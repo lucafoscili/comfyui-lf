@@ -24,6 +24,12 @@ This repository contains custom nodes that I use in my workflow.
 
 - **WorkflowSettings**: Configures various settings for a workflow, including options for randomization, selection criteria, and integration with large language models. This node serves as a central configuration point for complex workflows.
 
+## Installation
+
+- Go to `ComfyUI/custom_nodes` folder
+- Open a terminal.
+- Copy and Paste this command `git clone https://github.com/lucafoscili/comfyui-lf.git`
+
 ## Usage
 
 To use these nodes in ComfyUI, ensure they are properly installed and recognized within your ComfyUI environment. Each node comes with predefined input and output types, which should be connected appropriately within your workflow to achieve the desired functionality.
