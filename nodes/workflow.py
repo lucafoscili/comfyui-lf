@@ -70,9 +70,10 @@ class Lora2Prompt:
             text = text.replace(lora_tag, keywords)
         
         # Replace the weight_placeholder with the actual weight
-        loras = "".join(loras).replace(weight_placeholder, str(weight))
+        loras = [lora.replace(weight_placeholder, str(weight)) for lora in loras]
+        loras_string = "".join(loras)
         
-        return (text, loras,)
+        return (text, loras_string,)
     
 class LoraName2Prompt:
     @classmethod
