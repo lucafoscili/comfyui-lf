@@ -6,7 +6,7 @@ category = "LF Nodes/JSON"
 
 class LoadLocalJSON:
     @classmethod
-    def INPUT_TYPES(s):
+    def INPUT_TYPES(cls):
         return {
             "required": {
                 "url": ("STRING", {"default": ""}),

@@ -2,7 +2,7 @@ category = "LF Nodes/Logic"
 
 class SwitchInteger:
     @classmethod
-    def INPUT_TYPES(self):
+    def INPUT_TYPES(cls):
         return {
             "required": {
                 "on_true": ("INT", {"default": 0}),
