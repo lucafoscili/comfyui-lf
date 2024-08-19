@@ -141,15 +141,15 @@ class WorkflowSettings:
                 "square_format": ("BOOLEAN", {"default": False, "label": "Square format?"}),
                 "xtra": ("BOOLEAN", {"default": False, "label": "Xtra?"}),
                 "llm_prompt": ("BOOLEAN", {"default": False, "label": "LLM Prompt?"}),
-                "character_lora_weight": ("STRING", {"default": "1.0", "label": "Character LoRA weight"}),
-                "additional_loras_weight": ("STRING", {"default": "0.5", "label": "Additional LoRAs weight"}),
+                "character_lora_weight": ("FLOAT", {"default": 1.0, "label": "Character LoRA weight", "min": -10.0, "max": 10.0, "step": 0.1}),
+                "additional_loras_weight": ("FLOAT", {"default": 0.5, "label": "Additional LoRAs weight", "min": -10.0, "max": 10.0, "step": 0.1}),
                 "custom_images_urls": ("STRING", {"default": "", "multiline": True, "label": "Custom images URLs"}),
                 "config_json_path": ("STRING", {"default": "", "multiline": True, "label": "Config JSON path"}),
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF}),
             }
         }
     
-    RETURN_TYPES = ("BOOLEAN", "STRING", "STRING", "STRING", "BOOLEAN", "INT", "INT", "BOOLEAN", "BOOLEAN", "BOOLEAN", "BOOLEAN", "BOOLEAN", "BOOLEAN", "INT", "INT", "INT", "INT", "BOOLEAN", "BOOLEAN", "BOOLEAN", "STRING", "STRING", "STRING", "STRING")
+    RETURN_TYPES = ("BOOLEAN", "STRING", "STRING", "STRING", "BOOLEAN", "INT", "INT", "BOOLEAN", "BOOLEAN", "BOOLEAN", "BOOLEAN", "BOOLEAN", "BOOLEAN", "INT", "INT", "INT", "INT", "BOOLEAN", "BOOLEAN", "BOOLEAN", "FLOAT", "FLOAT", "STRING", "STRING")
     RETURN_NAMES = ("drawing_board", "drawing_board_pos", "drawing_board_neg", "drawing_board_loras", "random_seed", "global_seed", "batch_size", "random_framing", "random_pose", "random_character", "random_outfit", "random_location", "random_style", "character_selector", "outfit_selector", "location_selector", "style_selector", "square_format", "xtra", "LLM_prompt", "character_lora_weight", "additional_loras_weight", "custom_images_urls", "config_json_path")
     CATEGORY =  category
     FUNCTION = "workflow_settings"
