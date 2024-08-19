@@ -1,8 +1,108 @@
+import re
+
 category = "LF Nodes/Workflow"
+
+class Lora2Prompt:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "text": ("STRING", {"multiline": True, "label": "Input Text with LoRAs"}),
+                "separator": ("STRING", { "default": "SEP", "label": "Keywords separator"}),
+                "weight": ("FLOAT", { "default": 0.5, "label": "LoRAs weight"}),
+                "weight_placeholder": ("STRING", { "default": "wwWEIGHTww", "label": "Weight placeholder"}),
+            }
+        }
+
+    RETURN_TYPES = ("STRING", "STRING",)
+    RETURN_NAMES = ("prompt", "loras",)
+    CATEGORY = category
+    FUNCTION = "extract_loras_and_keywords"
+
+    def extract_loras_and_keywords(self, text: str, separator:str, weight:float, weight_placeholder:str):
+        # Regular expression to match loras in <lora:...> format
+        lora_pattern = r'<lora:[^<>]+>'
+        
+        # Find all matches of loras in the input text
+        loras = re.findall(lora_pattern, text)
+        
+        # Extract keywords from each lora and prepare them for replacement
+        lora_keyword_map = {}
+        for lora in loras:
+            # Remove the <lora: and last '>': part to get the safetensors file name and weight
+            safetensors_info = lora[len('<lora:'):][:-1]
+            
+            # Split the safetensors_info by ':' to separate the file name and weight
+            file_name_with_weight = safetensors_info.split(':')
+            if len(file_name_with_weight) > 1:
+                file_name, _ = file_name_with_weight
+            else:
+                file_name = file_name_with_weight[0]
+            
+            # Split the file name by '\\' to separate the file name and the folder containing it
+            file_name_with_folder = file_name.split('\\')
+            if len(file_name_with_folder) > 1:
+                _, file_name = file_name_with_folder
+            else:
+                file_name = file_name_with_folder[0]
+            
+            # Split the file name by '.safetensors' to separate the file name and the extension
+            file_name_with_extension = file_name.split('.safetensors')
+            if len(file_name_with_extension) > 1:
+                file_name, _ = file_name_with_extension
+            else:
+                file_name = file_name_with_extension[0]
+
+            # Extract keywords from the file name
+            if str(file_name).find(separator) > 1:
+                keywords = file_name.split(separator)
+            else:
+                keywords = file_name
+
+            # Join keywords into a string to replace the lora tag
+            keyword_str = ''.join(keywords)
+            
+            # Map the original lora tag to its keywords
+            lora_keyword_map[lora] = keyword_str
+        
+        # Replace each lora tag in the text with its corresponding keywords
+        for lora_tag, keywords in lora_keyword_map.items():
+            text = text.replace(lora_tag, keywords)
+        
+        # Replace the weight_placeholder with the actual weight
+        loras = "".join(loras).replace(weight_placeholder, str(weight))
+        
+        return (text, loras,)
+    
+class LoraName2Prompt:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "file_name": ("STRING", {"multiline": True, "label": "LoRA file name"}),
+                "separator": ("STRING", { "default": "SEP", "label": "Keywords separator"}),
+            }
+        }
+
+    RETURN_TYPES = ("STRING", "INT",)
+    RETURN_NAMES = ("keywords", "nr_keywords",)
+    CATEGORY = category
+    FUNCTION = "process_lora_to_prompt"
+
+    def process_lora_to_prompt(self, file_name: str, separator: str):
+        if file_name.endswith(".safetensors"):
+            keywords = file_name[:-len(".safetensors")].split(separator)
+        else:
+            keywords = file_name.split(separator)
+
+        keywords_str = ", ".join(keywords)
+        keywords_count = len(keywords)
+
+        return (keywords_str, keywords_count,)
     
 class SeedGenerator:
     @classmethod
-    def INPUT_TYPES(s):
+    def INPUT_TYPES(cls):
         return {
             "required": {
                 "global_seed": ("INT", {"default": 0}),
@@ -18,7 +118,7 @@ class SeedGenerator:
 
 class WorkflowSettings:
     @classmethod
-    def INPUT_TYPES(s):
+    def INPUT_TYPES(cls):
         return {
             "required": {
                 "drawing_board": ("BOOLEAN", {"default": False, "label": "Drawing board?"}),
@@ -60,10 +160,14 @@ class WorkflowSettings:
 
 
 NODE_CLASS_MAPPINGS = {
+    "Lora2Prompt": Lora2Prompt,
+    "LoraName2Prompt": LoraName2Prompt,
     "SeedGenerator": SeedGenerator,
     "WorkflowSettings": WorkflowSettings,
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
+    "Lora2Prompt": "Convert prompt and LoRAs",
+    "LoraName2Prompt": "Convert LoRA filename to prompt",
     "SeedGenerator": "Generate N unique seeds",
     "WorkflowSettings": "Workflow settings",
 }
