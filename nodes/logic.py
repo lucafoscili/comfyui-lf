@@ -1,6 +1,3 @@
-import folder_paths
-import comfy.utils
-
 category = "LF Nodes/Logic"
 
 class SwitchInteger:
@@ -15,7 +12,7 @@ class SwitchInteger:
         }
 
     RETURN_TYPES = ("INT",)
-    CATEGORY = "Art Venture/Utils"
+    CATEGORY = category
     FUNCTION = "integer_switch"
 
     def integer_switch(self, on_true: int, on_false: int, boolean: bool):

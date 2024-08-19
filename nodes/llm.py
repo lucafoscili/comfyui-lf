@@ -6,9 +6,6 @@ import requests
 
 from PIL import Image
 
-import folder_paths
-import comfy.utils
-
 category = "LF Nodes/LLM"
     
 class CharacterImpersonator:
@@ -30,7 +27,7 @@ class CharacterImpersonator:
 
     RETURN_TYPES = ("JSON", "JSON", "STRING")
     RETURN_NAMES = ("request_json", "response_json", "answer")
-    CATEGORY = "Art Venture/Utils"
+    CATEGORY = category
     FUNCTION = "llm_call"
 
     def llm_call(self, temperature, max_tokens, prompt, seed, character_bio, url, image=None):

@@ -2,9 +2,6 @@ import json
 import random
 import requests
 
-import folder_paths
-import comfy.utils
-
 category = "LF Nodes/JSON"
 
 class LoadLocalJSON:
@@ -16,8 +13,8 @@ class LoadLocalJSON:
             },
         }
 
-    RETURN_TYPES = ("JSON")
-    CATEGORY = "Art Venture/Utils"
+    RETURN_TYPES = ("JSON",)
+    CATEGORY =  category
     FUNCTION = "load_json"
 
     def load_json(self, url: str):
@@ -26,7 +23,7 @@ class LoadLocalJSON:
             with open(file_path, 'r') as file:
                 data = json.load(file)
 
-        return (data)
+        return (data,)
 
 class GetRandomKeyFromJSON:
     @classmethod
@@ -39,9 +36,8 @@ class GetRandomKeyFromJSON:
         }
 
     RETURN_TYPES = ("STRING",)
-    CATEGORY = "Art Venture/Utils"
+    CATEGORY = category
     FUNCTION = "get_random_key_from_json"
-    OUTPUT_NODE = True
 
     def get_random_key_from_json(self, json: dict, seed: int):
         random.seed(seed)
