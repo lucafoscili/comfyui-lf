@@ -40,4 +40,4 @@ Contributions to this repository are welcome. Please feel free to submit pull re
 
 ## License
 
-[Insert License Here]
+MIT License
