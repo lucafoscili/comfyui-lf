@@ -10,6 +10,6 @@ Repository = "https://github.com/lucafoscili/comfyui-lf"
 #  Used by Comfy Registry https://comfyregistry.org
 
 [tool.comfy]
-PublisherId = ""
+PublisherId = "lucafoscili"
 DisplayName = "comfyui-lf"
 Icon = ""
