@@ -1,0 +1,15 @@
+[project]
+name = "comfyui-lf"
+description = "JSON Nodes, Large Language Model Nodes, Logic Nodes, Workflow Nodes."
+version = "1.0.0"
+license = {file = "LICENSE"}
+dependencies = ["numpy", "openai==1.12.0", "Pillow", "torch", "requests"]
+
+[project.urls]
+Repository = "https://github.com/lucafoscili/comfyui-lf"
+#  Used by Comfy Registry https://comfyregistry.org
+
+[tool.comfy]
+PublisherId = ""
+DisplayName = "comfyui-lf"
+Icon = ""
