@@ -1,0 +1,11 @@
+{
+  "name": "comfyui-lf",
+  "version": "0.0.1",
+  "private": false,
+  "scripts": {
+    "compile": "tsc && node ./web/src/scripts/fix-imports.js"
+  },
+  "devDependencies": {
+    "typescript": "5.5.4"
+  }
+}

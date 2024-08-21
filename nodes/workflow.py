@@ -60,7 +60,14 @@ class Lora2Prompt:
                 keywords = file_name
 
             # Join keywords into a string to replace the lora tag
-            keyword_str = ''.join(keywords)
+            # Assuming keywords can be a single string or a list of strings
+            if isinstance(keywords, str):
+            # If keywords is a single string, keep it as is
+                keyword_str = keywords
+            elif isinstance(keywords, list):
+                keyword_str = ''.join(keywords[:-1]) + ', ' + keywords[-1]
+            else:
+                raise ValueError("keywords must be a string or a list of strings")
             
             # Map the original lora tag to its keywords
             lora_keyword_map[lora] = keyword_str

@@ -1,8 +1,31 @@
 import json
 import random
 import requests
+from server import PromptServer
 
 category = "LF Nodes/JSON"
+
+class DisplayJSON:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "json": ("JSON",),
+            },
+            "hidden": { "node_id": "UNIQUE_ID" } 
+        }        
+
+    CATEGORY = "LF Nodes/JSON"
+    FUNCTION = "display_json"
+    RETURN_TYPES = ()
+    OUTPUT_NODE = True
+
+    def display_json(self, json:dict, node_id):
+        PromptServer.instance.send_sync("lf-displayjson", {
+            "node": node_id, 
+            "json": json
+        })
+        return {}
 
 class LoadLocalJSON:
     @classmethod
@@ -113,12 +136,14 @@ class GetValueFromJSON:
 
 
 NODE_CLASS_MAPPINGS = {
-    "LoadLocalJSON": LoadLocalJSON,
+    "DisplayJSON": DisplayJSON,
     "GetRandomKeyFromJSON": GetRandomKeyFromJSON,
     "GetValueFromJSON": GetValueFromJSON,
+    "LoadLocalJSON": LoadLocalJSON,
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "LoadLocalJSON": "Load local JSON",
+    "DisplayJSON": "Display JSON",
     "GetRandomKeyFromJSON": "Get Random Key From JSON",
     "GetValueFromJSON": "Get Value from JSON",
+    "LoadLocalJSON": "Load local JSON",
 }
