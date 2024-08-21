@@ -34,7 +34,7 @@ class LF_LoadImages:
                 "dir": ("STRING", {"label": "Directory path"}),
                 "subdir": ("BOOLEAN", {"default": False, "label": "Load from subdir"}),
                 "strip_ext": ("BOOLEAN", {"default": True, "label": "Strip extension from name"}),
-                "load_cap": ("INT", {"default": 1, "label": "Maximum images to load", "min": 1}),
+                "load_cap": ("INT", {"default": 0, "label": "Maximum images to load, 0 to disable."}),
                 "dummy_output": ("BOOLEAN", {"default": False, "label": "Outputs a dummy image in tensor format when the list is empty"}),
             },
             "hidden": { "node_id": "UNIQUE_ID" } 
@@ -56,7 +56,7 @@ class LF_LoadImages:
             dir (str): The root directory from which to load images.
             subdir (bool): Indicates whether to also load images from subdirectories.
             strip_ext (bool): Whether to remove file extensions from filenames.
-            load_cap (int): Maximum number of images to load before stopping.
+            load_cap (int): Maximum number of images to load before stopping. Set 0 for an unlimited amount.
             node_id (str): Unique identifier for the node instance.
             dummy_output (bool): Flag indicating whether to output a dummy image tensorand string when the list is empty. Defaults to False.
 
