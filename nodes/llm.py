@@ -7,23 +7,23 @@ import requests
 from PIL import Image
 
 category = "LF Nodes/LLM"
-    
+
 class LF_CharacterImpersonator:
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "temperature" : ("FLOAT", {"max": 1.901, "min": 0.1, "step": 0.1, "display": "number", "round": 0.1, "default": 0.7}),  
-                "max_tokens" : ("INT", {"max": 8000, "min": 20, "step": 10, "default": 500, "display": "number"}), 
+                "temperature" : ("FLOAT", {"max": 1.901, "min": 0.1, "step": 0.1, "display": "number", "round": 0.1, "default": 0.7}),
+                "max_tokens" : ("INT", {"max": 8000, "min": 20, "step": 10, "default": 500, "display": "number"}),
                 "prompt": ("STRING", {"multiline": True, "default": ""}),
-                "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff}),      
-                "character_bio": ("STRING", { "multiline": True, "default": ""}),            
-                "url": ("STRING", {"multiline": True, "default": "http://localhost:5001/v1/chat/completions"}), 
+                "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff}),
+                "character_bio": ("STRING", { "multiline": True, "default": ""}),
+                "url": ("STRING", {"multiline": True, "default": "http://localhost:5001/v1/chat/completions"}),
             },
             "optional":{
-                "image" : ("IMAGE", {"default": None})  
+                "image" : ("IMAGE", {"default": None})
             }
-        } 
+        }
 
     RETURN_TYPES = ("JSON", "JSON", "STRING")
     RETURN_NAMES = ("request_json", "response_json", "answer")
@@ -31,10 +31,9 @@ class LF_CharacterImpersonator:
     FUNCTION = "llm_call"
 
     def llm_call(self, temperature, max_tokens, prompt, seed, character_bio, url, image=None):
-
         if isinstance(image, torch.Tensor):
             if image.ndim == 4:
-                image = image.squeeze(0) 
+                image = image.squeeze(0)
             pil_image = Image.fromarray((image.numpy() * 255).astype('uint8'))
             buffer = io.BytesIO()
             pil_image.save(buffer, format="PNG")
@@ -56,7 +55,7 @@ class LF_CharacterImpersonator:
         Your responsabilities:
         - Never break character: speak in first person and adhere to your biography.
         - Never break the fourth wall: you have no concept of what's going on "under the hood", your persona IS your life - let go of everything else that you know.
-        
+
         Let's see who you are, shall we?
         Here is your biography, written in Markdown:
         {character_bio}
