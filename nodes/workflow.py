@@ -2,7 +2,7 @@ import re
 
 category = "LF Nodes/Workflow"
 
-class Lora2Prompt:
+class LF_Lora2Prompt:
     @classmethod
     def INPUT_TYPES(cls):
         return {
@@ -82,7 +82,7 @@ class Lora2Prompt:
         
         return (text, loras_string,)
     
-class LoraName2Prompt:
+class LF_LoraName2Prompt:
     @classmethod
     def INPUT_TYPES(cls):
         return {
@@ -108,7 +108,7 @@ class LoraName2Prompt:
 
         return (keywords_str, keywords_count,)
     
-class SeedGenerator:
+class LF_SeedGenerator:
     @classmethod
     def INPUT_TYPES(cls):
         return {
@@ -124,7 +124,7 @@ class SeedGenerator:
         seeds = [global_seed + i for i in range(20)] 
         return seeds
 
-class WorkflowSettings:
+class LF_WorkflowSettings:
     @classmethod
     def INPUT_TYPES(cls):
         return {
@@ -168,14 +168,14 @@ class WorkflowSettings:
 
 
 NODE_CLASS_MAPPINGS = {
-    "Lora2Prompt": Lora2Prompt,
-    "LoraName2Prompt": LoraName2Prompt,
-    "SeedGenerator": SeedGenerator,
-    "WorkflowSettings": WorkflowSettings,
+    "LF_Lora2Prompt": LF_Lora2Prompt,
+    "LF_LoraName2Prompt": LF_LoraName2Prompt,
+    "LF_SeedGenerator": LF_SeedGenerator,
+    "LF_WorkflowSettings": LF_WorkflowSettings,
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "Lora2Prompt": "Convert prompt and LoRAs",
-    "LoraName2Prompt": "Convert LoRA filename to prompt",
-    "SeedGenerator": "Generate N unique seeds",
-    "WorkflowSettings": "Workflow settings",
+    "LF_Lora2Prompt": "Convert prompt and LoRAs",
+    "LF_LoraName2Prompt": "Convert LoRA filename to prompt",
+    "LF_SeedGenerator": "Generate N unique seeds",
+    "LF_WorkflowSettings": "Workflow settings",
 }

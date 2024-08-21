@@ -7,7 +7,7 @@ import { app } from '/scripts/app.js';
 class LFNodesManager {
   #EXT_PREFIX = 'LFExtension_';
   #NODES_DICT: NodeDictionary = {
-    DisplayJSON: DisplayJSONAdapter(),
+    LF_DisplayJSON: DisplayJSONAdapter(),
   };
 
   constructor() {
