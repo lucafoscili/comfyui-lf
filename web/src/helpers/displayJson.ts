@@ -1,64 +1,68 @@
 import { app } from '/scripts/app.js';
 import { ComfyWidgets } from '/scripts/widgets.js';
 
+const widgetName = 'json_value';
 const eventName: EventNames = 'lf-displayjson';
-const widgets: Array<unknown> = [];
 
 const eventCb = (event: CustomEvent<DisplayJSONPayload>) => {
-  const { id, json } = event.detail;
-  const node: NodeType = app.graph.getNodeById(+(id || app.runningNodeId));
+  if (window.lfManager.getDebug()) {
+    console.log(`Event '${eventName}' Callback`, event);
+  }
+  const payload = event.detail;
+  const node: NodeType = app.graph.getNodeById(+(payload.id || app.runningNodeId));
   if (node) {
     const isInitialized = node.lfProps?.isInitialized;
     if (isInitialized) {
       node.lfProps = Object.assign(node.lfProps, {
         ...node.lfProps,
-        json: JSON.stringify(json, null, 2),
+        payload,
       });
     } else {
-      node.lfProps = { isInitialized: true, json: JSON.stringify(json, null, 2) };
+      node.lfProps = { isInitialized: true, payload };
     }
     updateCb(node);
   }
 };
 
 const updateCb = (node: NodeType) => {
-  const widgetExists = !!widgets?.length;
-  const value = node.lfProps.json;
+  const props = node.lfProps as DisplayJSONProps;
+  if (window.lfManager.getDebug()) {
+    console.log(`Updating '${eventName}' Callback`, node);
+  }
+  const value = props?.payload?.json
+    ? JSON.stringify(props.payload.json, null, 2)
+    : 'Wow. Such empty. :V';
 
-  const widget = widgetExists
-    ? widgets[0]
-    : ComfyWidgets.STRING(
-        node,
-        'value',
-        [
-          'STRING',
-          {
-            multiline: true,
-          },
-        ],
-        app,
-      ).widget;
+  const existingWidget = node.widgets?.find((w) => w.name === widgetName);
+  if (existingWidget) {
+    existingWidget.value = value;
+  } else {
+    const widget = ComfyWidgets.STRING(
+      node,
+      widgetName,
+      [
+        'STRING',
+        {
+          multiline: true,
+        },
+      ],
+      app,
+    ).widget;
+    widget.inputEl.readOnly = true;
+    widget.inputEl.style.opacity = 0.75;
+    widget.value = value;
+    widget.serializeValue = false;
+  }
 
-  // Configure the widget
-  widget.inputEl.readOnly = true;
-  widget.inputEl.style.opacity = 0.75;
-  widget.value = value || 'Wow. Such empty. :V';
-
-  // Prevent the widget's value from being serialized to the node
-  // This is a workaround to avoid saving widget values unnecessarily
-  widget.serializeValue = async (): Promise<void> => {};
-
-  // Optionally, resize the node or trigger UI updates if necessary
   requestAnimationFrame(() => {
     app.graph.setDirtyCanvas(true, false);
   });
 };
 
-export const DisplayJSONAdapter = () => {
+export const DisplayJSONAdapter: () => DisplayJSONDictionaryEntry = () => {
   return {
     eventCb,
     eventName,
     updateCb,
-    widgets,
   };
 };

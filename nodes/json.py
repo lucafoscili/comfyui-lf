@@ -113,7 +113,6 @@ class LF_GetValueFromJSON:
 
         return (json_output, string_output, number_output, int_output, float_output, boolean_output)
 
-
 class LF_LoadLocalJSON:
     @classmethod
     def INPUT_TYPES(cls):

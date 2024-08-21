@@ -15,6 +15,10 @@ This repository contains custom nodes that I use in my workflow.
 
 - **CharacterImpersonator**: Utilizes a large language model to generate text responses as if coming from a character described by a provided biography. This node can be used for creative writing, role-playing scenarios, or generating dynamic content based on character traits.
 
+### Loader Nodes (`loaders.py`)
+
+- **LoadImages**: Node used to load multiple images from disk given a directory. Optionally it can fetch images from subdirectories.
+
 ### Logic Nodes (`logic.py`)
 
 - **SwitchInteger**: A simple logic node that returns one of two integer values based on a boolean condition. Useful for conditional branching in workflows.
