@@ -1,0 +1,42 @@
+{
+  "compilerOptions": {
+    "allowJs": false,
+    "allowUmdGlobalAccess": true,
+    "allowUnusedLabels": false,
+    "allowUnreachableCode": false,
+    "alwaysStrict": true,
+    "baseUrl": ".",
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "declaration": true,
+    "incremental": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "module": "ES2020",
+    "moduleResolution": "node",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noResolve": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": true,
+    "outDir": "web/js",
+    "paths": {
+      "*": ["node_modules/*"],
+      "@/*": ["./src/*"],
+      "/scripts/*": ["../../web/scripts/*"],
+      "/lib/*": ["../../web/lib/*"],
+      "/extensions/*": ["../../web/extensions/*"],
+      "/types/*": ["../../web/types/*"]
+    },
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "strictFunctionTypes": true,
+    "target": "ES2020"
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", "web/dist"]
+}
