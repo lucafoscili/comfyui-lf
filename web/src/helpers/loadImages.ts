@@ -34,7 +34,7 @@ const updateCb = (node: NodeType) => {
     const element = existingWidget.element;
     element.replaceChild(createWidget(props), element.firstChild);
   } else {
-    const widget = app.widgets.IMAGE_PREVIEW_B64(node, 'preview').widget;
+    const widget = app.widgets.IMAGE_PREVIEW_B64(node, widgetName).widget;
     widget.serializeValue = false;
   }
 
@@ -53,7 +53,7 @@ export const LoadImagesAdapter: () => LoadImagesDictionaryEntry = () => {
           }
           const props = node.lfProps as LoadImagesProps;
           const domWidget = createWidget(props);
-          const widget = node.addDOMWidget(name, 'base64_preview', domWidget);
+          const widget = node.addDOMWidget(name, widgetName, domWidget);
           return { widget };
         },
       };

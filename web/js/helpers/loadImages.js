@@ -32,7 +32,7 @@ const updateCb = (node) => {
         element.replaceChild(createWidget(props), element.firstChild);
     }
     else {
-        const widget = app.widgets.IMAGE_PREVIEW_B64(node, 'preview').widget;
+        const widget = app.widgets.IMAGE_PREVIEW_B64(node, widgetName).widget;
         widget.serializeValue = false;
     }
     requestAnimationFrame(() => {
@@ -49,7 +49,7 @@ export const LoadImagesAdapter = () => {
                     }
                     const props = node.lfProps;
                     const domWidget = createWidget(props);
-                    const widget = node.addDOMWidget(name, 'base64_preview', domWidget);
+                    const widget = node.addDOMWidget(name, widgetName, domWidget);
                     return { widget };
                 },
             };
