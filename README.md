@@ -17,7 +17,7 @@ This repository contains custom nodes that I use in my workflow.
 
 ### Loader Nodes (`loaders.py`)
 
-- **LoadImages**: Node used to load multiple images from disk given a directory. It can optionally fetch images from subdirectories.
+- **LoadImages**: Node used to load multiple images from disk given a directory. Optionally it can fetch images from subdirectories.
 
 ### Logic Nodes (`logic.py`)
 
