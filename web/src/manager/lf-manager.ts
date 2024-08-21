@@ -4,7 +4,8 @@ import { app } from '/scripts/app.js';
 /*-------------------------------------------------*/
 /*                 L F   C l a s s                 */
 /*-------------------------------------------------*/
-class LFNodesManager {
+class LFManager {
+  #DEBUG = false;
   #EXT_PREFIX = 'LFExtension_';
   #NODES_DICT: NodeDictionary = {
     LF_DisplayJSON: DisplayJSONAdapter(),
@@ -22,7 +23,22 @@ class LFNodesManager {
       }
     }
   }
+
+  getDebug() {
+    return this.#DEBUG;
+  }
+
+  log(message: string) {
+    if (this.#DEBUG) {
+      console.log(message);
+    }
+  }
+
+  toggleDebug() {
+    this.#DEBUG = !this.#DEBUG;
+  }
 }
 
-const lfNodesManager = new LFNodesManager();
-console.log('LF Nodes initialized.', lfNodesManager);
+if (!window.lfManager) {
+  window.lfManager = new LFManager();
+}

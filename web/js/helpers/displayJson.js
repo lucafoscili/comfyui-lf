@@ -1,8 +1,12 @@
 import { app } from '/scripts/app.js';
 import { ComfyWidgets } from '/scripts/widgets.js';
+const lfManager = window.lfManager;
 const eventName = 'lf-displayjson';
 const widgets = [];
 const eventCb = (event) => {
+    if (lfManager.getDebug()) {
+        console.log(`Event '${eventName}' Callback`);
+    }
     const { id, json } = event.detail;
     const node = app.graph.getNodeById(+(id || app.runningNodeId));
     if (node) {
@@ -20,6 +24,9 @@ const eventCb = (event) => {
     }
 };
 const updateCb = (node) => {
+    if (lfManager.getDebug()) {
+        console.log(`Updating '${eventName}' Callback`);
+    }
     const widgetExists = !!widgets?.length;
     const value = node.lfProps.json;
     const widget = widgetExists
@@ -37,7 +44,9 @@ const updateCb = (node) => {
     // Prevent the widget's value from being serialized to the node
     // This is a workaround to avoid saving widget values unnecessarily
     widget.serializeValue = async () => { };
-    // Optionally, resize the node or trigger UI updates if necessary
+    if (!widgetExists) {
+        widgets.push(widget);
+    }
     requestAnimationFrame(() => {
         app.graph.setDirtyCanvas(true, false);
     });

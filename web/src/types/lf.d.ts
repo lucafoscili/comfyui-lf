@@ -5,6 +5,11 @@ declare interface DisplayJSONPayload {
   id: string;
   json: Record<string, unknown>;
 }
+declare interface LFManager {
+  getDebug: () => boolean;
+  log: (message: string) => void;
+  toggleDebug: () => void;
+}
 declare interface LFProps {
   isInitialized: boolean;
   json: string;
@@ -17,6 +22,9 @@ declare interface NodeDictionaryEntry {
   eventName: EventNames;
   updateCb: (node: NodeType) => void;
   widgets: Array<unknown>;
+}
+declare interface Window {
+  lfManager: LFManager;
 }
 
 declare module '../helpers/displayJson' {
