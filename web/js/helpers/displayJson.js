@@ -1,11 +1,10 @@
 import { app } from '/scripts/app.js';
 import { ComfyWidgets } from '/scripts/widgets.js';
-const lfManager = window.lfManager;
 const eventName = 'lf-displayjson';
 const widgets = [];
 const eventCb = (event) => {
-    if (lfManager.getDebug()) {
-        console.log(`Event '${eventName}' Callback`);
+    if (window.lfManager.getDebug()) {
+        console.log(`Event '${eventName}' Callback`, event);
     }
     const { id, json } = event.detail;
     const node = app.graph.getNodeById(+(id || app.runningNodeId));
@@ -24,8 +23,8 @@ const eventCb = (event) => {
     }
 };
 const updateCb = (node) => {
-    if (lfManager.getDebug()) {
-        console.log(`Updating '${eventName}' Callback`);
+    if (window.lfManager.getDebug()) {
+        console.log(`Updating '${eventName}' Callback`, node);
     }
     const widgetExists = !!widgets?.length;
     const value = node.lfProps.json;

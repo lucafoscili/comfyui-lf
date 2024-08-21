@@ -36,6 +36,7 @@ class LFManager {
 
   toggleDebug() {
     this.#DEBUG = !this.#DEBUG;
+    return this.#DEBUG;
   }
 }
 

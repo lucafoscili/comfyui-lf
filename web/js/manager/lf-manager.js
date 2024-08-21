@@ -44,6 +44,7 @@ class LFManager {
     }
     toggleDebug() {
         __classPrivateFieldSet(this, _LFManager_DEBUG, !__classPrivateFieldGet(this, _LFManager_DEBUG, "f"), "f");
+        return __classPrivateFieldGet(this, _LFManager_DEBUG, "f");
     }
 }
 _LFManager_DEBUG = new WeakMap(), _LFManager_EXT_PREFIX = new WeakMap(), _LFManager_NODES_DICT = new WeakMap();

@@ -8,7 +8,7 @@ declare interface DisplayJSONPayload {
 declare interface LFManager {
   getDebug: () => boolean;
   log: (message: string) => void;
-  toggleDebug: () => void;
+  toggleDebug: () => boolean;
 }
 declare interface LFProps {
   isInitialized: boolean;
