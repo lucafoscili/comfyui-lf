@@ -1,4 +1,5 @@
 import { DisplayJSONAdapter } from '../helpers/displayJson';
+import { LoadImagesAdapter } from '../helpers/loadImages';
 import { api } from '/scripts/api.js';
 import { app } from '/scripts/app.js';
 /*-------------------------------------------------*/
@@ -9,6 +10,7 @@ class LFManager {
   #EXT_PREFIX = 'LFExtension_';
   #NODES_DICT: NodeDictionary = {
     LF_DisplayJSON: DisplayJSONAdapter(),
+    LF_LoadImages: LoadImagesAdapter(),
   };
 
   constructor() {
@@ -16,9 +18,16 @@ class LFManager {
       if (Object.prototype.hasOwnProperty.call(this.#NODES_DICT, key)) {
         const node = this.#NODES_DICT[key];
         const name = this.#EXT_PREFIX + key;
-        app.registerExtension({
-          name,
-        });
+        if (node.eventName === 'lf-loadimages') {
+          app.registerExtension({
+            name,
+            getCustomWidgets: node.getCustomWidgets,
+          });
+        } else {
+          app.registerExtension({
+            name,
+          });
+        }
         api.addEventListener(node.eventName, node.eventCb);
       }
     }

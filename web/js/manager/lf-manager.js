@@ -11,6 +11,7 @@ var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (
 };
 var _LFManager_DEBUG, _LFManager_EXT_PREFIX, _LFManager_NODES_DICT;
 import { DisplayJSONAdapter } from '../helpers/displayJson.js';
+import { LoadImagesAdapter } from '../helpers/loadImages.js';
 import { api } from '/scripts/api.js';
 import { app } from '/scripts/app.js';
 /*-------------------------------------------------*/
@@ -22,14 +23,23 @@ class LFManager {
         _LFManager_EXT_PREFIX.set(this, 'LFExtension_');
         _LFManager_NODES_DICT.set(this, {
             LF_DisplayJSON: DisplayJSONAdapter(),
+            LF_LoadImages: LoadImagesAdapter(),
         });
         for (const key in __classPrivateFieldGet(this, _LFManager_NODES_DICT, "f")) {
             if (Object.prototype.hasOwnProperty.call(__classPrivateFieldGet(this, _LFManager_NODES_DICT, "f"), key)) {
                 const node = __classPrivateFieldGet(this, _LFManager_NODES_DICT, "f")[key];
                 const name = __classPrivateFieldGet(this, _LFManager_EXT_PREFIX, "f") + key;
-                app.registerExtension({
-                    name,
-                });
+                if (node.eventName === 'lf-loadimages') {
+                    app.registerExtension({
+                        name,
+                        getCustomWidgets: node.getCustomWidgets,
+                    });
+                }
+                else {
+                    app.registerExtension({
+                        name,
+                    });
+                }
                 api.addEventListener(node.eventName, node.eventCb);
             }
         }

@@ -27,7 +27,6 @@ interface NodeData {
   output_node: boolean;
   python_module: string;
 }
-
 interface NodeType {
   lfProps: LFProps;
   comfyClass: string;
@@ -39,6 +38,7 @@ interface NodeType {
   flags?: Record<string, boolean>;
   collapsed?: boolean;
   redrawOnMouse?: boolean;
+  widgets: Array<Widget>;
   widgetsUp?: boolean;
   widgetsStartY?: number;
   clipArea?: boolean;
@@ -46,6 +46,14 @@ interface NodeType {
   horizontal?: boolean;
   inputs: SlotInfo[];
   outputs: SlotInfo[];
+  addDOMWidget: (name?: string, type?: string, element?: HTMLElement) => unknown;
+  addCustomWidget: (
+    type?: T['type'],
+    name?: string,
+    value?: T['value'],
+    callback?: WidgetCallback<T> | string,
+    options?: T['options'],
+  ) => unknown;
   computeSize(): number;
   onAdded?(): void;
   onResize?(size: number): void;
@@ -99,4 +107,14 @@ interface SlotInfo {
   dir?: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'; // Optional, direction of the slot
   colorOn?: string; // Color to render when it is connected
   colorOff?: string; // Color to render when it is not connected
+}
+interface Widget {
+  element?: HTMLElement;
+  type: string;
+  name: string;
+  value: any;
+  options?: TextOption | ToggleOption | NumberOption | Base64PreviewOption;
+  last_y?: number;
+  y: number;
+  computedHeight?: number;
 }
