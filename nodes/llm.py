@@ -8,7 +8,7 @@ from PIL import Image
 
 category = "LF Nodes/LLM"
     
-class CharacterImpersonator:
+class LF_CharacterImpersonator:
     @classmethod
     def INPUT_TYPES(cls):
         return {
@@ -104,8 +104,8 @@ class CharacterImpersonator:
         return(request, llm_result, answer)
 
 NODE_CLASS_MAPPINGS = {
-    "CharacterImpersonator": CharacterImpersonator,
+    "LF_CharacterImpersonator": LF_CharacterImpersonator,
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "CharacterImpersonator": "LLM <-> Character",
+    "LF_CharacterImpersonator": "LLM <-> Character",
 }

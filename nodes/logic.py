@@ -1,6 +1,6 @@
 category = "LF Nodes/Logic"
 
-class SwitchInteger:
+class LF_SwitchInteger:
     @classmethod
     def INPUT_TYPES(cls):
         return {
@@ -19,8 +19,8 @@ class SwitchInteger:
         return (on_true if boolean else on_false,)
 
 NODE_CLASS_MAPPINGS = {
-    "SwitchInteger": SwitchInteger,
+    "LF_SwitchInteger": LF_SwitchInteger,
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "SwitchInteger": "Switch Integer",
+    "LF_SwitchInteger": "Switch Integer",
 }

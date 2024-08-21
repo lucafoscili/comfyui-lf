@@ -14,7 +14,7 @@ class LFNodesManager {
     constructor() {
         _LFNodesManager_EXT_PREFIX.set(this, 'LFExtension_');
         _LFNodesManager_NODES_DICT.set(this, {
-            DisplayJSON: DisplayJSONAdapter(),
+            LF_DisplayJSON: DisplayJSONAdapter(),
         });
         for (const key in __classPrivateFieldGet(this, _LFNodesManager_NODES_DICT, "f")) {
             if (Object.prototype.hasOwnProperty.call(__classPrivateFieldGet(this, _LFNodesManager_NODES_DICT, "f"), key)) {

@@ -6,9 +6,10 @@ This repository contains custom nodes that I use in my workflow.
 
 ### JSON Nodes (`json.py`)
 
-- **LoadLocalJSON**: Loads JSON data from a local file specified by a URL. This node is useful for importing static JSON configurations or datasets directly into ComfyUI workflows.
+- **DisplayJSON**: Displays JSON data.
 - **GetRandomKeyFromJSON**: Extracts a random key from a given JSON object. This can be used to introduce variability or select random elements from JSON data.
 - **GetValueFromJSON**: Extracts a specific value from a JSON object based on a provided key. This node supports extracting various types of values including JSON objects, strings, numbers, integers, floats, and booleans.
+- **LoadLocalJSON**: Loads JSON data from a local file specified by a URL. This node is useful for importing static JSON configurations or datasets directly into ComfyUI workflows.
 
 ### Large Language Model Nodes (`llm.py`)
 
@@ -20,12 +21,10 @@ This repository contains custom nodes that I use in my workflow.
 
 ### Workflow Nodes (`workflow.py`)
 
+- **Lora2Prompt**: Converts a prompt and LoRAs to a formatted string.
+- **LoraName2Prompt**: Processes a LoRA file name to extract keywords and count them. This node is useful for preparing prompts based on LoRA file names.
 - **SeedGenerator**: Generates a series of unique seeds based on a global seed value. This node is useful for creating reproducible random sequences in workflows.
 - **WorkflowSettings**: Configures various settings for a workflow, including options for randomization, selection criteria, and integration with large language models. This node serves as a central configuration point for complex workflows.
-- **Lora2Prompt**: Converts prompts and LoRAs (Large Object Representations) into a format suitable for processing. It extracts keywords from LoRAs and replaces them in the input text.
-- **LoraName2Prompt**: Processes a LoRA file name to extract keywords and count them. This node is useful for preparing prompts based on LoRA file names.
-- **Extract LoRAs and Keywords**: Similar to Lora2Prompt but focuses on extracting LoRAs and their associated keywords from the input text.
-- **Process LoRA to Prompt**: Similar to LoraName2Prompt but emphasizes converting LoRA file names into prompts.
 
 ## Installation
 

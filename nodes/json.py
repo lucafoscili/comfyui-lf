@@ -5,7 +5,7 @@ from server import PromptServer
 
 category = "LF Nodes/JSON"
 
-class DisplayJSON:
+class LF_DisplayJSON:
     @classmethod
     def INPUT_TYPES(cls):
         return {
@@ -27,28 +27,7 @@ class DisplayJSON:
         })
         return {}
 
-class LoadLocalJSON:
-    @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "url": ("STRING", {"default": ""}),
-            },
-        }
-
-    RETURN_TYPES = ("JSON",)
-    CATEGORY =  category
-    FUNCTION = "load_json"
-
-    def load_json(self, url: str):
-        if url.startswith("file://"):
-            file_path = requests.utils.unquote(url[7:])
-            with open(file_path, 'r') as file:
-                data = json.load(file)
-
-        return (data,)
-
-class GetRandomKeyFromJSON:
+class LF_GetRandomKeyFromJSON:
     @classmethod
     def INPUT_TYPES(cls):
         return {
@@ -69,7 +48,7 @@ class GetRandomKeyFromJSON:
         print("Selected Key:", selected_key)  # Debugging line to confirm the selected key
         return (selected_key,)
     
-class GetValueFromJSON:
+class LF_GetValueFromJSON:
     @classmethod
     def INPUT_TYPES(cls):
         return {
@@ -135,15 +114,36 @@ class GetValueFromJSON:
         return (json_output, string_output, number_output, int_output, float_output, boolean_output)
 
 
+class LF_LoadLocalJSON:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "url": ("STRING", {"default": ""}),
+            },
+        }
+
+    RETURN_TYPES = ("JSON",)
+    CATEGORY =  category
+    FUNCTION = "load_json"
+
+    def load_json(self, url: str):
+        if url.startswith("file://"):
+            file_path = requests.utils.unquote(url[7:])
+            with open(file_path, 'r') as file:
+                data = json.load(file)
+
+        return (data,)
+
 NODE_CLASS_MAPPINGS = {
-    "DisplayJSON": DisplayJSON,
-    "GetRandomKeyFromJSON": GetRandomKeyFromJSON,
-    "GetValueFromJSON": GetValueFromJSON,
-    "LoadLocalJSON": LoadLocalJSON,
+    "LF_DisplayJSON": LF_DisplayJSON,
+    "LF_GetRandomKeyFromJSON": LF_GetRandomKeyFromJSON,
+    "LF_GetValueFromJSON": LF_GetValueFromJSON,
+    "LF_LoadLocalJSON": LF_LoadLocalJSON,
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "DisplayJSON": "Display JSON",
-    "GetRandomKeyFromJSON": "Get Random Key From JSON",
-    "GetValueFromJSON": "Get Value from JSON",
-    "LoadLocalJSON": "Load local JSON",
+    "LF_DisplayJSON": "Display JSON",
+    "LF_GetRandomKeyFromJSON": "Get Random Key From JSON",
+    "LF_GetValueFromJSON": "Get Value from JSON",
+    "LF_LoadLocalJSON": "Load local JSON",
 }
