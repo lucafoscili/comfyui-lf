@@ -45,7 +45,6 @@ declare interface BaseNodeDictionaryEntry {
   eventCb: EventCallback;
   eventName: EventNames;
   updateCb: UpdateCallback;
-  widgets: Array<unknown>;
 }
 declare interface DisplayJSONDictionaryEntry extends BaseNodeDictionaryEntry {
   eventCb: (e: CustomEvent<DisplayJSONPayload>) => void;
@@ -66,3 +65,4 @@ declare interface LoadImagesDictionaryEntry extends BaseNodeDictionaryEntry {
 declare type NodeDictionaryEntry = DisplayJSONDictionaryEntry | LoadImagesDictionaryEntry;
 declare type EventCallback = (e: CustomEvent<NodePayload>) => void;
 declare type UpdateCallback = (node: NodeType) => void;
+declare type NodeNames = 'LF_DisplayJSON' | 'LF_LoadImages';

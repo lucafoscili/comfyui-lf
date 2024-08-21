@@ -1,8 +1,8 @@
 import { app } from '/scripts/app.js';
 import { ComfyWidgets } from '/scripts/widgets.js';
 
+const widgetName = 'json_value';
 const eventName: EventNames = 'lf-displayjson';
-const widgets: Array<unknown> = [];
 
 const eventCb = (event: CustomEvent<DisplayJSONPayload>) => {
   if (window.lfManager.getDebug()) {
@@ -25,40 +25,33 @@ const eventCb = (event: CustomEvent<DisplayJSONPayload>) => {
 };
 
 const updateCb = (node: NodeType) => {
+  const props = node.lfProps as DisplayJSONProps;
   if (window.lfManager.getDebug()) {
     console.log(`Updating '${eventName}' Callback`, node);
   }
-  const props = node.lfProps as DisplayJSONProps;
   const value = props?.payload?.json
     ? JSON.stringify(props.payload.json, null, 2)
     : 'Wow. Such empty. :V';
 
-  const widgetExists = !!widgets?.length;
-  const widget = widgetExists
-    ? widgets[0]
-    : ComfyWidgets.STRING(
-        node,
-        'value',
-        [
-          'STRING',
-          {
-            multiline: true,
-          },
-        ],
-        app,
-      ).widget;
-
-  // Configure the widget
-  widget.inputEl.readOnly = true;
-  widget.inputEl.style.opacity = 0.75;
-  widget.value = value;
-
-  // Prevent the widget's value from being serialized to the node
-  // This is a workaround to avoid saving widget values unnecessarily
-  widget.serializeValue = async (): Promise<void> => {};
-
-  if (!widgetExists) {
-    widgets.push(widget);
+  const existingWidget = node.widgets?.find((w) => w.name === widgetName);
+  if (existingWidget) {
+    existingWidget.value = value;
+  } else {
+    const widget = ComfyWidgets.STRING(
+      node,
+      widgetName,
+      [
+        'STRING',
+        {
+          multiline: true,
+        },
+      ],
+      app,
+    ).widget;
+    widget.inputEl.readOnly = true;
+    widget.inputEl.style.opacity = 0.75;
+    widget.value = value;
+    widget.serializeValue = false;
   }
 
   requestAnimationFrame(() => {
@@ -71,6 +64,5 @@ export const DisplayJSONAdapter: () => DisplayJSONDictionaryEntry = () => {
     eventCb,
     eventName,
     updateCb,
-    widgets,
   };
 };

@@ -1,6 +1,6 @@
 import { app } from '/scripts/app.js';
+const widgetName = 'image_preview_base64';
 const eventName = 'lf-loadimages';
-const widgets = [];
 const eventCb = (event) => {
     if (window.lfManager.getDebug()) {
         console.log(`Event '${eventName}' Callback`, event);
@@ -22,25 +22,18 @@ const eventCb = (event) => {
     }
 };
 const updateCb = (node) => {
+    const props = node.lfProps;
     if (window.lfManager.getDebug()) {
         console.log(`Updating '${eventName}' Callback`, node);
     }
-    const props = node.lfProps;
-    const value = props?.payload?.images ? props?.payload?.images : null;
-    if (!value) {
-        return;
-    }
-    const widgetExists = !!widgets?.length;
-    // Prevent the widget's value from being serialized to the node
-    // This is a workaround to avoid saving widget values unnecessarily
-    if (!widgetExists) {
-        const widget = app.widgets.IMAGE_PREVIEW_B64(node, 'preview').widget;
-        widgets.push(widget);
-        widget.serializeValue = async () => { };
+    const existingWidget = node?.widgets.find((w) => w.name === widgetName);
+    if (existingWidget) {
+        const element = existingWidget.element;
+        element.replaceChild(createWidget(props), element.firstChild);
     }
     else {
-        const element = widgets[0].element;
-        element.replaceChild(createWidget(props), element.firstChild);
+        const widget = app.widgets.IMAGE_PREVIEW_B64(node, 'preview').widget;
+        widget.serializeValue = false;
     }
     requestAnimationFrame(() => {
         app.graph.setDirtyCanvas(true, false);
@@ -64,7 +57,6 @@ export const LoadImagesAdapter = () => {
         eventCb,
         eventName,
         updateCb,
-        widgets,
     };
 };
 function createWidget(props) {
