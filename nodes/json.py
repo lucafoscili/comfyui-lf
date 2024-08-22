@@ -32,7 +32,7 @@ class LF_GetRandomKeyFromJSON:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF}, { "tooltip": "The seed for the random pick."}),
+                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "The seed for the random pick."}),
                 "json": ("JSON", { "tooltip": "JSON object from which a random key will be picked."},),
             }
         }
