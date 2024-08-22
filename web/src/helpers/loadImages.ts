@@ -112,7 +112,7 @@ function drawDoge() {
   doge.classList.add(cssClasses.doge);
   doge.innerText = `
 
-             W O W .  S U C H   E M P T Y.
+        W O W .  S U C H   E M P T Y.
 
 
   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡟⠋⠈⠙⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠤⢤⡀⠀⠀
