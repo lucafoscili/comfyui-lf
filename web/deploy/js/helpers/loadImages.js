@@ -71,22 +71,25 @@ function createWidget(props) {
         if (domWidget.firstChild) {
             domWidget.removeChild(domWidget.firstChild);
         }
-        const content = hasImages ? drawGrid(props.payload.images) : drawDoge();
+        const content = hasImages ? drawGrid(props.payload) : drawDoge();
         domWidget.appendChild(content);
     };
     domWidget.refresh();
     return domWidget;
 }
-function drawGrid(images) {
+function drawGrid(payload) {
+    const { file_names, images } = payload;
     const content = document.createElement('div');
     content.classList.add(cssClasses.wrapper);
     const grid = document.createElement('div');
     grid.classList.add(cssClasses.grid);
     for (let index = 0; index < images.length; index++) {
+        const title = file_names[index];
         const image64 = images[index];
         const image = document.createElement('img');
         image.classList.add(cssClasses.image);
         image.src = `data:image/png;base64,${image64}`;
+        image.title = `${title} (${index})`;
         grid.appendChild(image);
     }
     content.appendChild(grid);

@@ -9,6 +9,7 @@ declare interface DisplayJSONPayload extends BaseEventPayload {
   json: Record<string, unknown>;
 }
 declare interface LoadImagesPayload extends BaseEventPayload {
+  file_names: Array<string>;
   images: Array<string>;
 }
 declare type EventNames = 'lf-displayjson' | 'lf-loadimages';
