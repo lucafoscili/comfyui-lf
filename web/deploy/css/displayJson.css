@@ -1,0 +1,12 @@
+.lf-displayjson {
+  background: var(--kul-background-color);
+  max-height: 100%;
+  max-width: 100%;
+  overflow: auto;
+}
+.lf-displayjson__widget {
+  height: 100%;
+  width: 100%;
+}
+
+/*# sourceMappingURL=displayJson.css.map */

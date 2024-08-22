@@ -3,6 +3,10 @@ import { ComfyWidgets } from '/scripts/widgets.js';
 
 const widgetName = 'json_value';
 const eventName: EventNames = 'lf-displayjson';
+const cssClasses = {
+  wrapper: 'lf-displayjson',
+  widget: 'lf-displayjson__widget',
+};
 
 const eventCb = (event: CustomEvent<DisplayJSONPayload>) => {
   if (window.lfManager.getDebug()) {
@@ -25,32 +29,15 @@ const eventCb = (event: CustomEvent<DisplayJSONPayload>) => {
 };
 
 const updateCb = (node: NodeType) => {
-  const props = node.lfProps as DisplayJSONProps;
   if (window.lfManager.getDebug()) {
     console.log(`Updating '${eventName}' Callback`, node);
   }
-  const value = props?.payload?.json
-    ? JSON.stringify(props.payload.json, null, 2)
-    : 'Wow. Such empty. :V';
 
-  const existingWidget = node.widgets?.find((w) => w.name === widgetName);
+  const existingWidget = node?.widgets?.find((w) => w.name === widgetName);
   if (existingWidget) {
-    existingWidget.value = value;
+    (existingWidget.element as DisplayJsonWidget).refresh();
   } else {
-    const widget = ComfyWidgets.STRING(
-      node,
-      widgetName,
-      [
-        'STRING',
-        {
-          multiline: true,
-        },
-      ],
-      app,
-    ).widget;
-    widget.inputEl.readOnly = true;
-    widget.inputEl.style.opacity = 0.75;
-    widget.value = value;
+    const widget = app.widgets.KUL_CODE(node, widgetName).widget;
     widget.serializeValue = false;
   }
 
@@ -61,8 +48,44 @@ const updateCb = (node: NodeType) => {
 
 export const DisplayJSONAdapter: () => DisplayJSONDictionaryEntry = () => {
   return {
+    getCustomWidgets: () => {
+      return {
+        KUL_CODE(node, name) {
+          if (window.lfManager.getDebug()) {
+            console.log(`Adding 'KUL_CODE' custom widget`, node);
+          }
+          const props = node.lfProps as DisplayJSONProps;
+          const domWidget = document.createElement('div') as DisplayJsonWidget;
+          domWidget.refresh = () => {
+            if (domWidget.firstChild) {
+              domWidget.removeChild(domWidget.firstChild);
+            }
+            const content = createWidget(props);
+            domWidget.appendChild(content);
+          };
+          domWidget.refresh();
+          const widget = node.addDOMWidget(name, widgetName, domWidget);
+          return { widget };
+        },
+      };
+    },
     eventCb,
     eventName,
     updateCb,
   };
 };
+
+function createWidget(props: DisplayJSONProps) {
+  const value = props?.payload?.json;
+
+  const content = document.createElement('div');
+  content.classList.add(cssClasses.wrapper);
+
+  const codeWidget: HTMLKulCodeElement = document.createElement('kul-code');
+  codeWidget.classList.add(cssClasses.widget);
+  codeWidget.kulLanguage = 'json';
+  codeWidget.kulValue = value ? JSON.stringify(value, null, 2) : 'Wow. Such empty!';
+  content.appendChild(codeWidget);
+
+  return content;
+}

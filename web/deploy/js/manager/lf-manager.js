@@ -42,7 +42,7 @@ class LFManager {
             if (Object.prototype.hasOwnProperty.call(__classPrivateFieldGet(this, _LFManager_NODES_DICT, "f"), key)) {
                 const node = __classPrivateFieldGet(this, _LFManager_NODES_DICT, "f")[key];
                 const name = __classPrivateFieldGet(this, _LFManager_EXT_PREFIX, "f") + key;
-                if (node.eventName === 'lf-loadimages') {
+                if (node.eventName === 'lf-displayjson' || node.eventName === 'lf-loadimages') {
                     __classPrivateFieldGet(this, _LFManager_instances, "m", _LFManager_embedCss).call(this, key);
                     app.registerExtension({
                         name,

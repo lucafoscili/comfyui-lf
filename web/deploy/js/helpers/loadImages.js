@@ -28,11 +28,10 @@ const eventCb = (event) => {
     }
 };
 const updateCb = (node) => {
-    const props = node.lfProps;
     if (window.lfManager.getDebug()) {
         console.log(`Updating '${eventName}' Callback`, node);
     }
-    const existingWidget = node?.widgets.find((w) => w.name === widgetName);
+    const existingWidget = node?.widgets?.find((w) => w.name === widgetName);
     if (existingWidget) {
         existingWidget.element.refresh();
     }

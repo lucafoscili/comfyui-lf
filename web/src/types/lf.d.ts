@@ -92,6 +92,14 @@ declare interface BaseNodeDictionaryEntry {
 declare interface DisplayJSONDictionaryEntry extends BaseNodeDictionaryEntry {
   eventCb: (e: CustomEvent<DisplayJSONPayload>) => void;
   eventName: 'lf-displayjson';
+  getCustomWidgets: () => {
+    KUL_CODE(
+      node: NodeType,
+      name: string,
+    ): {
+      widget: Partial<Widget>;
+    };
+  };
 }
 declare interface LoadImagesDictionaryEntry extends BaseNodeDictionaryEntry {
   eventCb: (e: CustomEvent<LoadImages>) => void;
@@ -101,7 +109,7 @@ declare interface LoadImagesDictionaryEntry extends BaseNodeDictionaryEntry {
       node: NodeType,
       name: string,
     ): {
-      widget: unknown;
+      widget: Partial<Widget>;
     };
   };
 }
@@ -121,7 +129,10 @@ declare interface SwitchStringDictionaryEntry extends BaseNodeDictionaryEntry {
   eventCb: (e: CustomEvent<SwitchStringPayload>) => void;
   eventName: 'lf-switchstring';
 }
-declare interface LoadImagesWidget extends HTMLElement {
+declare interface DisplayJsonWidget extends HTMLDivElement {
+  refresh: () => void;
+}
+declare interface LoadImagesWidget extends HTMLDivElement {
   refresh: () => void;
 }
 declare type NodeDictionaryEntry =

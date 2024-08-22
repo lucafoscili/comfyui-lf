@@ -32,7 +32,7 @@ class LFManager {
       if (Object.prototype.hasOwnProperty.call(this.#NODES_DICT, key)) {
         const node = this.#NODES_DICT[key];
         const name = this.#EXT_PREFIX + key;
-        if (node.eventName === 'lf-loadimages') {
+        if (node.eventName === 'lf-displayjson' || node.eventName === 'lf-loadimages') {
           this.#embedCss(key);
           app.registerExtension({
             name,

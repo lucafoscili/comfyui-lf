@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const logColor = ''; // cyan
+const logColor = '\x1b[33m'; // yellow
 
 // Starting directory, relative to the script's location
 const baseDir = path.resolve(__dirname, '../../deploy/js/');

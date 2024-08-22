@@ -30,14 +30,13 @@ const eventCb = (event: CustomEvent<LoadImagesPayload>) => {
 };
 
 const updateCb = (node: NodeType) => {
-  const props = node.lfProps as LoadImagesProps;
   if (window.lfManager.getDebug()) {
     console.log(`Updating '${eventName}' Callback`, node);
   }
 
-  const existingWidget = node?.widgets.find((w) => w.name === widgetName);
+  const existingWidget = node?.widgets?.find((w) => w.name === widgetName);
   if (existingWidget) {
-    (existingWidget.element as unknown as LoadImagesWidget).refresh();
+    (existingWidget.element as LoadImagesWidget).refresh();
   } else {
     const widget = app.widgets.IMAGE_PREVIEW_B64(node, widgetName).widget;
     widget.serializeValue = false;
@@ -71,7 +70,7 @@ export const LoadImagesAdapter: () => LoadImagesDictionaryEntry = () => {
 
 function createWidget(props: LoadImagesProps) {
   const hasImages = !!props?.payload?.images?.length;
-  const domWidget = document.createElement('div') as unknown as LoadImagesWidget;
+  const domWidget = document.createElement('div') as LoadImagesWidget;
   domWidget.refresh = () => {
     if (domWidget.firstChild) {
       domWidget.removeChild(domWidget.firstChild);

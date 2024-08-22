@@ -1,0 +1,11 @@
+.lf-displayjson {
+  background: var(--kul-background-color);
+  max-height: 100%;
+  max-width: 100%;
+  overflow: auto;
+
+  &__widget {
+    height: 100%;
+    width: 100%;
+  }
+}
