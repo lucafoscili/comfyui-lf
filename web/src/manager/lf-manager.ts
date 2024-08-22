@@ -1,6 +1,8 @@
 import { DisplayJSONAdapter } from '../helpers/displayJson';
 import { LoadImagesAdapter } from '../helpers/loadImages';
+import { SwitchImageAdapter } from '../helpers/switchImage';
 import { SwitchIntegerAdapter } from '../helpers/switchInteger';
+import { SwitchStringAdapter } from '../helpers/switchString';
 import { api } from '/scripts/api.js';
 import { app } from '/scripts/app.js';
 /*-------------------------------------------------*/
@@ -13,7 +15,9 @@ class LFManager {
   #NODES_DICT: NodeDictionary = {
     displayJSON: DisplayJSONAdapter(),
     loadImages: LoadImagesAdapter(),
+    switchImage: SwitchImageAdapter(),
     switchInteger: SwitchIntegerAdapter(),
+    switchString: SwitchStringAdapter(),
   };
 
   constructor() {
