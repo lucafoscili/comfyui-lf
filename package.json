@@ -3,6 +3,7 @@
   "version": "1.4.0",
   "private": false,
   "scripts": {
+    "setup": "npm install && node ./web/src/scripts/copy-declarations.js",
     "prebuild": "rimraf web/js",
     "build:scss": "node ./web/src/scripts/compile-scss.js",
     "build:ts": "tsc",

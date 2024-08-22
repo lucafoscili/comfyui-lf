@@ -165,3 +165,8 @@ node_modules/
 
 # TS
 *.tsbuildinfo
+
+# Kethup Lite
+components.d.ts
+ketchup-lite.d.ts
+stencil-public-runtime.d.ts
