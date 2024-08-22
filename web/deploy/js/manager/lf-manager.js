@@ -37,7 +37,6 @@ class LFManager {
             switchString: SwitchStringAdapter(),
         });
         defineCustomElements(window);
-        document.documentElement.appendChild(document.createElement('kul-button'));
         __classPrivateFieldSet(this, _LFManager_CSS_EMBEDDED, new Set(), "f");
         for (const key in __classPrivateFieldGet(this, _LFManager_NODES_DICT, "f")) {
             if (Object.prototype.hasOwnProperty.call(__classPrivateFieldGet(this, _LFManager_NODES_DICT, "f"), key)) {
