@@ -19,7 +19,7 @@ def create_dummy_image_tensor():
         torch.Tensor: A single-element tensor representing a dummy image.
     """    
     # Create a small black image
-    img = Image.new('RGB', (1, 1), color=(0, 0, 0))
+    img = Image.new('RGB', (64, 64), color=(0, 0, 0))
     
     # Convert to tensor
     img_tensor = torch.from_numpy(np.array(img)).float() / 255.0
@@ -118,7 +118,7 @@ class LF_LoadImages:
         # Check if we should output the dummy image and string
         if dummy_output and not images:
             # Add a dummy image tensor to the list
-            file_names.append("*empty*")
+            file_names.append("empty")
             images.append(create_dummy_image_tensor())
         
         PromptServer.instance.send_sync("lf-loadimages", {
