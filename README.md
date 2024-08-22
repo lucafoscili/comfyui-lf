@@ -14,6 +14,7 @@ This repository contains custom nodes that I use in my workflow.
 ### Large Language Model Nodes (`llm.py`)
 
 - **CharacterImpersonator**: Utilizes a large language model to generate text responses as if coming from a character described by a provided biography. This node can be used for creative writing, role-playing scenarios, or generating dynamic content based on character traits.
+- **ImageClassifier**: Utilizes a large language model to generate descriptions about images portraying characters.
 
 ### Loader Nodes (`loaders.py`)
 
@@ -21,7 +22,10 @@ This repository contains custom nodes that I use in my workflow.
 
 ### Logic Nodes (`logic.py`)
 
-- **SwitchInteger**: A simple logic node that returns one of two integer values based on a boolean condition. Useful for conditional branching in workflows.
+- **SwitchImage**: A simple logic node that returns one of two images in tensor format based on a boolean condition.
+- **SwitchInteger**: A simple logic node that returns one of two integer values based on a boolean condition.
+- **SwitchJSON**: A simple logic node that returns one of two JSON objects based on a boolean condition.
+- **SwitchString**: A simple logic node that returns one of two string values based on a boolean condition.
 
 ### Workflow Nodes (`workflow.py`)
 

@@ -10,17 +10,17 @@ class LF_DisplayJSON:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "json": ("JSON",),
+                "json": ("JSON", { "tooltip": "JSON object to display."}),
             },
             "hidden": { "node_id": "UNIQUE_ID" } 
         }        
 
     CATEGORY = "LF Nodes/JSON"
-    FUNCTION = "display_json"
+    FUNCTION = "on_exec"
     RETURN_TYPES = ()
     OUTPUT_NODE = True
 
-    def display_json(self, json:dict, node_id):
+    def on_exec(self, json:dict, node_id):
         PromptServer.instance.send_sync("lf-displayjson", {
             "node": node_id, 
             "json": json
@@ -32,16 +32,16 @@ class LF_GetRandomKeyFromJSON:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF}),
-                "json": ("JSON",),
+                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "The seed for the random pick."}),
+                "json": ("JSON", { "tooltip": "JSON object from which a random key will be picked."},),
             }
         }
 
     RETURN_TYPES = ("STRING",)
     CATEGORY = category
-    FUNCTION = "get_random_key_from_json"
+    FUNCTION = "on_exec"
 
-    def get_random_key_from_json(self, json: dict, seed: int):
+    def on_exec(self, json: dict, seed: int):
         random.seed(seed)
         keys = list(json.keys())
         selected_key = random.choice(keys)
@@ -53,17 +53,17 @@ class LF_GetValueFromJSON:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "json": ("JSON", {"label": "JSON Object"}),
-                "key": ("STRING", {"label": "Key to select"})
+                "json": ("JSON", {"tooltip": "JSON Object."}),
+                "key": ("STRING", {"tooltip": "Key to select."})
             }
         }
 
     RETURN_TYPES = ("JSON", "STRING", "NUMBER", "INT", "FLOAT", "BOOLEAN")
     RETURN_NAMES = ("json_output", "string_output", "number_output", "int_output", "float_output", "boolean_output")
     CATEGORY = category
-    FUNCTION = "get_value_from_json"
+    FUNCTION = "on_exec"
 
-    def get_value_from_json(self, json: dict, key: str):
+    def on_exec(self, json: dict, key: str):
         # Extract the value associated with the specified key
         value = json.get(key, None)
 
@@ -118,15 +118,15 @@ class LF_LoadLocalJSON:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "url": ("STRING", {"default": ""}),
+                "url": ("STRING", {"default": "", "tooltip": "The local URL where the JSON file is stored (i.e.: file://C:/myjson.json)."}),
             },
         }
 
     RETURN_TYPES = ("JSON",)
     CATEGORY =  category
-    FUNCTION = "load_json"
+    FUNCTION = "on_exec"
 
-    def load_json(self, url: str):
+    def on_exec(self, url: str):
         if url.startswith("file://"):
             file_path = requests.utils.unquote(url[7:])
             with open(file_path, 'r') as file:

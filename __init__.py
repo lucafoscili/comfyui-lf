@@ -1,34 +1,29 @@
-import importlib.util
 import os
+import sys
 
-# Function to dynamically import a module
-def import_module(module_path):
-    spec = importlib.util.spec_from_file_location("module.name", module_path)
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-# Initialize main dictionaries
 NODE_CLASS_MAPPINGS = {}
 NODE_DISPLAY_NAME_MAPPINGS = {}
 
 # Directory containing the submodules
-submodules_dir = os.path.join(os.path.dirname(__file__), "nodes")
+modules_dir = os.path.join(os.path.dirname(__file__), "modules")
 
-# Iterate through each file in the submodules directory
-for filename in os.listdir(submodules_dir):
-    if filename.endswith(".py") and not filename.startswith("__"):
-        module_name = filename[:-3]  # Remove '.py' from the end
-        module_path = os.path.join(submodules_dir, filename)
-        
-        # Dynamically import the module
-        module = import_module(module_path)
-        
-        # Update main dictionaries with the ones from the submodule
-        NODE_CLASS_MAPPINGS.update(getattr(module, "NODE_CLASS_MAPPINGS", {}))
-        NODE_DISPLAY_NAME_MAPPINGS.update(getattr(module, "NODE_DISPLAY_NAME_MAPPINGS", {}))
-
-# Make sure to add any additional setup or initialization code here
+# Recursively find all Python files in the modules directory
+for dirpath, dirnames, filenames in os.walk(modules_dir):
+    for filename in filenames:
+        if filename.endswith(".py") and filename != "__init__.py":
+            # Construct the module's relative path
+            relative_path = os.path.relpath(os.path.join(dirpath, filename), modules_dir)
+            module_name = os.path.splitext(relative_path.replace(os.path.sep, "."))[0]
+            
+            # Import the module
+            try:
+                module = __import__(f"comfyui-lf.modules.{module_name}", fromlist=[''])
+                NODE_CLASS_MAPPINGS.update(getattr(module, "NODE_CLASS_MAPPINGS", {}))
+                NODE_DISPLAY_NAME_MAPPINGS.update(getattr(module, "NODE_DISPLAY_NAME_MAPPINGS", {}))
+            except ImportError as e:
+                print(f"Failed to import {module_name}: {e}")
 
 WEB_DIRECTORY = "./web/deploy"
 __all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS", "WEB_DIRECTORY"]

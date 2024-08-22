@@ -19,23 +19,23 @@ def create_dummy_image_tensor():
         torch.Tensor: A single-element tensor representing a dummy image.
     """    
     # Create a small black image
-    img = Image.new('RGB', (1, 1), color=(0, 0, 0))
+    img = Image.new('RGB', (64, 64), color=(0, 0, 0))
     
     # Convert to tensor
     img_tensor = torch.from_numpy(np.array(img)).float() / 255.0
     
     return img_tensor.unsqueeze(0)
-
+ 
 class LF_LoadImages:
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "dir": ("STRING", {"label": "Directory path"}),
-                "subdir": ("BOOLEAN", {"default": False, "label": "Load from subdir"}),
-                "strip_ext": ("BOOLEAN", {"default": True, "label": "Strip extension from name"}),
-                "load_cap": ("INT", {"default": 0, "label": "Maximum images to load, 0 to disable."}),
-                "dummy_output": ("BOOLEAN", {"default": False, "label": "Outputs a dummy image in tensor format when the list is empty"}),
+                "dir": ("STRING", {"label": "Directory path", "tooltip": "Path to the directory containing the images to load."}),
+                "subdir": ("BOOLEAN", {"default": False, "label": "Load from subdir", "tooltip": "Indicates whether to also load images from subdirectories."}),
+                "strip_ext": ("BOOLEAN", {"default": True, "label": "Strip extension from name", "tooltip": "Whether to remove file extensions from filenames."}),
+                "load_cap": ("INT", {"default": 0, "label": "Maximum images to load, 0 to disable.", "tooltip": "Maximum number of images to load before stopping. Set 0 for an unlimited amount."}),
+                "dummy_output": ("BOOLEAN", {"default": False, "label": "Outputs a dummy image in tensor format when the list is empty", "tooltip": "Flag indicating whether to output a dummy image tensor and string when the list is empty."}),
             },
             "hidden": { "node_id": "UNIQUE_ID" } 
         }
@@ -44,9 +44,9 @@ class LF_LoadImages:
     RETURN_NAMES = ("images", "names", "nr")
     OUTPUT_IS_LIST = (True, True, False)
     CATEGORY = category
-    FUNCTION = "load_images"
+    FUNCTION = "on_exec"
 
-    def load_images(self, dir, subdir, strip_ext, load_cap, dummy_output, node_id):
+    def on_exec(self, dir, subdir, strip_ext, load_cap, dummy_output, node_id):
         """
         Loads images from a specified directory and subdirectories, optionally stripping extensions from filenames.
         Images are converted to tensors and returned along with their filenames and the total number of images processed.
@@ -118,7 +118,7 @@ class LF_LoadImages:
         # Check if we should output the dummy image and string
         if dummy_output and not images:
             # Add a dummy image tensor to the list
-            file_names.append("*empty*")
+            file_names.append("empty")
             images.append(create_dummy_image_tensor())
         
         PromptServer.instance.send_sync("lf-loadimages", {
