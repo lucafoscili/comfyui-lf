@@ -18,6 +18,7 @@ import { SwitchJSONAdapter } from '../helpers/switchJson.js';
 import { SwitchStringAdapter } from '../helpers/switchString.js';
 import { api } from '/scripts/api.js';
 import { app } from '/scripts/app.js';
+import { defineCustomElements } from '../ketchup-lite/loader.js';
 /*-------------------------------------------------*/
 /*                 L F   C l a s s                 */
 /*-------------------------------------------------*/
@@ -35,6 +36,8 @@ class LFManager {
             switchJson: SwitchJSONAdapter(),
             switchString: SwitchStringAdapter(),
         });
+        defineCustomElements(window);
+        document.documentElement.appendChild(document.createElement('kul-button'));
         __classPrivateFieldSet(this, _LFManager_CSS_EMBEDDED, new Set(), "f");
         for (const key in __classPrivateFieldGet(this, _LFManager_NODES_DICT, "f")) {
             if (Object.prototype.hasOwnProperty.call(__classPrivateFieldGet(this, _LFManager_NODES_DICT, "f"), key)) {

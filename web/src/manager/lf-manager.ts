@@ -1,14 +1,16 @@
-import { DisplayJSONAdapter } from '../helpers/displayJson';
-import { LoadImagesAdapter } from '../helpers/loadImages';
-import { SwitchImageAdapter } from '../helpers/switchImage';
-import { SwitchIntegerAdapter } from '../helpers/switchInteger';
-import { SwitchJSONAdapter } from '../helpers/switchJson';
-import { SwitchStringAdapter } from '../helpers/switchString';
+import { DisplayJSONAdapter } from '../helpers/displayJson.js';
+import { LoadImagesAdapter } from '../helpers/loadImages.js';
+import { SwitchImageAdapter } from '../helpers/switchImage.js';
+import { SwitchIntegerAdapter } from '../helpers/switchInteger.js';
+import { SwitchJSONAdapter } from '../helpers/switchJson.js';
+import { SwitchStringAdapter } from '../helpers/switchString.js';
 import { api } from '/scripts/api.js';
 import { app } from '/scripts/app.js';
+import { defineCustomElements } from '../ketchup-lite/loader';
 /*-------------------------------------------------*/
 /*                 L F   C l a s s                 */
 /*-------------------------------------------------*/
+
 class LFManager {
   #CSS_EMBEDDED: Set<string>;
   #DEBUG = false;
@@ -23,6 +25,7 @@ class LFManager {
   };
 
   constructor() {
+    defineCustomElements(window);
     this.#CSS_EMBEDDED = new Set();
 
     for (const key in this.#NODES_DICT) {
