@@ -17,9 +17,9 @@ class LF_Lora2Prompt:
     RETURN_TYPES = ("STRING", "STRING",)
     RETURN_NAMES = ("prompt", "loras",)
     CATEGORY = category
-    FUNCTION = "extract_loras_and_keywords"
+    FUNCTION = "on_exec"
 
-    def extract_loras_and_keywords(self, text: str, separator:str, weight:float, weight_placeholder:str):
+    def on_exec(self, text: str, separator:str, weight:float, weight_placeholder:str):
         # Regular expression to match loras in <lora:...> format
         lora_pattern = r'<lora:[^<>]+>'
         
@@ -95,9 +95,9 @@ class LF_LoraName2Prompt:
     RETURN_TYPES = ("STRING", "INT",)
     RETURN_NAMES = ("keywords", "nr_keywords",)
     CATEGORY = category
-    FUNCTION = "process_lora_to_prompt"
+    FUNCTION = "on_exec"
 
-    def process_lora_to_prompt(self, file_name: str, separator: str):
+    def on_exec(self, file_name: str, separator: str):
         if file_name.endswith(".safetensors"):
             keywords = file_name[:-len(".safetensors")].split(separator)
         else:
@@ -118,9 +118,9 @@ class LF_SeedGenerator:
         }
     RETURN_TYPES = ("INT",) * 30
     CATEGORY = category
-    FUNCTION = "generate_seeds"
+    FUNCTION = "on_exec"
 
-    def generate_seeds(self, global_seed: int):
+    def on_exec(self, global_seed: int):
         seeds = [global_seed + i for i in range(20)] 
         return seeds
 
@@ -160,9 +160,9 @@ class LF_WorkflowSettings:
     RETURN_TYPES = ("BOOLEAN", "STRING", "STRING", "STRING", "BOOLEAN", "INT", "INT", "BOOLEAN", "BOOLEAN", "BOOLEAN", "BOOLEAN", "BOOLEAN", "BOOLEAN", "INT", "INT", "INT", "INT", "BOOLEAN", "BOOLEAN", "BOOLEAN", "FLOAT", "FLOAT", "STRING", "STRING")
     RETURN_NAMES = ("drawing_board", "drawing_board_pos", "drawing_board_neg", "drawing_board_loras", "random_seed", "global_seed", "batch_size", "random_framing", "random_pose", "random_character", "random_outfit", "random_location", "random_style", "character_selector", "outfit_selector", "location_selector", "style_selector", "square_format", "xtra", "LLM_prompt", "character_lora_weight", "additional_loras_weight", "custom_images_urls", "config_json_path")
     CATEGORY =  category
-    FUNCTION = "workflow_settings"
+    FUNCTION = "on_exec"
     
-    def workflow_settings(self, seed, drawing_board, drawing_board_plus, drawing_board_minus, drawing_board_loras, random_seed, fixed_seed, batch_size, random_framing, random_pose, random_character, random_outfit, random_location, random_style, character_selector, outfit_selector, location_selector, style_selector, square_format, xtra, llm_prompt, character_lora_weight, additional_loras_weight, custom_images_urls, config_json_path):
+    def on_exec(self, seed, drawing_board, drawing_board_plus, drawing_board_minus, drawing_board_loras, random_seed, fixed_seed, batch_size, random_framing, random_pose, random_character, random_outfit, random_location, random_style, character_selector, outfit_selector, location_selector, style_selector, square_format, xtra, llm_prompt, character_lora_weight, additional_loras_weight, custom_images_urls, config_json_path):
         global_seed = seed if random_seed else fixed_seed
         return (drawing_board, drawing_board_plus, drawing_board_minus, drawing_board_loras, random_seed, global_seed, batch_size, random_framing, random_pose, random_character, random_outfit, random_location, random_style, character_selector, outfit_selector, location_selector, style_selector, square_format, xtra, llm_prompt, character_lora_weight, additional_loras_weight, custom_images_urls, config_json_path)
 

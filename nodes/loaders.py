@@ -44,9 +44,9 @@ class LF_LoadImages:
     RETURN_NAMES = ("images", "names", "nr")
     OUTPUT_IS_LIST = (True, True, False)
     CATEGORY = category
-    FUNCTION = "load_images"
+    FUNCTION = "on_exec"
 
-    def load_images(self, dir, subdir, strip_ext, load_cap, dummy_output, node_id):
+    def on_exec(self, dir, subdir, strip_ext, load_cap, dummy_output, node_id):
         """
         Loads images from a specified directory and subdirectories, optionally stripping extensions from filenames.
         Images are converted to tensors and returned along with their filenames and the total number of images processed.

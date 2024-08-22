@@ -28,9 +28,9 @@ class LF_CharacterImpersonator:
     RETURN_TYPES = ("JSON", "JSON", "STRING")
     RETURN_NAMES = ("request_json", "response_json", "answer")
     CATEGORY = category
-    FUNCTION = "llm_call"
+    FUNCTION = "on_exec"
 
-    def llm_call(self, temperature, max_tokens, prompt, seed, character_bio, url, image=None):
+    def on_exec(self, temperature, max_tokens, prompt, seed, character_bio, url, image=None):
         if isinstance(image, torch.Tensor):
             if image.ndim == 4:
                 image = image.squeeze(0)

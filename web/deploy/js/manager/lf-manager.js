@@ -14,6 +14,7 @@ import { DisplayJSONAdapter } from '../helpers/displayJson.js';
 import { LoadImagesAdapter } from '../helpers/loadImages.js';
 import { SwitchImageAdapter } from '../helpers/switchImage.js';
 import { SwitchIntegerAdapter } from '../helpers/switchInteger.js';
+import { SwitchJSONAdapter } from '../helpers/switchJson.js';
 import { SwitchStringAdapter } from '../helpers/switchString.js';
 import { api } from '/scripts/api.js';
 import { app } from '/scripts/app.js';
@@ -27,10 +28,11 @@ class LFManager {
         _LFManager_DEBUG.set(this, false);
         _LFManager_EXT_PREFIX.set(this, 'LFExtension_');
         _LFManager_NODES_DICT.set(this, {
-            displayJSON: DisplayJSONAdapter(),
+            displayJson: DisplayJSONAdapter(),
             loadImages: LoadImagesAdapter(),
             switchImage: SwitchImageAdapter(),
             switchInteger: SwitchIntegerAdapter(),
+            switchJson: SwitchJSONAdapter(),
             switchString: SwitchStringAdapter(),
         });
         __classPrivateFieldSet(this, _LFManager_CSS_EMBEDDED, new Set(), "f");

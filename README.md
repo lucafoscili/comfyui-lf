@@ -23,6 +23,7 @@ This repository contains custom nodes that I use in my workflow.
 
 - **SwitchImage**: A simple logic node that returns one of two images in tensor format based on a boolean condition.
 - **SwitchInteger**: A simple logic node that returns one of two integer values based on a boolean condition.
+- **SwitchJSON**: A simple logic node that returns one of two JSON objects based on a boolean condition.
 - **SwitchString**: A simple logic node that returns one of two string values based on a boolean condition.
 
 ### Workflow Nodes (`workflow.py`)
