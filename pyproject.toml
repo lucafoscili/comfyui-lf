@@ -1,7 +1,7 @@
 [project]
 name = "comfyui-lf"
-description = "JSON Nodes, Large Language Model Nodes, Logic Nodes, Workflow Nodes."
-version = "1.3.0"
+description = "JSON Nodes, LLM Nodes and Logic Nodes."
+version = "1.4.0"
 license = {file = "LICENSE"}
 dependencies = ["numpy", "openai==1.12.0", "Pillow", "torch", "requests"]
 

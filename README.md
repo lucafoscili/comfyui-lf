@@ -14,6 +14,7 @@ This repository contains custom nodes that I use in my workflow.
 ### Large Language Model Nodes (`llm.py`)
 
 - **CharacterImpersonator**: Utilizes a large language model to generate text responses as if coming from a character described by a provided biography. This node can be used for creative writing, role-playing scenarios, or generating dynamic content based on character traits.
+- **ImageClassifier**: Utilizes a large language model to generate descriptions about images portraying characters.
 
 ### Loader Nodes (`loaders.py`)
 
