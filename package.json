@@ -1,12 +1,17 @@
 {
   "name": "comfyui-lf",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "private": false,
   "scripts": {
-    "build": "rimraf web/js && tsc && node ./web/src/scripts/fix-imports.js"
+    "prebuild": "rimraf web/js",
+    "build:scss": "node ./web/src/scripts/compile-scss.js",
+    "build:ts": "tsc",
+    "build": "npm run build:scss && npm run build:ts",
+    "postbuild": "node ./web/src/scripts/fix-imports.js"
   },
   "devDependencies": {
     "rimraf": "^6.0.0",
+    "sass": "^1.77.8",
     "typescript": "5.5.4"
   }
 }

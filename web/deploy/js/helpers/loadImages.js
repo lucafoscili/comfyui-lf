@@ -1,6 +1,12 @@
 import { app } from '/scripts/app.js';
 const widgetName = 'image_preview_base64';
 const eventName = 'lf-loadimages';
+const cssClasses = {
+    wrapper: 'lf-loadimages',
+    doge: 'lf-loadimages__doge',
+    grid: 'lf-loadimages__grid',
+    image: 'lf-loadimages__image',
+};
 const eventCb = (event) => {
     if (window.lfManager.getDebug()) {
         console.log(`Event '${eventName}' Callback`, event);
@@ -28,8 +34,7 @@ const updateCb = (node) => {
     }
     const existingWidget = node?.widgets.find((w) => w.name === widgetName);
     if (existingWidget) {
-        const element = existingWidget.element;
-        element.replaceChild(createWidget(props), element.firstChild);
+        existingWidget.element.refresh();
     }
     else {
         const widget = app.widgets.IMAGE_PREVIEW_B64(node, widgetName).widget;
@@ -61,40 +66,42 @@ export const LoadImagesAdapter = () => {
 };
 function createWidget(props) {
     const hasImages = !!props?.payload?.images?.length;
-    const content = hasImages ? drawGrid(props.payload.images) : drawDoge();
     const domWidget = document.createElement('div');
-    domWidget.appendChild(content);
+    domWidget.refresh = () => {
+        if (domWidget.firstChild) {
+            domWidget.removeChild(domWidget.firstChild);
+        }
+        const content = hasImages ? drawGrid(props.payload) : drawDoge();
+        domWidget.appendChild(content);
+    };
+    domWidget.refresh();
     return domWidget;
 }
-function drawGrid(images) {
+function drawGrid(payload) {
+    const { file_names, images } = payload;
     const content = document.createElement('div');
-    content.style.display = 'grid';
-    content.style.maxHeight = '100%';
-    content.style.maxWidth = '100%';
-    content.style.overflow = 'auto';
-    content.style.gridTemplateColumns = 'repeat(auto-fill, minmax(100px, 1fr))';
+    content.classList.add(cssClasses.wrapper);
+    const grid = document.createElement('div');
+    grid.classList.add(cssClasses.grid);
     for (let index = 0; index < images.length; index++) {
+        const title = file_names[index];
         const image64 = images[index];
         const image = document.createElement('img');
-        image.style.maxWidth = '100%';
-        image.style.maxWidth = '100%';
+        image.classList.add(cssClasses.image);
         image.src = `data:image/png;base64,${image64}`;
-        content.appendChild(image);
+        image.title = `${title} (${index})`;
+        grid.appendChild(image);
     }
+    content.appendChild(grid);
     return content;
 }
 function drawDoge() {
     const content = document.createElement('div');
     content.title = 'No images were loaded/found.';
-    content.style.backgroundColor = 'black';
-    content.style.color = 'white';
-    content.style.fontFamily = "'Courier New', monospace";
-    content.style.fontSize = '12px';
-    content.style.maxHeight = '100%';
-    content.style.maxWidth = '100%';
-    content.style.overflow = 'auto';
-    content.style.whiteSpace = 'pre';
-    const doge = `
+    content.classList.add(cssClasses.wrapper);
+    const doge = document.createElement('div');
+    doge.classList.add(cssClasses.doge);
+    doge.innerText = `
 
              W O W .  S U C H   E M P T Y.
 
@@ -125,6 +132,6 @@ function drawDoge() {
 ⠀⠀⠀⠀⠀⠀⠛⢦⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣠⠴⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠲⠤⣤⣤⣤⣄⠀⠀⠀⠀⠀⠀⠀⢠⣤⣤⠤⠴⠒⠛⠋⠀⠀⠀⠀⠀         
  `;
-    content.innerText = doge;
+    content.appendChild(doge);
     return content;
 }

@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Starting directory, relative to the script's location
-const baseDir = path.resolve(__dirname, '../../js/');
+const baseDir = path.resolve(__dirname, '../../deploy/js/');
 
 // Function to recursively search for files
 function searchFiles(dir) {
