@@ -12,6 +12,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 var _LFManager_instances, _LFManager_CSS_EMBEDDED, _LFManager_DEBUG, _LFManager_EXT_PREFIX, _LFManager_NODES_DICT, _LFManager_embedCss;
 import { DisplayJSONAdapter } from '../helpers/displayJson.js';
 import { LoadImagesAdapter } from '../helpers/loadImages.js';
+import { SwitchIntegerAdapter } from '../helpers/switchInteger.js';
 import { api } from '/scripts/api.js';
 import { app } from '/scripts/app.js';
 /*-------------------------------------------------*/
@@ -24,8 +25,9 @@ class LFManager {
         _LFManager_DEBUG.set(this, false);
         _LFManager_EXT_PREFIX.set(this, 'LFExtension_');
         _LFManager_NODES_DICT.set(this, {
-            LF_DisplayJSON: DisplayJSONAdapter(),
-            LF_LoadImages: LoadImagesAdapter(),
+            displayJSON: DisplayJSONAdapter(),
+            loadImages: LoadImagesAdapter(),
+            switchInteger: SwitchIntegerAdapter(),
         });
         __classPrivateFieldSet(this, _LFManager_CSS_EMBEDDED, new Set(), "f");
         for (const key in __classPrivateFieldGet(this, _LFManager_NODES_DICT, "f")) {
@@ -33,7 +35,7 @@ class LFManager {
                 const node = __classPrivateFieldGet(this, _LFManager_NODES_DICT, "f")[key];
                 const name = __classPrivateFieldGet(this, _LFManager_EXT_PREFIX, "f") + key;
                 if (node.eventName === 'lf-loadimages') {
-                    __classPrivateFieldGet(this, _LFManager_instances, "m", _LFManager_embedCss).call(this, 'loadImages');
+                    __classPrivateFieldGet(this, _LFManager_instances, "m", _LFManager_embedCss).call(this, key);
                     app.registerExtension({
                         name,
                         getCustomWidgets: node.getCustomWidgets,

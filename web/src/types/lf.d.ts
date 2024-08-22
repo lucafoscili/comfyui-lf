@@ -12,8 +12,11 @@ declare interface LoadImagesPayload extends BaseEventPayload {
   file_names: Array<string>;
   images: Array<string>;
 }
-declare type EventNames = 'lf-displayjson' | 'lf-loadimages';
-declare type EventPayload = DisplayJSONPayload | LoadImagesPayload;
+declare interface SwitchIntegerPayload extends BaseEventPayload {
+  bool: boolean;
+}
+declare type EventNames = 'lf-displayjson' | 'lf-loadimages' | 'lf-switchinteger';
+declare type EventPayload = DisplayJSONPayload | LoadImagesPayload | SwitchIntegerPayload;
 /*-------------------------------------------------------------------*/
 /*             M a n a g e r   D e c l a r a t i o n s               */
 /*-------------------------------------------------------------------*/
@@ -35,7 +38,10 @@ declare interface DisplayJSONProps extends BaseLFProps {
 declare interface LoadImagesProps extends BaseLFProps {
   payload: LoadImagesPayload;
 }
-declare type LFProps = DisplayJSONProps | LoadImagesProps;
+declare interface SwitchIntegerProps extends BaseLFProps {
+  payload: SwitchIntegerPayload;
+}
+declare type LFProps = DisplayJSONProps | LoadImagesProps | SwitchIntegerProps;
 /*-------------------------------------------------------------------*/
 /*           D i c t i o n a r y   D e c l a r a t i o n s           */
 /*-------------------------------------------------------------------*/
@@ -63,10 +69,16 @@ declare interface LoadImagesDictionaryEntry extends BaseNodeDictionaryEntry {
     };
   };
 }
+declare interface SwitchIntegerDictionaryEntry extends BaseNodeDictionaryEntry {
+  eventCb: (e: CustomEvent<SwitchIntegerPayload>) => void;
+  eventName: 'lf-switchinteger';
+}
 declare interface LoadImagesWidget extends HTMLElement {
   refresh: () => void;
 }
-declare type NodeDictionaryEntry = DisplayJSONDictionaryEntry | LoadImagesDictionaryEntry;
+declare type NodeDictionaryEntry =
+  | DisplayJSONDictionaryEntry
+  | LoadImagesDictionaryEntry
+  | SwitchIntegerDictionaryEntry;
 declare type EventCallback = (e: CustomEvent<NodePayload>) => void;
 declare type UpdateCallback = (node: NodeType) => void;
-declare type NodeNames = 'LF_DisplayJSON' | 'LF_LoadImages';

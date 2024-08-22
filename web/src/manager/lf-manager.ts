@@ -1,5 +1,6 @@
 import { DisplayJSONAdapter } from '../helpers/displayJson';
 import { LoadImagesAdapter } from '../helpers/loadImages';
+import { SwitchIntegerAdapter } from '../helpers/switchInteger';
 import { api } from '/scripts/api.js';
 import { app } from '/scripts/app.js';
 /*-------------------------------------------------*/
@@ -10,8 +11,9 @@ class LFManager {
   #DEBUG = false;
   #EXT_PREFIX = 'LFExtension_';
   #NODES_DICT: NodeDictionary = {
-    LF_DisplayJSON: DisplayJSONAdapter(),
-    LF_LoadImages: LoadImagesAdapter(),
+    displayJSON: DisplayJSONAdapter(),
+    loadImages: LoadImagesAdapter(),
+    switchInteger: SwitchIntegerAdapter(),
   };
 
   constructor() {
@@ -22,7 +24,7 @@ class LFManager {
         const node = this.#NODES_DICT[key];
         const name = this.#EXT_PREFIX + key;
         if (node.eventName === 'lf-loadimages') {
-          this.#embedCss('loadImages');
+          this.#embedCss(key);
           app.registerExtension({
             name,
             getCustomWidgets: node.getCustomWidgets,
