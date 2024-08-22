@@ -7,10 +7,10 @@ class LF_SwitchInteger:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "on_true": ("INT", {"default": 0}),
-                "on_false": ("INT", {"default": 0}),
-                "boolean": ("BOOLEAN", {"default": False}),
-            },
+            "on_true": ("INT", {"default": 0, "tooltip": "Value to return if the boolean condition is true."}),
+            "on_false": ("INT", {"default": 0, "tooltip": "Value to return if the boolean condition is false."}),
+            "boolean": ("BOOLEAN", {"default": False, "tooltip": "Boolean condition to switch between 'on_true' and 'on_false' values."}),
+        },
             "hidden": { "node_id": "UNIQUE_ID" }
         }
 
@@ -32,4 +32,4 @@ NODE_CLASS_MAPPINGS = {
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_SwitchInteger": "Switch Integer",
-}
+} 

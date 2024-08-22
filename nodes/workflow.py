@@ -7,12 +7,12 @@ class LF_Lora2Prompt:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "text": ("STRING", {"multiline": True, "label": "Input Text with LoRAs"}),
-                "separator": ("STRING", { "default": "SEP", "label": "Keywords separator"}),
-                "weight": ("FLOAT", { "default": 0.5, "label": "LoRAs weight"}),
-                "weight_placeholder": ("STRING", { "default": "wwWEIGHTww", "label": "Weight placeholder"}),
+                "text": ("STRING", {"multiline": True, "label": "Input Text with LoRAs", "tooltip": "The input text containing LoRa tags. These tags will be processed and replaced with extracted keywords."}),
+                "separator": ("STRING", { "default": "SEP", "label": "Keywords separator", "tooltip": "Character(s) used to separate keywords within the name of a single LoRa file. Helps in extracting individual keywords."}),
+                "weight": ("FLOAT", { "default": 0.5, "label": "LoRAs weight", "tooltip": "A weight value associated with LoRa tags, which may influence processing or output significance."}),
+                "weight_placeholder": ("STRING", { "default": "wwWEIGHTww", "label": "Weight placeholder", "tooltip": "A placeholder within LoRa tags that gets replaced with the actual weight value during processing."}),
             }
-        }
+        } 
 
     RETURN_TYPES = ("STRING", "STRING",)
     RETURN_NAMES = ("prompt", "loras",)
@@ -87,8 +87,8 @@ class LF_LoraName2Prompt:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "file_name": ("STRING", {"multiline": True, "label": "LoRA file name"}),
-                "separator": ("STRING", { "default": "SEP", "label": "Keywords separator"}),
+                "file_name": ("STRING", {"multiline": True, "label": "LoRA file name", "label": "LoRA file name."}),
+                "separator": ("STRING", { "default": "SEP", "label": "Keywords separator", "tooltip": "String separating each keyword in a LoRA filename."}),
             }
         }
 
@@ -113,7 +113,7 @@ class LF_SeedGenerator:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "global_seed": ("INT", {"default": 0}),
+                "global_seed": ("INT", {"default": 0, "tooltip": "Seed value from which the other seeds will be progressively increased."}),
             }
         }
     RETURN_TYPES = ("INT",) * 30
@@ -128,32 +128,32 @@ class LF_WorkflowSettings:
     @classmethod
     def INPUT_TYPES(cls):
         return {
-            "required": {
-                "drawing_board": ("BOOLEAN", {"default": False, "label": "Drawing board?"}),
-                "drawing_board_plus": ("STRING", {"default": "", "multiline": True, "label": "Drawing board +"}),
-                "drawing_board_minus": ("STRING", {"default": "", "multiline": True, "label": "Drawing board -"}),
-                "drawing_board_loras": ("STRING", {"default": "", "multiline": True, "label": "Drawing board LoRAs"}),
-                "random_seed": ("BOOLEAN", {"default": False, "label": "Random seed?"}),
-                "fixed_seed":  ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "label": "Fixed seed"}),
-                "batch_size": ("INT", {"default": 4, "label": "Batch size"}),
-                "random_framing": ("BOOLEAN", {"default": False, "label": "Random framing?"}),
-                "random_pose": ("BOOLEAN", {"default": False, "label": "Random pose?"}),
-                "random_character": ("BOOLEAN", {"default": False, "label": "Random character?"}),
-                "random_outfit": ("BOOLEAN", {"default": False, "label": "Random outfit?"}),
-                "random_location": ("BOOLEAN", {"default": False, "label": "Random location?"}),
-                "random_style": ("BOOLEAN", {"default": False, "label": "Random style?"}),
-                "character_selector": ("INT", {"default": 0, "label": "Character selector"}),
-                "outfit_selector": ("INT", {"default": 0, "label": "Outfit selector"}),
-                "location_selector": ("INT", {"default": 0, "label": "Location selector"}),
-                "style_selector": ("INT", {"default": 0, "label": "Style selector"}),
-                "square_format": ("BOOLEAN", {"default": False, "label": "Square format?"}),
-                "xtra": ("BOOLEAN", {"default": False, "label": "Xtra?"}),
-                "llm_prompt": ("BOOLEAN", {"default": False, "label": "LLM Prompt?"}),
-                "character_lora_weight": ("FLOAT", {"default": 1.0, "label": "Character LoRA weight", "min": -10.0, "max": 10.0, "step": 0.1}),
-                "additional_loras_weight": ("FLOAT", {"default": 0.5, "label": "Additional LoRAs weight", "min": -10.0, "max": 10.0, "step": 0.1}),
-                "custom_images_urls": ("STRING", {"default": "", "multiline": True, "label": "Custom images URLs"}),
-                "config_json_path": ("STRING", {"default": "", "multiline": True, "label": "Config JSON path"}),
-                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF}),
+           "required": {
+               "drawing_board": ("BOOLEAN", {"default": False, "label": "Drawing board?", "tooltip": "Enables or disables the drawing board mode (alternative prompt)."}),
+               "drawing_board_plus": ("STRING", {"default": "", "multiline": True, "label": "Drawing board +", "tooltip": "Positive prompt of the drawing board."}),
+               "drawing_board_minus": ("STRING", {"default": "", "multiline": True, "label": "Drawing board -", "tooltip": "Negative prompt of the drawing board."}),
+               "drawing_board_loras": ("STRING", {"default": "", "multiline": True, "label": "Drawing board LoRAs", "tooltip": "LoRA tags specific to the drawing board functionality."}),
+               "random_seed": ("BOOLEAN", {"default": False, "label": "Random seed?", "tooltip": "Whether to use the random seed or the fixed seed."}),
+               "fixed_seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "label": "Fixed seed", "tooltip": "Set a fixed seed value for deterministic operations."}),
+               "batch_size": ("INT", {"default": 4, "label": "Batch size", "tooltip": "Number of items to process in a batch."}),
+               "random_framing": ("BOOLEAN", {"default": False, "label": "Random framing?", "tooltip": "Enable random framing for dynamic compositions."}),
+               "random_pose": ("BOOLEAN", {"default": False, "label": "Random pose?", "tooltip": "Enable random poses for characters."}),
+               "random_character": ("BOOLEAN", {"default": False, "label": "Random character?", "tooltip": "Select characters randomly."}),
+               "random_outfit": ("BOOLEAN", {"default": False, "label": "Random outfit?", "tooltip": "Randomly assign outfits to characters."}),
+               "random_location": ("BOOLEAN", {"default": False, "label": "Random location?", "tooltip": "Randomly select locations for scenes."}),
+               "random_style": ("BOOLEAN", {"default": False, "label": "Random style?", "tooltip": "Apply random styles to images."}),
+               "character_selector": ("INT", {"default": 0, "label": "Character selector", "tooltip": "Select a specific character index."}),
+               "outfit_selector": ("INT", {"default": 0, "label": "Outfit selector", "tooltip": "Select a specific outfit index."}),
+               "location_selector": ("INT", {"default": 0, "label": "Location selector", "tooltip": "Select a specific location index."}),
+               "style_selector": ("INT", {"default": 0, "label": "Style selector", "tooltip": "Select a specific style index."}),
+               "square_format": ("BOOLEAN", {"default": False, "label": "Square format?", "tooltip": "Force output images to square format."}),
+               "xtra": ("BOOLEAN", {"default": False, "label": "Xtra?", "tooltip": "Enable extra features."}),
+               "llm_prompt": ("BOOLEAN", {"default": False, "label": "LLM Prompt?", "tooltip": "Use Language Model prompts."}),
+               "character_lora_weight": ("FLOAT", {"default": 1.0, "label": "Character LoRA weight", "min": -10.0, "max": 10.0, "step": 0.1, "tooltip": "Weighting for character-related LoRAs."}),
+               "additional_loras_weight": ("FLOAT", {"default": 0.5, "label": "Additional LoRAs weight", "min": -10.0, "max": 10.0, "step": 0.1, "tooltip": "Weighting for additional LoRAs."}),
+               "custom_images_urls": ("STRING", {"default": "", "multiline": True, "label": "Custom images URLs", "tooltip": "IMG2IMG: URL for using a custom image as a base."}),
+               "config_json_path": ("STRING", {"default": "", "multiline": True, "label": "Config JSON path", "tooltip": "Path to configuration JSON file."}),
+               "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "label": "Seed", "tooltip": "Seed value for randomization."}),
             }
         }
     

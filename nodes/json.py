@@ -10,7 +10,7 @@ class LF_DisplayJSON:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "json": ("JSON",),
+                "json": ("JSON", { "tooltip": "JSON object to display."}),
             },
             "hidden": { "node_id": "UNIQUE_ID" } 
         }        
@@ -32,8 +32,8 @@ class LF_GetRandomKeyFromJSON:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF}),
-                "json": ("JSON",),
+                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF}, { "tooltip": "The seed for the random pick."}),
+                "json": ("JSON", { "tooltip": "JSON object from which a random key will be picked."},),
             }
         }
 
@@ -53,8 +53,8 @@ class LF_GetValueFromJSON:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "json": ("JSON", {"label": "JSON Object"}),
-                "key": ("STRING", {"label": "Key to select"})
+                "json": ("JSON", {"tooltip": "JSON Object."}),
+                "key": ("STRING", {"tooltip": "Key to select."})
             }
         }
 
@@ -118,7 +118,7 @@ class LF_LoadLocalJSON:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "url": ("STRING", {"default": ""}),
+                "url": ("STRING", {"default": "", "tooltip": "The local URL where the JSON file is stored (i.e.: file://C:/myjson.json)."}),
             },
         }
 
