@@ -62,6 +62,9 @@ declare interface LoadImagesDictionaryEntry extends BaseNodeDictionaryEntry {
     };
   };
 }
+declare interface LoadImagesWidget extends HTMLElement {
+  refresh: () => void;
+}
 declare type NodeDictionaryEntry = DisplayJSONDictionaryEntry | LoadImagesDictionaryEntry;
 declare type EventCallback = (e: CustomEvent<NodePayload>) => void;
 declare type UpdateCallback = (node: NodeType) => void;

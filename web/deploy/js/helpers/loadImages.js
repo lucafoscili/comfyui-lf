@@ -34,8 +34,7 @@ const updateCb = (node) => {
     }
     const existingWidget = node?.widgets.find((w) => w.name === widgetName);
     if (existingWidget) {
-        const element = existingWidget.element;
-        element.replaceChild(createWidget(props), element.firstChild);
+        existingWidget.element.refresh();
     }
     else {
         const widget = app.widgets.IMAGE_PREVIEW_B64(node, widgetName).widget;
@@ -67,9 +66,15 @@ export const LoadImagesAdapter = () => {
 };
 function createWidget(props) {
     const hasImages = !!props?.payload?.images?.length;
-    const content = hasImages ? drawGrid(props.payload.images) : drawDoge();
     const domWidget = document.createElement('div');
-    domWidget.appendChild(content);
+    domWidget.refresh = () => {
+        if (domWidget.firstChild) {
+            domWidget.removeChild(domWidget.firstChild);
+        }
+        const content = hasImages ? drawGrid(props.payload.images) : drawDoge();
+        domWidget.appendChild(content);
+    };
+    domWidget.refresh();
     return domWidget;
 }
 function drawGrid(images) {

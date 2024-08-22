@@ -37,8 +37,7 @@ const updateCb = (node: NodeType) => {
 
   const existingWidget = node?.widgets.find((w) => w.name === widgetName);
   if (existingWidget) {
-    const element = existingWidget.element;
-    element.replaceChild(createWidget(props), element.firstChild);
+    (existingWidget.element as unknown as LoadImagesWidget).refresh();
   } else {
     const widget = app.widgets.IMAGE_PREVIEW_B64(node, widgetName).widget;
     widget.serializeValue = false;
@@ -72,9 +71,15 @@ export const LoadImagesAdapter: () => LoadImagesDictionaryEntry = () => {
 
 function createWidget(props: LoadImagesProps) {
   const hasImages = !!props?.payload?.images?.length;
-  const content = hasImages ? drawGrid(props.payload.images) : drawDoge();
-  const domWidget = document.createElement('div');
-  domWidget.appendChild(content);
+  const domWidget = document.createElement('div') as unknown as LoadImagesWidget;
+  domWidget.refresh = () => {
+    if (domWidget.firstChild) {
+      domWidget.removeChild(domWidget.firstChild);
+    }
+    const content = hasImages ? drawGrid(props.payload.images) : drawDoge();
+    domWidget.appendChild(content);
+  };
+  domWidget.refresh();
   return domWidget;
 }
 
