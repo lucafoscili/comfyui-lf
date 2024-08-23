@@ -61,10 +61,7 @@ export const ImageHistogramAdapter = () => {
                             if (domWidget?.firstChild && !timeoutId) {
                                 timeoutId = setTimeout(() => {
                                     const chart = widget.element.querySelector('kul-chart');
-                                    if (chart?.kulSizeX !== '100%') {
-                                        chart.kulSizeX = '100%';
-                                        chart.kulSizeY = '100%';
-                                    }
+                                    chart.refresh();
                                     timeoutId = null;
                                 }, 125);
                             }
@@ -103,8 +100,8 @@ function createWidget(props) {
     chartWidget.kulColors = ['red', 'green', 'blue'];
     chartWidget.kulData = dataset;
     chartWidget.kulSeries = ['Series_0', 'Series_1', 'Series_2'];
-    chartWidget.kulSizeX = '300px';
-    chartWidget.kulSizeY = '200px';
+    chartWidget.kulSizeX = '100%';
+    chartWidget.kulSizeY = '100%';
     chartWidget.kulTypes = ['area'];
     content.appendChild(chartWidget);
     return content;
