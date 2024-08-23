@@ -69,7 +69,11 @@ export const ImageHistogramAdapter: () => ImageHistogramDictionaryEntry = () => 
             try {
               if (domWidget?.firstChild && !timeoutId) {
                 timeoutId = setTimeout(() => {
-                  widget.element.querySelector('kul-chart')!.refresh();
+                  const chart = widget.element.querySelector('kul-chart');
+                  if (chart?.kulSizeX !== '100%') {
+                    chart.kulSizeX = '100%';
+                    chart.kulSizeY = '100%';
+                  }
                   timeoutId = null;
                 }, 125);
               }
@@ -100,18 +104,23 @@ function createWidget(props: ImageHistogramProps) {
   const chartWidget: HTMLKulChartElement = document.createElement('kul-chart');
   chartWidget.classList.add(cssClasses.widget);
   chartWidget.addEventListener('kul-chart-event', ({ detail }) => {
+    window.lfManager.log(`Histogram ready, resizing`, { detail });
+
     const { comp, eventType } = detail;
     if (eventType === 'ready') {
       const refresh = () => {
-        (comp as HTMLKulChartElement).refresh();
+        (comp as HTMLKulChartElement).kulSizeX = '100%';
+        (comp as HTMLKulChartElement).kulSizeY = '100%';
       };
-      setTimeout(refresh, 175);
+      setTimeout(refresh, 1000);
     }
   });
   chartWidget.kulAxis = 'Axis_0';
   chartWidget.kulColors = ['red', 'green', 'blue'];
   chartWidget.kulData = dataset;
   chartWidget.kulSeries = ['Series_0', 'Series_1', 'Series_2'];
+  chartWidget.kulSizeX = '300px';
+  chartWidget.kulSizeY = '200px';
   chartWidget.kulTypes = ['area'];
   content.appendChild(chartWidget);
 

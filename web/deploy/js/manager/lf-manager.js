@@ -27,7 +27,7 @@ class LFManager {
     constructor() {
         _LFManager_instances.add(this);
         _LFManager_CSS_EMBEDDED.set(this, void 0);
-        _LFManager_DEBUG.set(this, true);
+        _LFManager_DEBUG.set(this, false);
         _LFManager_DOM.set(this, document.documentElement);
         _LFManager_EXT_PREFIX.set(this, 'LFExtension_');
         _LFManager_KUL_MANAGER.set(this, void 0);
