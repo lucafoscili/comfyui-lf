@@ -1,3 +1,4 @@
+import random
 import re
 
 category = "LF Nodes/Workflow"
@@ -123,7 +124,52 @@ class LF_SeedGenerator:
     def on_exec(self, global_seed: int):
         seeds = [global_seed + i for i in range(20)] 
         return seeds
+    
+class LF_WallOfText:
+    @classmethod 
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "separator": ("STRING", {"default": ", ", "tooltip": "Character(s) separating each string apart."}),
+                "text_1": ("STRING", {"default": "", "multiline": True, "tooltip": "The first required string."}),
+                "text_2": ("STRING", {"default": "", "multiline": True, "tooltip": "The second required string."}),
+            },
+            "optional": {
+                "text_3": ("STRING", {"default": "", "multiline": True, "tooltip": "The third optional string."}),
+                "text_4": ("STRING", {"default": "", "multiline": True, "tooltip": "The fourth optional string."}),
+                "text_5": ("STRING", {"default": "", "multiline": True, "tooltip": "The fifth optional string."}),
+                "text_6": ("STRING", {"default": "", "multiline": True, "tooltip": "The sixth optional string."}),
+                "text_7": ("STRING", {"default": "", "multiline": True, "tooltip": "The seventh optional string."}),
+                "text_8": ("STRING", {"default": "", "multiline": True, "tooltip": "The eighth optional string."}),
+                "text_9": ("STRING", {"default": "", "multiline": True, "tooltip": "The ninth optional string."}),
+                "text_10": ("STRING", {"default": "", "multiline": True, "tooltip": "The tenth optional string."}),
+                "shuffle_inputs": ("BOOLEAN", {"default": False, "tooltip": "Toggle shuffling of input strings."}),
+                "seed": ("INT", {"default": 0, "tooltip": "Seed to control the randomness of the shuffling."}),
+            } 
+        }
 
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("wall_of_text",)
+    CATEGORY = category
+    FUNCTION = "on_exec"
+
+    def on_exec(self, **kwargs):
+        texts = [kwargs.get(f"text_{i}", "") for i in range(1, 11)]
+        wall_of_text = ""
+        if len(texts) > 1:
+            separator = kwargs.get("separator", "")
+            shuffle_inputs = kwargs.get("shuffle_inputs", False)
+            if shuffle_inputs:
+                import random
+                seed = kwargs.get("seed", 0)
+                random.seed(seed)
+                random.shuffle(texts)
+            wall_of_text = separator.join([text for text in texts if text])
+        else:
+            wall_of_text = texts[0]
+
+        return (wall_of_text,)
+    
 class LF_WorkflowSettings:
     @classmethod
     def INPUT_TYPES(cls):
@@ -171,11 +217,13 @@ NODE_CLASS_MAPPINGS = {
     "LF_Lora2Prompt": LF_Lora2Prompt,
     "LF_LoraName2Prompt": LF_LoraName2Prompt,
     "LF_SeedGenerator": LF_SeedGenerator,
+    "LF_WallOfText": LF_WallOfText,
     "LF_WorkflowSettings": LF_WorkflowSettings,
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_Lora2Prompt": "Convert prompt and LoRAs",
     "LF_LoraName2Prompt": "Convert LoRA filename to prompt",
     "LF_SeedGenerator": "Generate N unique seeds",
+    "LF_WallOfText": "Wall of text (string concatenate)",
     "LF_WorkflowSettings": "Workflow settings",
 }
