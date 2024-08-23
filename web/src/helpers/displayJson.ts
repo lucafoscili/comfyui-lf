@@ -1,5 +1,4 @@
 import { app } from '/scripts/app.js';
-import { ComfyWidgets } from '/scripts/widgets.js';
 
 const widgetName = 'json_value';
 const eventName: EventNames = 'lf-displayjson';
@@ -9,9 +8,8 @@ const cssClasses = {
 };
 
 const eventCb = (event: CustomEvent<DisplayJSONPayload>) => {
-  if (window.lfManager.getDebug()) {
-    console.log(`Event '${eventName}' Callback`, event);
-  }
+  window.lfManager.log(`Event '${eventName}' received`, { event }, 'success');
+
   const payload = event.detail;
   const node: NodeType = app.graph.getNodeById(+(payload.id || app.runningNodeId));
   if (node) {
@@ -29,13 +27,11 @@ const eventCb = (event: CustomEvent<DisplayJSONPayload>) => {
 };
 
 const updateCb = (node: NodeType) => {
-  if (window.lfManager.getDebug()) {
-    console.log(`Updating '${eventName}' Callback`, node);
-  }
+  window.lfManager.log(`Updating '${eventName}'`, { node });
 
   const existingWidget = node?.widgets?.find((w) => w.name === widgetName);
   if (existingWidget) {
-    (existingWidget.element as DisplayJsonWidget).refresh();
+    (existingWidget.element as DOMWidget).refresh();
   } else {
     const widget = app.widgets.KUL_CODE(node, widgetName).widget;
     widget.serializeValue = false;
@@ -51,12 +47,13 @@ export const DisplayJSONAdapter: () => DisplayJSONDictionaryEntry = () => {
     getCustomWidgets: () => {
       return {
         KUL_CODE(node, name) {
-          if (window.lfManager.getDebug()) {
-            console.log(`Adding 'KUL_CODE' custom widget`, node);
-          }
+          window.lfManager.log(`Adding KUL_CODE custom widget`, { node });
+
           const props = node.lfProps as DisplayJSONProps;
-          const domWidget = document.createElement('div') as DisplayJsonWidget;
+          const domWidget = document.createElement('div') as DOMWidget;
           domWidget.refresh = () => {
+            window.lfManager.log(`Refreshing KUL_CODE custom widget`, { domWidget });
+
             if (domWidget.firstChild) {
               domWidget.removeChild(domWidget.firstChild);
             }

@@ -64,6 +64,7 @@ function updateImports(filePath) {
 const files = searchFiles(baseDir);
 files.forEach(updateImports);
 
+console.log(logColor, '*---*');
 console.log(
   logColor,
   'All done! Look at you, making your imports fancy with those .js extensions!',

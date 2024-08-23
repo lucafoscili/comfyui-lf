@@ -1,6 +1,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 const logColor = '\x1b[34m%s\x1b[0m'; // blue
+
 console.log(logColor, '*---------------------------------*');
 console.log(logColor, '*       C o p y   t y p e s       *');
 console.log(logColor, '*---------------------------------*');
@@ -18,26 +19,28 @@ async function copyKetchupTypes() {
       'dist',
       'types',
     );
-    const destDir = path.join(__dirname, '..', 'types');
+    const destDir = path.join(__dirname, '..', 'types', 'ketchup-lite');
+
     console.log(logColor, '*---*');
     console.log(logColor, 'Source dir:' + sourceDir);
     console.log(logColor, 'Destination dir:' + destDir);
     console.log(logColor, '*---*');
 
-    const files = await fs
-      .readdir(sourceDir, { withFileTypes: true })
-      .then((dirents) =>
-        dirents.filter((dirent) => dirent.isFile() && dirent.name.endsWith('.d.ts')),
-      );
+    const dirents = await fs.readdir(sourceDir, { withFileTypes: true });
 
     await fs.ensureDir(destDir);
 
-    for (const file of files) {
-      const srcPath = path.join(sourceDir, file.name);
-      const destPath = path.join(destDir, file.name);
-      await fs.copy(srcPath, destPath);
-      console.log(logColor, `Copied ${file.name} to ${destPath}`);
-      console.log(' ');
+    for (const dirent of dirents) {
+      const srcPath = path.join(sourceDir, dirent.name);
+      const destPath = path.join(destDir, dirent.name);
+      if (dirent.isDirectory()) {
+        await copyKetchupTypesRecursive(srcPath, destPath);
+        console.log(logColor, `Directory ${dirent.name} created.`);
+      } else {
+        await fs.copy(srcPath, destPath);
+        console.log(logColor, '*---*');
+        console.log(logColor, `Copied ${dirent.name} to ${destPath}`);
+      }
     }
 
     console.log(logColor, '*---*');
@@ -45,6 +48,24 @@ async function copyKetchupTypes() {
   } catch (error) {
     console.log(logColor, '*---*');
     console.error(logColor, `Failed to copy ketchup-lite types: ${error.message}`);
+  }
+}
+
+async function copyKetchupTypesRecursive(srcDir, destDir) {
+  const dirents = await fs.readdir(srcDir, { withFileTypes: true });
+  await fs.ensureDir(destDir);
+
+  for (const dirent of dirents) {
+    const srcPath = path.join(srcDir, dirent.name);
+    const destPath = path.join(destDir, dirent.name);
+    if (dirent.isDirectory()) {
+      await copyKetchupTypesRecursive(srcPath, destPath);
+      console.log(logColor, `Directory ${dirent.name} created.`);
+    } else {
+      await fs.copy(srcPath, destPath);
+      console.log(logColor, '*---*');
+      console.log(logColor, `Copied ${dirent.name} to ${destPath}`);
+    }
   }
 }
 

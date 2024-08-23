@@ -8,9 +8,7 @@ const cssClasses = {
     image: 'lf-loadimages__image',
 };
 const eventCb = (event) => {
-    if (window.lfManager.getDebug()) {
-        console.log(`Event '${eventName}' Callback`, event);
-    }
+    window.lfManager.log(`Event '${eventName}' received`, { event }, 'success');
     const payload = event.detail;
     const node = app.graph.getNodeById(+(payload.id || app.runningNodeId));
     if (node) {
@@ -28,9 +26,7 @@ const eventCb = (event) => {
     }
 };
 const updateCb = (node) => {
-    if (window.lfManager.getDebug()) {
-        console.log(`Updating '${eventName}' Callback`, node);
-    }
+    window.lfManager.log(`Updating '${eventName}'`, { node });
     const existingWidget = node?.widgets?.find((w) => w.name === widgetName);
     if (existingWidget) {
         existingWidget.element.refresh();
@@ -48,9 +44,7 @@ export const LoadImagesAdapter = () => {
         getCustomWidgets: () => {
             return {
                 IMAGE_PREVIEW_B64(node, name) {
-                    if (window.lfManager.getDebug()) {
-                        console.log(`Adding 'IMAGE_PREVIEW_B64' custom widget`, node);
-                    }
+                    window.lfManager.log(`Adding 'IMAGE_PREVIEW_B64' custom widget`, { node });
                     const props = node.lfProps;
                     const domWidget = createWidget(props);
                     const widget = node.addDOMWidget(name, widgetName, domWidget);
@@ -67,6 +61,7 @@ function createWidget(props) {
     const hasImages = !!props?.payload?.images?.length;
     const domWidget = document.createElement('div');
     domWidget.refresh = () => {
+        window.lfManager.log(`Refreshing IMAGE_PREVIEW_B64 custom widget`, { domWidget });
         if (domWidget.firstChild) {
             domWidget.removeChild(domWidget.firstChild);
         }

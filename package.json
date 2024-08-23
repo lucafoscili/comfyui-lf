@@ -4,13 +4,14 @@
   "private": false,
   "scripts": {
     "setup": "npm install && node ./web/src/scripts/copy-declarations.js",
-    "prebuild": "rimraf web/js",
+    "prebuild": "rimraf web/deploy",
     "build:scss": "node ./web/src/scripts/compile-scss.js",
     "build:ts": "tsc",
     "build": "npm run build:scss && npm run build:ts",
     "postbuild": "node ./web/src/scripts/fix-imports.js && node ./web/src/scripts/get-ketchup-lite.js"
   },
   "devDependencies": {
+    "@types/node": "^22.5.0",
     "fs-extra": "^11.2.0",
     "ketchup-lite": "^1.0.5",
     "rimraf": "^6.0.0",

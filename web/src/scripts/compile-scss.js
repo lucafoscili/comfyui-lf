@@ -11,9 +11,11 @@ const sassDir = path.join(__dirname, '../../../node_modules/.bin/sass');
 const scssDir = path.join(__dirname, '../styles');
 const cssDir = path.join(__dirname, '../../deploy/css');
 
+console.log(logColor, '*---*');
 console.log(logColor, 'Sass dir: ' + sassDir);
 console.log(logColor, 'Scss dir: ' + scssDir);
 console.log(logColor, 'Css dir: ' + cssDir);
+console.log(logColor, '*---*');
 
 if (!fs.existsSync(cssDir)) {
   fs.mkdirSync(cssDir, { recursive: true });
@@ -27,10 +29,12 @@ const scssFiles = fs
 // Compile each SCSS file with output path
 scssFiles.forEach((file) => {
   const cssFile = file.replace(/\.scss$/, '.css').replace(scssDir, cssDir);
+  console.log(logColor, '*---*');
   console.log(logColor, `Compiling ${file} to ${cssFile}`);
   try {
     execSync(`${sassDir} ${file} ${cssFile}`, { stdio: 'inherit' });
   } catch (error) {
+    console.log(logColor, '*---*');
     console.error(logColor, `Error compiling ${file}:`, error);
   }
 });

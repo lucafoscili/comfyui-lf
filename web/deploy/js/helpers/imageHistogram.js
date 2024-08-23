@@ -1,12 +1,12 @@
 import { app } from '/scripts/app.js';
-const widgetName = 'json_value';
-const eventName = 'lf-displayjson';
+const widgetName = 'histogram';
+const eventName = 'lf-imagehistogram';
 const cssClasses = {
-    wrapper: 'lf-displayjson',
-    widget: 'lf-displayjson__widget',
+    wrapper: 'lf-imagehistogram',
+    widget: 'lf-imagehistogram__widget',
 };
 const eventCb = (event) => {
-    window.lfManager.log(`Event '${eventName}' received`, { event }, 'success');
+    window.lfManager.log(`Event '${eventName}' received`, { event });
     const payload = event.detail;
     const node = app.graph.getNodeById(+(payload.id || app.runningNodeId));
     if (node) {
@@ -30,23 +30,24 @@ const updateCb = (node) => {
         existingWidget.element.refresh();
     }
     else {
-        const widget = app.widgets.KUL_CODE(node, widgetName).widget;
+        const widget = app.widgets.KUL_CHART(node, widgetName).widget;
         widget.serializeValue = false;
     }
     requestAnimationFrame(() => {
         app.graph.setDirtyCanvas(true, false);
     });
 };
-export const DisplayJSONAdapter = () => {
+export const ImageHistogramAdapter = () => {
     return {
         getCustomWidgets: () => {
+            let timeoutId = null;
             return {
-                KUL_CODE(node, name) {
-                    window.lfManager.log(`Adding KUL_CODE custom widget`, { node });
+                KUL_CHART(node, name) {
+                    window.lfManager.log(`Adding 'KUL_CHART' custom widget`, { node }, 'success');
                     const props = node.lfProps;
                     const domWidget = document.createElement('div');
                     domWidget.refresh = () => {
-                        window.lfManager.log(`Refreshing KUL_CODE custom widget`, { domWidget });
+                        window.lfManager.log(`Refreshing KUL_CHART custom widget`, { domWidget });
                         if (domWidget.firstChild) {
                             domWidget.removeChild(domWidget.firstChild);
                         }
@@ -55,6 +56,19 @@ export const DisplayJSONAdapter = () => {
                     };
                     domWidget.refresh();
                     const widget = node.addDOMWidget(name, widgetName, domWidget);
+                    node.onResize = (number) => {
+                        try {
+                            if (domWidget?.firstChild && !timeoutId) {
+                                timeoutId = setTimeout(() => {
+                                    widget.element.querySelector('kul-chart').refresh();
+                                    timeoutId = null;
+                                }, 125);
+                            }
+                        }
+                        catch (error) {
+                            window.lfManager.log('Whoops! It seems there is no chart. :V', { error, number }, 'error');
+                        }
+                    };
                     return { widget };
                 },
             };
@@ -65,13 +79,22 @@ export const DisplayJSONAdapter = () => {
     };
 };
 function createWidget(props) {
-    const value = props?.payload?.json;
+    const dataset = props?.payload?.dataset;
     const content = document.createElement('div');
     content.classList.add(cssClasses.wrapper);
-    const codeWidget = document.createElement('kul-code');
-    codeWidget.classList.add(cssClasses.widget);
-    codeWidget.kulLanguage = 'json';
-    codeWidget.kulValue = value ? JSON.stringify(value, null, 2) : 'Wow. Such empty!';
-    content.appendChild(codeWidget);
+    const chartWidget = document.createElement('kul-chart');
+    chartWidget.classList.add(cssClasses.widget);
+    chartWidget.addEventListener('kul-chart-event', ({ detail }) => {
+        const { comp, eventType } = detail;
+        if (eventType === 'ready') {
+            comp.refresh();
+        }
+    });
+    chartWidget.kulAxis = 'Axis_0';
+    chartWidget.kulColors = ['red', 'green', 'blue'];
+    chartWidget.kulData = dataset;
+    chartWidget.kulSeries = ['Series_0', 'Series_1', 'Series_2'];
+    chartWidget.kulTypes = ['area'];
+    content.appendChild(chartWidget);
     return content;
 }

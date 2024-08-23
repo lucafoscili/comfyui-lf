@@ -1,8 +1,13 @@
 # LF Nodes
 
 This repository contains custom nodes that I use in my workflow.
+It's just a side project that I'm developing in my free time while I'm waiting for generations to complete!
 
 ## Nodes
+
+### Analysis Nodes (`analysis.py`)
+
+- **ImageHistogram**: Displays a widget that plots the RGB channels of a photo in tensor format on a line chart.
 
 ### JSON Nodes (`json.py`)
 
@@ -37,17 +42,21 @@ This repository contains custom nodes that I use in my workflow.
 
 ## Installation
 
-- Go to the `ComfyUI/custom_nodes` folder
+### Manager
+
+- Open ComfyUI Manager.
+- Search LF Nodes.
+- Click install.
+
+### Manual
+
+- Go to the `ComfyUI/custom_nodes` folder.
 - Open a terminal.
-- Copy and Paste this command `git clone https://github.com/lucafoscili/comfyui-lf.git`
-
-## Usage
-
-To use these nodes in ComfyUI, ensure they are properly installed and recognized within your ComfyUI environment. Each node comes with predefined input and output types, which should be connected appropriately within your workflow to achieve the desired functionality.
+- Copy and Paste this command `git clone https://github.com/lucafoscili/comfyui-lf.git`.
 
 ## Contributing
 
-Contributions to this repository are welcome. Please feel free to submit pull requests or open issues for discussion.
+Contributions to this repository are welcome, feel free to submit pull requests or open issues for discussion!
 
 ## License
 

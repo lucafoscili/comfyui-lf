@@ -6,7 +6,6 @@
 /*   A.I. generated, not reliable                  */
 /*-------------------------------------------------*/
 
-declare module '../ketchup-lite/loader.js';
 declare namespace LiteGraph {
   export const NODE_TITLE_HEIGHT: number;
   // Add other properties or methods of LiteGraph here if needed

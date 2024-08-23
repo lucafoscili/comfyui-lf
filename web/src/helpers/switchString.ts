@@ -5,9 +5,8 @@ const widgetName = 'display_boolean';
 const eventName: EventNames = 'lf-switchstring';
 
 const eventCb = (event: CustomEvent<SwitchStringPayload>) => {
-  if (window.lfManager.getDebug()) {
-    console.log(`Event '${eventName}' Callback`, event);
-  }
+  window.lfManager.log(`Event '${eventName}' received`, { event }, 'success');
+
   const payload = event.detail;
   const node: NodeType = app.graph.getNodeById(+(payload.id || app.runningNodeId));
   if (node) {
@@ -25,10 +24,9 @@ const eventCb = (event: CustomEvent<SwitchStringPayload>) => {
 };
 
 const updateCb = (node: NodeType) => {
+  window.lfManager.log(`Updating '${eventName}'`, { node });
+
   const props = node.lfProps as SwitchStringProps;
-  if (window.lfManager.getDebug()) {
-    console.log(`Updating '${eventName}' Callback`, node);
-  }
   const value = props?.payload?.bool ? 'True!' : 'False!';
 
   const existingWidget = node.widgets?.find((w) => w.name === widgetName);

@@ -167,6 +167,9 @@ node_modules/
 *.tsbuildinfo
 
 # Kethup Lite
-components.d.ts
-ketchup-lite.d.ts
-stencil-public-runtime.d.ts
+web/src/types/ketchup-lite
+web/deploy/assets/media
+web/deploy/assets/svg/*
+
+# Kethup Lite (add icons to keep here)
+!web/deploy/assets/svg/content_copy*

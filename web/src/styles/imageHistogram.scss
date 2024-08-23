@@ -1,0 +1,12 @@
+.lf-imagehistogram {
+  background: var(--kul-background-color);
+  height: 100%;
+  overflow: auto;
+  position: relative;
+  width: 100%;
+
+  &__widget {
+    height: 100%;
+    width: 100%;
+  }
+}
