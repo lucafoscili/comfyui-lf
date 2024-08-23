@@ -63,6 +63,7 @@ class LF_WorkflowSettings:
 
 NODE_CLASS_MAPPINGS = {
     "LF_ControlPanel": LF_ControlPanel,
+    "LF_WorkflowSettings": LF_WorkflowSettings,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
