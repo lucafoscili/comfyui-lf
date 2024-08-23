@@ -6,7 +6,9 @@
   width: 100%;
 }
 .lf-imagehistogram__widget {
+  min-height: 200px;
   height: 100%;
+  min-width: 300px;
   width: 100%;
 }
 

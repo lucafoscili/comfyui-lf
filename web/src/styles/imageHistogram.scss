@@ -6,7 +6,9 @@
   width: 100%;
 
   &__widget {
+    min-height: 200px;
     height: 100%;
+    min-width: 300px;
     width: 100%;
   }
 }

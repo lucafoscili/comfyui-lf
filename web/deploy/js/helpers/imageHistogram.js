@@ -56,23 +56,6 @@ export const ImageHistogramAdapter = () => {
                     };
                     domWidget.refresh();
                     const widget = node.addDOMWidget(name, widgetName, domWidget);
-                    node.onResize = (number) => {
-                        try {
-                            if (domWidget?.firstChild && !timeoutId) {
-                                timeoutId = setTimeout(() => {
-                                    const chart = widget.element.querySelector('kul-chart');
-                                    if (chart?.kulSizeX !== '100%') {
-                                        chart.kulSizeX = '100%';
-                                        chart.kulSizeY = '100%';
-                                    }
-                                    timeoutId = null;
-                                }, 125);
-                            }
-                        }
-                        catch (error) {
-                            window.lfManager.log('Whoops! It seems there is no chart. :V', { error, number }, 'error');
-                        }
-                    };
                     return { widget };
                 },
             };
@@ -103,8 +86,8 @@ function createWidget(props) {
     chartWidget.kulColors = ['red', 'green', 'blue'];
     chartWidget.kulData = dataset;
     chartWidget.kulSeries = ['Series_0', 'Series_1', 'Series_2'];
-    chartWidget.kulSizeX = '300px';
-    chartWidget.kulSizeY = '200px';
+    chartWidget.kulSizeX = '100%';
+    chartWidget.kulSizeY = '100%';
     chartWidget.kulTypes = ['area'];
     content.appendChild(chartWidget);
     return content;
