@@ -1,8 +1,13 @@
 # LF Nodes
 
 This repository contains custom nodes that I use in my workflow.
+It's just a side project that I'm developing in my free time while I'm waiting for generations to complete!
 
 ## Nodes
+
+### Analysis Nodes (`analysis.py`)
+
+- **ImageHistogram**: Displays a widget that plots the RGB channels of a photo in tensor format on a line chart.
 
 ### JSON Nodes (`json.py`)
 
@@ -14,11 +19,11 @@ This repository contains custom nodes that I use in my workflow.
 ### Large Language Model Nodes (`llm.py`)
 
 - **CharacterImpersonator**: Utilizes a large language model to generate text responses as if coming from a character described by a provided biography. This node can be used for creative writing, role-playing scenarios, or generating dynamic content based on character traits.
-- **ImageClassifier**: Utilizes a large language model to generate descriptions about images portraying characters.
+- **ImageClassifier**: Utilizes a large language model to generate descriptions of images portraying characters.
 
 ### Loader Nodes (`loaders.py`)
 
-- **LoadImages**: Node used to load multiple images from disk given a directory. Optionally it can fetch images from subdirectories.
+- **LoadImages**: Node used to load multiple images from the disk given a directory. Optionally, it can fetch images from subdirectories.
 
 ### Logic Nodes (`logic.py`)
 
@@ -32,21 +37,26 @@ This repository contains custom nodes that I use in my workflow.
 - **Lora2Prompt**: Converts a prompt and LoRAs to a formatted string.
 - **LoraName2Prompt**: Processes a LoRA file name to extract keywords and count them. This node is useful for preparing prompts based on LoRA file names.
 - **SeedGenerator**: Generates a series of unique seeds based on a global seed value. This node is useful for creating reproducible random sequences in workflows.
+- **WallOfText**: Concatenates up to 10 strings, with the optional toggle to shuffle the order of concatenation.
 - **WorkflowSettings**: Configures various settings for a workflow, including options for randomization, selection criteria, and integration with large language models. This node serves as a central configuration point for complex workflows.
 
 ## Installation
 
-- Go to `ComfyUI/custom_nodes` folder
+### Manager
+
+- Open ComfyUI Manager.
+- Search LF Nodes.
+- Click install.
+
+### Manual
+
+- Go to the `ComfyUI/custom_nodes` folder.
 - Open a terminal.
-- Copy and Paste this command `git clone https://github.com/lucafoscili/comfyui-lf.git`
-
-## Usage
-
-To use these nodes in ComfyUI, ensure they are properly installed and recognized within your ComfyUI environment. Each node comes with predefined input and output types, which should be connected appropriately within your workflow to achieve the desired functionality.
+- Copy and Paste this command `git clone https://github.com/lucafoscili/comfyui-lf.git`.
 
 ## Contributing
 
-Contributions to this repository are welcome. Please feel free to submit pull requests or open issues for discussion.
+Contributions to this repository are welcome, feel free to submit pull requests or open issues for discussion!
 
 ## License
 

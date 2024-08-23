@@ -4,12 +4,13 @@
   overflow: auto;
 }
 .lf-loadimages__doge {
-  background-color: black;
-  color: white;
-  font-family: "Courier New", monospace;
-  font-size: 12px;
+  background: var(--kul-background-color);
+  color: var(--kul-text-color);
+  font-family: var(--kul-font-family-monospace);
+  font-size: var(--kul-font-size);
   max-height: 100%;
   max-width: 100%;
+  text-align: center;
   white-space: pre;
 }
 .lf-loadimages__grid {

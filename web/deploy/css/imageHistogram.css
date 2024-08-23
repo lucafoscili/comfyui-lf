@@ -1,0 +1,13 @@
+.lf-imagehistogram {
+  background: var(--kul-background-color);
+  height: 100%;
+  overflow: auto;
+  position: relative;
+  width: 100%;
+}
+.lf-imagehistogram__widget {
+  height: 100%;
+  width: 100%;
+}
+
+/*# sourceMappingURL=imageHistogram.css.map */

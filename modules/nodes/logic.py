@@ -91,7 +91,7 @@ class LF_SwitchString:
 
     RETURN_TYPES = ("STRING",)
     CATEGORY = category
-    FUNCTION = "switch_string"
+    FUNCTION = "on_exec"
 
     def on_exec(self, node_id, on_true: str, on_false: str, boolean: bool):
         

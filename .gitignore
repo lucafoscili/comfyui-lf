@@ -165,3 +165,11 @@ node_modules/
 
 # TS
 *.tsbuildinfo
+
+# Kethup Lite
+web/src/types/ketchup-lite
+web/deploy/assets/media
+web/deploy/assets/svg/*
+
+# Kethup Lite (add icons to keep here)
+!web/deploy/assets/svg/content_copy*

@@ -10,9 +10,8 @@ const cssClasses = {
 };
 
 const eventCb = (event: CustomEvent<LoadImagesPayload>) => {
-  if (window.lfManager.getDebug()) {
-    console.log(`Event '${eventName}' Callback`, event);
-  }
+  window.lfManager.log(`Event '${eventName}' received`, { event }, 'success');
+
   const payload = event.detail;
   const node: NodeType = app.graph.getNodeById(+(payload.id || app.runningNodeId));
   if (node) {
@@ -30,14 +29,11 @@ const eventCb = (event: CustomEvent<LoadImagesPayload>) => {
 };
 
 const updateCb = (node: NodeType) => {
-  const props = node.lfProps as LoadImagesProps;
-  if (window.lfManager.getDebug()) {
-    console.log(`Updating '${eventName}' Callback`, node);
-  }
+  window.lfManager.log(`Updating '${eventName}'`, { node });
 
-  const existingWidget = node?.widgets.find((w) => w.name === widgetName);
+  const existingWidget = node?.widgets?.find((w) => w.name === widgetName);
   if (existingWidget) {
-    (existingWidget.element as unknown as LoadImagesWidget).refresh();
+    (existingWidget.element as DOMWidget).refresh();
   } else {
     const widget = app.widgets.IMAGE_PREVIEW_B64(node, widgetName).widget;
     widget.serializeValue = false;
@@ -53,9 +49,8 @@ export const LoadImagesAdapter: () => LoadImagesDictionaryEntry = () => {
     getCustomWidgets: () => {
       return {
         IMAGE_PREVIEW_B64(node, name) {
-          if (window.lfManager.getDebug()) {
-            console.log(`Adding 'IMAGE_PREVIEW_B64' custom widget`, node);
-          }
+          window.lfManager.log(`Adding 'IMAGE_PREVIEW_B64' custom widget`, { node });
+
           const props = node.lfProps as LoadImagesProps;
           const domWidget = createWidget(props);
           const widget = node.addDOMWidget(name, widgetName, domWidget);
@@ -71,8 +66,10 @@ export const LoadImagesAdapter: () => LoadImagesDictionaryEntry = () => {
 
 function createWidget(props: LoadImagesProps) {
   const hasImages = !!props?.payload?.images?.length;
-  const domWidget = document.createElement('div') as unknown as LoadImagesWidget;
+  const domWidget = document.createElement('div') as DOMWidget;
   domWidget.refresh = () => {
+    window.lfManager.log(`Refreshing IMAGE_PREVIEW_B64 custom widget`, { domWidget });
+
     if (domWidget.firstChild) {
       domWidget.removeChild(domWidget.firstChild);
     }
