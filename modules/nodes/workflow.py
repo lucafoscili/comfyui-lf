@@ -56,8 +56,8 @@ class LF_Lora2Prompt:
 
             # Extract keywords from the file name
             if str(file_name).find(separator) > 1:
-                keywords = file_name.split(separator)
-            else:
+                keywords = ', '.join(file_name.split(separator))
+            else: 
                 keywords = file_name
 
             # Join keywords into a string to replace the lora tag
