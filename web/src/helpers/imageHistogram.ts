@@ -63,8 +63,25 @@ export const ImageHistogramAdapter: () => ImageHistogramDictionaryEntry = () => 
             domWidget.appendChild(content);
           };
           domWidget.refresh();
-          const widget: Partial<Widget> = node.addDOMWidget(name, widgetName, domWidget);
 
+          const widget: Partial<Widget> = node.addDOMWidget(name, widgetName, domWidget);
+          node.onResize = (number) => {
+            try {
+              if (domWidget?.firstChild && !timeoutId) {
+                timeoutId = setTimeout(() => {
+                  const chart = widget.element.querySelector('kul-chart');
+                  chart.refresh();
+                  timeoutId = null;
+                }, 125);
+              }
+            } catch (error) {
+              window.lfManager.log(
+                'Whoops! It seems there is no chart. :V',
+                { error, number },
+                'error',
+              );
+            }
+          };
           return { widget };
         },
       };

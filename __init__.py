@@ -6,7 +6,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 NODE_CLASS_MAPPINGS = {}
 NODE_DISPLAY_NAME_MAPPINGS = {}
 
-version = "2.0.2"
+version = "2.1.0"
 
 # Directory containing the submodules
 modules_dir = os.path.join(os.path.dirname(__file__), "modules")
@@ -30,4 +30,4 @@ for dirpath, dirnames, filenames in os.walk(modules_dir):
 WEB_DIRECTORY = "./web/deploy"
 __all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS", "WEB_DIRECTORY"]
 
-print(f'\033[34mLF Nodes initialized\033[0mv[{version}]\033[92m\033[0m')
+print(f'\033[34mLF Nodes initialized   \033[0m[v{version}]\033[92m\033[0m')

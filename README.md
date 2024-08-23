@@ -2,6 +2,7 @@
 
 This repository contains custom nodes that I use in my workflow.
 It's just a side project that I'm developing in my free time while I'm waiting for generations to complete!
+There is a big JS bundled coming from another side-project of mine, [a webcomponents library](https://github.com/lucafoscili/ketchup-lite) that I'm going to use to add custom widgets to the nodes.
 
 ## Nodes
 
@@ -74,6 +75,11 @@ It's just a side project that I'm developing in my free time while I'm waiting f
 - Go to the `ComfyUI/custom_nodes` folder.
 - Open a terminal.
 - Copy and paste this command `git clone https://github.com/lucafoscili/comfyui-lf.git`.
+
+## Notes
+
+The LLM node is designed to work with [Koboldcpp](https://github.com/LostRuins/koboldcpp/tree/v1.73).
+The model used in the workflows samples is [UCLA-AGI/Llama-3-Instruct-8B-SPPO-Iter3](https://huggingface.co/UCLA-AGI/Llama-3-Instruct-8B-SPPO-Iter3) with [ChaoticNeutrals/LLaVA-Llama-3-8B-mmproj-Updated](https://huggingface.co/ChaoticNeutrals/LLaVA-Llama-3-8B-mmproj-Updated).
 
 ## Contributing
 
