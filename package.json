@@ -3,10 +3,11 @@
   "version": "2.0.2",
   "private": false,
   "scripts": {
+    "clean": "rimraf web/deploy",
     "setup": "npm install && node ./web/src/scripts/copy-declarations.js",
-    "prebuild": "rimraf web/deploy",
     "build:scss": "node ./web/src/scripts/compile-scss.js",
     "build:ts": "tsc",
+    "build:kul": "node ./web/src/scripts/get-ketchup-lite.js",
     "build": "npm run build:scss && npm run build:ts",
     "postbuild": "node ./web/src/scripts/fix-imports.js && node ./web/src/scripts/get-ketchup-lite.js"
   },
