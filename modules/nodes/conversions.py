@@ -5,6 +5,23 @@ from ..utils.conversions import *
 
 category = "LF Nodes/Conversions"
 
+class LF_Float2String:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "float": ("FLOAT", {"tooltip": "The float value to convert to a string."}),
+            }
+        }
+
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("converted_string",)
+    CATEGORY = category
+    FUNCTION = "on_exec"
+
+    def on_exec(self, float_value: float):
+        return (str(float_value),)
+
 class LF_Integer2String:
     @classmethod
     def INPUT_TYPES(cls):
@@ -144,6 +161,7 @@ class LF_WallOfText:
 
 
 NODE_CLASS_MAPPINGS = {
+    "LF_Float2String": LF_Float2String,
     "LF_Integer2String": LF_Integer2String,
     "LF_Lora2Prompt": LF_Lora2Prompt,
     "LF_LoraTag2Prompt": LF_LoraTag2Prompt,
@@ -151,6 +169,7 @@ NODE_CLASS_MAPPINGS = {
     "LF_WallOfText": LF_WallOfText,
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
+    "LF_Float2String": "Converts FLOAT to STRING",
     "LF_Integer2String": "Converts INT to STRING",
     "LF_Lora2Prompt": "Converts prompt and LoRAs",
     "LF_LoraTag2Prompt": "Converts LoRA tag to prompt",
