@@ -30,4 +30,4 @@ for dirpath, dirnames, filenames in os.walk(modules_dir):
 WEB_DIRECTORY = "./web/deploy"
 __all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS", "WEB_DIRECTORY"]
 
-print(f'\033[34mLF Nodes initialized [\033[0mv{version}]\033[92m\033[0m')
+print(f'\033[34mLF Nodes initialized\033[0mv[{version}]\033[92m\033[0m')
