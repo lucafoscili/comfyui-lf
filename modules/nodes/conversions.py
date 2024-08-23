@@ -5,15 +5,32 @@ from ..utils.conversions import *
 
 category = "LF Nodes/Conversions"
 
+class LF_Integer2String:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "integer": ("INT", {"tooltip": "The integer value to convert to a string."}),
+            }
+        }
+
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("converted_string",)
+    CATEGORY = category
+    FUNCTION = "on_exec"
+
+    def on_exec(self, integer_value: int):
+        return (str(integer_value),)
+
 class LF_Lora2Prompt:
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "text": ("STRING", {"multiline": True, "label": "Input Text with LoRAs", "tooltip": "The input text containing LoRa tags. These tags will be processed and replaced with extracted keywords."}),
-                "separator": ("STRING", { "default": "SEP", "label": "Keywords separator", "tooltip": "Character(s) used to separate keywords within the name of a single LoRa file. Helps in extracting individual keywords."}),
-                "weight": ("FLOAT", { "default": 0.5, "label": "LoRAs weight", "tooltip": "A weight value associated with LoRa tags, which may influence processing or output significance."}),
-                "weight_placeholder": ("STRING", { "default": "wwWEIGHTww", "label": "Weight placeholder", "tooltip": "A placeholder within LoRa tags that gets replaced with the actual weight value during processing."}),
+                "text": ("STRING", {"multiline": True, "tooltip": "The input text containing LoRa tags. These tags will be processed and replaced with extracted keywords."}),
+                "separator": ("STRING", { "default": "SEP", "tooltip": "Character(s) used to separate keywords within the name of a single LoRa file. Helps in extracting individual keywords."}),
+                "weight": ("FLOAT", { "default": 0.5, "tooltip": "A weight value associated with LoRa tags, which may influence processing or output significance."}),
+                "weight_placeholder": ("STRING", { "default": "wwWEIGHTww", "tooltip": "A placeholder within LoRa tags that gets replaced with the actual weight value during processing."}),
             }
         } 
 
@@ -50,8 +67,8 @@ class LF_LoraTag2Prompt:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "tag": ("STRING", {"multiline": True, "label": "LoRA Tag", "tooltip": "The LoRA tag to be converted."}),
-                "separator": ("STRING", { "default": "SEP", "label": "Keywords separator", "tooltip": "String separating each keyword in a LoRA filename."}),
+                "tag": ("STRING", {"multiline": True, "tooltip": "The LoRA tag to be converted."}),
+                "separator": ("STRING", { "default": "SEP", "tooltip": "String separating each keyword in a LoRA filename."}),
             }
         }
 
@@ -127,14 +144,16 @@ class LF_WallOfText:
 
 
 NODE_CLASS_MAPPINGS = {
+    "LF_Integer2String": LF_Integer2String,
     "LF_Lora2Prompt": LF_Lora2Prompt,
     "LF_LoraTag2Prompt": LF_LoraTag2Prompt,
     "LF_SequentialSeedsGenerator": LF_SequentialSeedsGenerator,
     "LF_WallOfText": LF_WallOfText,
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "LF_Lora2Prompt": "Convert prompt and LoRAs",
-    "LF_LoraTag2Prompt": "Convert LoRA tag to prompt",
+    "LF_Integer2String": "Converts INT to STRING",
+    "LF_Lora2Prompt": "Converts prompt and LoRAs",
+    "LF_LoraTag2Prompt": "Converts LoRA tag to prompt",
     "LF_SequentialSeedsGenerator": "Generate sequential seeds",
     "LF_WallOfText": "Wall of text (string concatenate)",
 }
