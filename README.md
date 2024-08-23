@@ -8,6 +8,23 @@ It's just a side project that I'm developing in my free time while I'm waiting f
 ### Analysis Nodes (`analysis.py`)
 
 - **ImageHistogram**: Displays a widget that plots the RGB channels of a photo in tensor format on a line chart.
+  
+![ImageHistogram](https://github.com/lucafoscili/comfyui-lf/docs/images/ImageHistogram.png "Displays the RGB channels of an image")
+
+### Conversions Nodes (`conversions.py`)
+
+- **Lora2Prompt**: Converts a prompt and LoRAs to a formatted string.
+- **LoraTag2Prompt**: Processes a LoRA tag to extract keywords and count them. This node is useful for preparing prompts based on LoRA file names.
+- **SequentialSeedsGenerator**: Generates a series of unique seeds based on a global seed value. This node is useful for creating reproducible random sequences in workflows.
+- **WallOfText**: Concatenates up to 10 strings, with the optional toggle to shuffle the order of concatenation.
+
+![Lora2Prompt](https://github.com/lucafoscili/comfyui-lf/docs/images/Lora2Prompt.png "Extracts keywords from LoRA filenames")
+
+![PromptLora2Prompt](https://github.com/lucafoscili/comfyui-lf/docs/images/PromptLora2Prompt.png "Splits LoRA tags from a prompt, extracting keywords in their place")
+
+![SequentialSeedsGenerator](https://github.com/lucafoscili/comfyui-lf/docs/images/SequentialSeedsGenerator.png "Massive seed generator")
+
+![WallOfText](https://github.com/lucafoscili/comfyui-lf/docs/images/WallOfText.png "Massive string concat")
 
 ### JSON Nodes (`json.py`)
 
@@ -16,14 +33,24 @@ It's just a side project that I'm developing in my free time while I'm waiting f
 - **GetValueFromJSON**: Extracts a specific value from a JSON object based on a provided key. This node supports extracting various types of values including JSON objects, strings, numbers, integers, floats, and booleans.
 - **LoadLocalJSON**: Loads JSON data from a local file specified by a URL. This node is useful for importing static JSON configurations or datasets directly into ComfyUI workflows.
 
+![DisplayJSON](https://github.com/lucafoscili/comfyui-lf/docs/images/DisplayJSON.png "Displays JSON data")
+
+![LoadLocalJSON_GetRandomKeyFromJSON_DisplayJSON](https://github.com/lucafoscili/comfyui-lf/docs/images/LoadLocalJSON_GetRandomKeyFromJSON_DisplayJSON.png "Demonstrates loading local JSON and displaying it")
+
 ### Large Language Model Nodes (`llm.py`)
 
 - **CharacterImpersonator**: Utilizes a large language model to generate text responses as if coming from a character described by a provided biography. This node can be used for creative writing, role-playing scenarios, or generating dynamic content based on character traits.
 - **ImageClassifier**: Utilizes a large language model to generate descriptions of images portraying characters.
 
+![CharacterImpersonator](https://github.com/lucafoscili/comfyui-lf/docs/images/CharacterLLM_2.png "Talking with Cleopatra")
+
+![ImageClassifier](https://github.com/lucafoscili/comfyui-lf/docs/images/ImageClassifier.png "Describe images")
+
 ### Loader Nodes (`loaders.py`)
 
 - **LoadImages**: Node used to load multiple images from the disk given a directory. Optionally, it can fetch images from subdirectories.
+
+![LoadImages](https://github.com/lucafoscili/comfyui-lf/docs/images/LoadImages.png "Loads base64 previews and displays filename on hover")
 
 ### Logic Nodes (`logic.py`)
 
@@ -32,13 +59,7 @@ It's just a side project that I'm developing in my free time while I'm waiting f
 - **SwitchJSON**: A simple logic node that returns one of two JSON objects based on a boolean condition.
 - **SwitchString**: A simple logic node that returns one of two string values based on a boolean condition.
 
-### Workflow Nodes (`workflow.py`)
-
-- **Lora2Prompt**: Converts a prompt and LoRAs to a formatted string.
-- **LoraName2Prompt**: Processes a LoRA file name to extract keywords and count them. This node is useful for preparing prompts based on LoRA file names.
-- **SeedGenerator**: Generates a series of unique seeds based on a global seed value. This node is useful for creating reproducible random sequences in workflows.
-- **WallOfText**: Concatenates up to 10 strings, with the optional toggle to shuffle the order of concatenation.
-- **WorkflowSettings**: Configures various settings for a workflow, including options for randomization, selection criteria, and integration with large language models. This node serves as a central configuration point for complex workflows.
+![SwitchImage](https://github.com/lucafoscili/comfyui-lf/docs/images/SwitchImage.png "Displays a text showing whether the boolean is true or not")
 
 ## Installation
 
@@ -52,7 +73,7 @@ It's just a side project that I'm developing in my free time while I'm waiting f
 
 - Go to the `ComfyUI/custom_nodes` folder.
 - Open a terminal.
-- Copy and Paste this command `git clone https://github.com/lucafoscili/comfyui-lf.git`.
+- Copy and paste this command `git clone https://github.com/lucafoscili/comfyui-lf.git`.
 
 ## Contributing
 
