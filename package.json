@@ -1,6 +1,6 @@
 {
   "name": "comfyui-lf",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "private": false,
   "scripts": {
     "setup": "npm install && node ./web/src/scripts/copy-declarations.js",
