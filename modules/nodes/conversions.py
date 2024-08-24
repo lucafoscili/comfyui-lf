@@ -1,7 +1,7 @@
 import random
 import re
 
-from ..utils.conversions import * 
+from ..utils.conversions import *
 
 category = "LF Nodes/Conversions"
 
@@ -22,6 +22,31 @@ class LF_Float2String:
     def on_exec(self, float_value: float):
         return (str(float_value),)
 
+class LF_ImageResizeByEdge:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "image": ("IMAGE", {"tooltip": "Input image tensor or a list of image tensors."}),
+                "longest_edge": ("BOOLEAN", {"default": False, "tooltip": "Resizes the image by the longest side if set to True. Otherwise, resizes by the shortest side."}),
+                "new_size": ("INT", {"default": 1024, "tooltip": "The size of the longest edge of the output image."}),
+                "resize_method": (["bicubic", "bilinear", "linear", "nearest", "nearest exact"], {"default": "bicubic", "tooltip": "Method to resize the image."})
+            }
+        }
+
+    RETURN_TYPES = ("IMAGE",)
+    RETURN_NAMES = ("resized_image",)
+    CATEGORY = category
+    FUNCTION = "on_exec"
+
+    def on_exec(self, image, longest_edge: bool, new_size: int, resize_method: str):
+        if isinstance(image, list):
+            resized_images = [resize_image(tensor, resize_method, longest_edge, new_size) for tensor in image]
+            return (resized_images,)
+        else:
+            resized_image = resize_image(image, resize_method, longest_edge, new_size)
+            return (resized_image,)
+        
 class LF_Integer2String:
     @classmethod
     def INPUT_TYPES(cls):
@@ -162,6 +187,7 @@ class LF_WallOfText:
 
 NODE_CLASS_MAPPINGS = {
     "LF_Float2String": LF_Float2String,
+    "LF_ImageResizeByEdge": LF_ImageResizeByEdge,
     "LF_Integer2String": LF_Integer2String,
     "LF_Lora2Prompt": LF_Lora2Prompt,
     "LF_LoraTag2Prompt": LF_LoraTag2Prompt,
@@ -169,10 +195,11 @@ NODE_CLASS_MAPPINGS = {
     "LF_WallOfText": LF_WallOfText,
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "LF_Float2String": "Converts FLOAT to STRING",
-    "LF_Integer2String": "Converts INT to STRING",
-    "LF_Lora2Prompt": "Converts prompt and LoRAs",
-    "LF_LoraTag2Prompt": "Converts LoRA tag to prompt",
+    "LF_Float2String": "Convert FLOAT to STRING",
+    "LF_ImageResizeByEdge": "Resize image by edge",
+    "LF_Integer2String": "Convert INT to STRING",
+    "LF_Lora2Prompt": "Convert prompt and LoRAs",
+    "LF_LoraTag2Prompt": "Convert LoRA tag to prompt",
     "LF_SequentialSeedsGenerator": "Generate sequential seeds",
     "LF_WallOfText": "Wall of text (string concatenate)",
 }
