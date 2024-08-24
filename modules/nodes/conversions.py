@@ -150,6 +150,81 @@ class LF_WallOfText:
             wall_of_text = texts[0]
 
         return (wall_of_text,)
+
+class LF_Something2Number:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {},
+            "optional": {
+                "JSON": ("JSON", {"tooltip": "JSON value to convert to numbers."}),
+                "boolean": ("BOOLEAN", {"tooltip": "Boolean value to convert to numbers."}),
+                "string": ("STRING", {"tooltip": "String value to convert to numbers."}),
+                "integer": ("INT", {"tooltip": "Integer value to convert to numbers."}),
+                "float": ("FLOAT", {"tooltip": "Float value to convert to numbers."})
+            }
+        }
+
+    RETURN_TYPES = ("FLOAT", "INT", "FLOAT", "INT",)
+    RETURN_NAMES = ("float_sum", "integer_sum", "float_list", "integer_list",)
+    OUTPUT_IS_LIST = (False, False, True, True,)
+    FUNCTION = "on_exec"
+
+    def on_exec(self, **kwargs):
+        """
+        Converts various inputs to floats and integers, handles nested structures,
+        and computes their sums.
+
+        Returns:
+            tuple:
+                - float_sum (float): Sum of all values converted to floats.
+                - integer_sum (int): Sum of all values converted to integers.
+                - float_list (list): List of all values converted to floats.
+                - integer_list (list): List of all values converted to integers.
+        """
+        float_values = []
+        integer_values = []
+
+        def extract_numbers(data):
+            """
+            Recursively extract numbers from various data types.
+            """
+            if isinstance(data, (int, float)):
+                float_values.append(float(data))
+                integer_values.append(int(data))
+            elif isinstance(data, bool):
+                float_values.append(1.0 if data else 0.0)
+                integer_values.append(1 if data else 0)
+            elif isinstance(data, str):
+                data = data.strip()
+                # Try direct conversion
+                try:
+                    num = float(data)
+                    float_values.append(num)
+                    integer_values.append(int(num))
+                except ValueError:
+                    # Try parsing as JSON
+                    try:
+                        parsed_json = json.loads(data)
+                        extract_numbers(parsed_json)
+                    except json.JSONDecodeError:
+                        pass  # Ignore strings that are neither numbers nor valid JSON
+            elif isinstance(data, dict):
+                for value in data.values():
+                    extract_numbers(value)
+            elif isinstance(data, (list, tuple, set)):
+                for item in data:
+                    extract_numbers(item)
+            # Ignore other data types (e.g., None, complex, etc.)
+
+        for _, value in kwargs.items():
+            extract_numbers(value)
+
+        float_sum = sum(float_values)
+        integer_sum = sum(integer_values)
+
+        return (float_sum, integer_sum, float_values, integer_values,)
+
     
 class LF_Something2String:
     @classmethod
@@ -189,12 +264,12 @@ class LF_Something2String:
 
         return (flattened_values, flattened_values,)
 
-
 NODE_CLASS_MAPPINGS = {
     "LF_ImageResizeByEdge": LF_ImageResizeByEdge,
     "LF_Lora2Prompt": LF_Lora2Prompt,
     "LF_LoraTag2Prompt": LF_LoraTag2Prompt,
     "LF_SequentialSeedsGenerator": LF_SequentialSeedsGenerator,
+    "LF_Something2Number": LF_Something2Number,
     "LF_Something2String": LF_Something2String,
     "LF_WallOfText": LF_WallOfText,
 }
@@ -203,6 +278,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_Lora2Prompt": "Convert prompt and LoRAs",
     "LF_LoraTag2Prompt": "Convert LoRA tag to prompt",
     "LF_SequentialSeedsGenerator": "Generate sequential seeds",
+    "LF_Something2Number": "Convert something to INT or FLOAT",
     "LF_Something2String": "Convert something to STRING",
     "LF_WallOfText": "Wall of text (string concatenate)",
 }
