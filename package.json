@@ -9,7 +9,7 @@
     "build:ts": "tsc",
     "build:kul": "node ./web/src/scripts/get-ketchup-lite.js",
     "build": "npm run build:scss && npm run build:ts",
-    "postbuild": "node ./web/src/scripts/fix-imports.js && node ./web/src/scripts/get-ketchup-lite.js"
+    "postbuild": "node ./web/src/scripts/fix-imports.js"
   },
   "devDependencies": {
     "@types/node": "^22.5.0",
