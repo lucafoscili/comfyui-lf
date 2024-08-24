@@ -2,6 +2,7 @@
 /*             G e n e r i c   D e c l a r a t i o n s               */
 /*-------------------------------------------------------------------*/
 declare type LFProps =
+  | ControlPanelProps
   | DisplayJSONProps
   | ImageHistogramProps
   | LoadImagesProps
@@ -13,6 +14,7 @@ declare type LFProps =
 /*               E v e n t s    D e c l a r a t i o n s              */
 /*-------------------------------------------------------------------*/
 declare type EventNames =
+  | 'lf-controlpanel'
   | 'lf-displayjson'
   | 'lf-imagehistogram'
   | 'lf-loadimages'
@@ -21,6 +23,7 @@ declare type EventNames =
   | 'lf-switchjson'
   | 'lf-switchstring';
 declare type EventPayload =
+  | ControlPanelPayload
   | DisplayJSONPayload
   | ImageHistogramPayload
   | LoadImagesPayload
@@ -32,6 +35,7 @@ declare type EventPayload =
 /*           D i c t i o n a r y   D e c l a r a t i o n s           */
 /*-------------------------------------------------------------------*/
 declare type NodeDictionaryEntry =
+  | ControlPanelDictionaryEntry
   | DisplayJSONDictionaryEntry
   | ImageHistogramDictionaryEntry
   | LoadImagesDictionaryEntry
@@ -39,3 +43,12 @@ declare type NodeDictionaryEntry =
   | SwitchIntegerDictionaryEntry
   | SwitchJSONDictionaryEntry
   | SwitchStringDictionaryEntry;
+declare type NodeNames =
+  | 'LF_ControlPaned'
+  | 'LF_DisplayJSON'
+  | 'LF_ImageHistogram'
+  | 'LF_LoadImages'
+  | 'LF_SwitchImage'
+  | 'LF_SwitchInteger'
+  | 'LF_SwitchJSON'
+  | 'LF_SwitchString';

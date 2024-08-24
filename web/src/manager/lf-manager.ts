@@ -1,15 +1,17 @@
-import type { KulDom } from '../types/ketchup-lite/managers/kul-manager/kul-manager-declarations.js';
-import type { KulManager } from '../types/ketchup-lite/managers/kul-manager/kul-manager.js';
+import { api } from '/scripts/api.js';
+import { app } from '/scripts/app.js';
+import { ControlPanelAdapter } from '../helpers/controlPanel.js';
 import { DisplayJSONAdapter } from '../helpers/displayJson.js';
+import { ImageHistogramAdapter } from '../helpers/imageHistogram.js';
 import { LoadImagesAdapter } from '../helpers/loadImages.js';
 import { SwitchImageAdapter } from '../helpers/switchImage.js';
 import { SwitchIntegerAdapter } from '../helpers/switchInteger.js';
 import { SwitchJSONAdapter } from '../helpers/switchJson.js';
 import { SwitchStringAdapter } from '../helpers/switchString.js';
-import { api } from '/scripts/api.js';
-import { app } from '/scripts/app.js';
 import { defineCustomElements } from '../ketchup-lite/loader';
-import { ImageHistogramAdapter } from '../helpers/imageHistogram.js';
+import type { KulDom } from '../types/ketchup-lite/managers/kul-manager/kul-manager-declarations.js';
+import type { KulManager } from '../types/ketchup-lite/managers/kul-manager/kul-manager.js';
+import { getKulManager } from '../utils/utils.js';
 /*-------------------------------------------------*/
 /*                 L F   C l a s s                 */
 /*-------------------------------------------------*/
@@ -21,6 +23,7 @@ class LFManager {
   #EXT_PREFIX = 'LFExtension_';
   #KUL_MANAGER: KulManager;
   #NODES_DICT: NodeDictionary = {
+    controlPanel: ControlPanelAdapter(),
     displayJson: DisplayJSONAdapter(),
     imageHistogram: ImageHistogramAdapter(),
     loadImages: LoadImagesAdapter(),
@@ -31,31 +34,34 @@ class LFManager {
   };
 
   constructor() {
+    const managerCb = () => {
+      this.#KUL_MANAGER = getKulManager();
+      this.log('KulManager ready', { kulManager: this.#KUL_MANAGER }, 'success');
+      document.removeEventListener('kul-manager-ready', managerCb);
+    };
     this.#DOM.ketchupLiteInit = {
       assetsPath: window.location.href + 'extensions/comfyui-lf/assets',
     };
-    document.addEventListener('kul-manager-ready', () => {
-      this.#KUL_MANAGER = this.#DOM.ketchupLite;
-      this.log('KulManager ready', { kulManager: this.#KUL_MANAGER }, 'success');
-    });
+    document.addEventListener('kul-manager-ready', managerCb);
     defineCustomElements(window);
     this.#CSS_EMBEDDED = new Set();
 
     for (const key in this.#NODES_DICT) {
       if (Object.prototype.hasOwnProperty.call(this.#NODES_DICT, key)) {
         const node = this.#NODES_DICT[key];
-        const name = this.#EXT_PREFIX + key;
-        if (node.getCustomWidgets) {
-          this.#embedCss(key);
-          app.registerExtension({
-            name,
-            getCustomWidgets: node.getCustomWidgets,
-          });
-        } else {
-          app.registerExtension({
-            name,
-          });
+        const hasbeforeRegisterNodeDef = !!node.beforeRegisterNodeDef;
+        const hasCustomWidgets = !!node.getCustomWidgets;
+        const extension: Extension = {
+          name: this.#EXT_PREFIX + key,
+        };
+        if (hasbeforeRegisterNodeDef) {
+          extension.beforeRegisterNodeDef = node.beforeRegisterNodeDef;
         }
+        if (hasCustomWidgets) {
+          extension.getCustomWidgets = node.getCustomWidgets;
+          this.#embedCss(key);
+        }
+        app.registerExtension(extension);
         api.addEventListener(node.eventName, node.eventCb);
       }
     }

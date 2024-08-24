@@ -30,9 +30,11 @@ declare interface NodeDictionary {
   [index: string]: NodeDictionaryEntry;
 }
 declare interface BaseNodeDictionaryEntry {
+  beforeRegisterNodeDef?: (node: NodeType, data: NodeData, name: string) => void;
   eventCb: EventCallback;
   eventName: EventNames;
   getCustomWidgets?: () => Record<KeyOfCustomWidgets, Function>;
+  nodeCreated?: (node) => void;
   updateCb: UpdateCallback;
 }
 declare interface CustomWidgets {
@@ -46,3 +48,6 @@ type KeyOfExistsIn<T, U> = {
 }[keyof T];
 declare type EventCallback = (e: CustomEvent<NodePayload>) => void;
 declare type UpdateCallback = (node: NodeType) => void;
+declare interface Extension extends Partial<BaseNodeDictionaryEntry> {
+  name: string;
+}

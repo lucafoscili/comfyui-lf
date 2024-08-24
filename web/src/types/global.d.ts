@@ -69,6 +69,7 @@ interface NodeType {
   onMouseLeave?(event: MouseEvent): void;
   onDblClick?(event: MouseEvent): void;
   onExecute?(): void;
+  onNodeCreated(): void;
   onPropertyChanged?(propertyName: string, newValue: any): boolean;
   onGetInputs?(): Array<[string, string]>[];
   onGetOutputs?(): Array<[string, string]>[];
@@ -83,6 +84,10 @@ interface NodeType {
   addOutput(name: string, type: string): void;
   getInputData(slotIndex: number): any;
   getOutputData(slotIndex: number): any;
+  prototype: {
+    addDOMWidget: (name?: string, type?: string, element?: Partial<HTMLElement>) => unknown;
+    onNodeCreated(): void;
+  };
 }
 
 interface NodeProperties {

@@ -1,6 +1,9 @@
 /*-------------------------------------------------------------------*/
 /*             G e n e r i c   D e c l a r a t i o n s               */
 /*-------------------------------------------------------------------*/
+declare interface ControlPanelProps extends BaseLFProps {
+  payload: ControlPanelPayload;
+}
 declare interface DisplayJSONProps extends BaseLFProps {
   payload: DisplayJSONPayload;
 }
@@ -25,6 +28,9 @@ declare interface SwitchStringProps extends BaseLFProps {
 /*-------------------------------------------------------------------*/
 /*               E v e n t s    D e c l a r a t i o n s              */
 /*-------------------------------------------------------------------*/
+declare interface ControlPanelPayload extends BaseEventPayload {
+  isDebug: boolean;
+}
 declare interface DisplayJSONPayload extends BaseEventPayload {
   json: Record<string, unknown>;
 }
@@ -51,6 +57,7 @@ declare interface SwitchStringPayload extends BaseEventPayload {
 /*           D i c t i o n a r y   D e c l a r a t i o n s           */
 /*-------------------------------------------------------------------*/
 interface NodeDictionary {
+  controlPanel: ControlPanelDictionaryEntry;
   displayJson: DisplayJSONDictionaryEntry;
   imageHistogram: ImageHistogramDictionaryEntry;
   loadImages: LoadImagesDictionaryEntry;
@@ -58,6 +65,18 @@ interface NodeDictionary {
   switchInteger: SwitchIntegerDictionaryEntry;
   switchJson: SwitchJSONDictionaryEntry;
   switchString: SwitchStringDictionaryEntry;
+}
+declare interface ControlPanelDictionaryEntry extends BaseNodeDictionaryEntry {
+  eventCb: (e: CustomEvent<ControlPanelPayload>) => void;
+  eventName: 'lf-controlpanel';
+  getCustomWidgets: () => {
+    KUL_BUTTON(
+      node: NodeType,
+      name: string,
+    ): {
+      widget: Partial<Widget>;
+    };
+  };
 }
 declare interface DisplayJSONDictionaryEntry extends BaseNodeDictionaryEntry {
   eventCb: (e: CustomEvent<DisplayJSONPayload>) => void;

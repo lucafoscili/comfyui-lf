@@ -42,7 +42,6 @@ async function copyKetchupLiteFiles() {
     console.log(logColor, 'Destination dir:' + destDir);
     console.log(logColor, 'Assets source dir:' + assetsSourceDir);
     console.log(logColor, 'Assets destination dir:' + assetsDestDir);
-    console.log(logColor, '*---*');
 
     // Ensure the destination directory exists
     await fs.ensureDir(destDir);
