@@ -14,8 +14,8 @@ class LF_ImageHistogram:
             "hidden": { "node_id": "UNIQUE_ID" }
         }
 
-    RETURN_TYPES = ("JSON",)
-    RETURN_NAMES = ("dataset",)
+    RETURN_TYPES = ("IMAGE", "JSON",)
+    RETURN_NAMES = ("image", "dataset",)
     CATEGORY = category
     FUNCTION = "on_exec"
 
@@ -39,7 +39,7 @@ class LF_ImageHistogram:
             "dataset": dataset,
         })
 
-        return (dataset,)
+        return (image, dataset,)
 
 NODE_CLASS_MAPPINGS = {
     "LF_ImageHistogram": LF_ImageHistogram,
