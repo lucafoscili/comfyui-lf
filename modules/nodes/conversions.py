@@ -1,27 +1,11 @@
+import json
 import random
 import re
 
 from ..utils.conversions import *
 
 category = "LF Nodes/Conversions"
-
-class LF_Float2String:
-    @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "float": ("FLOAT", {"tooltip": "The float value to convert to a string."}),
-            }
-        }
-
-    RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("converted_string",)
-    CATEGORY = category
-    FUNCTION = "on_exec"
-
-    def on_exec(self, float_value: float):
-        return (str(float_value),)
-
+    
 class LF_ImageResizeByEdge:
     @classmethod
     def INPUT_TYPES(cls):
@@ -47,23 +31,6 @@ class LF_ImageResizeByEdge:
             resized_image = resize_image(image, resize_method, longest_edge, new_size)
             return (resized_image,)
         
-class LF_Integer2String:
-    @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "integer": ("INT", {"tooltip": "The integer value to convert to a string."}),
-            }
-        }
-
-    RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("converted_string",)
-    CATEGORY = category
-    FUNCTION = "on_exec"
-
-    def on_exec(self, integer_value: int):
-        return (str(integer_value),)
-
 class LF_Lora2Prompt:
     @classmethod
     def INPUT_TYPES(cls):
@@ -183,23 +150,59 @@ class LF_WallOfText:
             wall_of_text = texts[0]
 
         return (wall_of_text,)
+    
+class LF_Something2String:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {},
+            "optional": {
+                "JSON": ("JSON", {"tooltip": "JSON value to convert to string."}) ,
+                "boolean": ("BOOLEAN", {"tooltip": "Boolean value to convert to string."}),
+                "float": ("FLOAT", {"tooltip": "Float value to convert to string."}),
+                "integer": ("INT", {"tooltip": "Integer value to convert to string."})
+            }
+        }
+
+    RETURN_TYPES = ("STRING", "STRING",)
+    RETURN_NAMES = ("concatenate", "list",)
+    OUTPUT_IS_LIST = (False, True,)
+    FUNCTION = "on_exec"
+
+    def on_exec(self, **kwargs):
+        """
+        Converts multiple inputs to strings, handling nested structures and mixed types.
+        """
+        flattened_values = []
+        
+        def flatten_input(input_item):
+            if isinstance(input_item, list):
+                for item in input_item:
+                    flatten_input(item)
+            elif isinstance(input_item, str):
+                flattened_values.append(input_item)
+            else:
+                flattened_values.append(str(input_item))
+
+        for _, value in kwargs.items():
+            flatten_input(value)
+
+        return (flattened_values, flattened_values,)
 
 
 NODE_CLASS_MAPPINGS = {
-    "LF_Float2String": LF_Float2String,
     "LF_ImageResizeByEdge": LF_ImageResizeByEdge,
-    "LF_Integer2String": LF_Integer2String,
     "LF_Lora2Prompt": LF_Lora2Prompt,
     "LF_LoraTag2Prompt": LF_LoraTag2Prompt,
     "LF_SequentialSeedsGenerator": LF_SequentialSeedsGenerator,
+    "LF_Something2String": LF_Something2String,
     "LF_WallOfText": LF_WallOfText,
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "LF_Float2String": "Convert FLOAT to STRING",
     "LF_ImageResizeByEdge": "Resize image by edge",
-    "LF_Integer2String": "Convert INT to STRING",
     "LF_Lora2Prompt": "Convert prompt and LoRAs",
     "LF_LoraTag2Prompt": "Convert LoRA tag to prompt",
     "LF_SequentialSeedsGenerator": "Generate sequential seeds",
+    "LF_Something2String": "Convert something to STRING",
     "LF_WallOfText": "Wall of text (string concatenate)",
 }
