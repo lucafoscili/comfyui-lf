@@ -1,11 +1,12 @@
 import { app } from '/scripts/app.js';
 
-const widgetName = 'histogram';
-const eventName: EventNames = 'lf-imagehistogram';
 const cssClasses = {
   wrapper: 'lf-imagehistogram',
   widget: 'lf-imagehistogram__widget',
 };
+const eventName: EventNames = 'lf-imagehistogram';
+const nodeName: NodeNames = 'LF_ImageHistogram';
+const widgetName = 'histogram';
 
 const eventCb = (event: CustomEvent<ImageHistogramPayload>) => {
   window.lfManager.log(`Event '${eventName}' received`, { event });
@@ -94,28 +95,25 @@ export const ImageHistogramAdapter: () => ImageHistogramDictionaryEntry = () => 
 
 function createWidget(props: ImageHistogramProps) {
   const dataset = props?.payload?.dataset;
+  const readyCb = ({ detail }) => {
+    window.lfManager.log(`Histogram ready, resizing`, { detail });
+
+    const { eventType } = detail;
+    if (eventType === 'ready') {
+      chartWidget.kulAxis = 'Axis_0';
+      chartWidget.kulColors = ['red', 'green', 'blue'];
+      chartWidget.kulData = dataset;
+      chartWidget.kulSeries = ['Series_0', 'Series_1', 'Series_2'];
+      chartWidget.removeEventListener('kul-chart-event', readyCb);
+    }
+  };
 
   const content = document.createElement('div');
   content.classList.add(cssClasses.wrapper);
 
-  const chartWidget: HTMLKulChartElement = document.createElement('kul-chart');
+  const chartWidget = document.createElement('kul-chart');
   chartWidget.classList.add(cssClasses.widget);
-  chartWidget.addEventListener('kul-chart-event', ({ detail }) => {
-    window.lfManager.log(`Histogram ready, resizing`, { detail });
-
-    const { comp, eventType } = detail;
-    if (eventType === 'ready') {
-      const refresh = () => {
-        (comp as HTMLKulChartElement).kulSizeX = '100%';
-        (comp as HTMLKulChartElement).kulSizeY = '100%';
-      };
-      setTimeout(refresh, 1000);
-    }
-  });
-  chartWidget.kulAxis = 'Axis_0';
-  chartWidget.kulColors = ['red', 'green', 'blue'];
-  chartWidget.kulData = dataset;
-  chartWidget.kulSeries = ['Series_0', 'Series_1', 'Series_2'];
+  chartWidget.addEventListener('kul-chart-event', readyCb);
   chartWidget.kulSizeX = '100%';
   chartWidget.kulSizeY = '100%';
   chartWidget.kulTypes = ['area'];
