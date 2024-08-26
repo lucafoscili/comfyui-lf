@@ -4,6 +4,9 @@
 declare interface ControlPanelProps extends BaseLFProps {
   payload: ControlPanelPayload;
 }
+declare interface ControlPanelOptions extends BaseWidgetOptions {
+  isReady?: boolean;
+}
 declare interface DisplayJSONProps extends BaseLFProps {
   payload: DisplayJSONPayload;
 }
@@ -64,18 +67,6 @@ interface NodeDictionary {
   switchInteger: SwitchIntegerDictionaryEntry;
   switchJson: SwitchJSONDictionaryEntry;
   switchString: SwitchStringDictionaryEntry;
-}
-declare interface ControlPanelDictionaryEntry {
-  beforeRegisterNodeDef?: (node: NodeType, data: NodeData, name: string) => void;
-  getCustomWidgets: () => {
-    KUL_MANAGER(
-      node: NodeType,
-      name: string,
-    ): {
-      widget: Partial<DOMWidget>;
-    };
-  };
-  name: string;
 }
 declare interface DisplayJSONDictionaryEntry extends BaseNodeDictionaryEntry {
   eventCb: (e: CustomEvent<DisplayJSONPayload>) => void;

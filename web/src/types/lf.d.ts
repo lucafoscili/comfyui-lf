@@ -16,6 +16,9 @@ declare interface BaseLFProps {
   isInitialized: boolean;
   payload: NodePayload;
 }
+declare interface BaseWidgetOptions {
+  refresh: () => void;
+}
 declare type LogSeverity = 'info' | 'success' | 'warning' | 'error';
 /*-------------------------------------------------------------------*/
 /*               E v e n t s    D e c l a r a t i o n s              */
@@ -36,6 +39,25 @@ declare interface BaseNodeDictionaryEntry {
   getCustomWidgets?: () => Record<KeyOfCustomWidgets, Function>;
   nodeCreated?: (node) => void;
   updateCb: UpdateCallback;
+}
+declare interface ControlPanelDictionary {
+  eventName: EventNames;
+  nodeName: NodeNames;
+  cssName: string;
+  widgetName: string;
+  extension?: ControlPanelExtension;
+}
+declare interface ControlPanelExtension {
+  beforeRegisterNodeDef?: (node: NodeType, data: NodeData, name: string) => void;
+  getCustomWidgets: () => {
+    KUL_CONTROL_PANEL(
+      node: NodeType,
+      name: string,
+    ): {
+      widget: Partial<Widget>;
+    };
+  };
+  name: string;
 }
 declare interface CustomWidgets {
   IMAGE_PREVIEW_B64;

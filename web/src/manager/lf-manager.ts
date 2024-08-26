@@ -1,3 +1,5 @@
+import type { KulDom } from '../types/ketchup-lite/managers/kul-manager/kul-manager-declarations.js';
+import type { KulManager } from '../types/ketchup-lite/managers/kul-manager/kul-manager.js';
 import { api } from '/scripts/api.js';
 import { app } from '/scripts/app.js';
 import { createContent } from '../helpers/controlPanel.js';
@@ -9,8 +11,6 @@ import { SwitchIntegerAdapter } from '../helpers/switchInteger.js';
 import { SwitchJSONAdapter } from '../helpers/switchJson.js';
 import { SwitchStringAdapter } from '../helpers/switchString.js';
 import { defineCustomElements } from '../ketchup-lite/loader';
-import type { KulDom } from '../types/ketchup-lite/managers/kul-manager/kul-manager-declarations.js';
-import type { KulManager } from '../types/ketchup-lite/managers/kul-manager/kul-manager.js';
 import { getKulManager } from '../utils/utils.js';
 import { createDOMWidget } from '../helpers/common.js';
 /*-------------------------------------------------*/
@@ -33,15 +33,7 @@ class LFManager {
     switchString: SwitchStringAdapter(),
   };
 
-  CONTROL_PANEL: {
-    eventName: EventNames;
-    isReady: boolean;
-    nodeName: NodeNames;
-    node?: Partial<NodeType>;
-    cssName: string;
-    widgetName: string;
-    widget?: DOMWidget;
-  };
+  CONTROL_PANEL: ControlPanelDictionary;
 
   constructor() {
     const managerCb = () => {
@@ -59,12 +51,10 @@ class LFManager {
     this.CONTROL_PANEL = {
       cssName: 'controlPanel',
       eventName: 'lf-controlpanel',
-      isReady: false,
       nodeName: 'LF_ControlPanel',
-      widgetName: 'KUL_MANAGER',
+      widgetName: 'KUL_CONTROL_PANEL',
     };
 
-    this.CONTROL_PANEL.node = LiteGraph.getNodeType(this.CONTROL_PANEL.nodeName);
     this.#registerControlPanel();
     this.#embedCss(this.CONTROL_PANEL.cssName);
 
@@ -109,11 +99,11 @@ class LFManager {
     const self = this;
 
     const panelWidgetCb = (nodeType: Partial<NodeType>, name: string) => {
-      const widget = app.widgets.KUL_MANAGER(nodeType, name).widget;
+      const widget = app.widgets.KUL_CONTROL_PANEL(nodeType, name, { isReady: false }).widget;
       widget.serializeValue = false;
     };
 
-    const extension: ControlPanelDictionaryEntry = {
+    const extension: ControlPanelExtension = {
       name: this.#EXT_PREFIX + this.CONTROL_PANEL.nodeName,
       beforeRegisterNodeDef: async (nodeType) => {
         if (nodeType.comfyClass === this.CONTROL_PANEL.nodeName) {
@@ -123,69 +113,53 @@ class LFManager {
             const r = onNodeCreated?.apply(this, arguments);
             const node = this;
 
-            if (self.CONTROL_PANEL.node && node === self.CONTROL_PANEL.node) {
-              if (self.CONTROL_PANEL.widget) {
-                self.log('Control panel widget already exists', { node }, 'warning');
-              } else {
-                panelWidgetCb(node, self.CONTROL_PANEL.widgetName);
-              }
-            } else if (self.CONTROL_PANEL.node) {
-              self.log('Attempted creation of multiple control panels', { node }, 'warning');
-            } else {
-              self.CONTROL_PANEL.node = node;
-              panelWidgetCb(node, self.CONTROL_PANEL.widgetName);
-            }
+            panelWidgetCb(node, self.CONTROL_PANEL.widgetName);
 
-            return r;
-          };
-
-          const onRemoved = nodeType.prototype.onRemoved;
-          nodeType.prototype.onRemoved = function () {
-            const r = onRemoved?.apply(this, arguments);
-
-            if (self.CONTROL_PANEL.node) {
-              self.CONTROL_PANEL.isReady = false;
-              self.CONTROL_PANEL.node = LiteGraph.getNodeType(self.CONTROL_PANEL.nodeName);
-            }
             return r;
           };
         }
       },
       getCustomWidgets: () => {
         return {
-          KUL_MANAGER(node, name) {
-            const existingDomWidget = self.CONTROL_PANEL.widget;
-            if (existingDomWidget) {
-              self.log(
-                'Attempted creation of multiple manager widgets',
-                { existingDomWidget },
-                'warning',
-              );
-              return { widget: existingDomWidget };
-            } else {
-              const domWidget = document.createElement('div') as DOMWidget;
-              self.CONTROL_PANEL.widget = domWidget;
-              domWidget.refresh = () => {
-                const content = createContent(self.CONTROL_PANEL.isReady);
-                if (self.CONTROL_PANEL.isReady) {
+          KUL_CONTROL_PANEL(node, name) {
+            const domWidget = document.createElement('div') as DOMWidget;
+            const refresh = () => {
+              const options = node.widgets?.find(
+                (w) => w.type === self.CONTROL_PANEL.widgetName,
+              )?.options;
+
+              if (options) {
+                const isReady = options.isReady;
+                if (isReady) {
+                  const content = createContent(isReady);
                   domWidget.replaceChild(content, domWidget.firstChild);
                 } else {
+                  const content = createContent(isReady);
+                  options.isReady = true;
                   domWidget.appendChild(content);
                 }
-              };
-              domWidget.dataset.isInVisibleNodes = 'true';
-              const readyCb = () => {
-                setTimeout(() => {
-                  self.CONTROL_PANEL.isReady = true;
-                  domWidget.refresh();
-                  document.removeEventListener('kul-spinner-event', readyCb);
-                }, 500);
-              };
-              document.addEventListener('kul-spinner-event', readyCb);
-              const widget = createDOMWidget(name, self.CONTROL_PANEL.widgetName, domWidget, node);
-              domWidget.refresh();
-              return { widget };
-            }
+              }
+            };
+            domWidget.dataset.isInVisibleNodes = 'true';
+            const widget: Partial<Widget> = createDOMWidget(
+              name,
+              self.CONTROL_PANEL.widgetName,
+              domWidget,
+              node,
+              {
+                isReady: false,
+                refresh,
+              },
+            );
+            const readyCb = () => {
+              setTimeout(() => {
+                widget.options.refresh();
+                document.removeEventListener('kul-spinner-event', readyCb);
+              }, 500);
+            };
+            document.addEventListener('kul-spinner-event', readyCb);
+            widget.options.refresh();
+            return { widget };
           },
         };
       },

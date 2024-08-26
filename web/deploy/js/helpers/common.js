@@ -1,7 +1,7 @@
 import { app } from '/scripts/app.js';
-export const createDOMWidget = (name, type, element, node) => {
+export const createDOMWidget = (name, type, element, node, options = undefined) => {
     window.lfManager.log(`Creating '${type}'`, { element });
-    return node.addDOMWidget(name, type, element);
+    return node.addDOMWidget(name, type, element, options);
 };
 export const getNode = (id) => {
     window.lfManager.log(`Fetching node '${id}'`);

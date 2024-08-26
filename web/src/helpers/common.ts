@@ -5,10 +5,11 @@ export const createDOMWidget = (
   type: string,
   element: Partial<DOMWidget>,
   node: NodeType,
+  options: WidgetOptions = undefined,
 ) => {
   window.lfManager.log(`Creating '${type}'`, { element });
 
-  return node.addDOMWidget(name, type, element);
+  return node.addDOMWidget(name, type, element, options);
 };
 
 export const getNode = (id: string) => {

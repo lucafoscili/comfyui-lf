@@ -48,7 +48,12 @@ interface NodeType {
   horizontal?: boolean;
   inputs: SlotInfo[];
   outputs: SlotInfo[];
-  addDOMWidget: (name?: string, type?: string, element?: Partial<HTMLElement>) => unknown;
+  addDOMWidget: (
+    name?: string,
+    type?: string,
+    element?: Partial<HTMLElement>,
+    options?: WidgetOptions,
+  ) => unknown;
   addCustomWidget: (
     type?: T['type'],
     name?: string,
@@ -120,7 +125,7 @@ interface Widget {
   type: string;
   name: string;
   value: any;
-  options?: TextOption | ToggleOption | NumberOption | Base64PreviewOption;
+  options?: WidgetOptions;
   last_y?: number;
   y: number;
   computedHeight?: number;

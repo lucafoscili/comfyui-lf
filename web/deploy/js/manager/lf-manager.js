@@ -57,11 +57,9 @@ class LFManager {
         this.CONTROL_PANEL = {
             cssName: 'controlPanel',
             eventName: 'lf-controlpanel',
-            isReady: false,
             nodeName: 'LF_ControlPanel',
-            widgetName: 'KUL_MANAGER',
+            widgetName: 'KUL_CONTROL_PANEL',
         };
-        this.CONTROL_PANEL.node = LiteGraph.getNodeType(this.CONTROL_PANEL.nodeName);
         __classPrivateFieldGet(this, _LFManager_instances, "m", _LFManager_registerControlPanel).call(this);
         __classPrivateFieldGet(this, _LFManager_instances, "m", _LFManager_embedCss).call(this, this.CONTROL_PANEL.cssName);
         for (const key in __classPrivateFieldGet(this, _LFManager_NODES_DICT, "f")) {
@@ -132,7 +130,7 @@ _LFManager_CSS_EMBEDDED = new WeakMap(), _LFManager_DEBUG = new WeakMap(), _LFMa
 }, _LFManager_registerControlPanel = function _LFManager_registerControlPanel() {
     const self = this;
     const panelWidgetCb = (nodeType, name) => {
-        const widget = app.widgets.KUL_MANAGER(nodeType, name).widget;
+        const widget = app.widgets.KUL_CONTROL_PANEL(nodeType, name, { isReady: false }).widget;
         widget.serializeValue = false;
     };
     const extension = {
@@ -144,67 +142,44 @@ _LFManager_CSS_EMBEDDED = new WeakMap(), _LFManager_DEBUG = new WeakMap(), _LFMa
                 nodeType.prototype.onNodeCreated = function () {
                     const r = onNodeCreated?.apply(this, arguments);
                     const node = this;
-                    if (self.CONTROL_PANEL.node && node === self.CONTROL_PANEL.node) {
-                        if (self.CONTROL_PANEL.widget) {
-                            self.log('Control panel widget already exists', { node }, 'warning');
-                        }
-                        else {
-                            panelWidgetCb(node, self.CONTROL_PANEL.widgetName);
-                        }
-                    }
-                    else if (self.CONTROL_PANEL.node) {
-                        self.log('Attempted creation of multiple control panels', { node }, 'warning');
-                    }
-                    else {
-                        self.CONTROL_PANEL.node = node;
-                        panelWidgetCb(node, self.CONTROL_PANEL.widgetName);
-                    }
-                    return r;
-                };
-                const onRemoved = nodeType.prototype.onRemoved;
-                nodeType.prototype.onRemoved = function () {
-                    const r = onRemoved?.apply(this, arguments);
-                    if (self.CONTROL_PANEL.node) {
-                        self.CONTROL_PANEL.isReady = false;
-                        self.CONTROL_PANEL.node = LiteGraph.getNodeType(self.CONTROL_PANEL.nodeName);
-                    }
+                    panelWidgetCb(node, self.CONTROL_PANEL.widgetName);
                     return r;
                 };
             }
         },
         getCustomWidgets: () => {
             return {
-                KUL_MANAGER(node, name) {
-                    const existingDomWidget = self.CONTROL_PANEL.widget;
-                    if (existingDomWidget) {
-                        self.log('Attempted creation of multiple manager widgets', { existingDomWidget }, 'warning');
-                        return { widget: existingDomWidget };
-                    }
-                    else {
-                        const domWidget = document.createElement('div');
-                        self.CONTROL_PANEL.widget = domWidget;
-                        domWidget.refresh = () => {
-                            const content = createContent(self.CONTROL_PANEL.isReady);
-                            if (self.CONTROL_PANEL.isReady) {
+                KUL_CONTROL_PANEL(node, name) {
+                    const domWidget = document.createElement('div');
+                    const refresh = () => {
+                        const options = node.widgets?.find((w) => w.type === self.CONTROL_PANEL.widgetName)?.options;
+                        if (options) {
+                            const isReady = options.isReady;
+                            if (isReady) {
+                                const content = createContent(isReady);
                                 domWidget.replaceChild(content, domWidget.firstChild);
                             }
                             else {
+                                const content = createContent(isReady);
+                                options.isReady = true;
                                 domWidget.appendChild(content);
                             }
-                        };
-                        domWidget.dataset.isInVisibleNodes = 'true';
-                        const readyCb = () => {
-                            setTimeout(() => {
-                                self.CONTROL_PANEL.isReady = true;
-                                domWidget.refresh();
-                                document.removeEventListener('kul-spinner-event', readyCb);
-                            }, 500);
-                        };
-                        document.addEventListener('kul-spinner-event', readyCb);
-                        const widget = createDOMWidget(name, self.CONTROL_PANEL.widgetName, domWidget, node);
-                        domWidget.refresh();
-                        return { widget };
-                    }
+                        }
+                    };
+                    domWidget.dataset.isInVisibleNodes = 'true';
+                    const widget = createDOMWidget(name, self.CONTROL_PANEL.widgetName, domWidget, node, {
+                        isReady: false,
+                        refresh,
+                    });
+                    const readyCb = () => {
+                        setTimeout(() => {
+                            widget.options.refresh();
+                            document.removeEventListener('kul-spinner-event', readyCb);
+                        }, 500);
+                    };
+                    document.addEventListener('kul-spinner-event', readyCb);
+                    widget.options.refresh();
+                    return { widget };
                 },
             };
         },
