@@ -1,5 +1,24 @@
-import { getLFManager } from '../utils/utils';
-import { app } from '/scripts/app.js';
+"use strict";
+/*import { app } from '/scripts/app.js';
+
+class LFDisplayJSON {
+  DICTIONARY: {
+    eventName: EventNames;
+    nodeName: NodeNames;
+    cssName: string;
+    widgetName: CustomWidgetNames;
+    extension?: ControlPanelExtension;
+  };
+
+  constructor() {
+    this.DICTIONARY = {
+      cssName: 'displayJson',
+      eventName: 'lf-displayjson',
+      nodeName: 'LF_DisplayJSON',
+      widgetName: 'KUL_CODE',
+    };
+  }
+}
 
 const widgetName = 'json_value';
 const eventName: EventNames = 'lf-displayjson';
@@ -9,7 +28,7 @@ const cssClasses = {
 };
 
 const eventCb = (event: CustomEvent<DisplayJSONPayload>) => {
-  getLFManager().log(`Event '${eventName}' received`, { event }, 'success');
+  window.lfManager.log(`Event '${eventName}' received`, { event }, 'success');
 
   const payload = event.detail;
   const node: NodeType = app.graph.getNodeById(+(payload.id || app.runningNodeId));
@@ -28,7 +47,7 @@ const eventCb = (event: CustomEvent<DisplayJSONPayload>) => {
 };
 
 const updateCb = (node: NodeType) => {
-  getLFManager().log(`Updating '${eventName}'`, { node });
+  window.lfManager.log(`Updating '${eventName}'`, { node });
 
   const existingWidget = node?.widgets?.find((w) => w.name === widgetName);
   if (existingWidget) {
@@ -48,12 +67,12 @@ export const DisplayJSONAdapter: () => DisplayJSONDictionaryEntry = () => {
     getCustomWidgets: () => {
       return {
         KUL_CODE(node, name) {
-          getLFManager().log(`Adding KUL_CODE custom widget`, { node });
+          window.lfManager.log(`Adding KUL_CODE custom widget`, { node });
 
           const props = node.lfProps as DisplayJSONProps;
           const domWidget = document.createElement('div') as DOMWidget;
           domWidget.refresh = () => {
-            getLFManager().log(`Refreshing KUL_CODE custom widget`, { domWidget });
+            window.lfManager.log(`Refreshing KUL_CODE custom widget`, { domWidget });
 
             if (domWidget.firstChild) {
               domWidget.removeChild(domWidget.firstChild);
@@ -87,3 +106,4 @@ function createWidget(props: DisplayJSONProps) {
 
   return content;
 }
+*/

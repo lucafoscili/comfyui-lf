@@ -1,3 +1,4 @@
+import { getLFManager } from '../utils/utils';
 import { app } from '/scripts/app.js';
 import { ComfyWidgets } from '/scripts/widgets.js';
 
@@ -5,7 +6,7 @@ const widgetName = 'display_boolean';
 const eventName: EventNames = 'lf-switchjson';
 
 const eventCb = (event: CustomEvent<SwitchJSONPayload>) => {
-  window.lfManager.log(`Event '${eventName}' received`, { event }, 'success');
+  getLFManager().log(`Event '${eventName}' received`, { event }, 'success');
 
   const payload = event.detail;
   const node: NodeType = app.graph.getNodeById(+(payload.id || app.runningNodeId));
@@ -24,7 +25,7 @@ const eventCb = (event: CustomEvent<SwitchJSONPayload>) => {
 };
 
 const updateCb = (node: NodeType) => {
-  window.lfManager.log(`Updating '${eventName}'`, { node });
+  getLFManager().log(`Updating '${eventName}'`, { node });
 
   const props = node.lfProps as SwitchJSONProps;
   const value = props?.payload?.bool ? 'True!' : 'False!';

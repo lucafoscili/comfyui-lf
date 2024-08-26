@@ -1,3 +1,4 @@
+import { getLFManager } from '../utils/utils';
 import { app } from '/scripts/app.js';
 
 export const createDOMWidget = (
@@ -7,25 +8,25 @@ export const createDOMWidget = (
   node: NodeType,
   options: WidgetOptions = undefined,
 ) => {
-  window.lfManager.log(`Creating '${type}'`, { element });
+  getLFManager().log(`Creating '${type}'`, { element });
 
   return node.addDOMWidget(name, type, element, options);
 };
 
 export const getNode = (id: string) => {
-  window.lfManager.log(`Fetching node '${id}'`);
+  getLFManager().log(`Fetching node '${id}'`);
 
   return app.graph?.getNodeById(+(id || app.runningNodeId));
 };
 
 export const getWidget = (node: NodeType, name: string) => {
-  window.lfManager.log(`Updating '${name}'`, { node });
+  getLFManager().log(`Updating '${name}'`, { node });
 
   return node?.widgets?.find((w) => w.name === name);
 };
 
 export const initProps = (event: CustomEvent<ControlPanelPayload>) => {
-  window.lfManager.log(`Event '${event.type}' received`, { event }, 'success');
+  getLFManager().log(`Event '${event.type}' received`, { event }, 'success');
 
   const payload = event.detail;
   const node = getNode(payload.id);
@@ -40,7 +41,7 @@ export const initProps = (event: CustomEvent<ControlPanelPayload>) => {
       node.lfProps = { isInitialized: true, payload };
     }
   } else {
-    window.lfManager.log(
+    getLFManager().log(
       `Whoops! It seems this node wasn't found '${payload.id}'`,
       { event },
       'error',

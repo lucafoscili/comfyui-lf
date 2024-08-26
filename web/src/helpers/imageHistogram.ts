@@ -1,3 +1,4 @@
+import { getLFManager } from '../utils/utils';
 import { app } from '/scripts/app.js';
 
 const cssClasses = {
@@ -8,7 +9,7 @@ const eventName: EventNames = 'lf-imagehistogram';
 const widgetName = 'histogram';
 
 const eventCb = (event: CustomEvent<ImageHistogramPayload>) => {
-  window.lfManager.log(`Event '${eventName}' received`, { event });
+  getLFManager().log(`Event '${eventName}' received`, { event });
 
   const payload = event.detail;
   const node: NodeType = app.graph.getNodeById(+(payload.id || app.runningNodeId));
@@ -27,7 +28,7 @@ const eventCb = (event: CustomEvent<ImageHistogramPayload>) => {
 };
 
 const updateCb = (node: NodeType) => {
-  window.lfManager.log(`Updating '${eventName}'`, { node });
+  getLFManager().log(`Updating '${eventName}'`, { node });
 
   const existingWidget = node?.widgets?.find((w) => w.name === widgetName);
   if (existingWidget) {
@@ -49,12 +50,12 @@ export const ImageHistogramAdapter: () => ImageHistogramDictionaryEntry = () => 
 
       return {
         KUL_CHART(node, name) {
-          window.lfManager.log(`Adding 'KUL_CHART' custom widget`, { node }, 'success');
+          getLFManager().log(`Adding 'KUL_CHART' custom widget`, { node }, 'success');
 
           const props = node.lfProps as ImageHistogramProps;
           const domWidget = document.createElement('div') as DOMWidget;
           domWidget.refresh = () => {
-            window.lfManager.log(`Refreshing KUL_CHART custom widget`, { domWidget });
+            getLFManager().log(`Refreshing KUL_CHART custom widget`, { domWidget });
 
             if (domWidget.firstChild) {
               domWidget.removeChild(domWidget.firstChild);
@@ -75,7 +76,7 @@ export const ImageHistogramAdapter: () => ImageHistogramDictionaryEntry = () => 
                 }, 125);
               }
             } catch (error) {
-              window.lfManager.log(
+              getLFManager().log(
                 'Whoops! It seems there is no chart. :V',
                 { error, number },
                 'error',
@@ -95,7 +96,7 @@ export const ImageHistogramAdapter: () => ImageHistogramDictionaryEntry = () => 
 function createWidget(props: ImageHistogramProps) {
   const dataset = props?.payload?.dataset;
   const readyCb = ({ detail }) => {
-    window.lfManager.log(`Histogram ready, resizing`, { detail });
+    getLFManager().log(`Histogram ready, resizing`, { detail });
 
     const { eventType } = detail;
     if (eventType === 'ready') {

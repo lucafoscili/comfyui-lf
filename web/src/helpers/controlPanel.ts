@@ -3,7 +3,7 @@ import type {
   KulListEventPayload,
   KulSwitchEventPayload,
 } from '../types/ketchup-lite/components';
-import { getKulManager, getKulThemes } from '../utils/utils';
+import { getKulManager, getKulThemes, getLFManager } from '../utils/utils';
 
 const cssClasses = {
   wrapper: 'lf-controlpanel',
@@ -25,7 +25,7 @@ const buttonCb = (e: CustomEvent<KulButtonEventPayload>) => {
 const switchCb = (e: CustomEvent<KulSwitchEventPayload>) => {
   if (e.detail.eventType === 'change') {
     const value = e.detail.value === 'on' ? true : false;
-    window.lfManager.toggleDebug(value);
+    getLFManager().toggleDebug(value);
   }
 };
 

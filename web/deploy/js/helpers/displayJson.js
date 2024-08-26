@@ -1,3 +1,4 @@
+import { getLFManager } from '../utils/utils.js';
 import { app } from '/scripts/app.js';
 const widgetName = 'json_value';
 const eventName = 'lf-displayjson';
@@ -6,7 +7,7 @@ const cssClasses = {
     widget: 'lf-displayjson__widget',
 };
 const eventCb = (event) => {
-    window.lfManager.log(`Event '${eventName}' received`, { event }, 'success');
+    getLFManager().log(`Event '${eventName}' received`, { event }, 'success');
     const payload = event.detail;
     const node = app.graph.getNodeById(+(payload.id || app.runningNodeId));
     if (node) {
@@ -24,7 +25,7 @@ const eventCb = (event) => {
     }
 };
 const updateCb = (node) => {
-    window.lfManager.log(`Updating '${eventName}'`, { node });
+    getLFManager().log(`Updating '${eventName}'`, { node });
     const existingWidget = node?.widgets?.find((w) => w.name === widgetName);
     if (existingWidget) {
         existingWidget.element.refresh();
@@ -42,11 +43,11 @@ export const DisplayJSONAdapter = () => {
         getCustomWidgets: () => {
             return {
                 KUL_CODE(node, name) {
-                    window.lfManager.log(`Adding KUL_CODE custom widget`, { node });
+                    getLFManager().log(`Adding KUL_CODE custom widget`, { node });
                     const props = node.lfProps;
                     const domWidget = document.createElement('div');
                     domWidget.refresh = () => {
-                        window.lfManager.log(`Refreshing KUL_CODE custom widget`, { domWidget });
+                        getLFManager().log(`Refreshing KUL_CODE custom widget`, { domWidget });
                         if (domWidget.firstChild) {
                             domWidget.removeChild(domWidget.firstChild);
                         }

@@ -23,10 +23,7 @@ import { SwitchStringAdapter } from '../helpers/switchString.js';
 import { defineCustomElements } from '../ketchup-lite/loader.js';
 import { getKulManager } from '../utils/utils.js';
 import { createDOMWidget } from '../helpers/common.js';
-/*-------------------------------------------------*/
-/*                 L F   C l a s s                 */
-/*-------------------------------------------------*/
-class LFManager {
+export class LFManager {
     constructor() {
         _LFManager_instances.add(this);
         _LFManager_CSS_EMBEDDED.set(this, void 0);
@@ -119,7 +116,7 @@ class LFManager {
         else {
             __classPrivateFieldSet(this, _LFManager_DEBUG, !__classPrivateFieldGet(this, _LFManager_DEBUG, "f"), "f");
         }
-        window.lfManager.log(`Debug active: '${__classPrivateFieldGet(this, _LFManager_DEBUG, "f")}'`, {}, 'warning');
+        this.log(`Debug active: '${__classPrivateFieldGet(this, _LFManager_DEBUG, "f")}'`, {}, 'warning');
         return __classPrivateFieldGet(this, _LFManager_DEBUG, "f");
     }
 }
@@ -192,7 +189,8 @@ _LFManager_CSS_EMBEDDED = new WeakMap(), _LFManager_DEBUG = new WeakMap(), _LFMa
     };
     app.registerExtension(extension);
 };
-if (!window.lfManager) {
-    window.lfManager = new LFManager();
-    window.lfManager.log('LFManager ready', { lfManager: window.lfManager }, 'success');
+const WINDOW = window;
+if (!WINDOW.lfManager) {
+    WINDOW.lfManager = new LFManager();
+    WINDOW.lfManager.log('LFManager ready', { lfManager: WINDOW.lfManager }, 'success');
 }

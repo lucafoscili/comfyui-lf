@@ -1,9 +1,10 @@
+import { getLFManager } from '../utils/utils.js';
 import { app } from '/scripts/app.js';
 import { ComfyWidgets } from '/scripts/widgets.js';
 const widgetName = 'display_boolean';
 const eventName = 'lf-switchstring';
 const eventCb = (event) => {
-    window.lfManager.log(`Event '${eventName}' received`, { event }, 'success');
+    getLFManager().log(`Event '${eventName}' received`, { event }, 'success');
     const payload = event.detail;
     const node = app.graph.getNodeById(+(payload.id || app.runningNodeId));
     if (node) {
@@ -21,7 +22,7 @@ const eventCb = (event) => {
     }
 };
 const updateCb = (node) => {
-    window.lfManager.log(`Updating '${eventName}'`, { node });
+    getLFManager().log(`Updating '${eventName}'`, { node });
     const props = node.lfProps;
     const value = props?.payload?.bool ? 'True!' : 'False!';
     const existingWidget = node.widgets?.find((w) => w.name === widgetName);

@@ -1,3 +1,4 @@
+import { getLFManager } from '../utils/utils';
 import { app } from '/scripts/app.js';
 
 const widgetName = 'image_preview_base64';
@@ -10,7 +11,7 @@ const cssClasses = {
 };
 
 const eventCb = (event: CustomEvent<LoadImagesPayload>) => {
-  window.lfManager.log(`Event '${eventName}' received`, { event }, 'success');
+  getLFManager().log(`Event '${eventName}' received`, { event }, 'success');
 
   const payload = event.detail;
   const node: NodeType = app.graph.getNodeById(+(payload.id || app.runningNodeId));
@@ -29,7 +30,7 @@ const eventCb = (event: CustomEvent<LoadImagesPayload>) => {
 };
 
 const updateCb = (node: NodeType) => {
-  window.lfManager.log(`Updating '${eventName}'`, { node });
+  getLFManager().log(`Updating '${eventName}'`, { node });
 
   const existingWidget = node?.widgets?.find((w) => w.name === widgetName);
   if (existingWidget) {
@@ -49,7 +50,7 @@ export const LoadImagesAdapter: () => LoadImagesDictionaryEntry = () => {
     getCustomWidgets: () => {
       return {
         IMAGE_PREVIEW_B64(node, name) {
-          window.lfManager.log(`Adding 'IMAGE_PREVIEW_B64' custom widget`, { node });
+          getLFManager().log(`Adding 'IMAGE_PREVIEW_B64' custom widget`, { node });
 
           const props = node.lfProps as LoadImagesProps;
           const domWidget = createWidget(props);
@@ -68,7 +69,7 @@ function createWidget(props: LoadImagesProps) {
   const hasImages = !!props?.payload?.images?.length;
   const domWidget = document.createElement('div') as DOMWidget;
   domWidget.refresh = () => {
-    window.lfManager.log(`Refreshing IMAGE_PREVIEW_B64 custom widget`, { domWidget });
+    getLFManager().log(`Refreshing IMAGE_PREVIEW_B64 custom widget`, { domWidget });
 
     if (domWidget.firstChild) {
       domWidget.removeChild(domWidget.firstChild);

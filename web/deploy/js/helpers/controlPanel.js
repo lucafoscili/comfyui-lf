@@ -1,4 +1,4 @@
-import { getKulManager, getKulThemes } from '../utils/utils.js';
+import { getKulManager, getKulThemes, getLFManager } from '../utils/utils.js';
 const cssClasses = {
     wrapper: 'lf-controlpanel',
     debug: 'lf-controlpanel__debug',
@@ -18,7 +18,7 @@ const buttonCb = (e) => {
 const switchCb = (e) => {
     if (e.detail.eventType === 'change') {
         const value = e.detail.value === 'on' ? true : false;
-        window.lfManager.toggleDebug(value);
+        getLFManager().toggleDebug(value);
     }
 };
 export function createContent(skipSpinner) {

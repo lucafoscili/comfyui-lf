@@ -1,4 +1,5 @@
 const DOM = document.documentElement;
+const WINDOW = window;
 export const capitalize = (input) => {
     return input
         .toLowerCase()
@@ -22,6 +23,9 @@ export const getKulThemes = () => {
         });
     }
     return kulData;
+};
+export const getLFManager = () => {
+    return WINDOW.lfManager;
 };
 export const kulManagerExists = () => {
     return !!DOM.ketchupLite;

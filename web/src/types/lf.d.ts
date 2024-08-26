@@ -1,16 +1,8 @@
 /*-------------------------------------------------------------------*/
 /*             G e n e r i c   D e c l a r a t i o n s               */
 /*-------------------------------------------------------------------*/
-declare interface Window {
-  lfManager: LFManager;
-}
 declare interface DOMWidget extends HTMLDivElement {
   refresh: () => void;
-}
-declare interface LFManager {
-  isDebug: () => boolean;
-  log: (message: string, args?: Record<string, unknown>, severity?: LogSeverity) => void;
-  toggleDebug: (value?: boolean) => boolean;
 }
 declare interface BaseLFProps {
   isInitialized: boolean;
@@ -40,6 +32,15 @@ declare interface BaseNodeDictionaryEntry {
   nodeCreated?: (node) => void;
   updateCb: UpdateCallback;
 }
+declare type EventCallback = (e: CustomEvent<NodePayload>) => void;
+declare type UpdateCallback = (node: NodeType) => void;
+declare interface Extension extends Partial<BaseNodeDictionaryEntry> {
+  name: string;
+}
+
+/*-------------------------------------------------------------------*/
+/*                    C o n t r o l   P a n e l                      */
+/*-------------------------------------------------------------------*/
 declare interface ControlPanelDictionary {
   eventName: EventNames;
   nodeName: NodeNames;
@@ -50,27 +51,7 @@ declare interface ControlPanelDictionary {
 declare interface ControlPanelExtension {
   beforeRegisterNodeDef?: (node: NodeType, data: NodeData, name: string) => void;
   getCustomWidgets: () => {
-    KUL_CONTROL_PANEL(
-      node: NodeType,
-      name: string,
-    ): {
-      widget: Partial<Widget>;
-    };
+    KUL_CONTROL_PANEL: (node: NodeType, name: string) => { widget: Partial<Widget> };
   };
-  name: string;
-}
-declare interface CustomWidgets {
-  IMAGE_PREVIEW_B64;
-  KUL_CHART;
-  KUL_CODE;
-  KUL_MANAGER;
-}
-declare type KeyOfCustomWidgets = KeyOfExistsIn<BaseNodeDictionaryEntry, CustomWidgets>;
-type KeyOfExistsIn<T, U> = {
-  [K in keyof T]: K extends keyof U ? K : never;
-}[keyof T];
-declare type EventCallback = (e: CustomEvent<NodePayload>) => void;
-declare type UpdateCallback = (node: NodeType) => void;
-declare interface Extension extends Partial<BaseNodeDictionaryEntry> {
   name: string;
 }

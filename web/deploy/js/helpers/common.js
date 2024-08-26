@@ -1,18 +1,19 @@
+import { getLFManager } from '../utils/utils.js';
 import { app } from '/scripts/app.js';
 export const createDOMWidget = (name, type, element, node, options = undefined) => {
-    window.lfManager.log(`Creating '${type}'`, { element });
+    getLFManager().log(`Creating '${type}'`, { element });
     return node.addDOMWidget(name, type, element, options);
 };
 export const getNode = (id) => {
-    window.lfManager.log(`Fetching node '${id}'`);
+    getLFManager().log(`Fetching node '${id}'`);
     return app.graph?.getNodeById(+(id || app.runningNodeId));
 };
 export const getWidget = (node, name) => {
-    window.lfManager.log(`Updating '${name}'`, { node });
+    getLFManager().log(`Updating '${name}'`, { node });
     return node?.widgets?.find((w) => w.name === name);
 };
 export const initProps = (event) => {
-    window.lfManager.log(`Event '${event.type}' received`, { event }, 'success');
+    getLFManager().log(`Event '${event.type}' received`, { event }, 'success');
     const payload = event.detail;
     const node = getNode(payload.id);
     if (node) {
@@ -28,7 +29,7 @@ export const initProps = (event) => {
         }
     }
     else {
-        window.lfManager.log(`Whoops! It seems this node wasn't found '${payload.id}'`, { event }, 'error');
+        getLFManager().log(`Whoops! It seems this node wasn't found '${payload.id}'`, { event }, 'error');
     }
     return node;
 };

@@ -17,7 +17,11 @@ import { createDOMWidget } from '../helpers/common.js';
 /*                 L F   C l a s s                 */
 /*-------------------------------------------------*/
 
-class LFManager {
+export interface LFWindow extends Window {
+  lfManager: LFManager;
+}
+
+export class LFManager {
   #CSS_EMBEDDED: Set<string>;
   #DEBUG = false;
   #DOM = document.documentElement as KulDom;
@@ -205,13 +209,15 @@ class LFManager {
     } else {
       this.#DEBUG = !this.#DEBUG;
     }
-    window.lfManager.log(`Debug active: '${this.#DEBUG}'`, {}, 'warning');
+    this.log(`Debug active: '${this.#DEBUG}'`, {}, 'warning');
 
     return this.#DEBUG;
   }
 }
 
-if (!window.lfManager) {
-  window.lfManager = new LFManager();
-  window.lfManager.log('LFManager ready', { lfManager: window.lfManager }, 'success');
+const WINDOW = window as unknown as LFWindow;
+
+if (!WINDOW.lfManager) {
+  WINDOW.lfManager = new LFManager();
+  WINDOW.lfManager.log('LFManager ready', { lfManager: WINDOW.lfManager }, 'success');
 }
