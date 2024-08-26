@@ -1,4 +1,10 @@
 import { getKulManager, getKulThemes } from '../utils/utils.js';
+const cssClasses = {
+    wrapper: 'lf-controlpanel',
+    debug: 'lf-controlpanel__debug',
+    spinner: 'lf-controlpanel__spinner',
+    themes: 'lf-controlpanel__themes',
+};
 const buttonCb = (e) => {
     if (e.detail.eventType === 'click') {
         getKulManager().theme.randomTheme();
@@ -9,10 +15,11 @@ const buttonCb = (e) => {
         getKulManager().theme.set(value);
     }
 };
-const cssClasses = {
-    wrapper: 'lf-controlpanel',
-    spinner: 'lf-controlpanel__spinner',
-    themes: 'lf-controlpanel__themes',
+const switchCb = (e) => {
+    if (e.detail.eventType === 'change') {
+        const value = e.detail.value === 'on' ? true : false;
+        window.lfManager.toggleDebug(value);
+    }
 };
 export function createContent(skipSpinner) {
     const wrapper = document.createElement('div');
@@ -23,6 +30,14 @@ export function createContent(skipSpinner) {
         spinnerWidget.kulLayout = 11;
         return spinnerWidget;
     };
+    const createDebugWidget = () => {
+        const debugWidget = document.createElement('kul-switch');
+        debugWidget.classList.add(cssClasses.debug);
+        debugWidget.kulLabel = 'Debug';
+        debugWidget.kulLeadingLabel = true;
+        debugWidget.addEventListener('kul-switch-event', switchCb);
+        return debugWidget;
+    };
     const createThemeWidget = () => {
         const themesWidget = document.createElement('kul-button');
         themesWidget.classList.add(cssClasses.themes);
@@ -31,7 +46,9 @@ export function createContent(skipSpinner) {
         return themesWidget;
     };
     if (skipSpinner) {
+        const debug = createDebugWidget();
         const themes = createThemeWidget();
+        wrapper.appendChild(debug);
         wrapper.appendChild(themes);
     }
     else {

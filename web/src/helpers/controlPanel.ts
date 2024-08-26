@@ -1,5 +1,16 @@
-import type { KulButtonEventPayload, KulListEventPayload } from '../types/ketchup-lite/components';
+import type {
+  KulButtonEventPayload,
+  KulListEventPayload,
+  KulSwitchEventPayload,
+} from '../types/ketchup-lite/components';
 import { getKulManager, getKulThemes } from '../utils/utils';
+
+const cssClasses = {
+  wrapper: 'lf-controlpanel',
+  debug: 'lf-controlpanel__debug',
+  spinner: 'lf-controlpanel__spinner',
+  themes: 'lf-controlpanel__themes',
+};
 
 const buttonCb = (e: CustomEvent<KulButtonEventPayload>) => {
   if (e.detail.eventType === 'click') {
@@ -11,10 +22,11 @@ const buttonCb = (e: CustomEvent<KulButtonEventPayload>) => {
   }
 };
 
-const cssClasses = {
-  wrapper: 'lf-controlpanel',
-  spinner: 'lf-controlpanel__spinner',
-  themes: 'lf-controlpanel__themes',
+const switchCb = (e: CustomEvent<KulSwitchEventPayload>) => {
+  if (e.detail.eventType === 'change') {
+    const value = e.detail.value === 'on' ? true : false;
+    window.lfManager.toggleDebug(value);
+  }
 };
 
 export function createContent(skipSpinner: boolean) {
@@ -29,6 +41,16 @@ export function createContent(skipSpinner: boolean) {
     return spinnerWidget;
   };
 
+  const createDebugWidget = () => {
+    const debugWidget = document.createElement('kul-switch');
+    debugWidget.classList.add(cssClasses.debug);
+    debugWidget.kulLabel = 'Debug';
+    debugWidget.kulLeadingLabel = true;
+    debugWidget.addEventListener('kul-switch-event', switchCb);
+
+    return debugWidget;
+  };
+
   const createThemeWidget = () => {
     const themesWidget = document.createElement('kul-button');
     themesWidget.classList.add(cssClasses.themes);
@@ -39,7 +61,9 @@ export function createContent(skipSpinner: boolean) {
   };
 
   if (skipSpinner) {
+    const debug = createDebugWidget();
     const themes = createThemeWidget();
+    wrapper.appendChild(debug);
     wrapper.appendChild(themes);
   } else {
     const spinner = createSpinnerWidget();

@@ -199,8 +199,14 @@ class LFManager {
     console.log(`${colorCode}${dot} ${message} ${resetColorCode}`, args);
   }
 
-  toggleDebug() {
-    this.#DEBUG = !this.#DEBUG;
+  toggleDebug(value?: boolean) {
+    if (value === false || value === true) {
+      this.#DEBUG = value;
+    } else {
+      this.#DEBUG = !this.#DEBUG;
+    }
+    window.lfManager.log(`Debug active: '${this.#DEBUG}'`, {}, 'warning');
+
     return this.#DEBUG;
   }
 }

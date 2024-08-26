@@ -112,8 +112,14 @@ class LFManager {
         const dot = '•';
         console.log(`${colorCode}${dot} ${message} ${resetColorCode}`, args);
     }
-    toggleDebug() {
-        __classPrivateFieldSet(this, _LFManager_DEBUG, !__classPrivateFieldGet(this, _LFManager_DEBUG, "f"), "f");
+    toggleDebug(value) {
+        if (value === false || value === true) {
+            __classPrivateFieldSet(this, _LFManager_DEBUG, value, "f");
+        }
+        else {
+            __classPrivateFieldSet(this, _LFManager_DEBUG, !__classPrivateFieldGet(this, _LFManager_DEBUG, "f"), "f");
+        }
+        window.lfManager.log(`Debug active: '${__classPrivateFieldGet(this, _LFManager_DEBUG, "f")}'`, {}, 'warning');
         return __classPrivateFieldGet(this, _LFManager_DEBUG, "f");
     }
 }

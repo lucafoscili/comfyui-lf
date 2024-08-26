@@ -10,7 +10,7 @@ declare interface DOMWidget extends HTMLDivElement {
 declare interface LFManager {
   isDebug: () => boolean;
   log: (message: string, args?: Record<string, unknown>, severity?: LogSeverity) => void;
-  toggleDebug: () => boolean;
+  toggleDebug: (value?: boolean) => boolean;
 }
 declare interface BaseLFProps {
   isInitialized: boolean;
