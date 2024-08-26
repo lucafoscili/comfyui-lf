@@ -1,8 +1,8 @@
+import { LFWidgets } from './widgets.js';
 import type { KulDom } from '../types/ketchup-lite/managers/kul-manager/kul-manager-declarations.js';
 import type { KulManager } from '../types/ketchup-lite/managers/kul-manager/kul-manager.js';
 import { api } from '/scripts/api.js';
 import { app } from '/scripts/app.js';
-import { createContent } from '../helpers/controlPanel.js';
 import { DisplayJSONAdapter } from '../helpers/displayJson.js';
 import { ImageHistogramAdapter } from '../helpers/imageHistogram.js';
 import { LoadImagesAdapter } from '../helpers/loadImages.js';
@@ -10,9 +10,9 @@ import { SwitchImageAdapter } from '../helpers/switchImage.js';
 import { SwitchIntegerAdapter } from '../helpers/switchInteger.js';
 import { SwitchJSONAdapter } from '../helpers/switchJson.js';
 import { SwitchStringAdapter } from '../helpers/switchString.js';
-import { defineCustomElements } from '../ketchup-lite/loader';
+import { defineCustomElements } from '../ketchup-lite/loader.js';
 import { getKulManager } from '../utils/utils.js';
-import { createDOMWidget } from '../helpers/common.js';
+
 /*-------------------------------------------------*/
 /*                 L F   C l a s s                 */
 /*-------------------------------------------------*/
@@ -26,7 +26,10 @@ export class LFManager {
   #DEBUG = false;
   #DOM = document.documentElement as KulDom;
   #EXT_PREFIX = 'LFExtension_';
-  #KUL_MANAGER: KulManager;
+  #MANAGERS: {
+    ketchupLite?: KulManager;
+    widgets?: LFWidgets;
+  } = {};
   #NODES_DICT: NodeDictionary = {
     displayJson: DisplayJSONAdapter(),
     imageHistogram: ImageHistogramAdapter(),
@@ -41,8 +44,8 @@ export class LFManager {
 
   constructor() {
     const managerCb = () => {
-      this.#KUL_MANAGER = getKulManager();
-      this.log('KulManager ready', { kulManager: this.#KUL_MANAGER }, 'success');
+      this.#MANAGERS.ketchupLite = getKulManager();
+      this.log('KulManager ready', { kulManager: this.#MANAGERS.ketchupLite }, 'success');
       document.removeEventListener('kul-manager-ready', managerCb);
     };
     this.#DOM.ketchupLiteInit = {
@@ -52,6 +55,7 @@ export class LFManager {
     defineCustomElements(window);
 
     this.#CSS_EMBEDDED = new Set();
+    this.#MANAGERS.widgets = new LFWidgets();
     this.CONTROL_PANEL = {
       cssName: 'controlPanel',
       eventName: 'lf-controlpanel',
@@ -116,56 +120,13 @@ export class LFManager {
           nodeType.prototype.onNodeCreated = function () {
             const r = onNodeCreated?.apply(this, arguments);
             const node = this;
-
-            panelWidgetCb(node, self.CONTROL_PANEL.widgetName);
-
+            self.#MANAGERS.widgets.create.controlPanel(node);
             return r;
           };
         }
       },
       getCustomWidgets: () => {
-        return {
-          KUL_CONTROL_PANEL(node, name) {
-            const domWidget = document.createElement('div') as DOMWidget;
-            const refresh = () => {
-              const options = node.widgets?.find(
-                (w) => w.type === self.CONTROL_PANEL.widgetName,
-              )?.options;
-
-              if (options) {
-                const isReady = options.isReady;
-                if (isReady) {
-                  const content = createContent(isReady);
-                  domWidget.replaceChild(content, domWidget.firstChild);
-                } else {
-                  const content = createContent(isReady);
-                  options.isReady = true;
-                  domWidget.appendChild(content);
-                }
-              }
-            };
-            domWidget.dataset.isInVisibleNodes = 'true';
-            const widget: Partial<Widget> = createDOMWidget(
-              name,
-              self.CONTROL_PANEL.widgetName,
-              domWidget,
-              node,
-              {
-                isReady: false,
-                refresh,
-              },
-            );
-            const readyCb = () => {
-              setTimeout(() => {
-                widget.options.refresh();
-                document.removeEventListener('kul-spinner-event', readyCb);
-              }, 500);
-            };
-            document.addEventListener('kul-spinner-event', readyCb);
-            widget.options.refresh();
-            return { widget };
-          },
-        };
+        return this.#MANAGERS.widgets.get.controlPanel();
       },
     };
 

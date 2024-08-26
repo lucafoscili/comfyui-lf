@@ -1,7 +1,7 @@
 import type { KulDataDataset } from '../types/ketchup-lite/components';
 import type { KulDom } from '../types/ketchup-lite/managers/kul-manager/kul-manager-declarations';
 import type { KulManager } from '../types/ketchup-lite/managers/kul-manager/kul-manager';
-import type { LFManager, LFWindow } from '../manager/lf-manager';
+import type { LFManager, LFWindow } from '../managers/manager';
 
 const DOM = document.documentElement as KulDom;
 const WINDOW = window as unknown as LFWindow;

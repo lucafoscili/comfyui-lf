@@ -4,6 +4,40 @@ import type {
   KulSwitchEventPayload,
 } from '../types/ketchup-lite/components';
 import { getKulManager, getKulThemes, getLFManager } from '../utils/utils';
+import { createDOMWidget } from '../helpers/common';
+
+export function KUL_CONTROL_PANEL(node: NodeType, name: string, wType: string) {
+  const domWidget = document.createElement('div') as DOMWidget;
+  const refresh = () => {
+    const options = node.widgets?.find((w) => w.type === wType)?.options;
+
+    if (options) {
+      const isReady = options.isReady;
+      if (isReady) {
+        const content = createContent(isReady);
+        domWidget.replaceChild(content, domWidget.firstChild);
+      } else {
+        const content = createContent(isReady);
+        options.isReady = true;
+        domWidget.appendChild(content);
+      }
+    }
+  };
+  domWidget.dataset.isInVisibleNodes = 'true';
+  const widget: Partial<Widget> = createDOMWidget(name, wType, domWidget, node, {
+    isReady: false,
+    refresh,
+  });
+  const readyCb = () => {
+    setTimeout(() => {
+      widget.options.refresh();
+      document.removeEventListener('kul-spinner-event', readyCb);
+    }, 500);
+  };
+  document.addEventListener('kul-spinner-event', readyCb);
+  widget.options.refresh();
+  return { widget };
+}
 
 const cssClasses = {
   wrapper: 'lf-controlpanel',
