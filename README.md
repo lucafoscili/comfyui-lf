@@ -14,9 +14,12 @@ There is a big JS bundled coming from another side-project of mine, [a webcompon
 
 ### Conversions Nodes (`conversions.py`)
 
+- **ImageResizeByEdge**: Resizes an image in tensor format's longest or shortest edge to the specified size.
 - **Lora2Prompt**: Converts a prompt and LoRAs to a formatted string.
 - **LoraTag2Prompt**: Processes a LoRA tag to extract keywords and count them. This node is useful for preparing prompts based on LoRA file names.
 - **SequentialSeedsGenerator**: Generates a series of unique seeds based on a global seed value. This node is useful for creating reproducible random sequences in workflows.
+- **Something2Number**: Converts multiple inputs to integers and floats, handling nested structures and mixed types. If multiple numbers are sent to the node, they are summed.
+- **Something2String**: Converts multiple inputs to strings, handling nested structures and mixed types.
 - **WallOfText**: Concatenates up to 10 strings, with the optional toggle to shuffle the order of concatenation.
 
 ![Lora2Prompt](https://github.com/lucafoscili/comfyui-lf/blob/792f573544096949c8123939d77006f5bfb00216/docs/images/Lora2Prompt.png "Extracts keywords from LoRA filenames")
@@ -33,8 +36,6 @@ There is a big JS bundled coming from another side-project of mine, [a webcompon
 - **GetRandomKeyFromJSON**: Extracts a random key from a given JSON object. This can be used to introduce variability or select random elements from JSON data.
 - **GetValueFromJSON**: Extracts a specific value from a JSON object based on a provided key. This node supports extracting various types of values including JSON objects, strings, numbers, integers, floats, and booleans.
 - **LoadLocalJSON**: Loads JSON data from a local file specified by a URL. This node is useful for importing static JSON configurations or datasets directly into ComfyUI workflows.
-
-![DisplayJSON](https://github.com/lucafoscili/comfyui-lf/blob/792f573544096949c8123939d77006f5bfb00216/docs/images/DisplayJSON.png "Displays JSON data")
 
 ![LoadLocalJSON_GetRandomKeyFromJSON_DisplayJSON](https://github.com/lucafoscili/comfyui-lf/blob/792f573544096949c8123939d77006f5bfb00216/docs/images/LoadLocalJSON_GetRandomKeyFromJSON_DisplayJSON.png "Demonstrates loading local JSON and displaying it")
 

@@ -1,12 +1,13 @@
+import { getLFManager } from '../utils/utils.js';
 import { app } from '/scripts/app.js';
-const widgetName = 'histogram';
-const eventName = 'lf-imagehistogram';
 const cssClasses = {
     wrapper: 'lf-imagehistogram',
     widget: 'lf-imagehistogram__widget',
 };
+const eventName = 'lf-imagehistogram';
+const widgetName = 'histogram';
 const eventCb = (event) => {
-    window.lfManager.log(`Event '${eventName}' received`, { event });
+    getLFManager().log(`Event '${eventName}' received`, { event });
     const payload = event.detail;
     const node = app.graph.getNodeById(+(payload.id || app.runningNodeId));
     if (node) {
@@ -24,7 +25,7 @@ const eventCb = (event) => {
     }
 };
 const updateCb = (node) => {
-    window.lfManager.log(`Updating '${eventName}'`, { node });
+    getLFManager().log(`Updating '${eventName}'`, { node });
     const existingWidget = node?.widgets?.find((w) => w.name === widgetName);
     if (existingWidget) {
         existingWidget.element.refresh();
@@ -43,11 +44,11 @@ export const ImageHistogramAdapter = () => {
             let timeoutId = null;
             return {
                 KUL_CHART(node, name) {
-                    window.lfManager.log(`Adding 'KUL_CHART' custom widget`, { node }, 'success');
+                    getLFManager().log(`Adding 'KUL_CHART' custom widget`, { node }, 'success');
                     const props = node.lfProps;
                     const domWidget = document.createElement('div');
                     domWidget.refresh = () => {
-                        window.lfManager.log(`Refreshing KUL_CHART custom widget`, { domWidget });
+                        getLFManager().log(`Refreshing KUL_CHART custom widget`, { domWidget });
                         if (domWidget.firstChild) {
                             domWidget.removeChild(domWidget.firstChild);
                         }
@@ -67,7 +68,7 @@ export const ImageHistogramAdapter = () => {
                             }
                         }
                         catch (error) {
-                            window.lfManager.log('Whoops! It seems there is no chart. :V', { error, number }, 'error');
+                            getLFManager().log('Whoops! It seems there is no chart. :V', { error, number }, 'error');
                         }
                     };
                     return { widget };
@@ -81,25 +82,22 @@ export const ImageHistogramAdapter = () => {
 };
 function createWidget(props) {
     const dataset = props?.payload?.dataset;
+    const readyCb = ({ detail }) => {
+        getLFManager().log(`Histogram ready, resizing`, { detail });
+        const { eventType } = detail;
+        if (eventType === 'ready') {
+            chartWidget.kulAxis = 'Axis_0';
+            chartWidget.kulColors = ['red', 'green', 'blue'];
+            chartWidget.kulData = dataset;
+            chartWidget.kulSeries = ['Series_0', 'Series_1', 'Series_2'];
+            chartWidget.removeEventListener('kul-chart-event', readyCb);
+        }
+    };
     const content = document.createElement('div');
     content.classList.add(cssClasses.wrapper);
     const chartWidget = document.createElement('kul-chart');
     chartWidget.classList.add(cssClasses.widget);
-    chartWidget.addEventListener('kul-chart-event', ({ detail }) => {
-        window.lfManager.log(`Histogram ready, resizing`, { detail });
-        const { comp, eventType } = detail;
-        if (eventType === 'ready') {
-            const refresh = () => {
-                comp.kulSizeX = '100%';
-                comp.kulSizeY = '100%';
-            };
-            setTimeout(refresh, 1000);
-        }
-    });
-    chartWidget.kulAxis = 'Axis_0';
-    chartWidget.kulColors = ['red', 'green', 'blue'];
-    chartWidget.kulData = dataset;
-    chartWidget.kulSeries = ['Series_0', 'Series_1', 'Series_2'];
+    chartWidget.addEventListener('kul-chart-event', readyCb);
     chartWidget.kulSizeX = '100%';
     chartWidget.kulSizeY = '100%';
     chartWidget.kulTypes = ['area'];

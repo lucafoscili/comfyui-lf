@@ -1,6 +1,12 @@
 /*-------------------------------------------------------------------*/
 /*             G e n e r i c   D e c l a r a t i o n s               */
 /*-------------------------------------------------------------------*/
+declare interface ControlPanelProps extends BaseLFProps {
+  payload: ControlPanelPayload;
+}
+declare interface ControlPanelOptions extends BaseWidgetOptions {
+  isReady?: boolean;
+}
 declare interface DisplayJSONProps extends BaseLFProps {
   payload: DisplayJSONPayload;
 }
@@ -25,6 +31,9 @@ declare interface SwitchStringProps extends BaseLFProps {
 /*-------------------------------------------------------------------*/
 /*               E v e n t s    D e c l a r a t i o n s              */
 /*-------------------------------------------------------------------*/
+declare interface ControlPanelPayload extends BaseEventPayload {
+  isDebug: boolean;
+}
 declare interface DisplayJSONPayload extends BaseEventPayload {
   json: Record<string, unknown>;
 }

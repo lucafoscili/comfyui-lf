@@ -8,6 +8,7 @@
 
 declare namespace LiteGraph {
   export const NODE_TITLE_HEIGHT: number;
+  export const getNodeType: (node: string) => NodeType;
   // Add other properties or methods of LiteGraph here if needed
 }
 
@@ -40,13 +41,19 @@ interface NodeType {
   redrawOnMouse?: boolean;
   widgets: Array<Widget>;
   widgetsUp?: boolean;
+  pos: [number, number];
   widgetsStartY?: number;
   clipArea?: boolean;
   resizable?: boolean;
   horizontal?: boolean;
   inputs: SlotInfo[];
   outputs: SlotInfo[];
-  addDOMWidget: (name?: string, type?: string, element?: Partial<HTMLElement>) => unknown;
+  addDOMWidget: (
+    name?: string,
+    type?: string,
+    element?: Partial<HTMLElement>,
+    options?: WidgetOptions,
+  ) => unknown;
   addCustomWidget: (
     type?: T['type'],
     name?: string,
@@ -69,6 +76,7 @@ interface NodeType {
   onMouseLeave?(event: MouseEvent): void;
   onDblClick?(event: MouseEvent): void;
   onExecute?(): void;
+  onNodeCreated(): void;
   onPropertyChanged?(propertyName: string, newValue: any): boolean;
   onGetInputs?(): Array<[string, string]>[];
   onGetOutputs?(): Array<[string, string]>[];
@@ -83,6 +91,10 @@ interface NodeType {
   addOutput(name: string, type: string): void;
   getInputData(slotIndex: number): any;
   getOutputData(slotIndex: number): any;
+  prototype: Partial<NodeType>;
+  drawNode(node: NodeType, ctx: Canvas): void;
+  onConfigure(): void;
+  widgets_values: Widget[];
 }
 
 interface NodeProperties {
@@ -113,8 +125,23 @@ interface Widget {
   type: string;
   name: string;
   value: any;
-  options?: TextOption | ToggleOption | NumberOption | Base64PreviewOption;
+  options?: WidgetOptions;
   last_y?: number;
   y: number;
   computedHeight?: number;
+  onRemove?(): void;
+}
+type OnConnectionChangeCallback = (
+  side: number,
+  slot: number,
+  connect: boolean,
+  link_info: ConnectionChangePayload,
+  output: Widget,
+) => OnConnectionChangeCallback;
+interface ConnectionChangePayload {
+  origin_id: number;
+  origin_slot: number;
+  target_id: number;
+  target_slot: number;
+  type: string;
 }

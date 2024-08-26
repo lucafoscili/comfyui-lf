@@ -6,12 +6,10 @@ class LF_ControlPanel:
     @classmethod
     def INPUT_TYPES(cls):
         return {
-            "required": {
-                "debug": ("BOOLEAN", {"default": False, "tooltip": "Enables log messages in the browser's console."}),
-            },
+            "required": {},
             "hidden": { "node_id": "UNIQUE_ID" }
         }
-
+    
     RETURN_TYPES = ()
     CATEGORY = category
     FUNCTION = "on_exec"

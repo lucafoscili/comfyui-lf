@@ -15,7 +15,6 @@ console.log(logColor, '*---*');
 console.log(logColor, 'Sass dir: ' + sassDir);
 console.log(logColor, 'Scss dir: ' + scssDir);
 console.log(logColor, 'Css dir: ' + cssDir);
-console.log(logColor, '*---*');
 
 if (!fs.existsSync(cssDir)) {
   fs.mkdirSync(cssDir, { recursive: true });

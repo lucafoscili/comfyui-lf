@@ -1,19 +1,45 @@
+import json
 import random
 import re
 
-from ..utils.conversions import * 
+from ..utils.conversions import *
 
 category = "LF Nodes/Conversions"
+    
+class LF_ImageResizeByEdge:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "image": ("IMAGE", {"tooltip": "Input image tensor or a list of image tensors."}),
+                "longest_edge": ("BOOLEAN", {"default": False, "tooltip": "Resizes the image by the longest side if set to True. Otherwise, resizes by the shortest side."}),
+                "new_size": ("INT", {"default": 1024, "tooltip": "The size of the longest edge of the output image."}),
+                "resize_method": (["bicubic", "bilinear", "linear", "nearest", "nearest exact"], {"default": "bicubic", "tooltip": "Method to resize the image."})
+            }
+        }
 
+    RETURN_TYPES = ("IMAGE",)
+    RETURN_NAMES = ("resized_image",)
+    CATEGORY = category
+    FUNCTION = "on_exec"
+
+    def on_exec(self, image, longest_edge: bool, new_size: int, resize_method: str):
+        if isinstance(image, list):
+            resized_images = [resize_image(tensor, resize_method, longest_edge, new_size) for tensor in image]
+            return (resized_images,)
+        else:
+            resized_image = resize_image(image, resize_method, longest_edge, new_size)
+            return (resized_image,)
+        
 class LF_Lora2Prompt:
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "text": ("STRING", {"multiline": True, "label": "Input Text with LoRAs", "tooltip": "The input text containing LoRa tags. These tags will be processed and replaced with extracted keywords."}),
-                "separator": ("STRING", { "default": "SEP", "label": "Keywords separator", "tooltip": "Character(s) used to separate keywords within the name of a single LoRa file. Helps in extracting individual keywords."}),
-                "weight": ("FLOAT", { "default": 0.5, "label": "LoRAs weight", "tooltip": "A weight value associated with LoRa tags, which may influence processing or output significance."}),
-                "weight_placeholder": ("STRING", { "default": "wwWEIGHTww", "label": "Weight placeholder", "tooltip": "A placeholder within LoRa tags that gets replaced with the actual weight value during processing."}),
+                "text": ("STRING", {"multiline": True, "tooltip": "The input text containing LoRa tags. These tags will be processed and replaced with extracted keywords."}),
+                "separator": ("STRING", { "default": "SEP", "tooltip": "Character(s) used to separate keywords within the name of a single LoRa file. Helps in extracting individual keywords."}),
+                "weight": ("FLOAT", { "default": 0.5, "tooltip": "A weight value associated with LoRa tags, which may influence processing or output significance."}),
+                "weight_placeholder": ("STRING", { "default": "wwWEIGHTww", "tooltip": "A placeholder within LoRa tags that gets replaced with the actual weight value during processing."}),
             }
         } 
 
@@ -50,8 +76,8 @@ class LF_LoraTag2Prompt:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "tag": ("STRING", {"multiline": True, "label": "LoRA Tag", "tooltip": "The LoRA tag to be converted."}),
-                "separator": ("STRING", { "default": "SEP", "label": "Keywords separator", "tooltip": "String separating each keyword in a LoRA filename."}),
+                "tag": ("STRING", {"multiline": True, "tooltip": "The LoRA tag to be converted."}),
+                "separator": ("STRING", { "default": "SEP", "tooltip": "String separating each keyword in a LoRA filename."}),
             }
         }
 
@@ -125,16 +151,134 @@ class LF_WallOfText:
 
         return (wall_of_text,)
 
+class LF_Something2Number:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {},
+            "optional": {
+                "JSON": ("JSON", {"tooltip": "JSON value to convert to numbers."}),
+                "boolean": ("BOOLEAN", {"tooltip": "Boolean value to convert to numbers."}),
+                "string": ("STRING", {"tooltip": "String value to convert to numbers."}),
+                "integer": ("INT", {"tooltip": "Integer value to convert to numbers."}),
+                "float": ("FLOAT", {"tooltip": "Float value to convert to numbers."})
+            }
+        }
+
+    RETURN_TYPES = ("FLOAT", "INT", "FLOAT", "INT",)
+    RETURN_NAMES = ("float_sum", "integer_sum", "float_list", "integer_list",)
+    OUTPUT_IS_LIST = (False, False, True, True,)
+    FUNCTION = "on_exec"
+
+    def on_exec(self, **kwargs):
+        """
+        Converts various inputs to floats and integers, handles nested structures,
+        and computes their sums.
+
+        Returns:
+            tuple:
+                - float_sum (float): Sum of all values converted to floats.
+                - integer_sum (int): Sum of all values converted to integers.
+                - float_list (list): List of all values converted to floats.
+                - integer_list (list): List of all values converted to integers.
+        """
+        float_values = []
+        integer_values = []
+
+        def extract_numbers(data):
+            """
+            Recursively extract numbers from various data types.
+            """
+            if isinstance(data, (int, float)):
+                float_values.append(float(data))
+                integer_values.append(int(data))
+            elif isinstance(data, bool):
+                float_values.append(1.0 if data else 0.0)
+                integer_values.append(1 if data else 0)
+            elif isinstance(data, str):
+                data = data.strip()
+                # Try direct conversion
+                try:
+                    num = float(data)
+                    float_values.append(num)
+                    integer_values.append(int(num))
+                except ValueError:
+                    # Try parsing as JSON
+                    try:
+                        parsed_json = json.loads(data)
+                        extract_numbers(parsed_json)
+                    except json.JSONDecodeError:
+                        pass  # Ignore strings that are neither numbers nor valid JSON
+            elif isinstance(data, dict):
+                for value in data.values():
+                    extract_numbers(value)
+            elif isinstance(data, (list, tuple, set)):
+                for item in data:
+                    extract_numbers(item)
+            # Ignore other data types (e.g., None, complex, etc.)
+
+        for _, value in kwargs.items():
+            extract_numbers(value)
+
+        float_sum = sum(float_values)
+        integer_sum = sum(integer_values)
+
+        return (float_sum, integer_sum, float_values, integer_values,)
+
+    
+class LF_Something2String:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {},
+            "optional": {
+                "JSON": ("JSON", {"tooltip": "JSON value to convert to string."}) ,
+                "boolean": ("BOOLEAN", {"tooltip": "Boolean value to convert to string."}),
+                "float": ("FLOAT", {"tooltip": "Float value to convert to string."}),
+                "integer": ("INT", {"tooltip": "Integer value to convert to string."})
+            }
+        }
+
+    RETURN_TYPES = ("STRING", "STRING",)
+    RETURN_NAMES = ("concatenate", "list",)
+    OUTPUT_IS_LIST = (False, True,)
+    FUNCTION = "on_exec"
+
+    def on_exec(self, **kwargs):
+        """
+        Converts multiple inputs to strings, handling nested structures and mixed types.
+        """
+        flattened_values = []
+        
+        def flatten_input(input_item):
+            if isinstance(input_item, list):
+                for item in input_item:
+                    flatten_input(item)
+            elif isinstance(input_item, str):
+                flattened_values.append(input_item)
+            else:
+                flattened_values.append(str(input_item))
+
+        for _, value in kwargs.items():
+            flatten_input(value)
+
+        return (flattened_values, flattened_values,)
 
 NODE_CLASS_MAPPINGS = {
+    "LF_ImageResizeByEdge": LF_ImageResizeByEdge,
     "LF_Lora2Prompt": LF_Lora2Prompt,
     "LF_LoraTag2Prompt": LF_LoraTag2Prompt,
     "LF_SequentialSeedsGenerator": LF_SequentialSeedsGenerator,
+    "LF_Something2Number": LF_Something2Number,
+    "LF_Something2String": LF_Something2String,
     "LF_WallOfText": LF_WallOfText,
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
+    "LF_ImageResizeByEdge": "Resize image by edge",
     "LF_Lora2Prompt": "Convert prompt and LoRAs",
     "LF_LoraTag2Prompt": "Convert LoRA tag to prompt",
     "LF_SequentialSeedsGenerator": "Generate sequential seeds",
+    "LF_Something2Number": "Convert something to INT or FLOAT",
+    "LF_Something2String": "Convert something to STRING",
     "LF_WallOfText": "Wall of text (string concatenate)",
 }
