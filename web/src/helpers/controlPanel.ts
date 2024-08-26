@@ -1,88 +1,52 @@
-import type { KulDataDataset } from '../types/ketchup-lite/components';
-import { capitalize, getKulManager, kulManagerExists } from '../utils/utils';
-import { getNode, getWidget, redrawCanvas, refreshWidget } from './common';
-import { app } from '/scripts/app.js';
+import type { KulButtonEventPayload, KulListEventPayload } from '../types/ketchup-lite/components';
+import { getKulManager, getKulThemes } from '../utils/utils';
 
-const widgetName = 'theme_controller';
-const eventName: EventNames = 'lf-controlpanel';
+const buttonCb = (e: CustomEvent<KulButtonEventPayload>) => {
+  if (e.detail.eventType === 'click') {
+    getKulManager().theme.randomTheme();
+  } else if (e.detail.eventType === 'kul-event') {
+    const listEvent = e.detail.originalEvent as CustomEvent<KulListEventPayload>;
+    const value = listEvent.detail.node.id;
+    getKulManager().theme.set(value);
+  }
+};
+
 const cssClasses = {
   wrapper: 'lf-controlpanel',
-  widget: 'lf-controlpanel__widget',
+  spinner: 'lf-controlpanel__spinner',
+  themes: 'lf-controlpanel__themes',
 };
 
-const eventCb = (event: CustomEvent<ControlPanelPayload>) => {
-  const node = getNode(event);
-  if (node) {
-    updateCb(node);
-  }
-};
+export function createContent(skipSpinner: boolean) {
+  const wrapper = document.createElement('div');
 
-const updateCb = (node: NodeType) => {
-  const existingWidget = getWidget(node, widgetName);
+  const createSpinnerWidget = () => {
+    const spinnerWidget = document.createElement('kul-spinner');
+    spinnerWidget.classList.add(cssClasses.spinner);
+    spinnerWidget.kulActive = true;
+    spinnerWidget.kulLayout = 11;
 
-  if (existingWidget) {
-    (existingWidget.element as DOMWidget).refresh();
+    return spinnerWidget;
+  };
+
+  const createThemeWidget = () => {
+    const themesWidget = document.createElement('kul-button');
+    themesWidget.classList.add(cssClasses.themes);
+    themesWidget.kulData = getKulThemes();
+    themesWidget.addEventListener('kul-button-event', buttonCb);
+
+    return themesWidget;
+  };
+
+  if (skipSpinner) {
+    const themes = createThemeWidget();
+    wrapper.appendChild(themes);
   } else {
-    const widget = app.widgets.KUL_BUTTON(node, widgetName).widget;
-    window.lfManager.log(`Created widget`, { widget });
+    const spinner = createSpinnerWidget();
+    wrapper.appendChild(spinner);
   }
 
-  redrawCanvas();
-};
+  wrapper.classList.add(cssClasses.wrapper);
 
-export const ControlPanelAdapter: () => ControlPanelDictionaryEntry = () => {
-  return {
-    getCustomWidgets: () => {
-      return {
-        KUL_BUTTON(node, name) {
-          const domWidget = document.createElement('div') as DOMWidget;
-          domWidget.refresh = refreshWidget.bind(domWidget, createWidget);
-          domWidget.refresh();
-          const widget = node.addDOMWidget(name, widgetName, domWidget);
-          return { widget };
-        },
-      };
-    },
-    eventCb,
-    eventName,
-    updateCb,
-  };
-};
-
-function createWidget() {
-  const content = document.createElement('div');
-  content.classList.add(cssClasses.wrapper);
-
-  const managerCb = () => {
-    buttonWidget.kulData = getThemes();
-    removeEventListener('kul-manager-ready', managerCb);
-  };
-
-  const buttonWidget: HTMLKulButtonElement = document.createElement('kul-button');
-  buttonWidget.classList.add(cssClasses.widget);
-  if (kulManagerExists()) {
-    buttonWidget.kulData = getThemes();
-  } else {
-    addEventListener('kul-manager-ready', managerCb);
-  }
-  content.appendChild(buttonWidget);
-
-  return content;
-}
-
-function getThemes() {
-  const themes = getKulManager().theme.getThemes();
-
-  const kulData: KulDataDataset = {
-    nodes: [{ children: [], icon: 'style', id: 'root', value: 'Theme' }],
-  };
-  for (let index = 0; index < themes.length; index++) {
-    const currentTheme = themes[index];
-    kulData.nodes[0].children.push({
-      id: currentTheme,
-      value: capitalize(currentTheme),
-    });
-  }
-
-  return kulData;
+  return wrapper;
 }

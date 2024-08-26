@@ -8,6 +8,7 @@
 
 declare namespace LiteGraph {
   export const NODE_TITLE_HEIGHT: number;
+  export const getNodeType: (node: string) => NodeType;
   // Add other properties or methods of LiteGraph here if needed
 }
 
@@ -40,6 +41,7 @@ interface NodeType {
   redrawOnMouse?: boolean;
   widgets: Array<Widget>;
   widgetsUp?: boolean;
+  pos: [number, number];
   widgetsStartY?: number;
   clipArea?: boolean;
   resizable?: boolean;
@@ -84,10 +86,10 @@ interface NodeType {
   addOutput(name: string, type: string): void;
   getInputData(slotIndex: number): any;
   getOutputData(slotIndex: number): any;
-  prototype: {
-    addDOMWidget: (name?: string, type?: string, element?: Partial<HTMLElement>) => unknown;
-    onNodeCreated(): void;
-  };
+  prototype: Partial<NodeType>;
+  drawNode(node: NodeType, ctx: Canvas): void;
+  onConfigure(): void;
+  widgets_values: Widget[];
 }
 
 interface NodeProperties {
@@ -122,4 +124,19 @@ interface Widget {
   last_y?: number;
   y: number;
   computedHeight?: number;
+  onRemove?(): void;
+}
+type OnConnectionChangeCallback = (
+  side: number,
+  slot: number,
+  connect: boolean,
+  link_info: ConnectionChangePayload,
+  output: Widget,
+) => OnConnectionChangeCallback;
+interface ConnectionChangePayload {
+  origin_id: number;
+  origin_slot: number;
+  target_id: number;
+  target_slot: number;
+  type: string;
 }

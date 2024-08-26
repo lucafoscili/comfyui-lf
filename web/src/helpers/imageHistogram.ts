@@ -5,7 +5,6 @@ const cssClasses = {
   widget: 'lf-imagehistogram__widget',
 };
 const eventName: EventNames = 'lf-imagehistogram';
-const nodeName: NodeNames = 'LF_ImageHistogram';
 const widgetName = 'histogram';
 
 const eventCb = (event: CustomEvent<ImageHistogramPayload>) => {

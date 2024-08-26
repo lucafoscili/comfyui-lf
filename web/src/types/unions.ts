@@ -35,7 +35,6 @@ declare type EventPayload =
 /*           D i c t i o n a r y   D e c l a r a t i o n s           */
 /*-------------------------------------------------------------------*/
 declare type NodeDictionaryEntry =
-  | ControlPanelDictionaryEntry
   | DisplayJSONDictionaryEntry
   | ImageHistogramDictionaryEntry
   | LoadImagesDictionaryEntry
@@ -44,7 +43,7 @@ declare type NodeDictionaryEntry =
   | SwitchJSONDictionaryEntry
   | SwitchStringDictionaryEntry;
 declare type NodeNames =
-  | 'LF_ControlPaned'
+  | 'LF_ControlPanel'
   | 'LF_DisplayJSON'
   | 'LF_ImageHistogram'
   | 'LF_LoadImages'

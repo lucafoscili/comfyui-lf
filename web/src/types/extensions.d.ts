@@ -57,7 +57,6 @@ declare interface SwitchStringPayload extends BaseEventPayload {
 /*           D i c t i o n a r y   D e c l a r a t i o n s           */
 /*-------------------------------------------------------------------*/
 interface NodeDictionary {
-  controlPanel: ControlPanelDictionaryEntry;
   displayJson: DisplayJSONDictionaryEntry;
   imageHistogram: ImageHistogramDictionaryEntry;
   loadImages: LoadImagesDictionaryEntry;
@@ -66,17 +65,17 @@ interface NodeDictionary {
   switchJson: SwitchJSONDictionaryEntry;
   switchString: SwitchStringDictionaryEntry;
 }
-declare interface ControlPanelDictionaryEntry extends BaseNodeDictionaryEntry {
-  eventCb: (e: CustomEvent<ControlPanelPayload>) => void;
-  eventName: 'lf-controlpanel';
+declare interface ControlPanelDictionaryEntry {
+  beforeRegisterNodeDef?: (node: NodeType, data: NodeData, name: string) => void;
   getCustomWidgets: () => {
-    KUL_BUTTON(
+    KUL_MANAGER(
       node: NodeType,
       name: string,
     ): {
-      widget: Partial<Widget>;
+      widget: Partial<DOMWidget>;
     };
   };
+  name: string;
 }
 declare interface DisplayJSONDictionaryEntry extends BaseNodeDictionaryEntry {
   eventCb: (e: CustomEvent<DisplayJSONPayload>) => void;

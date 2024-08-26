@@ -1,1 +1,1 @@
-export declare const ControlPanelAdapter: () => ControlPanelDictionaryEntry;
+export declare function createContent(skipSpinner: boolean): HTMLDivElement;

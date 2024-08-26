@@ -1,8 +1,20 @@
 import { app } from '/scripts/app.js';
-export const getNode = (event) => {
+export const createDOMWidget = (name, type, element, node) => {
+    window.lfManager.log(`Creating '${type}'`, { element });
+    return node.prototype.addDOMWidget(name, type, element);
+};
+export const getNode = (id) => {
+    window.lfManager.log(`Fetching node '${id}'`);
+    return app.graph?.getNodeById(+(id || app.runningNodeId));
+};
+export const getWidget = (node, name) => {
+    window.lfManager.log(`Updating '${name}'`, { node });
+    return node?.widgets?.find((w) => w.name === name);
+};
+export const initProps = (event) => {
     window.lfManager.log(`Event '${event.type}' received`, { event }, 'success');
     const payload = event.detail;
-    const node = app.graph.getNodeById(+(payload.id || app.runningNodeId));
+    const node = getNode(payload.id);
     if (node) {
         const isInitialized = node.lfProps?.isInitialized;
         if (isInitialized) {
@@ -20,20 +32,6 @@ export const getNode = (event) => {
     }
     return node;
 };
-export const getWidget = (node, name) => {
-    window.lfManager.log(`Updating '${name}'`, { node });
-    return node?.widgets?.find((w) => w.name === name);
-};
 export const redrawCanvas = () => requestAnimationFrame(() => {
     app.graph.setDirtyCanvas(true, false);
 });
-export const refreshWidget = (domWidget, widgetCb) => {
-    () => {
-        window.lfManager.log(`Refreshing widget`, { domWidget });
-        if (domWidget.firstChild) {
-            domWidget.removeChild(domWidget.firstChild);
-        }
-        const content = widgetCb();
-        domWidget.appendChild(content);
-    };
-};

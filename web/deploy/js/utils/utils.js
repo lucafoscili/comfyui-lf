@@ -9,6 +9,20 @@ export const capitalize = (input) => {
 export const getKulManager = () => {
     return DOM.ketchupLite;
 };
+export const getKulThemes = () => {
+    const themes = getKulManager().theme.getThemes();
+    const kulData = {
+        nodes: [{ children: [], icon: 'style', id: 'root', value: 'Theme' }],
+    };
+    for (let index = 0; index < themes.length; index++) {
+        const currentTheme = themes[index];
+        kulData.nodes[0].children.push({
+            id: currentTheme,
+            value: capitalize(currentTheme),
+        });
+    }
+    return kulData;
+};
 export const kulManagerExists = () => {
     return !!DOM.ketchupLite;
 };

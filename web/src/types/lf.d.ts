@@ -41,6 +41,7 @@ declare interface CustomWidgets {
   IMAGE_PREVIEW_B64;
   KUL_CHART;
   KUL_CODE;
+  KUL_MANAGER;
 }
 declare type KeyOfCustomWidgets = KeyOfExistsIn<BaseNodeDictionaryEntry, CustomWidgets>;
 type KeyOfExistsIn<T, U> = {

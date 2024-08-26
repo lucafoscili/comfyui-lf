@@ -4,7 +4,6 @@ const cssClasses = {
     widget: 'lf-imagehistogram__widget',
 };
 const eventName = 'lf-imagehistogram';
-const nodeName = 'LF_ImageHistogram';
 const widgetName = 'histogram';
 const eventCb = (event) => {
     window.lfManager.log(`Event '${eventName}' received`, { event });

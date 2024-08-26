@@ -1,8 +1,17 @@
 .lf-controlpanel {
+  align-items: center;
   background: var(--kul-background-color);
+  display: flex;
+  height: 100%;
+  justify-content: center;
   max-height: 100%;
   max-width: 100%;
   overflow: auto;
+  width: 100%;
+}
+.lf-controlpanel__spinner {
+  height: 100%;
+  width: 100%;
 }
 
 /*# sourceMappingURL=controlPanel.css.map */
