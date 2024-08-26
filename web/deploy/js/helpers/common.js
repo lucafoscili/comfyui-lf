@@ -1,7 +1,7 @@
 import { app } from '/scripts/app.js';
 export const createDOMWidget = (name, type, element, node) => {
     window.lfManager.log(`Creating '${type}'`, { element });
-    return node.prototype.addDOMWidget(name, type, element);
+    return node.addDOMWidget(name, type, element);
 };
 export const getNode = (id) => {
     window.lfManager.log(`Fetching node '${id}'`);

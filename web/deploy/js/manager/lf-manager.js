@@ -131,18 +131,19 @@ _LFManager_CSS_EMBEDDED = new WeakMap(), _LFManager_DEBUG = new WeakMap(), _LFMa
     }
 }, _LFManager_registerControlPanel = function _LFManager_registerControlPanel() {
     const self = this;
-    const panelWidgetCb = (node, name) => {
-        const widget = app.widgets.KUL_MANAGER(node, name).widget;
+    const panelWidgetCb = (nodeType, name) => {
+        const widget = app.widgets.KUL_MANAGER(nodeType, name).widget;
         widget.serializeValue = false;
     };
     const extension = {
         name: __classPrivateFieldGet(this, _LFManager_EXT_PREFIX, "f") + this.CONTROL_PANEL.nodeName,
-        beforeRegisterNodeDef: async (node) => {
-            if (node.comfyClass === this.CONTROL_PANEL.nodeName) {
-                node.prototype.flags = node.prototype.flags || {};
-                const onNodeCreated = node.prototype.onNodeCreated;
-                node.prototype.onNodeCreated = function () {
+        beforeRegisterNodeDef: async (nodeType) => {
+            if (nodeType.comfyClass === this.CONTROL_PANEL.nodeName) {
+                nodeType.prototype.flags = nodeType.prototype.flags || {};
+                const onNodeCreated = nodeType.prototype.onNodeCreated;
+                nodeType.prototype.onNodeCreated = function () {
                     const r = onNodeCreated?.apply(this, arguments);
+                    const node = this;
                     if (self.CONTROL_PANEL.node && node === self.CONTROL_PANEL.node) {
                         if (self.CONTROL_PANEL.widget) {
                             self.log('Control panel widget already exists', { node }, 'warning');
@@ -160,8 +161,8 @@ _LFManager_CSS_EMBEDDED = new WeakMap(), _LFManager_DEBUG = new WeakMap(), _LFMa
                     }
                     return r;
                 };
-                const onRemoved = node.prototype.onRemoved;
-                node.prototype.onRemoved = function () {
+                const onRemoved = nodeType.prototype.onRemoved;
+                nodeType.prototype.onRemoved = function () {
                     const r = onRemoved?.apply(this, arguments);
                     if (self.CONTROL_PANEL.node) {
                         self.CONTROL_PANEL.isReady = false;
@@ -202,14 +203,6 @@ _LFManager_CSS_EMBEDDED = new WeakMap(), _LFManager_DEBUG = new WeakMap(), _LFMa
                         document.addEventListener('kul-spinner-event', readyCb);
                         const widget = createDOMWidget(name, self.CONTROL_PANEL.widgetName, domWidget, node);
                         domWidget.refresh();
-                        domWidget.addEventListener('mousemove', (e) => {
-                            node.prototype.pos = [e.clientX, e.clientY];
-                            node.prototype.size = [
-                                self.CONTROL_PANEL.widget.clientWidth,
-                                self.CONTROL_PANEL.widget.clientWidth,
-                            ];
-                            console.log(node.prototype.pos, node.prototype.size);
-                        });
                         return { widget };
                     }
                 },

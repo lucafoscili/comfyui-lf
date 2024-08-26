@@ -37,7 +37,7 @@ class LFManager {
     eventName: EventNames;
     isReady: boolean;
     nodeName: NodeNames;
-    node?: NodeType;
+    node?: Partial<NodeType>;
     cssName: string;
     widgetName: string;
     widget?: DOMWidget;
@@ -108,19 +108,20 @@ class LFManager {
   #registerControlPanel() {
     const self = this;
 
-    const panelWidgetCb = (node: NodeType, name: string) => {
-      const widget = app.widgets.KUL_MANAGER(node, name).widget;
+    const panelWidgetCb = (nodeType: Partial<NodeType>, name: string) => {
+      const widget = app.widgets.KUL_MANAGER(nodeType, name).widget;
       widget.serializeValue = false;
     };
 
     const extension: ControlPanelDictionaryEntry = {
       name: this.#EXT_PREFIX + this.CONTROL_PANEL.nodeName,
-      beforeRegisterNodeDef: async (node) => {
-        if (node.comfyClass === this.CONTROL_PANEL.nodeName) {
-          node.prototype.flags = node.prototype.flags || {};
-          const onNodeCreated = node.prototype.onNodeCreated;
-          node.prototype.onNodeCreated = function () {
+      beforeRegisterNodeDef: async (nodeType) => {
+        if (nodeType.comfyClass === this.CONTROL_PANEL.nodeName) {
+          nodeType.prototype.flags = nodeType.prototype.flags || {};
+          const onNodeCreated = nodeType.prototype.onNodeCreated;
+          nodeType.prototype.onNodeCreated = function () {
             const r = onNodeCreated?.apply(this, arguments);
+            const node = this;
 
             if (self.CONTROL_PANEL.node && node === self.CONTROL_PANEL.node) {
               if (self.CONTROL_PANEL.widget) {
@@ -138,9 +139,10 @@ class LFManager {
             return r;
           };
 
-          const onRemoved = node.prototype.onRemoved;
-          node.prototype.onRemoved = function () {
+          const onRemoved = nodeType.prototype.onRemoved;
+          nodeType.prototype.onRemoved = function () {
             const r = onRemoved?.apply(this, arguments);
+
             if (self.CONTROL_PANEL.node) {
               self.CONTROL_PANEL.isReady = false;
               self.CONTROL_PANEL.node = LiteGraph.getNodeType(self.CONTROL_PANEL.nodeName);
@@ -182,13 +184,6 @@ class LFManager {
               document.addEventListener('kul-spinner-event', readyCb);
               const widget = createDOMWidget(name, self.CONTROL_PANEL.widgetName, domWidget, node);
               domWidget.refresh();
-              domWidget.addEventListener('mousemove', (e: MouseEvent) => {
-                node.prototype.pos = [e.clientX, e.clientY];
-                node.prototype.size = [
-                  self.CONTROL_PANEL.widget.clientWidth,
-                  self.CONTROL_PANEL.widget.clientWidth,
-                ];
-              });
               return { widget };
             }
           },

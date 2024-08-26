@@ -8,7 +8,7 @@ export const createDOMWidget = (
 ) => {
   window.lfManager.log(`Creating '${type}'`, { element });
 
-  return node.prototype.addDOMWidget(name, type, element);
+  return node.addDOMWidget(name, type, element);
 };
 
 export const getNode = (id: string) => {
