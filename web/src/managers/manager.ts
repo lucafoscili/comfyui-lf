@@ -31,6 +31,7 @@ export class LFManager {
     widgets?: LFWidgets;
   } = {};
   #NODES_DICT: NodeDictionary = {
+    controlPanel: null,
     displayJson: DisplayJSONAdapter(),
     imageHistogram: ImageHistogramAdapter(),
     loadImages: LoadImagesAdapter(),
@@ -63,13 +64,14 @@ export class LFManager {
       widgetName: 'KUL_CONTROL_PANEL',
     };
 
-    this.#registerControlPanel();
-    this.#embedCss(this.CONTROL_PANEL.cssName);
-
     for (const key in this.#NODES_DICT) {
       if (Object.prototype.hasOwnProperty.call(this.#NODES_DICT, key)) {
         const node = this.#NODES_DICT[key];
         switch (key) {
+          case 'controlPanel':
+            this.#embedCss(key);
+            this.#registerControlPanel();
+            break;
           default:
             const hasbeforeRegisterNodeDef = !!node.beforeRegisterNodeDef;
             const hasCustomWidgets = !!node.getCustomWidgets;
@@ -105,11 +107,6 @@ export class LFManager {
 
   #registerControlPanel() {
     const self = this;
-
-    const panelWidgetCb = (nodeType: Partial<NodeType>, name: string) => {
-      const widget = app.widgets.KUL_CONTROL_PANEL(nodeType, name, { isReady: false }).widget;
-      widget.serializeValue = false;
-    };
 
     const extension: ControlPanelExtension = {
       name: this.#EXT_PREFIX + this.CONTROL_PANEL.nodeName,
