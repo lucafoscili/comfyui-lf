@@ -48,12 +48,12 @@ interface NodeType {
   horizontal?: boolean;
   inputs?: SlotInfo[];
   outputs?: SlotInfo[];
-  addDOMWidget?: (
+  addDOMWidget?: <T extends WidgetOptions>(
     name?: string,
-    type?: string,
-    element?: Partial<HTMLElement>,
-    options?: WidgetOptions,
-  ) => unknown;
+    type?: CustomWidgetNames,
+    element?: HTMLDivElement,
+    options?: T,
+  ) => Widget;
   addCustomWidget?: (
     type?: T['type'],
     name?: string,
@@ -121,7 +121,7 @@ interface SlotInfo {
   colorOff?: string; // Color to render when it is not connected
 }
 interface Widget {
-  element?: Partial<HTMLElement>;
+  element?: DOMWidget;
   type?: string;
   name?: string;
   value?: any;

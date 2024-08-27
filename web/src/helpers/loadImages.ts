@@ -1,4 +1,4 @@
-import { getLFManager } from '../utils/utils';
+/*import { getLFManager } from '../utils/utils';
 import { app } from '/scripts/app.js';
 
 const widgetName = 'image_preview_base64';
@@ -142,3 +142,4 @@ function drawDoge() {
   content.appendChild(doge);
   return content;
 }
+*/

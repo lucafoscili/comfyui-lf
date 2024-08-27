@@ -1,17 +1,5 @@
-import { getLFManager } from '../utils/utils';
+/*import { getLFManager } from '../utils/utils';
 import { app } from '/scripts/app.js';
-
-export const createDOMWidget = (
-  name: string,
-  type: string,
-  element: Partial<DOMWidget>,
-  node: NodeType,
-  options: WidgetOptions = undefined,
-) => {
-  getLFManager().log(`Creating '${type}'`, { element });
-
-  return node.addDOMWidget(name, type, element, options);
-};
 
 export const getNode = (id: string) => {
   getLFManager().log(`Fetching node '${id}'`);
@@ -54,3 +42,4 @@ export const redrawCanvas = () =>
   requestAnimationFrame(() => {
     app.graph.setDirtyCanvas(true, false);
   });
+*/

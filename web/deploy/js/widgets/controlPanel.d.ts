@@ -1,4 +1,4 @@
-export declare function getControlPanel(node: NodeType, name: string, wType: string): {
+export declare function renderControlPanel(node: NodeType, name: string, wType: CustomWidgetNames): {
     widget: Widget;
 };
-export declare function createContent(skipSpinner: boolean): HTMLDivElement;
+export declare function contentCb(isReady: boolean): HTMLDivElement;

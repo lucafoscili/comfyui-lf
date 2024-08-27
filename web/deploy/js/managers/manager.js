@@ -9,20 +9,22 @@ var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
     return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
 };
-var _LFManager_instances, _LFManager_APIS, _LFManager_CSS_EMBEDS, _LFManager_DEBUG, _LFManager_DOM, _LFManager_MANAGERS, _LFManager_embedCss;
+var _LFManager_APIS, _LFManager_CSS_EMBEDS, _LFManager_DEBUG, _LFManager_DOM, _LFManager_MANAGERS;
 import { api } from '/scripts/api.js';
 import { app } from '/scripts/app.js';
 import { defineCustomElements } from '../ketchup-lite/loader.js';
 import { getKulManager } from '../utils/utils.js';
 import { LFNodes } from './nodes.js';
 import { LFWidgets } from './widgets.js';
-import { CSS_FILENAMES } from '../utils/constants.js';
+import { LFEvents } from './events.js';
 export class LFManager {
     constructor() {
-        _LFManager_instances.add(this);
         _LFManager_APIS.set(this, {
             event: (name, callback) => {
                 api.addEventListener(name, callback);
+            },
+            getNodeById: (id) => {
+                return app.graph.getNodeById(+(id || app.runningNodeId));
             },
             redraw: () => {
                 app.graph.setDirtyCanvas(true, false);
@@ -31,7 +33,7 @@ export class LFManager {
                 app.registerExtension(extension);
             },
         });
-        _LFManager_CSS_EMBEDS.set(this, void 0);
+        _LFManager_CSS_EMBEDS.set(this, ['controlPanel', 'displayJson', 'imageHistogram', 'loadImages']);
         _LFManager_DEBUG.set(this, false);
         _LFManager_DOM.set(this, document.documentElement);
         _LFManager_MANAGERS.set(this, {});
@@ -45,17 +47,30 @@ export class LFManager {
         };
         document.addEventListener('kul-manager-ready', managerCb);
         defineCustomElements(window);
-        __classPrivateFieldSet(this, _LFManager_CSS_EMBEDS, new Set(CSS_FILENAMES), "f");
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes = new LFNodes();
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").widgets = new LFWidgets();
-        __classPrivateFieldGet(this, _LFManager_instances, "m", _LFManager_embedCss).call(this);
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").events = new LFEvents();
+        for (let index = 0; index < __classPrivateFieldGet(this, _LFManager_CSS_EMBEDS, "f").length; index++) {
+            const cssFileName = __classPrivateFieldGet(this, _LFManager_CSS_EMBEDS, "f")[index];
+            const link = document.createElement('link');
+            link.dataset.filename = cssFileName.toString();
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            link.href = `extensions/comfyui-lf/css/${cssFileName}.css`;
+            document.head.appendChild(link);
+        }
     }
     getApiRoutes() {
         return __classPrivateFieldGet(this, _LFManager_APIS, "f");
     }
     initialize() {
+        const events = __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").events.get;
         const widgets = __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").widgets.get;
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.controlPanel(widgets.setters.controlPanel, widgets.adders.controlPanel);
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.displayJson(widgets.setters.code, widgets.adders.code);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event('lf-displayjson', (e) => {
+            events.eventHandlers.displayJson(e, widgets.adders.code);
+        });
     }
     isDebug() {
         return __classPrivateFieldGet(this, _LFManager_DEBUG, "f");
@@ -80,7 +95,7 @@ export class LFManager {
                 break;
         }
         const resetColorCode = '\x1b[0m';
-        const dot = '•';
+        const dot = '• LF Nodes •';
         console.log(`${colorCode}${dot} ${message} ${resetColorCode}`, args);
     }
     toggleDebug(value) {
@@ -94,20 +109,10 @@ export class LFManager {
         return __classPrivateFieldGet(this, _LFManager_DEBUG, "f");
     }
 }
-_LFManager_APIS = new WeakMap(), _LFManager_CSS_EMBEDS = new WeakMap(), _LFManager_DEBUG = new WeakMap(), _LFManager_DOM = new WeakMap(), _LFManager_MANAGERS = new WeakMap(), _LFManager_instances = new WeakSet(), _LFManager_embedCss = function _LFManager_embedCss() {
-    const cssFiles = Array.from(__classPrivateFieldGet(this, _LFManager_CSS_EMBEDS, "f"));
-    for (const cssFileName of cssFiles) {
-        const link = document.createElement('link');
-        link.dataset.filename = cssFileName.toString();
-        link.rel = 'stylesheet';
-        link.type = 'text/css';
-        link.href = `extensions/comfyui-lf/css/${cssFileName}.css`;
-        document.head.appendChild(link);
-    }
-};
+_LFManager_APIS = new WeakMap(), _LFManager_CSS_EMBEDS = new WeakMap(), _LFManager_DEBUG = new WeakMap(), _LFManager_DOM = new WeakMap(), _LFManager_MANAGERS = new WeakMap();
 const WINDOW = window;
 if (!WINDOW.lfManager) {
     WINDOW.lfManager = new LFManager();
-    WINDOW.lfManager.log('LFManager ready', { lfManager: WINDOW.lfManager }, 'success');
+    WINDOW.lfManager.log('LFManager ready', { LFManager: WINDOW.lfManager }, 'success');
     WINDOW.lfManager.initialize();
 }

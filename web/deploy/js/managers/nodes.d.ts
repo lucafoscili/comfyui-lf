@@ -2,6 +2,7 @@ export declare class LFNodes {
     #private;
     constructor();
     register: {
-        controlPanel: (set_w: ControlPanelWidgetsSetter, add_w: ControlPanelWidgetCallback) => void;
+        controlPanel: (setW: ControlPanelWidgetsSetter, addW: WidgetCallback) => void;
+        displayJson: (setW: DisplayJSONWidgetsSetter, addW: WidgetCallback) => void;
     };
 }

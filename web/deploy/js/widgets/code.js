@@ -1,32 +1,17 @@
-import { getLFManager } from '../utils/utils.js';
+import { createDOMWidget } from '../utils/utils.js';
 const cssClasses = {
-    wrapper: 'lf-displayjson',
-    widget: 'lf-displayjson__widget',
+    content: 'lf-displayjson',
+    code: 'lf-displayjson__code',
 };
-export function getCode(node, name, type) {
-    getLFManager().log(`Adding KUL_CODE custom widget`, { node });
-    const props = node.lfProps;
-    const domWidget = document.createElement('div');
-    domWidget.refresh = () => {
-        getLFManager().log(`Refreshing KUL_CODE custom widget`, { domWidget });
-        if (domWidget.firstChild) {
-            domWidget.removeChild(domWidget.firstChild);
-        }
-        const content = createWidget(props);
-        domWidget.appendChild(content);
-    };
-    domWidget.refresh();
-    const widget = node.addDOMWidget(name, type, domWidget);
-    return { widget };
-}
-function createWidget(props) {
-    const value = props?.payload?.json;
+export function renderCode(node, name, wType, getOptions) {
+    const wrapper = document.createElement('div');
     const content = document.createElement('div');
-    content.classList.add(cssClasses.wrapper);
-    const codeWidget = document.createElement('kul-code');
-    codeWidget.classList.add(cssClasses.widget);
-    codeWidget.kulLanguage = 'json';
-    codeWidget.kulValue = value ? JSON.stringify(value, null, 2) : 'Wow. Such empty!';
-    content.appendChild(codeWidget);
-    return content;
+    const code = document.createElement('kul-code');
+    const options = getOptions(code);
+    content.classList.add(cssClasses.content);
+    code.classList.add(cssClasses.code);
+    code.kulLanguage = 'json';
+    content.appendChild(code);
+    wrapper.appendChild(content);
+    return { widget: createDOMWidget(name, wType, wrapper, node, options) };
 }

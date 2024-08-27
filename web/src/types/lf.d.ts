@@ -1,25 +1,25 @@
 /*-------------------------------------------------------------------*/
 /*             G e n e r i c   D e c l a r a t i o n s               */
 /*-------------------------------------------------------------------*/
-declare interface DOMWidget extends HTMLDivElement {
-  refresh: () => void;
-}
 declare interface BaseLFProps {
   isInitialized: boolean;
   payload: NodePayload;
 }
-declare interface BaseWidgetOptions {
-  refresh: () => void;
-}
 declare interface ComfyAPIs {
-  event: (name: EventNames, callback: (event: CustomEvent<BaseEventPayload>) => void) => void;
+  event: <T extends BaseEventPayload>(
+    name: EventNames,
+    callback: (event: CustomEvent<T>) => void,
+  ) => void;
+  getNodeById: (id: string) => NodeType;
   redraw: () => void;
   register: (extension: Extension) => void;
 }
-declare type CssFileName = keyof NodeNamesMap;
-declare type CustomWidgetNamesMap = { [index: CssFileName]: CustomWidgetNames };
 declare type LogSeverity = 'info' | 'success' | 'warning' | 'error';
-declare type NodeNamesMap = { [index: string]: NodeNames };
+declare type WidgetCallback = (node: NodeType, name: string) => { widget: Widget };
+declare interface WidgetOptions {
+  isReady?: boolean;
+  refresh: () => void;
+}
 /*-------------------------------------------------------------------*/
 /*               E v e n t s    D e c l a r a t i o n s              */
 /*-------------------------------------------------------------------*/
@@ -45,22 +45,3 @@ declare type UpdateCallback = (node: NodeType) => void;
 declare interface Extension extends Partial<BaseNodeDictionaryEntry> {
   name: string;
 }
-/*-------------------------------------------------------------------*/
-/*                    C o n t r o l   P a n e l                      */
-/*-------------------------------------------------------------------*/
-declare interface ControlPanelDictionary {
-  eventName: EventNames;
-  nodeName: NodeNames;
-  cssName: string;
-  widgetName: string;
-  extension?: ControlPanelExtension;
-}
-declare interface ControlPanelExtension {
-  beforeRegisterNodeDef?: (node: NodeType, data: NodeData, name: string) => void;
-  getCustomWidgets: ControlPanelWidgets;
-  name: string;
-}
-declare type ControlPanelWidgetsSetter = () => {
-  KUL_CONTROL_PANEL: ControlPanelWidgetCallback;
-};
-declare type ControlPanelWidgetCallback = (node: NodeType, name: string) => { widget: Widget };

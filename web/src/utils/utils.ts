@@ -1,7 +1,6 @@
 import type { KulDataDataset } from '../types/ketchup-lite/components';
 import type { KulDom } from '../types/ketchup-lite/managers/kul-manager/kul-manager-declarations';
-import type { KulManager } from '../types/ketchup-lite/managers/kul-manager/kul-manager';
-import type { LFManager, LFWindow } from '../managers/manager';
+import type { LFWindow } from '../managers/manager';
 
 const DOM = document.documentElement as KulDom;
 const WINDOW = window as unknown as LFWindow;
@@ -14,11 +13,23 @@ export const capitalize = (input: string) => {
     .join(' ');
 };
 
-export const getApiRoutes: () => ComfyAPIs = () => {
+export const createDOMWidget = (
+  name: string,
+  type: CustomWidgetNames,
+  element: HTMLDivElement,
+  node: NodeType,
+  options: WidgetOptions = undefined,
+) => {
+  getLFManager().log(`Creating '${type}'`, { element });
+
+  return node.addDOMWidget(name, type, element, options);
+};
+
+export const getApiRoutes = () => {
   return WINDOW.lfManager.getApiRoutes();
 };
 
-export const getKulManager: () => KulManager = () => {
+export const getKulManager = () => {
   return DOM.ketchupLite;
 };
 
@@ -39,10 +50,14 @@ export const getKulThemes = () => {
   return kulData;
 };
 
-export const getLFManager: () => LFManager = () => {
+export const getLFManager = () => {
   return WINDOW.lfManager;
 };
 
-export const kulManagerExists: () => boolean = () => {
+export const kulManagerExists = () => {
   return !!DOM.ketchupLite;
+};
+
+export const log = () => {
+  return WINDOW.lfManager.log;
 };

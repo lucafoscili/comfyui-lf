@@ -1,4 +1,4 @@
-import { getLFManager } from '../utils/utils';
+/*import { getLFManager } from '../utils/utils';
 import { app } from '/scripts/app.js';
 import { ComfyWidgets } from '/scripts/widgets.js';
 
@@ -63,3 +63,4 @@ export const SwitchIntegerAdapter: () => SwitchIntegerDictionaryEntry = () => {
     updateCb,
   };
 };
+*/

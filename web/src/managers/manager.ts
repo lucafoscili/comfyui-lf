@@ -6,7 +6,7 @@ import { defineCustomElements } from '../ketchup-lite/loader.js';
 import { getKulManager } from '../utils/utils.js';
 import { LFNodes } from './nodes.js';
 import { LFWidgets } from './widgets.js';
-import { CSS_FILENAMES } from '../utils/constants.js';
+import { LFEvents } from './events.js';
 
 /*-------------------------------------------------*/
 /*                 L F   C l a s s                 */
@@ -21,6 +21,9 @@ export class LFManager {
     event: (name, callback) => {
       api.addEventListener(name, callback);
     },
+    getNodeById: (id: string) => {
+      return app.graph.getNodeById(+(id || app.runningNodeId));
+    },
     redraw: () => {
       app.graph.setDirtyCanvas(true, false);
     },
@@ -28,10 +31,11 @@ export class LFManager {
       app.registerExtension(extension);
     },
   };
-  #CSS_EMBEDS: Set<CssFileName>;
+  #CSS_EMBEDS = ['controlPanel', 'displayJson', 'imageHistogram', 'loadImages'];
   #DEBUG = false;
   #DOM = document.documentElement as KulDom;
   #MANAGERS: {
+    events?: LFEvents;
     ketchupLite?: KulManager;
     nodes?: LFNodes;
     widgets?: LFWidgets;
@@ -49,16 +53,12 @@ export class LFManager {
     document.addEventListener('kul-manager-ready', managerCb);
     defineCustomElements(window);
 
-    this.#CSS_EMBEDS = new Set(CSS_FILENAMES);
     this.#MANAGERS.nodes = new LFNodes();
     this.#MANAGERS.widgets = new LFWidgets();
-    this.#embedCss();
-  }
+    this.#MANAGERS.events = new LFEvents();
 
-  #embedCss() {
-    const cssFiles = Array.from(this.#CSS_EMBEDS);
-
-    for (const cssFileName of cssFiles) {
+    for (let index = 0; index < this.#CSS_EMBEDS.length; index++) {
+      const cssFileName = this.#CSS_EMBEDS[index];
       const link = document.createElement('link');
       link.dataset.filename = cssFileName.toString();
       link.rel = 'stylesheet';
@@ -73,11 +73,18 @@ export class LFManager {
   }
 
   initialize() {
+    const events = this.#MANAGERS.events.get;
     const widgets = this.#MANAGERS.widgets.get;
+
     this.#MANAGERS.nodes.register.controlPanel(
       widgets.setters.controlPanel,
       widgets.adders.controlPanel,
     );
+
+    this.#MANAGERS.nodes.register.displayJson(widgets.setters.code, widgets.adders.code);
+    this.#APIS.event('lf-displayjson', (e: CustomEvent<DisplayJSONPayload>) => {
+      events.eventHandlers.displayJson(e, widgets.adders.code);
+    });
   }
 
   isDebug() {
@@ -106,7 +113,7 @@ export class LFManager {
     }
 
     const resetColorCode = '\x1b[0m';
-    const dot = '•';
+    const dot = '• LF Nodes •';
 
     console.log(`${colorCode}${dot} ${message} ${resetColorCode}`, args);
   }
@@ -127,6 +134,6 @@ const WINDOW = window as unknown as LFWindow;
 
 if (!WINDOW.lfManager) {
   WINDOW.lfManager = new LFManager();
-  WINDOW.lfManager.log('LFManager ready', { lfManager: WINDOW.lfManager }, 'success');
+  WINDOW.lfManager.log('LFManager ready', { LFManager: WINDOW.lfManager }, 'success');
   WINDOW.lfManager.initialize();
 }

@@ -4,9 +4,6 @@
 declare interface ControlPanelProps extends BaseLFProps {
   payload: ControlPanelPayload;
 }
-declare interface ControlPanelOptions extends BaseWidgetOptions {
-  isReady?: boolean;
-}
 declare interface DisplayJSONProps extends BaseLFProps {
   payload: DisplayJSONPayload;
 }
@@ -71,14 +68,7 @@ interface NodeDictionary {
 declare interface DisplayJSONDictionaryEntry extends BaseNodeDictionaryEntry {
   eventCb: (e: CustomEvent<DisplayJSONPayload>) => void;
   eventName: 'lf-displayjson';
-  getCustomWidgets: () => {
-    KUL_CODE(
-      node: NodeType,
-      name: string,
-    ): {
-      widget: Widget;
-    };
-  };
+  getCustomWidgets: DisplayJSONWidgetsSetter;
 }
 declare interface ImageHistogramDictionaryEntry extends BaseNodeDictionaryEntry {
   eventCb: (e: CustomEvent<ImageHistogramPayload>) => void;
@@ -120,3 +110,14 @@ declare interface SwitchStringDictionaryEntry extends BaseNodeDictionaryEntry {
   eventCb: (e: CustomEvent<SwitchStringPayload>) => void;
   eventName: 'lf-switchstring';
 }
+declare interface ControlPanelExtension extends Extension {
+  beforeRegisterNodeDef?: (node: NodeType, data: NodeData, name: string) => void;
+  getCustomWidgets: ControlPanelWidgets;
+}
+
+declare type ControlPanelWidgetsSetter = () => {
+  KUL_CONTROL_PANEL: WidgetCallback;
+};
+declare type DisplayJSONWidgetsSetter = () => {
+  KUL_CODE: WidgetCallback;
+};

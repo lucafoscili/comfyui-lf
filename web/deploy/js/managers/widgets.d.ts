@@ -5,6 +5,17 @@ export declare class LFWidgets {
         controlPanel: (nodeType: NodeType) => any;
         code: (nodeType: NodeType) => any;
     };
+    option: {
+        code: (code: HTMLKulCodeElement) => {
+            hideOnZoom: boolean;
+            getComp(): HTMLKulCodeElement;
+            getProps(): Promise<import("../types/ketchup-lite/components.js").GenericObject<unknown>>;
+            getValue(): string;
+            refresh: () => void;
+            setProps(props: Partial<HTMLKulCodeElement>): void;
+            setValue(value: JSON | string): Promise<void>;
+        };
+    };
     set: {
         controlPanel: () => {
             KUL_CONTROL_PANEL: (nodeType: NodeType, name: string) => {
@@ -13,7 +24,7 @@ export declare class LFWidgets {
         };
         code: () => {
             KUL_CODE: (nodeType: NodeType, name: string) => {
-                widget: unknown;
+                widget: Widget;
             };
         };
     };
@@ -21,6 +32,17 @@ export declare class LFWidgets {
         adders: {
             controlPanel: (nodeType: NodeType) => any;
             code: (nodeType: NodeType) => any;
+        };
+        options: {
+            code: (code: HTMLKulCodeElement) => {
+                hideOnZoom: boolean;
+                getComp(): HTMLKulCodeElement;
+                getProps(): Promise<import("../types/ketchup-lite/components.js").GenericObject<unknown>>;
+                getValue(): string;
+                refresh: () => void;
+                setProps(props: Partial<HTMLKulCodeElement>): void;
+                setValue(value: JSON | string): Promise<void>;
+            };
         };
         setters: {
             controlPanel: () => {
@@ -30,7 +52,7 @@ export declare class LFWidgets {
             };
             code: () => {
                 KUL_CODE: (nodeType: NodeType, name: string) => {
-                    widget: unknown;
+                    widget: Widget;
                 };
             };
         };

@@ -10,7 +10,6 @@ declare type LFProps =
   | SwitchIntegerProps
   | SwitchJSONProps
   | SwitchStringProps;
-declare type WidgetOptions = ControlPanelOptions;
 /*-------------------------------------------------------------------*/
 /*               E v e n t s    D e c l a r a t i o n s              */
 /*-------------------------------------------------------------------*/

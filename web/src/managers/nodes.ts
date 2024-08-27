@@ -1,4 +1,3 @@
-import { NODE_NAMES_MAP } from '../utils/constants';
 import { getApiRoutes } from '../utils/utils';
 
 /*-------------------------------------------------*/
@@ -7,29 +6,59 @@ import { getApiRoutes } from '../utils/utils';
 
 export class LFNodes {
   #EXT_PREFIX = 'LFExtension_';
-  #NAMES: NodeNamesMap;
+  #NAMES: { [index: string]: NodeNames } = {
+    controlPanel: 'LF_ControlPanel',
+    displayJson: 'LF_DisplayJSON',
+    imageHistogram: 'LF_ImageHistogram',
+    loadImages: 'LF_LoadImages',
+    switchImage: 'LF_SwitchImage',
+    switchInteger: 'LF_SwitchInteger',
+    switchJSON: 'LF_SwitchJSON',
+    switchString: 'LF_SwitchString',
+  };
 
-  constructor() {
-    this.#NAMES = NODE_NAMES_MAP;
+  constructor() {}
+
+  #getExtName(name: NodeNames) {
+    return this.#EXT_PREFIX + name;
   }
 
   register = {
-    controlPanel: (set_w: ControlPanelWidgetsSetter, add_w: ControlPanelWidgetCallback) => {
-      const name = this.#EXT_PREFIX + this.#NAMES.controlPanel;
+    controlPanel: (setW: ControlPanelWidgetsSetter, addW: WidgetCallback) => {
+      const name = this.#NAMES.controlPanel;
       const extension: ControlPanelExtension = {
-        name: this.#EXT_PREFIX + this.#NAMES.controlPanel,
+        name: this.#getExtName(name),
         beforeRegisterNodeDef: async (nodeType) => {
-          if (nodeType.comfyClass === this.#NAMES.controlPanel) {
+          if (nodeType.comfyClass === name) {
             const onNodeCreated = nodeType.prototype.onNodeCreated;
             nodeType.prototype.onNodeCreated = function () {
               const r = onNodeCreated?.apply(this, arguments);
               const node = this;
-              add_w(node, name);
+              addW(node, name);
               return r;
             };
           }
         },
-        getCustomWidgets: set_w,
+        getCustomWidgets: setW,
+      };
+      getApiRoutes().register(extension);
+    },
+    displayJson: (setW: DisplayJSONWidgetsSetter, addW: WidgetCallback) => {
+      const name = this.#NAMES.displayJson;
+      const extension: Extension = {
+        name: this.#getExtName(name),
+        beforeRegisterNodeDef: async (nodeType) => {
+          if (nodeType.comfyClass === name) {
+            const onNodeCreated = nodeType.prototype.onNodeCreated;
+            nodeType.prototype.onNodeCreated = function () {
+              const r = onNodeCreated?.apply(this, arguments);
+              const node = this;
+              addW(node, name);
+              return r;
+            };
+          }
+        },
+        getCustomWidgets: setW,
       };
       getApiRoutes().register(extension);
     },

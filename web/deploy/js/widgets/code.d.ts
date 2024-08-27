@@ -1,3 +1,4 @@
-export declare function getCode(node: NodeType, name: string, type: string): {
-    widget: unknown;
+import { LFWidgets } from '../managers/widgets';
+export declare function renderCode(node: NodeType, name: string, wType: CustomWidgetNames, getOptions: LFWidgets['option']['code']): {
+    widget: Widget;
 };
