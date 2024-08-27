@@ -1,12 +1,9 @@
 export declare class LFWidgets {
-    NAMES: {
-        controlPanel: string;
-        displayJson: string;
-    };
+    #private;
     constructor();
     add: {
-        controlPanel: (nodeType: Partial<NodeType>) => any;
-        code: (nodeType: Partial<NodeType>) => any;
+        controlPanel: (nodeType: NodeType) => any;
+        code: (nodeType: NodeType) => any;
     };
     set: {
         controlPanel: () => {
@@ -17,6 +14,24 @@ export declare class LFWidgets {
         code: () => {
             KUL_CODE: (nodeType: NodeType, name: string) => {
                 widget: unknown;
+            };
+        };
+    };
+    get: {
+        adders: {
+            controlPanel: (nodeType: NodeType) => any;
+            code: (nodeType: NodeType) => any;
+        };
+        setters: {
+            controlPanel: () => {
+                KUL_CONTROL_PANEL: (nodeType: NodeType, name: string) => {
+                    widget: Widget;
+                };
+            };
+            code: () => {
+                KUL_CODE: (nodeType: NodeType, name: string) => {
+                    widget: unknown;
+                };
             };
         };
     };

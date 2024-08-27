@@ -91,7 +91,7 @@ interface NodeType {
   addOutput?: (name: string, type: string) => void;
   getInputData?: (slotIndex: number) => any;
   getOutputData?: (slotIndex: number) => any;
-  prototype?: Partial<NodeType>;
+  prototype?: NodeType;
   drawNode?: (node: NodeType, ctx: Canvas) => void;
   onConfigure?: () => void;
   widgets_values?: Widget[];

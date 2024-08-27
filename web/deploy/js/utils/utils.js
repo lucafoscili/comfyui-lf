@@ -7,6 +7,9 @@ export const capitalize = (input) => {
         .map((word) => word.charAt(0).toUpperCase() + word.substring(1))
         .join(' ');
 };
+export const getApiRoutes = () => {
+    return WINDOW.lfManager.getApiRoutes();
+};
 export const getKulManager = () => {
     return DOM.ketchupLite;
 };

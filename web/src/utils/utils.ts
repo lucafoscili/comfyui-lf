@@ -14,6 +14,10 @@ export const capitalize = (input: string) => {
     .join(' ');
 };
 
+export const getApiRoutes: () => ComfyAPIs = () => {
+  return WINDOW.lfManager.getApiRoutes();
+};
+
 export const getKulManager: () => KulManager = () => {
   return DOM.ketchupLite;
 };

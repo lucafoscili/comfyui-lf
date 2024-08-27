@@ -1,4 +1,5 @@
-import { getLFManager } from '../utils/utils';
+import { NODE_NAMES_MAP } from '../utils/constants';
+import { getApiRoutes } from '../utils/utils';
 
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
@@ -6,26 +7,19 @@ import { getLFManager } from '../utils/utils';
 
 export class LFNodes {
   #EXT_PREFIX = 'LFExtension_';
-  NAMES = {
-    controlPanel: 'LF_ControlPanel',
-    displayJson: 'LF_DisplayJSON',
-    imageHistogram: 'LF_ImageHistogram',
-    loadImages: 'LF_LoadImages',
-    switchImage: 'LF_SwitchImage',
-    switchInteger: 'LF_SwitchInteger',
-    switchJSON: 'LF_SwitchJSON',
-    switchString: 'LF_SwitchString',
-  };
+  #NAMES: NodeNamesMap;
 
-  constructor() {}
+  constructor() {
+    this.#NAMES = NODE_NAMES_MAP;
+  }
 
   register = {
     controlPanel: (set_w: ControlPanelWidgetsSetter, add_w: ControlPanelWidgetCallback) => {
-      const name = this.#EXT_PREFIX + this.NAMES.controlPanel;
+      const name = this.#EXT_PREFIX + this.#NAMES.controlPanel;
       const extension: ControlPanelExtension = {
-        name: this.#EXT_PREFIX + this.NAMES.controlPanel,
+        name: this.#EXT_PREFIX + this.#NAMES.controlPanel,
         beforeRegisterNodeDef: async (nodeType) => {
-          if (nodeType.comfyClass === this.NAMES.controlPanel) {
+          if (nodeType.comfyClass === this.#NAMES.controlPanel) {
             const onNodeCreated = nodeType.prototype.onNodeCreated;
             nodeType.prototype.onNodeCreated = function () {
               const r = onNodeCreated?.apply(this, arguments);
@@ -37,7 +31,7 @@ export class LFNodes {
         },
         getCustomWidgets: set_w,
       };
-      getLFManager().APIS.register(extension);
+      getApiRoutes().register(extension);
     },
   };
 }

@@ -11,7 +11,15 @@ declare interface BaseLFProps {
 declare interface BaseWidgetOptions {
   refresh: () => void;
 }
+declare interface ComfyAPIs {
+  event: (name: EventNames, callback: (event: CustomEvent<BaseEventPayload>) => void) => void;
+  redraw: () => void;
+  register: (extension: Extension) => void;
+}
+declare type CssFileName = keyof NodeNamesMap;
+declare type CustomWidgetNamesMap = { [index: CssFileName]: CustomWidgetNames };
 declare type LogSeverity = 'info' | 'success' | 'warning' | 'error';
+declare type NodeNamesMap = { [index: string]: NodeNames };
 /*-------------------------------------------------------------------*/
 /*               E v e n t s    D e c l a r a t i o n s              */
 /*-------------------------------------------------------------------*/
@@ -37,7 +45,6 @@ declare type UpdateCallback = (node: NodeType) => void;
 declare interface Extension extends Partial<BaseNodeDictionaryEntry> {
   name: string;
 }
-
 /*-------------------------------------------------------------------*/
 /*                    C o n t r o l   P a n e l                      */
 /*-------------------------------------------------------------------*/
@@ -56,7 +63,4 @@ declare interface ControlPanelExtension {
 declare type ControlPanelWidgetsSetter = () => {
   KUL_CONTROL_PANEL: ControlPanelWidgetCallback;
 };
-declare type ControlPanelWidgetCallback = (
-  node: Partial<NodeType>,
-  name: string,
-) => { widget: Widget };
+declare type ControlPanelWidgetCallback = (node: NodeType, name: string) => { widget: Widget };

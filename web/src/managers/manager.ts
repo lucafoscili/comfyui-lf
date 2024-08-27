@@ -6,6 +6,7 @@ import { defineCustomElements } from '../ketchup-lite/loader.js';
 import { getKulManager } from '../utils/utils.js';
 import { LFNodes } from './nodes.js';
 import { LFWidgets } from './widgets.js';
+import { CSS_FILENAMES } from '../utils/constants.js';
 
 /*-------------------------------------------------*/
 /*                 L F   C l a s s                 */
@@ -16,20 +17,7 @@ export interface LFWindow extends Window {
 }
 
 export class LFManager {
-  #CSS_EMBEDS: Set<string>;
-  #DEBUG = false;
-  #DOM = document.documentElement as KulDom;
-  #MANAGERS: {
-    ketchupLite?: KulManager;
-    nodes?: LFNodes;
-    widgets?: LFWidgets;
-  } = {};
-
-  APIS: {
-    event: (name: EventNames, callback: (event: CustomEvent<BaseEventPayload>) => void) => void;
-    redraw: () => void;
-    register: (extension: Extension) => void;
-  } = {
+  #APIS: ComfyAPIs = {
     event: (name, callback) => {
       api.addEventListener(name, callback);
     },
@@ -40,7 +28,14 @@ export class LFManager {
       app.registerExtension(extension);
     },
   };
-  CONTROL_PANEL: ControlPanelDictionary;
+  #CSS_EMBEDS: Set<CssFileName>;
+  #DEBUG = false;
+  #DOM = document.documentElement as KulDom;
+  #MANAGERS: {
+    ketchupLite?: KulManager;
+    nodes?: LFNodes;
+    widgets?: LFWidgets;
+  } = {};
 
   constructor() {
     const managerCb = async () => {
@@ -54,7 +49,7 @@ export class LFManager {
     document.addEventListener('kul-manager-ready', managerCb);
     defineCustomElements(window);
 
-    this.#CSS_EMBEDS = new Set(['controlPanel', 'displayJson', 'imageHistogram', 'loadImages']);
+    this.#CSS_EMBEDS = new Set(CSS_FILENAMES);
     this.#MANAGERS.nodes = new LFNodes();
     this.#MANAGERS.widgets = new LFWidgets();
     this.#embedCss();
@@ -65,12 +60,24 @@ export class LFManager {
 
     for (const cssFileName of cssFiles) {
       const link = document.createElement('link');
-      link.dataset.filename = cssFileName;
+      link.dataset.filename = cssFileName.toString();
       link.rel = 'stylesheet';
       link.type = 'text/css';
       link.href = `extensions/comfyui-lf/css/${cssFileName}.css`;
       document.head.appendChild(link);
     }
+  }
+
+  getApiRoutes(): ComfyAPIs {
+    return this.#APIS;
+  }
+
+  initialize() {
+    const widgets = this.#MANAGERS.widgets.get;
+    this.#MANAGERS.nodes.register.controlPanel(
+      widgets.setters.controlPanel,
+      widgets.adders.controlPanel,
+    );
   }
 
   isDebug() {
@@ -102,16 +109,6 @@ export class LFManager {
     const dot = '•';
 
     console.log(`${colorCode}${dot} ${message} ${resetColorCode}`, args);
-  }
-
-  initialize() {
-    const widgets = {
-      controlPanel: {
-        add: this.#MANAGERS.widgets.add.controlPanel,
-        set: this.#MANAGERS.widgets.set.controlPanel,
-      },
-    };
-    this.#MANAGERS.nodes.register.controlPanel(widgets.controlPanel.set, widgets.controlPanel.add);
   }
 
   toggleDebug(value?: boolean) {
