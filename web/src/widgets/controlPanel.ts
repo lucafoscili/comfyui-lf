@@ -6,7 +6,14 @@ import type {
 import { getKulManager, getKulThemes, getLFManager } from '../utils/utils';
 import { createDOMWidget } from '../helpers/common';
 
-export function KUL_CONTROL_PANEL(node: NodeType, name: string, wType: string) {
+const cssClasses = {
+  wrapper: 'lf-controlpanel',
+  debug: 'lf-controlpanel__debug',
+  spinner: 'lf-controlpanel__spinner',
+  themes: 'lf-controlpanel__themes',
+};
+
+export function getControlPanel(node: NodeType, name: string, wType: string) {
   const domWidget = document.createElement('div') as DOMWidget;
   const refresh = () => {
     const options = node.widgets?.find((w) => w.type === wType)?.options;
@@ -24,7 +31,7 @@ export function KUL_CONTROL_PANEL(node: NodeType, name: string, wType: string) {
     }
   };
   domWidget.dataset.isInVisibleNodes = 'true';
-  const widget: Partial<Widget> = createDOMWidget(name, wType, domWidget, node, {
+  const widget: Widget = createDOMWidget(name, wType, domWidget, node, {
     isReady: false,
     refresh,
   });
@@ -38,13 +45,6 @@ export function KUL_CONTROL_PANEL(node: NodeType, name: string, wType: string) {
   widget.options.refresh();
   return { widget };
 }
-
-const cssClasses = {
-  wrapper: 'lf-controlpanel',
-  debug: 'lf-controlpanel__debug',
-  spinner: 'lf-controlpanel__spinner',
-  themes: 'lf-controlpanel__themes',
-};
 
 const buttonCb = (e: CustomEvent<KulButtonEventPayload>) => {
   if (e.detail.eventType === 'click') {

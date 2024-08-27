@@ -1,31 +1,44 @@
 import { app } from '/scripts/app.js';
-import { KUL_CONTROL_PANEL } from '../widgets/controlPanel.js';
+import { getControlPanel } from '../widgets/controlPanel.js';
+import { getCode } from '../widgets/code.js';
 
 /*-------------------------------------------------*/
-/*                 L F   C l a s s                 */
+/*            W i d g e t s   C l a s s            */
 /*-------------------------------------------------*/
 
 export class LFWidgets {
-  #NAMES: { [index: string]: CustomWidgetNames } = {
+  NAMES = {
     controlPanel: 'KUL_CONTROL_PANEL',
+    displayJson: 'KUL_CODE',
   };
 
   constructor() {}
 
-  create = {
+  add = {
     controlPanel: (nodeType: Partial<NodeType>) => {
-      const widget = app.widgets.KUL_CONTROL_PANEL(nodeType, this.#NAMES.controlPanel, {
-        isReady: false,
-      }).widget;
+      const widget = app.widgets.KUL_CONTROL_PANEL(nodeType, this.NAMES.controlPanel).widget;
       widget.serializeValue = false;
+      return widget;
+    },
+    code: (nodeType: Partial<NodeType>) => {
+      const widget = app.widgets.KUL_CODE(nodeType, this.NAMES.displayJson).widget;
+      widget.serializeValue = false;
+      return widget;
     },
   };
 
-  get = {
+  set = {
     controlPanel: () => {
       return {
         KUL_CONTROL_PANEL: (nodeType: NodeType, name: string) => {
-          return KUL_CONTROL_PANEL(nodeType, name, this.#NAMES.controlPanel);
+          return getControlPanel(nodeType, name, this.NAMES.controlPanel);
+        },
+      };
+    },
+    code: () => {
+      return {
+        KUL_CODE: (nodeType: NodeType, name: string) => {
+          return getCode(nodeType, name, this.NAMES.displayJson);
         },
       };
     },

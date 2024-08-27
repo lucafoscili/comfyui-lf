@@ -53,10 +53,10 @@ declare type NodeNames =
   | 'LF_SwitchJSON'
   | 'LF_SwitchString';
 declare interface CustomWidgets {
-  KUL_CHART(node: NodeType, name: string): { widget: Partial<Widget> };
-  KUL_CODE(node: NodeType, name: string): { widget: Partial<Widget> };
-  KUL_CONTROL_PANEL(node: NodeType, name: string): { widget: Partial<Widget> };
-  IMAGE_PREVIEW_B64(node: NodeType, name: string): { widget: Partial<Widget> };
+  KUL_CHART(node: NodeType, name: string): { widget: Widget };
+  KUL_CODE(node: NodeType, name: string): { widget: Widget };
+  KUL_CONTROL_PANEL(node: NodeType, name: string): { widget: Widget };
+  IMAGE_PREVIEW_B64(node: NodeType, name: string): { widget: Widget };
 }
 declare type CustomWidgetNames =
   | 'KUL_CHART'

@@ -76,7 +76,7 @@ declare interface DisplayJSONDictionaryEntry extends BaseNodeDictionaryEntry {
       node: NodeType,
       name: string,
     ): {
-      widget: Partial<Widget>;
+      widget: Widget;
     };
   };
 }
@@ -88,7 +88,7 @@ declare interface ImageHistogramDictionaryEntry extends BaseNodeDictionaryEntry 
       node: NodeType,
       name: string,
     ): {
-      widget: Partial<Widget>;
+      widget: Widget;
     };
   };
 }
@@ -100,7 +100,7 @@ declare interface LoadImagesDictionaryEntry extends BaseNodeDictionaryEntry {
       node: NodeType,
       name: string,
     ): {
-      widget: Partial<Widget>;
+      widget: Widget;
     };
   };
 }

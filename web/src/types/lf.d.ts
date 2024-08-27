@@ -50,8 +50,13 @@ declare interface ControlPanelDictionary {
 }
 declare interface ControlPanelExtension {
   beforeRegisterNodeDef?: (node: NodeType, data: NodeData, name: string) => void;
-  getCustomWidgets: () => {
-    KUL_CONTROL_PANEL: (node: NodeType, name: string) => { widget: Partial<Widget> };
-  };
+  getCustomWidgets: ControlPanelWidgets;
   name: string;
 }
+declare type ControlPanelWidgetsSetter = () => {
+  KUL_CONTROL_PANEL: ControlPanelWidgetCallback;
+};
+declare type ControlPanelWidgetCallback = (
+  node: Partial<NodeType>,
+  name: string,
+) => { widget: Widget };

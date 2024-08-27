@@ -1,6 +1,12 @@
 import { getKulManager, getKulThemes, getLFManager } from '../utils/utils.js';
 import { createDOMWidget } from '../helpers/common.js';
-export function KUL_CONTROL_PANEL(node, name, wType) {
+const cssClasses = {
+    wrapper: 'lf-controlpanel',
+    debug: 'lf-controlpanel__debug',
+    spinner: 'lf-controlpanel__spinner',
+    themes: 'lf-controlpanel__themes',
+};
+export function getControlPanel(node, name, wType) {
     const domWidget = document.createElement('div');
     const refresh = () => {
         const options = node.widgets?.find((w) => w.type === wType)?.options;
@@ -32,12 +38,6 @@ export function KUL_CONTROL_PANEL(node, name, wType) {
     widget.options.refresh();
     return { widget };
 }
-const cssClasses = {
-    wrapper: 'lf-controlpanel',
-    debug: 'lf-controlpanel__debug',
-    spinner: 'lf-controlpanel__spinner',
-    themes: 'lf-controlpanel__themes',
-};
 const buttonCb = (e) => {
     if (e.detail.eventType === 'click') {
         getKulManager().theme.randomTheme();

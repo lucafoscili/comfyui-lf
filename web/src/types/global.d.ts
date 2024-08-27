@@ -29,72 +29,72 @@ interface NodeData {
   python_module: string;
 }
 interface NodeType {
-  lfProps: LFProps;
-  comfyClass: string;
-  filter: string;
-  nodeData: NodeData;
+  lfProps?: LFProps;
+  comfyClass?: string;
+  filter?: string;
+  nodeData?: NodeData;
   size?: [number, number];
   properties?: NodeProperties;
   shape?: 'BOX_SHAPE' | 'ROUND_SHAPE' | 'CARD_SHAPE';
   flags?: Record<string, boolean>;
   collapsed?: boolean;
   redrawOnMouse?: boolean;
-  widgets: Array<Widget>;
+  widgets?: Array<Widget>;
   widgetsUp?: boolean;
-  pos: [number, number];
+  pos?: [number, number];
   widgetsStartY?: number;
   clipArea?: boolean;
   resizable?: boolean;
   horizontal?: boolean;
-  inputs: SlotInfo[];
-  outputs: SlotInfo[];
-  addDOMWidget: (
+  inputs?: SlotInfo[];
+  outputs?: SlotInfo[];
+  addDOMWidget?: (
     name?: string,
     type?: string,
     element?: Partial<HTMLElement>,
     options?: WidgetOptions,
   ) => unknown;
-  addCustomWidget: (
+  addCustomWidget?: (
     type?: T['type'],
     name?: string,
     value?: T['value'],
     callback?: WidgetCallback<T> | string,
     options?: T['options'],
   ) => unknown;
-  computeSize(): number;
-  onAdded?(): void;
-  onResize?(size: number): void;
-  onRemoved?(): void;
-  onStart?(): void;
-  onStop?(): void;
-  onDrawBackground?(ctx: CanvasRenderingContext2D): void;
-  onDrawForeground?(ctx: CanvasRenderingContext2D): void;
-  onMouseDown?(event: MouseEvent): void;
-  onMouseMove?(event: MouseEvent): void;
-  onMouseUp?(event: MouseEvent): void;
-  onMouseEnter?(event: MouseEvent): void;
-  onMouseLeave?(event: MouseEvent): void;
-  onDblClick?(event: MouseEvent): void;
-  onExecute?(): void;
-  onNodeCreated(): void;
-  onPropertyChanged?(propertyName: string, newValue: any): boolean;
-  onGetInputs?(): Array<[string, string]>[];
-  onGetOutputs?(): Array<[string, string]>[];
-  onSerialize?(data: Record<string, any>): Record<string, any>;
-  onSelected?(data: Record<string, any>): void;
-  onDeselected?(data: Record<string, any>): void;
-  onDropItem?(item: HTMLElement): void;
-  onDropFile?(file: File): void;
-  onConnectInput?(inputIndex: number, link: LinkInfo): boolean;
-  onConnectionsChange?(connection: ConnectionInfo): void;
-  addInput(name: string, type: string): void;
-  addOutput(name: string, type: string): void;
-  getInputData(slotIndex: number): any;
-  getOutputData(slotIndex: number): any;
-  prototype: Partial<NodeType>;
-  drawNode(node: NodeType, ctx: Canvas): void;
-  onConfigure(): void;
-  widgets_values: Widget[];
+  computeSize?: () => number;
+  onAdded?: () => void;
+  onResize?: (size: number) => void;
+  onRemoved?: () => void;
+  onStart?: () => void;
+  onStop?: () => void;
+  onDrawBackground?: (ctx: CanvasRenderingContext2D) => void;
+  onDrawForeground?: (ctx: CanvasRenderingContext2D) => void;
+  onMouseDown?: (event: MouseEvent) => void;
+  onMouseMove?: (event: MouseEvent) => void;
+  onMouseUp?: (event: MouseEvent) => void;
+  onMouseEnter?: (event: MouseEvent) => void;
+  onMouseLeave?: (event: MouseEvent) => void;
+  onDblClick?: (event: MouseEvent) => void;
+  onExecute?: () => void;
+  onNodeCreated?: () => void;
+  onPropertyChanged?: (propertyName: string, newValue: any) => boolean;
+  onGetInputs?: () => Array<[string, string]>[];
+  onGetOutputs?: () => Array<[string, string]>[];
+  onSerialize?: (data: Record<string, any>) => Record<string, any>;
+  onSelected?: (data: Record<string, any>) => void;
+  onDeselected?: (data: Record<string, any>) => void;
+  onDropItem?: (item: HTMLElement) => void;
+  onDropFile?: (file: File) => void;
+  onConnectInput?: (inputIndex: number, link: LinkInfo) => boolean;
+  onConnectionsChange?: (connection: ConnectionInfo) => void;
+  addInput?: (name: string, type: string) => void;
+  addOutput?: (name: string, type: string) => void;
+  getInputData?: (slotIndex: number) => any;
+  getOutputData?: (slotIndex: number) => any;
+  prototype?: Partial<NodeType>;
+  drawNode?: (node: NodeType, ctx: Canvas) => void;
+  onConfigure?: () => void;
+  widgets_values?: Widget[];
 }
 
 interface NodeProperties {
@@ -112,8 +112,8 @@ interface NodeProperties {
 }
 
 interface SlotInfo {
-  name: string;
-  type: string;
+  name?: string;
+  type?: string;
   link?: string | string[]; // Depending if the slot is input or output, contains the id of the link or an array of ids
   label?: string; // Optional, used to rename the name as shown in the canvas
   dir?: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'; // Optional, direction of the slot
@@ -122,26 +122,26 @@ interface SlotInfo {
 }
 interface Widget {
   element?: Partial<HTMLElement>;
-  type: string;
-  name: string;
-  value: any;
+  type?: string;
+  name?: string;
+  value?: any;
   options?: WidgetOptions;
   last_y?: number;
-  y: number;
+  y?: number;
   computedHeight?: number;
-  onRemove?(): void;
+  onRemove?: () => void;
 }
 type OnConnectionChangeCallback = (
-  side: number,
-  slot: number,
-  connect: boolean,
-  link_info: ConnectionChangePayload,
-  output: Widget,
+  side?: number,
+  slot?: number,
+  connect?: boolean,
+  link_info?: ConnectionChangePayload,
+  output?: Widget,
 ) => OnConnectionChangeCallback;
 interface ConnectionChangePayload {
-  origin_id: number;
-  origin_slot: number;
-  target_id: number;
-  target_slot: number;
-  type: string;
+  origin_id?: number;
+  origin_slot?: number;
+  target_id?: number;
+  target_slot?: number;
+  type?: string;
 }

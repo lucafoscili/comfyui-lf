@@ -65,7 +65,7 @@ export const ImageHistogramAdapter: () => ImageHistogramDictionaryEntry = () => 
           };
           domWidget.refresh();
 
-          const widget: Partial<Widget> = node.addDOMWidget(name, widgetName, domWidget);
+          const widget: Widget = node.addDOMWidget(name, widgetName, domWidget);
           node.onResize = (number) => {
             try {
               if (domWidget?.firstChild && !timeoutId) {

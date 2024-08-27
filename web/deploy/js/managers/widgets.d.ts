@@ -1,15 +1,22 @@
 export declare class LFWidgets {
-    TYPES: {
-        [index: string]: CustomWidgetNames;
+    NAMES: {
+        controlPanel: string;
+        displayJson: string;
     };
     constructor();
-    create: {
-        controlPanel: (nodeType: Partial<NodeType>) => void;
+    add: {
+        controlPanel: (nodeType: Partial<NodeType>) => any;
+        code: (nodeType: Partial<NodeType>) => any;
     };
-    get: {
+    set: {
         controlPanel: () => {
             KUL_CONTROL_PANEL: (nodeType: NodeType, name: string) => {
-                widget: Partial<Widget>;
+                widget: Widget;
+            };
+        };
+        code: () => {
+            KUL_CODE: (nodeType: NodeType, name: string) => {
+                widget: unknown;
             };
         };
     };
