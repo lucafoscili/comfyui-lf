@@ -1,6 +1,5 @@
-import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-9570d2db.js';
-import { k as kulManagerInstance, g as getProps } from './kul-manager-18eb90c7.js';
-import { K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './GenericVariables-0efba181.js';
+import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-9aa60797.js';
+import { k as kulManagerInstance, g as getProps, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './kul-manager-ed681a28.js';
 
 var KulSplashProps;
 (function (KulSplashProps) {
@@ -100,8 +99,8 @@ const KulSplash = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: '156c2351ec33a920aab9a868d51c08c779eba45b' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '06b859932f25f08c4976d96c09a375da08272c70', id: KUL_WRAPPER_ID }, h("div", { key: '3994896a38def86b31028d1e6bb322ecbaecfe25', class: 'modal' +
-                (this.state === 'unmounting' ? ' active' : '') }, h("div", { key: '48b0aa897c38c5fc2ce673b2eac745c4beb59e95', class: "wrapper" }, h("div", { key: '23267b13ea403a206645726c8db4b25ed3776756', class: "widget" }, h("slot", { key: '7a5e94b887e8fc8b5655f7e88060feca3aaedbf5' })), h("div", { key: 'f1603d1500609509c482ef42107e6c3cf9748cb0', class: "label" }, this.state === 'unmounting'
+        return (h(Host, { key: 'd917d0dc5f1e690ff94b70baa4aeaacee2447e78' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '5012a4352902008162514a245723be5ff4d0a2e4', id: KUL_WRAPPER_ID }, h("div", { key: 'c4e28f59838b52b64c645f0a8c8bfdb4b0bfd569', class: 'modal' +
+                (this.state === 'unmounting' ? ' active' : '') }, h("div", { key: 'b85f19cb3941f1e85ac950157031d035fa1c1aee', class: "wrapper" }, h("div", { key: 'a6f4f2c004f2ef032a4265d877d6f85564fa19a7', class: "widget" }, h("slot", { key: '966f58b6c07a200ac414c6527ce676858dfd8bd4' })), h("div", { key: 'a0925083407d3afe9df024ac89ec7a54bf3e1d5c', class: "label" }, this.state === 'unmounting'
             ? 'Ready!'
             : this.kulLabel))))));
     }

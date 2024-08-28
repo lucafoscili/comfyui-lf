@@ -1,7 +1,6 @@
-import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-9570d2db.js';
+import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-9aa60797.js';
 import { K as KulDataCyAttributes } from './GenericTypes-8038330a.js';
-import { k as kulManagerInstance, g as getProps } from './kul-manager-18eb90c7.js';
-import { K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './GenericVariables-0efba181.js';
+import { k as kulManagerInstance, g as getProps, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './kul-manager-ed681a28.js';
 
 var KulSwitchProps;
 (function (KulSwitchProps) {
@@ -147,11 +146,11 @@ const KulSwitch = class {
             'form-field': true,
             'form-field--align-end': this.kulLeadingLabel,
         };
-        return (h(Host, { key: 'ec01bfd2919b64972f464c10aaa21a589969eeac' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '70c2e0818f5c1e738b88524da177a84ba967dd54', id: KUL_WRAPPER_ID }, h("div", { key: 'b9a0fdb44713ad77935bef658825fff4c9dc0e8d', class: formClassName }, h("div", { key: 'c93df772a1e2b0cd4440fd16040146a1539fc443', class: className }, h("div", { key: '791455e66749977a980b812c02ddf002143b60a3', class: "switch__track" }), h("div", { key: '5e0d416244a51ad09336845ed348ae511f9f8a3f', class: "switch__thumb-underlay" }, h("div", { key: 'c2f44f56c8a088d230b2dba0a3e863cb5d97744b', class: "switch__thumb" }, h("div", { key: '3cce195ca86cf58393677cdafff345b8c3492fde', ref: (el) => {
+        return (h(Host, { key: 'fcf38a96b44416df91e138007171e3d98e61544d' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '406a8cd0760d6a85a891670975d0aa29afe343fc', id: KUL_WRAPPER_ID }, h("div", { key: '247852f3755865c06af75794309458c23bab3003', class: formClassName }, h("div", { key: '401751930e12ccc27c88ea53252de821ece78d9a', class: className }, h("div", { key: '438046e78f069a04b7c711f02a4ab66710c79000', class: "switch__track" }), h("div", { key: '31d54b73e3aca1572fe2a345bd78a4281ac2bdf3', class: "switch__thumb-underlay" }, h("div", { key: '41228d3ee5b545ef70f18d3b6e123ea0f16392af', class: "switch__thumb" }, h("div", { key: 'bb176ea550a4012ac59f2d6dbd817890c3d2b653', ref: (el) => {
                 if (this.kulRipple) {
                     this.#rippleSurface = el;
                 }
-            } }), h("input", { key: '58c1af998895f3723e15120f7667fe8041b9abb4', class: "switch__native-control", checked: this.#isOn(), "data-cy": KulDataCyAttributes.INPUT, disabled: this.kulDisabled, onBlur: (e) => {
+            } }), h("input", { key: '6edfee9c4852ccf8e92df123d509cfdf59cc6b82', class: "switch__native-control", checked: this.#isOn(), "data-cy": KulDataCyAttributes.INPUT, disabled: this.kulDisabled, onBlur: (e) => {
                 this.onKulEvent(e, 'blur');
             }, onChange: (e) => {
                 this.#updateState(this.#isOn() ? 'off' : 'on', e);
@@ -159,7 +158,7 @@ const KulSwitch = class {
                 this.onKulEvent(e, 'focus');
             }, onPointerDown: (e) => {
                 this.onKulEvent(e, 'pointerdown');
-            }, role: "switch", type: "checkbox", value: this.value ? 'on' : 'off' })))), h("label", { key: '78a12f011ecc057c23b1c4372145675eead3a138', class: "switch__label", onClick: (e) => {
+            }, role: "switch", type: "checkbox", value: this.value ? 'on' : 'off' })))), h("label", { key: '156614555984002a7b851d9ee0773194f6a8c1db', class: "switch__label", onClick: (e) => {
                 this.onKulEvent(e, 'change');
             } }, this.kulLabel)))));
     }

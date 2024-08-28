@@ -1,6 +1,5 @@
-import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-9570d2db.js';
-import { k as kulManagerInstance, g as getProps } from './kul-manager-18eb90c7.js';
-import { K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './GenericVariables-0efba181.js';
+import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-9aa60797.js';
+import { k as kulManagerInstance, g as getProps, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './kul-manager-ed681a28.js';
 
 var KulPhotoframeProps;
 (function (KulPhotoframeProps) {
@@ -118,9 +117,9 @@ const KulPhotoframe = class {
         if (this.isInViewport && !this.#renderValue) {
             this.#renderValue = true;
         }
-        return (h(Host, { key: '1b4b00cc255604302572410e1a8e2923324d2c18' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '56a2796215ca38d5b07c0367c217bf993269098d', id: KUL_WRAPPER_ID, ref: (el) => {
+        return (h(Host, { key: '8794567a7f553b656632401c23c7ba6224554089' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'a52b9aab7d1c34d3098d4cc6df644148616eca39', id: KUL_WRAPPER_ID, ref: (el) => {
                 this.#wrapperEl = el;
-            } }, h("img", { key: '8c023b2dd2f54834fc491005f85d12b7c7a3a58a', ...this.kulPlaceholder, class: "placeholder", ref: (el) => (this.#placeholderEl = el), onLoad: (e) => {
+            } }, h("img", { key: 'bba323b865bf8034bc038fd77dec9a04484f5139', ...this.kulPlaceholder, class: "placeholder", ref: (el) => (this.#placeholderEl = el), onLoad: (e) => {
                 if (this.#placeholderEl.naturalWidth >
                     this.#placeholderEl.naturalHeight) {
                     this.#wrapperEl.classList.add('horizontal');

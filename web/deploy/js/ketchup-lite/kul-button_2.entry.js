@@ -1,7 +1,6 @@
-import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, H as Host, F as Fragment, a as getAssetPath } from './index-9570d2db.js';
+import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, H as Host, F as Fragment, a as getAssetPath } from './index-9aa60797.js';
 import { K as KulDataCyAttributes } from './GenericTypes-8038330a.js';
-import { k as kulManagerInstance, g as getProps, d as KulDynamicPositionPlacement, b as KulLanguageGeneric } from './kul-manager-18eb90c7.js';
-import { b as KUL_DROPDOWN_CLASS_VISIBLE, c as KUL_DROPDOWN_CLASS, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './GenericVariables-0efba181.js';
+import { k as kulManagerInstance, g as getProps, f as KUL_DROPDOWN_CLASS_VISIBLE, h as KulDynamicPositionPlacement, i as KUL_DROPDOWN_CLASS, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID, e as KulLanguageGeneric } from './kul-manager-ed681a28.js';
 
 var KulButtonProps;
 (function (KulButtonProps) {
@@ -606,7 +605,7 @@ const KulList = class {
             'list--empty': isEmpty,
             'list--selectable': this.kulSelectable,
         };
-        return (h(Host, { key: '87257d42958d310d866304f8290d2ba9d62ee9d7' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '40e192dcccebd7bc54acb15eaaf53a3060464280', id: KUL_WRAPPER_ID }, isEmpty ? (h("div", { class: "empty-data" }, h("div", { class: "empty-data__text" }, this.#kulManager.language.translate(KulLanguageGeneric.EMPTY_DATA)))) : (h("ul", { "aria-multiselectable": 'false', class: className, role: 'listbox' }, this.kulData.nodes.map((item, index) => this.#prepNode(item, index)))))));
+        return (h(Host, { key: 'f5395c265ebb72434ed61fa8f33a70938c0a8b18' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'ec8d2e9f2dec1615b970da3bfd6ed04759d9e50b', id: KUL_WRAPPER_ID }, isEmpty ? (h("div", { class: "empty-data" }, h("div", { class: "empty-data__text" }, this.#kulManager.language.translate(KulLanguageGeneric.EMPTY_DATA)))) : (h("ul", { "aria-multiselectable": 'false', class: className, role: 'listbox' }, this.kulData.nodes.map((item, index) => this.#prepNode(item, index)))))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

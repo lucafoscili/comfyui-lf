@@ -170,7 +170,7 @@ node_modules/
 web/src/types/ketchup-lite
 web/deploy/assets/media
 web/deploy/assets/svg/*
-web/deploy/js/ketchup-lite/showcase*
+web/deploy/js/ketchup-lite/*showcase*
 
 # Kethup Lite (add icons to keep here)
 !web/deploy/assets/svg/arrow_drop_down.svg

@@ -1,7 +1,6 @@
-import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-9570d2db.js';
-import { k as kulManagerInstance, g as getProps, K as KulThemeColorValues } from './kul-manager-18eb90c7.js';
+import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-9aa60797.js';
+import { k as kulManagerInstance, g as getProps, b as KulThemeColorValues, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './kul-manager-ed681a28.js';
 import { K as KulDataCyAttributes } from './GenericTypes-8038330a.js';
-import { K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './GenericVariables-0efba181.js';
 
 var KulTabbarProps;
 (function (KulTabbarProps) {
