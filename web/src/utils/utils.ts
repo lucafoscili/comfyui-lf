@@ -61,3 +61,10 @@ export const kulManagerExists = () => {
 export const log = () => {
   return WINDOW.lfManager.log;
 };
+export const unescapeJson = (str: string) => {
+  try {
+    return JSON.parse(str);
+  } catch (e) {
+    return str.replace(/\\(.)/g, '$1');
+  }
+};

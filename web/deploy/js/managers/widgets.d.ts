@@ -13,7 +13,7 @@ export declare class LFWidgets {
             getValue(): string;
             refresh: () => void;
             setProps(props: Partial<HTMLKulCodeElement>): void;
-            setValue(value: JSON | string): Promise<void>;
+            setValue(value: Record<string, unknown> | string): void;
         };
     };
     set: {
@@ -41,7 +41,7 @@ export declare class LFWidgets {
                 getValue(): string;
                 refresh: () => void;
                 setProps(props: Partial<HTMLKulCodeElement>): void;
-                setValue(value: JSON | string): Promise<void>;
+                setValue(value: Record<string, unknown> | string): void;
             };
         };
         setters: {

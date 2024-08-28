@@ -7,3 +7,4 @@ export declare const getKulThemes: () => KulDataDataset;
 export declare const getLFManager: () => import("../managers/manager").LFManager;
 export declare const kulManagerExists: () => boolean;
 export declare const log: () => (message: string, args?: Record<string, unknown>, severity?: LogSeverity) => void;
+export declare const unescapeJson: (str: string) => any;

@@ -173,4 +173,6 @@ web/deploy/assets/svg/*
 web/deploy/js/ketchup-lite/showcase*
 
 # Kethup Lite (add icons to keep here)
-!web/deploy/assets/svg/content_copy*
+!web/deploy/assets/svg/arrow_drop_down.svg
+!web/deploy/assets/svg/content_copy.svg
+!web/deploy/assets/svg/style.svg

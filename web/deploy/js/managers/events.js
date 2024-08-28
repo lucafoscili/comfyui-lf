@@ -31,9 +31,8 @@ export class LFEvents {
                     const widget = __classPrivateFieldGet(this, _LFEvents_instances, "m", _LFEvents_getW).call(this, node, 'KUL_CODE', addW);
                     const comp = widget.options.getComp();
                     comp.kulLanguage = 'json';
-                    widget.options.setValue(event.detail.json).then(() => {
-                        getApiRoutes().redraw();
-                    });
+                    widget.options.setValue(event.detail.json);
+                    getApiRoutes().redraw();
                 }
             },
         };

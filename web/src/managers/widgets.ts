@@ -1,7 +1,7 @@
 import { app } from '/scripts/app.js';
 import { renderControlPanel } from '../widgets/controlPanel.js';
 import { renderCode } from '../widgets/code.js';
-import { getLFManager } from '../utils/utils.js';
+import { getLFManager, unescapeJson } from '../utils/utils.js';
 
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
@@ -48,18 +48,17 @@ export class LFWidgets {
             }
           }
         },
-        setValue(value: JSON | string) {
-          if (value === undefined || value === '') {
-            code.kulValue = 'Wow. Such empty!';
-          } else {
-            if (value === typeof 'string') {
-              code.kulValue = value;
+        setValue(value: Record<string, unknown> | string) {
+          try {
+            if (typeof value === 'string') {
+              code.kulValue = JSON.stringify(unescapeJson(value));
             } else {
-              try {
-                code.kulValue = JSON.stringify(value, null, 2);
-              } catch (error) {
-                getLFManager().log('Error when setting value!', { error }, 'error');
-              }
+              code.kulValue = JSON.stringify(value);
+            }
+          } catch (error) {
+            getLFManager().log('Error when setting value!', { error }, 'error');
+            if (value === undefined || value === '') {
+              code.kulValue = 'Wow. Such empty!';
             }
           }
         },
