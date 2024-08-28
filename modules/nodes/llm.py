@@ -24,10 +24,10 @@ class LF_CharacterImpersonator:
             }
         }
 
-    RETURN_TYPES = ("JSON", "JSON", "STRING")
-    RETURN_NAMES = ("request_json", "response_json", "answer")
     CATEGORY = category
     FUNCTION = "on_exec"
+    RETURN_NAMES = ("request_json", "response_json", "answer")
+    RETURN_TYPES = ("JSON", "JSON", "STRING")
 
     def on_exec(self, temperature, max_tokens, prompt, seed, character_bio, url, image=None):
         if isinstance(image, torch.Tensor):
@@ -82,10 +82,10 @@ class LF_ImageClassifier:
             },
         }
 
-    RETURN_TYPES = ("JSON", "JSON", "STRING")
-    RETURN_NAMES = ("request_json", "response_json", "message")
     CATEGORY = category
     FUNCTION = "on_exec"
+    RETURN_NAMES = ("request_json", "response_json", "message")
+    RETURN_TYPES = ("JSON", "JSON", "STRING")
 
     def on_exec(self, temperature, max_tokens, prompt, seed, character_bio, url, image=None):
         if isinstance(image, torch.Tensor):

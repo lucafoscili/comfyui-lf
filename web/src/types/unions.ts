@@ -1,17 +1,5 @@
 /*-------------------------------------------------------------------*/
-/*             G e n e r i c   D e c l a r a t i o n s               */
-/*-------------------------------------------------------------------*/
-declare type LFProps =
-  | ControlPanelProps
-  | DisplayJSONProps
-  | ImageHistogramProps
-  | LoadImagesProps
-  | SwitchImageProps
-  | SwitchIntegerProps
-  | SwitchJSONProps
-  | SwitchStringProps;
-/*-------------------------------------------------------------------*/
-/*               E v e n t s    D e c l a r a t i o n s              */
+/*                E v e n t s   D e c l a r a t i o n s              */
 /*-------------------------------------------------------------------*/
 declare type EventNames =
   | 'lf-controlpanel'
@@ -32,16 +20,8 @@ declare type EventPayload =
   | SwitchJSONPayload
   | SwitchStringPayload;
 /*-------------------------------------------------------------------*/
-/*           D i c t i o n a r y   D e c l a r a t i o n s           */
+/*                N o d e s   D e c l a r a t i o n s                */
 /*-------------------------------------------------------------------*/
-declare type NodeDictionaryEntry =
-  | DisplayJSONDictionaryEntry
-  | ImageHistogramDictionaryEntry
-  | LoadImagesDictionaryEntry
-  | SwitchImageDictionaryEntry
-  | SwitchIntegerDictionaryEntry
-  | SwitchJSONDictionaryEntry
-  | SwitchStringDictionaryEntry;
 declare type NodeNames =
   | 'LF_ControlPanel'
   | 'LF_DisplayJSON'
@@ -51,6 +31,9 @@ declare type NodeNames =
   | 'LF_SwitchInteger'
   | 'LF_SwitchJSON'
   | 'LF_SwitchString';
+/*-------------------------------------------------------------------*/
+/*              W i d g e t s   D e c l a r a t i o n s              */
+/*-------------------------------------------------------------------*/
 declare interface CustomWidgets {
   KUL_CHART(node: NodeType, name: string): { widget: Widget };
   KUL_CODE(node: NodeType, name: string): { widget: Widget };
@@ -62,3 +45,4 @@ declare type CustomWidgetNames =
   | 'KUL_CODE'
   | 'KUL_CONTROL_PANEL'
   | 'IMAGE_PREVIEW_B64';
+declare type CustomWidgetOptions = CodeWidgetOptions | ControlPanelWidgetOptions;

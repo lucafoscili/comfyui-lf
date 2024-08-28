@@ -17,8 +17,8 @@ class LF_DisplayJSON:
 
     CATEGORY = "LF Nodes/JSON"
     FUNCTION = "on_exec"
-    RETURN_TYPES = ()
     OUTPUT_NODE = True
+    RETURN_TYPES = ()
 
     def on_exec(self, json:dict, node_id):
         PromptServer.instance.send_sync("lf-displayjson", {
@@ -37,9 +37,9 @@ class LF_GetRandomKeyFromJSON:
             }
         }
 
-    RETURN_TYPES = ("STRING",)
     CATEGORY = category
     FUNCTION = "on_exec"
+    RETURN_TYPES = ("STRING",)
 
     def on_exec(self, json: dict, seed: int):
         random.seed(seed)
@@ -58,10 +58,10 @@ class LF_GetValueFromJSON:
             }
         }
 
-    RETURN_TYPES = ("JSON", "STRING", "NUMBER", "INT", "FLOAT", "BOOLEAN")
-    RETURN_NAMES = ("json_output", "string_output", "number_output", "int_output", "float_output", "boolean_output")
     CATEGORY = category
     FUNCTION = "on_exec"
+    RETURN_NAMES = ("json_output", "string_output", "number_output", "int_output", "float_output", "boolean_output")
+    RETURN_TYPES = ("JSON", "STRING", "NUMBER", "INT", "FLOAT", "BOOLEAN")
 
     def on_exec(self, json: dict, key: str):
         # Extract the value associated with the specified key
@@ -118,19 +118,21 @@ class LF_LoadLocalJSON:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "url": ("STRING", {"default": "", "tooltip": "The local URL where the JSON file is stored (i.e.: file://C:/myjson.json)."}),
+                "url": ("STRING", {"default": "", "multiline": True, "tooltip": "The local URL where the JSON file is stored (i.e.: file://C:/myjson.json)."}),
             },
         }
 
-    RETURN_TYPES = ("JSON",)
-    CATEGORY =  category
+    CATEGORY = category
     FUNCTION = "on_exec"
+    RETURN_TYPES = ("JSON",)
 
     def on_exec(self, url: str):
-        if url.startswith("file://"):
-            file_path = requests.utils.unquote(url[7:])
-            with open(file_path, 'r') as file:
-                data = json.load(file)
+        if not url.startswith("file://"):
+            url = "file://" + url
+        
+        file_path = requests.utils.unquote(url[7:])
+        with open(file_path, 'r') as file:
+            data = json.load(file)
 
         return (data,)
 

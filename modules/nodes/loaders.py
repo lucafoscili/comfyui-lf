@@ -40,11 +40,11 @@ class LF_LoadImages:
             "hidden": { "node_id": "UNIQUE_ID" } 
         }
 
-    RETURN_TYPES = ("IMAGE", "STRING", "INT")
-    RETURN_NAMES = ("images", "names", "nr")
-    OUTPUT_IS_LIST = (True, True, False)
     CATEGORY = category
     FUNCTION = "on_exec"
+    OUTPUT_IS_LIST = (True, True, False)
+    RETURN_NAMES = ("images", "names", "nr")
+    RETURN_TYPES = ("IMAGE", "STRING", "INT")
 
     def on_exec(self, dir, subdir, strip_ext, load_cap, dummy_output, node_id):
         """

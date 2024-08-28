@@ -14,10 +14,11 @@ class LF_ImageHistogram:
             "hidden": { "node_id": "UNIQUE_ID" }
         }
 
-    RETURN_TYPES = ("IMAGE", "JSON",)
-    RETURN_NAMES = ("image", "dataset",)
     CATEGORY = category
     FUNCTION = "on_exec"
+    OUTPUT_NODE = True
+    RETURN_NAMES = ("image", "dataset",)
+    RETURN_TYPES = ("IMAGE", "JSON",)
 
     def on_exec(self, image, node_id):
         """

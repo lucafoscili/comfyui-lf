@@ -1,52 +1,47 @@
 import type {
   KulButtonEventPayload,
+  KulEventPayload,
   KulListEventPayload,
   KulSwitchEventPayload,
 } from '../types/ketchup-lite/components';
 import { createDOMWidget, getKulManager, getKulThemes, getLFManager } from '../utils/utils';
 
-const cssClasses = {
-  content: 'lf-controlpanel',
-  debug: 'lf-controlpanel__debug',
-  spinner: 'lf-controlpanel__spinner',
-  themes: 'lf-controlpanel__themes',
+const BASE_CSS_CLASS = 'lf-controlpanel';
+
+export const controlPanelWidget = {
+  cssClasses: {
+    content: BASE_CSS_CLASS,
+    debug: `${BASE_CSS_CLASS}__debug`,
+    spinner: `${BASE_CSS_CLASS}__spinner`,
+    themes: `${BASE_CSS_CLASS}__themes`,
+  },
+  options: () => {
+    return {
+      async getValue() {
+        return { debug: getLFManager()?.isDebug(), themes: getKulManager()?.theme.name };
+      },
+      async setValue(value) {
+        if (value) {
+          const { debug, themes } = value;
+          if (debug !== undefined) {
+            getLFManager().toggleDebug(debug);
+          }
+          if (themes !== undefined) {
+            getKulManager().theme.set(themes);
+          }
+        }
+      },
+    } as ControlPanelWidgetOptions;
+  },
+  render: (node: NodeType, name: string, wType: CustomWidgetNames) => {
+    const wrapper = document.createElement('div');
+    contentCb(wrapper, false);
+    wrapper.dataset.isInVisibleNodes = 'true';
+    const options = controlPanelWidget.options();
+    const widget = createDOMWidget(name, wType, wrapper, node, options);
+    return { widget };
+  },
 };
-
-export function renderControlPanel(node: NodeType, name: string, wType: CustomWidgetNames) {
-  const wrapper = document.createElement('div');
-
-  const refresh = () => {
-    const options = node.widgets?.find((w) => w.type === wType)?.options;
-
-    if (options) {
-      const isReady = options.isReady;
-      if (isReady) {
-        const content = contentCb(isReady);
-        wrapper.replaceChild(content, wrapper.firstChild);
-      } else {
-        const content = contentCb(isReady);
-        options.isReady = true;
-        wrapper.appendChild(content);
-      }
-    }
-  };
-
-  wrapper.dataset.isInVisibleNodes = 'true';
-  const options: WidgetOptions = {
-    isReady: false,
-    refresh,
-  };
-  const widget = createDOMWidget(name, wType, wrapper, node, options);
-  const readyCb = () => {
-    setTimeout(() => {
-      refresh();
-      document.removeEventListener('kul-spinner-event', readyCb);
-    }, 500);
-  };
-  document.addEventListener('kul-spinner-event', readyCb);
-  refresh();
-  return { widget };
-}
 
 const buttonCb = (e: CustomEvent<KulButtonEventPayload>) => {
   if (e.detail.eventType === 'click') {
@@ -58,6 +53,12 @@ const buttonCb = (e: CustomEvent<KulButtonEventPayload>) => {
   }
 };
 
+const readyCb = (domWidget: HTMLDivElement) => {
+  setTimeout(() => {
+    contentCb(domWidget, true);
+  }, 750);
+};
+
 const switchCb = (e: CustomEvent<KulSwitchEventPayload>) => {
   if (e.detail.eventType === 'change') {
     const value = e.detail.value === 'on' ? true : false;
@@ -65,12 +66,12 @@ const switchCb = (e: CustomEvent<KulSwitchEventPayload>) => {
   }
 };
 
-export function contentCb(isReady: boolean) {
+export function contentCb(domWidget: HTMLDivElement, isReady: boolean) {
   const content = document.createElement('div');
 
   const createSpinner = () => {
     const spinner = document.createElement('kul-spinner');
-    spinner.classList.add(cssClasses.spinner);
+    spinner.classList.add(controlPanelWidget.cssClasses.spinner);
     spinner.kulActive = true;
     spinner.kulLayout = 11;
 
@@ -79,7 +80,7 @@ export function contentCb(isReady: boolean) {
 
   const createDebug = () => {
     const debug = document.createElement('kul-switch');
-    debug.classList.add(cssClasses.debug);
+    debug.classList.add(controlPanelWidget.cssClasses.debug);
     debug.kulLabel = 'Debug';
     debug.kulLeadingLabel = true;
     debug.addEventListener('kul-switch-event', switchCb);
@@ -89,7 +90,7 @@ export function contentCb(isReady: boolean) {
 
   const createTheme = () => {
     const themes = document.createElement('kul-button');
-    themes.classList.add(cssClasses.themes);
+    themes.classList.add(controlPanelWidget.cssClasses.themes);
     themes.kulData = getKulThemes();
     themes.addEventListener('kul-button-event', buttonCb);
 
@@ -101,12 +102,13 @@ export function contentCb(isReady: boolean) {
     const themes = createTheme();
     content.appendChild(debug);
     content.appendChild(themes);
+    domWidget.replaceChild(content, domWidget.firstChild);
   } else {
     const spinner = createSpinner();
+    spinner.addEventListener('kul-spinner-event', readyCb.bind(null, domWidget));
     content.appendChild(spinner);
+    domWidget.appendChild(content);
   }
 
-  content.classList.add(cssClasses.content);
-
-  return content;
+  content.classList.add(controlPanelWidget.cssClasses.content);
 }

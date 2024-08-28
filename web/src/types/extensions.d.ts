@@ -1,39 +1,6 @@
 /*-------------------------------------------------------------------*/
-/*             G e n e r i c   D e c l a r a t i o n s               */
-/*-------------------------------------------------------------------*/
-declare interface ControlPanelProps extends BaseLFProps {
-  payload: ControlPanelPayload;
-}
-declare interface DisplayJSONProps extends BaseLFProps {
-  payload: DisplayJSONPayload;
-}
-declare interface ImageHistogramProps extends BaseLFProps {
-  payload: ImageHistogramPayload;
-}
-declare interface LoadImagesProps extends BaseLFProps {
-  payload: LoadImagesPayload;
-}
-declare interface SwitchImageProps extends BaseLFProps {
-  payload: SwitchImagePayload;
-}
-declare interface SwitchIntegerProps extends BaseLFProps {
-  payload: SwitchIntegerPayload;
-}
-declare interface SwitchJSONProps extends BaseLFProps {
-  payload: SwitchJSONPayload;
-}
-declare interface SwitchStringProps extends BaseLFProps {
-  payload: SwitchStringPayload;
-}
-/*-------------------------------------------------------------------*/
 /*               E v e n t s    D e c l a r a t i o n s              */
 /*-------------------------------------------------------------------*/
-declare interface ControlPanelPayload extends BaseEventPayload {
-  isDebug: boolean;
-}
-declare interface DisplayJSONPayload extends BaseEventPayload {
-  json: Record<string, unknown>;
-}
 declare interface ImageHistogramPayload extends BaseEventPayload {
   dataset: KulDataDataset;
 }
@@ -64,11 +31,6 @@ interface NodeDictionary {
   switchInteger: SwitchIntegerDictionaryEntry;
   switchJson: SwitchJSONDictionaryEntry;
   switchString: SwitchStringDictionaryEntry;
-}
-declare interface DisplayJSONDictionaryEntry extends BaseNodeDictionaryEntry {
-  eventCb: (e: CustomEvent<DisplayJSONPayload>) => void;
-  eventName: 'lf-displayjson';
-  getCustomWidgets: DisplayJSONWidgetsSetter;
 }
 declare interface ImageHistogramDictionaryEntry extends BaseNodeDictionaryEntry {
   eventCb: (e: CustomEvent<ImageHistogramPayload>) => void;
@@ -110,14 +72,3 @@ declare interface SwitchStringDictionaryEntry extends BaseNodeDictionaryEntry {
   eventCb: (e: CustomEvent<SwitchStringPayload>) => void;
   eventName: 'lf-switchstring';
 }
-declare interface ControlPanelExtension extends Extension {
-  beforeRegisterNodeDef?: (node: NodeType, data: NodeData, name: string) => void;
-  getCustomWidgets: ControlPanelWidgets;
-}
-
-declare type ControlPanelWidgetsSetter = () => {
-  KUL_CONTROL_PANEL: WidgetCallback;
-};
-declare type DisplayJSONWidgetsSetter = () => {
-  KUL_CODE: WidgetCallback;
-};

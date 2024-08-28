@@ -1,10 +1,6 @@
 /*-------------------------------------------------------------------*/
 /*             G e n e r i c   D e c l a r a t i o n s               */
 /*-------------------------------------------------------------------*/
-declare interface BaseLFProps {
-  isInitialized: boolean;
-  payload: NodePayload;
-}
 declare interface ComfyAPIs {
   event: <T extends BaseEventPayload>(
     name: EventNames,
@@ -16,10 +12,6 @@ declare interface ComfyAPIs {
 }
 declare type LogSeverity = 'info' | 'success' | 'warning' | 'error';
 declare type WidgetCallback = (node: NodeType, name: string) => { widget: Widget };
-declare interface WidgetOptions {
-  isReady?: boolean;
-  refresh: () => void;
-}
 /*-------------------------------------------------------------------*/
 /*               E v e n t s    D e c l a r a t i o n s              */
 /*-------------------------------------------------------------------*/

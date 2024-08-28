@@ -18,7 +18,7 @@ export const createDOMWidget = (
   type: CustomWidgetNames,
   element: HTMLDivElement,
   node: NodeType,
-  options: WidgetOptions = undefined,
+  options: CustomWidgetOptions = undefined,
 ) => {
   getLFManager().log(`Creating '${type}'`, { element });
 
