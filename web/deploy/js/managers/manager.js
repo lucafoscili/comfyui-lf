@@ -9,7 +9,7 @@ var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
     return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
 };
-var _LFManager_APIS, _LFManager_CSS_EMBEDS, _LFManager_DEBUG, _LFManager_DOM, _LFManager_MANAGERS;
+var _LFManager_APIS, _LFManager_DEBUG, _LFManager_DOM, _LFManager_MANAGERS;
 import { api } from '/scripts/api.js';
 import { app } from '/scripts/app.js';
 import { defineCustomElements } from '../ketchup-lite/loader.js';
@@ -33,7 +33,6 @@ export class LFManager {
                 app.registerExtension(extension);
             },
         });
-        _LFManager_CSS_EMBEDS.set(this, ['controlPanel', 'displayJson', 'imageHistogram', 'loadImages']);
         _LFManager_DEBUG.set(this, false);
         _LFManager_DOM.set(this, document.documentElement);
         _LFManager_MANAGERS.set(this, {});
@@ -50,15 +49,6 @@ export class LFManager {
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes = new LFNodes();
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").widgets = new LFWidgets();
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").events = new LFEvents();
-        for (let index = 0; index < __classPrivateFieldGet(this, _LFManager_CSS_EMBEDS, "f").length; index++) {
-            const cssFileName = __classPrivateFieldGet(this, _LFManager_CSS_EMBEDS, "f")[index];
-            const link = document.createElement('link');
-            link.dataset.filename = cssFileName.toString();
-            link.rel = 'stylesheet';
-            link.type = 'text/css';
-            link.href = `extensions/comfyui-lf/css/${cssFileName}.css`;
-            document.head.appendChild(link);
-        }
     }
     getApiRoutes() {
         return __classPrivateFieldGet(this, _LFManager_APIS, "f");
@@ -109,7 +99,7 @@ export class LFManager {
         return __classPrivateFieldGet(this, _LFManager_DEBUG, "f");
     }
 }
-_LFManager_APIS = new WeakMap(), _LFManager_CSS_EMBEDS = new WeakMap(), _LFManager_DEBUG = new WeakMap(), _LFManager_DOM = new WeakMap(), _LFManager_MANAGERS = new WeakMap();
+_LFManager_APIS = new WeakMap(), _LFManager_DEBUG = new WeakMap(), _LFManager_DOM = new WeakMap(), _LFManager_MANAGERS = new WeakMap();
 const WINDOW = window;
 if (!WINDOW.lfManager) {
     WINDOW.lfManager = new LFManager();

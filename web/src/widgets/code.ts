@@ -1,8 +1,10 @@
 import { createDOMWidget, getLFManager, unescapeJson } from '../utils/utils';
 
 const BASE_CSS_CLASS = 'lf-code';
+const EMPTY = '{ "Wow": "Such empty!" }';
+const TYPE: CustomWidgetNames = 'KUL_CODE';
 
-export const codeWidget = {
+export const codeFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
     code: `${BASE_CSS_CLASS}__widget`,
@@ -13,10 +15,7 @@ export const codeWidget = {
       getComp() {
         return code;
       },
-      getProps() {
-        return code.getProps();
-      },
-      async getValue() {
+      getValue() {
         return code.kulValue;
       },
       setProps(props: Partial<HTMLKulCodeElement>) {
@@ -27,10 +26,15 @@ export const codeWidget = {
           }
         }
       },
-      async setValue(value: Record<string, unknown> | string) {
-        const empty = 'Wow. Such empty!';
-        if (value === '' || value === null || value === undefined) {
-          code.kulValue = empty;
+      setValue(value: Record<string, unknown> | string) {
+        if (
+          value === '' ||
+          value === null ||
+          value === undefined ||
+          value === '{}' ||
+          !Object.keys(value).length
+        ) {
+          code.kulValue = EMPTY;
         } else {
           try {
             if (typeof value === 'string') {
@@ -41,26 +45,27 @@ export const codeWidget = {
           } catch (error) {
             getLFManager().log('Error when setting value!', { error }, 'error');
             if (value === undefined || value === '') {
-              code.kulValue = empty;
+              code.kulValue = EMPTY;
             }
           }
         }
       },
     } as CodeWidgetOptions;
   },
-  render: (node: NodeType, name: string, wType: CustomWidgetNames) => {
+  render: (node: NodeType, name: string) => {
     const wrapper = document.createElement('div');
     const content = document.createElement('div');
     const code = document.createElement('kul-code');
-    const options = codeWidget.options(code);
+    const options = codeFactory.options(code);
 
-    content.classList.add(codeWidget.cssClasses.content);
-    code.classList.add(codeWidget.cssClasses.code);
+    content.classList.add(codeFactory.cssClasses.content);
+    code.classList.add(codeFactory.cssClasses.code);
     code.kulLanguage = 'json';
+    code.kulValue = EMPTY;
 
     content.appendChild(code);
     wrapper.appendChild(content);
 
-    return { widget: createDOMWidget(name, wType, wrapper, node, options) };
+    return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };
   },
 };

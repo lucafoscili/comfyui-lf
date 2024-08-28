@@ -31,7 +31,6 @@ export class LFManager {
       app.registerExtension(extension);
     },
   };
-  #CSS_EMBEDS = ['controlPanel', 'displayJson', 'imageHistogram', 'loadImages'];
   #DEBUG = false;
   #DOM = document.documentElement as KulDom;
   #MANAGERS: {
@@ -56,16 +55,6 @@ export class LFManager {
     this.#MANAGERS.nodes = new LFNodes();
     this.#MANAGERS.widgets = new LFWidgets();
     this.#MANAGERS.events = new LFEvents();
-
-    for (let index = 0; index < this.#CSS_EMBEDS.length; index++) {
-      const cssFileName = this.#CSS_EMBEDS[index];
-      const link = document.createElement('link');
-      link.dataset.filename = cssFileName.toString();
-      link.rel = 'stylesheet';
-      link.type = 'text/css';
-      link.href = `extensions/comfyui-lf/css/${cssFileName}.css`;
-      document.head.appendChild(link);
-    }
   }
 
   getApiRoutes(): ComfyAPIs {

@@ -1,16 +1,6 @@
-declare interface ControlPanelExtension extends Extension {
-  beforeRegisterNodeDef?: (node: NodeType, data: NodeData, name: string) => void;
-  getCustomWidgets: ControlPanelWidgets;
-}
-
-declare interface ControlPanelPayload extends BaseEventPayload {
-  isDebug: boolean;
-}
-
 declare interface ControlPanelWidgetOptions {
-  getValue(): Promise<ControlPanelWidgetValue>;
-  onReady(cb: (isReady: boolean) => HTMLDivElement): void;
-  setValue(value: ControlPanelWidgetValue): Promise<void>;
+  getValue(): ControlPanelWidgetValue;
+  setValue(value: ControlPanelWidgetValue): void;
 }
 
 declare interface ControlPanelWidgetValue {

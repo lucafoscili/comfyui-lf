@@ -3,7 +3,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
-var _LFEvents_instances, _LFEvents_NAMES, _LFEvents_initProps, _LFEvents_getW;
+var _LFEvents_instances, _LFEvents_NAMES, _LFEvents_getW;
 import { getApiRoutes, getLFManager } from '../utils/utils.js';
 /*-------------------------------------------------*/
 /*             E v e n t s   C l a s s             */
@@ -23,11 +23,11 @@ export class LFEvents {
         });
         this.eventHandler = {
             displayJson: (event, addW) => {
-                getLFManager().log(`Event '${__classPrivateFieldGet(this, _LFEvents_NAMES, "f").displayJson}' received`, { event }, 'success');
+                const name = __classPrivateFieldGet(this, _LFEvents_NAMES, "f").displayJson;
+                getLFManager().log(`Event '${name}' received`, { event }, 'success');
                 const payload = event.detail;
                 const node = getApiRoutes().getNodeById(payload.id);
                 if (node) {
-                    __classPrivateFieldGet(this, _LFEvents_instances, "m", _LFEvents_initProps).call(this, node, payload);
                     const widget = __classPrivateFieldGet(this, _LFEvents_instances, "m", _LFEvents_getW).call(this, node, 'KUL_CODE', addW);
                     const comp = widget.options.getComp();
                     comp.kulLanguage = 'json';
@@ -41,17 +41,6 @@ export class LFEvents {
         };
     }
 }
-_LFEvents_NAMES = new WeakMap(), _LFEvents_instances = new WeakSet(), _LFEvents_initProps = function _LFEvents_initProps(node, payload) {
-    const isInitialized = node.lfProps?.isInitialized;
-    if (isInitialized) {
-        node.lfProps = Object.assign(node.lfProps, {
-            ...node.lfProps,
-            payload,
-        });
-    }
-    else {
-        node.lfProps = { isInitialized: true, payload: { id: '', isDebug: false, ...payload } };
-    }
-}, _LFEvents_getW = function _LFEvents_getW(node, name, addW) {
+_LFEvents_NAMES = new WeakMap(), _LFEvents_instances = new WeakSet(), _LFEvents_getW = function _LFEvents_getW(node, name, addW) {
     return node?.widgets?.find((w) => w.name === name) || addW(node, name).widget;
 };

@@ -1,4 +1,13 @@
-export declare function renderControlPanel(node: NodeType, name: string, wType: CustomWidgetNames): {
-    widget: Widget;
+export declare const controlPanelFactory: {
+    cssClasses: {
+        content: string;
+        debug: string;
+        spinner: string;
+        themes: string;
+    };
+    options: () => ControlPanelWidgetOptions;
+    render: (node: NodeType, name: string) => {
+        widget: Widget;
+    };
 };
-export declare function contentCb(isReady: boolean): HTMLDivElement;
+export declare function contentCb(domWidget: HTMLDivElement, isReady: boolean): void;

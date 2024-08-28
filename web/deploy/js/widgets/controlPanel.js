@@ -1,43 +1,53 @@
 import { createDOMWidget, getKulManager, getKulThemes, getLFManager } from '../utils/utils.js';
-const cssClasses = {
-    content: 'lf-controlpanel',
-    debug: 'lf-controlpanel__debug',
-    spinner: 'lf-controlpanel__spinner',
-    themes: 'lf-controlpanel__themes',
+const BASE_CSS_CLASS = 'lf-controlpanel';
+const TYPE = 'KUL_CONTROL_PANEL';
+export const controlPanelFactory = {
+    cssClasses: {
+        content: BASE_CSS_CLASS,
+        debug: `${BASE_CSS_CLASS}__debug`,
+        spinner: `${BASE_CSS_CLASS}__spinner`,
+        themes: `${BASE_CSS_CLASS}__themes`,
+    },
+    options: () => {
+        return {
+            getValue() {
+                return { debug: getLFManager()?.isDebug(), themes: getKulManager()?.theme.name };
+            },
+            setValue(value) {
+                const themeSetter = () => {
+                    const { themes } = value;
+                    if (themes) {
+                        getKulManager().theme.set(themes);
+                    }
+                    return value;
+                };
+                const { debug } = value;
+                if (debug === true || debug === false) {
+                    getLFManager().toggleDebug(debug);
+                }
+                const kulManager = getKulManager();
+                if (kulManager) {
+                    themeSetter();
+                }
+                else {
+                    const managerCb = () => {
+                        themeSetter();
+                        document.removeEventListener('kul-manager-ready', managerCb);
+                    };
+                    document.addEventListener('kul-manager-ready', managerCb);
+                }
+            },
+        };
+    },
+    render: (node, name) => {
+        const wrapper = document.createElement('div');
+        contentCb(wrapper, false);
+        wrapper.dataset.isInVisibleNodes = 'true';
+        const options = controlPanelFactory.options();
+        const widget = createDOMWidget(name, TYPE, wrapper, node, options);
+        return { widget };
+    },
 };
-export function renderControlPanel(node, name, wType) {
-    const wrapper = document.createElement('div');
-    const refresh = () => {
-        const options = node.widgets?.find((w) => w.type === wType)?.options;
-        if (options) {
-            const isReady = options.isReady;
-            if (isReady) {
-                const content = contentCb(isReady);
-                wrapper.replaceChild(content, wrapper.firstChild);
-            }
-            else {
-                const content = contentCb(isReady);
-                options.isReady = true;
-                wrapper.appendChild(content);
-            }
-        }
-    };
-    wrapper.dataset.isInVisibleNodes = 'true';
-    const options = {
-        isReady: false,
-        refresh,
-    };
-    const widget = createDOMWidget(name, wType, wrapper, node, options);
-    const readyCb = () => {
-        setTimeout(() => {
-            refresh();
-            document.removeEventListener('kul-spinner-event', readyCb);
-        }, 500);
-    };
-    document.addEventListener('kul-spinner-event', readyCb);
-    refresh();
-    return { widget };
-}
 const buttonCb = (e) => {
     if (e.detail.eventType === 'click') {
         getKulManager().theme.randomTheme();
@@ -48,24 +58,29 @@ const buttonCb = (e) => {
         getKulManager().theme.set(value);
     }
 };
+const readyCb = (domWidget) => {
+    setTimeout(() => {
+        contentCb(domWidget, true);
+    }, 750);
+};
 const switchCb = (e) => {
     if (e.detail.eventType === 'change') {
         const value = e.detail.value === 'on' ? true : false;
         getLFManager().toggleDebug(value);
     }
 };
-export function contentCb(isReady) {
+export function contentCb(domWidget, isReady) {
     const content = document.createElement('div');
     const createSpinner = () => {
         const spinner = document.createElement('kul-spinner');
-        spinner.classList.add(cssClasses.spinner);
+        spinner.classList.add(controlPanelFactory.cssClasses.spinner);
         spinner.kulActive = true;
         spinner.kulLayout = 11;
         return spinner;
     };
     const createDebug = () => {
         const debug = document.createElement('kul-switch');
-        debug.classList.add(cssClasses.debug);
+        debug.classList.add(controlPanelFactory.cssClasses.debug);
         debug.kulLabel = 'Debug';
         debug.kulLeadingLabel = true;
         debug.addEventListener('kul-switch-event', switchCb);
@@ -73,7 +88,7 @@ export function contentCb(isReady) {
     };
     const createTheme = () => {
         const themes = document.createElement('kul-button');
-        themes.classList.add(cssClasses.themes);
+        themes.classList.add(controlPanelFactory.cssClasses.themes);
         themes.kulData = getKulThemes();
         themes.addEventListener('kul-button-event', buttonCb);
         return themes;
@@ -83,11 +98,13 @@ export function contentCb(isReady) {
         const themes = createTheme();
         content.appendChild(debug);
         content.appendChild(themes);
+        domWidget.replaceChild(content, domWidget.firstChild);
     }
     else {
         const spinner = createSpinner();
+        spinner.addEventListener('kul-spinner-event', readyCb.bind(null, domWidget));
         content.appendChild(spinner);
+        domWidget.appendChild(content);
     }
-    content.classList.add(cssClasses.content);
-    return content;
+    content.classList.add(controlPanelFactory.cssClasses.content);
 }

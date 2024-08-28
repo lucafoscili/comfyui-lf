@@ -1,4 +1,10 @@
-import { LFWidgets } from '../managers/widgets';
-export declare function renderCode(node: NodeType, name: string, wType: CustomWidgetNames, getOptions: LFWidgets['option']['code']): {
-    widget: Widget;
+export declare const codeFactory: {
+    cssClasses: {
+        content: string;
+        code: string;
+    };
+    options: (code: HTMLKulCodeElement) => CodeWidgetOptions;
+    render: (node: NodeType, name: string) => {
+        widget: Widget;
+    };
 };

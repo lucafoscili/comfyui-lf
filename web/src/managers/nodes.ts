@@ -1,3 +1,5 @@
+import { controlPanelFactory } from '../nodes/controlPanel';
+import { displayJsonFactory } from '../nodes/displayJson';
 import { getApiRoutes } from '../utils/utils';
 
 /*-------------------------------------------------*/
@@ -5,7 +7,6 @@ import { getApiRoutes } from '../utils/utils';
 /*-------------------------------------------------*/
 
 export class LFNodes {
-  #EXT_PREFIX = 'LFExtension_';
   #NAMES: { [index: string]: NodeNames } = {
     controlPanel: 'LF_ControlPanel',
     displayJson: 'LF_DisplayJSON',
@@ -19,48 +20,8 @@ export class LFNodes {
 
   constructor() {}
 
-  #getExtName(name: NodeNames) {
-    return this.#EXT_PREFIX + name;
-  }
-
   register = {
-    controlPanel: (setW: ControlPanelWidgetsSetter, addW: WidgetCallback) => {
-      const name = this.#NAMES.controlPanel;
-      const extension: ControlPanelExtension = {
-        name: this.#getExtName(name),
-        beforeRegisterNodeDef: async (nodeType) => {
-          if (nodeType.comfyClass === name) {
-            const onNodeCreated = nodeType.prototype.onNodeCreated;
-            nodeType.prototype.onNodeCreated = function () {
-              const r = onNodeCreated?.apply(this, arguments);
-              const node = this;
-              addW(node, name);
-              return r;
-            };
-          }
-        },
-        getCustomWidgets: setW,
-      };
-      getApiRoutes().register(extension);
-    },
-    displayJson: (setW: DisplayJSONWidgetsSetter, addW: WidgetCallback) => {
-      const name = this.#NAMES.displayJson;
-      const extension: Extension = {
-        name: this.#getExtName(name),
-        beforeRegisterNodeDef: async (nodeType) => {
-          if (nodeType.comfyClass === name) {
-            const onNodeCreated = nodeType.prototype.onNodeCreated;
-            nodeType.prototype.onNodeCreated = function () {
-              const r = onNodeCreated?.apply(this, arguments);
-              const node = this;
-              addW(node, name);
-              return r;
-            };
-          }
-        },
-        getCustomWidgets: setW,
-      };
-      getApiRoutes().register(extension);
-    },
+    controlPanel: controlPanelFactory.register,
+    displayJson: displayJsonFactory.register,
   };
 }

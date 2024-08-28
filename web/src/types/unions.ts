@@ -11,7 +11,6 @@ declare type EventNames =
   | 'lf-switchjson'
   | 'lf-switchstring';
 declare type EventPayload =
-  | ControlPanelPayload
   | DisplayJSONPayload
   | ImageHistogramPayload
   | LoadImagesPayload

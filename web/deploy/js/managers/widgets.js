@@ -3,85 +3,46 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
-var _LFWidgets_NAMES;
+var _LFWidgets_CSS_EMBEDS, _LFWidgets_NAMES;
 import { app } from '/scripts/app.js';
-import { renderControlPanel } from '../widgets/controlPanel.js';
-import { renderCode } from '../widgets/code.js';
-import { getLFManager, unescapeJson } from '../utils/utils.js';
+import { controlPanelFactory } from '../widgets/controlPanel.js';
+import { codeFactory } from '../widgets/code.js';
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
 /*-------------------------------------------------*/
 export class LFWidgets {
     constructor() {
+        _LFWidgets_CSS_EMBEDS.set(this, ['code', 'controlPanel']);
         _LFWidgets_NAMES.set(this, {
+            code: 'KUL_CODE',
             controlPanel: 'KUL_CONTROL_PANEL',
-            displayJson: 'KUL_CODE',
         });
         this.add = {
+            code: (nodeType) => {
+                const widget = app.widgets.KUL_CODE(nodeType, __classPrivateFieldGet(this, _LFWidgets_NAMES, "f").code).widget;
+                return widget;
+            },
             controlPanel: (nodeType) => {
                 const widget = app.widgets.KUL_CONTROL_PANEL(nodeType, __classPrivateFieldGet(this, _LFWidgets_NAMES, "f").controlPanel).widget;
                 return widget;
             },
-            code: (nodeType) => {
-                const widget = app.widgets.KUL_CODE(nodeType, __classPrivateFieldGet(this, _LFWidgets_NAMES, "f").displayJson).widget;
-                return widget;
-            },
         };
         this.option = {
-            code: (code) => {
-                return {
-                    hideOnZoom: false,
-                    getComp() {
-                        return code;
-                    },
-                    getProps() {
-                        return code.getProps();
-                    },
-                    getValue() {
-                        return code.kulValue;
-                    },
-                    refresh: () => { },
-                    setProps(props) {
-                        for (const key in props) {
-                            if (Object.prototype.hasOwnProperty.call(props, key)) {
-                                const prop = props[key];
-                                code[prop] = prop;
-                            }
-                        }
-                    },
-                    setValue(value) {
-                        try {
-                            if (typeof value === 'string') {
-                                code.kulValue = JSON.stringify(unescapeJson(value));
-                            }
-                            else {
-                                code.kulValue = JSON.stringify(value);
-                            }
-                        }
-                        catch (error) {
-                            getLFManager().log('Error when setting value!', { error }, 'error');
-                            if (value === undefined || value === '') {
-                                code.kulValue = 'Wow. Such empty!';
-                            }
-                        }
-                    },
-                };
-            },
+            code: (code) => codeFactory.options(code),
+            controlPanel: () => controlPanelFactory.options(),
         };
         this.set = {
-            controlPanel: () => {
-                const type = __classPrivateFieldGet(this, _LFWidgets_NAMES, "f").controlPanel;
+            code: () => {
                 return {
-                    KUL_CONTROL_PANEL: (nodeType, name) => {
-                        return renderControlPanel(nodeType, name, type);
+                    KUL_CODE: (nodeType, name) => {
+                        return codeFactory.render(nodeType, name);
                     },
                 };
             },
-            code: () => {
-                const type = __classPrivateFieldGet(this, _LFWidgets_NAMES, "f").displayJson;
+            controlPanel: () => {
                 return {
-                    KUL_CODE: (nodeType, name) => {
-                        return renderCode(nodeType, name, type, this.option.code);
+                    KUL_CONTROL_PANEL: (nodeType, name) => {
+                        return controlPanelFactory.render(nodeType, name);
                     },
                 };
             },
@@ -91,6 +52,15 @@ export class LFWidgets {
             options: this.option,
             setters: this.set,
         };
+        for (let index = 0; index < __classPrivateFieldGet(this, _LFWidgets_CSS_EMBEDS, "f").length; index++) {
+            const cssFileName = __classPrivateFieldGet(this, _LFWidgets_CSS_EMBEDS, "f")[index];
+            const link = document.createElement('link');
+            link.dataset.filename = cssFileName.toString();
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            link.href = `extensions/comfyui-lf/css/${cssFileName}.css`;
+            document.head.appendChild(link);
+        }
     }
 }
-_LFWidgets_NAMES = new WeakMap();
+_LFWidgets_CSS_EMBEDS = new WeakMap(), _LFWidgets_NAMES = new WeakMap();
