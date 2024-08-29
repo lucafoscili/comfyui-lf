@@ -1,3 +1,4 @@
+import type { BaseWidgetCallback, ChartWidgetsSetter } from '../types/widgets';
 export declare const imageHistogramFactory: {
-    register: (setW: ImageHistogramWidgetsSetter, addW: WidgetCallback, resizeHandlerW: (node: NodeType) => void) => void;
+    register: (setW: ChartWidgetsSetter, addW: BaseWidgetCallback, resizeHandlerW: (node: NodeType) => void) => void;
 };

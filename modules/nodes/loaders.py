@@ -123,7 +123,7 @@ class LF_LoadImages:
         
         PromptServer.instance.send_sync("lf-loadimages", {
             "node": node_id, 
-            "file_names": file_names,
+            "fileNames": file_names,
             "images": images_buffer,
         })
 

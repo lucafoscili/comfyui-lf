@@ -1,3 +1,5 @@
+import type { DisplayJSONPayload, EventNames, ImageHistogramPayload } from '../types/events';
+import type { BaseWidgetCallback, CustomWidgetNames } from '../types/widgets';
 import { getApiRoutes, getLFManager } from '../utils/utils';
 
 /*-------------------------------------------------*/
@@ -16,12 +18,12 @@ export class LFEvents {
     switchString: 'lf-switchstring',
   };
 
-  #getW(node: NodeType, name: CustomWidgetNames, addW: WidgetCallback) {
+  #getW(node: NodeType, name: CustomWidgetNames, addW: BaseWidgetCallback) {
     return node?.widgets?.find((w) => w.name === name) || addW(node, name).widget;
   }
 
   eventHandler = {
-    displayJson: (event: CustomEvent<DisplayJSONPayload>, addW: WidgetCallback) => {
+    displayJson: (event: CustomEvent<DisplayJSONPayload>, addW: BaseWidgetCallback) => {
       const name = this.#NAMES.displayJson;
       getLFManager().log(`Event '${name}' received`, { event }, 'success');
 
@@ -35,7 +37,7 @@ export class LFEvents {
         getApiRoutes().redraw();
       }
     },
-    imageHistogram: (event: CustomEvent<ImageHistogramPayload>, addW: WidgetCallback) => {
+    imageHistogram: (event: CustomEvent<ImageHistogramPayload>, addW: BaseWidgetCallback) => {
       const name = this.#NAMES.imageHistogram;
       getLFManager().log(`Event '${name}' received`, { event }, 'success');
 

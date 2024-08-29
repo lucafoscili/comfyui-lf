@@ -1,15 +1,12 @@
 /*-------------------------------------------------*/
-/*                  G l o b a l                    */
-/*                                                 */
 /*   Types inferred from the framework to make TS  */
 /*   coding more quick.                            */
-/*   A.I. generated, not reliable                  */
+/*   Mostly A.I. generated, not reliable           */
 /*-------------------------------------------------*/
 
 declare namespace LiteGraph {
-  export const NODE_TITLE_HEIGHT: number;
   export const getNodeType: (node: string) => NodeType;
-  // Add other properties or methods of LiteGraph here if needed
+  export const NODE_TITLE_HEIGHT: number;
 }
 
 interface Input {
@@ -58,7 +55,7 @@ interface NodeType {
     type?: T['type'],
     name?: string,
     value?: T['value'],
-    callback?: WidgetCallback<T> | string,
+    callback?: BaseWidgetCallback<T> | string,
     options?: T['options'],
   ) => unknown;
   computeSize?: () => number;

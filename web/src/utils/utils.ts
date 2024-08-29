@@ -1,6 +1,7 @@
 import type { KulDataDataset } from '../types/ketchup-lite/components';
 import type { KulDom } from '../types/ketchup-lite/managers/kul-manager/kul-manager-declarations';
 import type { LFWindow } from '../managers/manager';
+import type { CustomWidgetNames, CustomWidgetOptions } from '../types/widgets';
 
 const DOM = document.documentElement as KulDom;
 const WINDOW = window as unknown as LFWindow;
@@ -60,6 +61,16 @@ export const kulManagerExists = () => {
 
 export const log = () => {
   return WINDOW.lfManager.log;
+};
+
+export const splitByLastSpaceBeforeAnyBracket = (input: string) => {
+  const match = input.match(/\s+(.+)\[.*?\]/);
+
+  if (match && match[1]) {
+    return match[1];
+  }
+
+  return input;
 };
 
 export const unescapeJson = (

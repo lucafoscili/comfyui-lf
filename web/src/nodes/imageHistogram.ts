@@ -1,11 +1,13 @@
+import type { Extension, NodeNames } from '../types/nodes';
+import type { BaseWidgetCallback, ChartWidgetsSetter } from '../types/widgets';
 import { getApiRoutes } from '../utils/utils';
 
 const NAME: NodeNames = 'LF_ImageHistogram';
 
 export const imageHistogramFactory = {
   register: (
-    setW: ImageHistogramWidgetsSetter,
-    addW: WidgetCallback,
+    setW: ChartWidgetsSetter,
+    addW: BaseWidgetCallback,
     resizeHandlerW: (node: NodeType) => void,
   ) => {
     const extension: Extension = {

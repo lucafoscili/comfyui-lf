@@ -2,6 +2,7 @@ import { app } from '/scripts/app.js';
 import { controlPanelFactory } from '../widgets/controlPanel.js';
 import { codeFactory } from '../widgets/code.js';
 import { chartFactory } from '../widgets/chart.js';
+import { CustomWidgetNames } from '../types/widgets.js';
 
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */

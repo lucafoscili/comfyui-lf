@@ -1,3 +1,4 @@
+import type { CustomWidgetNames } from '../types/widgets';
 import { createDOMWidget, getLFManager, unescapeJson } from '../utils/utils';
 
 const BASE_CSS_CLASS = 'lf-code';
@@ -50,7 +51,7 @@ export const codeFactory = {
           }
         }
       },
-    } as CodeWidgetOptions;
+    };
   },
   render: (node: NodeType, name: string) => {
     const wrapper = document.createElement('div');

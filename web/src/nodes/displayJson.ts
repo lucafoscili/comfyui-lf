@@ -1,9 +1,11 @@
+import type { Extension, NodeNames } from '../types/nodes';
+import type { BaseWidgetCallback, CodeWidgetsSetter } from '../types/widgets';
 import { getApiRoutes } from '../utils/utils';
 
 const NAME: NodeNames = 'LF_DisplayJSON';
 
 export const displayJsonFactory = {
-  register: (setW: CodeWidgetsSetter, addW: WidgetCallback) => {
+  register: (setW: CodeWidgetsSetter, addW: BaseWidgetCallback) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

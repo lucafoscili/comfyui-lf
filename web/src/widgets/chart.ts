@@ -1,4 +1,5 @@
-import { KulDataDataset } from '../types/ketchup-lite/components';
+import type { KulDataDataset } from '../types/ketchup-lite/components';
+import type { CustomWidgetNames } from '../types/widgets';
 import { createDOMWidget, getLFManager, unescapeJson } from '../utils/utils';
 
 const BASE_CSS_CLASS = 'lf-chart';
@@ -41,7 +42,7 @@ export const chartFactory = {
           }
         }
       },
-    } as ChartWidgetOptions;
+    };
   },
   render: (node: NodeType, name: string) => {
     const wrapper = document.createElement('div');

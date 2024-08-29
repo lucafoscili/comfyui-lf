@@ -3,6 +3,7 @@ import type {
   KulListEventPayload,
   KulSwitchEventPayload,
 } from '../types/ketchup-lite/components';
+import type { CustomWidgetNames } from '../types/widgets';
 import { createDOMWidget, getKulManager, getKulThemes, getLFManager } from '../utils/utils';
 
 const BASE_CSS_CLASS = 'lf-controlpanel';
@@ -45,15 +46,15 @@ export const controlPanelFactory = {
           document.addEventListener('kul-manager-ready', managerCb);
         }
       },
-    } as ControlPanelWidgetOptions;
+    };
   },
   render: (node: NodeType, name: string) => {
     const wrapper = document.createElement('div');
+    const options = controlPanelFactory.options();
+
     contentCb(wrapper, false);
     wrapper.dataset.isInVisibleNodes = 'true';
-    const options = controlPanelFactory.options();
-    const widget = createDOMWidget(name, TYPE, wrapper, node, options);
-    return { widget };
+    return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };
   },
 };
 
@@ -80,7 +81,7 @@ const switchCb = (e: CustomEvent<KulSwitchEventPayload>) => {
   }
 };
 
-export function contentCb(domWidget: HTMLDivElement, isReady: boolean) {
+const contentCb = (domWidget: HTMLDivElement, isReady: boolean) => {
   const content = document.createElement('div');
 
   const createSpinner = () => {
@@ -127,4 +128,4 @@ export function contentCb(domWidget: HTMLDivElement, isReady: boolean) {
   }
 
   content.classList.add(controlPanelFactory.cssClasses.content);
-}
+};

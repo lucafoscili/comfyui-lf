@@ -1,3 +1,4 @@
+import { ComfyAPIs, LogSeverity } from '../types/manager.js';
 export interface LFWindow extends Window {
     lfManager: LFManager;
 }

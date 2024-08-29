@@ -41,11 +41,10 @@ export const controlPanelFactory = {
     },
     render: (node, name) => {
         const wrapper = document.createElement('div');
+        const options = controlPanelFactory.options();
         contentCb(wrapper, false);
         wrapper.dataset.isInVisibleNodes = 'true';
-        const options = controlPanelFactory.options();
-        const widget = createDOMWidget(name, TYPE, wrapper, node, options);
-        return { widget };
+        return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };
     },
 };
 const buttonCb = (e) => {
@@ -69,7 +68,7 @@ const switchCb = (e) => {
         getLFManager().toggleDebug(value);
     }
 };
-export function contentCb(domWidget, isReady) {
+const contentCb = (domWidget, isReady) => {
     const content = document.createElement('div');
     const createSpinner = () => {
         const spinner = document.createElement('kul-spinner');
@@ -109,4 +108,4 @@ export function contentCb(domWidget, isReady) {
         domWidget.appendChild(content);
     }
     content.classList.add(controlPanelFactory.cssClasses.content);
-}
+};

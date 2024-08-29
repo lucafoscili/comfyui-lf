@@ -40,6 +40,13 @@ export const kulManagerExists = () => {
 export const log = () => {
     return WINDOW.lfManager.log;
 };
+export const splitByLastSpaceBeforeAnyBracket = (input) => {
+    const match = input.match(/\s+(.+)\[.*?\]/);
+    if (match && match[1]) {
+        return match[1];
+    }
+    return input;
+};
 export const unescapeJson = (str) => {
     let validJson = false;
     let parsedJson = undefined;

@@ -1,5 +1,5 @@
-import type { KulDom } from '../types/ketchup-lite/managers/kul-manager/kul-manager-declarations.js';
-import type { KulManager } from '../types/ketchup-lite/managers/kul-manager/kul-manager.js';
+import type { KulDom } from '../types/ketchup-lite/managers/kul-manager/kul-manager-declarations';
+import type { KulManager } from '../types/ketchup-lite/managers/kul-manager/kul-manager';
 import { api } from '/scripts/api.js';
 import { app } from '/scripts/app.js';
 import { defineCustomElements } from '../ketchup-lite/loader.js';
@@ -7,6 +7,9 @@ import { getKulManager } from '../utils/utils.js';
 import { LFNodes } from './nodes.js';
 import { LFWidgets } from './widgets.js';
 import { LFEvents } from './events.js';
+import { ComfyAPIs, LogSeverity } from '../types/manager.js';
+import { Extension } from '../types/nodes.js';
+import { DisplayJSONPayload, ImageHistogramPayload } from '../types/events.js';
 
 /*-------------------------------------------------*/
 /*                 L F   C l a s s                 */

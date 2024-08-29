@@ -3,7 +3,13 @@ export declare const chartFactory: {
         content: string;
         chart: string;
     };
-    options: (chart: HTMLKulChartElement) => ChartWidgetOptions;
+    options: (chart: HTMLKulChartElement) => {
+        hideOnZoom: boolean;
+        getComp(): HTMLKulChartElement;
+        getValue(): string;
+        setProps(props: Partial<HTMLKulChartElement>): void;
+        setValue(value: Record<string, unknown> | string): void;
+    };
     render: (node: NodeType, name: string) => {
         widget: Widget;
     };

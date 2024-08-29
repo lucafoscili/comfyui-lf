@@ -5,9 +5,14 @@ export declare const controlPanelFactory: {
         spinner: string;
         themes: string;
     };
-    options: () => ControlPanelWidgetOptions;
+    options: () => {
+        getValue(): {
+            debug: boolean;
+            themes: string;
+        };
+        setValue(value: any): void;
+    };
     render: (node: NodeType, name: string) => {
         widget: Widget;
     };
 };
-export declare function contentCb(domWidget: HTMLDivElement, isReady: boolean): void;

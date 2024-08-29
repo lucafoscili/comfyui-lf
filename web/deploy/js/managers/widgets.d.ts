@@ -7,9 +7,27 @@ export declare class LFWidgets {
         controlPanel: (nodeType: NodeType) => any;
     };
     option: {
-        chart: (chart: HTMLKulChartElement) => ChartWidgetOptions;
-        code: (code: HTMLKulCodeElement) => CodeWidgetOptions;
-        controlPanel: () => ControlPanelWidgetOptions;
+        chart: (chart: HTMLKulChartElement) => {
+            hideOnZoom: boolean;
+            getComp(): HTMLKulChartElement;
+            getValue(): string;
+            setProps(props: Partial<HTMLKulChartElement>): void;
+            setValue(value: Record<string, unknown> | string): void;
+        };
+        code: (code: HTMLKulCodeElement) => {
+            hideOnZoom: boolean;
+            getComp(): HTMLKulCodeElement;
+            getValue(): string;
+            setProps(props: Partial<HTMLKulCodeElement>): void;
+            setValue(value: Record<string, unknown> | string): void;
+        };
+        controlPanel: () => {
+            getValue(): {
+                debug: boolean;
+                themes: string;
+            };
+            setValue(value: any): void;
+        };
     };
     resizerHandler: {
         chart: (nodeType: NodeType) => void;
@@ -38,9 +56,27 @@ export declare class LFWidgets {
             controlPanel: (nodeType: NodeType) => any;
         };
         options: {
-            chart: (chart: HTMLKulChartElement) => ChartWidgetOptions;
-            code: (code: HTMLKulCodeElement) => CodeWidgetOptions;
-            controlPanel: () => ControlPanelWidgetOptions;
+            chart: (chart: HTMLKulChartElement) => {
+                hideOnZoom: boolean;
+                getComp(): HTMLKulChartElement;
+                getValue(): string;
+                setProps(props: Partial<HTMLKulChartElement>): void;
+                setValue(value: Record<string, unknown> | string): void;
+            };
+            code: (code: HTMLKulCodeElement) => {
+                hideOnZoom: boolean;
+                getComp(): HTMLKulCodeElement;
+                getValue(): string;
+                setProps(props: Partial<HTMLKulCodeElement>): void;
+                setValue(value: Record<string, unknown> | string): void;
+            };
+            controlPanel: () => {
+                getValue(): {
+                    debug: boolean;
+                    themes: string;
+                };
+                setValue(value: any): void;
+            };
         };
         resizerHandlers: {
             chart: (nodeType: NodeType) => void;
