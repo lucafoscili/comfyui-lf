@@ -1,31 +1,29 @@
-import { DisplayJSONPayload, EventName } from '../types/events';
+import { EventName, LoadImagesPayload } from '../types/events';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import {
   CustomWidgetName,
   type BaseWidgetCallback,
-  type CodeWidgetsSetter,
+  type ImagePreviewWidgetsSetter,
 } from '../types/widgets';
 import { getApiRoutes, getLFManager, getWidget } from '../utils/common';
 
-const NAME = NodeName.displayJson;
+const NAME = NodeName.loadImages;
 
-export const displayJsonFactory = {
-  eventHandler: (event: CustomEvent<DisplayJSONPayload>, addW: BaseWidgetCallback) => {
-    const name = EventName.displayJson;
+export const loadImagesFactory = {
+  eventHandler: (event: CustomEvent<LoadImagesPayload>, addW: BaseWidgetCallback) => {
+    const name = EventName.loadImages;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
 
     const payload = event.detail;
     const node = getApiRoutes().getNodeById(payload.id);
     if (node) {
-      const widget = getWidget(node, CustomWidgetName.code, addW);
-      const comp = widget.options.getComp();
-      comp.kulLanguage = 'json';
-      widget.options.setValue(event.detail.json);
+      const widget = getWidget(node, CustomWidgetName.imagePreview, addW);
+      widget.options.setValue(payload);
       getApiRoutes().redraw();
     }
   },
-  register: (setW: CodeWidgetsSetter, addW: BaseWidgetCallback) => {
+  register: (setW: ImagePreviewWidgetsSetter, addW: BaseWidgetCallback) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

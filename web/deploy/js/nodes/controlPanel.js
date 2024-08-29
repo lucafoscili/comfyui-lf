@@ -1,5 +1,5 @@
 import { NodeName } from '../types/nodes.js';
-import { getApiRoutes } from '../utils/utils.js';
+import { getApiRoutes } from '../utils/common.js';
 const NAME = NodeName.controlPanel;
 export const controlPanelFactory = {
     register: (setW, addW) => {

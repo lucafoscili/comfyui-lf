@@ -1,7 +1,7 @@
 import type { KulDataDataset } from '../types/ketchup-lite/components';
 import { LogSeverity } from '../types/manager';
 import { CustomWidgetName } from '../types/widgets';
-import { createDOMWidget, getLFManager, unescapeJson } from '../utils/utils';
+import { createDOMWidget, getLFManager, unescapeJson } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-chart';
 const TYPE = CustomWidgetName.chart;

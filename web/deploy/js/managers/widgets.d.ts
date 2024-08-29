@@ -5,6 +5,7 @@ export declare class LFWidgets {
         KUL_CHART: (nodeType: NodeType) => any;
         KUL_CODE: (nodeType: NodeType) => any;
         KUL_CONTROL_PANEL: (nodeType: NodeType) => any;
+        IMAGE_PREVIEW_B64: (nodeType: NodeType) => any;
     };
     option: {
         KUL_CHART: (chart: HTMLKulChartElement) => {
@@ -28,6 +29,11 @@ export declare class LFWidgets {
             };
             setValue(value: any): void;
         };
+        IMAGE_PREVIEW_B64: (content: HTMLDivElement) => {
+            hideOnZoom: boolean;
+            getValue(): import("../types/widgets.js").ImagePreviewWidgetValue;
+            setValue(value: import("../types/widgets.js").ImagePreviewWidgetValue): void;
+        };
     };
     resizerHandler: {
         KUL_CHART: (nodeType: NodeType) => void;
@@ -48,12 +54,18 @@ export declare class LFWidgets {
                 widget: Widget;
             };
         };
+        IMAGE_PREVIEW_B64: () => {
+            IMAGE_PREVIEW_B64: (nodeType: NodeType, name: string) => {
+                widget: Widget;
+            };
+        };
     };
     get: {
         adders: {
             KUL_CHART: (nodeType: NodeType) => any;
             KUL_CODE: (nodeType: NodeType) => any;
             KUL_CONTROL_PANEL: (nodeType: NodeType) => any;
+            IMAGE_PREVIEW_B64: (nodeType: NodeType) => any;
         };
         options: {
             KUL_CHART: (chart: HTMLKulChartElement) => {
@@ -77,6 +89,11 @@ export declare class LFWidgets {
                 };
                 setValue(value: any): void;
             };
+            IMAGE_PREVIEW_B64: (content: HTMLDivElement) => {
+                hideOnZoom: boolean;
+                getValue(): import("../types/widgets.js").ImagePreviewWidgetValue;
+                setValue(value: import("../types/widgets.js").ImagePreviewWidgetValue): void;
+            };
         };
         resizerHandlers: {
             KUL_CHART: (nodeType: NodeType) => void;
@@ -94,6 +111,11 @@ export declare class LFWidgets {
             };
             KUL_CONTROL_PANEL: () => {
                 KUL_CONTROL_PANEL: (nodeType: NodeType, name: string) => {
+                    widget: Widget;
+                };
+            };
+            IMAGE_PREVIEW_B64: () => {
+                IMAGE_PREVIEW_B64: (nodeType: NodeType, name: string) => {
                     widget: Widget;
                 };
             };

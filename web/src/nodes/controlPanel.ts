@@ -1,6 +1,6 @@
 import { NodeName, type Extension } from '../types/nodes';
 import type { BaseWidgetCallback, ControlPanelWidgetsSetter } from '../types/widgets';
-import { getApiRoutes } from '../utils/utils';
+import { getApiRoutes } from '../utils/common';
 
 const NAME = NodeName.controlPanel;
 

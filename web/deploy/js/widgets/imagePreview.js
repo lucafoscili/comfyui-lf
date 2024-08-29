@@ -1,5 +1,5 @@
 import { CustomWidgetName } from '../types/widgets.js';
-import { createDOMWidget, splitByLastSpaceBeforeAnyBracket } from '../utils/utils.js';
+import { createDOMWidget, splitByLastSpaceBeforeAnyBracket } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-imagepreview';
 const DOGE = `
 
@@ -49,7 +49,8 @@ export const imagePreviewFactory = {
                     images: [],
                 };
                 const images = content.querySelectorAll('img');
-                for (let index = 0; index < images.length; index++) {
+                const maxImagesToProcess = Math.min(images?.length ?? 0, 5);
+                for (let index = 0; index < maxImagesToProcess; index++) {
                     const image = images[index];
                     value.fileNames.push(splitByLastSpaceBeforeAnyBracket(image.title));
                     value.images.push(image.src);
@@ -97,7 +98,7 @@ const drawGrid = (value) => {
         const image = document.createElement('img');
         image.classList.add(imagePreviewFactory.cssClasses.image);
         image.src = `data:image/png;base64,${image64}`;
-        image.title = `${title} (${index})`;
+        image.title = `${title} [${index}]`;
         grid.appendChild(image);
     }
     content.appendChild(grid);

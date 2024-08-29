@@ -1,6 +1,6 @@
 import { LogSeverity } from '../types/manager';
 import { CustomWidgetName } from '../types/widgets';
-import { createDOMWidget, getLFManager, unescapeJson } from '../utils/utils';
+import { createDOMWidget, getLFManager, unescapeJson } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-code';
 const EMPTY = '{ "Wow": "Such empty!" }';

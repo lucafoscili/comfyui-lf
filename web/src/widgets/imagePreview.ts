@@ -1,5 +1,5 @@
 import { CustomWidgetName, type ImagePreviewWidgetValue } from '../types/widgets';
-import { createDOMWidget, splitByLastSpaceBeforeAnyBracket } from '../utils/utils';
+import { createDOMWidget, splitByLastSpaceBeforeAnyBracket } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-imagepreview';
 const DOGE = `
@@ -51,7 +51,8 @@ export const imagePreviewFactory = {
           images: [],
         };
         const images = content.querySelectorAll('img');
-        for (let index = 0; index < images.length; index++) {
+        const maxImagesToProcess = Math.min(images?.length ?? 0, 1);
+        for (let index = 0; index < maxImagesToProcess; index++) {
           const image = images[index];
           value.fileNames.push(splitByLastSpaceBeforeAnyBracket(image.title));
           value.images.push(image.src);
@@ -100,7 +101,7 @@ const drawGrid = (value: ImagePreviewWidgetValue) => {
     const image = document.createElement('img');
     image.classList.add(imagePreviewFactory.cssClasses.image);
     image.src = `data:image/png;base64,${image64}`;
-    image.title = `${title} (${index})`;
+    image.title = `${title} [${index}]`;
     grid.appendChild(image);
   }
 

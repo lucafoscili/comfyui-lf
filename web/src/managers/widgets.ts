@@ -3,6 +3,7 @@ import { controlPanelFactory } from '../widgets/controlPanel.js';
 import { codeFactory } from '../widgets/code.js';
 import { chartFactory } from '../widgets/chart.js';
 import { CustomWidgetName } from '../types/widgets.js';
+import { imagePreviewFactory } from '../widgets/imagePreview.js';
 
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
@@ -39,12 +40,21 @@ export class LFWidgets {
       ).widget;
       return widget;
     },
+    [CustomWidgetName.imagePreview]: (nodeType: NodeType) => {
+      const widget = app.widgets[CustomWidgetName.imagePreview](
+        nodeType,
+        CustomWidgetName.imagePreview,
+      ).widget;
+      return widget;
+    },
   };
 
   option = {
     [CustomWidgetName.chart]: (chart: HTMLKulChartElement) => chartFactory.options(chart),
     [CustomWidgetName.code]: (code: HTMLKulCodeElement) => codeFactory.options(code),
     [CustomWidgetName.controlPanel]: () => controlPanelFactory.options(),
+    [CustomWidgetName.imagePreview]: (content: HTMLDivElement) =>
+      imagePreviewFactory.options(content),
   };
 
   resizerHandler = {
@@ -70,6 +80,13 @@ export class LFWidgets {
       return {
         [CustomWidgetName.controlPanel]: (nodeType: NodeType, name: string) => {
           return controlPanelFactory.render(nodeType, name);
+        },
+      };
+    },
+    [CustomWidgetName.imagePreview]: () => {
+      return {
+        [CustomWidgetName.imagePreview]: (nodeType: NodeType, name: string) => {
+          return imagePreviewFactory.render(nodeType, name);
         },
       };
     },

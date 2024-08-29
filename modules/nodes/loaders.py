@@ -72,8 +72,8 @@ class LF_LoadImages:
         count = 0
 
         for root, dirs, files in os.walk(dir):
-            if subdir and dirs:
-                dirs[:] = [d for d in dirs if os.path.isdir(os.path.join(root, d))]
+            if not subdir:
+                dirs[:] = []
             for file in files:
                 if file.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif')):
                     image_path = os.path.join(root, file)

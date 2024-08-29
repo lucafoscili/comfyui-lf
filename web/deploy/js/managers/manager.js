@@ -13,12 +13,11 @@ var _LFManager_APIS, _LFManager_DEBUG, _LFManager_DOM, _LFManager_MANAGERS;
 import { api } from '/scripts/api.js';
 import { app } from '/scripts/app.js';
 import { defineCustomElements } from '../ketchup-lite/loader.js';
-import { getKulManager } from '../utils/utils.js';
+import { getKulManager } from '../utils/common.js';
 import { LFNodes } from './nodes.js';
 import { LFWidgets } from './widgets.js';
-import { LFEvents } from './events.js';
 import { LogSeverity } from '../types/manager.js';
-import { EventName } from '../types/events.js';
+import { EventName, } from '../types/events.js';
 export class LFManager {
     constructor() {
         _LFManager_APIS.set(this, {
@@ -50,22 +49,37 @@ export class LFManager {
         defineCustomElements(window);
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes = new LFNodes();
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").widgets = new LFWidgets();
-        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").events = new LFEvents();
     }
     getApiRoutes() {
         return __classPrivateFieldGet(this, _LFManager_APIS, "f");
     }
     initialize() {
-        const events = __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").events.get;
+        const nodes = __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.get;
         const widgets = __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").widgets.get;
+        /*-------------------------------------------------------------------*/
+        /*               I n i t   C o n t r o l   P a n e l                 */
+        /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_ControlPanel(widgets.setters.KUL_CONTROL_PANEL, widgets.adders.KUL_CONTROL_PANEL);
+        /*-------------------------------------------------------------------*/
+        /*                  I n i t   D i s p l a y J S O N                  */
+        /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_DisplayJSON(widgets.setters.KUL_CODE, widgets.adders.KUL_CODE);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.displayJson, (e) => {
-            events.eventHandlers.displayJson(e, widgets.adders.KUL_CODE);
+            nodes.eventHandlers.LF_DisplayJSON(e, widgets.adders.KUL_CODE);
         });
+        /*-------------------------------------------------------------------*/
+        /*               I n i t   I m a g e H i s t o g r a m               */
+        /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_ImageHistogram(widgets.setters.KUL_CHART, widgets.adders.KUL_CHART, widgets.resizerHandlers.KUL_CHART);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.imageHistogram, (e) => {
-            events.eventHandlers.imageHistogram(e, widgets.adders.KUL_CHART);
+            nodes.eventHandlers.LF_ImageHistogram(e, widgets.adders.KUL_CHART);
+        });
+        /*-------------------------------------------------------------------*/
+        /*                I n i t   I m a g e s L o a d e r                  */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_LoadImages(widgets.setters.IMAGE_PREVIEW_B64, widgets.adders.IMAGE_PREVIEW_B64);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.loadImages, (e) => {
+            nodes.eventHandlers.LF_LoadImages(e, widgets.adders.IMAGE_PREVIEW_B64);
         });
     }
     isDebug() {
@@ -101,7 +115,7 @@ export class LFManager {
         else {
             __classPrivateFieldSet(this, _LFManager_DEBUG, !__classPrivateFieldGet(this, _LFManager_DEBUG, "f"), "f");
         }
-        this.log(`Debug active: '${__classPrivateFieldGet(this, _LFManager_DEBUG, "f")}'`, {}, LogSeverity.Warning);
+        this.log(`Debug active: '${__classPrivateFieldGet(this, _LFManager_DEBUG, "f")}'`, { value }, LogSeverity.Warning);
         return __classPrivateFieldGet(this, _LFManager_DEBUG, "f");
     }
 }

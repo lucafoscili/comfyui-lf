@@ -3,13 +3,17 @@ import type { KulManager } from '../types/ketchup-lite/managers/kul-manager/kul-
 import { api } from '/scripts/api.js';
 import { app } from '/scripts/app.js';
 import { defineCustomElements } from '../ketchup-lite/loader.js';
-import { getKulManager } from '../utils/utils.js';
+import { getKulManager } from '../utils/common.js';
 import { LFNodes } from './nodes.js';
 import { LFWidgets } from './widgets.js';
-import { LFEvents } from './events.js';
 import { ComfyAPIs, LogSeverity } from '../types/manager.js';
 import { Extension } from '../types/nodes.js';
-import { DisplayJSONPayload, EventName, ImageHistogramPayload } from '../types/events.js';
+import {
+  DisplayJSONPayload,
+  EventName,
+  ImageHistogramPayload,
+  LoadImagesPayload,
+} from '../types/events.js';
 
 /*-------------------------------------------------*/
 /*                 L F   C l a s s                 */
@@ -37,7 +41,6 @@ export class LFManager {
   #DEBUG = false;
   #DOM = document.documentElement as KulDom;
   #MANAGERS: {
-    events?: LFEvents;
     ketchupLite?: KulManager;
     nodes?: LFNodes;
     widgets?: LFWidgets;
@@ -57,7 +60,6 @@ export class LFManager {
 
     this.#MANAGERS.nodes = new LFNodes();
     this.#MANAGERS.widgets = new LFWidgets();
-    this.#MANAGERS.events = new LFEvents();
   }
 
   getApiRoutes(): ComfyAPIs {
@@ -65,26 +67,43 @@ export class LFManager {
   }
 
   initialize() {
-    const events = this.#MANAGERS.events.get;
+    const nodes = this.#MANAGERS.nodes.get;
     const widgets = this.#MANAGERS.widgets.get;
 
+    /*-------------------------------------------------------------------*/
+    /*               I n i t   C o n t r o l   P a n e l                 */
+    /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_ControlPanel(
       widgets.setters.KUL_CONTROL_PANEL,
       widgets.adders.KUL_CONTROL_PANEL,
     );
-
+    /*-------------------------------------------------------------------*/
+    /*                  I n i t   D i s p l a y J S O N                  */
+    /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_DisplayJSON(widgets.setters.KUL_CODE, widgets.adders.KUL_CODE);
     this.#APIS.event(EventName.displayJson, (e: CustomEvent<DisplayJSONPayload>) => {
-      events.eventHandlers.displayJson(e, widgets.adders.KUL_CODE);
+      nodes.eventHandlers.LF_DisplayJSON(e, widgets.adders.KUL_CODE);
     });
-
+    /*-------------------------------------------------------------------*/
+    /*               I n i t   I m a g e H i s t o g r a m               */
+    /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_ImageHistogram(
       widgets.setters.KUL_CHART,
       widgets.adders.KUL_CHART,
       widgets.resizerHandlers.KUL_CHART,
     );
     this.#APIS.event(EventName.imageHistogram, (e: CustomEvent<ImageHistogramPayload>) => {
-      events.eventHandlers.imageHistogram(e, widgets.adders.KUL_CHART);
+      nodes.eventHandlers.LF_ImageHistogram(e, widgets.adders.KUL_CHART);
+    });
+    /*-------------------------------------------------------------------*/
+    /*                I n i t   I m a g e s L o a d e r                  */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_LoadImages(
+      widgets.setters.IMAGE_PREVIEW_B64,
+      widgets.adders.IMAGE_PREVIEW_B64,
+    );
+    this.#APIS.event(EventName.loadImages, (e: CustomEvent<LoadImagesPayload>) => {
+      nodes.eventHandlers.LF_LoadImages(e, widgets.adders.IMAGE_PREVIEW_B64);
     });
   }
 
@@ -125,7 +144,7 @@ export class LFManager {
     } else {
       this.#DEBUG = !this.#DEBUG;
     }
-    this.log(`Debug active: '${this.#DEBUG}'`, {}, LogSeverity.Warning);
+    this.log(`Debug active: '${this.#DEBUG}'`, { value }, LogSeverity.Warning);
 
     return this.#DEBUG;
   }

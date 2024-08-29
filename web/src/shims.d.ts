@@ -119,7 +119,7 @@ interface SlotInfo {
 }
 interface Widget {
   element?: DOMWidget;
-  type?: string;
+  type?: any;
   name?: string;
   value?: any;
   options?: WidgetOptions;

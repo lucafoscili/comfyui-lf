@@ -1,7 +1,12 @@
 import type { KulDataDataset } from '../types/ketchup-lite/components';
 import type { KulDom } from '../types/ketchup-lite/managers/kul-manager/kul-manager-declarations';
 import type { LFWindow } from '../managers/manager';
-import type { CustomWidgetName, CustomWidgetOptions } from '../types/widgets';
+import type {
+  BaseWidgetCallback,
+  CustomWidgetMap,
+  CustomWidgetName,
+  CustomWidgetOptions,
+} from '../types/widgets';
 
 const DOM = document.documentElement as KulDom;
 const WINDOW = window as unknown as LFWindow;
@@ -57,6 +62,17 @@ export const getLFManager = () => {
 
 export const kulManagerExists = () => {
   return !!DOM.ketchupLite;
+};
+
+export const getWidget = <T extends CustomWidgetName>(
+  node: NodeType,
+  name: T,
+  addW: BaseWidgetCallback,
+): CustomWidgetMap[T] => {
+  return (
+    (node?.widgets?.find((w) => w.name === name) as CustomWidgetMap[T]) ||
+    (addW(node, name).widget as CustomWidgetMap[T])
+  );
 };
 
 export const log = () => {

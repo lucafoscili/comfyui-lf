@@ -1,10 +1,30 @@
+import { EventName, ImageHistogramPayload } from '../types/events';
+import { LogSeverity } from '../types/manager';
 import { Extension, NodeName } from '../types/nodes';
-import type { BaseWidgetCallback, ChartWidgetsSetter } from '../types/widgets';
-import { getApiRoutes } from '../utils/utils';
+import {
+  CustomWidgetName,
+  type BaseWidgetCallback,
+  type ChartWidgetsSetter,
+} from '../types/widgets';
+import { getApiRoutes, getLFManager, getWidget } from '../utils/common';
 
 const NAME = NodeName.imageHistogram;
 
 export const imageHistogramFactory = {
+  eventHandler: (event: CustomEvent<ImageHistogramPayload>, addW: BaseWidgetCallback) => {
+    const name = EventName.imageHistogram;
+    getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
+
+    const payload = event.detail;
+    const node = getApiRoutes().getNodeById(payload.id);
+    if (node) {
+      const widget = getWidget(node, CustomWidgetName.chart, addW);
+      const comp = widget.options.getComp();
+      comp.refresh();
+      widget.options.setValue(event.detail.dataset);
+      getApiRoutes().redraw();
+    }
+  },
   register: (
     setW: ChartWidgetsSetter,
     addW: BaseWidgetCallback,

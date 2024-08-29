@@ -9,6 +9,7 @@ import { controlPanelFactory } from '../widgets/controlPanel.js';
 import { codeFactory } from '../widgets/code.js';
 import { chartFactory } from '../widgets/chart.js';
 import { CustomWidgetName } from '../types/widgets.js';
+import { imagePreviewFactory } from '../widgets/imagePreview.js';
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
 /*-------------------------------------------------*/
@@ -28,11 +29,16 @@ export class LFWidgets {
                 const widget = app.widgets[CustomWidgetName.controlPanel](nodeType, CustomWidgetName.controlPanel).widget;
                 return widget;
             },
+            [CustomWidgetName.imagePreview]: (nodeType) => {
+                const widget = app.widgets[CustomWidgetName.imagePreview](nodeType, CustomWidgetName.imagePreview).widget;
+                return widget;
+            },
         };
         this.option = {
             [CustomWidgetName.chart]: (chart) => chartFactory.options(chart),
             [CustomWidgetName.code]: (code) => codeFactory.options(code),
             [CustomWidgetName.controlPanel]: () => controlPanelFactory.options(),
+            [CustomWidgetName.imagePreview]: (content) => imagePreviewFactory.options(content),
         };
         this.resizerHandler = {
             [CustomWidgetName.chart]: (nodeType) => chartFactory.resize(nodeType),
@@ -56,6 +62,13 @@ export class LFWidgets {
                 return {
                     [CustomWidgetName.controlPanel]: (nodeType, name) => {
                         return controlPanelFactory.render(nodeType, name);
+                    },
+                };
+            },
+            [CustomWidgetName.imagePreview]: () => {
+                return {
+                    [CustomWidgetName.imagePreview]: (nodeType, name) => {
+                        return imagePreviewFactory.render(nodeType, name);
                     },
                 };
             },

@@ -4,7 +4,7 @@ import type {
   KulSwitchEventPayload,
 } from '../types/ketchup-lite/components';
 import { CustomWidgetName } from '../types/widgets';
-import { createDOMWidget, getKulManager, getKulThemes, getLFManager } from '../utils/utils';
+import { createDOMWidget, getKulManager, getKulThemes, getLFManager } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-controlpanel';
 const TYPE = CustomWidgetName.controlPanel;
