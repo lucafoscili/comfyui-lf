@@ -1,4 +1,4 @@
-import { BaseEventPayload, EventNames } from './events';
+import { BaseEventPayload, EventName } from './events';
 import { Extension } from './nodes';
 
 /*-------------------------------------------------------------------*/
@@ -7,11 +7,16 @@ import { Extension } from './nodes';
 
 export interface ComfyAPIs {
   event: <T extends BaseEventPayload>(
-    name: EventNames,
+    name: EventName,
     callback: (event: CustomEvent<T>) => void,
   ) => void;
   getNodeById: (id: string) => NodeType;
   redraw: () => void;
   register: (extension: Extension) => void;
 }
-export type LogSeverity = 'info' | 'success' | 'warning' | 'error';
+export enum LogSeverity {
+  Info = 'info',
+  Success = 'success',
+  Warning = 'warning',
+  Error = 'error',
+}

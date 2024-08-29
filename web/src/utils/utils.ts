@@ -1,7 +1,7 @@
 import type { KulDataDataset } from '../types/ketchup-lite/components';
 import type { KulDom } from '../types/ketchup-lite/managers/kul-manager/kul-manager-declarations';
 import type { LFWindow } from '../managers/manager';
-import type { CustomWidgetNames, CustomWidgetOptions } from '../types/widgets';
+import type { CustomWidgetName, CustomWidgetOptions } from '../types/widgets';
 
 const DOM = document.documentElement as KulDom;
 const WINDOW = window as unknown as LFWindow;
@@ -16,7 +16,7 @@ export const capitalize = (input: string) => {
 
 export const createDOMWidget = (
   name: string,
-  type: CustomWidgetNames,
+  type: CustomWidgetName,
   element: HTMLDivElement,
   node: NodeType,
   options: CustomWidgetOptions = undefined,

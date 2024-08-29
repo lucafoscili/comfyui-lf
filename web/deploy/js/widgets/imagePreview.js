@@ -1,3 +1,4 @@
+import { CustomWidgetName } from '../types/widgets.js';
 import { createDOMWidget, splitByLastSpaceBeforeAnyBracket } from '../utils/utils.js';
 const BASE_CSS_CLASS = 'lf-imagepreview';
 const DOGE = `
@@ -31,7 +32,7 @@ W O W .  S U C H   E M P T Y.
 ⠀⠀⠀⠀⠀⠀⠛⢦⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣠⠴⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠲⠤⣤⣤⣤⣄⠀⠀⠀⠀⠀⠀⠀⢠⣤⣤⠤⠴⠒⠛⠋⠀⠀⠀⠀⠀         
 `;
-const TYPE = 'IMAGE_PREVIEW_B64';
+const TYPE = CustomWidgetName.imagePreview;
 export const imagePreviewFactory = {
     cssClasses: {
         content: BASE_CSS_CLASS,

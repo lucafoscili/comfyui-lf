@@ -1,4 +1,4 @@
-import type { CustomWidgetNames, ImagePreviewWidgetValue } from '../types/widgets';
+import { CustomWidgetName, type ImagePreviewWidgetValue } from '../types/widgets';
 import { createDOMWidget, splitByLastSpaceBeforeAnyBracket } from '../utils/utils';
 
 const BASE_CSS_CLASS = 'lf-imagepreview';
@@ -33,7 +33,7 @@ W O W .  S U C H   E M P T Y.
 ⠀⠀⠀⠀⠀⠀⠛⢦⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣠⠴⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠲⠤⣤⣤⣤⣄⠀⠀⠀⠀⠀⠀⠀⢠⣤⣤⠤⠴⠒⠛⠋⠀⠀⠀⠀⠀         
 `;
-const TYPE: CustomWidgetNames = 'IMAGE_PREVIEW_B64';
+const TYPE = CustomWidgetName.imagePreview;
 
 export const imagePreviewFactory = {
   cssClasses: {

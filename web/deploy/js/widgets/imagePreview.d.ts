@@ -1,4 +1,4 @@
-import type { ImagePreviewWidgetValue } from '../types/widgets';
+import { type ImagePreviewWidgetValue } from '../types/widgets';
 export declare const imagePreviewFactory: {
     cssClasses: {
         content: string;

@@ -3,62 +3,58 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
-var _LFWidgets_CSS_EMBEDS, _LFWidgets_NAMES;
+var _LFWidgets_CSS_EMBEDS;
 import { app } from '/scripts/app.js';
 import { controlPanelFactory } from '../widgets/controlPanel.js';
 import { codeFactory } from '../widgets/code.js';
 import { chartFactory } from '../widgets/chart.js';
+import { CustomWidgetName } from '../types/widgets.js';
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
 /*-------------------------------------------------*/
 export class LFWidgets {
     constructor() {
-        _LFWidgets_CSS_EMBEDS.set(this, ['chart', 'code', 'controlPanel']);
-        _LFWidgets_NAMES.set(this, {
-            chart: 'KUL_CHART',
-            code: 'KUL_CODE',
-            controlPanel: 'KUL_CONTROL_PANEL',
-        });
+        _LFWidgets_CSS_EMBEDS.set(this, [...Object.keys(CustomWidgetName)]);
         this.add = {
-            chart: (nodeType) => {
-                const widget = app.widgets.KUL_CHART(nodeType, __classPrivateFieldGet(this, _LFWidgets_NAMES, "f").chart).widget;
+            [CustomWidgetName.chart]: (nodeType) => {
+                const widget = app.widgets[CustomWidgetName.chart](nodeType, CustomWidgetName.chart).widget;
                 return widget;
             },
-            code: (nodeType) => {
-                const widget = app.widgets.KUL_CODE(nodeType, __classPrivateFieldGet(this, _LFWidgets_NAMES, "f").code).widget;
+            [CustomWidgetName.code]: (nodeType) => {
+                const widget = app.widgets[CustomWidgetName.code](nodeType, CustomWidgetName.code).widget;
                 return widget;
             },
-            controlPanel: (nodeType) => {
-                const widget = app.widgets.KUL_CONTROL_PANEL(nodeType, __classPrivateFieldGet(this, _LFWidgets_NAMES, "f").controlPanel).widget;
+            [CustomWidgetName.controlPanel]: (nodeType) => {
+                const widget = app.widgets[CustomWidgetName.controlPanel](nodeType, CustomWidgetName.controlPanel).widget;
                 return widget;
             },
         };
         this.option = {
-            chart: (chart) => chartFactory.options(chart),
-            code: (code) => codeFactory.options(code),
-            controlPanel: () => controlPanelFactory.options(),
+            [CustomWidgetName.chart]: (chart) => chartFactory.options(chart),
+            [CustomWidgetName.code]: (code) => codeFactory.options(code),
+            [CustomWidgetName.controlPanel]: () => controlPanelFactory.options(),
         };
         this.resizerHandler = {
-            chart: (nodeType) => chartFactory.resize(nodeType),
+            [CustomWidgetName.chart]: (nodeType) => chartFactory.resize(nodeType),
         };
         this.set = {
-            chart: () => {
+            [CustomWidgetName.chart]: () => {
                 return {
-                    KUL_CHART: (nodeType, name) => {
+                    [CustomWidgetName.chart]: (nodeType, name) => {
                         return chartFactory.render(nodeType, name);
                     },
                 };
             },
-            code: () => {
+            [CustomWidgetName.code]: () => {
                 return {
-                    KUL_CODE: (nodeType, name) => {
+                    [CustomWidgetName.code]: (nodeType, name) => {
                         return codeFactory.render(nodeType, name);
                     },
                 };
             },
-            controlPanel: () => {
+            [CustomWidgetName.controlPanel]: () => {
                 return {
-                    KUL_CONTROL_PANEL: (nodeType, name) => {
+                    [CustomWidgetName.controlPanel]: (nodeType, name) => {
                         return controlPanelFactory.render(nodeType, name);
                     },
                 };
@@ -81,4 +77,4 @@ export class LFWidgets {
         }
     }
 }
-_LFWidgets_CSS_EMBEDS = new WeakMap(), _LFWidgets_NAMES = new WeakMap();
+_LFWidgets_CSS_EMBEDS = new WeakMap();

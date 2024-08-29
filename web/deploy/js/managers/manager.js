@@ -17,6 +17,8 @@ import { getKulManager } from '../utils/utils.js';
 import { LFNodes } from './nodes.js';
 import { LFWidgets } from './widgets.js';
 import { LFEvents } from './events.js';
+import { LogSeverity } from '../types/manager.js';
+import { EventName } from '../types/events.js';
 export class LFManager {
     constructor() {
         _LFManager_APIS.set(this, {
@@ -38,7 +40,7 @@ export class LFManager {
         _LFManager_MANAGERS.set(this, {});
         const managerCb = async () => {
             __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").ketchupLite = getKulManager();
-            this.log('KulManager ready', { kulManager: __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").ketchupLite }, 'success');
+            this.log('KulManager ready', { kulManager: __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").ketchupLite }, LogSeverity.Success);
             document.removeEventListener('kul-manager-ready', managerCb);
         };
         __classPrivateFieldGet(this, _LFManager_DOM, "f").ketchupLiteInit = {
@@ -56,20 +58,20 @@ export class LFManager {
     initialize() {
         const events = __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").events.get;
         const widgets = __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").widgets.get;
-        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.controlPanel(widgets.setters.controlPanel, widgets.adders.controlPanel);
-        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.displayJson(widgets.setters.code, widgets.adders.code);
-        __classPrivateFieldGet(this, _LFManager_APIS, "f").event('lf-displayjson', (e) => {
-            events.eventHandlers.displayJson(e, widgets.adders.code);
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_ControlPanel(widgets.setters.KUL_CONTROL_PANEL, widgets.adders.KUL_CONTROL_PANEL);
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_DisplayJSON(widgets.setters.KUL_CODE, widgets.adders.KUL_CODE);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.displayJson, (e) => {
+            events.eventHandlers.displayJson(e, widgets.adders.KUL_CODE);
         });
-        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.imageHistogram(widgets.setters.chart, widgets.adders.chart, widgets.resizerHandlers.chart);
-        __classPrivateFieldGet(this, _LFManager_APIS, "f").event('lf-imagehistogram', (e) => {
-            events.eventHandlers.imageHistogram(e, widgets.adders.chart);
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_ImageHistogram(widgets.setters.KUL_CHART, widgets.adders.KUL_CHART, widgets.resizerHandlers.KUL_CHART);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.imageHistogram, (e) => {
+            events.eventHandlers.imageHistogram(e, widgets.adders.KUL_CHART);
         });
     }
     isDebug() {
         return __classPrivateFieldGet(this, _LFManager_DEBUG, "f");
     }
-    log(message, args, severity = 'info') {
+    log(message, args, severity = LogSeverity.Info) {
         if (!__classPrivateFieldGet(this, _LFManager_DEBUG, "f")) {
             return;
         }
@@ -99,7 +101,7 @@ export class LFManager {
         else {
             __classPrivateFieldSet(this, _LFManager_DEBUG, !__classPrivateFieldGet(this, _LFManager_DEBUG, "f"), "f");
         }
-        this.log(`Debug active: '${__classPrivateFieldGet(this, _LFManager_DEBUG, "f")}'`, {}, 'warning');
+        this.log(`Debug active: '${__classPrivateFieldGet(this, _LFManager_DEBUG, "f")}'`, {}, LogSeverity.Warning);
         return __classPrivateFieldGet(this, _LFManager_DEBUG, "f");
     }
 }
@@ -107,6 +109,6 @@ _LFManager_APIS = new WeakMap(), _LFManager_DEBUG = new WeakMap(), _LFManager_DO
 const WINDOW = window;
 if (!WINDOW.lfManager) {
     WINDOW.lfManager = new LFManager();
-    WINDOW.lfManager.log('LFManager ready', { LFManager: WINDOW.lfManager }, 'success');
+    WINDOW.lfManager.log('LFManager ready', { LFManager: WINDOW.lfManager }, LogSeverity.Success);
     WINDOW.lfManager.initialize();
 }

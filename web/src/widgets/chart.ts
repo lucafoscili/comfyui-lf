@@ -1,9 +1,10 @@
 import type { KulDataDataset } from '../types/ketchup-lite/components';
-import type { CustomWidgetNames } from '../types/widgets';
+import { LogSeverity } from '../types/manager';
+import { CustomWidgetName } from '../types/widgets';
 import { createDOMWidget, getLFManager, unescapeJson } from '../utils/utils';
 
 const BASE_CSS_CLASS = 'lf-chart';
-const TYPE: CustomWidgetNames = 'KUL_CHART';
+const TYPE = CustomWidgetName.chart;
 
 let TIMEOUT: NodeJS.Timeout;
 
@@ -36,7 +37,7 @@ export const chartFactory = {
             chart.kulData = unescapeJson(value).parsedJson;
           }
         } catch (error) {
-          getLFManager().log('Error when setting value!', { error, chart }, 'error');
+          getLFManager().log('Error when setting value!', { error, chart }, LogSeverity.Error);
           if (value === undefined || value === '') {
             chart.kulData = undefined;
           }
@@ -82,7 +83,7 @@ export const chartFactory = {
         }, 125);
       }
     } catch (error) {
-      getLFManager().log('Whoops! It seems there is no chart. :V', { error }, 'error');
+      getLFManager().log('Whoops! It seems there is no chart. :V', { error }, LogSeverity.Error);
     }
   },
 };

@@ -1,6 +1,8 @@
+import { LogSeverity } from '../types/manager.js';
+import { CustomWidgetName } from '../types/widgets.js';
 import { createDOMWidget, getLFManager, unescapeJson } from '../utils/utils.js';
 const BASE_CSS_CLASS = 'lf-chart';
-const TYPE = 'KUL_CHART';
+const TYPE = CustomWidgetName.chart;
 let TIMEOUT;
 export const chartFactory = {
     cssClasses: {
@@ -32,7 +34,7 @@ export const chartFactory = {
                     }
                 }
                 catch (error) {
-                    getLFManager().log('Error when setting value!', { error, chart }, 'error');
+                    getLFManager().log('Error when setting value!', { error, chart }, LogSeverity.Error);
                     if (value === undefined || value === '') {
                         chart.kulData = undefined;
                     }
@@ -74,7 +76,7 @@ export const chartFactory = {
             }
         }
         catch (error) {
-            getLFManager().log('Whoops! It seems there is no chart. :V', { error }, 'error');
+            getLFManager().log('Whoops! It seems there is no chart. :V', { error }, LogSeverity.Error);
         }
     },
 };

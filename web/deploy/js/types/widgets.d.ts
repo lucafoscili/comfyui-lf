@@ -1,21 +1,26 @@
 export type BaseWidgetCallback = (node: NodeType, name: string) => {
     widget: Widget;
 };
+export declare enum CustomWidgetName {
+    chart = "KUL_CHART",
+    code = "KUL_CODE",
+    controlPanel = "KUL_CONTROL_PANEL",
+    imagePreview = "IMAGE_PREVIEW_B64"
+}
 export interface CustomWidgets {
-    KUL_CHART(node: NodeType, name: string): {
+    [CustomWidgetName.chart](node: NodeType, name: string): {
         widget: Widget;
     };
-    KUL_CODE(node: NodeType, name: string): {
+    [CustomWidgetName.code](node: NodeType, name: string): {
         widget: Widget;
     };
-    KUL_CONTROL_PANEL(node: NodeType, name: string): {
+    [CustomWidgetName.controlPanel](node: NodeType, name: string): {
         widget: Widget;
     };
-    IMAGE_PREVIEW_B64(node: NodeType, name: string): {
+    [CustomWidgetName.imagePreview](node: NodeType, name: string): {
         widget: Widget;
     };
 }
-export type CustomWidgetNames = 'KUL_CHART' | 'KUL_CODE' | 'KUL_CONTROL_PANEL' | 'IMAGE_PREVIEW_B64';
 export type CustomWidgetOptions = ChartWidgetOptions | CodeWidgetOptions | ControlPanelWidgetOptions | ImagePreviewWidgetOptions;
 export interface ChartWidgetOptions {
     hideOnZoom: boolean;
@@ -25,7 +30,7 @@ export interface ChartWidgetOptions {
     setValue(value: Record<string, unknown> | string): void;
 }
 export type ChartWidgetsSetter = () => {
-    KUL_CHART: BaseWidgetCallback;
+    [CustomWidgetName.chart]: BaseWidgetCallback;
 };
 export type ChartWidgetValue = string;
 export interface CodeWidgetOptions {
@@ -36,7 +41,7 @@ export interface CodeWidgetOptions {
     setValue(value: Record<string, unknown> | string): void;
 }
 export type CodeWidgetsSetter = () => {
-    KUL_CODE: BaseWidgetCallback;
+    [CustomWidgetName.code]: BaseWidgetCallback;
 };
 export type CodeWidgetValue = string;
 export interface ControlPanelWidgetOptions {
@@ -44,7 +49,7 @@ export interface ControlPanelWidgetOptions {
     setValue(value: ControlPanelWidgetValue): void;
 }
 export type ControlPanelWidgetsSetter = () => {
-    KUL_CONTROL_PANEL: BaseWidgetCallback;
+    [CustomWidgetName.controlPanel]: BaseWidgetCallback;
 };
 export interface ControlPanelWidgetValue {
     debug: boolean;
@@ -56,7 +61,7 @@ export interface ImagePreviewWidgetOptions {
     setValue(value: ImagePreviewWidgetValue): void;
 }
 export declare type ImagePreviewWidgetsSetter = () => {
-    IMAGE_PREVIEW_B64: BaseWidgetCallback;
+    [CustomWidgetName.imagePreview]: BaseWidgetCallback;
 };
 export interface ImagePreviewWidgetValue {
     fileNames: string[];

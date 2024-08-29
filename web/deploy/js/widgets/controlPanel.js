@@ -1,6 +1,7 @@
+import { CustomWidgetName } from '../types/widgets.js';
 import { createDOMWidget, getKulManager, getKulThemes, getLFManager } from '../utils/utils.js';
 const BASE_CSS_CLASS = 'lf-controlpanel';
-const TYPE = 'KUL_CONTROL_PANEL';
+const TYPE = CustomWidgetName.controlPanel;
 export const controlPanelFactory = {
     cssClasses: {
         content: BASE_CSS_CLASS,

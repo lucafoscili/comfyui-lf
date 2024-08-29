@@ -1,5 +1,6 @@
+import { NodeName } from '../types/nodes.js';
 import { getApiRoutes } from '../utils/utils.js';
-const NAME = 'LF_ControlPanel';
+const NAME = NodeName.controlPanel;
 export const controlPanelFactory = {
     register: (setW, addW) => {
         const extension = {

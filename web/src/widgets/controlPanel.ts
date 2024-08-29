@@ -3,11 +3,11 @@ import type {
   KulListEventPayload,
   KulSwitchEventPayload,
 } from '../types/ketchup-lite/components';
-import type { CustomWidgetNames } from '../types/widgets';
+import { CustomWidgetName } from '../types/widgets';
 import { createDOMWidget, getKulManager, getKulThemes, getLFManager } from '../utils/utils';
 
 const BASE_CSS_CLASS = 'lf-controlpanel';
-const TYPE: CustomWidgetNames = 'KUL_CONTROL_PANEL';
+const TYPE = CustomWidgetName.controlPanel;
 
 export const controlPanelFactory = {
   cssClasses: {

@@ -1,5 +1,6 @@
+import { NodeName } from '../types/nodes.js';
 import { getApiRoutes } from '../utils/utils.js';
-const NAME = 'LF_ImageHistogram';
+const NAME = NodeName.imageHistogram;
 export const imageHistogramFactory = {
     register: (setW, addW, resizeHandlerW) => {
         const extension = {

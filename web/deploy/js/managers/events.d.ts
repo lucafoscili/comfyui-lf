@@ -1,5 +1,5 @@
-import type { DisplayJSONPayload, ImageHistogramPayload } from '../types/events';
-import type { BaseWidgetCallback } from '../types/widgets';
+import { type DisplayJSONPayload, type ImageHistogramPayload } from '../types/events';
+import { BaseWidgetCallback } from '../types/widgets';
 export declare class LFEvents {
     #private;
     eventHandler: {

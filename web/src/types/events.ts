@@ -8,15 +8,16 @@ export interface BaseEventPayload {
   id: string;
 }
 export type EventCallback<T extends EventPayload> = (e: CustomEvent<T>) => void;
-export type EventNames =
-  | 'lf-controlpanel'
-  | 'lf-displayjson'
-  | 'lf-imagehistogram'
-  | 'lf-loadimages'
-  | 'lf-switchimage'
-  | 'lf-switchinteger'
-  | 'lf-switchjson'
-  | 'lf-switchstring';
+export enum EventName {
+  controlPanel = 'lf-controlpanel',
+  displayJson = 'lf-displayjson',
+  imageHistogram = 'lf-imagehistogram',
+  loadImages = 'lf-loadimages',
+  switchImage = 'lf-switchimage',
+  switchImteger = 'lf-switchinteger',
+  switchJson = 'lf-switchjson',
+  switchString = 'lf-switchstring',
+}
 export type EventPayload =
   | DisplayJSONPayload
   | ImageHistogramPayload

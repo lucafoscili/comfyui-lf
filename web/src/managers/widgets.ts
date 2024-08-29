@@ -2,19 +2,14 @@ import { app } from '/scripts/app.js';
 import { controlPanelFactory } from '../widgets/controlPanel.js';
 import { codeFactory } from '../widgets/code.js';
 import { chartFactory } from '../widgets/chart.js';
-import { CustomWidgetNames } from '../types/widgets.js';
+import { CustomWidgetName } from '../types/widgets.js';
 
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
 /*-------------------------------------------------*/
 
 export class LFWidgets {
-  #CSS_EMBEDS = ['chart', 'code', 'controlPanel'];
-  #NAMES: { [index: string]: CustomWidgetNames } = {
-    chart: 'KUL_CHART',
-    code: 'KUL_CODE',
-    controlPanel: 'KUL_CONTROL_PANEL',
-  };
+  #CSS_EMBEDS = [...Object.keys(CustomWidgetName)];
 
   constructor() {
     for (let index = 0; index < this.#CSS_EMBEDS.length; index++) {
@@ -29,48 +24,51 @@ export class LFWidgets {
   }
 
   add = {
-    chart: (nodeType: NodeType) => {
-      const widget = app.widgets.KUL_CHART(nodeType, this.#NAMES.chart).widget;
+    [CustomWidgetName.chart]: (nodeType: NodeType) => {
+      const widget = app.widgets[CustomWidgetName.chart](nodeType, CustomWidgetName.chart).widget;
       return widget;
     },
-    code: (nodeType: NodeType) => {
-      const widget = app.widgets.KUL_CODE(nodeType, this.#NAMES.code).widget;
+    [CustomWidgetName.code]: (nodeType: NodeType) => {
+      const widget = app.widgets[CustomWidgetName.code](nodeType, CustomWidgetName.code).widget;
       return widget;
     },
-    controlPanel: (nodeType: NodeType) => {
-      const widget = app.widgets.KUL_CONTROL_PANEL(nodeType, this.#NAMES.controlPanel).widget;
+    [CustomWidgetName.controlPanel]: (nodeType: NodeType) => {
+      const widget = app.widgets[CustomWidgetName.controlPanel](
+        nodeType,
+        CustomWidgetName.controlPanel,
+      ).widget;
       return widget;
     },
   };
 
   option = {
-    chart: (chart: HTMLKulChartElement) => chartFactory.options(chart),
-    code: (code: HTMLKulCodeElement) => codeFactory.options(code),
-    controlPanel: () => controlPanelFactory.options(),
+    [CustomWidgetName.chart]: (chart: HTMLKulChartElement) => chartFactory.options(chart),
+    [CustomWidgetName.code]: (code: HTMLKulCodeElement) => codeFactory.options(code),
+    [CustomWidgetName.controlPanel]: () => controlPanelFactory.options(),
   };
 
   resizerHandler = {
-    chart: (nodeType: NodeType) => chartFactory.resize(nodeType),
+    [CustomWidgetName.chart]: (nodeType: NodeType) => chartFactory.resize(nodeType),
   };
 
   set = {
-    chart: () => {
+    [CustomWidgetName.chart]: () => {
       return {
-        KUL_CHART: (nodeType: NodeType, name: string) => {
+        [CustomWidgetName.chart]: (nodeType: NodeType, name: string) => {
           return chartFactory.render(nodeType, name);
         },
       };
     },
-    code: () => {
+    [CustomWidgetName.code]: () => {
       return {
-        KUL_CODE: (nodeType: NodeType, name: string) => {
+        [CustomWidgetName.code]: (nodeType: NodeType, name: string) => {
           return codeFactory.render(nodeType, name);
         },
       };
     },
-    controlPanel: () => {
+    [CustomWidgetName.controlPanel]: () => {
       return {
-        KUL_CONTROL_PANEL: (nodeType: NodeType, name: string) => {
+        [CustomWidgetName.controlPanel]: (nodeType: NodeType, name: string) => {
           return controlPanelFactory.render(nodeType, name);
         },
       };

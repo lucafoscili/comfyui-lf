@@ -1,5 +1,6 @@
-import type { DisplayJSONPayload, EventNames, ImageHistogramPayload } from '../types/events';
-import type { BaseWidgetCallback, CustomWidgetNames } from '../types/widgets';
+import { EventName, type DisplayJSONPayload, type ImageHistogramPayload } from '../types/events';
+import { LogSeverity } from '../types/manager';
+import { BaseWidgetCallback, CustomWidgetName } from '../types/widgets';
 import { getApiRoutes, getLFManager } from '../utils/utils';
 
 /*-------------------------------------------------*/
@@ -7,30 +8,19 @@ import { getApiRoutes, getLFManager } from '../utils/utils';
 /*-------------------------------------------------*/
 
 export class LFEvents {
-  #NAMES: { [index: string]: EventNames } = {
-    controlPanel: 'lf-controlpanel',
-    displayJson: 'lf-displayjson',
-    imageHistogram: 'lf-imagehistogram',
-    loadImages: 'lf-loadimages',
-    switchImage: 'lf-switchimage',
-    switchInteger: 'lf-switchinteger',
-    switchJSON: 'lf-switchjson',
-    switchString: 'lf-switchstring',
-  };
-
-  #getW(node: NodeType, name: CustomWidgetNames, addW: BaseWidgetCallback) {
+  #getW(node: NodeType, name: CustomWidgetName, addW: BaseWidgetCallback) {
     return node?.widgets?.find((w) => w.name === name) || addW(node, name).widget;
   }
 
   eventHandler = {
     displayJson: (event: CustomEvent<DisplayJSONPayload>, addW: BaseWidgetCallback) => {
-      const name = this.#NAMES.displayJson;
-      getLFManager().log(`Event '${name}' received`, { event }, 'success');
+      const name = EventName.displayJson;
+      getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
 
       const payload = event.detail;
       const node = getApiRoutes().getNodeById(payload.id);
       if (node) {
-        const widget = this.#getW(node, 'KUL_CODE', addW);
+        const widget = this.#getW(node, CustomWidgetName.code, addW);
         const comp = widget.options.getComp();
         comp.kulLanguage = 'json';
         widget.options.setValue(event.detail.json);
@@ -38,13 +28,13 @@ export class LFEvents {
       }
     },
     imageHistogram: (event: CustomEvent<ImageHistogramPayload>, addW: BaseWidgetCallback) => {
-      const name = this.#NAMES.imageHistogram;
-      getLFManager().log(`Event '${name}' received`, { event }, 'success');
+      const name = EventName.imageHistogram;
+      getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
 
       const payload = event.detail;
       const node = getApiRoutes().getNodeById(payload.id);
       if (node) {
-        const widget = this.#getW(node, 'KUL_CHART', addW);
+        const widget = this.#getW(node, CustomWidgetName.chart, addW);
         const comp = widget.options.getComp();
         widget.options.setValue(event.detail.dataset);
         getApiRoutes().redraw();

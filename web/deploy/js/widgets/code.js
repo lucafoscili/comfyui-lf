@@ -1,7 +1,9 @@
+import { LogSeverity } from '../types/manager.js';
+import { CustomWidgetName } from '../types/widgets.js';
 import { createDOMWidget, getLFManager, unescapeJson } from '../utils/utils.js';
 const BASE_CSS_CLASS = 'lf-code';
 const EMPTY = '{ "Wow": "Such empty!" }';
-const TYPE = 'KUL_CODE';
+const TYPE = CustomWidgetName.code;
 export const codeFactory = {
     cssClasses: {
         content: BASE_CSS_CLASS,
@@ -42,7 +44,7 @@ export const codeFactory = {
                         }
                     }
                     catch (error) {
-                        getLFManager().log('Error when setting value!', { error, code }, 'error');
+                        getLFManager().log('Error when setting value!', { error, code }, LogSeverity.Error);
                         if (value === undefined || value === '') {
                             code.kulValue = EMPTY;
                         }

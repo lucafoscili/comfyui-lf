@@ -9,7 +9,7 @@ import { LFWidgets } from './widgets.js';
 import { LFEvents } from './events.js';
 import { ComfyAPIs, LogSeverity } from '../types/manager.js';
 import { Extension } from '../types/nodes.js';
-import { DisplayJSONPayload, ImageHistogramPayload } from '../types/events.js';
+import { DisplayJSONPayload, EventName, ImageHistogramPayload } from '../types/events.js';
 
 /*-------------------------------------------------*/
 /*                 L F   C l a s s                 */
@@ -46,7 +46,7 @@ export class LFManager {
   constructor() {
     const managerCb = async () => {
       this.#MANAGERS.ketchupLite = getKulManager();
-      this.log('KulManager ready', { kulManager: this.#MANAGERS.ketchupLite }, 'success');
+      this.log('KulManager ready', { kulManager: this.#MANAGERS.ketchupLite }, LogSeverity.Success);
       document.removeEventListener('kul-manager-ready', managerCb);
     };
     this.#DOM.ketchupLiteInit = {
@@ -68,23 +68,23 @@ export class LFManager {
     const events = this.#MANAGERS.events.get;
     const widgets = this.#MANAGERS.widgets.get;
 
-    this.#MANAGERS.nodes.register.controlPanel(
-      widgets.setters.controlPanel,
-      widgets.adders.controlPanel,
+    this.#MANAGERS.nodes.register.LF_ControlPanel(
+      widgets.setters.KUL_CONTROL_PANEL,
+      widgets.adders.KUL_CONTROL_PANEL,
     );
 
-    this.#MANAGERS.nodes.register.displayJson(widgets.setters.code, widgets.adders.code);
-    this.#APIS.event('lf-displayjson', (e: CustomEvent<DisplayJSONPayload>) => {
-      events.eventHandlers.displayJson(e, widgets.adders.code);
+    this.#MANAGERS.nodes.register.LF_DisplayJSON(widgets.setters.KUL_CODE, widgets.adders.KUL_CODE);
+    this.#APIS.event(EventName.displayJson, (e: CustomEvent<DisplayJSONPayload>) => {
+      events.eventHandlers.displayJson(e, widgets.adders.KUL_CODE);
     });
 
-    this.#MANAGERS.nodes.register.imageHistogram(
-      widgets.setters.chart,
-      widgets.adders.chart,
-      widgets.resizerHandlers.chart,
+    this.#MANAGERS.nodes.register.LF_ImageHistogram(
+      widgets.setters.KUL_CHART,
+      widgets.adders.KUL_CHART,
+      widgets.resizerHandlers.KUL_CHART,
     );
-    this.#APIS.event('lf-imagehistogram', (e: CustomEvent<ImageHistogramPayload>) => {
-      events.eventHandlers.imageHistogram(e, widgets.adders.chart);
+    this.#APIS.event(EventName.imageHistogram, (e: CustomEvent<ImageHistogramPayload>) => {
+      events.eventHandlers.imageHistogram(e, widgets.adders.KUL_CHART);
     });
   }
 
@@ -92,7 +92,7 @@ export class LFManager {
     return this.#DEBUG;
   }
 
-  log(message: string, args?: Record<string, unknown>, severity: LogSeverity = 'info') {
+  log(message: string, args?: Record<string, unknown>, severity = LogSeverity.Info) {
     if (!this.#DEBUG) {
       return;
     }
@@ -125,7 +125,7 @@ export class LFManager {
     } else {
       this.#DEBUG = !this.#DEBUG;
     }
-    this.log(`Debug active: '${this.#DEBUG}'`, {}, 'warning');
+    this.log(`Debug active: '${this.#DEBUG}'`, {}, LogSeverity.Warning);
 
     return this.#DEBUG;
   }
@@ -135,6 +135,6 @@ const WINDOW = window as unknown as LFWindow;
 
 if (!WINDOW.lfManager) {
   WINDOW.lfManager = new LFManager();
-  WINDOW.lfManager.log('LFManager ready', { LFManager: WINDOW.lfManager }, 'success');
+  WINDOW.lfManager.log('LFManager ready', { LFManager: WINDOW.lfManager }, LogSeverity.Success);
   WINDOW.lfManager.initialize();
 }

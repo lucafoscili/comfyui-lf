@@ -1,5 +1,6 @@
+import { NodeName } from '../types/nodes.js';
 import { getApiRoutes } from '../utils/utils.js';
-const NAME = 'LF_DisplayJSON';
+const NAME = NodeName.displayJson;
 export const displayJsonFactory = {
     register: (setW, addW) => {
         const extension = {

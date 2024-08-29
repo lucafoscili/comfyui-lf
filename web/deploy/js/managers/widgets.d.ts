@@ -2,26 +2,26 @@ export declare class LFWidgets {
     #private;
     constructor();
     add: {
-        chart: (nodeType: NodeType) => any;
-        code: (nodeType: NodeType) => any;
-        controlPanel: (nodeType: NodeType) => any;
+        KUL_CHART: (nodeType: NodeType) => any;
+        KUL_CODE: (nodeType: NodeType) => any;
+        KUL_CONTROL_PANEL: (nodeType: NodeType) => any;
     };
     option: {
-        chart: (chart: HTMLKulChartElement) => {
+        KUL_CHART: (chart: HTMLKulChartElement) => {
             hideOnZoom: boolean;
             getComp(): HTMLKulChartElement;
             getValue(): string;
             setProps(props: Partial<HTMLKulChartElement>): void;
             setValue(value: Record<string, unknown> | string): void;
         };
-        code: (code: HTMLKulCodeElement) => {
+        KUL_CODE: (code: HTMLKulCodeElement) => {
             hideOnZoom: boolean;
             getComp(): HTMLKulCodeElement;
             getValue(): string;
             setProps(props: Partial<HTMLKulCodeElement>): void;
             setValue(value: Record<string, unknown> | string): void;
         };
-        controlPanel: () => {
+        KUL_CONTROL_PANEL: () => {
             getValue(): {
                 debug: boolean;
                 themes: string;
@@ -30,20 +30,20 @@ export declare class LFWidgets {
         };
     };
     resizerHandler: {
-        chart: (nodeType: NodeType) => void;
+        KUL_CHART: (nodeType: NodeType) => void;
     };
     set: {
-        chart: () => {
+        KUL_CHART: () => {
             KUL_CHART: (nodeType: NodeType, name: string) => {
                 widget: Widget;
             };
         };
-        code: () => {
+        KUL_CODE: () => {
             KUL_CODE: (nodeType: NodeType, name: string) => {
                 widget: Widget;
             };
         };
-        controlPanel: () => {
+        KUL_CONTROL_PANEL: () => {
             KUL_CONTROL_PANEL: (nodeType: NodeType, name: string) => {
                 widget: Widget;
             };
@@ -51,26 +51,26 @@ export declare class LFWidgets {
     };
     get: {
         adders: {
-            chart: (nodeType: NodeType) => any;
-            code: (nodeType: NodeType) => any;
-            controlPanel: (nodeType: NodeType) => any;
+            KUL_CHART: (nodeType: NodeType) => any;
+            KUL_CODE: (nodeType: NodeType) => any;
+            KUL_CONTROL_PANEL: (nodeType: NodeType) => any;
         };
         options: {
-            chart: (chart: HTMLKulChartElement) => {
+            KUL_CHART: (chart: HTMLKulChartElement) => {
                 hideOnZoom: boolean;
                 getComp(): HTMLKulChartElement;
                 getValue(): string;
                 setProps(props: Partial<HTMLKulChartElement>): void;
                 setValue(value: Record<string, unknown> | string): void;
             };
-            code: (code: HTMLKulCodeElement) => {
+            KUL_CODE: (code: HTMLKulCodeElement) => {
                 hideOnZoom: boolean;
                 getComp(): HTMLKulCodeElement;
                 getValue(): string;
                 setProps(props: Partial<HTMLKulCodeElement>): void;
                 setValue(value: Record<string, unknown> | string): void;
             };
-            controlPanel: () => {
+            KUL_CONTROL_PANEL: () => {
                 getValue(): {
                     debug: boolean;
                     themes: string;
@@ -79,20 +79,20 @@ export declare class LFWidgets {
             };
         };
         resizerHandlers: {
-            chart: (nodeType: NodeType) => void;
+            KUL_CHART: (nodeType: NodeType) => void;
         };
         setters: {
-            chart: () => {
+            KUL_CHART: () => {
                 KUL_CHART: (nodeType: NodeType, name: string) => {
                     widget: Widget;
                 };
             };
-            code: () => {
+            KUL_CODE: () => {
                 KUL_CODE: (nodeType: NodeType, name: string) => {
                     widget: Widget;
                 };
             };
-            controlPanel: () => {
+            KUL_CONTROL_PANEL: () => {
                 KUL_CONTROL_PANEL: (nodeType: NodeType, name: string) => {
                     widget: Widget;
                 };

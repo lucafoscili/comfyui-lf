@@ -1,8 +1,8 @@
-import type { Extension, NodeNames } from '../types/nodes';
+import { NodeName, type Extension } from '../types/nodes';
 import type { BaseWidgetCallback, CodeWidgetsSetter } from '../types/widgets';
 import { getApiRoutes } from '../utils/utils';
 
-const NAME: NodeNames = 'LF_DisplayJSON';
+const NAME = NodeName.displayJson;
 
 export const displayJsonFactory = {
   register: (setW: CodeWidgetsSetter, addW: BaseWidgetCallback) => {
