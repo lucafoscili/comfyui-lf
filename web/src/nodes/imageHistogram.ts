@@ -38,7 +38,7 @@ export const imageHistogramFactory = {
           nodeType.prototype.onNodeCreated = function () {
             const r = onNodeCreated?.apply(this, arguments);
             const node = this;
-            addW(node, NAME);
+            addW(node, CustomWidgetName.chart);
             return r;
           };
           const onResize = nodeType.prototype.onResize;

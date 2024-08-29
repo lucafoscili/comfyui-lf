@@ -45,7 +45,7 @@ export const chartFactory = {
       },
     };
   },
-  render: (node: NodeType, name: string) => {
+  render: (node: NodeType, name: CustomWidgetName) => {
     const wrapper = document.createElement('div');
     const content = document.createElement('div');
     const chart = document.createElement('kul-chart');

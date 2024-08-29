@@ -48,7 +48,7 @@ export const controlPanelFactory = {
       },
     };
   },
-  render: (node: NodeType, name: string) => {
+  render: (node: NodeType, name: CustomWidgetName) => {
     const wrapper = document.createElement('div');
     const options = controlPanelFactory.options();
 

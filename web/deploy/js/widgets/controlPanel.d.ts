@@ -1,3 +1,4 @@
+import { CustomWidgetName } from '../types/widgets';
 export declare const controlPanelFactory: {
     cssClasses: {
         content: string;
@@ -12,7 +13,7 @@ export declare const controlPanelFactory: {
         };
         setValue(value: any): void;
     };
-    render: (node: NodeType, name: string) => {
+    render: (node: NodeType, name: CustomWidgetName) => {
         widget: Widget;
     };
 };

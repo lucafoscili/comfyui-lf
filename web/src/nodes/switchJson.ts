@@ -1,31 +1,31 @@
-import { DisplayJSONPayload, EventName } from '../types/events';
+import { EventName, SwitchImagePayload } from '../types/events';
 import { LogSeverity } from '../types/manager';
-import { NodeName, type Extension } from '../types/nodes';
+import { Extension, NodeName } from '../types/nodes';
 import {
   CustomWidgetName,
+  TextfieldWidgetsSetter,
   type BaseWidgetCallback,
-  type CodeWidgetsSetter,
 } from '../types/widgets';
 import { getApiRoutes, getLFManager, getWidget } from '../utils/common';
 
-const NAME = NodeName.displayJson;
+const NAME = NodeName.switchJson;
 
-export const displayJsonFactory = {
-  eventHandler: (event: CustomEvent<DisplayJSONPayload>, addW: BaseWidgetCallback) => {
-    const name = EventName.displayJson;
+export const switchJsonFactory = {
+  eventHandler: (event: CustomEvent<SwitchImagePayload>, addW: BaseWidgetCallback) => {
+    const name = EventName.switchJson;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
 
     const payload = event.detail;
     const node = getApiRoutes().getNodeById(payload.id);
     if (node) {
-      const widget = getWidget(node, CustomWidgetName.code, addW);
+      const widget = getWidget(node, CustomWidgetName.textfield, addW);
       const comp = widget.options.getComp();
-      comp.kulLanguage = 'json';
-      widget.options.setValue(event.detail.json);
+      comp.refresh();
+      widget.options.setValue(String(event.detail.bool + '').valueOf());
       getApiRoutes().redraw();
     }
   },
-  register: (setW: CodeWidgetsSetter, addW: BaseWidgetCallback) => {
+  register: (setW: TextfieldWidgetsSetter, addW: BaseWidgetCallback) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {
@@ -34,7 +34,7 @@ export const displayJsonFactory = {
           nodeType.prototype.onNodeCreated = function () {
             const r = onNodeCreated?.apply(this, arguments);
             const node = this;
-            addW(node, CustomWidgetName.code);
+            addW(node, CustomWidgetName.textfield);
             return r;
           };
         }

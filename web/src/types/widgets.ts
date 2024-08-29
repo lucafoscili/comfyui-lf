@@ -4,30 +4,37 @@
 
 import { KulDataDataset } from './ketchup-lite/components';
 
-export type BaseWidgetCallback = (node: NodeType, name: string) => { widget: Widget };
+export type BaseWidgetCallback = <T extends CustomWidgetName>(
+  node: NodeType,
+  name: T,
+) => { widget: Widget };
 export enum CustomWidgetName {
   chart = 'KUL_CHART',
   code = 'KUL_CODE',
   controlPanel = 'KUL_CONTROL_PANEL',
   imagePreview = 'IMAGE_PREVIEW_B64',
+  textfield = 'KUL_TEXTFIELD',
 }
 export interface CustomWidgetSetters {
   [CustomWidgetName.chart](node: NodeType, name: string): { widget: ChartWidget };
   [CustomWidgetName.code](node: NodeType, name: string): { widget: CodeWidget };
   [CustomWidgetName.controlPanel](node: NodeType, name: string): { widget: ControlPanelWidget };
   [CustomWidgetName.imagePreview](node: NodeType, name: string): { widget: ImagePreviewWidget };
+  [CustomWidgetName.textfield](node: NodeType, name: string): { widget: TextfieldWidget };
 }
 export type CustomWidgetMap = {
   [CustomWidgetName.chart]: ChartWidget;
   [CustomWidgetName.code]: CodeWidget;
   [CustomWidgetName.controlPanel]: ControlPanelWidget;
   [CustomWidgetName.imagePreview]: ImagePreviewWidget;
+  [CustomWidgetName.textfield]: TextfieldWidget;
 };
 export type CustomWidgetOptions =
   | ChartWidgetOptions
   | CodeWidgetOptions
   | ControlPanelWidgetOptions
-  | ImagePreviewWidgetOptions;
+  | ImagePreviewWidgetOptions
+  | TextfieldWidgetOptions;
 
 /*-------------------------------------------------------------------*/
 /*                C h a r t   D e c l a r a t i o n s                */
@@ -109,3 +116,23 @@ export interface ImagePreviewWidgetValue {
   fileNames: string[];
   images: string[];
 }
+
+/*-------------------------------------------------------------------*/
+/*            T e x t f i e l d   D e c l a r a t i o n s            */
+/*-------------------------------------------------------------------*/
+
+export interface TextfieldWidget extends Widget {
+  options: TextfieldWidgetOptions;
+  type: [CustomWidgetName.textfield];
+}
+export interface TextfieldWidgetOptions {
+  hideOnZoom: boolean;
+  getComp(): HTMLKulTextfieldElement;
+  getValue(): TextfieldWidgetValue;
+  setProps(props: Partial<HTMLKulTextfieldElement>): void;
+  setValue(value: TextfieldWidgetValue): void;
+}
+export declare type TextfieldWidgetsSetter = () => {
+  [CustomWidgetName.textfield]: BaseWidgetCallback;
+};
+export type TextfieldWidgetValue = string;

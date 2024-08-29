@@ -10,6 +10,7 @@ import { codeFactory } from '../widgets/code.js';
 import { chartFactory } from '../widgets/chart.js';
 import { CustomWidgetName } from '../types/widgets.js';
 import { imagePreviewFactory } from '../widgets/imagePreview.js';
+import { textfieldFactory } from '../widgets/textfield.js';
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
 /*-------------------------------------------------*/
@@ -33,12 +34,17 @@ export class LFWidgets {
                 const widget = app.widgets[CustomWidgetName.imagePreview](nodeType, CustomWidgetName.imagePreview).widget;
                 return widget;
             },
+            [CustomWidgetName.textfield]: (nodeType) => {
+                const widget = app.widgets[CustomWidgetName.textfield](nodeType, CustomWidgetName.textfield).widget;
+                return widget;
+            },
         };
         this.option = {
             [CustomWidgetName.chart]: (chart) => chartFactory.options(chart),
             [CustomWidgetName.code]: (code) => codeFactory.options(code),
             [CustomWidgetName.controlPanel]: () => controlPanelFactory.options(),
             [CustomWidgetName.imagePreview]: (content) => imagePreviewFactory.options(content),
+            [CustomWidgetName.textfield]: (textfield) => textfieldFactory.options(textfield),
         };
         this.resizerHandler = {
             [CustomWidgetName.chart]: (nodeType) => chartFactory.resize(nodeType),
@@ -69,6 +75,13 @@ export class LFWidgets {
                 return {
                     [CustomWidgetName.imagePreview]: (nodeType, name) => {
                         return imagePreviewFactory.render(nodeType, name);
+                    },
+                };
+            },
+            [CustomWidgetName.textfield]: () => {
+                return {
+                    [CustomWidgetName.textfield]: (nodeType, name) => {
+                        return textfieldFactory.render(nodeType, name);
                     },
                 };
             },

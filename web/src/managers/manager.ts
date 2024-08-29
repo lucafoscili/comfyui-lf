@@ -13,6 +13,10 @@ import {
   EventName,
   ImageHistogramPayload,
   LoadImagesPayload,
+  SwitchImagePayload,
+  SwitchIntegerPayload,
+  SwitchJSONPayload,
+  SwitchStringPayload,
 } from '../types/events.js';
 
 /*-------------------------------------------------*/
@@ -40,6 +44,7 @@ export class LFManager {
   };
   #DEBUG = false;
   #DOM = document.documentElement as KulDom;
+  #INITIALIZED = false;
   #MANAGERS: {
     ketchupLite?: KulManager;
     nodes?: LFNodes;
@@ -67,6 +72,14 @@ export class LFManager {
   }
 
   initialize() {
+    if (this.#INITIALIZED) {
+      this.log(
+        'Attempt to initialize LFManager when already ready!',
+        { LFManager: this },
+        LogSeverity.Warning,
+      );
+      return;
+    }
     const nodes = this.#MANAGERS.nodes.get;
     const widgets = this.#MANAGERS.widgets.get;
 
@@ -105,6 +118,48 @@ export class LFManager {
     this.#APIS.event(EventName.loadImages, (e: CustomEvent<LoadImagesPayload>) => {
       nodes.eventHandlers.LF_LoadImages(e, widgets.adders.IMAGE_PREVIEW_B64);
     });
+    /*-------------------------------------------------------------------*/
+    /*                 I n i t   S w i t c h   I m a g e                 */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_SwitchImage(
+      widgets.setters.KUL_TEXTFIELD,
+      widgets.adders.KUL_TEXTFIELD,
+    );
+    this.#APIS.event(EventName.switchImage, (e: CustomEvent<SwitchImagePayload>) => {
+      nodes.eventHandlers.LF_SwitchImage(e, widgets.adders.KUL_TEXTFIELD);
+    });
+    /*-------------------------------------------------------------------*/
+    /*                I n i t   S w i t c h   I n t e g e r              */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_SwitchInteger(
+      widgets.setters.KUL_TEXTFIELD,
+      widgets.adders.KUL_TEXTFIELD,
+    );
+    this.#APIS.event(EventName.switchInteger, (e: CustomEvent<SwitchIntegerPayload>) => {
+      nodes.eventHandlers.LF_SwitchInteger(e, widgets.adders.KUL_TEXTFIELD);
+    });
+    /*-------------------------------------------------------------------*/
+    /*                  I n i t   S w i t c h   J S O N                  */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_SwitchJSON(
+      widgets.setters.KUL_TEXTFIELD,
+      widgets.adders.KUL_TEXTFIELD,
+    );
+    this.#APIS.event(EventName.switchJson, (e: CustomEvent<SwitchJSONPayload>) => {
+      nodes.eventHandlers.LF_SwitchJSON(e, widgets.adders.KUL_TEXTFIELD);
+    });
+    /*-------------------------------------------------------------------*/
+    /*                I n i t   S w i t c h   S t r i n g                */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_SwitchString(
+      widgets.setters.KUL_TEXTFIELD,
+      widgets.adders.KUL_TEXTFIELD,
+    );
+    this.#APIS.event(EventName.switchString, (e: CustomEvent<SwitchStringPayload>) => {
+      nodes.eventHandlers.LF_SwitchString(e, widgets.adders.KUL_TEXTFIELD);
+    });
+
+    this.#INITIALIZED = true;
   }
 
   isDebug() {

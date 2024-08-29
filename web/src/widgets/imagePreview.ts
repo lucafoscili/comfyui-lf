@@ -46,18 +46,10 @@ export const imagePreviewFactory = {
     return {
       hideOnZoom: true,
       getValue() {
-        const value: ImagePreviewWidgetValue = {
+        return {
           fileNames: [],
           images: [],
         };
-        const images = content.querySelectorAll('img');
-        const maxImagesToProcess = Math.min(images?.length ?? 0, 1);
-        for (let index = 0; index < maxImagesToProcess; index++) {
-          const image = images[index];
-          value.fileNames.push(splitByLastSpaceBeforeAnyBracket(image.title));
-          value.images.push(image.src);
-        }
-        return value;
       },
       setValue(value: ImagePreviewWidgetValue) {
         if (value.images?.length > 0) {
@@ -76,7 +68,7 @@ export const imagePreviewFactory = {
       },
     };
   },
-  render: (node: NodeType, name: string) => {
+  render: (node: NodeType, name: CustomWidgetName) => {
     const wrapper = document.createElement('div');
     const content = document.createElement('div');
     const options = imagePreviewFactory.options(content);

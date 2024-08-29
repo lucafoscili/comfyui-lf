@@ -54,7 +54,7 @@ export const codeFactory = {
       },
     };
   },
-  render: (node: NodeType, name: string) => {
+  render: (node: NodeType, name: CustomWidgetName) => {
     const wrapper = document.createElement('div');
     const content = document.createElement('div');
     const code = document.createElement('kul-code');

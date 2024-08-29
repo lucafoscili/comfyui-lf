@@ -1,12 +1,13 @@
 import { KulDataDataset } from './ketchup-lite/components';
-export type BaseWidgetCallback = (node: NodeType, name: string) => {
+export type BaseWidgetCallback = <T extends CustomWidgetName>(node: NodeType, name: T) => {
     widget: Widget;
 };
 export declare enum CustomWidgetName {
     chart = "KUL_CHART",
     code = "KUL_CODE",
     controlPanel = "KUL_CONTROL_PANEL",
-    imagePreview = "IMAGE_PREVIEW_B64"
+    imagePreview = "IMAGE_PREVIEW_B64",
+    textfield = "KUL_TEXTFIELD"
 }
 export interface CustomWidgetSetters {
     [CustomWidgetName.chart](node: NodeType, name: string): {
@@ -21,14 +22,18 @@ export interface CustomWidgetSetters {
     [CustomWidgetName.imagePreview](node: NodeType, name: string): {
         widget: ImagePreviewWidget;
     };
+    [CustomWidgetName.textfield](node: NodeType, name: string): {
+        widget: TextfieldWidget;
+    };
 }
 export type CustomWidgetMap = {
     [CustomWidgetName.chart]: ChartWidget;
     [CustomWidgetName.code]: CodeWidget;
     [CustomWidgetName.controlPanel]: ControlPanelWidget;
     [CustomWidgetName.imagePreview]: ImagePreviewWidget;
+    [CustomWidgetName.textfield]: TextfieldWidget;
 };
-export type CustomWidgetOptions = ChartWidgetOptions | CodeWidgetOptions | ControlPanelWidgetOptions | ImagePreviewWidgetOptions;
+export type CustomWidgetOptions = ChartWidgetOptions | CodeWidgetOptions | ControlPanelWidgetOptions | ImagePreviewWidgetOptions | TextfieldWidgetOptions;
 export interface ChartWidget extends Widget {
     options: ChartWidgetOptions;
     type: [CustomWidgetName.chart];
@@ -90,3 +95,18 @@ export interface ImagePreviewWidgetValue {
     fileNames: string[];
     images: string[];
 }
+export interface TextfieldWidget extends Widget {
+    options: TextfieldWidgetOptions;
+    type: [CustomWidgetName.textfield];
+}
+export interface TextfieldWidgetOptions {
+    hideOnZoom: boolean;
+    getComp(): HTMLKulTextfieldElement;
+    getValue(): TextfieldWidgetValue;
+    setProps(props: Partial<HTMLKulTextfieldElement>): void;
+    setValue(value: TextfieldWidgetValue): void;
+}
+export declare type TextfieldWidgetsSetter = () => {
+    [CustomWidgetName.textfield]: BaseWidgetCallback;
+};
+export type TextfieldWidgetValue = string;

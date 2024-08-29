@@ -7,4 +7,5 @@ export var CustomWidgetName;
     CustomWidgetName["code"] = "KUL_CODE";
     CustomWidgetName["controlPanel"] = "KUL_CONTROL_PANEL";
     CustomWidgetName["imagePreview"] = "IMAGE_PREVIEW_B64";
+    CustomWidgetName["textfield"] = "KUL_TEXTFIELD";
 })(CustomWidgetName || (CustomWidgetName = {}));

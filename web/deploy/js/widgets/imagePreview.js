@@ -1,5 +1,5 @@
 import { CustomWidgetName } from '../types/widgets.js';
-import { createDOMWidget, splitByLastSpaceBeforeAnyBracket } from '../utils/common.js';
+import { createDOMWidget } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-imagepreview';
 const DOGE = `
 
@@ -44,18 +44,10 @@ export const imagePreviewFactory = {
         return {
             hideOnZoom: true,
             getValue() {
-                const value = {
+                return {
                     fileNames: [],
                     images: [],
                 };
-                const images = content.querySelectorAll('img');
-                const maxImagesToProcess = Math.min(images?.length ?? 0, 5);
-                for (let index = 0; index < maxImagesToProcess; index++) {
-                    const image = images[index];
-                    value.fileNames.push(splitByLastSpaceBeforeAnyBracket(image.title));
-                    value.images.push(image.src);
-                }
-                return value;
             },
             setValue(value) {
                 if (value.images?.length > 0) {

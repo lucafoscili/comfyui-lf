@@ -1,3 +1,4 @@
+import { CustomWidgetName } from '../types/widgets';
 export declare const codeFactory: {
     cssClasses: {
         content: string;
@@ -10,7 +11,7 @@ export declare const codeFactory: {
         setProps(props: Partial<HTMLKulCodeElement>): void;
         setValue(value: Record<string, unknown> | string): void;
     };
-    render: (node: NodeType, name: string) => {
+    render: (node: NodeType, name: CustomWidgetName) => {
         widget: Widget;
     };
 };

@@ -9,7 +9,7 @@ export declare enum EventName {
     imageHistogram = "lf-imagehistogram",
     loadImages = "lf-loadimages",
     switchImage = "lf-switchimage",
-    switchImteger = "lf-switchinteger",
+    switchInteger = "lf-switchinteger",
     switchJson = "lf-switchjson",
     switchString = "lf-switchstring"
 }

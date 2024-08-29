@@ -1,3 +1,4 @@
+import { CustomWidgetName } from '../types/widgets.js';
 export declare class LFWidgets {
     #private;
     constructor();
@@ -6,6 +7,7 @@ export declare class LFWidgets {
         KUL_CODE: (nodeType: NodeType) => any;
         KUL_CONTROL_PANEL: (nodeType: NodeType) => any;
         IMAGE_PREVIEW_B64: (nodeType: NodeType) => any;
+        KUL_TEXTFIELD: (nodeType: NodeType) => any;
     };
     option: {
         KUL_CHART: (chart: HTMLKulChartElement) => {
@@ -31,8 +33,18 @@ export declare class LFWidgets {
         };
         IMAGE_PREVIEW_B64: (content: HTMLDivElement) => {
             hideOnZoom: boolean;
-            getValue(): import("../types/widgets.js").ImagePreviewWidgetValue;
+            getValue(): {
+                fileNames: any[];
+                images: any[];
+            };
             setValue(value: import("../types/widgets.js").ImagePreviewWidgetValue): void;
+        };
+        KUL_TEXTFIELD: (textfield: HTMLKulTextfieldElement) => {
+            hideOnZoom: boolean;
+            getComp(): HTMLKulTextfieldElement;
+            getValue(): string;
+            setProps(props: Partial<HTMLKulTextfieldElement>): void;
+            setValue(value: string): void;
         };
     };
     resizerHandler: {
@@ -40,22 +52,27 @@ export declare class LFWidgets {
     };
     set: {
         KUL_CHART: () => {
-            KUL_CHART: (nodeType: NodeType, name: string) => {
+            KUL_CHART: (nodeType: NodeType, name: CustomWidgetName) => {
                 widget: Widget;
             };
         };
         KUL_CODE: () => {
-            KUL_CODE: (nodeType: NodeType, name: string) => {
+            KUL_CODE: (nodeType: NodeType, name: CustomWidgetName) => {
                 widget: Widget;
             };
         };
         KUL_CONTROL_PANEL: () => {
-            KUL_CONTROL_PANEL: (nodeType: NodeType, name: string) => {
+            KUL_CONTROL_PANEL: (nodeType: NodeType, name: CustomWidgetName) => {
                 widget: Widget;
             };
         };
         IMAGE_PREVIEW_B64: () => {
-            IMAGE_PREVIEW_B64: (nodeType: NodeType, name: string) => {
+            IMAGE_PREVIEW_B64: (nodeType: NodeType, name: CustomWidgetName) => {
+                widget: Widget;
+            };
+        };
+        KUL_TEXTFIELD: () => {
+            KUL_TEXTFIELD: (nodeType: NodeType, name: CustomWidgetName) => {
                 widget: Widget;
             };
         };
@@ -66,6 +83,7 @@ export declare class LFWidgets {
             KUL_CODE: (nodeType: NodeType) => any;
             KUL_CONTROL_PANEL: (nodeType: NodeType) => any;
             IMAGE_PREVIEW_B64: (nodeType: NodeType) => any;
+            KUL_TEXTFIELD: (nodeType: NodeType) => any;
         };
         options: {
             KUL_CHART: (chart: HTMLKulChartElement) => {
@@ -91,8 +109,18 @@ export declare class LFWidgets {
             };
             IMAGE_PREVIEW_B64: (content: HTMLDivElement) => {
                 hideOnZoom: boolean;
-                getValue(): import("../types/widgets.js").ImagePreviewWidgetValue;
+                getValue(): {
+                    fileNames: any[];
+                    images: any[];
+                };
                 setValue(value: import("../types/widgets.js").ImagePreviewWidgetValue): void;
+            };
+            KUL_TEXTFIELD: (textfield: HTMLKulTextfieldElement) => {
+                hideOnZoom: boolean;
+                getComp(): HTMLKulTextfieldElement;
+                getValue(): string;
+                setProps(props: Partial<HTMLKulTextfieldElement>): void;
+                setValue(value: string): void;
             };
         };
         resizerHandlers: {
@@ -100,22 +128,27 @@ export declare class LFWidgets {
         };
         setters: {
             KUL_CHART: () => {
-                KUL_CHART: (nodeType: NodeType, name: string) => {
+                KUL_CHART: (nodeType: NodeType, name: CustomWidgetName) => {
                     widget: Widget;
                 };
             };
             KUL_CODE: () => {
-                KUL_CODE: (nodeType: NodeType, name: string) => {
+                KUL_CODE: (nodeType: NodeType, name: CustomWidgetName) => {
                     widget: Widget;
                 };
             };
             KUL_CONTROL_PANEL: () => {
-                KUL_CONTROL_PANEL: (nodeType: NodeType, name: string) => {
+                KUL_CONTROL_PANEL: (nodeType: NodeType, name: CustomWidgetName) => {
                     widget: Widget;
                 };
             };
             IMAGE_PREVIEW_B64: () => {
-                IMAGE_PREVIEW_B64: (nodeType: NodeType, name: string) => {
+                IMAGE_PREVIEW_B64: (nodeType: NodeType, name: CustomWidgetName) => {
+                    widget: Widget;
+                };
+            };
+            KUL_TEXTFIELD: () => {
+                KUL_TEXTFIELD: (nodeType: NodeType, name: CustomWidgetName) => {
                     widget: Widget;
                 };
             };

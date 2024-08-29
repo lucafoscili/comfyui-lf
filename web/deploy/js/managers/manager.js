@@ -9,7 +9,7 @@ var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
     return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
 };
-var _LFManager_APIS, _LFManager_DEBUG, _LFManager_DOM, _LFManager_MANAGERS;
+var _LFManager_APIS, _LFManager_DEBUG, _LFManager_DOM, _LFManager_INITIALIZED, _LFManager_MANAGERS;
 import { api } from '/scripts/api.js';
 import { app } from '/scripts/app.js';
 import { defineCustomElements } from '../ketchup-lite/loader.js';
@@ -36,6 +36,7 @@ export class LFManager {
         });
         _LFManager_DEBUG.set(this, false);
         _LFManager_DOM.set(this, document.documentElement);
+        _LFManager_INITIALIZED.set(this, false);
         _LFManager_MANAGERS.set(this, {});
         const managerCb = async () => {
             __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").ketchupLite = getKulManager();
@@ -54,6 +55,10 @@ export class LFManager {
         return __classPrivateFieldGet(this, _LFManager_APIS, "f");
     }
     initialize() {
+        if (__classPrivateFieldGet(this, _LFManager_INITIALIZED, "f")) {
+            this.log('Attempt to initialize LFManager when already ready!', { LFManager: this }, LogSeverity.Warning);
+            return;
+        }
         const nodes = __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.get;
         const widgets = __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").widgets.get;
         /*-------------------------------------------------------------------*/
@@ -81,6 +86,35 @@ export class LFManager {
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.loadImages, (e) => {
             nodes.eventHandlers.LF_LoadImages(e, widgets.adders.IMAGE_PREVIEW_B64);
         });
+        /*-------------------------------------------------------------------*/
+        /*                 I n i t   S w i t c h   I m a g e                 */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_SwitchImage(widgets.setters.KUL_TEXTFIELD, widgets.adders.KUL_TEXTFIELD);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.switchImage, (e) => {
+            nodes.eventHandlers.LF_SwitchImage(e, widgets.adders.KUL_TEXTFIELD);
+        });
+        /*-------------------------------------------------------------------*/
+        /*                I n i t   S w i t c h   I n t e g e r              */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_SwitchInteger(widgets.setters.KUL_TEXTFIELD, widgets.adders.KUL_TEXTFIELD);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.switchInteger, (e) => {
+            nodes.eventHandlers.LF_SwitchInteger(e, widgets.adders.KUL_TEXTFIELD);
+        });
+        /*-------------------------------------------------------------------*/
+        /*                  I n i t   S w i t c h   J S O N                  */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_SwitchJSON(widgets.setters.KUL_TEXTFIELD, widgets.adders.KUL_TEXTFIELD);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.switchJson, (e) => {
+            nodes.eventHandlers.LF_SwitchJSON(e, widgets.adders.KUL_TEXTFIELD);
+        });
+        /*-------------------------------------------------------------------*/
+        /*                I n i t   S w i t c h   S t r i n g                */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_SwitchString(widgets.setters.KUL_TEXTFIELD, widgets.adders.KUL_TEXTFIELD);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.switchString, (e) => {
+            nodes.eventHandlers.LF_SwitchString(e, widgets.adders.KUL_TEXTFIELD);
+        });
+        __classPrivateFieldSet(this, _LFManager_INITIALIZED, true, "f");
     }
     isDebug() {
         return __classPrivateFieldGet(this, _LFManager_DEBUG, "f");
@@ -119,7 +153,7 @@ export class LFManager {
         return __classPrivateFieldGet(this, _LFManager_DEBUG, "f");
     }
 }
-_LFManager_APIS = new WeakMap(), _LFManager_DEBUG = new WeakMap(), _LFManager_DOM = new WeakMap(), _LFManager_MANAGERS = new WeakMap();
+_LFManager_APIS = new WeakMap(), _LFManager_DEBUG = new WeakMap(), _LFManager_DOM = new WeakMap(), _LFManager_INITIALIZED = new WeakMap(), _LFManager_MANAGERS = new WeakMap();
 const WINDOW = window;
 if (!WINDOW.lfManager) {
     WINDOW.lfManager = new LFManager();

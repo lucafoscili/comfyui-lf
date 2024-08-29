@@ -1,5 +1,9 @@
 import { NodeName, type Extension } from '../types/nodes';
-import type { BaseWidgetCallback, ControlPanelWidgetsSetter } from '../types/widgets';
+import {
+  CustomWidgetName,
+  type BaseWidgetCallback,
+  type ControlPanelWidgetsSetter,
+} from '../types/widgets';
 import { getApiRoutes } from '../utils/common';
 
 const NAME = NodeName.controlPanel;
@@ -14,7 +18,7 @@ export const controlPanelFactory = {
           nodeType.prototype.onNodeCreated = function () {
             const r = onNodeCreated?.apply(this, arguments);
             const node = this;
-            addW(node, NAME);
+            addW(node, CustomWidgetName.controlPanel);
             return r;
           };
         }

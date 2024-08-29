@@ -14,7 +14,7 @@ export enum EventName {
   imageHistogram = 'lf-imagehistogram',
   loadImages = 'lf-loadimages',
   switchImage = 'lf-switchimage',
-  switchImteger = 'lf-switchinteger',
+  switchInteger = 'lf-switchinteger',
   switchJson = 'lf-switchjson',
   switchString = 'lf-switchstring',
 }
@@ -53,26 +53,33 @@ export interface LoadImagesPayload extends BaseEventPayload {
 }
 
 /*-------------------------------------------------------------------*/
-/*          L o a d   I m a g e s   D e c l a r a t i o n s          */
+/*         S w i t c h   I m a g e   D e c l a r a t i o n s         */
 /*-------------------------------------------------------------------*/
-/*-------------------------------------------------------------------*/
-/*          L o a d   I m a g e s   D e c l a r a t i o n s          */
-/*-------------------------------------------------------------------*/
-/*-------------------------------------------------------------------*/
-/*          L o a d   I m a g e s   D e c l a r a t i o n s          */
-/*-------------------------------------------------------------------*/
-/*-------------------------------------------------------------------*/
-/*          L o a d   I m a g e s   D e c l a r a t i o n s          */
-/*-------------------------------------------------------------------*/
+
 export interface SwitchImagePayload extends BaseEventPayload {
   bool: boolean;
 }
+
+/*-------------------------------------------------------------------*/
+/*       S w i t c h   I n t e g e r   D e c l a r a t i o n s       */
+/*-------------------------------------------------------------------*/
+
 export interface SwitchIntegerPayload extends BaseEventPayload {
   bool: boolean;
 }
+
+/*-------------------------------------------------------------------*/
+/*          S w i t c h   J S O N   D e c l a r a t i o n s          */
+/*-------------------------------------------------------------------*/
+
 export interface SwitchJSONPayload extends BaseEventPayload {
   bool: boolean;
 }
+
+/*-------------------------------------------------------------------*/
+/*         S w i t c h   s t r i n g   D e c l a r a t i o n s       */
+/*-------------------------------------------------------------------*/
+
 export interface SwitchStringPayload extends BaseEventPayload {
   bool: boolean;
 }

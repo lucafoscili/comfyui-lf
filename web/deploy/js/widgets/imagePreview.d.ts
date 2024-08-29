@@ -1,4 +1,4 @@
-import { type ImagePreviewWidgetValue } from '../types/widgets';
+import { CustomWidgetName, type ImagePreviewWidgetValue } from '../types/widgets';
 export declare const imagePreviewFactory: {
     cssClasses: {
         content: string;
@@ -8,10 +8,13 @@ export declare const imagePreviewFactory: {
     };
     options: (content: HTMLDivElement) => {
         hideOnZoom: boolean;
-        getValue(): ImagePreviewWidgetValue;
+        getValue(): {
+            fileNames: any[];
+            images: any[];
+        };
         setValue(value: ImagePreviewWidgetValue): void;
     };
-    render: (node: NodeType, name: string) => {
+    render: (node: NodeType, name: CustomWidgetName) => {
         widget: Widget;
     };
 };
