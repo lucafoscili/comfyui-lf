@@ -4,7 +4,7 @@ import { codeFactory } from '../widgets/code.js';
 import { chartFactory } from '../widgets/chart.js';
 import { CustomWidgetName } from '../types/widgets.js';
 import { imagePreviewFactory } from '../widgets/imagePreview.js';
-import { textfieldFactory } from '../widgets/textfield.js';
+import { booleanViewerFactory } from '../widgets/booleanViewer.js';
 import { jsonInputFactory } from '../widgets/jsonInput.js';
 
 /*-------------------------------------------------*/
@@ -27,6 +27,13 @@ export class LFWidgets {
   }
 
   add = {
+    [CustomWidgetName.booleanViewer]: (nodeType: NodeType) => {
+      const widget = app.widgets[CustomWidgetName.booleanViewer](
+        nodeType,
+        CustomWidgetName.booleanViewer,
+      ).widget;
+      return widget;
+    },
     [CustomWidgetName.chart]: (nodeType: NodeType) => {
       const widget = app.widgets[CustomWidgetName.chart](nodeType, CustomWidgetName.chart).widget;
       return widget;
@@ -56,16 +63,11 @@ export class LFWidgets {
       ).widget;
       return widget;
     },
-    [CustomWidgetName.textfield]: (nodeType: NodeType) => {
-      const widget = app.widgets[CustomWidgetName.textfield](
-        nodeType,
-        CustomWidgetName.textfield,
-      ).widget;
-      return widget;
-    },
   };
 
   option = {
+    [CustomWidgetName.booleanViewer]: (booleanViewer: HTMLKulTextfieldElement) =>
+      booleanViewerFactory.options(booleanViewer),
     [CustomWidgetName.chart]: (chart: HTMLKulChartElement) => chartFactory.options(chart),
     [CustomWidgetName.code]: (code: HTMLKulCodeElement) => codeFactory.options(code),
     [CustomWidgetName.controlPanel]: () => controlPanelFactory.options(),
@@ -73,8 +75,6 @@ export class LFWidgets {
       jsonInputFactory.options(content),
     [CustomWidgetName.imagePreview]: (content: HTMLDivElement) =>
       imagePreviewFactory.options(content),
-    [CustomWidgetName.textfield]: (textfield: HTMLKulTextfieldElement) =>
-      textfieldFactory.options(textfield),
   };
 
   resizerHandler = {
@@ -82,6 +82,13 @@ export class LFWidgets {
   };
 
   set = {
+    [CustomWidgetName.booleanViewer]: () => {
+      return {
+        [CustomWidgetName.booleanViewer]: (nodeType: NodeType, name: CustomWidgetName) => {
+          return booleanViewerFactory.render(nodeType, name);
+        },
+      };
+    },
     [CustomWidgetName.chart]: () => {
       return {
         [CustomWidgetName.chart]: (nodeType: NodeType, name: CustomWidgetName) => {
@@ -114,13 +121,6 @@ export class LFWidgets {
       return {
         [CustomWidgetName.imagePreview]: (nodeType: NodeType, name: CustomWidgetName) => {
           return imagePreviewFactory.render(nodeType, name);
-        },
-      };
-    },
-    [CustomWidgetName.textfield]: () => {
-      return {
-        [CustomWidgetName.textfield]: (nodeType: NodeType, name: CustomWidgetName) => {
-          return textfieldFactory.render(nodeType, name);
         },
       };
     },

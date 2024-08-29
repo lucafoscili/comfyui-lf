@@ -15,10 +15,10 @@ export declare class LFNodes {
         LF_DisplayJSON: (setW: import("../types/widgets").CodeWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_ImageHistogram: (setW: import("../types/widgets").ChartWidgetsSetter, addW: BaseWidgetCallback, resizeHandlerW: (node: NodeType) => void) => void;
         LF_LoadImages: (setW: import("../types/widgets").ImagePreviewWidgetsSetter, addW: BaseWidgetCallback) => void;
-        LF_SwitchImage: (setW: import("../types/widgets").TextfieldWidgetsSetter, addW: BaseWidgetCallback) => void;
-        LF_SwitchInteger: (setW: import("../types/widgets").TextfieldWidgetsSetter, addW: BaseWidgetCallback) => void;
-        LF_SwitchJSON: (setW: import("../types/widgets").TextfieldWidgetsSetter, addW: BaseWidgetCallback) => void;
-        LF_SwitchString: (setW: import("../types/widgets").TextfieldWidgetsSetter, addW: BaseWidgetCallback) => void;
+        LF_SwitchImage: (setW: import("../types/widgets").BooleanViewerWidgetsSetter, addW: BaseWidgetCallback) => void;
+        LF_SwitchInteger: (setW: import("../types/widgets").BooleanViewerWidgetsSetter, addW: BaseWidgetCallback) => void;
+        LF_SwitchJSON: (setW: import("../types/widgets").BooleanViewerWidgetsSetter, addW: BaseWidgetCallback) => void;
+        LF_SwitchString: (setW: import("../types/widgets").BooleanViewerWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_WriteJSON: (setW: import("../types/widgets").JsonInputWidgetsSetter) => void;
     };
     get: {
@@ -37,10 +37,10 @@ export declare class LFNodes {
             LF_DisplayJSON: (setW: import("../types/widgets").CodeWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_ImageHistogram: (setW: import("../types/widgets").ChartWidgetsSetter, addW: BaseWidgetCallback, resizeHandlerW: (node: NodeType) => void) => void;
             LF_LoadImages: (setW: import("../types/widgets").ImagePreviewWidgetsSetter, addW: BaseWidgetCallback) => void;
-            LF_SwitchImage: (setW: import("../types/widgets").TextfieldWidgetsSetter, addW: BaseWidgetCallback) => void;
-            LF_SwitchInteger: (setW: import("../types/widgets").TextfieldWidgetsSetter, addW: BaseWidgetCallback) => void;
-            LF_SwitchJSON: (setW: import("../types/widgets").TextfieldWidgetsSetter, addW: BaseWidgetCallback) => void;
-            LF_SwitchString: (setW: import("../types/widgets").TextfieldWidgetsSetter, addW: BaseWidgetCallback) => void;
+            LF_SwitchImage: (setW: import("../types/widgets").BooleanViewerWidgetsSetter, addW: BaseWidgetCallback) => void;
+            LF_SwitchInteger: (setW: import("../types/widgets").BooleanViewerWidgetsSetter, addW: BaseWidgetCallback) => void;
+            LF_SwitchJSON: (setW: import("../types/widgets").BooleanViewerWidgetsSetter, addW: BaseWidgetCallback) => void;
+            LF_SwitchString: (setW: import("../types/widgets").BooleanViewerWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_WriteJSON: (setW: import("../types/widgets").JsonInputWidgetsSetter) => void;
         };
     };

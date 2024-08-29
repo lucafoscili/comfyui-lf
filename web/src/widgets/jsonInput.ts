@@ -17,6 +17,7 @@ export const jsonInputFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
     widget: `${BASE_CSS_CLASS}__widget`,
+    widgetError: `${BASE_CSS_CLASS}__widget--error`,
   },
   options: (jsonInput: HTMLTextAreaElement) => {
     return {
@@ -82,14 +83,18 @@ function handleInputChange(e: Event) {
         const jsonObject = JSON.parse(jsonInput.value);
         const formattedJson = JSON.stringify(jsonObject, null, 2);
         if (formattedJson !== '{}') {
+          jsonInput.title = '';
           jsonInput.value = formattedJson;
+          jsonInput.classList.remove(jsonInputFactory.cssClasses.widgetError);
         }
       } catch (error) {
         getLFManager().log('Error parsing JSON', { error }, LogSeverity.Warning);
+        jsonInput.classList.add(jsonInputFactory.cssClasses.widgetError);
+        jsonInput.title = error;
       }
     };
 
-    VALIDATION_TIMEOUT = setTimeout(validateAndFormatJSON, 2000);
+    VALIDATION_TIMEOUT = setTimeout(validateAndFormatJSON, 5000);
   };
 
   clearTimeout(VALIDATION_TIMEOUT);

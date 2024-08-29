@@ -7,15 +7,27 @@
   width: 100%;
 
   &__widget {
-    background: var(--kul-background-color);
-    border: 0;
-    color: var(--kul-text-color);
-    display: block;
-    font-family: var(--kul-font-family-monospace);
-    font-size: var(--kul-font-size);
-    height: 100%;
-    padding: 8px;
-    resize: none;
-    width: 100%;
+    & {
+      background: var(--kul-background-color);
+      border: 0;
+      color: var(--kul-text-color);
+      display: block;
+      font-family: var(--kul-font-family-monospace);
+      font-size: var(--kul-font-size);
+      height: 100%;
+      outline: none;
+      padding: 8px;
+      resize: none;
+      transition: box-shadow 175ms ease;
+      width: 100%;
+    }
+
+    &:focus {
+      box-shadow: inset 0px 0px 4px 1px var(--kul-text-color);
+    }
+
+    &--error {
+      box-shadow: inset 0px 0px 4px 1px var(--kul-danger-color);
+    }
   }
 }

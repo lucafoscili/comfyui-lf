@@ -3,6 +3,7 @@ export declare const jsonInputFactory: {
     cssClasses: {
         content: string;
         widget: string;
+        widgetError: string;
     };
     options: (jsonInput: HTMLTextAreaElement) => {
         hideOnZoom: boolean;

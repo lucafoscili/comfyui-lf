@@ -10,7 +10,7 @@ import { codeFactory } from '../widgets/code.js';
 import { chartFactory } from '../widgets/chart.js';
 import { CustomWidgetName } from '../types/widgets.js';
 import { imagePreviewFactory } from '../widgets/imagePreview.js';
-import { textfieldFactory } from '../widgets/textfield.js';
+import { booleanViewerFactory } from '../widgets/booleanViewer.js';
 import { jsonInputFactory } from '../widgets/jsonInput.js';
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
@@ -19,6 +19,10 @@ export class LFWidgets {
     constructor() {
         _LFWidgets_CSS_EMBEDS.set(this, [...Object.keys(CustomWidgetName)]);
         this.add = {
+            [CustomWidgetName.booleanViewer]: (nodeType) => {
+                const widget = app.widgets[CustomWidgetName.booleanViewer](nodeType, CustomWidgetName.booleanViewer).widget;
+                return widget;
+            },
             [CustomWidgetName.chart]: (nodeType) => {
                 const widget = app.widgets[CustomWidgetName.chart](nodeType, CustomWidgetName.chart).widget;
                 return widget;
@@ -39,23 +43,26 @@ export class LFWidgets {
                 const widget = app.widgets[CustomWidgetName.imagePreview](nodeType, CustomWidgetName.imagePreview).widget;
                 return widget;
             },
-            [CustomWidgetName.textfield]: (nodeType) => {
-                const widget = app.widgets[CustomWidgetName.textfield](nodeType, CustomWidgetName.textfield).widget;
-                return widget;
-            },
         };
         this.option = {
+            [CustomWidgetName.booleanViewer]: (booleanViewer) => booleanViewerFactory.options(booleanViewer),
             [CustomWidgetName.chart]: (chart) => chartFactory.options(chart),
             [CustomWidgetName.code]: (code) => codeFactory.options(code),
             [CustomWidgetName.controlPanel]: () => controlPanelFactory.options(),
             [CustomWidgetName.jsonInput]: (content) => jsonInputFactory.options(content),
             [CustomWidgetName.imagePreview]: (content) => imagePreviewFactory.options(content),
-            [CustomWidgetName.textfield]: (textfield) => textfieldFactory.options(textfield),
         };
         this.resizerHandler = {
             [CustomWidgetName.chart]: (nodeType) => chartFactory.resize(nodeType),
         };
         this.set = {
+            [CustomWidgetName.booleanViewer]: () => {
+                return {
+                    [CustomWidgetName.booleanViewer]: (nodeType, name) => {
+                        return booleanViewerFactory.render(nodeType, name);
+                    },
+                };
+            },
             [CustomWidgetName.chart]: () => {
                 return {
                     [CustomWidgetName.chart]: (nodeType, name) => {
@@ -88,13 +95,6 @@ export class LFWidgets {
                 return {
                     [CustomWidgetName.imagePreview]: (nodeType, name) => {
                         return imagePreviewFactory.render(nodeType, name);
-                    },
-                };
-            },
-            [CustomWidgetName.textfield]: () => {
-                return {
-                    [CustomWidgetName.textfield]: (nodeType, name) => {
-                        return textfieldFactory.render(nodeType, name);
                     },
                 };
             },

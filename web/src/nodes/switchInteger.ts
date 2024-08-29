@@ -2,8 +2,8 @@ import { EventName, SwitchImagePayload } from '../types/events';
 import { LogSeverity } from '../types/manager';
 import { Extension, NodeName } from '../types/nodes';
 import {
+  BooleanViewerWidgetsSetter,
   CustomWidgetName,
-  TextfieldWidgetsSetter,
   type BaseWidgetCallback,
 } from '../types/widgets';
 import { getApiRoutes, getLFManager, getWidget } from '../utils/common';
@@ -18,14 +18,14 @@ export const switchIntegerFactory = {
     const payload = event.detail;
     const node = getApiRoutes().getNodeById(payload.id);
     if (node) {
-      const widget = getWidget(node, CustomWidgetName.textfield, addW);
+      const widget = getWidget(node, CustomWidgetName.booleanViewer, addW);
       const comp = widget.options.getComp();
       comp.refresh();
       widget.options.setValue(String(event.detail.bool + '').valueOf());
       getApiRoutes().redraw();
     }
   },
-  register: (setW: TextfieldWidgetsSetter, addW: BaseWidgetCallback) => {
+  register: (setW: BooleanViewerWidgetsSetter, addW: BaseWidgetCallback) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {
@@ -34,7 +34,7 @@ export const switchIntegerFactory = {
           nodeType.prototype.onNodeCreated = function () {
             const r = onNodeCreated?.apply(this, arguments);
             const node = this;
-            addW(node, CustomWidgetName.textfield);
+            addW(node, CustomWidgetName.booleanViewer);
             return r;
           };
         }

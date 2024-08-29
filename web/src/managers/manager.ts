@@ -123,41 +123,41 @@ export class LFManager {
     /*                 I n i t   S w i t c h   I m a g e                 */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_SwitchImage(
-      widgets.setters.KUL_TEXTFIELD,
-      widgets.adders.KUL_TEXTFIELD,
+      widgets.setters.KUL_BOOLEAN_VIEWER,
+      widgets.adders.KUL_BOOLEAN_VIEWER,
     );
     this.#APIS.event(EventName.switchImage, (e: CustomEvent<SwitchImagePayload>) => {
-      nodes.eventHandlers.LF_SwitchImage(e, widgets.adders.KUL_TEXTFIELD);
+      nodes.eventHandlers.LF_SwitchImage(e, widgets.adders.KUL_BOOLEAN_VIEWER);
     });
     /*-------------------------------------------------------------------*/
     /*                I n i t   S w i t c h   I n t e g e r              */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_SwitchInteger(
-      widgets.setters.KUL_TEXTFIELD,
-      widgets.adders.KUL_TEXTFIELD,
+      widgets.setters.KUL_BOOLEAN_VIEWER,
+      widgets.adders.KUL_BOOLEAN_VIEWER,
     );
     this.#APIS.event(EventName.switchInteger, (e: CustomEvent<SwitchIntegerPayload>) => {
-      nodes.eventHandlers.LF_SwitchInteger(e, widgets.adders.KUL_TEXTFIELD);
+      nodes.eventHandlers.LF_SwitchInteger(e, widgets.adders.KUL_BOOLEAN_VIEWER);
     });
     /*-------------------------------------------------------------------*/
     /*                  I n i t   S w i t c h   J S O N                  */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_SwitchJSON(
-      widgets.setters.KUL_TEXTFIELD,
-      widgets.adders.KUL_TEXTFIELD,
+      widgets.setters.KUL_BOOLEAN_VIEWER,
+      widgets.adders.KUL_BOOLEAN_VIEWER,
     );
     this.#APIS.event(EventName.switchJson, (e: CustomEvent<SwitchJSONPayload>) => {
-      nodes.eventHandlers.LF_SwitchJSON(e, widgets.adders.KUL_TEXTFIELD);
+      nodes.eventHandlers.LF_SwitchJSON(e, widgets.adders.KUL_BOOLEAN_VIEWER);
     });
     /*-------------------------------------------------------------------*/
     /*                I n i t   S w i t c h   S t r i n g                */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_SwitchString(
-      widgets.setters.KUL_TEXTFIELD,
-      widgets.adders.KUL_TEXTFIELD,
+      widgets.setters.KUL_BOOLEAN_VIEWER,
+      widgets.adders.KUL_BOOLEAN_VIEWER,
     );
     this.#APIS.event(EventName.switchString, (e: CustomEvent<SwitchStringPayload>) => {
-      nodes.eventHandlers.LF_SwitchString(e, widgets.adders.KUL_TEXTFIELD);
+      nodes.eventHandlers.LF_SwitchString(e, widgets.adders.KUL_BOOLEAN_VIEWER);
     });
     /*-------------------------------------------------------------------*/
     /*                       W r i t e   J S O N                         */

@@ -89,30 +89,30 @@ export class LFManager {
         /*-------------------------------------------------------------------*/
         /*                 I n i t   S w i t c h   I m a g e                 */
         /*-------------------------------------------------------------------*/
-        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_SwitchImage(widgets.setters.KUL_TEXTFIELD, widgets.adders.KUL_TEXTFIELD);
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_SwitchImage(widgets.setters.KUL_BOOLEAN_VIEWER, widgets.adders.KUL_BOOLEAN_VIEWER);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.switchImage, (e) => {
-            nodes.eventHandlers.LF_SwitchImage(e, widgets.adders.KUL_TEXTFIELD);
+            nodes.eventHandlers.LF_SwitchImage(e, widgets.adders.KUL_BOOLEAN_VIEWER);
         });
         /*-------------------------------------------------------------------*/
         /*                I n i t   S w i t c h   I n t e g e r              */
         /*-------------------------------------------------------------------*/
-        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_SwitchInteger(widgets.setters.KUL_TEXTFIELD, widgets.adders.KUL_TEXTFIELD);
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_SwitchInteger(widgets.setters.KUL_BOOLEAN_VIEWER, widgets.adders.KUL_BOOLEAN_VIEWER);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.switchInteger, (e) => {
-            nodes.eventHandlers.LF_SwitchInteger(e, widgets.adders.KUL_TEXTFIELD);
+            nodes.eventHandlers.LF_SwitchInteger(e, widgets.adders.KUL_BOOLEAN_VIEWER);
         });
         /*-------------------------------------------------------------------*/
         /*                  I n i t   S w i t c h   J S O N                  */
         /*-------------------------------------------------------------------*/
-        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_SwitchJSON(widgets.setters.KUL_TEXTFIELD, widgets.adders.KUL_TEXTFIELD);
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_SwitchJSON(widgets.setters.KUL_BOOLEAN_VIEWER, widgets.adders.KUL_BOOLEAN_VIEWER);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.switchJson, (e) => {
-            nodes.eventHandlers.LF_SwitchJSON(e, widgets.adders.KUL_TEXTFIELD);
+            nodes.eventHandlers.LF_SwitchJSON(e, widgets.adders.KUL_BOOLEAN_VIEWER);
         });
         /*-------------------------------------------------------------------*/
         /*                I n i t   S w i t c h   S t r i n g                */
         /*-------------------------------------------------------------------*/
-        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_SwitchString(widgets.setters.KUL_TEXTFIELD, widgets.adders.KUL_TEXTFIELD);
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_SwitchString(widgets.setters.KUL_BOOLEAN_VIEWER, widgets.adders.KUL_BOOLEAN_VIEWER);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.switchString, (e) => {
-            nodes.eventHandlers.LF_SwitchString(e, widgets.adders.KUL_TEXTFIELD);
+            nodes.eventHandlers.LF_SwitchString(e, widgets.adders.KUL_BOOLEAN_VIEWER);
         });
         /*-------------------------------------------------------------------*/
         /*                       W r i t e   J S O N                         */

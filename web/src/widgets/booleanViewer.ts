@@ -1,28 +1,28 @@
 import { CustomWidgetName } from '../types/widgets';
 import { createDOMWidget } from '../utils/common';
 
-const BASE_CSS_CLASS = 'lf-textfield';
+const BASE_CSS_CLASS = 'lf-booleanviewer';
 const LABEL = 'True or False?';
-const TYPE = CustomWidgetName.textfield;
+const TYPE = CustomWidgetName.booleanViewer;
 
-export const textfieldFactory = {
+export const booleanViewerFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
   },
-  options: (textfield: HTMLKulTextfieldElement) => {
+  options: (booleanViewer: HTMLKulTextfieldElement) => {
     return {
       hideOnZoom: false,
       getComp() {
-        return textfield;
+        return booleanViewer;
       },
       getValue() {
-        return textfield?.kulLabel;
+        return booleanViewer?.kulLabel;
       },
       setProps(props: Partial<HTMLKulTextfieldElement>) {
         for (const key in props) {
           if (Object.prototype.hasOwnProperty.call(props, key)) {
             const prop = props[key];
-            textfield[prop] = prop;
+            booleanViewer[prop] = prop;
           }
         }
       },
@@ -30,14 +30,14 @@ export const textfieldFactory = {
         const isFalse = value?.toLowerCase()?.includes('false');
         const isTrue = value?.toLowerCase()?.includes('true');
         if (isTrue) {
-          textfield.kulIcon = 'check';
-          textfield.kulLabel = 'True!';
+          booleanViewer.kulIcon = 'check';
+          booleanViewer.kulLabel = 'True!';
         } else if (isFalse) {
-          textfield.kulIcon = 'clear';
-          textfield.kulLabel = 'False!';
+          booleanViewer.kulIcon = 'clear';
+          booleanViewer.kulLabel = 'False!';
         } else {
-          textfield.kulIcon = '';
-          textfield.kulLabel = LABEL;
+          booleanViewer.kulIcon = '';
+          booleanViewer.kulLabel = LABEL;
         }
       },
     };
@@ -45,14 +45,14 @@ export const textfieldFactory = {
   render: (node: NodeType, name: CustomWidgetName) => {
     const wrapper = document.createElement('div');
     const content = document.createElement('div');
-    const textfield = document.createElement('kul-textfield');
-    const options = textfieldFactory.options(textfield);
+    const booleanViewer = document.createElement('kul-textfield');
+    const options = booleanViewerFactory.options(booleanViewer);
 
-    content.classList.add(textfieldFactory.cssClasses.content);
-    textfield.kulDisabled = true;
-    textfield.kulLabel = LABEL;
+    content.classList.add(booleanViewerFactory.cssClasses.content);
+    booleanViewer.kulDisabled = true;
+    booleanViewer.kulLabel = LABEL;
 
-    content.appendChild(textfield);
+    content.appendChild(booleanViewer);
     wrapper.appendChild(content);
 
     return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };
