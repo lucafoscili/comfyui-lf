@@ -28,18 +28,14 @@ export const textfieldFactory = {
                 const isFalse = value?.toLowerCase()?.includes('false');
                 const isTrue = value?.toLowerCase()?.includes('true');
                 if (isTrue) {
-                    textfield.classList.add('kul-success');
                     textfield.kulIcon = 'check';
                     textfield.kulLabel = 'True!';
                 }
                 else if (isFalse) {
-                    textfield.classList.add('kul-danger');
                     textfield.kulIcon = 'clear';
                     textfield.kulLabel = 'False!';
                 }
                 else {
-                    textfield.classList.remove('kul-danger');
-                    textfield.classList.remove('kul-success');
                     textfield.kulIcon = '';
                     textfield.kulLabel = LABEL;
                 }
