@@ -61,6 +61,10 @@ export class LFManager {
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event('lf-displayjson', (e) => {
             events.eventHandlers.displayJson(e, widgets.adders.code);
         });
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.imageHistogram(widgets.setters.chart, widgets.adders.chart, widgets.resizerHandlers.chart);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event('lf-imagehistogram', (e) => {
+            events.eventHandlers.imageHistogram(e, widgets.adders.chart);
+        });
     }
     isDebug() {
         return __classPrivateFieldGet(this, _LFManager_DEBUG, "f");

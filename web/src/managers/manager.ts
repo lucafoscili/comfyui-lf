@@ -74,6 +74,15 @@ export class LFManager {
     this.#APIS.event('lf-displayjson', (e: CustomEvent<DisplayJSONPayload>) => {
       events.eventHandlers.displayJson(e, widgets.adders.code);
     });
+
+    this.#MANAGERS.nodes.register.imageHistogram(
+      widgets.setters.chart,
+      widgets.adders.chart,
+      widgets.resizerHandlers.chart,
+    );
+    this.#APIS.event('lf-imagehistogram', (e: CustomEvent<ImageHistogramPayload>) => {
+      events.eventHandlers.imageHistogram(e, widgets.adders.chart);
+    });
   }
 
   isDebug() {

@@ -35,6 +35,19 @@ export class LFEvents {
         getApiRoutes().redraw();
       }
     },
+    imageHistogram: (event: CustomEvent<ImageHistogramPayload>, addW: WidgetCallback) => {
+      const name = this.#NAMES.imageHistogram;
+      getLFManager().log(`Event '${name}' received`, { event }, 'success');
+
+      const payload = event.detail;
+      const node = getApiRoutes().getNodeById(payload.id);
+      if (node) {
+        const widget = this.#getW(node, 'KUL_CHART', addW);
+        const comp = widget.options.getComp();
+        widget.options.setValue(event.detail.dataset);
+        getApiRoutes().redraw();
+      }
+    },
   };
 
   get = {

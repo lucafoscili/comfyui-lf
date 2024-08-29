@@ -61,10 +61,26 @@ export const kulManagerExists = () => {
 export const log = () => {
   return WINDOW.lfManager.log;
 };
-export const unescapeJson = (str: string) => {
+
+export const unescapeJson = (
+  str: string,
+): {
+  validJson: boolean;
+  parsedJson?: Record<string, unknown>;
+  unescapedStr: string;
+} => {
+  let validJson = false;
+  let parsedJson: Record<string, unknown> | undefined = undefined;
+  let unescapedStr = str;
+
   try {
-    return JSON.parse(str);
-  } catch (e) {
-    return str.replace(/\\(.)/g, '$1');
+    const parsed = JSON.parse(str);
+    validJson = true;
+    parsedJson = parsed;
+    unescapedStr = JSON.stringify(parsed);
+  } catch (error) {
+    unescapedStr = str.replace(/\\(.)/g, '$1');
   }
+
+  return { validJson, parsedJson, unescapedStr };
 };

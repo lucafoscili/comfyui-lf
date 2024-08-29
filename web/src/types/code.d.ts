@@ -5,3 +5,7 @@ declare interface CodeWidgetOptions {
   setProps(props: Partial<HTMLKulCodeElement>): void;
   setValue(value: Record<string, unknown> | string): void;
 }
+
+declare type CodeWidgetsSetter = () => {
+  KUL_CODE: WidgetCallback;
+};

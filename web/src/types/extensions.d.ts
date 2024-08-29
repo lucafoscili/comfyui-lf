@@ -1,9 +1,6 @@
 /*-------------------------------------------------------------------*/
 /*               E v e n t s    D e c l a r a t i o n s              */
 /*-------------------------------------------------------------------*/
-declare interface ImageHistogramPayload extends BaseEventPayload {
-  dataset: KulDataDataset;
-}
 declare interface LoadImagesPayload extends BaseEventPayload {
   file_names: Array<string>;
   images: Array<string>;
@@ -31,18 +28,6 @@ interface NodeDictionary {
   switchInteger: SwitchIntegerDictionaryEntry;
   switchJson: SwitchJSONDictionaryEntry;
   switchString: SwitchStringDictionaryEntry;
-}
-declare interface ImageHistogramDictionaryEntry extends BaseNodeDictionaryEntry {
-  eventCb: (e: CustomEvent<ImageHistogramPayload>) => void;
-  eventName: 'lf-imagehistogram';
-  getCustomWidgets: () => {
-    KUL_CHART(
-      node: NodeType,
-      name: string,
-    ): {
-      widget: Widget;
-    };
-  };
 }
 declare interface LoadImagesDictionaryEntry extends BaseNodeDictionaryEntry {
   eventCb: (e: CustomEvent<LoadImages>) => void;

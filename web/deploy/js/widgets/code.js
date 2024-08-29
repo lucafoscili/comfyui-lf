@@ -35,14 +35,14 @@ export const codeFactory = {
                 else {
                     try {
                         if (typeof value === 'string') {
-                            code.kulValue = JSON.stringify(unescapeJson(value));
+                            code.kulValue = unescapeJson(value).unescapedStr;
                         }
                         else {
                             code.kulValue = JSON.stringify(value);
                         }
                     }
                     catch (error) {
-                        getLFManager().log('Error when setting value!', { error }, 'error');
+                        getLFManager().log('Error when setting value!', { error, code }, 'error');
                         if (value === undefined || value === '') {
                             code.kulValue = EMPTY;
                         }

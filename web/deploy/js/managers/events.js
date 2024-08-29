@@ -35,6 +35,18 @@ export class LFEvents {
                     getApiRoutes().redraw();
                 }
             },
+            imageHistogram: (event, addW) => {
+                const name = __classPrivateFieldGet(this, _LFEvents_NAMES, "f").imageHistogram;
+                getLFManager().log(`Event '${name}' received`, { event }, 'success');
+                const payload = event.detail;
+                const node = getApiRoutes().getNodeById(payload.id);
+                if (node) {
+                    const widget = __classPrivateFieldGet(this, _LFEvents_instances, "m", _LFEvents_getW).call(this, node, 'KUL_CHART', addW);
+                    const comp = widget.options.getComp();
+                    widget.options.setValue(event.detail.dataset);
+                    getApiRoutes().redraw();
+                }
+            },
         };
         this.get = {
             eventHandlers: this.eventHandler,

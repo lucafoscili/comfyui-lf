@@ -7,7 +7,3 @@ declare interface DisplayJSONDictionaryEntry extends BaseNodeDictionaryEntry {
 declare interface DisplayJSONPayload extends BaseEventPayload {
   json: Record<string, unknown>;
 }
-
-declare type DisplayJSONWidgetsSetter = () => {
-  KUL_CODE: WidgetCallback;
-};

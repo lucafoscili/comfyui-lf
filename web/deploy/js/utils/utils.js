@@ -41,10 +41,17 @@ export const log = () => {
     return WINDOW.lfManager.log;
 };
 export const unescapeJson = (str) => {
+    let validJson = false;
+    let parsedJson = undefined;
+    let unescapedStr = str;
     try {
-        return JSON.parse(str);
+        const parsed = JSON.parse(str);
+        validJson = true;
+        parsedJson = parsed;
+        unescapedStr = JSON.stringify(parsed);
     }
-    catch (e) {
-        return str.replace(/\\(.)/g, '$1');
+    catch (error) {
+        unescapedStr = str.replace(/\\(.)/g, '$1');
     }
+    return { validJson, parsedJson, unescapedStr };
 };

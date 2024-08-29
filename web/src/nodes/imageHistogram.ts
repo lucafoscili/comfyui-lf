@@ -1,9 +1,13 @@
 import { getApiRoutes } from '../utils/utils';
 
-const NAME: NodeNames = 'LF_DisplayJSON';
+const NAME: NodeNames = 'LF_ImageHistogram';
 
-export const displayJsonFactory = {
-  register: (setW: CodeWidgetsSetter, addW: WidgetCallback) => {
+export const imageHistogramFactory = {
+  register: (
+    setW: ImageHistogramWidgetsSetter,
+    addW: WidgetCallback,
+    resizeHandlerW: (node: NodeType) => void,
+  ) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {
@@ -13,6 +17,13 @@ export const displayJsonFactory = {
             const r = onNodeCreated?.apply(this, arguments);
             const node = this;
             addW(node, NAME);
+            return r;
+          };
+          const onResize = nodeType.prototype.onResize;
+          nodeType.prototype.onResize = function () {
+            const r = onResize?.apply(this, arguments);
+            const node = this;
+            resizeHandlerW(node);
             return r;
           };
         }

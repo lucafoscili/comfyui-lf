@@ -44,4 +44,7 @@ declare type CustomWidgetNames =
   | 'KUL_CODE'
   | 'KUL_CONTROL_PANEL'
   | 'IMAGE_PREVIEW_B64';
-declare type CustomWidgetOptions = CodeWidgetOptions | ControlPanelWidgetOptions;
+declare type CustomWidgetOptions =
+  | ChartWidgetOptions
+  | CodeWidgetOptions
+  | ControlPanelWidgetOptions;

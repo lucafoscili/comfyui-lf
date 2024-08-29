@@ -83,6 +83,7 @@ export function contentCb(domWidget, isReady) {
         debug.classList.add(controlPanelFactory.cssClasses.debug);
         debug.kulLabel = 'Debug';
         debug.kulLeadingLabel = true;
+        debug.title = 'Activate verbose console logging';
         debug.addEventListener('kul-switch-event', switchCb);
         return debug;
     };
@@ -90,6 +91,7 @@ export function contentCb(domWidget, isReady) {
         const themes = document.createElement('kul-button');
         themes.classList.add(controlPanelFactory.cssClasses.themes);
         themes.kulData = getKulThemes();
+        themes.title = 'Change the LF Nodes suite theme';
         themes.addEventListener('kul-button-event', buttonCb);
         return themes;
     };

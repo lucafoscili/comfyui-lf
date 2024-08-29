@@ -7,17 +7,23 @@ var _LFWidgets_CSS_EMBEDS, _LFWidgets_NAMES;
 import { app } from '/scripts/app.js';
 import { controlPanelFactory } from '../widgets/controlPanel.js';
 import { codeFactory } from '../widgets/code.js';
+import { chartFactory } from '../widgets/chart.js';
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
 /*-------------------------------------------------*/
 export class LFWidgets {
     constructor() {
-        _LFWidgets_CSS_EMBEDS.set(this, ['code', 'controlPanel']);
+        _LFWidgets_CSS_EMBEDS.set(this, ['chart', 'code', 'controlPanel']);
         _LFWidgets_NAMES.set(this, {
+            chart: 'KUL_CHART',
             code: 'KUL_CODE',
             controlPanel: 'KUL_CONTROL_PANEL',
         });
         this.add = {
+            chart: (nodeType) => {
+                const widget = app.widgets.KUL_CHART(nodeType, __classPrivateFieldGet(this, _LFWidgets_NAMES, "f").chart).widget;
+                return widget;
+            },
             code: (nodeType) => {
                 const widget = app.widgets.KUL_CODE(nodeType, __classPrivateFieldGet(this, _LFWidgets_NAMES, "f").code).widget;
                 return widget;
@@ -28,10 +34,21 @@ export class LFWidgets {
             },
         };
         this.option = {
+            chart: (chart) => chartFactory.options(chart),
             code: (code) => codeFactory.options(code),
             controlPanel: () => controlPanelFactory.options(),
         };
+        this.resizerHandler = {
+            chart: (nodeType) => chartFactory.resize(nodeType),
+        };
         this.set = {
+            chart: () => {
+                return {
+                    KUL_CHART: (nodeType, name) => {
+                        return chartFactory.render(nodeType, name);
+                    },
+                };
+            },
             code: () => {
                 return {
                     KUL_CODE: (nodeType, name) => {
@@ -50,6 +67,7 @@ export class LFWidgets {
         this.get = {
             adders: this.add,
             options: this.option,
+            resizerHandlers: this.resizerHandler,
             setters: this.set,
         };
         for (let index = 0; index < __classPrivateFieldGet(this, _LFWidgets_CSS_EMBEDS, "f").length; index++) {
