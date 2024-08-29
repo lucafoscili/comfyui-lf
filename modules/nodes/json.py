@@ -135,16 +135,58 @@ class LF_LoadLocalJSON:
             data = json.load(file)
 
         return (data,)
+    
+class LF_WriteJSON:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "KUL_JSON_INPUT": ("KUL_JSON_INPUT", {"default": "{}", "multiline": True, "tooltip": "Write your JSON content here."}),
+            },
+            "hidden": { "node_id": "UNIQUE_ID" }
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    OUTPUT_NODE = True
+    RETURN_TYPES = ("JSON",)
+
+    def on_exec(self, KUL_JSON_INPUT: str, node_id: str):
+        try:
+            json_data = json.loads(KUL_JSON_INPUT)
+            PromptServer.instance.send_sync("lf-writejson", {
+                "node": node_id,
+                "json": json_data
+            })
+            return (json_data,)
+        
+        except json.JSONDecodeError as e:
+            error_message = f"Invalid JSON: {str(e)}"
+            PromptServer.instance.send_sync("lf-writejson-error", {
+                "node": node_id,
+                "error": error_message
+            })
+            return None
+        
+        except Exception as e:
+            error_message = f"Unexpected error: {str(e)}"
+            PromptServer.instance.send_sync("lf-writejson-error", {
+                "node": node_id,
+                "error": error_message
+            })
+            return None
 
 NODE_CLASS_MAPPINGS = {
     "LF_DisplayJSON": LF_DisplayJSON,
     "LF_GetRandomKeyFromJSON": LF_GetRandomKeyFromJSON,
     "LF_GetValueFromJSON": LF_GetValueFromJSON,
     "LF_LoadLocalJSON": LF_LoadLocalJSON,
+    "LF_WriteJSON": LF_WriteJSON,
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_DisplayJSON": "Display JSON",
     "LF_GetRandomKeyFromJSON": "Get Random Key From JSON",
     "LF_GetValueFromJSON": "Get Value from JSON",
     "LF_LoadLocalJSON": "Load local JSON",
+    "LF_WriteJSON": "Write JSON"
 }

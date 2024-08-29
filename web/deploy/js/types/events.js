@@ -8,4 +8,5 @@ export var EventName;
     EventName["switchInteger"] = "lf-switchinteger";
     EventName["switchJson"] = "lf-switchjson";
     EventName["switchString"] = "lf-switchstring";
+    EventName["writeJson"] = "lf-writejson";
 })(EventName || (EventName = {}));

@@ -1,0 +1,19 @@
+.lf-jsoninput {
+  background: var(--kul-background-color);
+  height: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  overflow: auto;
+  width: 100%;
+}
+.lf-jsoninput__widget {
+  background: var(--kul-background-color);
+  color: var(--kul-text-color);
+  font-family: var(--kul-font-family-monospace);
+  font-size: var(--kul-font-size);
+  height: 100%;
+  resize: none;
+  width: 100%;
+}
+
+/*# sourceMappingURL=jsonInput.css.map */

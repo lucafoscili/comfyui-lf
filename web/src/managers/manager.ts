@@ -17,6 +17,7 @@ import {
   SwitchIntegerPayload,
   SwitchJSONPayload,
   SwitchStringPayload,
+  WriteJSONPayload,
 } from '../types/events.js';
 
 /*-------------------------------------------------*/
@@ -157,6 +158,13 @@ export class LFManager {
     );
     this.#APIS.event(EventName.switchString, (e: CustomEvent<SwitchStringPayload>) => {
       nodes.eventHandlers.LF_SwitchString(e, widgets.adders.KUL_TEXTFIELD);
+    });
+    /*-------------------------------------------------------------------*/
+    /*                       W r i t e   J S O N                         */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_WriteJSON(widgets.setters.KUL_JSON_INPUT);
+    this.#APIS.event(EventName.writeJson, (e: CustomEvent<WriteJSONPayload>) => {
+      nodes.eventHandlers.LF_WriteJSON(e, widgets.adders.KUL_JSON_INPUT);
     });
 
     this.#INITIALIZED = true;

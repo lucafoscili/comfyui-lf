@@ -11,6 +11,9 @@ export const createDOMWidget = (name, type, element, node, options = undefined) 
     getLFManager().log(`Creating '${type}'`, { element });
     return node.addDOMWidget(name, type, element, options);
 };
+export const findWidget = (node, name) => {
+    return node?.widgets?.find((w) => w.name === name);
+};
 export const getApiRoutes = () => {
     return WINDOW.lfManager.getApiRoutes();
 };
@@ -56,10 +59,9 @@ export const unescapeJson = (str) => {
     let parsedJson = undefined;
     let unescapedStr = str;
     try {
-        const parsed = JSON.parse(str);
+        parsedJson = JSON.parse(str);
         validJson = true;
-        parsedJson = parsed;
-        unescapedStr = JSON.stringify(parsed);
+        unescapedStr = JSON.stringify(parsedJson, null, 2);
     }
     catch (error) {
         unescapedStr = str.replace(/\\(.)/g, '$1');

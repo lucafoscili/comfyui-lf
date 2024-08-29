@@ -11,6 +11,7 @@ import { chartFactory } from '../widgets/chart.js';
 import { CustomWidgetName } from '../types/widgets.js';
 import { imagePreviewFactory } from '../widgets/imagePreview.js';
 import { textfieldFactory } from '../widgets/textfield.js';
+import { jsonInputFactory } from '../widgets/jsonInput.js';
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
 /*-------------------------------------------------*/
@@ -30,6 +31,10 @@ export class LFWidgets {
                 const widget = app.widgets[CustomWidgetName.controlPanel](nodeType, CustomWidgetName.controlPanel).widget;
                 return widget;
             },
+            [CustomWidgetName.jsonInput]: (nodeType) => {
+                const widget = app.widgets[CustomWidgetName.jsonInput](nodeType, CustomWidgetName.jsonInput).widget;
+                return widget;
+            },
             [CustomWidgetName.imagePreview]: (nodeType) => {
                 const widget = app.widgets[CustomWidgetName.imagePreview](nodeType, CustomWidgetName.imagePreview).widget;
                 return widget;
@@ -43,6 +48,7 @@ export class LFWidgets {
             [CustomWidgetName.chart]: (chart) => chartFactory.options(chart),
             [CustomWidgetName.code]: (code) => codeFactory.options(code),
             [CustomWidgetName.controlPanel]: () => controlPanelFactory.options(),
+            [CustomWidgetName.jsonInput]: (content) => jsonInputFactory.options(content),
             [CustomWidgetName.imagePreview]: (content) => imagePreviewFactory.options(content),
             [CustomWidgetName.textfield]: (textfield) => textfieldFactory.options(textfield),
         };
@@ -68,6 +74,13 @@ export class LFWidgets {
                 return {
                     [CustomWidgetName.controlPanel]: (nodeType, name) => {
                         return controlPanelFactory.render(nodeType, name);
+                    },
+                };
+            },
+            [CustomWidgetName.jsonInput]: () => {
+                return {
+                    [CustomWidgetName.jsonInput]: (nodeType, name) => {
+                        return jsonInputFactory.render(nodeType, name);
                     },
                 };
             },

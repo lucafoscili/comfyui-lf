@@ -12,6 +12,7 @@ export enum CustomWidgetName {
   chart = 'KUL_CHART',
   code = 'KUL_CODE',
   controlPanel = 'KUL_CONTROL_PANEL',
+  jsonInput = 'KUL_JSON_INPUT',
   imagePreview = 'IMAGE_PREVIEW_B64',
   textfield = 'KUL_TEXTFIELD',
 }
@@ -19,6 +20,7 @@ export interface CustomWidgetSetters {
   [CustomWidgetName.chart](node: NodeType, name: string): { widget: ChartWidget };
   [CustomWidgetName.code](node: NodeType, name: string): { widget: CodeWidget };
   [CustomWidgetName.controlPanel](node: NodeType, name: string): { widget: ControlPanelWidget };
+  [CustomWidgetName.jsonInput](node: NodeType, name: string): { widget: JsonInputWidget };
   [CustomWidgetName.imagePreview](node: NodeType, name: string): { widget: ImagePreviewWidget };
   [CustomWidgetName.textfield](node: NodeType, name: string): { widget: TextfieldWidget };
 }
@@ -26,6 +28,7 @@ export type CustomWidgetMap = {
   [CustomWidgetName.chart]: ChartWidget;
   [CustomWidgetName.code]: CodeWidget;
   [CustomWidgetName.controlPanel]: ControlPanelWidget;
+  [CustomWidgetName.jsonInput]: JsonInputWidget;
   [CustomWidgetName.imagePreview]: ImagePreviewWidget;
   [CustomWidgetName.textfield]: TextfieldWidget;
 };
@@ -33,6 +36,7 @@ export type CustomWidgetOptions =
   | ChartWidgetOptions
   | CodeWidgetOptions
   | ControlPanelWidgetOptions
+  | JsonInputWidgetOptions
   | ImagePreviewWidgetOptions
   | TextfieldWidgetOptions;
 
@@ -95,6 +99,24 @@ export interface ControlPanelWidgetValue {
   debug: boolean;
   themes: string;
 }
+
+/*-------------------------------------------------------------------*/
+/*           J s o n   I n p u t   D e c l a r a t i o n s           */
+/*-------------------------------------------------------------------*/
+
+export interface JsonInputWidget extends Widget {
+  options: JsonInputWidgetOptions;
+  type: [CustomWidgetName.jsonInput];
+}
+export interface JsonInputWidgetOptions {
+  hideOnZoom: boolean;
+  getValue(): JsonInputWidgetValue;
+  setValue(value: JsonInputWidgetValue): void;
+}
+export declare type JsonInputWidgetsSetter = () => {
+  [CustomWidgetName.jsonInput]: BaseWidgetCallback;
+};
+export type JsonInputWidgetValue = string | Record<string, unknown>;
 
 /*-------------------------------------------------------------------*/
 /*        I m a g e   P r e v i e w   D e c l a r a t i o n s        */

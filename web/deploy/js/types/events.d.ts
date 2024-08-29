@@ -11,9 +11,10 @@ export declare enum EventName {
     switchImage = "lf-switchimage",
     switchInteger = "lf-switchinteger",
     switchJson = "lf-switchjson",
-    switchString = "lf-switchstring"
+    switchString = "lf-switchstring",
+    writeJson = "lf-writejson"
 }
-export type EventPayload = DisplayJSONPayload | ImageHistogramPayload | LoadImagesPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload;
+export type EventPayload = DisplayJSONPayload | ImageHistogramPayload | LoadImagesPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | WriteJSONPayload;
 export interface DisplayJSONPayload extends BaseEventPayload {
     json: Record<string, unknown>;
 }
@@ -35,4 +36,8 @@ export interface SwitchJSONPayload extends BaseEventPayload {
 }
 export interface SwitchStringPayload extends BaseEventPayload {
     bool: boolean;
+}
+export interface WriteJSONPayload extends BaseEventPayload {
+    error: string;
+    json: Record<string, unknown>;
 }

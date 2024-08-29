@@ -7,6 +7,7 @@ import { switchImageFactory } from '../nodes/switchImage.js';
 import { switchIntegerFactory } from '../nodes/switchInteger.js';
 import { switchJsonFactory } from '../nodes/switchJson.js';
 import { switchStringFactory } from '../nodes/switchString.js';
+import { writeJsonFactory } from '../nodes/writeJson.js';
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
 /*-------------------------------------------------*/
@@ -20,6 +21,7 @@ export class LFNodes {
             [NodeName.switchInteger]: switchIntegerFactory.eventHandler,
             [NodeName.switchJson]: switchJsonFactory.eventHandler,
             [NodeName.switchString]: switchStringFactory.eventHandler,
+            [NodeName.writeJson]: writeJsonFactory.eventHandler,
         };
         this.register = {
             [NodeName.controlPanel]: controlPanelFactory.register,
@@ -30,6 +32,7 @@ export class LFNodes {
             [NodeName.switchInteger]: switchIntegerFactory.register,
             [NodeName.switchJson]: switchJsonFactory.register,
             [NodeName.switchString]: switchStringFactory.register,
+            [NodeName.writeJson]: writeJsonFactory.register,
         };
         this.get = {
             eventHandlers: this.eventHandler,

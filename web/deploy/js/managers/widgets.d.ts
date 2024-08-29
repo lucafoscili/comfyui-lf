@@ -6,6 +6,7 @@ export declare class LFWidgets {
         KUL_CHART: (nodeType: NodeType) => any;
         KUL_CODE: (nodeType: NodeType) => any;
         KUL_CONTROL_PANEL: (nodeType: NodeType) => any;
+        KUL_JSON_INPUT: (nodeType: NodeType) => any;
         IMAGE_PREVIEW_B64: (nodeType: NodeType) => any;
         KUL_TEXTFIELD: (nodeType: NodeType) => any;
     };
@@ -30,6 +31,11 @@ export declare class LFWidgets {
                 themes: string;
             };
             setValue(value: any): void;
+        };
+        KUL_JSON_INPUT: (content: HTMLTextAreaElement) => {
+            hideOnZoom: boolean;
+            getValue(): string;
+            setValue(value: Record<string, unknown> | string): void;
         };
         IMAGE_PREVIEW_B64: (content: HTMLDivElement) => {
             hideOnZoom: boolean;
@@ -66,6 +72,9 @@ export declare class LFWidgets {
                 widget: Widget;
             };
         };
+        KUL_JSON_INPUT: () => {
+            KUL_JSON_INPUT: (nodeType: NodeType, name: CustomWidgetName) => any;
+        };
         IMAGE_PREVIEW_B64: () => {
             IMAGE_PREVIEW_B64: (nodeType: NodeType, name: CustomWidgetName) => {
                 widget: Widget;
@@ -82,6 +91,7 @@ export declare class LFWidgets {
             KUL_CHART: (nodeType: NodeType) => any;
             KUL_CODE: (nodeType: NodeType) => any;
             KUL_CONTROL_PANEL: (nodeType: NodeType) => any;
+            KUL_JSON_INPUT: (nodeType: NodeType) => any;
             IMAGE_PREVIEW_B64: (nodeType: NodeType) => any;
             KUL_TEXTFIELD: (nodeType: NodeType) => any;
         };
@@ -106,6 +116,11 @@ export declare class LFWidgets {
                     themes: string;
                 };
                 setValue(value: any): void;
+            };
+            KUL_JSON_INPUT: (content: HTMLTextAreaElement) => {
+                hideOnZoom: boolean;
+                getValue(): string;
+                setValue(value: Record<string, unknown> | string): void;
             };
             IMAGE_PREVIEW_B64: (content: HTMLDivElement) => {
                 hideOnZoom: boolean;
@@ -141,6 +156,9 @@ export declare class LFWidgets {
                 KUL_CONTROL_PANEL: (nodeType: NodeType, name: CustomWidgetName) => {
                     widget: Widget;
                 };
+            };
+            KUL_JSON_INPUT: () => {
+                KUL_JSON_INPUT: (nodeType: NodeType, name: CustomWidgetName) => any;
             };
             IMAGE_PREVIEW_B64: () => {
                 IMAGE_PREVIEW_B64: (nodeType: NodeType, name: CustomWidgetName) => {

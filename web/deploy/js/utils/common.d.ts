@@ -2,6 +2,7 @@ import type { KulDataDataset } from '../types/ketchup-lite/components';
 import type { BaseWidgetCallback, CustomWidgetMap, CustomWidgetName, CustomWidgetOptions } from '../types/widgets';
 export declare const capitalize: (input: string) => string;
 export declare const createDOMWidget: (name: string, type: CustomWidgetName, element: HTMLDivElement, node: NodeType, options?: CustomWidgetOptions) => Widget;
+export declare const findWidget: <T extends CustomWidgetName>(node: NodeType, name: T) => CustomWidgetMap[T];
 export declare const getApiRoutes: () => import("../types/manager").ComfyAPIs;
 export declare const getKulManager: () => import("../types/ketchup-lite/managers/kul-manager/kul-manager-declarations").KulManager;
 export declare const getKulThemes: () => KulDataDataset;

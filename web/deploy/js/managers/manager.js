@@ -114,6 +114,13 @@ export class LFManager {
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.switchString, (e) => {
             nodes.eventHandlers.LF_SwitchString(e, widgets.adders.KUL_TEXTFIELD);
         });
+        /*-------------------------------------------------------------------*/
+        /*                       W r i t e   J S O N                         */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_WriteJSON(widgets.setters.KUL_JSON_INPUT);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.writeJson, (e) => {
+            nodes.eventHandlers.LF_WriteJSON(e, widgets.adders.KUL_JSON_INPUT);
+        });
         __classPrivateFieldSet(this, _LFManager_INITIALIZED, true, "f");
     }
     isDebug() {

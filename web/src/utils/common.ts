@@ -31,6 +31,13 @@ export const createDOMWidget = (
   return node.addDOMWidget(name, type, element, options);
 };
 
+export const findWidget = <T extends CustomWidgetName>(
+  node: NodeType,
+  name: T,
+): CustomWidgetMap[T] => {
+  return node?.widgets?.find((w) => w.name === name) as CustomWidgetMap[T];
+};
+
 export const getApiRoutes = () => {
   return WINDOW.lfManager.getApiRoutes();
 };
@@ -101,10 +108,9 @@ export const unescapeJson = (
   let unescapedStr = str;
 
   try {
-    const parsed = JSON.parse(str);
+    parsedJson = JSON.parse(str);
     validJson = true;
-    parsedJson = parsed;
-    unescapedStr = JSON.stringify(parsed);
+    unescapedStr = JSON.stringify(parsedJson, null, 2);
   } catch (error) {
     unescapedStr = str.replace(/\\(.)/g, '$1');
   }

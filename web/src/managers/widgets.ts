@@ -5,6 +5,7 @@ import { chartFactory } from '../widgets/chart.js';
 import { CustomWidgetName } from '../types/widgets.js';
 import { imagePreviewFactory } from '../widgets/imagePreview.js';
 import { textfieldFactory } from '../widgets/textfield.js';
+import { jsonInputFactory } from '../widgets/jsonInput.js';
 
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
@@ -41,6 +42,13 @@ export class LFWidgets {
       ).widget;
       return widget;
     },
+    [CustomWidgetName.jsonInput]: (nodeType: NodeType) => {
+      const widget = app.widgets[CustomWidgetName.jsonInput](
+        nodeType,
+        CustomWidgetName.jsonInput,
+      ).widget;
+      return widget;
+    },
     [CustomWidgetName.imagePreview]: (nodeType: NodeType) => {
       const widget = app.widgets[CustomWidgetName.imagePreview](
         nodeType,
@@ -61,6 +69,8 @@ export class LFWidgets {
     [CustomWidgetName.chart]: (chart: HTMLKulChartElement) => chartFactory.options(chart),
     [CustomWidgetName.code]: (code: HTMLKulCodeElement) => codeFactory.options(code),
     [CustomWidgetName.controlPanel]: () => controlPanelFactory.options(),
+    [CustomWidgetName.jsonInput]: (content: HTMLTextAreaElement) =>
+      jsonInputFactory.options(content),
     [CustomWidgetName.imagePreview]: (content: HTMLDivElement) =>
       imagePreviewFactory.options(content),
     [CustomWidgetName.textfield]: (textfield: HTMLKulTextfieldElement) =>
@@ -90,6 +100,13 @@ export class LFWidgets {
       return {
         [CustomWidgetName.controlPanel]: (nodeType: NodeType, name: CustomWidgetName) => {
           return controlPanelFactory.render(nodeType, name);
+        },
+      };
+    },
+    [CustomWidgetName.jsonInput]: () => {
+      return {
+        [CustomWidgetName.jsonInput]: (nodeType: NodeType, name: CustomWidgetName) => {
+          return jsonInputFactory.render(nodeType, name);
         },
       };
     },

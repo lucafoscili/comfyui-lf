@@ -8,6 +8,7 @@ export declare class LFNodes {
         LF_SwitchInteger: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
         LF_SwitchJSON: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
         LF_SwitchString: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
+        LF_WriteJSON: (event: CustomEvent<import("../types/events").WriteJSONPayload>, addW: BaseWidgetCallback) => void;
     };
     register: {
         LF_ControlPanel: (setW: import("../types/widgets").ControlPanelWidgetsSetter, addW: BaseWidgetCallback) => void;
@@ -18,6 +19,7 @@ export declare class LFNodes {
         LF_SwitchInteger: (setW: import("../types/widgets").TextfieldWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_SwitchJSON: (setW: import("../types/widgets").TextfieldWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_SwitchString: (setW: import("../types/widgets").TextfieldWidgetsSetter, addW: BaseWidgetCallback) => void;
+        LF_WriteJSON: (setW: import("../types/widgets").JsonInputWidgetsSetter) => void;
     };
     get: {
         eventHandlers: {
@@ -28,6 +30,7 @@ export declare class LFNodes {
             LF_SwitchInteger: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
             LF_SwitchJSON: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
             LF_SwitchString: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
+            LF_WriteJSON: (event: CustomEvent<import("../types/events").WriteJSONPayload>, addW: BaseWidgetCallback) => void;
         };
         registrations: {
             LF_ControlPanel: (setW: import("../types/widgets").ControlPanelWidgetsSetter, addW: BaseWidgetCallback) => void;
@@ -38,6 +41,7 @@ export declare class LFNodes {
             LF_SwitchInteger: (setW: import("../types/widgets").TextfieldWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_SwitchJSON: (setW: import("../types/widgets").TextfieldWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_SwitchString: (setW: import("../types/widgets").TextfieldWidgetsSetter, addW: BaseWidgetCallback) => void;
+            LF_WriteJSON: (setW: import("../types/widgets").JsonInputWidgetsSetter) => void;
         };
     };
 }
