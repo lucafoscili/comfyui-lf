@@ -1,6 +1,5 @@
-import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-9570d2db.js';
-import { k as kulManagerInstance, g as getProps } from './kul-manager-18eb90c7.js';
-import { K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './GenericVariables-0efba181.js';
+import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-9aa60797.js';
+import { k as kulManagerInstance, g as getProps, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './kul-manager-ed681a28.js';
 
 var KulToastProps;
 (function (KulToastProps) {
@@ -115,7 +114,7 @@ const KulToast = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: 'cf3ec21d2b8a966f333a0fd39625b0082bacdae0' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '32ea9c48518ce11f5525fe8f75f34f2cd32140a4', id: KUL_WRAPPER_ID }, h("div", { key: 'b9d11235c8d5735c3e4e9af5f03f69ba4f2ae10e', class: "toast" }, h("div", { key: 'c2a5ae25033b8589bc4772efa4dd7141b64b234a', class: `toast__accent ${this.kulTimer ? 'toast__accent--temporary' : ''}` }), h("div", { key: '6b525b4975d598cf1e5711cfa078b56a4df2c739', class: "toast__message-wrapper" }, this.kulIcon ? (h("div", { class: "toast__icon" }, h("kul-image", { ...this.kulIcon }))) : undefined, this.kulMessage ? (h("div", { class: "toast__message" }, this.kulMessage)) : undefined, this.kulCloseIcon ? (h("div", { class: "toast__icon toast__icon--close", onClick: () => this.kulCloseCallback() }, h("kul-image", { ...this.kulCloseIcon }))) : undefined)))));
+        return (h(Host, { key: 'bec482d898d443387a36d5f1e6dd00b1f5a93d89' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'edd5224317f4572b0db51aea231c140a01a4b9f3', id: KUL_WRAPPER_ID }, h("div", { key: 'd9510bdf847876e8799e64507f9662ccd19d4f23', class: "toast" }, h("div", { key: '10d3b599bd5928847f94bce1fb879bb56a0de8fe', class: `toast__accent ${this.kulTimer ? 'toast__accent--temporary' : ''}` }), h("div", { key: '495403d9ad30f55ec08e67d6abb4cb81ba7e57c7', class: "toast__message-wrapper" }, this.kulIcon ? (h("div", { class: "toast__icon" }, h("kul-image", { ...this.kulIcon }))) : undefined, this.kulMessage ? (h("div", { class: "toast__message" }, this.kulMessage)) : undefined, this.kulCloseIcon ? (h("div", { class: "toast__icon toast__icon--close", onClick: () => this.kulCloseCallback() }, h("kul-image", { ...this.kulCloseIcon }))) : undefined)))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

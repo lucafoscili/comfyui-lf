@@ -18,10 +18,10 @@ class LF_ImageResizeByEdge:
             }
         }
 
-    RETURN_TYPES = ("IMAGE",)
-    RETURN_NAMES = ("resized_image",)
     CATEGORY = category
     FUNCTION = "on_exec"
+    RETURN_NAMES = ("resized_image",)
+    RETURN_TYPES = ("IMAGE",)
 
     def on_exec(self, image, longest_edge: bool, new_size: int, resize_method: str):
         if isinstance(image, list):
@@ -43,10 +43,10 @@ class LF_Lora2Prompt:
             }
         } 
 
-    RETURN_TYPES = ("STRING", "STRING",)
-    RETURN_NAMES = ("prompt", "loras",)
     CATEGORY = category
     FUNCTION = "on_exec"
+    RETURN_NAMES = ("prompt", "loras",)
+    RETURN_TYPES = ("STRING", "STRING",)
 
     def on_exec(self, text: str, separator:str, weight:float, weight_placeholder:str):
         # Regular expression to match loras in <lora:...> format
@@ -81,10 +81,10 @@ class LF_LoraTag2Prompt:
             }
         }
 
-    RETURN_TYPES = ("STRING", "INT",)
-    RETURN_NAMES = ("keywords", "nr_keywords",)
     CATEGORY = category
     FUNCTION = "on_exec"
+    RETURN_NAMES = ("keywords", "nr_keywords",)
+    RETURN_TYPES = ("STRING", "INT",)
 
     def on_exec(self, tag: str, separator: str):
         clean_lora = cleanse_lora_tag(tag, separator)   
@@ -99,9 +99,10 @@ class LF_SequentialSeedsGenerator:
                 "global_seed": ("INT", {"default": 0, "tooltip": "Seed value from which the other seeds will be progressively increased."}),
             }
         }
-    RETURN_TYPES = ("INT",) * 30
+    
     CATEGORY = category
     FUNCTION = "on_exec"
+    RETURN_TYPES = ("INT",) * 30
 
     def on_exec(self, global_seed: int):
         seeds = [global_seed + i for i in range(20)] 
@@ -130,10 +131,10 @@ class LF_WallOfText:
             } 
         }
 
-    RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("wall_of_text",)
     CATEGORY = category
     FUNCTION = "on_exec"
+    RETURN_NAMES = ("wall_of_text",)
+    RETURN_TYPES = ("STRING",)
 
     def on_exec(self, **kwargs):
         texts = [kwargs.get(f"text_{i}", "") for i in range(1, 11)]
@@ -165,10 +166,10 @@ class LF_Something2Number:
             }
         }
 
-    RETURN_TYPES = ("FLOAT", "INT", "FLOAT", "INT",)
-    RETURN_NAMES = ("float_sum", "integer_sum", "float_list", "integer_list",)
-    OUTPUT_IS_LIST = (False, False, True, True,)
     FUNCTION = "on_exec"
+    OUTPUT_IS_LIST = (False, False, True, True,)
+    RETURN_NAMES = ("float_sum", "integer_sum", "float_list", "integer_list",)
+    RETURN_TYPES = ("FLOAT", "INT", "FLOAT", "INT",)
 
     def on_exec(self, **kwargs):
         """
@@ -239,10 +240,10 @@ class LF_Something2String:
             }
         }
 
+    FUNCTION = "on_exec"
+    OUTPUT_IS_LIST = (False, True,)
     RETURN_TYPES = ("STRING", "STRING",)
     RETURN_NAMES = ("concatenate", "list",)
-    OUTPUT_IS_LIST = (False, True,)
-    FUNCTION = "on_exec"
 
     def on_exec(self, **kwargs):
         """

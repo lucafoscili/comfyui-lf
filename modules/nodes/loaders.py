@@ -40,11 +40,11 @@ class LF_LoadImages:
             "hidden": { "node_id": "UNIQUE_ID" } 
         }
 
-    RETURN_TYPES = ("IMAGE", "STRING", "INT")
-    RETURN_NAMES = ("images", "names", "nr")
-    OUTPUT_IS_LIST = (True, True, False)
     CATEGORY = category
     FUNCTION = "on_exec"
+    OUTPUT_IS_LIST = (True, True, False)
+    RETURN_NAMES = ("images", "names", "nr")
+    RETURN_TYPES = ("IMAGE", "STRING", "INT")
 
     def on_exec(self, dir, subdir, strip_ext, load_cap, dummy_output, node_id):
         """
@@ -72,8 +72,8 @@ class LF_LoadImages:
         count = 0
 
         for root, dirs, files in os.walk(dir):
-            if subdir and dirs:
-                dirs[:] = [d for d in dirs if os.path.isdir(os.path.join(root, d))]
+            if not subdir:
+                dirs[:] = []
             for file in files:
                 if file.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif')):
                     image_path = os.path.join(root, file)
@@ -123,7 +123,7 @@ class LF_LoadImages:
         
         PromptServer.instance.send_sync("lf-loadimages", {
             "node": node_id, 
-            "file_names": file_names,
+            "fileNames": file_names,
             "images": images_buffer,
         })
 

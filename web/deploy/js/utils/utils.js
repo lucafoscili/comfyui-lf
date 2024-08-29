@@ -7,6 +7,13 @@ export const capitalize = (input) => {
         .map((word) => word.charAt(0).toUpperCase() + word.substring(1))
         .join(' ');
 };
+export const createDOMWidget = (name, type, element, node, options = undefined) => {
+    getLFManager().log(`Creating '${type}'`, { element });
+    return node.addDOMWidget(name, type, element, options);
+};
+export const getApiRoutes = () => {
+    return WINDOW.lfManager.getApiRoutes();
+};
 export const getKulManager = () => {
     return DOM.ketchupLite;
 };
@@ -29,4 +36,29 @@ export const getLFManager = () => {
 };
 export const kulManagerExists = () => {
     return !!DOM.ketchupLite;
+};
+export const log = () => {
+    return WINDOW.lfManager.log;
+};
+export const splitByLastSpaceBeforeAnyBracket = (input) => {
+    const match = input.match(/\s+(.+)\[.*?\]/);
+    if (match && match[1]) {
+        return match[1];
+    }
+    return input;
+};
+export const unescapeJson = (str) => {
+    let validJson = false;
+    let parsedJson = undefined;
+    let unescapedStr = str;
+    try {
+        const parsed = JSON.parse(str);
+        validJson = true;
+        parsedJson = parsed;
+        unescapedStr = JSON.stringify(parsed);
+    }
+    catch (error) {
+        unescapedStr = str.replace(/\\(.)/g, '$1');
+    }
+    return { validJson, parsedJson, unescapedStr };
 };

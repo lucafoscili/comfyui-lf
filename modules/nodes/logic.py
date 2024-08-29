@@ -14,9 +14,9 @@ class LF_SwitchImage:
             "hidden": { "node_id": "UNIQUE_ID" }
         }
 
-    RETURN_TYPES = ("IMAGE",)
     CATEGORY = category
     FUNCTION = "on_exec"
+    RETURN_TYPES = ("IMAGE",)
 
     def on_exec(self, node_id, on_true, on_false, boolean: bool):
         
@@ -39,9 +39,9 @@ class LF_SwitchInteger:
             "hidden": { "node_id": "UNIQUE_ID" }
         }
 
-    RETURN_TYPES = ("INT",)
     CATEGORY = category
     FUNCTION = "on_exec"
+    RETURN_TYPES = ("INT",)
 
     def on_exec(self, node_id, on_true: int, on_false: int, boolean: bool):
         
@@ -64,9 +64,9 @@ class LF_SwitchJSON:
             "hidden": { "node_id": "UNIQUE_ID" }
         }
 
-    RETURN_TYPES = ("JSON",)
     CATEGORY = category
     FUNCTION = "on_exec"
+    RETURN_TYPES = ("JSON",)
 
     def on_exec(self, node_id, on_true:dict, on_false:dict, boolean: bool):
         
@@ -89,9 +89,9 @@ class LF_SwitchString:
             "hidden": { "node_id": "UNIQUE_ID" }
         }
 
-    RETURN_TYPES = ("STRING",)
     CATEGORY = category
     FUNCTION = "on_exec"
+    RETURN_TYPES = ("STRING",)
 
     def on_exec(self, node_id, on_true: str, on_false: str, boolean: bool):
         

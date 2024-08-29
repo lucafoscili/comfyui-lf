@@ -1,0 +1,60 @@
+import { CustomWidgetName } from '../types/widgets';
+import { createDOMWidget } from '../utils/common';
+
+const BASE_CSS_CLASS = 'lf-textfield';
+const LABEL = 'True or False?';
+const TYPE = CustomWidgetName.textfield;
+
+export const textfieldFactory = {
+  cssClasses: {
+    content: BASE_CSS_CLASS,
+  },
+  options: (textfield: HTMLKulTextfieldElement) => {
+    return {
+      hideOnZoom: false,
+      getComp() {
+        return textfield;
+      },
+      getValue() {
+        return textfield?.kulLabel;
+      },
+      setProps(props: Partial<HTMLKulTextfieldElement>) {
+        for (const key in props) {
+          if (Object.prototype.hasOwnProperty.call(props, key)) {
+            const prop = props[key];
+            textfield[prop] = prop;
+          }
+        }
+      },
+      setValue(value: string) {
+        const isFalse = value?.toLowerCase()?.includes('false');
+        const isTrue = value?.toLowerCase()?.includes('true');
+        if (isTrue) {
+          textfield.kulIcon = 'check';
+          textfield.kulLabel = 'True!';
+        } else if (isFalse) {
+          textfield.kulIcon = 'clear';
+          textfield.kulLabel = 'False!';
+        } else {
+          textfield.kulIcon = '';
+          textfield.kulLabel = LABEL;
+        }
+      },
+    };
+  },
+  render: (node: NodeType, name: CustomWidgetName) => {
+    const wrapper = document.createElement('div');
+    const content = document.createElement('div');
+    const textfield = document.createElement('kul-textfield');
+    const options = textfieldFactory.options(textfield);
+
+    content.classList.add(textfieldFactory.cssClasses.content);
+    textfield.kulDisabled = true;
+    textfield.kulLabel = LABEL;
+
+    content.appendChild(textfield);
+    wrapper.appendChild(content);
+
+    return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };
+  },
+};

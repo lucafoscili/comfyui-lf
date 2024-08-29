@@ -1,6 +1,5 @@
-import { h, a as getAssetPath, r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, H as Host } from './index-9570d2db.js';
-import { k as kulManagerInstance, g as getProps, a as KulLanguageSearch, b as KulLanguageGeneric } from './kul-manager-18eb90c7.js';
-import { K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './GenericVariables-0efba181.js';
+import { h, a as getAssetPath, r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, H as Host } from './index-9aa60797.js';
+import { k as kulManagerInstance, g as getProps, K as KUL_WRAPPER_ID, d as KulLanguageSearch, e as KulLanguageGeneric, a as KUL_STYLE_ID } from './kul-manager-ed681a28.js';
 import { K as KulDataCyAttributes } from './GenericTypes-8038330a.js';
 
 var KulTreeProps;
@@ -280,7 +279,7 @@ const KulTree = class {
     render() {
         const isEmpty = !!!this.kulData?.nodes?.length;
         this.#rippleSurface = {};
-        return (h(Host, { key: '9097f9d8f0a52a6e25757d31c0edf8afc785d6c0' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '0f1dc38317a05be3e55f830a4799d7a2357aab5f', id: KUL_WRAPPER_ID }, h("div", { key: '5648366d950aaf0f8e4839cd6db189572aefe47c', class: "tree" }, this.kulFilter ? (h("kul-textfield", { kulIcon: "magnify", kulFullWidth: true, kulLabel: this.#kulManager.language.translate(KulLanguageSearch.SEARCH), kulStyling: "flat", "onKul-textfield-event": (e) => {
+        return (h(Host, { key: 'd0adad8ae40c8f1b9e9bfdfd562ef801edde4633' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'cdb527af9f9e9a28019529aee5cfea685e78b9b5', id: KUL_WRAPPER_ID }, h("div", { key: '4631f5f89ad7142bdda5df336bdc06341e788e9a', class: "tree" }, this.kulFilter ? (h("kul-textfield", { kulIcon: "magnify", kulFullWidth: true, kulLabel: this.#kulManager.language.translate(KulLanguageSearch.SEARCH), kulStyling: "flat", "onKul-textfield-event": (e) => {
                 this.onKulEvent(e, 'kul-event');
                 if (e.detail.eventType === 'input') {
                     this.#filter(e);

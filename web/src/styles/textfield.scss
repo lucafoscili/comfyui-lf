@@ -1,0 +1,12 @@
+.lf-textfield {
+  align-items: center;
+  background: var(--kul-background-color);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  max-height: 100%;
+  max-width: 100%;
+  overflow: auto;
+  width: 100%;
+}
