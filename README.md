@@ -36,6 +36,7 @@ There is a big JS bundled coming from another side-project of mine, [a webcompon
 - **GetRandomKeyFromJSON**: Extracts a random key from a given JSON object. This can be used to introduce variability or select random elements from JSON data.
 - **GetValueFromJSON**: Extracts a specific value from a JSON object based on a provided key. This node supports extracting various types of values including JSON objects, strings, numbers, integers, floats, and booleans.
 - **LoadLocalJSON**: Loads JSON data from a local file specified by a URL. This node is useful for importing static JSON configurations or datasets directly into ComfyUI workflows.
+- **WriteJSON**: A simple text area that lets the user input a JSON file which will be validated when the workflow is queued.
 
 ![LoadLocalJSON_GetRandomKeyFromJSON_DisplayJSON](https://github.com/lucafoscili/comfyui-lf/blob/792f573544096949c8123939d77006f5bfb00216/docs/images/LoadLocalJSON_GetRandomKeyFromJSON_DisplayJSON.png "Demonstrates loading local JSON and displaying it")
 

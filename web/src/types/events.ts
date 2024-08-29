@@ -17,6 +17,7 @@ export enum EventName {
   switchInteger = 'lf-switchinteger',
   switchJson = 'lf-switchjson',
   switchString = 'lf-switchstring',
+  writeJson = 'lf-writejson',
 }
 export type EventPayload =
   | DisplayJSONPayload
@@ -25,7 +26,8 @@ export type EventPayload =
   | SwitchImagePayload
   | SwitchIntegerPayload
   | SwitchJSONPayload
-  | SwitchStringPayload;
+  | SwitchStringPayload
+  | WriteJSONPayload;
 
 /*-------------------------------------------------------------------*/
 /*         D i s p l a y J S O N   D e c l a r a t i o n s           */
@@ -82,4 +84,13 @@ export interface SwitchJSONPayload extends BaseEventPayload {
 
 export interface SwitchStringPayload extends BaseEventPayload {
   bool: boolean;
+}
+
+/*-------------------------------------------------------------------*/
+/*            W r i t e J S O N   D e c l a r a t i o n s            */
+/*-------------------------------------------------------------------*/
+
+export interface WriteJSONPayload extends BaseEventPayload {
+  error: string;
+  json: Record<string, unknown>;
 }

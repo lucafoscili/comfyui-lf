@@ -7,7 +7,8 @@ export declare enum NodeName {
     switchImage = "LF_SwitchImage",
     switchInteger = "LF_SwitchInteger",
     switchJson = "LF_SwitchJSON",
-    switchString = "LF_SwitchString"
+    switchString = "LF_SwitchString",
+    writeJson = "LF_WriteJSON"
 }
 type AtLeastOne<T, U = {
     [K in keyof T]: Pick<T, K>;

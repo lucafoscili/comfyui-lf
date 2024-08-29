@@ -3,11 +3,12 @@ export type BaseWidgetCallback = <T extends CustomWidgetName>(node: NodeType, na
     widget: Widget;
 };
 export declare enum CustomWidgetName {
+    booleanViewer = "KUL_BOOLEAN_VIEWER",
     chart = "KUL_CHART",
     code = "KUL_CODE",
     controlPanel = "KUL_CONTROL_PANEL",
-    imagePreview = "IMAGE_PREVIEW_B64",
-    textfield = "KUL_TEXTFIELD"
+    jsonInput = "KUL_JSON_INPUT",
+    imagePreview = "IMAGE_PREVIEW_B64"
 }
 export interface CustomWidgetSetters {
     [CustomWidgetName.chart](node: NodeType, name: string): {
@@ -19,21 +20,25 @@ export interface CustomWidgetSetters {
     [CustomWidgetName.controlPanel](node: NodeType, name: string): {
         widget: ControlPanelWidget;
     };
+    [CustomWidgetName.jsonInput](node: NodeType, name: string): {
+        widget: JsonInputWidget;
+    };
     [CustomWidgetName.imagePreview](node: NodeType, name: string): {
         widget: ImagePreviewWidget;
     };
-    [CustomWidgetName.textfield](node: NodeType, name: string): {
-        widget: TextfieldWidget;
+    [CustomWidgetName.booleanViewer](node: NodeType, name: string): {
+        widget: BooleanViewerWidget;
     };
 }
 export type CustomWidgetMap = {
     [CustomWidgetName.chart]: ChartWidget;
     [CustomWidgetName.code]: CodeWidget;
     [CustomWidgetName.controlPanel]: ControlPanelWidget;
+    [CustomWidgetName.jsonInput]: JsonInputWidget;
     [CustomWidgetName.imagePreview]: ImagePreviewWidget;
-    [CustomWidgetName.textfield]: TextfieldWidget;
+    [CustomWidgetName.booleanViewer]: BooleanViewerWidget;
 };
-export type CustomWidgetOptions = ChartWidgetOptions | CodeWidgetOptions | ControlPanelWidgetOptions | ImagePreviewWidgetOptions | TextfieldWidgetOptions;
+export type CustomWidgetOptions = ChartWidgetOptions | CodeWidgetOptions | ControlPanelWidgetOptions | JsonInputWidgetOptions | ImagePreviewWidgetOptions | BooleanViewerWidgetOptions;
 export interface ChartWidget extends Widget {
     options: ChartWidgetOptions;
     type: [CustomWidgetName.chart];
@@ -79,6 +84,19 @@ export interface ControlPanelWidgetValue {
     debug: boolean;
     themes: string;
 }
+export interface JsonInputWidget extends Widget {
+    options: JsonInputWidgetOptions;
+    type: [CustomWidgetName.jsonInput];
+}
+export interface JsonInputWidgetOptions {
+    hideOnZoom: boolean;
+    getValue(): JsonInputWidgetValue;
+    setValue(value: JsonInputWidgetValue): void;
+}
+export declare type JsonInputWidgetsSetter = () => {
+    [CustomWidgetName.jsonInput]: BaseWidgetCallback;
+};
+export type JsonInputWidgetValue = string | Record<string, unknown>;
 export interface ImagePreviewWidget extends Widget {
     options: ImagePreviewWidgetOptions;
     type: [CustomWidgetName.imagePreview];
@@ -95,18 +113,18 @@ export interface ImagePreviewWidgetValue {
     fileNames: string[];
     images: string[];
 }
-export interface TextfieldWidget extends Widget {
-    options: TextfieldWidgetOptions;
-    type: [CustomWidgetName.textfield];
+export interface BooleanViewerWidget extends Widget {
+    options: BooleanViewerWidgetOptions;
+    type: [CustomWidgetName.booleanViewer];
 }
-export interface TextfieldWidgetOptions {
+export interface BooleanViewerWidgetOptions {
     hideOnZoom: boolean;
     getComp(): HTMLKulTextfieldElement;
-    getValue(): TextfieldWidgetValue;
+    getValue(): BooleanViewerWidgetValue;
     setProps(props: Partial<HTMLKulTextfieldElement>): void;
-    setValue(value: TextfieldWidgetValue): void;
+    setValue(value: BooleanViewerWidgetValue): void;
 }
-export declare type TextfieldWidgetsSetter = () => {
-    [CustomWidgetName.textfield]: BaseWidgetCallback;
+export declare type BooleanViewerWidgetsSetter = () => {
+    [CustomWidgetName.booleanViewer]: BaseWidgetCallback;
 };
-export type TextfieldWidgetValue = string;
+export type BooleanViewerWidgetValue = string;

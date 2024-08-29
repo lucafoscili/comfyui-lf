@@ -1,7 +1,9 @@
 .lf-imagepreview {
-  max-height: 100%;
-  max-width: 100%;
-  overflow: auto;
+  & {
+    max-height: 100%;
+    max-width: 100%;
+    overflow: auto;
+  }
 
   &__doge {
     background: var(--kul-background-color);

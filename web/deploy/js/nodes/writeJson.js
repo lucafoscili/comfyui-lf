@@ -3,22 +3,20 @@ import { LogSeverity } from '../types/manager.js';
 import { NodeName } from '../types/nodes.js';
 import { CustomWidgetName, } from '../types/widgets.js';
 import { getApiRoutes, getLFManager, getWidget } from '../utils/common.js';
-const NAME = NodeName.switchImage;
-export const switchImageFactory = {
+const NAME = NodeName.writeJson;
+export const writeJsonFactory = {
     eventHandler: (event, addW) => {
-        const name = EventName.switchImage;
+        const name = EventName.writeJson;
         getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
         const payload = event.detail;
         const node = getApiRoutes().getNodeById(payload.id);
         if (node) {
-            const widget = getWidget(node, CustomWidgetName.booleanViewer, addW);
-            const comp = widget.options.getComp();
-            comp.refresh();
-            widget.options.setValue(String(event.detail.bool + '').valueOf());
+            const widget = getWidget(node, CustomWidgetName.jsonInput, addW);
+            widget.options.setValue(event.detail.json);
             getApiRoutes().redraw();
         }
     },
-    register: (setW, addW) => {
+    register: (setW) => {
         const extension = {
             name: 'LFExt_' + NAME,
             beforeRegisterNodeDef: async (nodeType) => {
@@ -26,8 +24,6 @@ export const switchImageFactory = {
                     const onNodeCreated = nodeType.prototype.onNodeCreated;
                     nodeType.prototype.onNodeCreated = function () {
                         const r = onNodeCreated?.apply(this, arguments);
-                        const node = this;
-                        addW(node, CustomWidgetName.booleanViewer);
                         return r;
                     };
                 }

@@ -8,6 +8,7 @@ import { switchIntegerFactory } from '../nodes/switchInteger';
 import { switchJsonFactory } from '../nodes/switchJson';
 import { switchStringFactory } from '../nodes/switchString';
 import { BaseWidgetCallback } from '../types/widgets';
+import { writeJsonFactory } from '../nodes/writeJson';
 
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
@@ -22,6 +23,7 @@ export class LFNodes {
     [NodeName.switchInteger]: switchIntegerFactory.eventHandler,
     [NodeName.switchJson]: switchJsonFactory.eventHandler,
     [NodeName.switchString]: switchStringFactory.eventHandler,
+    [NodeName.writeJson]: writeJsonFactory.eventHandler,
   };
 
   register = {
@@ -33,6 +35,7 @@ export class LFNodes {
     [NodeName.switchInteger]: switchIntegerFactory.register,
     [NodeName.switchJson]: switchJsonFactory.register,
     [NodeName.switchString]: switchStringFactory.register,
+    [NodeName.writeJson]: writeJsonFactory.register,
   };
 
   get = {
