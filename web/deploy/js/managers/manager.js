@@ -87,6 +87,13 @@ export class LFManager {
             nodes.eventHandlers.LF_ImageHistogram(e, widgets.adders.KUL_CHART);
         });
         /*-------------------------------------------------------------------*/
+        /*            I n i t   I m a g e R e s i z e B y E d g e            */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_ImageResizeByEdge(widgets.setters.KUL_TREE, widgets.adders.KUL_TREE);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.imageResizeByEdge, (e) => {
+            nodes.eventHandlers.LF_ImageResizeByEdge(e, widgets.adders.KUL_TREE);
+        });
+        /*-------------------------------------------------------------------*/
         /*                I n i t   I m a g e s L o a d e r                  */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_LoadImages(widgets.setters.IMAGE_PREVIEW_B64, widgets.adders.IMAGE_PREVIEW_B64);

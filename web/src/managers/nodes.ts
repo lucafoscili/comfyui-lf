@@ -11,6 +11,7 @@ import { BaseWidgetCallback } from '../types/widgets';
 import { writeJsonFactory } from '../nodes/writeJson';
 import { multipleImageResizeForWebFactory } from '../nodes/multipleImageResizeForWeb';
 import { blurImagesFactory } from '../nodes/blurImages';
+import { imageResizeByEdgeFactory } from '../nodes/imageResizeByEdge';
 
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
@@ -21,6 +22,7 @@ export class LFNodes {
     [NodeName.blurImages]: blurImagesFactory.eventHandler,
     [NodeName.displayJson]: displayJsonFactory.eventHandler,
     [NodeName.imageHistogram]: imageHistogramFactory.eventHandler,
+    [NodeName.imageResizeByEdge]: imageResizeByEdgeFactory.eventHandler,
     [NodeName.loadImages]: loadImagesFactory.eventHandler,
     [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.eventHandler,
     [NodeName.switchImage]: switchImageFactory.eventHandler,
@@ -35,6 +37,7 @@ export class LFNodes {
     [NodeName.controlPanel]: controlPanelFactory.register,
     [NodeName.displayJson]: displayJsonFactory.register,
     [NodeName.imageHistogram]: imageHistogramFactory.register,
+    [NodeName.imageResizeByEdge]: imageResizeByEdgeFactory.register,
     [NodeName.loadImages]: loadImagesFactory.register,
     [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.register,
     [NodeName.switchImage]: switchImageFactory.register,

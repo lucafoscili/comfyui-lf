@@ -22,7 +22,7 @@
       width: 100%;
     }
 
-    &:focus {
+    &:focus:not(.lf-jsoninput__widget--error) {
       box-shadow: inset 0px 0px 4px 1px var(--kul-text-color);
     }
 
