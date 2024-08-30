@@ -7,56 +7,63 @@ on:
 jobs:
   node_counter:
     runs-on: ubuntu-latest
-
+    
     steps:
-      - uses: actions/checkout@v2
+    - uses: actions/checkout@v2
+      
+    - name: Count Nodes
+      id: count_nodes
+      run: |
+        # Function to count nodes in a single file
+        count_nodes_in_file() {
+          local file=$1
+          local node_count=0
+          
+          while IFS= read -r line; do
+            if [[ $line =~ ^class[[:space:]]+[A-Za-z_][A-Za-z0-9_] ]]; then
+              ((node_count++))
+            fi
+          done < "$file"
+          
+          echo "Nodes in $file: $node_count"
+          echo "::set-output name=node_count_$file::$node_count"
+        }
+        
+        # Call the function for each file
+        count_nodes_in_file analysis.py
+        count_nodes_in_file configuration.py
+        count_nodes_in_file conversions.py
+        count_nodes_in_file json.py
+        count_nodes_in_file llm.py
+        count_nodes_in_file loaders.py
+        count_nodes_in_file logic.py
+        
+        # Sum up all node counts
+        total_node_count=0
+        for file in analysis.py configuration.py conversions.py json.py llm.py loaders.py logic.py; do
+          total_node_count=$((total_node_count + ${node_count_$file}))
+        done
+        echo "Total nodes: $total_node_count"
+        echo "::set-output name=total_node_count::$total_node_count"
+    
+    - name: Create Badge
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          const path = require('path');
 
-      - name: Count Nodes
-        id: count_nodes
-        run: |
-          # Function to count nodes in a single file
-          count_nodes_in_file() {
-            local file=$1
-            local node_count=0
-            
-            while IFS= read -r line; do
-              if [[ $line =~ ^class[[:space:]]+[A-Za-z_][A-Za-z0-9_] ]]; then
-                ((node_count++))
-              fi
-            done < "$file"
-            
-            echo "Nodes in $file: $node_count"
-            echo "::set-output name=node_count_$file::$node_count"
-          }
+          // Get the total node count from the previous step
+          const totalNodeCount = process.env.TOTAL_NODE_COUNT;
 
-          # Call the function for each file
-          count_nodes_in_file analysis.py
-          count_nodes_in_file configuration.py
-          count_nodes_in_file conversions.py
-          count_nodes_in_file json.py
-          count_nodes_in_file llm.py
-          count_nodes_in_file loaders.py
-          count_nodes_in_file logic.py
+          // Create a simple text-based badge
+          const badgeContent = `Total Nodes: ${totalNodeCount}`;
 
-          # Sum up all node counts
-          total_node_count=0
-          for file in analysis.py configuration.py conversions.py json.py llm.py loaders.py logic.py; do
-            total_node_count=$((total_node_count + ${node_count_$file}))
-          done
-          echo "Total nodes: $total_node_count"
-          echo "::set-output name=total_node_count::$total_node_count"
+          // Write the badge content to a file
+          fs.writeFileSync(path.join(process.cwd(), 'badge.txt'), badgeContent);
 
-      - name: Create Total Nodes Badge
-        uses: shields-io/shields.io@v1
-        with:
-          type: info
-          color: blue
-          label: Total Nodes
-          message: ${{ steps.count_nodes.outputs.total_node_count }}
-          output: total_nodes_badge.svg
-
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: node-badges
-          path: total_nodes_badge.svg
+    - name: Upload Badge
+      uses: actions/upload-artifact@v3
+      with:
+        name: node-badge
+        path: badge.txt
