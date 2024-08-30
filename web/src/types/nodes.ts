@@ -11,6 +11,7 @@ export enum NodeName {
   imageHistogram = 'LF_ImageHistogram',
   loadImages = 'LF_LoadImages',
   multipleImageResizeForWeb = 'LF_MultipleImageResizeForWeb',
+  imageResizeByEdge = 'LF_ImageResizeByEdge',
   switchImage = 'LF_SwitchImage',
   switchInteger = 'LF_SwitchInteger',
   switchJson = 'LF_SwitchJSON',

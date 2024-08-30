@@ -13,6 +13,7 @@ import {
   DisplayJSONPayload,
   EventName,
   ImageHistogramPayload,
+  ImageResizeByEdgePayload,
   LoadImagesPayload,
   MultipleImageResizeForWebPayload,
   SwitchImagePayload,
@@ -120,6 +121,16 @@ export class LFManager {
     );
     this.#APIS.event(EventName.imageHistogram, (e: CustomEvent<ImageHistogramPayload>) => {
       nodes.eventHandlers.LF_ImageHistogram(e, widgets.adders.KUL_CHART);
+    });
+    /*-------------------------------------------------------------------*/
+    /*            I n i t   I m a g e R e s i z e B y E d g e            */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_ImageResizeByEdge(
+      widgets.setters.KUL_TREE,
+      widgets.adders.KUL_TREE,
+    );
+    this.#APIS.event(EventName.imageResizeByEdge, (e: CustomEvent<ImageResizeByEdgePayload>) => {
+      nodes.eventHandlers.LF_ImageResizeByEdge(e, widgets.adders.KUL_TREE);
     });
     /*-------------------------------------------------------------------*/
     /*                I n i t   I m a g e s L o a d e r                  */

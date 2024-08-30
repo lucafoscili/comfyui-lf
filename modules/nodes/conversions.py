@@ -79,7 +79,8 @@ class LF_ImageResizeByEdge:
                 "longest_edge": ("BOOLEAN", {"default": False, "tooltip": "Resizes the image by the longest side if set to True. Otherwise, resizes by the shortest side."}),
                 "new_size": ("INT", {"default": 1024, "tooltip": "The size of the longest edge of the output image."}),
                 "resize_method": (["bicubic", "bilinear", "linear", "nearest", "nearest exact"], {"default": "bicubic", "tooltip": "Method to resize the image."})
-            }
+            },
+            "hidden": {"node_id": "UNIQUE_ID"}
         }
 
     CATEGORY = category
@@ -87,13 +88,68 @@ class LF_ImageResizeByEdge:
     RETURN_NAMES = ("resized_image",)
     RETURN_TYPES = ("IMAGE",)
 
-    def on_exec(self, image, longest_edge: bool, new_size: int, resize_method: str):
+    def on_exec(self, node_id, image, longest_edge: bool, new_size: int, resize_method: str):
+        dataset = { "nodes": [{ "children": [], "icon":"help", "id": "", "value": "" }] }
+        resized_image = []
+        
+        original_heights = []
+        original_widths = []
+        heights = []
+        widths = []
+
         if isinstance(image, list):
+            for idx, img in enumerate(image):
+                original_height, original_width = img.shape[1], img.shape[2]
+                original_heights.append(original_height)
+                original_widths.append(original_width)
+
             resized_images = [resize_image(tensor, resize_method, longest_edge, new_size) for tensor in image]
-            return (resized_images,)
+            
+            for img in resized_images:
+                height, width = img.shape[1], img.shape[2]
+                heights.append(height)
+                widths.append(width)
+
+            log_str = f"[{idx}] From {original_height}x{original_width} to {height}x{width}"
+            node = {
+                "id": log_str,
+                "value": log_str
+            }
+            dataset["nodes"][0]["children"].append(node)
+
+            resized_image = resized_images
         else:
+            original_height, original_width = image.shape[1], image.shape[2]
+            original_heights = [original_height]
+            original_widths = [original_width]
+
             resized_image = resize_image(image, resize_method, longest_edge, new_size)
-            return (resized_image,)
+            height, width = resized_image.shape[1], resized_image.shape[2] 
+            heights = [height]
+            widths = [width]
+
+            log_str = f"From {original_height}x{original_width} to {height}x{width}."
+            node = {
+                "id": log_str,
+                "value": log_str
+            }
+            dataset["nodes"][0]["children"].append(node)
+
+        num_resized = len(image)
+        summary_message = f"Resized {num_resized} {'image' if num_resized == 1 else 'images'}"   
+        dataset["nodes"][0]["id"] = summary_message
+        dataset["nodes"][0]["value"] = summary_message
+
+        PromptServer.instance.send_sync("lf-imageresizebyedge", {
+            "node": node_id,
+            "dataset": dataset,
+            "original_heights": original_heights,
+            "original_widths": original_widths,
+            "heights": heights,
+            "widths": widths
+        })
+
+        return (resized_image,)
         
 class LF_Lora2Prompt:
     @classmethod
@@ -233,7 +289,6 @@ class LF_MultipleImageResizeForWeb:
 
             dataset["nodes"].append(rootNode)
 
-
         PromptServer.instance.send_sync("lf-multipleimageresizeforweb", {
             "node": node_id,
             "dataset": dataset,
@@ -332,7 +387,6 @@ class LF_Something2Number:
 
         return (float_sum, integer_sum, float_values, integer_values,)
 
-    
 class LF_Something2String:
     @classmethod
     def INPUT_TYPES(cls):

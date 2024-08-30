@@ -13,6 +13,7 @@ export enum EventName {
   controlPanel = 'lf-controlpanel',
   displayJson = 'lf-displayjson',
   imageHistogram = 'lf-imagehistogram',
+  imageResizeByEdge = 'lf-imageresizebyedge',
   loadImages = 'lf-loadimages',
   multipleImageResizeForWeb = 'lf-multipleimageresizeforweb',
   switchImage = 'lf-switchimage',
@@ -25,6 +26,7 @@ export type EventPayload =
   | BlurImagesPayload
   | DisplayJSONPayload
   | ImageHistogramPayload
+  | ImageResizeByEdgePayload
   | LoadImagesPayload
   | MultipleImageResizeForWebPayload
   | SwitchImagePayload
@@ -56,6 +58,18 @@ export interface DisplayJSONPayload extends BaseEventPayload {
 
 export interface ImageHistogramPayload extends BaseEventPayload {
   dataset: KulDataDataset;
+}
+
+/*-------------------------------------------------------------------*/
+/*    I m a g e R e s i z e B y E d g e   D e c l a r a t i o n s    */
+/*-------------------------------------------------------------------*/
+
+export interface ImageResizeByEdgePayload extends BaseEventPayload {
+  dataset: KulDataDataset;
+  heights: number[];
+  original_heights: number[];
+  original_widths: number[];
+  widths: number[];
 }
 
 /*-------------------------------------------------------------------*/
