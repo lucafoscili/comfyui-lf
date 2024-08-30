@@ -4,6 +4,7 @@ export interface BaseEventPayload {
 }
 export type EventCallback<T extends EventPayload> = (e: CustomEvent<T>) => void;
 export declare enum EventName {
+    blurImages = "lf-blurimages",
     controlPanel = "lf-controlpanel",
     displayJson = "lf-displayjson",
     imageHistogram = "lf-imagehistogram",
@@ -15,7 +16,11 @@ export declare enum EventName {
     switchString = "lf-switchstring",
     writeJson = "lf-writejson"
 }
-export type EventPayload = DisplayJSONPayload | ImageHistogramPayload | LoadImagesPayload | MultipleImageResizeForWebPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | WriteJSONPayload;
+export type EventPayload = BlurImagesPayload | DisplayJSONPayload | ImageHistogramPayload | LoadImagesPayload | MultipleImageResizeForWebPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | WriteJSONPayload;
+export interface BlurImagesPayload extends BaseEventPayload {
+    fileNames: Array<string>;
+    images: Array<string>;
+}
 export interface DisplayJSONPayload extends BaseEventPayload {
     json: Record<string, unknown>;
 }

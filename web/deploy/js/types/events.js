@@ -1,5 +1,6 @@
 export var EventName;
 (function (EventName) {
+    EventName["blurImages"] = "lf-blurimages";
     EventName["controlPanel"] = "lf-controlpanel";
     EventName["displayJson"] = "lf-displayjson";
     EventName["imageHistogram"] = "lf-imagehistogram";

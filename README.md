@@ -14,6 +14,7 @@ There is a big JS bundled coming from another side-project of mine, [a webcompon
 
 ### Conversions Nodes (`conversions.py`)
 
+- **BlurImages**: Applies the gaussian blur filter to a list of images.
 - **ImageResizeByEdge**: Resizes an image in tensor format's longest or shortest edge to the specified size.
 - **Lora2Prompt**: Converts a prompt and LoRAs to a formatted string.
 - **LoraTag2Prompt**: Processes a LoRA tag to extract keywords and count them. This node is useful for preparing prompts based on LoRA file names.

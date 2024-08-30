@@ -1,5 +1,8 @@
+import base64
+import io
 import numpy as np
 import torch
+
 from PIL import Image
 from torchvision.transforms import InterpolationMode, functional
 
@@ -136,6 +139,42 @@ def resize_image(image_tensor: torch.Tensor, resize_method: str, longest_side: b
     resized_image = resized_image.permute(0, 2, 3, 1)
 
     return resized_image
+
+def tensor_to_base64(tensors):
+    """
+    Convert PyTorch tensor(s) to base64 encoding.
+    
+    Args:
+        tensors (torch.Tensor or List[torch.Tensor]): Input tensor(s) containing image data.
+    
+    Returns:
+        str or List[str]: Base64 encoded string representation(s) of the tensor image(s).
+    """
+    def convert_single_tensor(tensor):
+        if len(tensor.shape) == 4 and tensor.shape[-1] != 3:
+            tensor = tensor[:, :, :3]
+        
+        # Handle both 3D and 4D tensors
+        if tensor.dim() == 4:
+            # For 4D tensors, take the first image in the batch
+            tensor = tensor[0]
+        
+        # Convert tensor to PIL Image
+        pil_img = Image.fromarray(np.uint8(tensor.cpu().numpy() * 255))
+        
+        # Save the image to a BytesIO buffer
+        buffered = io.BytesIO()
+        pil_img.save(buffered, format="webp", quality=60)
+        
+        # Encode the buffer contents to base64 and decode it back to a string
+        img_base64 = base64.b64encode(buffered.getvalue()).decode('utf-8')
+        
+        return img_base64
+
+    if isinstance(tensors, list):
+        return [convert_single_tensor(tensor) for tensor in tensors]
+    else:
+        return convert_single_tensor(tensors)
 
 def tensor_to_pil(tensor):
     """

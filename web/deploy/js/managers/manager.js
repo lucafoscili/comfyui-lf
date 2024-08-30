@@ -62,6 +62,13 @@ export class LFManager {
         const nodes = __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.get;
         const widgets = __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").widgets.get;
         /*-------------------------------------------------------------------*/
+        /*                    I n i t   B l u r I m a g e s                  */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_BlurImages(widgets.setters.IMAGE_PREVIEW_B64, widgets.adders.IMAGE_PREVIEW_B64);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.blurImages, (e) => {
+            nodes.eventHandlers.LF_BlurImages(e, widgets.adders.IMAGE_PREVIEW_B64);
+        });
+        /*-------------------------------------------------------------------*/
         /*               I n i t   C o n t r o l   P a n e l                 */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_ControlPanel(widgets.setters.KUL_CONTROL_PANEL, widgets.adders.KUL_CONTROL_PANEL);

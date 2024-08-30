@@ -9,12 +9,14 @@ import { switchJsonFactory } from '../nodes/switchJson.js';
 import { switchStringFactory } from '../nodes/switchString.js';
 import { writeJsonFactory } from '../nodes/writeJson.js';
 import { multipleImageResizeForWebFactory } from '../nodes/multipleImageResizeForWeb.js';
+import { blurImagesFactory } from '../nodes/blurImages.js';
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
 /*-------------------------------------------------*/
 export class LFNodes {
     constructor() {
         this.eventHandler = {
+            [NodeName.blurImages]: blurImagesFactory.eventHandler,
             [NodeName.displayJson]: displayJsonFactory.eventHandler,
             [NodeName.imageHistogram]: imageHistogramFactory.eventHandler,
             [NodeName.loadImages]: loadImagesFactory.eventHandler,
@@ -26,6 +28,7 @@ export class LFNodes {
             [NodeName.writeJson]: writeJsonFactory.eventHandler,
         };
         this.register = {
+            [NodeName.blurImages]: blurImagesFactory.register,
             [NodeName.controlPanel]: controlPanelFactory.register,
             [NodeName.displayJson]: displayJsonFactory.register,
             [NodeName.imageHistogram]: imageHistogramFactory.register,

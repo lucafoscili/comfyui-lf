@@ -10,6 +10,7 @@ import { switchStringFactory } from '../nodes/switchString';
 import { BaseWidgetCallback } from '../types/widgets';
 import { writeJsonFactory } from '../nodes/writeJson';
 import { multipleImageResizeForWebFactory } from '../nodes/multipleImageResizeForWeb';
+import { blurImagesFactory } from '../nodes/blurImages';
 
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
@@ -17,6 +18,7 @@ import { multipleImageResizeForWebFactory } from '../nodes/multipleImageResizeFo
 
 export class LFNodes {
   eventHandler = {
+    [NodeName.blurImages]: blurImagesFactory.eventHandler,
     [NodeName.displayJson]: displayJsonFactory.eventHandler,
     [NodeName.imageHistogram]: imageHistogramFactory.eventHandler,
     [NodeName.loadImages]: loadImagesFactory.eventHandler,
@@ -29,6 +31,7 @@ export class LFNodes {
   };
 
   register = {
+    [NodeName.blurImages]: blurImagesFactory.register,
     [NodeName.controlPanel]: controlPanelFactory.register,
     [NodeName.displayJson]: displayJsonFactory.register,
     [NodeName.imageHistogram]: imageHistogramFactory.register,

@@ -3,6 +3,7 @@
 /*-------------------------------------------------------------------*/
 export var NodeName;
 (function (NodeName) {
+    NodeName["blurImages"] = "LF_BlurImages";
     NodeName["controlPanel"] = "LF_ControlPanel";
     NodeName["displayJson"] = "LF_DisplayJSON";
     NodeName["imageHistogram"] = "LF_ImageHistogram";

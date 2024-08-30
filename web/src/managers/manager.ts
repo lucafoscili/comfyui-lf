@@ -9,6 +9,7 @@ import { LFWidgets } from './widgets.js';
 import { ComfyAPIs, LogSeverity } from '../types/manager.js';
 import { Extension } from '../types/nodes.js';
 import {
+  BlurImagesPayload,
   DisplayJSONPayload,
   EventName,
   ImageHistogramPayload,
@@ -85,6 +86,16 @@ export class LFManager {
     const nodes = this.#MANAGERS.nodes.get;
     const widgets = this.#MANAGERS.widgets.get;
 
+    /*-------------------------------------------------------------------*/
+    /*                    I n i t   B l u r I m a g e s                  */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_BlurImages(
+      widgets.setters.IMAGE_PREVIEW_B64,
+      widgets.adders.IMAGE_PREVIEW_B64,
+    );
+    this.#APIS.event(EventName.blurImages, (e: CustomEvent<BlurImagesPayload>) => {
+      nodes.eventHandlers.LF_BlurImages(e, widgets.adders.IMAGE_PREVIEW_B64);
+    });
     /*-------------------------------------------------------------------*/
     /*               I n i t   C o n t r o l   P a n e l                 */
     /*-------------------------------------------------------------------*/

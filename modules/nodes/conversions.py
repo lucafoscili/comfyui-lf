@@ -3,12 +3,67 @@ import json
 import random
 import re
 
-from PIL import Image
+from PIL import Image, ImageFilter
 from server import PromptServer
+
 from ..utils.conversions import *
 
 category = "LF Nodes/Conversions"
-    
+
+class LF_BlurImages:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "images": ("IMAGE", {"tooltip": "List of images to blur."}),
+                "file_names": ("STRING", {"forceInput": True, "tooltip": "Corresponding list of file names for the images."}),
+                "blur_radius": ("INT", {"default": 20, "min": 1, "max": 100, "step": 1, "tooltip": "Radius for the Gaussian blur."}),
+            },
+            "hidden": {"node_id": "UNIQUE_ID"}
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    INPUT_IS_LIST = (True, True, False)
+    OUTPUT_IS_LIST = (True, True)
+    RETURN_NAMES = ("images", "file_names")
+    RETURN_TYPES = ("IMAGE", "STRING")
+
+    def on_exec(self, node_id, images, file_names, blur_radius):
+        blurred_images = []
+        blurred_file_names = []
+
+        for index, image_data in enumerate(images):
+            if isinstance(blur_radius, (list, tuple)):
+                blur_radius = blur_radius[0]  # Take the first value if it's a list or tuple
+            
+            file_name = file_names[index]
+            base_name, original_extension = file_name.rsplit('.', 1)  # Split base name and extension
+            
+            # Convert the tensor to a PIL Image
+            image = tensor_to_pil(image_data)
+            
+            # Apply Gaussian blur
+            blurred_image = image.filter(ImageFilter.GaussianBlur(blur_radius))
+            
+            # Convert the blurred image back to a tensor
+            blurred_tensor = pil_to_tensor(blurred_image)
+            blurred_images.append(blurred_tensor)
+            
+            # Construct the new file name with '_Blur' suffix
+            new_file_name = f"{base_name}_Blur.{original_extension}"
+            blurred_file_names.append(new_file_name)
+
+        b64_images = tensor_to_base64(blurred_images)
+        
+        PromptServer.instance.send_sync("lf-blurimages", {
+            "node": node_id,
+            "fileNames": blurred_file_names,
+            "images": b64_images,
+        })
+
+        return (blurred_images, blurred_file_names,)
+
 class LF_ImageResizeByEdge:
     @classmethod
     def INPUT_TYPES(cls):
@@ -355,6 +410,7 @@ class LF_WallOfText:
         return (wall_of_text,)
 
 NODE_CLASS_MAPPINGS = {
+    "LF_BlurImages": LF_BlurImages,
     "LF_ImageResizeByEdge": LF_ImageResizeByEdge,
     "LF_Lora2Prompt": LF_Lora2Prompt,
     "LF_LoraTag2Prompt": LF_LoraTag2Prompt,
@@ -365,6 +421,7 @@ NODE_CLASS_MAPPINGS = {
     "LF_WallOfText": LF_WallOfText,
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
+    "LF_BlurImages": "Blur images",
     "LF_ImageResizeByEdge": "Resize image by edge",
     "LF_Lora2Prompt": "Convert prompt and LoRAs",
     "LF_LoraTag2Prompt": "Convert LoRA tag to prompt",

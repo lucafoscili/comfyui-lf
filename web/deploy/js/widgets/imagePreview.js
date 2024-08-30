@@ -71,10 +71,7 @@ export const imagePreviewFactory = {
     },
     render: (node, name) => {
         const wrapper = document.createElement('div');
-        const content = document.createElement('div');
-        const options = imagePreviewFactory.options(content);
-        content.classList.add(imagePreviewFactory.cssClasses.content);
-        wrapper.appendChild(content);
+        const options = imagePreviewFactory.options(wrapper);
         return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };
     },
 };
@@ -89,7 +86,7 @@ const drawGrid = (value) => {
         const image64 = images[index];
         const image = document.createElement('img');
         image.classList.add(imagePreviewFactory.cssClasses.image);
-        image.src = `data:image/png;base64,${image64}`;
+        image.src = `data:image/webp;base64,${image64}`;
         image.title = `${title} [${index}]`;
         grid.appendChild(image);
     }
