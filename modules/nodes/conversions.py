@@ -17,25 +17,26 @@ class LF_BlurImages:
             "required": {
                 "images": ("IMAGE", {"tooltip": "List of images to blur."}),
                 "file_names": ("STRING", {"forceInput": True, "tooltip": "Corresponding list of file names for the images."}),
-                "blur_radius": ("INT", {"default": 20, "min": 1, "max": 100, "step": 1, "tooltip": "Radius for the Gaussian blur."}),
+                "blur_percentage": ("FLOAT", {"default": 0.25, "min": 0.05, "max": 1.0, "step": 0.05, "tooltip": "0% Blur: No blur applied, the image remains as-is. 100% Blur: Maximum blur applied based on the image's dimensions, which would result in a highly blurred (almost unrecognizable) image."})
             },
             "hidden": {"node_id": "UNIQUE_ID"}
         }
 
     CATEGORY = category
     FUNCTION = "on_exec"
-    INPUT_IS_LIST = (True, True, False)
+    INPUT_IS_LIST = (True, True, False, False)
     OUTPUT_IS_LIST = (True, True)
     RETURN_NAMES = ("images", "file_names")
     RETURN_TYPES = ("IMAGE", "STRING")
 
-    def on_exec(self, node_id, images, file_names, blur_radius):
+    def on_exec(self, node_id, images, file_names, blur_percentage):
         blurred_images = []
         blurred_file_names = []
 
+        if isinstance(blur_percentage, (list, tuple)):
+            blur_percentage = blur_percentage[0]  # Take the first value if it's a list or tuple
+
         for index, image_data in enumerate(images):
-            if isinstance(blur_radius, (list, tuple)):
-                blur_radius = blur_radius[0]  # Take the first value if it's a list or tuple
             
             file_name = file_names[index]
             base_name, original_extension = file_name.rsplit('.', 1)  # Split base name and extension
@@ -43,8 +44,13 @@ class LF_BlurImages:
             # Convert the tensor to a PIL Image
             image = tensor_to_pil(image_data)
             
-            # Apply Gaussian blur
-            blurred_image = image.filter(ImageFilter.GaussianBlur(blur_radius))
+            # Scale the blur radius based on image size
+            width, height = image.size
+            min_dimension = min(width, height)
+            adjusted_blur_radius = blur_percentage * (min_dimension / 10)
+            
+            # Apply Gaussian blur with the adjusted blur radius
+            blurred_image = image.filter(ImageFilter.GaussianBlur(adjusted_blur_radius))
             
             # Convert the blurred image back to a tensor
             blurred_tensor = pil_to_tensor(blurred_image)
