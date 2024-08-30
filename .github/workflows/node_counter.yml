@@ -2,7 +2,7 @@ name: Node Counter
 
 on:
   push:
-    branches: [main]
+    branches: [master]
 
 jobs:
   node_counter:
