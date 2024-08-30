@@ -1,4 +1,6 @@
-# LF Nodes
+# LF Custom Nodes for ComfyUI
+
+![Node Count](...)
 
 This repository contains custom nodes that I use in my workflow.
 It's just a side project that I'm developing in my free time while I'm waiting for generations to complete!
