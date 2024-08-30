@@ -1,7 +1,10 @@
+import io
 import json
 import random
 import re
 
+from PIL import Image
+from server import PromptServer
 from ..utils.conversions import *
 
 category = "LF Nodes/Conversions"
@@ -91,6 +94,92 @@ class LF_LoraTag2Prompt:
         keywords_count = count_words_in_comma_separated_string(clean_lora) 
         return (clean_lora, keywords_count,)
     
+class LF_MultipleImageResizeForWeb:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "images": ("IMAGE", {"type": "IMAGE", "tooltip": "List of images to process."}),
+                "file_names": ("STRING", {"forceInput": True, "type": "STRING", "tooltip": "Corresponding list of file names for the images."}),
+            },
+            "hidden": {"node_id": "UNIQUE_ID"}
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    INPUT_IS_LIST = (True, True,)
+    OUTPUT_IS_LIST = (True, True, True, False,)
+    RETURN_NAMES = ("images", "names", "names_with_dir", "json_data",)
+    RETURN_TYPES = ("IMAGE", "STRING", "STRING", "JSON",)
+
+    def on_exec(self, node_id, images, file_names):
+        dataset = { "nodes": [], }
+        output_file_names = []
+        output_file_names_with_dir = []
+        output_images = []
+        resolutions = [256, 320, 512, 640, 1024, 1280, 2048, 2560]
+
+        for index, image_data in enumerate(images):
+            file_name = file_names[index]
+            base_name = file_name.split('.')[0]  # Strip extension for prefixing
+            original_extension = file_name.split('.')[-1].lower()  # Get the original file extension and make it lowercase
+
+            # Convert the tensor to a PIL Image
+            image = tensor_to_pil(image_data)
+
+            # HD version (no resizing, original quality)
+            img_byte_arr = io.BytesIO()
+
+            # Handling image format, with a fallback to PNG if needed
+            try:
+                image_format = 'PNG' if original_extension not in ['jpeg', 'jpg', 'png', 'webp'] else original_extension.upper()
+                image.save(img_byte_arr, format=image_format)
+            except KeyError as e:
+                print(f"Unknown format '{original_extension}', falling back to PNG.")
+                image.save(img_byte_arr, format='PNG')
+
+            img_byte_arr = img_byte_arr.getvalue()
+
+            output_images.append(pil_to_tensor(image)) 
+            output_file_names.append(f"{base_name}.{image_format}")
+            output_file_names_with_dir.append(f"HD/{base_name}.{image_format}")
+
+            rootNode = {
+                "children": [],
+                "id": base_name,
+                "value": base_name
+            }
+
+            # Resized versions
+            for resolution in resolutions:
+                resized_image = image.resize(
+                    (resolution, int(image.height * resolution / image.width)), Image.Resampling.LANCZOS
+                )
+
+                img_byte_arr = io.BytesIO()
+                resized_image.save(img_byte_arr, format='WEBP', quality=60)
+                img_byte_arr = img_byte_arr.getvalue()
+
+                output_images.append(pil_to_tensor(resized_image))
+                output_file_names.append(f"{resolution}w_{base_name}.webp")
+                output_file_names_with_dir.append(f"{resolution}w/{resolution}w_{base_name}.webp")
+
+                childNode = {
+                    "id": f"{resolution}w_{base_name}",
+                    "value": f"{resolution}w_{base_name}"
+                }
+                rootNode["children"].append(childNode)
+
+            dataset["nodes"].append(rootNode)
+
+
+        PromptServer.instance.send_sync("lf-multipleimageresizeforweb", {
+            "node": node_id,
+            "dataset": dataset,
+        })
+
+        return (output_images, output_file_names, output_file_names_with_dir,dataset)
+    
 class LF_SequentialSeedsGenerator:
     @classmethod
     def INPUT_TYPES(cls):
@@ -107,50 +196,6 @@ class LF_SequentialSeedsGenerator:
     def on_exec(self, global_seed: int):
         seeds = [global_seed + i for i in range(20)] 
         return seeds
-    
-class LF_WallOfText:
-    @classmethod 
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "separator": ("STRING", {"default": ", ", "tooltip": "Character(s) separating each string apart."}),
-                "text_1": ("STRING", {"default": "", "multiline": True, "tooltip": "The first required string."}),
-                "text_2": ("STRING", {"default": "", "multiline": True, "tooltip": "The second required string."}),
-            },
-            "optional": {
-                "text_3": ("STRING", {"default": "", "multiline": True, "tooltip": "The third optional string."}),
-                "text_4": ("STRING", {"default": "", "multiline": True, "tooltip": "The fourth optional string."}),
-                "text_5": ("STRING", {"default": "", "multiline": True, "tooltip": "The fifth optional string."}),
-                "text_6": ("STRING", {"default": "", "multiline": True, "tooltip": "The sixth optional string."}),
-                "text_7": ("STRING", {"default": "", "multiline": True, "tooltip": "The seventh optional string."}),
-                "text_8": ("STRING", {"default": "", "multiline": True, "tooltip": "The eighth optional string."}),
-                "text_9": ("STRING", {"default": "", "multiline": True, "tooltip": "The ninth optional string."}),
-                "text_10": ("STRING", {"default": "", "multiline": True, "tooltip": "The tenth optional string."}),
-                "shuffle_inputs": ("BOOLEAN", {"default": False, "tooltip": "Toggle shuffling of input strings."}),
-                "seed": ("INT", {"default": 0, "tooltip": "Seed to control the randomness of the shuffling."}),
-            } 
-        }
-
-    CATEGORY = category
-    FUNCTION = "on_exec"
-    RETURN_NAMES = ("wall_of_text",)
-    RETURN_TYPES = ("STRING",)
-
-    def on_exec(self, **kwargs):
-        texts = [kwargs.get(f"text_{i}", "") for i in range(1, 11)]
-        wall_of_text = ""
-        if len(texts) > 1:
-            separator = kwargs.get("separator", "")
-            shuffle_inputs = kwargs.get("shuffle_inputs", False)
-            if shuffle_inputs:
-                seed = kwargs.get("seed", 0)
-                random.seed(seed)
-                random.shuffle(texts)
-            wall_of_text = separator.join([text for text in texts if text])
-        else:
-            wall_of_text = texts[0]
-
-        return (wall_of_text,)
 
 class LF_Something2Number:
     @classmethod
@@ -264,11 +309,56 @@ class LF_Something2String:
             flatten_input(value)
 
         return (flattened_values, flattened_values,)
+    
+class LF_WallOfText:
+    @classmethod 
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "separator": ("STRING", {"default": ", ", "tooltip": "Character(s) separating each string apart."}),
+                "text_1": ("STRING", {"default": "", "multiline": True, "tooltip": "The first required string."}),
+                "text_2": ("STRING", {"default": "", "multiline": True, "tooltip": "The second required string."}),
+            },
+            "optional": {
+                "text_3": ("STRING", {"default": "", "multiline": True, "tooltip": "The third optional string."}),
+                "text_4": ("STRING", {"default": "", "multiline": True, "tooltip": "The fourth optional string."}),
+                "text_5": ("STRING", {"default": "", "multiline": True, "tooltip": "The fifth optional string."}),
+                "text_6": ("STRING", {"default": "", "multiline": True, "tooltip": "The sixth optional string."}),
+                "text_7": ("STRING", {"default": "", "multiline": True, "tooltip": "The seventh optional string."}),
+                "text_8": ("STRING", {"default": "", "multiline": True, "tooltip": "The eighth optional string."}),
+                "text_9": ("STRING", {"default": "", "multiline": True, "tooltip": "The ninth optional string."}),
+                "text_10": ("STRING", {"default": "", "multiline": True, "tooltip": "The tenth optional string."}),
+                "shuffle_inputs": ("BOOLEAN", {"default": False, "tooltip": "Toggle shuffling of input strings."}),
+                "seed": ("INT", {"default": 0, "tooltip": "Seed to control the randomness of the shuffling."}),
+            } 
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    RETURN_NAMES = ("wall_of_text",)
+    RETURN_TYPES = ("STRING",)
+
+    def on_exec(self, **kwargs):
+        texts = [kwargs.get(f"text_{i}", "") for i in range(1, 11)]
+        wall_of_text = ""
+        if len(texts) > 1:
+            separator = kwargs.get("separator", "")
+            shuffle_inputs = kwargs.get("shuffle_inputs", False)
+            if shuffle_inputs:
+                seed = kwargs.get("seed", 0)
+                random.seed(seed)
+                random.shuffle(texts)
+            wall_of_text = separator.join([text for text in texts if text])
+        else:
+            wall_of_text = texts[0]
+
+        return (wall_of_text,)
 
 NODE_CLASS_MAPPINGS = {
     "LF_ImageResizeByEdge": LF_ImageResizeByEdge,
     "LF_Lora2Prompt": LF_Lora2Prompt,
     "LF_LoraTag2Prompt": LF_LoraTag2Prompt,
+    "LF_MultipleImageResizeForWeb": LF_MultipleImageResizeForWeb,
     "LF_SequentialSeedsGenerator": LF_SequentialSeedsGenerator,
     "LF_Something2Number": LF_Something2Number,
     "LF_Something2String": LF_Something2String,
@@ -278,6 +368,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_ImageResizeByEdge": "Resize image by edge",
     "LF_Lora2Prompt": "Convert prompt and LoRAs",
     "LF_LoraTag2Prompt": "Convert LoRA tag to prompt",
+    "LF_MultipleImageResizeForWeb": "Multiple image resize for Web",
     "LF_SequentialSeedsGenerator": "Generate sequential seeds",
     "LF_Something2Number": "Convert something to INT or FLOAT",
     "LF_Something2String": "Convert something to STRING",

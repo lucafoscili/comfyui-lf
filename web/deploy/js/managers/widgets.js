@@ -12,6 +12,7 @@ import { CustomWidgetName } from '../types/widgets.js';
 import { imagePreviewFactory } from '../widgets/imagePreview.js';
 import { booleanViewerFactory } from '../widgets/booleanViewer.js';
 import { jsonInputFactory } from '../widgets/jsonInput.js';
+import { treeFactory } from '../widgets/tree.js';
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
 /*-------------------------------------------------*/
@@ -43,6 +44,10 @@ export class LFWidgets {
                 const widget = app.widgets[CustomWidgetName.imagePreview](nodeType, CustomWidgetName.imagePreview).widget;
                 return widget;
             },
+            [CustomWidgetName.tree]: (nodeType) => {
+                const widget = app.widgets[CustomWidgetName.tree](nodeType, CustomWidgetName.tree).widget;
+                return widget;
+            },
         };
         this.option = {
             [CustomWidgetName.booleanViewer]: (booleanViewer) => booleanViewerFactory.options(booleanViewer),
@@ -51,6 +56,7 @@ export class LFWidgets {
             [CustomWidgetName.controlPanel]: () => controlPanelFactory.options(),
             [CustomWidgetName.jsonInput]: (content) => jsonInputFactory.options(content),
             [CustomWidgetName.imagePreview]: (content) => imagePreviewFactory.options(content),
+            [CustomWidgetName.tree]: (content) => treeFactory.options(content),
         };
         this.resizerHandler = {
             [CustomWidgetName.chart]: (nodeType) => chartFactory.resize(nodeType),
@@ -95,6 +101,13 @@ export class LFWidgets {
                 return {
                     [CustomWidgetName.imagePreview]: (nodeType, name) => {
                         return imagePreviewFactory.render(nodeType, name);
+                    },
+                };
+            },
+            [CustomWidgetName.tree]: () => {
+                return {
+                    [CustomWidgetName.tree]: (nodeType, name) => {
+                        return treeFactory.render(nodeType, name);
                     },
                 };
             },

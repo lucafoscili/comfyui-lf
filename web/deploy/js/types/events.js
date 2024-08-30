@@ -4,6 +4,7 @@ export var EventName;
     EventName["displayJson"] = "lf-displayjson";
     EventName["imageHistogram"] = "lf-imagehistogram";
     EventName["loadImages"] = "lf-loadimages";
+    EventName["multipleImageResizeForWeb"] = "lf-multipleimageresizeforweb";
     EventName["switchImage"] = "lf-switchimage";
     EventName["switchInteger"] = "lf-switchinteger";
     EventName["switchJson"] = "lf-switchjson";

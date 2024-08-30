@@ -4,6 +4,7 @@ export declare enum NodeName {
     displayJson = "LF_DisplayJSON",
     imageHistogram = "LF_ImageHistogram",
     loadImages = "LF_LoadImages",
+    multipleImageResizeForWeb = "LF_MultipleImageResizeForWeb",
     switchImage = "LF_SwitchImage",
     switchInteger = "LF_SwitchInteger",
     switchJson = "LF_SwitchJSON",

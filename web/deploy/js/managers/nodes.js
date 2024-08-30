@@ -8,6 +8,7 @@ import { switchIntegerFactory } from '../nodes/switchInteger.js';
 import { switchJsonFactory } from '../nodes/switchJson.js';
 import { switchStringFactory } from '../nodes/switchString.js';
 import { writeJsonFactory } from '../nodes/writeJson.js';
+import { multipleImageResizeForWebFactory } from '../nodes/multipleImageResizeForWeb.js';
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
 /*-------------------------------------------------*/
@@ -17,6 +18,7 @@ export class LFNodes {
             [NodeName.displayJson]: displayJsonFactory.eventHandler,
             [NodeName.imageHistogram]: imageHistogramFactory.eventHandler,
             [NodeName.loadImages]: loadImagesFactory.eventHandler,
+            [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.eventHandler,
             [NodeName.switchImage]: switchImageFactory.eventHandler,
             [NodeName.switchInteger]: switchIntegerFactory.eventHandler,
             [NodeName.switchJson]: switchJsonFactory.eventHandler,
@@ -28,6 +30,7 @@ export class LFNodes {
             [NodeName.displayJson]: displayJsonFactory.register,
             [NodeName.imageHistogram]: imageHistogramFactory.register,
             [NodeName.loadImages]: loadImagesFactory.register,
+            [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.register,
             [NodeName.switchImage]: switchImageFactory.register,
             [NodeName.switchInteger]: switchIntegerFactory.register,
             [NodeName.switchJson]: switchJsonFactory.register,

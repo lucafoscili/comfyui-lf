@@ -87,6 +87,13 @@ export class LFManager {
             nodes.eventHandlers.LF_LoadImages(e, widgets.adders.IMAGE_PREVIEW_B64);
         });
         /*-------------------------------------------------------------------*/
+        /*     I n i t   M u l t i p l e   R e s i z e   F o r   W e b       */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_MultipleImageResizeForWeb(widgets.setters.KUL_TREE, widgets.adders.KUL_TREE);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.multipleImageResizeForWeb, (e) => {
+            nodes.eventHandlers.LF_MultipleImageResizeForWeb(e, widgets.adders.KUL_TREE);
+        });
+        /*-------------------------------------------------------------------*/
         /*                 I n i t   S w i t c h   I m a g e                 */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_SwitchImage(widgets.setters.KUL_BOOLEAN_VIEWER, widgets.adders.KUL_BOOLEAN_VIEWER);

@@ -1,4 +1,6 @@
+import numpy as np
 import torch
+from PIL import Image
 from torchvision.transforms import InterpolationMode, functional
 
 def cleanse_lora_tag(lora_tag: str, separator: str):
@@ -66,6 +68,31 @@ def count_words_in_comma_separated_string(input_string):
     word_count = len(words_list)
     return word_count
 
+def pil_to_tensor(image):
+    """
+    Convert a PIL Image to a PyTorch tensor.
+
+    Args:
+        image (PIL.Image): The input PIL Image.
+
+    Returns:
+        torch.Tensor: The converted tensor representing the image.
+            The tensor will have shape [1, C, H, W] where C is the number of channels.
+
+    Notes:
+        - The PIL Image is first converted to a NumPy array.
+        - The array is then converted to a float32 tensor and normalized to [0, 1] range.
+        - The tensor is reordered from [H, W, C] to [C, H, W] format.
+        - An extra dimension is added at the beginning to represent the batch size (1).
+    """
+    # Convert the PIL image to a NumPy array
+    np_image = np.array(image).astype("float32") / 255.0
+    
+    # Convert the NumPy array to a tensor and reorder to [C, H, W]
+    tensor = torch.tensor(np_image).permute(0, 1, 2).unsqueeze(0)
+    
+    return tensor
+
 def resize_image(image_tensor: torch.Tensor, resize_method: str, longest_side: bool, size: int):
     """
     Resize an image tensor using PyTorch's interpolation methods.
@@ -109,3 +136,36 @@ def resize_image(image_tensor: torch.Tensor, resize_method: str, longest_side: b
     resized_image = resized_image.permute(0, 2, 3, 1)
 
     return resized_image
+
+def tensor_to_pil(tensor):
+    """
+    Convert a PyTorch tensor to a PIL Image.
+
+    Args:
+        tensor (torch.Tensor): The input tensor representing the image.
+            It should be a 4D tensor with shape [B, H, W, C] or a 3D tensor with shape [H, W, C].
+
+    Returns:
+        PIL.Image: The converted PIL Image.
+
+    Raises:
+        Exception: If there's an error during the conversion process.
+
+    Notes:
+        - If the input tensor is 4D, it will use the first image in the batch.
+        - The tensor is converted to a NumPy array and then to a PIL Image.
+        - The image values are scaled from [0, 1] to [0, 255] and converted to uint8.
+    """
+    try:
+        # Ensure that the tensor is 4D [B, H, W, C]
+        if tensor.dim() == 4:
+            tensor = tensor[0]  # Use the first image in the batch
+
+        # Convert the tensor from [H, W, C] format
+        image = tensor.cpu().numpy()  # Convert to a NumPy array
+        image = (image * 255).astype("uint8")  # Convert to uint8
+
+        return Image.fromarray(image)
+    except Exception as e:
+        print(f"Error converting tensor to PIL image: {e}")
+        raise

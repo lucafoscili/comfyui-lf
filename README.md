@@ -17,6 +17,7 @@ There is a big JS bundled coming from another side-project of mine, [a webcompon
 - **ImageResizeByEdge**: Resizes an image in tensor format's longest or shortest edge to the specified size.
 - **Lora2Prompt**: Converts a prompt and LoRAs to a formatted string.
 - **LoraTag2Prompt**: Processes a LoRA tag to extract keywords and count them. This node is useful for preparing prompts based on LoRA file names.
+- **MultipleImageResizeForWeb**: The node takes a list of images as input and generates eight additional images, each resized to common web resolutions (256px, 320px, 512px, 640px, 1024px, 1280px, 2048px, 2560px) along the longest edge.
 - **SequentialSeedsGenerator**: Generates a series of unique seeds based on a global seed value. This node is useful for creating reproducible random sequences in workflows.
 - **Something2Number**: Converts multiple inputs to integers and floats, handling nested structures and mixed types. If multiple numbers are sent to the node, they are summed.
 - **Something2String**: Converts multiple inputs to strings, handling nested structures and mixed types.

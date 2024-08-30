@@ -1,5 +1,5 @@
 import { CustomWidgetName, type ImagePreviewWidgetValue } from '../types/widgets';
-import { createDOMWidget, splitByLastSpaceBeforeAnyBracket } from '../utils/common';
+import { createDOMWidget } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-imagepreview';
 const DOGE = `

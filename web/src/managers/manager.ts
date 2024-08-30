@@ -13,6 +13,7 @@ import {
   EventName,
   ImageHistogramPayload,
   LoadImagesPayload,
+  MultipleImageResizeForWebPayload,
   SwitchImagePayload,
   SwitchIntegerPayload,
   SwitchJSONPayload,
@@ -119,6 +120,19 @@ export class LFManager {
     this.#APIS.event(EventName.loadImages, (e: CustomEvent<LoadImagesPayload>) => {
       nodes.eventHandlers.LF_LoadImages(e, widgets.adders.IMAGE_PREVIEW_B64);
     });
+    /*-------------------------------------------------------------------*/
+    /*     I n i t   M u l t i p l e   R e s i z e   F o r   W e b       */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_MultipleImageResizeForWeb(
+      widgets.setters.KUL_TREE,
+      widgets.adders.KUL_TREE,
+    );
+    this.#APIS.event(
+      EventName.multipleImageResizeForWeb,
+      (e: CustomEvent<MultipleImageResizeForWebPayload>) => {
+        nodes.eventHandlers.LF_MultipleImageResizeForWeb(e, widgets.adders.KUL_TREE);
+      },
+    );
     /*-------------------------------------------------------------------*/
     /*                 I n i t   S w i t c h   I m a g e                 */
     /*-------------------------------------------------------------------*/

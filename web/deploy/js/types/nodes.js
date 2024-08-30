@@ -7,6 +7,7 @@ export var NodeName;
     NodeName["displayJson"] = "LF_DisplayJSON";
     NodeName["imageHistogram"] = "LF_ImageHistogram";
     NodeName["loadImages"] = "LF_LoadImages";
+    NodeName["multipleImageResizeForWeb"] = "LF_MultipleImageResizeForWeb";
     NodeName["switchImage"] = "LF_SwitchImage";
     NodeName["switchInteger"] = "LF_SwitchInteger";
     NodeName["switchJson"] = "LF_SwitchJSON";

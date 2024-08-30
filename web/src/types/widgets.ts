@@ -13,32 +13,36 @@ export enum CustomWidgetName {
   chart = 'KUL_CHART',
   code = 'KUL_CODE',
   controlPanel = 'KUL_CONTROL_PANEL',
-  jsonInput = 'KUL_JSON_INPUT',
   imagePreview = 'IMAGE_PREVIEW_B64',
+  jsonInput = 'KUL_JSON_INPUT',
+  tree = 'KUL_TREE',
 }
 export interface CustomWidgetSetters {
+  [CustomWidgetName.booleanViewer](node: NodeType, name: string): { widget: BooleanViewerWidget };
   [CustomWidgetName.chart](node: NodeType, name: string): { widget: ChartWidget };
   [CustomWidgetName.code](node: NodeType, name: string): { widget: CodeWidget };
   [CustomWidgetName.controlPanel](node: NodeType, name: string): { widget: ControlPanelWidget };
-  [CustomWidgetName.jsonInput](node: NodeType, name: string): { widget: JsonInputWidget };
   [CustomWidgetName.imagePreview](node: NodeType, name: string): { widget: ImagePreviewWidget };
-  [CustomWidgetName.booleanViewer](node: NodeType, name: string): { widget: BooleanViewerWidget };
+  [CustomWidgetName.jsonInput](node: NodeType, name: string): { widget: JsonInputWidget };
+  [CustomWidgetName.tree](node: NodeType, name: string): { widget: TreeWidget };
 }
 export type CustomWidgetMap = {
+  [CustomWidgetName.booleanViewer]: BooleanViewerWidget;
   [CustomWidgetName.chart]: ChartWidget;
   [CustomWidgetName.code]: CodeWidget;
   [CustomWidgetName.controlPanel]: ControlPanelWidget;
-  [CustomWidgetName.jsonInput]: JsonInputWidget;
   [CustomWidgetName.imagePreview]: ImagePreviewWidget;
-  [CustomWidgetName.booleanViewer]: BooleanViewerWidget;
+  [CustomWidgetName.jsonInput]: JsonInputWidget;
+  [CustomWidgetName.tree]: TreeWidget;
 };
 export type CustomWidgetOptions =
+  | BooleanViewerWidgetOptions
   | ChartWidgetOptions
   | CodeWidgetOptions
   | ControlPanelWidgetOptions
-  | JsonInputWidgetOptions
   | ImagePreviewWidgetOptions
-  | BooleanViewerWidgetOptions;
+  | JsonInputWidgetOptions
+  | TreeWidgetOptions;
 
 /*-------------------------------------------------------------------*/
 /*                C h a r t   D e c l a r a t i o n s                */
@@ -158,3 +162,23 @@ export declare type BooleanViewerWidgetsSetter = () => {
   [CustomWidgetName.booleanViewer]: BaseWidgetCallback;
 };
 export type BooleanViewerWidgetValue = string;
+
+/*-------------------------------------------------------------------*/
+/*            T e x t f i e l d   D e c l a r a t i o n s            */
+/*-------------------------------------------------------------------*/
+
+export interface TreeWidget extends Widget {
+  options: TreeWidgetOptions;
+  type: [CustomWidgetName.tree];
+}
+export interface TreeWidgetOptions {
+  hideOnZoom: boolean;
+  getComp(): HTMLKulTreeElement;
+  getValue(): TreeWidgetValue;
+  setProps(props: Partial<HTMLKulTreeElement>): void;
+  setValue(value: TreeWidgetValue): void;
+}
+export declare type TreeWidgetsSetter = () => {
+  [CustomWidgetName.tree]: BaseWidgetCallback;
+};
+export type TreeWidgetValue = string | KulDataDataset;

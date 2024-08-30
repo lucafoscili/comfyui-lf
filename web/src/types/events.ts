@@ -13,6 +13,7 @@ export enum EventName {
   displayJson = 'lf-displayjson',
   imageHistogram = 'lf-imagehistogram',
   loadImages = 'lf-loadimages',
+  multipleImageResizeForWeb = 'lf-multipleimageresizeforweb',
   switchImage = 'lf-switchimage',
   switchInteger = 'lf-switchinteger',
   switchJson = 'lf-switchjson',
@@ -23,6 +24,7 @@ export type EventPayload =
   | DisplayJSONPayload
   | ImageHistogramPayload
   | LoadImagesPayload
+  | MultipleImageResizeForWebPayload
   | SwitchImagePayload
   | SwitchIntegerPayload
   | SwitchJSONPayload
@@ -52,6 +54,14 @@ export interface ImageHistogramPayload extends BaseEventPayload {
 export interface LoadImagesPayload extends BaseEventPayload {
   fileNames: Array<string>;
   images: Array<string>;
+}
+
+/*-------------------------------------------------------------------*/
+/*      M u l t i p l e   R e s i z e    D e c l a r a t i o n s     */
+/*-------------------------------------------------------------------*/
+
+export interface MultipleImageResizeForWebPayload extends BaseEventPayload {
+  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/
