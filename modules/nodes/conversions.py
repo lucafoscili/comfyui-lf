@@ -327,6 +327,7 @@ class LF_Something2Number:
             }
         }
 
+    CATEGORY = category
     FUNCTION = "on_exec"
     OUTPUT_IS_LIST = (False, False, True, True,)
     RETURN_NAMES = ("float_sum", "integer_sum", "float_list", "integer_list",)
@@ -400,6 +401,7 @@ class LF_Something2String:
             }
         }
 
+    CATEGORY = category
     FUNCTION = "on_exec"
     OUTPUT_IS_LIST = (False, True,)
     RETURN_TYPES = ("STRING", "STRING",)

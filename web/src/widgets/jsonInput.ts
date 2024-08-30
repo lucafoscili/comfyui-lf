@@ -88,7 +88,7 @@ function handleInputChange(e: Event) {
       }
     };
 
-    VALIDATION_TIMEOUT = setTimeout(validateAndFormatJSON, 5000);
+    VALIDATION_TIMEOUT = setTimeout(validateAndFormatJSON, 2500);
   };
 
   clearTimeout(VALIDATION_TIMEOUT);
