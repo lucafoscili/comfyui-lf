@@ -1,69 +1,38 @@
-name: Node Counter
+name: Update Node Count Badge
 
 on:
   push:
-    branches: [master]
+    branches:
+      - master
 
 jobs:
-  node_counter:
+  update-badge:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - uses: actions/checkout@v2
-      
-    - name: Count Nodes
-      id: count_nodes
-      run: |
-        # Function to count nodes in a single file
-        count_nodes_in_file() {
-          local file=$1
-          local node_count=0
-          
-          while IFS= read -r line; do
-            if [[ $line =~ ^class[[:space:]]+[A-Za-z_][A-Za-z0-9_] ]]; then
-              ((node_count++))
-            fi
-          done < "$file"
-          
-          echo "Nodes in $file: $node_count"
-          echo "::set-output name=node_count_$file::$node_count"
-        }
-        
-        # Call the function for each file
-        count_nodes_in_file /modules/nodes/analysis.py
-        count_nodes_in_file /modules/nodes/configuration.py
-        count_nodes_in_file /modules/nodes/conversions.py
-        count_nodes_in_file /modules/nodes/json.py
-        count_nodes_in_file /modules/nodes/llm.py
-        count_nodes_in_file /modules/nodes/loaders.py
-        count_nodes_in_file /modules/nodes/logic.py
-        
-        # Sum up all node counts
-        total_node_count=0
-        for file in analysis.py configuration.py conversions.py json.py llm.py loaders.py logic.py; do
-          total_node_count=$((total_node_count + ${node_count_$file}))
-        done
-        echo "Total nodes: $total_node_count"
-        echo "::set-output name=total_node_count::$total_node_count"
-    
-    - name: Create Badge
-      uses: actions/github-script@v6
-      with:
-        script: |
-          const fs = require('fs');
-          const path = require('path');
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-          // Get the total node count from the previous step
-          const totalNodeCount = process.env.TOTAL_NODE_COUNT;
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
 
-          // Create a simple text-based badge
-          const badgeContent = `Total Nodes: ${totalNodeCount}`;
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          # Add any other dependencies your script needs
 
-          // Write the badge content to a file
-          fs.writeFileSync(path.join(process.cwd(), 'badge.txt'), badgeContent);
+      - name: Count nodes and update badge
+        run: |
+          python update_badge.py
 
-    - name: Upload Badge
-      uses: actions/upload-artifact@v3
-      with:
-        name: node-badge
-        path: badge.txt
+      - name: Commit changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add README.md
+          git commit -m "Update node count badge"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
