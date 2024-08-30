@@ -30,13 +30,13 @@ jobs:
         }
         
         # Call the function for each file
-        count_nodes_in_file analysis.py
-        count_nodes_in_file configuration.py
-        count_nodes_in_file conversions.py
-        count_nodes_in_file json.py
-        count_nodes_in_file llm.py
-        count_nodes_in_file loaders.py
-        count_nodes_in_file logic.py
+        count_nodes_in_file /modules/nodes/analysis.py
+        count_nodes_in_file /modules/nodes/configuration.py
+        count_nodes_in_file /modules/nodes/conversions.py
+        count_nodes_in_file /modules/nodes/json.py
+        count_nodes_in_file /modules/nodes/llm.py
+        count_nodes_in_file /modules/nodes/loaders.py
+        count_nodes_in_file /modules/nodes/logic.py
         
         # Sum up all node counts
         total_node_count=0
