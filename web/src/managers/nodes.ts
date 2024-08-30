@@ -9,6 +9,8 @@ import { switchJsonFactory } from '../nodes/switchJson';
 import { switchStringFactory } from '../nodes/switchString';
 import { BaseWidgetCallback } from '../types/widgets';
 import { writeJsonFactory } from '../nodes/writeJson';
+import { multipleImageResizeForWebFactory } from '../nodes/multipleImageResizeForWeb';
+import { blurImagesFactory } from '../nodes/blurImages';
 
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
@@ -16,9 +18,11 @@ import { writeJsonFactory } from '../nodes/writeJson';
 
 export class LFNodes {
   eventHandler = {
+    [NodeName.blurImages]: blurImagesFactory.eventHandler,
     [NodeName.displayJson]: displayJsonFactory.eventHandler,
     [NodeName.imageHistogram]: imageHistogramFactory.eventHandler,
     [NodeName.loadImages]: loadImagesFactory.eventHandler,
+    [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.eventHandler,
     [NodeName.switchImage]: switchImageFactory.eventHandler,
     [NodeName.switchInteger]: switchIntegerFactory.eventHandler,
     [NodeName.switchJson]: switchJsonFactory.eventHandler,
@@ -27,10 +31,12 @@ export class LFNodes {
   };
 
   register = {
+    [NodeName.blurImages]: blurImagesFactory.register,
     [NodeName.controlPanel]: controlPanelFactory.register,
     [NodeName.displayJson]: displayJsonFactory.register,
     [NodeName.imageHistogram]: imageHistogramFactory.register,
     [NodeName.loadImages]: loadImagesFactory.register,
+    [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.register,
     [NodeName.switchImage]: switchImageFactory.register,
     [NodeName.switchInteger]: switchIntegerFactory.register,
     [NodeName.switchJson]: switchJsonFactory.register,

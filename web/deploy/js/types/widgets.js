@@ -7,6 +7,7 @@ export var CustomWidgetName;
     CustomWidgetName["chart"] = "KUL_CHART";
     CustomWidgetName["code"] = "KUL_CODE";
     CustomWidgetName["controlPanel"] = "KUL_CONTROL_PANEL";
-    CustomWidgetName["jsonInput"] = "KUL_JSON_INPUT";
     CustomWidgetName["imagePreview"] = "IMAGE_PREVIEW_B64";
+    CustomWidgetName["jsonInput"] = "KUL_JSON_INPUT";
+    CustomWidgetName["tree"] = "KUL_TREE";
 })(CustomWidgetName || (CustomWidgetName = {}));

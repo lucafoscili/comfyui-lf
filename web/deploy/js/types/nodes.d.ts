@@ -1,9 +1,11 @@
 import { CustomWidgetName } from './widgets';
 export declare enum NodeName {
+    blurImages = "LF_BlurImages",
     controlPanel = "LF_ControlPanel",
     displayJson = "LF_DisplayJSON",
     imageHistogram = "LF_ImageHistogram",
     loadImages = "LF_LoadImages",
+    multipleImageResizeForWeb = "LF_MultipleImageResizeForWeb",
     switchImage = "LF_SwitchImage",
     switchInteger = "LF_SwitchInteger",
     switchJson = "LF_SwitchJSON",

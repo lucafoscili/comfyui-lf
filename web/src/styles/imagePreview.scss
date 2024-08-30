@@ -1,17 +1,13 @@
 .lf-imagepreview {
   & {
-    max-height: 100%;
-    max-width: 100%;
+    background: var(--kul-background-color);
     overflow: auto;
   }
 
   &__doge {
-    background: var(--kul-background-color);
     color: var(--kul-text-color);
     font-family: var(--kul-font-family-monospace);
     font-size: var(--kul-font-size);
-    max-height: 100%;
-    max-width: 100%;
     text-align: center;
     white-space: pre;
   }
@@ -19,12 +15,19 @@
   &__grid {
     align-items: center;
     display: grid;
-    max-height: 100%;
-    max-width: 100%;
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   }
 
   &__image {
     max-width: 100%;
+  }
+
+  &,
+  &__doge,
+  &__grid {
+    height: 100%;
+    max-height: 100%;
+    max-width: 100%;
+    width: 100%;
   }
 }

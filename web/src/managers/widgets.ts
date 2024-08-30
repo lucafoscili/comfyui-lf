@@ -6,6 +6,7 @@ import { CustomWidgetName } from '../types/widgets.js';
 import { imagePreviewFactory } from '../widgets/imagePreview.js';
 import { booleanViewerFactory } from '../widgets/booleanViewer.js';
 import { jsonInputFactory } from '../widgets/jsonInput.js';
+import { treeFactory } from '../widgets/tree.js';
 
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
@@ -63,6 +64,10 @@ export class LFWidgets {
       ).widget;
       return widget;
     },
+    [CustomWidgetName.tree]: (nodeType: NodeType) => {
+      const widget = app.widgets[CustomWidgetName.tree](nodeType, CustomWidgetName.tree).widget;
+      return widget;
+    },
   };
 
   option = {
@@ -75,6 +80,7 @@ export class LFWidgets {
       jsonInputFactory.options(content),
     [CustomWidgetName.imagePreview]: (content: HTMLDivElement) =>
       imagePreviewFactory.options(content),
+    [CustomWidgetName.tree]: (content: HTMLKulTreeElement) => treeFactory.options(content),
   };
 
   resizerHandler = {
@@ -121,6 +127,13 @@ export class LFWidgets {
       return {
         [CustomWidgetName.imagePreview]: (nodeType: NodeType, name: CustomWidgetName) => {
           return imagePreviewFactory.render(nodeType, name);
+        },
+      };
+    },
+    [CustomWidgetName.tree]: () => {
+      return {
+        [CustomWidgetName.tree]: (nodeType: NodeType, name: CustomWidgetName) => {
+          return treeFactory.render(nodeType, name);
         },
       };
     },

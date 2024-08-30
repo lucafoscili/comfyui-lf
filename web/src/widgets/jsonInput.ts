@@ -1,13 +1,7 @@
 import { LogSeverity } from '../types/manager';
 import { NodeName } from '../types/nodes';
 import { CustomWidgetName } from '../types/widgets';
-import {
-  createDOMWidget,
-  findWidget,
-  getLFManager,
-  getWidget,
-  unescapeJson,
-} from '../utils/common';
+import { createDOMWidget, findWidget, getLFManager, unescapeJson } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-jsoninput';
 const TYPE = CustomWidgetName.jsonInput;

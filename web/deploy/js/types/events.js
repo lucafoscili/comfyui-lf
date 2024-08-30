@@ -1,9 +1,11 @@
 export var EventName;
 (function (EventName) {
+    EventName["blurImages"] = "lf-blurimages";
     EventName["controlPanel"] = "lf-controlpanel";
     EventName["displayJson"] = "lf-displayjson";
     EventName["imageHistogram"] = "lf-imagehistogram";
     EventName["loadImages"] = "lf-loadimages";
+    EventName["multipleImageResizeForWeb"] = "lf-multipleimageresizeforweb";
     EventName["switchImage"] = "lf-switchimage";
     EventName["switchInteger"] = "lf-switchinteger";
     EventName["switchJson"] = "lf-switchjson";

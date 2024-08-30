@@ -9,10 +9,12 @@ export interface BaseEventPayload {
 }
 export type EventCallback<T extends EventPayload> = (e: CustomEvent<T>) => void;
 export enum EventName {
+  blurImages = 'lf-blurimages',
   controlPanel = 'lf-controlpanel',
   displayJson = 'lf-displayjson',
   imageHistogram = 'lf-imagehistogram',
   loadImages = 'lf-loadimages',
+  multipleImageResizeForWeb = 'lf-multipleimageresizeforweb',
   switchImage = 'lf-switchimage',
   switchInteger = 'lf-switchinteger',
   switchJson = 'lf-switchjson',
@@ -20,14 +22,25 @@ export enum EventName {
   writeJson = 'lf-writejson',
 }
 export type EventPayload =
+  | BlurImagesPayload
   | DisplayJSONPayload
   | ImageHistogramPayload
   | LoadImagesPayload
+  | MultipleImageResizeForWebPayload
   | SwitchImagePayload
   | SwitchIntegerPayload
   | SwitchJSONPayload
   | SwitchStringPayload
   | WriteJSONPayload;
+
+/*-------------------------------------------------------------------*/
+/*           B l u r I m a g e s   D e c l a r a t i o n s           */
+/*-------------------------------------------------------------------*/
+
+export interface BlurImagesPayload extends BaseEventPayload {
+  fileNames: Array<string>;
+  images: Array<string>;
+}
 
 /*-------------------------------------------------------------------*/
 /*         D i s p l a y J S O N   D e c l a r a t i o n s           */
@@ -52,6 +65,14 @@ export interface ImageHistogramPayload extends BaseEventPayload {
 export interface LoadImagesPayload extends BaseEventPayload {
   fileNames: Array<string>;
   images: Array<string>;
+}
+
+/*-------------------------------------------------------------------*/
+/*      M u l t i p l e   R e s i z e    D e c l a r a t i o n s     */
+/*-------------------------------------------------------------------*/
+
+export interface MultipleImageResizeForWebPayload extends BaseEventPayload {
+  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/
