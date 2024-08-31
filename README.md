@@ -1,6 +1,6 @@
 # LF Custom Nodes for ComfyUI
 
-![LFNodes](https://github.com/lucafoscili/comfyui-lf/blob/master/docs/images/LFNodes.png "LF Nodes for ComfyUI")
+![LFNodes](https://github.com/lucafoscili/comfyui-lf/blob/a7ef3c6e62c266b9f09f2f843e8f8590663f6bb6/docs/images/LFNodes.png "LF Nodes for ComfyUI")
 
 This repository contains custom nodes that I use in my workflow.
 It's just a side project that I'm developing in my free time while I'm waiting for generations to complete!
