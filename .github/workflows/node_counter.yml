@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+  workflow_dispatch:
 
 jobs:
   update-badge:
@@ -19,13 +20,10 @@ jobs:
           python-version: '3.x'
 
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          # Add any other dependencies your script needs
+        run: pip install -r requirements.txt
 
-      - name: Count nodes and update badge
-        run: |
-          python update_badge.py
+      - name: Run the node count script
+        run: python update_badge.py
 
       - name: Commit changes
         run: |
@@ -33,6 +31,9 @@ jobs:
           git config --local user.name "GitHub Action"
           git add README.md
           git commit -m "Update node count badge"
-          git push
+
+      - name: Push changes
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_PAT: ${{ secrets.BADGE_ACTION }}
+        run: |
+          git push https://${BADGE_ACTION}@github.com/${{ github.repository }}.git HEAD:master
