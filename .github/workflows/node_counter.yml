@@ -30,10 +30,10 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add README.md
-          git commit -m "Update node count badge"
+          git commit -m "Update node count badge" || echo "No changes to commit"
 
       - name: Push changes
         env:
           GH_PAT: ${{ secrets.BADGE_ACTION }}
         run: |
-          git push https://${BADGE_ACTION}@github.com/${{ github.repository }}.git HEAD:master
+          git push https://${GH_PAT}@github.com/${{ github.repository }}.git HEAD:master
