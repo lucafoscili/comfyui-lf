@@ -1,24 +1,20 @@
 import os
-import ast
 
 def count_nodes_in_file(file_path):
-    with open(file_path, "r") as file:
-        tree = ast.parse(file.read(), filename=file_path)
-
-    node_class_mappings = None
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Assign):
-            for target in node.targets:
-                if isinstance(target, ast.Name) and target.id == 'NODE_CLASS_MAPPINGS':
-                    if isinstance(node.value, ast.Dict):
-                        node_class_mappings = node.value
-                        break
-        if node_class_mappings:
-            break
-
-    if node_class_mappings:
-        return len(node_class_mappings.keys())
-    return 0
+    try:
+        with open(file_path, "r") as file:
+            content = file.read()
+        # Parse the content to extract NODE_CLASS_MAPPINGS
+        mappings_start = content.find('NODE_CLASS_MAPPINGS = {')
+        mappings_end = content.find('}', mappings_start)
+        if mappings_start != -1 and mappings_end != -1:
+            mappings_content = content[mappings_start:mappings_end+1]
+            exec(mappings_content, globals())
+            node_class_mappings = globals().get('NODE_CLASS_MAPPINGS', {})
+            return len(node_class_mappings.keys()) if callable(node_class_mappings.keys) else len(node_class_mappings)
+    except Exception as e:
+        print(f"Error parsing file {file_path}: {str(e)}")
+        return 0
 
 def count_all_nodes(directory):
     node_counts = {}
