@@ -4,13 +4,14 @@ def count_nodes_in_file(file_path):
     try:
         with open(file_path, "r") as file:
             content = file.read()
-        # Parse the content to extract NODE_CLASS_MAPPINGS
-        mappings_start = content.find('NODE_CLASS_MAPPINGS = {')
+        print(f"Parsing file: {file_path}")
+        print("---")
+        mappings_start = content.find('NODE_DISPLAY_NAME_MAPPINGS = {')
         mappings_end = content.find('}', mappings_start)
         if mappings_start != -1 and mappings_end != -1:
             mappings_content = content[mappings_start:mappings_end+1]
             exec(mappings_content, globals())
-            node_class_mappings = globals().get('NODE_CLASS_MAPPINGS', {})
+            node_class_mappings = globals().get('NODE_DISPLAY_NAME_MAPPINGS', {})
             return len(node_class_mappings.keys()) if callable(node_class_mappings.keys) else len(node_class_mappings)
     except Exception as e:
         print(f"Error parsing file {file_path}: {str(e)}")
