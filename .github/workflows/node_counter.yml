@@ -34,6 +34,6 @@ jobs:
 
       - name: Push changes
         env:
-          GH_PAT: ${{ secrets.GITHUB_TOKEN }}
+          GH_PAT: ${{ github.token }}
         run: |
           git push https://${GH_PAT}@github.com/${{ github.repository }}.git HEAD:master
