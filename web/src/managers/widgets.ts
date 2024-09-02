@@ -7,6 +7,7 @@ import { imagePreviewFactory } from '../widgets/imagePreview.js';
 import { booleanViewerFactory } from '../widgets/booleanViewer.js';
 import { jsonInputFactory } from '../widgets/jsonInput.js';
 import { treeFactory } from '../widgets/tree.js';
+import { chatFactory } from '../widgets/chat.js';
 
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
@@ -37,6 +38,10 @@ export class LFWidgets {
     },
     [CustomWidgetName.chart]: (nodeType: NodeType) => {
       const widget = app.widgets[CustomWidgetName.chart](nodeType, CustomWidgetName.chart).widget;
+      return widget;
+    },
+    [CustomWidgetName.chat]: (nodeType: NodeType) => {
+      const widget = app.widgets[CustomWidgetName.chat](nodeType, CustomWidgetName.chat).widget;
       return widget;
     },
     [CustomWidgetName.code]: (nodeType: NodeType) => {
@@ -74,6 +79,7 @@ export class LFWidgets {
     [CustomWidgetName.booleanViewer]: (booleanViewer: HTMLKulTextfieldElement) =>
       booleanViewerFactory.options(booleanViewer),
     [CustomWidgetName.chart]: (chart: HTMLKulChartElement) => chartFactory.options(chart),
+    [CustomWidgetName.chat]: (chat: HTMLKulChatElement) => chatFactory.options(chat),
     [CustomWidgetName.code]: (code: HTMLKulCodeElement) => codeFactory.options(code),
     [CustomWidgetName.controlPanel]: () => controlPanelFactory.options(),
     [CustomWidgetName.jsonInput]: (content: HTMLTextAreaElement) =>
@@ -99,6 +105,13 @@ export class LFWidgets {
       return {
         [CustomWidgetName.chart]: (nodeType: NodeType, name: CustomWidgetName) => {
           return chartFactory.render(nodeType, name);
+        },
+      };
+    },
+    [CustomWidgetName.chat]: () => {
+      return {
+        [CustomWidgetName.chat]: (nodeType: NodeType, name: CustomWidgetName) => {
+          return chatFactory.render(nodeType, name);
         },
       };
     },

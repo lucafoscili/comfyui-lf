@@ -5,6 +5,7 @@ export type BaseWidgetCallback = <T extends CustomWidgetName>(node: NodeType, na
 export declare enum CustomWidgetName {
     booleanViewer = "KUL_BOOLEAN_VIEWER",
     chart = "KUL_CHART",
+    chat = "KUL_CHAT",
     code = "KUL_CODE",
     controlPanel = "KUL_CONTROL_PANEL",
     imagePreview = "IMAGE_PREVIEW_B64",
@@ -12,38 +13,42 @@ export declare enum CustomWidgetName {
     tree = "KUL_TREE"
 }
 export interface CustomWidgetSetters {
-    [CustomWidgetName.booleanViewer](node: NodeType, name: string): {
+    [CustomWidgetName.booleanViewer](node: NodeType, name: CustomWidgetName.booleanViewer): {
         widget: BooleanViewerWidget;
     };
-    [CustomWidgetName.chart](node: NodeType, name: string): {
+    [CustomWidgetName.chart](node: NodeType, name: CustomWidgetName.chart): {
         widget: ChartWidget;
     };
-    [CustomWidgetName.code](node: NodeType, name: string): {
+    [CustomWidgetName.chat](node: NodeType, name: CustomWidgetName.chat): {
+        widget: ChatWidget;
+    };
+    [CustomWidgetName.code](node: NodeType, name: CustomWidgetName.code): {
         widget: CodeWidget;
     };
-    [CustomWidgetName.controlPanel](node: NodeType, name: string): {
+    [CustomWidgetName.controlPanel](node: NodeType, name: CustomWidgetName.controlPanel): {
         widget: ControlPanelWidget;
     };
-    [CustomWidgetName.imagePreview](node: NodeType, name: string): {
+    [CustomWidgetName.imagePreview](node: NodeType, name: CustomWidgetName.imagePreview): {
         widget: ImagePreviewWidget;
     };
-    [CustomWidgetName.jsonInput](node: NodeType, name: string): {
+    [CustomWidgetName.jsonInput](node: NodeType, name: CustomWidgetName.jsonInput): {
         widget: JsonInputWidget;
     };
-    [CustomWidgetName.tree](node: NodeType, name: string): {
+    [CustomWidgetName.tree](node: NodeType, name: CustomWidgetName.tree): {
         widget: TreeWidget;
     };
 }
 export type CustomWidgetMap = {
     [CustomWidgetName.booleanViewer]: BooleanViewerWidget;
     [CustomWidgetName.chart]: ChartWidget;
+    [CustomWidgetName.chat]: ChatWidget;
     [CustomWidgetName.code]: CodeWidget;
     [CustomWidgetName.controlPanel]: ControlPanelWidget;
     [CustomWidgetName.imagePreview]: ImagePreviewWidget;
     [CustomWidgetName.jsonInput]: JsonInputWidget;
     [CustomWidgetName.tree]: TreeWidget;
 };
-export type CustomWidgetOptions = BooleanViewerWidgetOptions | ChartWidgetOptions | CodeWidgetOptions | ControlPanelWidgetOptions | ImagePreviewWidgetOptions | JsonInputWidgetOptions | TreeWidgetOptions;
+export type CustomWidgetOptions = BooleanViewerWidgetOptions | ChartWidgetOptions | ChatWidgetOptions | CodeWidgetOptions | ControlPanelWidgetOptions | ImagePreviewWidgetOptions | JsonInputWidgetOptions | TreeWidgetOptions;
 export interface ChartWidget extends Widget {
     options: ChartWidgetOptions;
     type: [CustomWidgetName.chart];
@@ -59,6 +64,21 @@ export type ChartWidgetsSetter = () => {
     [CustomWidgetName.chart]: BaseWidgetCallback;
 };
 export type ChartWidgetValue = string;
+export interface ChatWidget extends Widget {
+    options: ChatWidgetOptions;
+    type: [CustomWidgetName.chat];
+}
+export interface ChatWidgetOptions {
+    hideOnZoom: boolean;
+    getComp(): HTMLKulChatElement;
+    getValue(): void;
+    setProps(props: Partial<HTMLKulChatElement>): void;
+    setValue(): void;
+}
+export type ChatWidgetsSetter = () => {
+    [CustomWidgetName.chat]: BaseWidgetCallback;
+};
+export type ChatWidgetValue = string;
 export interface CodeWidget extends Widget {
     options: CodeWidgetOptions;
     type: [CustomWidgetName.code];

@@ -1,5 +1,6 @@
-import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, a as getAssetPath, H as Host } from './index-9aa60797.js';
-import { k as kulManagerInstance, g as getProps, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './kul-manager-ed681a28.js';
+import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, a as getAssetPath, H as Host } from './index-9570d2db.js';
+import { k as kulManagerInstance, g as getProps } from './kul-manager-18eb90c7.js';
+import { K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './GenericVariables-0efba181.js';
 import { K as KulDataCyAttributes } from './GenericTypes-8038330a.js';
 
 var KulTextfieldProps;
@@ -245,7 +246,7 @@ const KulTextfield = class {
         this.status.forEach((status) => {
             classList.push(`textfield--${status}`);
         });
-        return (h(Host, { key: '77e2cb81118df495230693761f404b4090b4c4be' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'd289e28db1225ee0fa86450056b05ebdfa931313', id: KUL_WRAPPER_ID }, h("div", { key: '0fbc5c275795bd410616954c258660b04663022e', class: classList.join(' ') }, this.kulStyling === 'textarea'
+        return (h(Host, { key: '6cf33c559d6eeb705c0869402903d72ea2de6cb9' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '8f24bab83dd05f53290c25a795aef4b40ed7809d', id: KUL_WRAPPER_ID }, h("div", { key: '2ebd46ad56a4e7a91124ca5cc10c8bb27b52c39c', class: classList.join(' ') }, this.kulStyling === 'textarea'
             ? [
                 this.#prepCounter(),
                 this.#prepIcon(),

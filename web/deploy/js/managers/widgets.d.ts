@@ -5,6 +5,7 @@ export declare class LFWidgets {
     add: {
         KUL_BOOLEAN_VIEWER: (nodeType: NodeType) => any;
         KUL_CHART: (nodeType: NodeType) => any;
+        KUL_CHAT: (nodeType: NodeType) => any;
         KUL_CODE: (nodeType: NodeType) => any;
         KUL_CONTROL_PANEL: (nodeType: NodeType) => any;
         KUL_JSON_INPUT: (nodeType: NodeType) => any;
@@ -25,6 +26,13 @@ export declare class LFWidgets {
             getValue(): string;
             setProps(props: Partial<HTMLKulChartElement>): void;
             setValue(value: Record<string, unknown> | string): void;
+        };
+        KUL_CHAT: (chat: HTMLKulChatElement) => {
+            hideOnZoom: boolean;
+            getComp(): HTMLKulChatElement;
+            getValue(): string;
+            setProps(props: Partial<HTMLKulChatElement>): void;
+            setValue(history: string): void;
         };
         KUL_CODE: (code: HTMLKulCodeElement) => {
             hideOnZoom: boolean;
@@ -75,6 +83,9 @@ export declare class LFWidgets {
                 widget: Widget;
             };
         };
+        KUL_CHAT: () => {
+            KUL_CHAT: (nodeType: NodeType, name: CustomWidgetName) => any;
+        };
         KUL_CODE: () => {
             KUL_CODE: (nodeType: NodeType, name: CustomWidgetName) => {
                 widget: Widget;
@@ -103,6 +114,7 @@ export declare class LFWidgets {
         adders: {
             KUL_BOOLEAN_VIEWER: (nodeType: NodeType) => any;
             KUL_CHART: (nodeType: NodeType) => any;
+            KUL_CHAT: (nodeType: NodeType) => any;
             KUL_CODE: (nodeType: NodeType) => any;
             KUL_CONTROL_PANEL: (nodeType: NodeType) => any;
             KUL_JSON_INPUT: (nodeType: NodeType) => any;
@@ -123,6 +135,13 @@ export declare class LFWidgets {
                 getValue(): string;
                 setProps(props: Partial<HTMLKulChartElement>): void;
                 setValue(value: Record<string, unknown> | string): void;
+            };
+            KUL_CHAT: (chat: HTMLKulChatElement) => {
+                hideOnZoom: boolean;
+                getComp(): HTMLKulChatElement;
+                getValue(): string;
+                setProps(props: Partial<HTMLKulChatElement>): void;
+                setValue(history: string): void;
             };
             KUL_CODE: (code: HTMLKulCodeElement) => {
                 hideOnZoom: boolean;
@@ -172,6 +191,9 @@ export declare class LFWidgets {
                 KUL_CHART: (nodeType: NodeType, name: CustomWidgetName) => {
                     widget: Widget;
                 };
+            };
+            KUL_CHAT: () => {
+                KUL_CHAT: (nodeType: NodeType, name: CustomWidgetName) => any;
             };
             KUL_CODE: () => {
                 KUL_CODE: (nodeType: NodeType, name: CustomWidgetName) => {

@@ -1,0 +1,14 @@
+.lf-chat {
+  background: var(--kul-background-color);
+  height: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  overflow: auto;
+  width: 100%;
+}
+.lf-chat__widget {
+  height: 100%;
+  width: 100%;
+}
+
+/*# sourceMappingURL=chat.css.map */

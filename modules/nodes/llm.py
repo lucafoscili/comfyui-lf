@@ -65,7 +65,7 @@ class LF_CharacterImpersonator:
         if status_code != 200:
             message = f"Whoops! Request failed with status code {status_code} and method {method}."
 
-        return(request, response_data, message)
+        return (request, response_data, message)
 
 class LF_ImageClassifier:
     @classmethod
@@ -127,13 +127,39 @@ class LF_ImageClassifier:
         if status_code != 200:
             message = f"Whoops! Request failed with status code {status_code} and method {method}."
 
-        return(request, response_data, message)
+        return (request, response_data, message)
     
+class LF_LLMChat:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "KUL_CHAT": ("KUL_CHAT", {"default": "", "tooltip": "Chat with your local LLM."}),
+            },
+        }
+    
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    OUTPUT_LIST = (False, False, False, False, True)
+    OUTPUT_NODE = True
+    RETURN_NAMES = ("chat_history_json", "last_message", "last_user_message", "last_llm_message", "all_messages")
+    RETURN_TYPES = ("JSON", "STRING", "STRING", "STRING", "STRING")
+
+    def on_exec(self, KUL_CHAT):
+        chat_data = json.loads(KUL_CHAT)
+        all_messages = [message["content"] for message in chat_data]
+        last_message = all_messages[-1]
+        last_user_message = next((message["content"] for message in reversed(chat_data) if message["role"] == "user"), "")
+        last_llm_message = next((message["content"] for message in reversed(chat_data) if message["role"] == "llm"), "")
+        return (chat_data, last_message, last_user_message, last_llm_message, json.dumps(all_messages))
+
 NODE_CLASS_MAPPINGS = {
     "LF_CharacterImpersonator": LF_CharacterImpersonator,
-    "LF_ImageClassifier": LF_ImageClassifier
+    "LF_ImageClassifier": LF_ImageClassifier,
+    "LF_LLMChat": LF_LLMChat,
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_CharacterImpersonator": "LLM <-> Character",
     "LF_ImageClassifier": "LLM Image classifier",
+    "LF_LLMChat": "LLM Chat"
 }

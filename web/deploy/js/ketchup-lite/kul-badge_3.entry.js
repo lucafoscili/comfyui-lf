@@ -1,5 +1,5 @@
 import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, H as Host, a as getAssetPath } from './index-9aa60797.js';
-import { k as kulManagerInstance, g as getProps, b as KulThemeColorValues, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID, C as CSS_VAR_PREFIX } from './kul-manager-ed681a28.js';
+import { k as kulManagerInstance, g as getProps, b as KulThemeColorValues, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID, C as CSS_VAR_PREFIX } from './kul-manager-3484bcf1.js';
 
 var KulBadgeProps;
 (function (KulBadgeProps) {
@@ -395,59 +395,59 @@ const KulSpinner = class {
             spinnerClass = 'spinner-v' + this.kulLayout;
             if (this.kulLayout === 7) {
                 spinnerEl = [
-                    h("div", { key: '2716ce8f63ea62361ab16dc6afc944bfbbd6f7d6', class: "sk-spinner-v7-dot" }),
-                    h("div", { key: '372f2b70c25fe39e6bf37365fb82306b2d84a1d0', class: "sk-spinner-v7-dot" }),
-                    h("div", { key: '5bc97c4bedb9e62d41a394f4936ddcacadc51a6a', class: "sk-spinner-v7-dot" }),
-                    h("div", { key: 'ad1166742b83319b0688c3b3970e79c110e0ed07', class: "sk-spinner-v7-dot" }),
-                    h("div", { key: '0fabafa866678085cf0c16018e82f1ceb49fc64b', class: "sk-spinner-v7-dot" }),
-                    h("div", { key: 'c558e66cfeb56e41d3b537fea23ce288258051da', class: "sk-spinner-v7-dot" }),
+                    h("div", { key: '3156674fc3ca5a67369227096506f754e73f822b', class: "sk-spinner-v7-dot" }),
+                    h("div", { key: 'b3b0c77be344921b2095b300f299d698f6724c28', class: "sk-spinner-v7-dot" }),
+                    h("div", { key: '55ecfc6d0fd52c53484b8a98225395f952cc444d', class: "sk-spinner-v7-dot" }),
+                    h("div", { key: '93aad70eebd22fcf6df0de30a5b74a3441a7c83b', class: "sk-spinner-v7-dot" }),
+                    h("div", { key: 'b1a8d2e77a63b99384d8898b8eafc9f4c07614f9', class: "sk-spinner-v7-dot" }),
+                    h("div", { key: 'd0908690d912208ce7f44cb70c17a8bf0f1e95c4', class: "sk-spinner-v7-dot" }),
                 ];
             }
             if (this.kulLayout === 9) {
                 spinnerEl = [
-                    h("div", { key: 'c55cec08a21a4b8e147a08e6cce52d759d3e3598', class: "sk-spinner-v9-bounce1" }),
-                    h("div", { key: '64535e25d7b4fcbf6e05e3ede50013feee89a3eb', class: "sk-spinner-v9-bounce2" }),
+                    h("div", { key: '98447f180ae9fd5a09877f953fdb2740072b2ff7', class: "sk-spinner-v9-bounce1" }),
+                    h("div", { key: '9d0576ca9c363b76229b65f2a4ad136051c71a74', class: "sk-spinner-v9-bounce2" }),
                 ];
             }
             if (this.kulLayout === 10) {
                 spinnerEl = [
-                    h("div", { key: '22d50f6d3ee615c6722db054adf188994bc4bcec', class: "sk-spinner-v10-cube1" }),
-                    h("div", { key: '578b69137222d46ea81d7776b29844c3360008db', class: "sk-spinner-v10-cube2" }),
+                    h("div", { key: '95d8167fdda9601f0908138ad4ff43b2ce6e8778', class: "sk-spinner-v10-cube1" }),
+                    h("div", { key: 'f0e25e63031085cb4e83c49543cddf79d755b2ab', class: "sk-spinner-v10-cube2" }),
                 ];
             }
             if (this.kulLayout === 12) {
                 spinnerEl = [
-                    h("div", { key: 'f5dd5dd1d8761bc0b53fb0f588157c22b0336575', class: "sk-spinner-v12-dot1" }),
-                    h("div", { key: '5c8f894000793ad59a2a23a50f211771667e5b72', class: "sk-spinner-v12-dot2" }),
+                    h("div", { key: '00c20acfdfd84837ac04a10843b982939b22cdd8', class: "sk-spinner-v12-dot1" }),
+                    h("div", { key: '5fdc9ab526c970ec64210b6e5288f70b7ec17991', class: "sk-spinner-v12-dot2" }),
                 ];
             }
             if (this.kulLayout === 13) {
                 spinnerEl = [
-                    h("div", { key: 'd4f2669e63844929719b6a2cb05d3aa496575d8b', class: "sk-spinner-v13-cube sk-spinner-v13-cube1" }),
-                    h("div", { key: '016cad88e2568eb2241169fd61b07fdbafd14bfb', class: "sk-spinner-v13-cube sk-spinner-v13-cube2" }),
-                    h("div", { key: '80ac1041480c4ba5880b5e47d8819e001940a447', class: "sk-spinner-v13-cube sk-spinner-v13-cube3" }),
-                    h("div", { key: '1068a7d499060d6396eaf3dd76ac9a6194f4f5ec', class: "sk-spinner-v13-cube sk-spinner-v13-cube4" }),
-                    h("div", { key: '1782324f6f061e8a81aec6a2d9a3f85893b8f2bf', class: "sk-spinner-v13-cube sk-spinner-v13-cube5" }),
-                    h("div", { key: '1bd21f0010a28383bd9fd187289d50c60db9eb4f', class: "sk-spinner-v13-cube sk-spinner-v13-cube6" }),
-                    h("div", { key: 'db6d2f3f3fc3298c9472fafab7836cacd0d6beb0', class: "sk-spinner-v13-cube sk-spinner-v13-cube7" }),
-                    h("div", { key: 'f47699ea8bbffcc900df64161dc81a45c46c6974', class: "sk-spinner-v13-cube sk-spinner-v13-cube8" }),
-                    h("div", { key: '31655fa2a2ddad53d5be276a30582e3362d363c5', class: "sk-spinner-v13-cube sk-spinner-v13-cube9" }),
+                    h("div", { key: '2f5c6bc3b7a4fc01ead196408025b077286e42f8', class: "sk-spinner-v13-cube sk-spinner-v13-cube1" }),
+                    h("div", { key: 'e92c4a32b6ac27c3175cfc0629d74f642b1e39af', class: "sk-spinner-v13-cube sk-spinner-v13-cube2" }),
+                    h("div", { key: 'a664c2d6439a6bc112a83984006b0fdf0627c920', class: "sk-spinner-v13-cube sk-spinner-v13-cube3" }),
+                    h("div", { key: '565603729ba7e76c2f3f19b22439c9cfd1df9eb3', class: "sk-spinner-v13-cube sk-spinner-v13-cube4" }),
+                    h("div", { key: 'c0595138e08635fa35b271eed32f2bdc0fb35fa4', class: "sk-spinner-v13-cube sk-spinner-v13-cube5" }),
+                    h("div", { key: '4b8927eec57a20df8888701704abd2180b121cbc', class: "sk-spinner-v13-cube sk-spinner-v13-cube6" }),
+                    h("div", { key: '415f4f3ff95b8f46fc1db324fb110ba7bf7a429f', class: "sk-spinner-v13-cube sk-spinner-v13-cube7" }),
+                    h("div", { key: '2dce29cd132c7946fc7838446448b580562cf02d', class: "sk-spinner-v13-cube sk-spinner-v13-cube8" }),
+                    h("div", { key: '6ba1e1184ad87a0aef6dd53a0f09d2ac4a032f19', class: "sk-spinner-v13-cube sk-spinner-v13-cube9" }),
                 ];
             }
             if (this.kulLayout === 14) {
                 spinnerEl = [
-                    h("div", { key: 'db60bdc8552fe02c408671758fc19eb2b3102ee4', class: "sk-spinner-v14-circle1 sk-spinner-v14-circle" }),
-                    h("div", { key: 'ddb4e26c246a26e7c422b7a750a6eee2173ada6a', class: "sk-spinner-v14-circle2 sk-spinner-v14-circle" }),
-                    h("div", { key: '30f0b0036704da6e15a15d9ddd777af2c8c53885', class: "sk-spinner-v14-circle3 sk-spinner-v14-circle" }),
-                    h("div", { key: '7fe9721c54e0c036065a08209d79b9b2670f4a69', class: "sk-spinner-v14-circle4 sk-spinner-v14-circle" }),
-                    h("div", { key: '4d1bf4afbea66680963e77926e94c7dad5d32b93', class: "sk-spinner-v14-circle5 sk-spinner-v14-circle" }),
-                    h("div", { key: '33aa159b61b7599bd3ce868eabdede80c5b58639', class: "sk-spinner-v14-circle6 sk-spinner-v14-circle" }),
-                    h("div", { key: '6a7fca9c18964aa7ed38b25ff1f9413eadbd6006', class: "sk-spinner-v14-circle7 sk-spinner-v14-circle" }),
-                    h("div", { key: 'ed3fdef1ad78f05aa2094b38286c187a97095ab9', class: "sk-spinner-v14-circle8 sk-spinner-v14-circle" }),
-                    h("div", { key: 'aa8ceed1126d5a6c360d074bab596f6a5cac077b', class: "sk-spinner-v14-circle9 sk-spinner-v14-circle" }),
-                    h("div", { key: '7890c3e7c4e8e6a97f70d39ecd72f5d8c8f7d255', class: "sk-spinner-v14-circle10 sk-spinner-v14-circle" }),
-                    h("div", { key: '56fb80cddf8d8ab474e5ff1004ea8fa7cfbbb30f', class: "sk-spinner-v14-circle11 sk-spinner-v14-circle" }),
-                    h("div", { key: '482e29a7ec343f842c66fbb8012b61ce31ec5265', class: "sk-spinner-v14-circle12 sk-spinner-v14-circle" }),
+                    h("div", { key: '651f832eaf5e9a6e5ffd4a30839de4bd11a388e7', class: "sk-spinner-v14-circle1 sk-spinner-v14-circle" }),
+                    h("div", { key: 'b15abe9a76fcd9464f88c31305941a96c6aae91e', class: "sk-spinner-v14-circle2 sk-spinner-v14-circle" }),
+                    h("div", { key: '28b5e5b1395e77803cb40f7bd6c8d7a46190490a', class: "sk-spinner-v14-circle3 sk-spinner-v14-circle" }),
+                    h("div", { key: '50a8cf589af85ad3ed831dd329884386919171ba', class: "sk-spinner-v14-circle4 sk-spinner-v14-circle" }),
+                    h("div", { key: '6fd6fd41fb9c0d5098e5eb7ff69995fffeab239e', class: "sk-spinner-v14-circle5 sk-spinner-v14-circle" }),
+                    h("div", { key: 'f9767b93e0c87ea0e33db743330a8f4e5f4fff93', class: "sk-spinner-v14-circle6 sk-spinner-v14-circle" }),
+                    h("div", { key: 'dfa9651b0d8bd1789e38a3c6d8e92de4636ada38', class: "sk-spinner-v14-circle7 sk-spinner-v14-circle" }),
+                    h("div", { key: 'd68e0a9252a3cfd6ef49f23ea18b9e3d06a836c6', class: "sk-spinner-v14-circle8 sk-spinner-v14-circle" }),
+                    h("div", { key: 'e6c5987817764a03914bf90b1fbbde0857aa1d92', class: "sk-spinner-v14-circle9 sk-spinner-v14-circle" }),
+                    h("div", { key: '235c03df60ce983377ea079c75deadb9be4ee7ea', class: "sk-spinner-v14-circle10 sk-spinner-v14-circle" }),
+                    h("div", { key: '408dcd9c662112088b41cf3e85d48b34cdf43405', class: "sk-spinner-v14-circle11 sk-spinner-v14-circle" }),
+                    h("div", { key: '3c63d13bbf866fb4f156acf7277ca1812961567c', class: "sk-spinner-v14-circle12 sk-spinner-v14-circle" }),
                 ];
             }
         }
@@ -475,7 +475,7 @@ const KulSpinner = class {
                 fontSize: '3px',
             };
         }
-        return (h(Host, { key: '479d7c2bc5f3ee33614072b3df549eb9ad1b4ddb', style: elStyle }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'c1ff0b4a0293d942731a7f2abd9f8fb5edcf1bf4', id: KUL_WRAPPER_ID, style: elStyle }, h("div", { key: 'c03d7b2c704605a2b2dc86cafc8e457d697222ee', id: "loading-wrapper-master", class: masterClass, style: elStyle }, h("div", { key: 'da978d3ff6c373984fe91f38ddd52faf8dd46454', id: wrapperClass, style: elStyle }, h("div", { key: 'd0d1aa078af6fa4f4405ce5bf9f6ec5d1bf797c3', class: spinnerClass }, spinnerEl))))));
+        return (h(Host, { key: 'caca3f1aa8f2be3dcf5f19c2a4383238deedf012', style: elStyle }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '05415048c5464838dfa5c1a9538efd9ff6715aa0', id: KUL_WRAPPER_ID, style: elStyle }, h("div", { key: '65d6f9a8e2144905de04aeefc44d11ab02dd086c', id: "loading-wrapper-master", class: masterClass, style: elStyle }, h("div", { key: '0be4eb77919e7ab62bffd0e0de07f31d185d4f90', id: wrapperClass, style: elStyle }, h("div", { key: '13d7f56e86ad0695741e8c4171d281ef9e9598c5', class: spinnerClass }, spinnerEl))))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

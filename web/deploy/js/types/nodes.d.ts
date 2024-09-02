@@ -4,6 +4,7 @@ export declare enum NodeName {
     controlPanel = "LF_ControlPanel",
     displayJson = "LF_DisplayJSON",
     imageHistogram = "LF_ImageHistogram",
+    llmChat = "LF_LLMChat",
     loadImages = "LF_LoadImages",
     multipleImageResizeForWeb = "LF_MultipleImageResizeForWeb",
     imageResizeByEdge = "LF_ImageResizeByEdge",

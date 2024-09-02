@@ -7,6 +7,7 @@ export var NodeName;
     NodeName["controlPanel"] = "LF_ControlPanel";
     NodeName["displayJson"] = "LF_DisplayJSON";
     NodeName["imageHistogram"] = "LF_ImageHistogram";
+    NodeName["llmChat"] = "LF_LLMChat";
     NodeName["loadImages"] = "LF_LoadImages";
     NodeName["multipleImageResizeForWeb"] = "LF_MultipleImageResizeForWeb";
     NodeName["imageResizeByEdge"] = "LF_ImageResizeByEdge";

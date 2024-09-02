@@ -1,20 +1,20 @@
 {
   "name": "comfyui-lf",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "private": false,
   "scripts": {
     "clean": "rimraf web/deploy",
-    "setup": "npm install && node ./web/src/scripts/copy-declarations.js",
+    "setup": "yarn install && yarn build:kul",
     "build:scss": "node ./web/src/scripts/compile-scss.js",
     "build:ts": "tsc",
-    "build:kul": "node ./web/src/scripts/get-ketchup-lite.js",
-    "build": "npm run build:scss && npm run build:ts",
+    "build:kul": "node ./web/src/scripts/copy-declarations.js && node ./web/src/scripts/get-ketchup-lite.js",
+    "build": "yarn build:scss && yarn build:ts",
     "postbuild": "node ./web/src/scripts/fix-imports.js"
   },
   "devDependencies": {
     "@types/node": "^22.5.0",
     "fs-extra": "^11.2.0",
-    "ketchup-lite": "^1.1.1",
+    "ketchup-lite": "1.1.4",
     "rimraf": "^6.0.0",
     "sass": "^1.77.8",
     "typescript": "5.5.4"

@@ -20,7 +20,7 @@
   transition: box-shadow 175ms ease;
   width: 100%;
 }
-.lf-jsoninput__widget:focus {
+.lf-jsoninput__widget:focus:not(.lf-jsoninput__widget--error) {
   box-shadow: inset 0px 0px 4px 1px var(--kul-text-color);
 }
 .lf-jsoninput__widget--error {
