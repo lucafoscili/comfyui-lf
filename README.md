@@ -106,7 +106,7 @@ Utilizes a large language model to generate descriptions of images portraying ch
 
 Real-time chat with an LLM model served through Koboldcpp (<http://localhost:5001>).
 It's possible to select the last messages as an output, sending them to the next node.
-![LLMChat](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/LLMChat.png "Example of LLM chat")
+![LLMChat](https://github.com/lucafoscili/comfyui-lf/blob/69181cfe1c3b2062a40035e8b59cece8e8688483/docs/images/LLMChat.png "Example of LLM chat")
 
 ### Loader nodes (`loaders.py`)
 
