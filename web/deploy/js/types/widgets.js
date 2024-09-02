@@ -5,6 +5,7 @@ export var CustomWidgetName;
 (function (CustomWidgetName) {
     CustomWidgetName["booleanViewer"] = "KUL_BOOLEAN_VIEWER";
     CustomWidgetName["chart"] = "KUL_CHART";
+    CustomWidgetName["chat"] = "KUL_CHAT";
     CustomWidgetName["code"] = "KUL_CODE";
     CustomWidgetName["controlPanel"] = "KUL_CONTROL_PANEL";
     CustomWidgetName["imagePreview"] = "IMAGE_PREVIEW_B64";

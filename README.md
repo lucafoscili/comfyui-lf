@@ -102,6 +102,12 @@ Utilizes a large language model to generate text responses as if coming from a c
 Utilizes a large language model to generate descriptions of images portraying characters.
 ![ImageClassifier](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/ImageClassifier.png "Example classification output describing an image character")
 
+#### LLMChat
+
+Real-time chat with an LLM model served through Koboldcpp (<http://localhost:5001>).
+It's possible to select the last messages as an output, sending them to the next node.
+![LLMChat](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/LLMChat.png "Example of LLM chat")
+
 ### Loader nodes (`loaders.py`)
 
 #### LoadImages
@@ -147,7 +153,7 @@ Returns one of two string values based on a boolean condition, allowing for flex
 
 ## Notes
 
-The LLM node is designed to work with [Koboldcpp](https://github.com/LostRuins/koboldcpp/tree/v1.73).
+The LLM nodes are designed to work with [Koboldcpp](https://github.com/LostRuins/koboldcpp/tree/v1.73).
 The model used in the workflows samples is [UCLA-AGI/Llama-3-Instruct-8B-SPPO-Iter3](https://huggingface.co/UCLA-AGI/Llama-3-Instruct-8B-SPPO-Iter3) with [ChaoticNeutrals/LLaVA-Llama-3-8B-mmproj-Updated](https://huggingface.co/ChaoticNeutrals/LLaVA-Llama-3-8B-mmproj-Updated).
 
 ## Contributing
@@ -159,10 +165,14 @@ To setup the environment clone this repository, then from the root open a termin
 
 This will install all the required dependencies for the Python back-end.
 
-`npm run steup`
+`npm run setup`
 
 This command will install all the frontend dependencies.
 Note that the repository includes the compiled files directly to allow Comfy to load them, dependencies are only needed for actual development.
+
+`npm run build`
+
+This command will compile all the frontend sources and generate/refresh the actual web directory.
 
 ## License
 

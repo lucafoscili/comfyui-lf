@@ -143,6 +143,10 @@ export class LFManager {
       nodes.eventHandlers.LF_LoadImages(e, widgets.adders.IMAGE_PREVIEW_B64);
     });
     /*-------------------------------------------------------------------*/
+    /*                     I n i t   L L M C h a t                       */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_LLMChat(widgets.setters.KUL_CHAT, widgets.adders.KUL_CHAT);
+    /*-------------------------------------------------------------------*/
     /*     I n i t   M u l t i p l e   R e s i z e   F o r   W e b       */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_MultipleImageResizeForWeb(

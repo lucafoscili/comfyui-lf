@@ -75,7 +75,7 @@ function handleInputChange(e) {
                 jsonInput.title = error;
             }
         };
-        VALIDATION_TIMEOUT = setTimeout(validateAndFormatJSON, 5000);
+        VALIDATION_TIMEOUT = setTimeout(validateAndFormatJSON, 2500);
     };
     clearTimeout(VALIDATION_TIMEOUT);
     startValidationTimer();
