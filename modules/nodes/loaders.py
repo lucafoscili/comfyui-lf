@@ -65,14 +65,14 @@ class LF_LoadImages:
                     # Load image using PIL and convert to tensor
                     with open(image_path, 'rb') as img_file:
                         img_data = img_file.read()
-                        img = Image.open(io.BytesIO(img_data))
+                        img = Image.open(io.BytesIO(img_data)).convert("RGB")
 
-                        # Convert PIL Image to RGB
-                        img_rgb = img.convert("RGB")
+                        # Resize the image for front-end
+                        img_resized = resize_image(img, max_size=1024)
                         
                         # Convert PIL Image to BytesIO buffer
                         buffered = io.BytesIO()
-                        img_rgb.save(buffered, format="JPEG")
+                        img_resized.save(buffered, format="JPEG")
                         
                         # Encode BytesIO buffer to base64 string
                         img_base64 = base64.b64encode(buffered.getvalue()).decode('utf-8')
@@ -80,8 +80,7 @@ class LF_LoadImages:
                         # Append base64-encoded string to the GUI list
                         images_buffer.append(img_base64)                    
 
-                        # Convert to tensor
-                        img = Image.open(image_path).convert("RGB")
+                        # Convert the original (non-resized) image to tensor
                         img_tensor = torch.from_numpy(np.array(img).astype(np.float32) / 255.0).unsqueeze(0)
 
                         # Append image in tensor format to the tensor list
