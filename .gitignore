@@ -182,9 +182,4 @@ web/deploy/js/ketchup-lite/*showcase*
 !web/deploy/assets/svg/style.svg
 
 # Kethup Lite (add Prism js to keep here)
-!web/deploy/assets/prism/*css*
-!web/deploy/assets/prism/*javascript*
 !web/deploy/assets/prism/*json*
-!web/deploy/assets/prism/*markdown*
-!web/deploy/assets/prism/*python*
-!web/deploy/assets/prism/*typescript*
