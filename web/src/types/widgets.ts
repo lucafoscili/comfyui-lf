@@ -16,6 +16,8 @@ export enum CustomWidgetName {
   controlPanel = 'KUL_CONTROL_PANEL',
   imagePreview = 'IMAGE_PREVIEW_B64',
   jsonInput = 'KUL_JSON_INPUT',
+  list = 'KUL_LIST',
+  string = 'STRING',
   tree = 'KUL_TREE',
 }
 export interface CustomWidgetSetters {
@@ -38,6 +40,7 @@ export interface CustomWidgetSetters {
     node: NodeType,
     name: CustomWidgetName.jsonInput,
   ): { widget: JsonInputWidget };
+  [CustomWidgetName.list](node: NodeType, name: CustomWidgetName.list): { widget: ListWidget };
   [CustomWidgetName.tree](node: NodeType, name: CustomWidgetName.tree): { widget: TreeWidget };
 }
 export type CustomWidgetMap = {
@@ -48,6 +51,8 @@ export type CustomWidgetMap = {
   [CustomWidgetName.controlPanel]: ControlPanelWidget;
   [CustomWidgetName.imagePreview]: ImagePreviewWidget;
   [CustomWidgetName.jsonInput]: JsonInputWidget;
+  [CustomWidgetName.list]: ListWidget;
+  [CustomWidgetName.string]: Widget;
   [CustomWidgetName.tree]: TreeWidget;
 };
 export type CustomWidgetOptions =
@@ -58,7 +63,28 @@ export type CustomWidgetOptions =
   | ControlPanelWidgetOptions
   | ImagePreviewWidgetOptions
   | JsonInputWidgetOptions
+  | ListWidgetOptions
   | TreeWidgetOptions;
+
+/*-------------------------------------------------------------------*/
+/*       B o o l e a n  V i e w e r   D e c l a r a t i o n s        */
+/*-------------------------------------------------------------------*/
+
+export interface BooleanViewerWidget extends Widget {
+  options: BooleanViewerWidgetOptions;
+  type: [CustomWidgetName.booleanViewer];
+}
+export interface BooleanViewerWidgetOptions {
+  hideOnZoom: boolean;
+  getComp(): HTMLKulTextfieldElement;
+  getValue(): BooleanViewerWidgetValue;
+  setProps(props: Partial<HTMLKulTextfieldElement>): void;
+  setValue(value: BooleanViewerWidgetValue): void;
+}
+export declare type BooleanViewerWidgetsSetter = () => {
+  [CustomWidgetName.booleanViewer]: BaseWidgetCallback;
+};
+export type BooleanViewerWidgetValue = string;
 
 /*-------------------------------------------------------------------*/
 /*                C h a r t   D e c l a r a t i o n s                */
@@ -180,27 +206,27 @@ export interface ImagePreviewWidgetValue {
 }
 
 /*-------------------------------------------------------------------*/
-/*            T e x t f i e l d   D e c l a r a t i o n s            */
+/*                  L i s t   D e c l a r a t i o n s                */
 /*-------------------------------------------------------------------*/
 
-export interface BooleanViewerWidget extends Widget {
-  options: BooleanViewerWidgetOptions;
-  type: [CustomWidgetName.booleanViewer];
+export interface ListWidget extends Widget {
+  options: ListWidgetOptions;
+  type: [CustomWidgetName.list];
 }
-export interface BooleanViewerWidgetOptions {
+export interface ListWidgetOptions {
   hideOnZoom: boolean;
-  getComp(): HTMLKulTextfieldElement;
-  getValue(): BooleanViewerWidgetValue;
-  setProps(props: Partial<HTMLKulTextfieldElement>): void;
-  setValue(value: BooleanViewerWidgetValue): void;
+  getComp(): HTMLKulListElement;
+  getValue(): ListWidgetValue;
+  setProps(props: Partial<HTMLKulListElement>): void;
+  setValue(value: ListWidgetValue): void;
 }
-export declare type BooleanViewerWidgetsSetter = () => {
-  [CustomWidgetName.booleanViewer]: BaseWidgetCallback;
+export declare type ListWidgetsSetter = () => {
+  [CustomWidgetName.list]: BaseWidgetCallback;
 };
-export type BooleanViewerWidgetValue = string;
+export type ListWidgetValue = string | KulDataDataset;
 
 /*-------------------------------------------------------------------*/
-/*            T e x t f i e l d   D e c l a r a t i o n s            */
+/*                  T r e e   D e c l a r a t i o n s                */
 /*-------------------------------------------------------------------*/
 
 export interface TreeWidget extends Widget {

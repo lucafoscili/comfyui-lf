@@ -16,6 +16,7 @@ import {
   ImageResizeByEdgePayload,
   LoadImagesPayload,
   MultipleImageResizeForWebPayload,
+  StringPayload,
   SwitchImagePayload,
   SwitchIntegerPayload,
   SwitchJSONPayload,
@@ -146,6 +147,13 @@ export class LFManager {
     /*                     I n i t   L L M C h a t                       */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_LLMChat(widgets.setters.KUL_CHAT, widgets.adders.KUL_CHAT);
+    /*-------------------------------------------------------------------*/
+    /*                      I n i t   S t r i n g                        */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_String(widgets.setters.KUL_LIST, widgets.adders.KUL_LIST);
+    this.#APIS.event(EventName.string, (e: CustomEvent<StringPayload>) => {
+      nodes.eventHandlers.LF_String(e, widgets.adders.KUL_LIST);
+    });
     /*-------------------------------------------------------------------*/
     /*     I n i t   M u l t i p l e   R e s i z e   F o r   W e b       */
     /*-------------------------------------------------------------------*/

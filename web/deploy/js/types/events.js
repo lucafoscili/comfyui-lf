@@ -7,6 +7,7 @@ export var EventName;
     EventName["imageResizeByEdge"] = "lf-imageresizebyedge";
     EventName["loadImages"] = "lf-loadimages";
     EventName["multipleImageResizeForWeb"] = "lf-multipleimageresizeforweb";
+    EventName["string"] = "lf-string";
     EventName["switchImage"] = "lf-switchimage";
     EventName["switchInteger"] = "lf-switchinteger";
     EventName["switchJson"] = "lf-switchjson";

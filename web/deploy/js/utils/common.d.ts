@@ -8,7 +8,7 @@ export declare const getKulManager: () => import("../types/ketchup-lite/managers
 export declare const getKulThemes: () => KulDataDataset;
 export declare const getLFManager: () => import("../managers/manager").LFManager;
 export declare const kulManagerExists: () => boolean;
-export declare const getWidget: <T extends CustomWidgetName>(node: NodeType, name: T, addW: BaseWidgetCallback) => CustomWidgetMap[T];
+export declare const getWidget: <T extends CustomWidgetName>(node: NodeType, name: T, addW?: BaseWidgetCallback) => CustomWidgetMap[T];
 export declare const log: () => (message: string, args?: Record<string, unknown>, severity?: import("../types/manager").LogSeverity) => void;
 export declare const splitByLastSpaceBeforeAnyBracket: (input: string) => string;
 export declare const unescapeJson: (str: string) => {

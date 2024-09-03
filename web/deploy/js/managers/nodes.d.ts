@@ -7,6 +7,7 @@ export declare class LFNodes {
         LF_ImageResizeByEdge: (event: CustomEvent<import("../types/events").ImageResizeByEdgePayload>, addW: BaseWidgetCallback) => void;
         LF_LoadImages: (event: CustomEvent<import("../types/events").LoadImagesPayload>, addW: BaseWidgetCallback) => void;
         LF_MultipleImageResizeForWeb: (event: CustomEvent<import("../types/events").MultipleImageResizeForWebPayload>, addW: BaseWidgetCallback) => void;
+        LF_String: (event: CustomEvent<import("../types/events").StringPayload>, addW: BaseWidgetCallback) => void;
         LF_SwitchImage: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
         LF_SwitchInteger: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
         LF_SwitchJSON: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
@@ -22,6 +23,7 @@ export declare class LFNodes {
         LF_LLMChat: (setW: import("../types/widgets").ChatWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_LoadImages: (setW: import("../types/widgets").ImagePreviewWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_MultipleImageResizeForWeb: (setW: import("../types/widgets").TreeWidgetsSetter, addW: BaseWidgetCallback) => void;
+        LF_String: (setW: import("../types/widgets").ListWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_SwitchImage: (setW: import("../types/widgets").BooleanViewerWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_SwitchInteger: (setW: import("../types/widgets").BooleanViewerWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_SwitchJSON: (setW: import("../types/widgets").BooleanViewerWidgetsSetter, addW: BaseWidgetCallback) => void;
@@ -36,6 +38,7 @@ export declare class LFNodes {
             LF_ImageResizeByEdge: (event: CustomEvent<import("../types/events").ImageResizeByEdgePayload>, addW: BaseWidgetCallback) => void;
             LF_LoadImages: (event: CustomEvent<import("../types/events").LoadImagesPayload>, addW: BaseWidgetCallback) => void;
             LF_MultipleImageResizeForWeb: (event: CustomEvent<import("../types/events").MultipleImageResizeForWebPayload>, addW: BaseWidgetCallback) => void;
+            LF_String: (event: CustomEvent<import("../types/events").StringPayload>, addW: BaseWidgetCallback) => void;
             LF_SwitchImage: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
             LF_SwitchInteger: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
             LF_SwitchJSON: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
@@ -51,6 +54,7 @@ export declare class LFNodes {
             LF_LLMChat: (setW: import("../types/widgets").ChatWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_LoadImages: (setW: import("../types/widgets").ImagePreviewWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_MultipleImageResizeForWeb: (setW: import("../types/widgets").TreeWidgetsSetter, addW: BaseWidgetCallback) => void;
+            LF_String: (setW: import("../types/widgets").ListWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_SwitchImage: (setW: import("../types/widgets").BooleanViewerWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_SwitchInteger: (setW: import("../types/widgets").BooleanViewerWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_SwitchJSON: (setW: import("../types/widgets").BooleanViewerWidgetsSetter, addW: BaseWidgetCallback) => void;

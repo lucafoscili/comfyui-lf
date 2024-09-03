@@ -10,5 +10,7 @@ export var CustomWidgetName;
     CustomWidgetName["controlPanel"] = "KUL_CONTROL_PANEL";
     CustomWidgetName["imagePreview"] = "IMAGE_PREVIEW_B64";
     CustomWidgetName["jsonInput"] = "KUL_JSON_INPUT";
+    CustomWidgetName["list"] = "KUL_LIST";
+    CustomWidgetName["string"] = "STRING";
     CustomWidgetName["tree"] = "KUL_TREE";
 })(CustomWidgetName || (CustomWidgetName = {}));

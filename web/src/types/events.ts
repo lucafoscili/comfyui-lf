@@ -16,6 +16,7 @@ export enum EventName {
   imageResizeByEdge = 'lf-imageresizebyedge',
   loadImages = 'lf-loadimages',
   multipleImageResizeForWeb = 'lf-multipleimageresizeforweb',
+  string = 'lf-string',
   switchImage = 'lf-switchimage',
   switchInteger = 'lf-switchinteger',
   switchJson = 'lf-switchjson',
@@ -29,6 +30,7 @@ export type EventPayload =
   | ImageResizeByEdgePayload
   | LoadImagesPayload
   | MultipleImageResizeForWebPayload
+  | StringPayload
   | SwitchImagePayload
   | SwitchIntegerPayload
   | SwitchJSONPayload
@@ -87,6 +89,14 @@ export interface LoadImagesPayload extends BaseEventPayload {
 
 export interface MultipleImageResizeForWebPayload extends BaseEventPayload {
   dataset: KulDataDataset;
+}
+
+/*-------------------------------------------------------------------*/
+/*               S t r i n g   D e c l a r a t i o n s               */
+/*-------------------------------------------------------------------*/
+
+export interface StringPayload extends BaseEventPayload {
+  value: string;
 }
 
 /*-------------------------------------------------------------------*/

@@ -12,6 +12,7 @@ import { multipleImageResizeForWebFactory } from '../nodes/multipleImageResizeFo
 import { blurImagesFactory } from '../nodes/blurImages.js';
 import { imageResizeByEdgeFactory } from '../nodes/imageResizeByEdge.js';
 import { llmChatFactory } from '../nodes/llmChat.js';
+import { stringFactory } from '../nodes/string.js';
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
 /*-------------------------------------------------*/
@@ -24,6 +25,7 @@ export class LFNodes {
             [NodeName.imageResizeByEdge]: imageResizeByEdgeFactory.eventHandler,
             [NodeName.loadImages]: loadImagesFactory.eventHandler,
             [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.eventHandler,
+            [NodeName.string]: stringFactory.eventHandler,
             [NodeName.switchImage]: switchImageFactory.eventHandler,
             [NodeName.switchInteger]: switchIntegerFactory.eventHandler,
             [NodeName.switchJson]: switchJsonFactory.eventHandler,
@@ -39,6 +41,7 @@ export class LFNodes {
             [NodeName.llmChat]: llmChatFactory.register,
             [NodeName.loadImages]: loadImagesFactory.register,
             [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.register,
+            [NodeName.string]: stringFactory.register,
             [NodeName.switchImage]: switchImageFactory.register,
             [NodeName.switchInteger]: switchIntegerFactory.register,
             [NodeName.switchJson]: switchJsonFactory.register,

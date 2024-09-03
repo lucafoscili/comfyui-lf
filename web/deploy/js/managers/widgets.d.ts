@@ -10,6 +10,7 @@ export declare class LFWidgets {
         KUL_CONTROL_PANEL: (nodeType: NodeType) => any;
         KUL_JSON_INPUT: (nodeType: NodeType) => any;
         IMAGE_PREVIEW_B64: (nodeType: NodeType) => any;
+        KUL_LIST: (nodeType: NodeType) => any;
         KUL_TREE: (nodeType: NodeType) => any;
     };
     option: {
@@ -61,7 +62,14 @@ export declare class LFWidgets {
             };
             setValue(value: import("../types/widgets.js").ImagePreviewWidgetValue): void;
         };
-        KUL_TREE: (content: HTMLKulTreeElement) => {
+        KUL_LIST: (list: HTMLKulListElement) => {
+            hideOnZoom: boolean;
+            getComp(): HTMLKulListElement;
+            getValue(): string;
+            setProps(props: Partial<HTMLKulListElement>): void;
+            setValue(value: import("../types/ketchup-lite/components.js").KulDataDataset | string): void;
+        };
+        KUL_TREE: (tree: HTMLKulTreeElement) => {
             hideOnZoom: boolean;
             getComp(): HTMLKulTreeElement;
             getValue(): string;
@@ -104,6 +112,11 @@ export declare class LFWidgets {
                 widget: Widget;
             };
         };
+        KUL_LIST: () => {
+            KUL_LIST: (nodeType: NodeType, name: CustomWidgetName) => {
+                widget: Widget;
+            };
+        };
         KUL_TREE: () => {
             KUL_TREE: (nodeType: NodeType, name: CustomWidgetName) => {
                 widget: Widget;
@@ -119,6 +132,7 @@ export declare class LFWidgets {
             KUL_CONTROL_PANEL: (nodeType: NodeType) => any;
             KUL_JSON_INPUT: (nodeType: NodeType) => any;
             IMAGE_PREVIEW_B64: (nodeType: NodeType) => any;
+            KUL_LIST: (nodeType: NodeType) => any;
             KUL_TREE: (nodeType: NodeType) => any;
         };
         options: {
@@ -170,7 +184,14 @@ export declare class LFWidgets {
                 };
                 setValue(value: import("../types/widgets.js").ImagePreviewWidgetValue): void;
             };
-            KUL_TREE: (content: HTMLKulTreeElement) => {
+            KUL_LIST: (list: HTMLKulListElement) => {
+                hideOnZoom: boolean;
+                getComp(): HTMLKulListElement;
+                getValue(): string;
+                setProps(props: Partial<HTMLKulListElement>): void;
+                setValue(value: import("../types/ketchup-lite/components.js").KulDataDataset | string): void;
+            };
+            KUL_TREE: (tree: HTMLKulTreeElement) => {
                 hideOnZoom: boolean;
                 getComp(): HTMLKulTreeElement;
                 getValue(): string;
@@ -210,6 +231,11 @@ export declare class LFWidgets {
             };
             IMAGE_PREVIEW_B64: () => {
                 IMAGE_PREVIEW_B64: (nodeType: NodeType, name: CustomWidgetName) => {
+                    widget: Widget;
+                };
+            };
+            KUL_LIST: () => {
+                KUL_LIST: (nodeType: NodeType, name: CustomWidgetName) => {
                     widget: Widget;
                 };
             };

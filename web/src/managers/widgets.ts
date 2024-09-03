@@ -8,6 +8,7 @@ import { booleanViewerFactory } from '../widgets/booleanViewer.js';
 import { jsonInputFactory } from '../widgets/jsonInput.js';
 import { treeFactory } from '../widgets/tree.js';
 import { chatFactory } from '../widgets/chat.js';
+import { listFactory } from '../widgets/list.js';
 
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
@@ -69,6 +70,10 @@ export class LFWidgets {
       ).widget;
       return widget;
     },
+    [CustomWidgetName.list]: (nodeType: NodeType) => {
+      const widget = app.widgets[CustomWidgetName.list](nodeType, CustomWidgetName.list).widget;
+      return widget;
+    },
     [CustomWidgetName.tree]: (nodeType: NodeType) => {
       const widget = app.widgets[CustomWidgetName.tree](nodeType, CustomWidgetName.tree).widget;
       return widget;
@@ -86,7 +91,8 @@ export class LFWidgets {
       jsonInputFactory.options(content),
     [CustomWidgetName.imagePreview]: (content: HTMLDivElement) =>
       imagePreviewFactory.options(content),
-    [CustomWidgetName.tree]: (content: HTMLKulTreeElement) => treeFactory.options(content),
+    [CustomWidgetName.list]: (list: HTMLKulListElement) => listFactory.options(list),
+    [CustomWidgetName.tree]: (tree: HTMLKulTreeElement) => treeFactory.options(tree),
   };
 
   resizerHandler = {
@@ -140,6 +146,13 @@ export class LFWidgets {
       return {
         [CustomWidgetName.imagePreview]: (nodeType: NodeType, name: CustomWidgetName) => {
           return imagePreviewFactory.render(nodeType, name);
+        },
+      };
+    },
+    [CustomWidgetName.list]: () => {
+      return {
+        [CustomWidgetName.list]: (nodeType: NodeType, name: CustomWidgetName) => {
+          return listFactory.render(nodeType, name);
         },
       };
     },

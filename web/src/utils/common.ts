@@ -67,19 +67,20 @@ export const getLFManager = () => {
   return WINDOW.lfManager;
 };
 
-export const kulManagerExists = () => {
-  return !!DOM.ketchupLite;
-};
-
 export const getWidget = <T extends CustomWidgetName>(
   node: NodeType,
   name: T,
-  addW: BaseWidgetCallback,
+  addW?: BaseWidgetCallback,
 ): CustomWidgetMap[T] => {
   return (
-    (node?.widgets?.find((w) => w.name === name) as CustomWidgetMap[T]) ||
-    (addW(node, name).widget as CustomWidgetMap[T])
+    (node?.widgets?.find(
+      (w) => w.name.toLowerCase() === name.toLowerCase(),
+    ) as CustomWidgetMap[T]) || (addW ? (addW(node, name).widget as CustomWidgetMap[T]) : undefined)
   );
+};
+
+export const kulManagerExists = () => {
+  return !!DOM.ketchupLite;
 };
 
 export const log = () => {

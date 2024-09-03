@@ -178,4 +178,8 @@ web/deploy/js/ketchup-lite/*showcase*
 !web/deploy/assets/svg/check.svg
 !web/deploy/assets/svg/clear.svg
 !web/deploy/assets/svg/content_copy.svg
+!web/deploy/assets/svg/history.svg
 !web/deploy/assets/svg/style.svg
+
+# Kethup Lite (add Prism js to keep here)
+!web/deploy/assets/prism/prism-json.min.js
