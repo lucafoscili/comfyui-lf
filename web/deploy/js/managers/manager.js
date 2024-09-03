@@ -105,6 +105,13 @@ export class LFManager {
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_LLMChat(widgets.setters.KUL_CHAT, widgets.adders.KUL_CHAT);
         /*-------------------------------------------------------------------*/
+        /*                      I n i t   S t r i n g                        */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_String(widgets.setters.KUL_LIST, widgets.adders.KUL_LIST);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.string, (e) => {
+            nodes.eventHandlers.LF_String(e, widgets.adders.KUL_LIST);
+        });
+        /*-------------------------------------------------------------------*/
         /*     I n i t   M u l t i p l e   R e s i z e   F o r   W e b       */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_MultipleImageResizeForWeb(widgets.setters.KUL_TREE, widgets.adders.KUL_TREE);

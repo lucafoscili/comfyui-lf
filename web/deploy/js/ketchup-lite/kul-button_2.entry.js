@@ -358,13 +358,14 @@ KulButton.style = KulButtonStyle0;
 var KulListProps;
 (function (KulListProps) {
     KulListProps["kulData"] = "The actual data of the list.";
+    KulListProps["kulEnableDeletions"] = "Defines whether items can be removed from the list or not.";
     KulListProps["kulNavigation"] = "When true, enables items' navigation through arrow keys.";
     KulListProps["kulRipple"] = "When set to true, the pointerdown event will trigger a ripple effect.";
     KulListProps["kulSelectable"] = "Defines whether items are selectable or not.";
     KulListProps["kulStyle"] = "Custom style of the component.";
 })(KulListProps || (KulListProps = {}));
 
-const kulListCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}:host{--kul_list_backdrop_filter:var(--kul-list-backdrop-filter, blur(3.5px));--kul_list_background_color:rgba(var(--kul-background-color-rgb), 0.75);--kul_list_font_family:var(--kul-list-font-family, var(--kul-font-family));--kul_list_font_size:var(--kul-list-font-size, var(--kul-font-size));--kul_list_font_weight:var(--kul-list-font-weight, 400);--kul_list_group_item_height:var(--kul-list-group-item-height, 3em);--kul_list_item_height:var(--kul-list-item-height, 2.5em);--kul_list_item_padding:var(--kul-list-item-padding, 0 0.75em);--kul_list_primary_color:var(\n    --kul-list-primary-color,\n    var(--kul-primary-color)\n  );--kul_list_primary_color_rgb:var(\n    --kul-list-primary-color-rgb,\n    var(--kul-primary-color-rgb)\n  );--kul_list_text_color:var(--kul-list-text-color, var(--kul-text-color));--kul_list_text_color_rgb:var(\n    --kul-list-text-color-rgb,\n    var(--kul-text-color-rgb)\n  );--kul_list_transition:var(--kul-list-transition, 125ms);-webkit-backdrop-filter:var(--kul_list_backdrop_filter);backdrop-filter:var(--kul_list_backdrop_filter);background-color:var(--kul_list_background_color);display:block;font-family:var(--kul_list_font_family);font-size:var(--kul_list_font_size);height:100%;outline:none;width:100%}#kul-component{height:100%;width:100%}.list{box-sizing:border-box;color:var(--kul_list_text_color);font-weight:var(--kul_list_font_weight);height:100%;letter-spacing:0.009375em;line-height:1.5em;list-style-type:none;margin:0;padding:0.5em 0;text-decoration:inherit;text-transform:inherit;width:100%}.list--empty{padding:0}.list--selectable .node{cursor:pointer;pointer-events:all}.list--selectable .node:not(.node--selected):hover,.list--selectable .node:not(.node--selected).node--focused{background-color:rgba(var(--kul_list_text_color_rgb), 0.125)}.list--selectable .node.node--selected:hover{background-color:rgba(var(--kul_list_primary_color_rgb), 0.225);color:var(--kul_list_primary_color)}.node{align-items:center;display:flex;height:var(--kul_list_item_height);justify-content:flex-start;padding:var(--kul_list_item_padding);pointer-events:none;position:relative;outline:none;overflow:hidden;transition:background-color var(--kul_list_transition), color var(--kul_list_transition)}.node--has-description{align-self:flex-start;height:3.6em}.node--selected{background-color:rgba(var(--kul_list_primary_color_rgb), 0.175);color:var(--kul_list_primary_color)}.node__title{display:block;line-height:normal;margin-bottom:-1.5em;margin-top:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.node__title:before{content:\"\";display:inline-block;width:0;height:1.5em;vertical-align:0}.node__title:after{content:\"\";display:inline-block;width:0;height:2em;vertical-align:-2em}.node__subtitle{color:var(--kul_list_text_color);display:block;font-size:0.875em;font-weight:400;letter-spacing:0.0178571429em;line-height:normal;margin-top:0;opacity:0.75;overflow:hidden;padding-bottom:0.5em;text-decoration:inherit;text-transform:inherit;text-overflow:ellipsis;white-space:nowrap}.node__icon{background-color:var(--kul_list_text_color);height:1.5em;margin:0 0.75em 0 0;width:1.5em}.empty-data{align-items:center;display:flex;justify-content:center;height:100%;width:100%}:host(.kul-dropdown-menu){display:none;height:max-content;max-height:50dvh;max-width:75dvw;overflow:auto;width:max-content}:host(.kul-dropdown-menu--visible){display:block}";
+const kulListCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}:host{--kul_list_backdrop_filter:var(--kul-list-backdrop-filter, blur(3.5px));--kul_list_background_color:rgba(var(--kul-background-color-rgb), 0.75);--kul_list_font_family:var(--kul-list-font-family, var(--kul-font-family));--kul_list_font_size:var(--kul-list-font-size, var(--kul-font-size));--kul_list_font_weight:var(--kul-list-font-weight, 400);--kul_list_group_item_height:var(--kul-list-group-item-height, 3em);--kul_list_item_height:var(--kul-list-item-height, 2.5em);--kul_list_item_padding:var(--kul-list-item-padding, 0 0.75em);--kul_list_primary_color:var(\n    --kul-list-primary-color,\n    var(--kul-primary-color)\n  );--kul_list_primary_color_rgb:var(\n    --kul-list-primary-color-rgb,\n    var(--kul-primary-color-rgb)\n  );--kul_list_text_color:var(--kul-list-text-color, var(--kul-text-color));--kul_list_text_color_rgb:var(\n    --kul-list-text-color-rgb,\n    var(--kul-text-color-rgb)\n  );--kul_list_transition:var(--kul-list-transition, 125ms);-webkit-backdrop-filter:var(--kul_list_backdrop_filter);backdrop-filter:var(--kul_list_backdrop_filter);background-color:var(--kul_list_background_color);display:block;font-family:var(--kul_list_font_family);font-size:var(--kul_list_font_size);height:100%;outline:none;width:100%}#kul-component{height:100%;width:100%}.list{box-sizing:border-box;color:var(--kul_list_text_color);font-weight:var(--kul_list_font_weight);height:100%;letter-spacing:0.009375em;line-height:1.5em;list-style-type:none;margin:0;padding:0.5em 0;text-decoration:inherit;text-transform:inherit;width:100%}.list--empty{padding:0}.list--selectable .node{cursor:pointer;pointer-events:all}.list--selectable .node:not(.node--selected):hover,.list--selectable .node:not(.node--selected).node--focused{background-color:rgba(var(--kul_list_text_color_rgb), 0.125)}.list--selectable .node.node--selected:hover{background-color:rgba(var(--kul_list_primary_color_rgb), 0.225);color:var(--kul_list_primary_color)}.list-item{align-items:center;display:flex;width:100%}.list-item:hover .delete{width:1.5em}.delete{box-sizing:border-box;cursor:pointer;height:var(--kul_list_item_height);opacity:0.75;overflow:hidden;transition:opacity 125ms ease, width 125ms ease;width:0}.delete:hover{opacity:1}.delete__icon{background-color:var(--kul_list_text_color);height:100%;margin:0;width:100%}.node{align-items:center;display:flex;height:var(--kul_list_item_height);justify-content:flex-start;padding:var(--kul_list_item_padding);pointer-events:none;position:relative;outline:none;overflow:hidden;transition:background-color var(--kul_list_transition), color var(--kul_list_transition);width:100%}.node--has-description{align-self:flex-start;height:3.6em}.node--selected{background-color:rgba(var(--kul_list_primary_color_rgb), 0.175);color:var(--kul_list_primary_color)}.node__title{display:block;line-height:normal;margin-bottom:-1.5em;margin-top:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.node__title:before{content:\"\";display:inline-block;width:0;height:1.5em;vertical-align:0}.node__title:after{content:\"\";display:inline-block;width:0;height:2em;vertical-align:-2em}.node__subtitle{color:var(--kul_list_text_color);display:block;font-size:0.875em;font-weight:400;letter-spacing:0.0178571429em;line-height:normal;margin-top:0;opacity:0.75;overflow:hidden;padding-bottom:0.5em;text-decoration:inherit;text-transform:inherit;text-overflow:ellipsis;white-space:nowrap}.node__icon{background-color:var(--kul_list_text_color);height:1.5em;margin:0 0.75em 0 0;width:1.5em}.empty-data{align-items:center;display:flex;justify-content:center;height:100%;width:100%}:host(.kul-dropdown-menu){display:none;height:max-content;max-height:50dvh;max-width:75dvw;overflow:auto;width:max-content}:host(.kul-dropdown-menu--visible){display:block}";
 const KulListStyle0 = kulListCss;
 
 const KulList = class {
@@ -381,6 +382,7 @@ const KulList = class {
         this.focused = undefined;
         this.selected = undefined;
         this.kulData = null;
+        this.kulEnableDeletions = false;
         this.kulNavigation = true;
         this.kulRipple = true;
         this.kulSelectable = true;
@@ -408,6 +410,12 @@ const KulList = class {
             case 'click':
                 this.focused = index;
                 this.#handleSelection(index);
+                break;
+            case 'delete':
+                if (index > -1) {
+                    this.kulData.nodes.splice(index, 1);
+                    this.refresh();
+                }
                 break;
             case 'focus':
                 this.focused = index;
@@ -536,21 +544,24 @@ const KulList = class {
             this.selected = index;
         }
     }
-    #prepSubtitle(node) {
-        return node.description ? (h("div", { class: "node__subtitle" }, node.description)) : undefined;
+    #prepDeleteIcon(node) {
+        const path = getAssetPath(`./assets/svg/clear.svg`);
+        const style = {
+            mask: `url('${path}') no-repeat center`,
+            webkitMask: `url('${path}') no-repeat center`,
+        };
+        return (h("div", { class: "delete", "data-cy": KulDataCyAttributes.BUTTON, onClick: (e) => {
+                const index = this.kulData?.nodes?.indexOf(node);
+                this.onKulEvent(e, 'delete', node, index);
+            } }, h("div", { class: "delete__icon", key: node.id + '_delete', style: style })));
     }
     #prepIcon(node) {
-        if (!node.icon) {
-            return;
-        }
-        else {
-            const path = getAssetPath(`./assets/svg/${node.icon}.svg`);
-            const style = {
-                mask: `url('${path}') no-repeat center`,
-                webkitMask: `url('${path}') no-repeat center`,
-            };
-            return h("div", { class: "node__icon", style: style });
-        }
+        const path = getAssetPath(`./assets/svg/${node.icon}.svg`);
+        const style = {
+            mask: `url('${path}') no-repeat center`,
+            webkitMask: `url('${path}') no-repeat center`,
+        };
+        return h("div", { class: "node__icon", style: style });
     }
     #prepNode(node, index) {
         const isFocused = this.focused ===
@@ -563,7 +574,7 @@ const KulList = class {
             'node--has-description': !!node.description,
             'node--selected': isSelected,
         };
-        return (h("li", { "aria-selected": isSelected, "aria-checked": isSelected, class: className, "data-cy": KulDataCyAttributes.NODE, "data-index": index.toString(), onBlur: (e) => this.onKulEvent(e, 'blur', node, index), onClick: (e) => this.onKulEvent(e, 'click', node, index), onFocus: (e) => this.onKulEvent(e, 'focus', node, index), onPointerDown: (e) => this.onKulEvent(e, 'pointerdown', node, index), ref: (el) => {
+        return (h("li", { class: "list-item" }, this.kulEnableDeletions ? this.#prepDeleteIcon(node) : null, h("div", { "aria-selected": isSelected, "aria-checked": isSelected, class: className, "data-cy": KulDataCyAttributes.NODE, "data-index": index.toString(), onBlur: (e) => this.onKulEvent(e, 'blur', node, index), onClick: (e) => this.onKulEvent(e, 'click', node, index), onFocus: (e) => this.onKulEvent(e, 'focus', node, index), onPointerDown: (e) => this.onKulEvent(e, 'pointerdown', node, index), ref: (el) => {
                 if (el) {
                     this.#listItems.push(el);
                 }
@@ -571,7 +582,10 @@ const KulList = class {
                 if (this.kulRipple && el) {
                     this.#rippleSurface.push(el);
                 }
-            } }), this.#prepIcon(node), h("span", { class: "node__text" }, this.#prepTitle(node), this.#prepSubtitle(node))));
+            } }), node.icon ? this.#prepIcon(node) : null, h("span", { class: "node__text" }, this.#prepTitle(node), this.#prepSubtitle(node)))));
+    }
+    #prepSubtitle(node) {
+        return node.description ? (h("div", { class: "node__subtitle" }, node.description)) : undefined;
     }
     #prepTitle(node) {
         return node.value ? (h("div", { class: "node__title" }, node.value)) : undefined;
@@ -605,7 +619,7 @@ const KulList = class {
             'list--empty': isEmpty,
             'list--selectable': this.kulSelectable,
         };
-        return (h(Host, { key: '4064602c148309bd44a127c3579a78d4a6c9a555' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'b3f2ca3b9db614a0473ce0fa6c1d3af181acb1d0', id: KUL_WRAPPER_ID }, isEmpty ? (h("div", { class: "empty-data" }, h("div", { class: "empty-data__text" }, this.#kulManager.language.translate(KulLanguageGeneric.EMPTY_DATA)))) : (h("ul", { "aria-multiselectable": 'false', class: className, role: 'listbox' }, this.kulData.nodes.map((item, index) => this.#prepNode(item, index)))))));
+        return (h(Host, { key: '8cd0cbb1e18f50d6265eae7c41f92cdc3707811c' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '147d9420abc69406f36bc35558a4062288c16443', id: KUL_WRAPPER_ID }, isEmpty ? (h("div", { class: "empty-data" }, h("div", { class: "empty-data__text" }, this.#kulManager.language.translate(KulLanguageGeneric.EMPTY_DATA)))) : (h("ul", { "aria-multiselectable": 'false', class: className, role: 'listbox' }, this.kulData.nodes.map((item, index) => this.#prepNode(item, index)))))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

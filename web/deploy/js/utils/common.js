@@ -41,8 +41,7 @@ export const kulManagerExists = () => {
     return !!DOM.ketchupLite;
 };
 export const getWidget = (node, name, addW) => {
-    return (node?.widgets?.find((w) => w.name === name) ||
-        addW(node, name).widget);
+    return (node?.widgets?.find((w) => w.name.toLowerCase() === name.toLowerCase()) || (addW ? addW(node, name).widget : undefined));
 };
 export const log = () => {
     return WINDOW.lfManager.log;

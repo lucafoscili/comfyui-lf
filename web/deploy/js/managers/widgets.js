@@ -14,6 +14,7 @@ import { booleanViewerFactory } from '../widgets/booleanViewer.js';
 import { jsonInputFactory } from '../widgets/jsonInput.js';
 import { treeFactory } from '../widgets/tree.js';
 import { chatFactory } from '../widgets/chat.js';
+import { listFactory } from '../widgets/list.js';
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
 /*-------------------------------------------------*/
@@ -49,6 +50,10 @@ export class LFWidgets {
                 const widget = app.widgets[CustomWidgetName.imagePreview](nodeType, CustomWidgetName.imagePreview).widget;
                 return widget;
             },
+            [CustomWidgetName.list]: (nodeType) => {
+                const widget = app.widgets[CustomWidgetName.list](nodeType, CustomWidgetName.list).widget;
+                return widget;
+            },
             [CustomWidgetName.tree]: (nodeType) => {
                 const widget = app.widgets[CustomWidgetName.tree](nodeType, CustomWidgetName.tree).widget;
                 return widget;
@@ -62,7 +67,8 @@ export class LFWidgets {
             [CustomWidgetName.controlPanel]: () => controlPanelFactory.options(),
             [CustomWidgetName.jsonInput]: (content) => jsonInputFactory.options(content),
             [CustomWidgetName.imagePreview]: (content) => imagePreviewFactory.options(content),
-            [CustomWidgetName.tree]: (content) => treeFactory.options(content),
+            [CustomWidgetName.list]: (list) => listFactory.options(list),
+            [CustomWidgetName.tree]: (tree) => treeFactory.options(tree),
         };
         this.resizerHandler = {
             [CustomWidgetName.chart]: (nodeType) => chartFactory.resize(nodeType),
@@ -114,6 +120,13 @@ export class LFWidgets {
                 return {
                     [CustomWidgetName.imagePreview]: (nodeType, name) => {
                         return imagePreviewFactory.render(nodeType, name);
+                    },
+                };
+            },
+            [CustomWidgetName.list]: () => {
+                return {
+                    [CustomWidgetName.list]: (nodeType, name) => {
+                        return listFactory.render(nodeType, name);
                     },
                 };
             },

@@ -137,6 +137,13 @@ Returns one of two JSON objects depending on a boolean condition, helping to dyn
 Returns one of two string values based on a boolean condition, allowing for flexible text-based responses in workflows.
 ![SwitchString](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/SwitchString.png "Dynamically choose between two string values based on a boolean condition.")
 
+### Primitive nodes (`primitives.py`)
+
+#### String
+
+Used to select a string. It keeps record of old prompts, displaying a clickable list below the textarea.
+![String](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/String.png "String node with history")
+
 ## Installation
 
 ### Manager
