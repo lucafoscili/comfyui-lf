@@ -8,6 +8,7 @@ class LF_Float:
         return {
             "required": {
                 "float": ("FLOAT", {"default": 0, "tooltip": "Float value."}),
+                "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
             },
             "hidden": { "node_id": "UNIQUE_ID" }
         }
@@ -17,10 +18,11 @@ class LF_Float:
     RETURN_NAMES = ("float",)
     RETURN_TYPES = ("FLOAT",)
 
-    def on_exec(self, node_id, float):
+    def on_exec(self, node_id, float, enable_history):
 
         PromptServer.instance.send_sync("lf-float", {
             "node": node_id, 
+            "isHistoryEnabled": enable_history,
             "value": float,
         })
 
@@ -32,6 +34,7 @@ class LF_Integer:
         return {
             "required": {
                 "integer": ("INT", {"default": 0, "tooltip": "Integer value."}),
+                "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
             },
             "hidden": { "node_id": "UNIQUE_ID" }
         }
@@ -41,10 +44,11 @@ class LF_Integer:
     RETURN_NAMES = ("int",)
     RETURN_TYPES = ("INT",)
 
-    def on_exec(self, node_id, integer):
+    def on_exec(self, node_id, integer, enable_history):
 
         PromptServer.instance.send_sync("lf-integer", {
             "node": node_id, 
+            "isHistoryEnabled": enable_history,
             "value": integer,
         })
 
@@ -56,6 +60,7 @@ class LF_String:
         return {
             "required": {
                 "string": ("STRING", {"default": "", "multiline": True, "tooltip": "String value."}),
+                "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
             },
             "hidden": { "node_id": "UNIQUE_ID" }
         }
@@ -65,10 +70,11 @@ class LF_String:
     RETURN_NAMES = ("string",)
     RETURN_TYPES = ("STRING",)
 
-    def on_exec(self, node_id, string):
+    def on_exec(self, node_id, string, enable_history):
 
         PromptServer.instance.send_sync("lf-string", {
             "node": node_id, 
+            "isHistoryEnabled": enable_history,
             "value": string,
         })
 

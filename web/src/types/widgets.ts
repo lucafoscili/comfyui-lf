@@ -182,22 +182,24 @@ export interface ControlPanelWidgetValue {
 }
 
 /*-------------------------------------------------------------------*/
-/*           J s o n   I n p u t   D e c l a r a t i o n s           */
+/*              H i s t o r y   D e c l a r a t i o n s              */
 /*-------------------------------------------------------------------*/
 
-export interface JsonInputWidget extends Widget {
-  options: JsonInputWidgetOptions;
-  type: [CustomWidgetName.jsonInput];
+export interface HistoryWidget extends Widget {
+  options: HistoryWidgetOptions;
+  type: [CustomWidgetName.history];
 }
-export interface JsonInputWidgetOptions {
+export interface HistoryWidgetOptions {
   hideOnZoom: boolean;
-  getValue(): JsonInputWidgetValue;
-  setValue(value: JsonInputWidgetValue): void;
+  getComp(): HTMLKulListElement;
+  getValue(): HistoryWidgetValue;
+  setProps(props: Partial<HTMLKulListElement>): void;
+  setValue(value: HistoryWidgetValue): void;
 }
-export declare type JsonInputWidgetsSetter = () => {
-  [CustomWidgetName.jsonInput]: BaseWidgetCallback;
+export declare type HistoryWidgetsSetter = () => {
+  [CustomWidgetName.history]: BaseWidgetCallback;
 };
-export type JsonInputWidgetValue = string | Record<string, unknown>;
+export type HistoryWidgetValue = string | KulDataDataset;
 
 /*-------------------------------------------------------------------*/
 /*        I m a g e   P r e v i e w   D e c l a r a t i o n s        */
@@ -221,24 +223,22 @@ export interface ImagePreviewWidgetValue {
 }
 
 /*-------------------------------------------------------------------*/
-/*              H i s t o r y   D e c l a r a t i o n s              */
+/*           J s o n   I n p u t   D e c l a r a t i o n s           */
 /*-------------------------------------------------------------------*/
 
-export interface HistoryWidget extends Widget {
-  options: HistoryWidgetOptions;
-  type: [CustomWidgetName.history];
+export interface JsonInputWidget extends Widget {
+  options: JsonInputWidgetOptions;
+  type: [CustomWidgetName.jsonInput];
 }
-export interface HistoryWidgetOptions {
+export interface JsonInputWidgetOptions {
   hideOnZoom: boolean;
-  getComp(): HTMLKulListElement;
-  getValue(): HistoryWidgetValue;
-  setProps(props: Partial<HTMLKulListElement>): void;
-  setValue(value: HistoryWidgetValue): void;
+  getValue(): JsonInputWidgetValue;
+  setValue(value: JsonInputWidgetValue): void;
 }
-export declare type HistoryWidgetsSetter = () => {
-  [CustomWidgetName.history]: BaseWidgetCallback;
+export declare type JsonInputWidgetsSetter = () => {
+  [CustomWidgetName.jsonInput]: BaseWidgetCallback;
 };
-export type HistoryWidgetValue = string | KulDataDataset;
+export type JsonInputWidgetValue = string | Record<string, unknown>;
 
 /*-------------------------------------------------------------------*/
 /*                  T r e e   D e c l a r a t i o n s                */

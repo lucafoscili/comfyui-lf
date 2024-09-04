@@ -63,6 +63,7 @@ export interface DisplayJSONPayload extends BaseEventPayload {
 /*-------------------------------------------------------------------*/
 
 export interface FloatPayload extends BaseEventPayload {
+  isHistoryEnabled: boolean;
   value: number;
 }
 
@@ -91,6 +92,7 @@ export interface ImageResizeByEdgePayload extends BaseEventPayload {
 /*-------------------------------------------------------------------*/
 
 export interface IntegerPayload extends BaseEventPayload {
+  isHistoryEnabled: boolean;
   value: number;
 }
 
@@ -116,6 +118,7 @@ export interface MultipleImageResizeForWebPayload extends BaseEventPayload {
 /*-------------------------------------------------------------------*/
 
 export interface StringPayload extends BaseEventPayload {
+  isHistoryEnabled: boolean;
   value: string;
 }
 

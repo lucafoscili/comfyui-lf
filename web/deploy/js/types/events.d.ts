@@ -29,6 +29,7 @@ export interface DisplayJSONPayload extends BaseEventPayload {
     json: Record<string, unknown>;
 }
 export interface FloatPayload extends BaseEventPayload {
+    isHistoryEnabled: boolean;
     value: number;
 }
 export interface ImageHistogramPayload extends BaseEventPayload {
@@ -42,6 +43,7 @@ export interface ImageResizeByEdgePayload extends BaseEventPayload {
     widths: number[];
 }
 export interface IntegerPayload extends BaseEventPayload {
+    isHistoryEnabled: boolean;
     value: number;
 }
 export interface LoadImagesPayload extends BaseEventPayload {
@@ -52,6 +54,7 @@ export interface MultipleImageResizeForWebPayload extends BaseEventPayload {
     dataset: KulDataDataset;
 }
 export interface StringPayload extends BaseEventPayload {
+    isHistoryEnabled: boolean;
     value: string;
 }
 export interface SwitchImagePayload extends BaseEventPayload {

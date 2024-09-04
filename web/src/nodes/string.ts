@@ -13,8 +13,9 @@ export const stringFactory = {
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
 
     const payload = event.detail;
+    const isHistoryEnabled = payload.isHistoryEnabled;
     const node = getApiRoutes().getNodeById(payload.id);
-    if (node) {
+    if (isHistoryEnabled && node) {
       const list = getCustomWidget(node, CustomWidgetName.history, addW);
       if (list) {
         const value = payload.value;
