@@ -6,10 +6,12 @@ export type BaseWidgetCallback = <T extends CustomWidgetName>(node: NodeType, na
     widget: Widget;
 };
 export type ComfyWidgetMap = {
+    [ComfyWidgetName.float]: Widget;
     [ComfyWidgetName.integer]: Widget;
     [ComfyWidgetName.string]: Widget;
 };
 export declare enum ComfyWidgetName {
+    float = "FLOAT",
     integer = "INTEGER",
     string = "STRING"
 }

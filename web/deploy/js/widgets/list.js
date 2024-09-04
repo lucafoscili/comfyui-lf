@@ -65,9 +65,13 @@ export const listFactory = {
 const handleEvent = (e, comfyNode) => {
     const { eventType, node } = e.detail;
     if (eventType === 'click' && node?.value) {
+        const floatW = getWidget(comfyNode, ComfyWidgetName.float);
         const intW = getWidget(comfyNode, ComfyWidgetName.integer);
         const stringW = getWidget(comfyNode, ComfyWidgetName.string);
-        if (intW) {
+        if (floatW) {
+            floatW.value = node.value;
+        }
+        else if (intW) {
             intW.value = node.value;
         }
         else if (stringW) {

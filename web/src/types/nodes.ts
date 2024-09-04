@@ -8,6 +8,7 @@ export enum NodeName {
   blurImages = 'LF_BlurImages',
   controlPanel = 'LF_ControlPanel',
   displayJson = 'LF_DisplayJSON',
+  float = 'LF_Float',
   imageHistogram = 'LF_ImageHistogram',
   integer = 'LF_Integer',
   llmChat = 'LF_LLMChat',

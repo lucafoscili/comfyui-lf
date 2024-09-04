@@ -80,6 +80,13 @@ export class LFManager {
             nodes.eventHandlers.LF_DisplayJSON(e, widgets.adders.KUL_CODE);
         });
         /*-------------------------------------------------------------------*/
+        /*                        I n i t   F l o a t                        */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_Float(widgets.setters.KUL_LIST, widgets.adders.KUL_LIST);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.float, (e) => {
+            nodes.eventHandlers.LF_Float(e, widgets.adders.KUL_LIST);
+        });
+        /*-------------------------------------------------------------------*/
         /*               I n i t   I m a g e H i s t o g r a m               */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_ImageHistogram(widgets.setters.KUL_CHART, widgets.adders.KUL_CHART, widgets.resizerHandlers.KUL_CHART);

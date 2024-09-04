@@ -149,6 +149,11 @@ Returns one of two string values based on a boolean condition, allowing for flex
 
 ### Primitive nodes (`primitives.py`)
 
+#### Float
+
+Used to select a float. It keeps record of old values, displaying a clickable list below the widget.
+![Float](https://github.com/lucafoscili/comfyui-lf/blob/460888f68f9568b05d390add9733dc480ee0950f/docs/images/Float.png "Float node with history")
+
 #### Integer
 
 Used to select an integer. It keeps record of old values, displaying a clickable list below the widget.

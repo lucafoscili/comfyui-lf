@@ -12,6 +12,7 @@ export enum EventName {
   blurImages = 'lf-blurimages',
   controlPanel = 'lf-controlpanel',
   displayJson = 'lf-displayjson',
+  float = 'lf-float',
   imageHistogram = 'lf-imagehistogram',
   imageResizeByEdge = 'lf-imageresizebyedge',
   integer = 'lf-integer',
@@ -27,6 +28,7 @@ export enum EventName {
 export type EventPayload =
   | BlurImagesPayload
   | DisplayJSONPayload
+  | FloatPayload
   | ImageHistogramPayload
   | ImageResizeByEdgePayload
   | IntegerPayload
@@ -54,6 +56,14 @@ export interface BlurImagesPayload extends BaseEventPayload {
 
 export interface DisplayJSONPayload extends BaseEventPayload {
   json: Record<string, unknown>;
+}
+
+/*-------------------------------------------------------------------*/
+/*               F l o a t   D e c l a r a t i o n s                 */
+/*-------------------------------------------------------------------*/
+
+export interface FloatPayload extends BaseEventPayload {
+  value: number;
 }
 
 /*-------------------------------------------------------------------*/

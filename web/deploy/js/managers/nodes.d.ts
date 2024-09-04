@@ -3,6 +3,7 @@ export declare class LFNodes {
     eventHandler: {
         LF_BlurImages: (event: CustomEvent<import("../types/events").BlurImagesPayload>, addW: BaseWidgetCallback) => void;
         LF_DisplayJSON: (event: CustomEvent<import("../types/events").DisplayJSONPayload>, addW: BaseWidgetCallback) => void;
+        LF_Float: (event: CustomEvent<import("../types/events").FloatPayload>, addW: BaseWidgetCallback) => void;
         LF_ImageHistogram: (event: CustomEvent<import("../types/events").ImageHistogramPayload>, addW: BaseWidgetCallback) => void;
         LF_ImageResizeByEdge: (event: CustomEvent<import("../types/events").ImageResizeByEdgePayload>, addW: BaseWidgetCallback) => void;
         LF_Integer: (event: CustomEvent<import("../types/events").IntegerPayload>, addW: BaseWidgetCallback) => void;
@@ -19,6 +20,7 @@ export declare class LFNodes {
         LF_BlurImages: (setW: import("../types/widgets").ImagePreviewWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_ControlPanel: (setW: import("../types/widgets").ControlPanelWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_DisplayJSON: (setW: import("../types/widgets").CodeWidgetsSetter, addW: BaseWidgetCallback) => void;
+        LF_Float: (setW: import("../types/widgets").ListWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_ImageHistogram: (setW: import("../types/widgets").ChartWidgetsSetter, addW: BaseWidgetCallback, resizeHandlerW: (node: NodeType) => void) => void;
         LF_ImageResizeByEdge: (setW: import("../types/widgets").TreeWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_Integer: (setW: import("../types/widgets").ListWidgetsSetter, addW: BaseWidgetCallback) => void;
@@ -36,6 +38,7 @@ export declare class LFNodes {
         eventHandlers: {
             LF_BlurImages: (event: CustomEvent<import("../types/events").BlurImagesPayload>, addW: BaseWidgetCallback) => void;
             LF_DisplayJSON: (event: CustomEvent<import("../types/events").DisplayJSONPayload>, addW: BaseWidgetCallback) => void;
+            LF_Float: (event: CustomEvent<import("../types/events").FloatPayload>, addW: BaseWidgetCallback) => void;
             LF_ImageHistogram: (event: CustomEvent<import("../types/events").ImageHistogramPayload>, addW: BaseWidgetCallback) => void;
             LF_ImageResizeByEdge: (event: CustomEvent<import("../types/events").ImageResizeByEdgePayload>, addW: BaseWidgetCallback) => void;
             LF_Integer: (event: CustomEvent<import("../types/events").IntegerPayload>, addW: BaseWidgetCallback) => void;
@@ -52,6 +55,7 @@ export declare class LFNodes {
             LF_BlurImages: (setW: import("../types/widgets").ImagePreviewWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_ControlPanel: (setW: import("../types/widgets").ControlPanelWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_DisplayJSON: (setW: import("../types/widgets").CodeWidgetsSetter, addW: BaseWidgetCallback) => void;
+            LF_Float: (setW: import("../types/widgets").ListWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_ImageHistogram: (setW: import("../types/widgets").ChartWidgetsSetter, addW: BaseWidgetCallback, resizeHandlerW: (node: NodeType) => void) => void;
             LF_ImageResizeByEdge: (setW: import("../types/widgets").TreeWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_Integer: (setW: import("../types/widgets").ListWidgetsSetter, addW: BaseWidgetCallback) => void;

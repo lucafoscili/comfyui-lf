@@ -12,6 +12,7 @@ import {
   BlurImagesPayload,
   DisplayJSONPayload,
   EventName,
+  FloatPayload,
   ImageHistogramPayload,
   ImageResizeByEdgePayload,
   IntegerPayload,
@@ -112,6 +113,13 @@ export class LFManager {
     this.#MANAGERS.nodes.register.LF_DisplayJSON(widgets.setters.KUL_CODE, widgets.adders.KUL_CODE);
     this.#APIS.event(EventName.displayJson, (e: CustomEvent<DisplayJSONPayload>) => {
       nodes.eventHandlers.LF_DisplayJSON(e, widgets.adders.KUL_CODE);
+    });
+    /*-------------------------------------------------------------------*/
+    /*                        I n i t   F l o a t                        */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_Float(widgets.setters.KUL_LIST, widgets.adders.KUL_LIST);
+    this.#APIS.event(EventName.float, (e: CustomEvent<FloatPayload>) => {
+      nodes.eventHandlers.LF_Float(e, widgets.adders.KUL_LIST);
     });
     /*-------------------------------------------------------------------*/
     /*               I n i t   I m a g e H i s t o g r a m               */

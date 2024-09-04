@@ -3,6 +3,7 @@ export var EventName;
     EventName["blurImages"] = "lf-blurimages";
     EventName["controlPanel"] = "lf-controlpanel";
     EventName["displayJson"] = "lf-displayjson";
+    EventName["float"] = "lf-float";
     EventName["imageHistogram"] = "lf-imagehistogram";
     EventName["imageResizeByEdge"] = "lf-imageresizebyedge";
     EventName["integer"] = "lf-integer";

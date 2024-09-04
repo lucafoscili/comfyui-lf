@@ -3,6 +3,7 @@
 /*-------------------------------------------------------------------*/
 export var ComfyWidgetName;
 (function (ComfyWidgetName) {
+    ComfyWidgetName["float"] = "FLOAT";
     ComfyWidgetName["integer"] = "INTEGER";
     ComfyWidgetName["string"] = "STRING";
 })(ComfyWidgetName || (ComfyWidgetName = {}));

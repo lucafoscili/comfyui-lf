@@ -2,6 +2,30 @@ from server import PromptServer
 
 category = "LF Nodes/Primitives"
     
+class LF_Float:
+    @classmethod 
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "float": ("FLOAT", {"default": 0, "tooltip": "Float value."}),
+            },
+            "hidden": { "node_id": "UNIQUE_ID" }
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    RETURN_NAMES = ("float",)
+    RETURN_TYPES = ("FLOAT",)
+
+    def on_exec(self, node_id, float):
+
+        PromptServer.instance.send_sync("lf-float", {
+            "node": node_id, 
+            "value": float,
+        })
+
+        return (float,)
+    
 class LF_Integer:
     @classmethod 
     def INPUT_TYPES(cls):
@@ -51,10 +75,12 @@ class LF_String:
         return (string,)
     
 NODE_CLASS_MAPPINGS = {
+    "LF_Float": LF_Float,
     "LF_Integer": LF_Integer,
     "LF_String": LF_String
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
+    "LF_Float": "Float",
     "LF_Integer": "Integer",
     "LF_String": "String"
 }

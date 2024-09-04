@@ -6,6 +6,7 @@ export var NodeName;
     NodeName["blurImages"] = "LF_BlurImages";
     NodeName["controlPanel"] = "LF_ControlPanel";
     NodeName["displayJson"] = "LF_DisplayJSON";
+    NodeName["float"] = "LF_Float";
     NodeName["imageHistogram"] = "LF_ImageHistogram";
     NodeName["integer"] = "LF_Integer";
     NodeName["llmChat"] = "LF_LLMChat";
