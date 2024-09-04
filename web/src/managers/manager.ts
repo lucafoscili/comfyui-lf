@@ -117,9 +117,9 @@ export class LFManager {
     /*-------------------------------------------------------------------*/
     /*                        I n i t   F l o a t                        */
     /*-------------------------------------------------------------------*/
-    this.#MANAGERS.nodes.register.LF_Float(widgets.setters.KUL_LIST, widgets.adders.KUL_LIST);
+    this.#MANAGERS.nodes.register.LF_Float(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
     this.#APIS.event(EventName.float, (e: CustomEvent<FloatPayload>) => {
-      nodes.eventHandlers.LF_Float(e, widgets.adders.KUL_LIST);
+      nodes.eventHandlers.LF_Float(e, widgets.adders.KUL_HISTORY);
     });
     /*-------------------------------------------------------------------*/
     /*               I n i t   I m a g e H i s t o g r a m               */
@@ -155,9 +155,12 @@ export class LFManager {
     /*-------------------------------------------------------------------*/
     /*                      I n i t   I n t e g e r                      */
     /*-------------------------------------------------------------------*/
-    this.#MANAGERS.nodes.register.LF_Integer(widgets.setters.KUL_LIST, widgets.adders.KUL_LIST);
+    this.#MANAGERS.nodes.register.LF_Integer(
+      widgets.setters.KUL_HISTORY,
+      widgets.adders.KUL_HISTORY,
+    );
     this.#APIS.event(EventName.integer, (e: CustomEvent<IntegerPayload>) => {
-      nodes.eventHandlers.LF_Integer(e, widgets.adders.KUL_LIST);
+      nodes.eventHandlers.LF_Integer(e, widgets.adders.KUL_HISTORY);
     });
     /*-------------------------------------------------------------------*/
     /*                     I n i t   L L M C h a t                       */
@@ -166,9 +169,12 @@ export class LFManager {
     /*-------------------------------------------------------------------*/
     /*                      I n i t   S t r i n g                        */
     /*-------------------------------------------------------------------*/
-    this.#MANAGERS.nodes.register.LF_String(widgets.setters.KUL_LIST, widgets.adders.KUL_LIST);
+    this.#MANAGERS.nodes.register.LF_String(
+      widgets.setters.KUL_HISTORY,
+      widgets.adders.KUL_HISTORY,
+    );
     this.#APIS.event(EventName.string, (e: CustomEvent<StringPayload>) => {
-      nodes.eventHandlers.LF_String(e, widgets.adders.KUL_LIST);
+      nodes.eventHandlers.LF_String(e, widgets.adders.KUL_HISTORY);
     });
     /*-------------------------------------------------------------------*/
     /*     I n i t   M u l t i p l e   R e s i z e   F o r   W e b       */

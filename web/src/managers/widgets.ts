@@ -8,7 +8,7 @@ import { booleanViewerFactory } from '../widgets/booleanViewer.js';
 import { jsonInputFactory } from '../widgets/jsonInput.js';
 import { treeFactory } from '../widgets/tree.js';
 import { chatFactory } from '../widgets/chat.js';
-import { listFactory } from '../widgets/list.js';
+import { historyFactory } from '../widgets/history.js';
 
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
@@ -70,8 +70,11 @@ export class LFWidgets {
       ).widget;
       return widget;
     },
-    [CustomWidgetName.list]: (nodeType: NodeType) => {
-      const widget = app.widgets[CustomWidgetName.list](nodeType, CustomWidgetName.list).widget;
+    [CustomWidgetName.history]: (nodeType: NodeType) => {
+      const widget = app.widgets[CustomWidgetName.history](
+        nodeType,
+        CustomWidgetName.history,
+      ).widget;
       return widget;
     },
     [CustomWidgetName.tree]: (nodeType: NodeType) => {
@@ -91,7 +94,7 @@ export class LFWidgets {
       jsonInputFactory.options(content),
     [CustomWidgetName.imagePreview]: (content: HTMLDivElement) =>
       imagePreviewFactory.options(content),
-    [CustomWidgetName.list]: (list: HTMLKulListElement) => listFactory.options(list),
+    [CustomWidgetName.history]: (history: HTMLKulListElement) => historyFactory.options(history),
     [CustomWidgetName.tree]: (tree: HTMLKulTreeElement) => treeFactory.options(tree),
   };
 
@@ -149,10 +152,10 @@ export class LFWidgets {
         },
       };
     },
-    [CustomWidgetName.list]: () => {
+    [CustomWidgetName.history]: () => {
       return {
-        [CustomWidgetName.list]: (nodeType: NodeType, name: CustomWidgetName) => {
-          return listFactory.render(nodeType, name);
+        [CustomWidgetName.history]: (nodeType: NodeType, name: CustomWidgetName) => {
+          return historyFactory.render(nodeType, name);
         },
       };
     },

@@ -82,9 +82,9 @@ export class LFManager {
         /*-------------------------------------------------------------------*/
         /*                        I n i t   F l o a t                        */
         /*-------------------------------------------------------------------*/
-        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_Float(widgets.setters.KUL_LIST, widgets.adders.KUL_LIST);
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_Float(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.float, (e) => {
-            nodes.eventHandlers.LF_Float(e, widgets.adders.KUL_LIST);
+            nodes.eventHandlers.LF_Float(e, widgets.adders.KUL_HISTORY);
         });
         /*-------------------------------------------------------------------*/
         /*               I n i t   I m a g e H i s t o g r a m               */
@@ -110,9 +110,9 @@ export class LFManager {
         /*-------------------------------------------------------------------*/
         /*                      I n i t   I n t e g e r                      */
         /*-------------------------------------------------------------------*/
-        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_Integer(widgets.setters.KUL_LIST, widgets.adders.KUL_LIST);
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_Integer(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.integer, (e) => {
-            nodes.eventHandlers.LF_Integer(e, widgets.adders.KUL_LIST);
+            nodes.eventHandlers.LF_Integer(e, widgets.adders.KUL_HISTORY);
         });
         /*-------------------------------------------------------------------*/
         /*                     I n i t   L L M C h a t                       */
@@ -121,9 +121,9 @@ export class LFManager {
         /*-------------------------------------------------------------------*/
         /*                      I n i t   S t r i n g                        */
         /*-------------------------------------------------------------------*/
-        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_String(widgets.setters.KUL_LIST, widgets.adders.KUL_LIST);
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_String(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.string, (e) => {
-            nodes.eventHandlers.LF_String(e, widgets.adders.KUL_LIST);
+            nodes.eventHandlers.LF_String(e, widgets.adders.KUL_HISTORY);
         });
         /*-------------------------------------------------------------------*/
         /*     I n i t   M u l t i p l e   R e s i z e   F o r   W e b       */

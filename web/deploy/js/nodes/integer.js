@@ -11,7 +11,7 @@ export const integerFactory = {
         const payload = event.detail;
         const node = getApiRoutes().getNodeById(payload.id);
         if (node) {
-            const list = getCustomWidget(node, CustomWidgetName.list, addW);
+            const list = getCustomWidget(node, CustomWidgetName.history, addW);
             if (list) {
                 const value = payload.value;
                 const strValue = value?.toString();
@@ -51,7 +51,7 @@ export const integerFactory = {
                     nodeType.prototype.onNodeCreated = function () {
                         const r = onNodeCreated?.apply(this, arguments);
                         const node = this;
-                        addW(node, CustomWidgetName.list);
+                        addW(node, CustomWidgetName.history);
                         return r;
                     };
                 }

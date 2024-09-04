@@ -3,24 +3,24 @@ import { LogSeverity } from '../types/manager';
 import { ComfyWidgetName, CustomWidgetName } from '../types/widgets';
 import { createDOMWidget, getLFManager, getWidget, unescapeJson } from '../utils/common';
 
-const BASE_CSS_CLASS = 'lf-list';
-const TYPE = CustomWidgetName.list;
+const BASE_CSS_CLASS = 'lf-history';
+const TYPE = CustomWidgetName.history;
 
-export const listFactory = {
+export const historyFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
-    list: `${BASE_CSS_CLASS}__widget`,
+    history: `${BASE_CSS_CLASS}__widget`,
   },
-  options: (list: HTMLKulListElement) => {
+  options: (history: HTMLKulListElement) => {
     return {
       hideOnZoom: true,
       getComp() {
-        return list;
+        return history;
       },
       getValue() {
-        const nodes = list?.kulData?.nodes;
+        const nodes = history?.kulData?.nodes;
         if (nodes?.length) {
-          return JSON.stringify(list.kulData);
+          return JSON.stringify(history.kulData);
         }
         return '';
       },
@@ -28,20 +28,20 @@ export const listFactory = {
         for (const key in props) {
           if (Object.prototype.hasOwnProperty.call(props, key)) {
             const prop = props[key];
-            list[prop] = prop;
+            history[prop] = prop;
           }
         }
       },
       setValue(value: KulDataDataset | string) {
         try {
           if (typeof value === 'string') {
-            list.kulData = unescapeJson(value).parsedJson;
+            history.kulData = unescapeJson(value).parsedJson;
           } else {
-            list.kulData = value;
+            history.kulData = value;
           }
         } catch (error) {
-          getLFManager().log('Error when setting value!', { error, list }, LogSeverity.Error);
-          list.kulData = null;
+          getLFManager().log('Error when setting value!', { error, history }, LogSeverity.Error);
+          history.kulData = null;
         }
       },
     };
@@ -49,18 +49,18 @@ export const listFactory = {
   render: (node: NodeType, name: CustomWidgetName) => {
     const wrapper = document.createElement('div');
     const content = document.createElement('div');
-    const list = document.createElement('kul-list');
-    const options = listFactory.options(list);
+    const history = document.createElement('kul-list');
+    const options = historyFactory.options(history);
 
-    content.classList.add(listFactory.cssClasses.content);
-    list.classList.add(listFactory.cssClasses.list);
-    list.kulEnableDeletions = true;
-    list.kulSelectable = true;
-    list.addEventListener('kul-list-event', (e) => {
+    content.classList.add(historyFactory.cssClasses.content);
+    history.classList.add(historyFactory.cssClasses.history);
+    history.kulEnableDeletions = true;
+    history.kulSelectable = true;
+    history.addEventListener('kul-list-event', (e) => {
       handleEvent(e, node);
     });
 
-    content.appendChild(list);
+    content.appendChild(history);
     wrapper.appendChild(content);
 
     return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };
