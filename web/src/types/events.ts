@@ -10,6 +10,7 @@ export interface BaseEventPayload {
 export type EventCallback<T extends EventPayload> = (e: CustomEvent<T>) => void;
 export enum EventName {
   blurImages = 'lf-blurimages',
+  boolean = 'lf-boolean',
   controlPanel = 'lf-controlpanel',
   displayJson = 'lf-displayjson',
   float = 'lf-float',
@@ -27,6 +28,7 @@ export enum EventName {
 }
 export type EventPayload =
   | BlurImagesPayload
+  | BooleanPayload
   | DisplayJSONPayload
   | FloatPayload
   | ImageHistogramPayload
@@ -48,6 +50,15 @@ export type EventPayload =
 export interface BlurImagesPayload extends BaseEventPayload {
   fileNames: Array<string>;
   images: Array<string>;
+}
+
+/*-------------------------------------------------------------------*/
+/*             B o o l e a n   D e c l a r a t i o n s               */
+/*-------------------------------------------------------------------*/
+
+export interface BooleanPayload extends BaseEventPayload {
+  isHistoryEnabled: boolean;
+  value: boolean;
 }
 
 /*-------------------------------------------------------------------*/

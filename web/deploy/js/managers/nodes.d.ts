@@ -2,6 +2,7 @@ import { BaseWidgetCallback } from '../types/widgets';
 export declare class LFNodes {
     eventHandler: {
         LF_BlurImages: (event: CustomEvent<import("../types/events").BlurImagesPayload>, addW: BaseWidgetCallback) => void;
+        LF_Boolean: (event: CustomEvent<import("../types/events").BooleanPayload>, addW: BaseWidgetCallback) => void;
         LF_DisplayJSON: (event: CustomEvent<import("../types/events").DisplayJSONPayload>, addW: BaseWidgetCallback) => void;
         LF_Float: (event: CustomEvent<import("../types/events").FloatPayload>, addW: BaseWidgetCallback) => void;
         LF_ImageHistogram: (event: CustomEvent<import("../types/events").ImageHistogramPayload>, addW: BaseWidgetCallback) => void;
@@ -18,6 +19,7 @@ export declare class LFNodes {
     };
     register: {
         LF_BlurImages: (setW: import("../types/widgets").ImagePreviewWidgetsSetter, addW: BaseWidgetCallback) => void;
+        LF_Boolean: (setW: import("../types/widgets").HistoryWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_ControlPanel: (setW: import("../types/widgets").ControlPanelWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_DisplayJSON: (setW: import("../types/widgets").CodeWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_Float: (setW: import("../types/widgets").HistoryWidgetsSetter, addW: BaseWidgetCallback) => void;
@@ -37,6 +39,7 @@ export declare class LFNodes {
     get: {
         eventHandlers: {
             LF_BlurImages: (event: CustomEvent<import("../types/events").BlurImagesPayload>, addW: BaseWidgetCallback) => void;
+            LF_Boolean: (event: CustomEvent<import("../types/events").BooleanPayload>, addW: BaseWidgetCallback) => void;
             LF_DisplayJSON: (event: CustomEvent<import("../types/events").DisplayJSONPayload>, addW: BaseWidgetCallback) => void;
             LF_Float: (event: CustomEvent<import("../types/events").FloatPayload>, addW: BaseWidgetCallback) => void;
             LF_ImageHistogram: (event: CustomEvent<import("../types/events").ImageHistogramPayload>, addW: BaseWidgetCallback) => void;
@@ -53,6 +56,7 @@ export declare class LFNodes {
         };
         registrations: {
             LF_BlurImages: (setW: import("../types/widgets").ImagePreviewWidgetsSetter, addW: BaseWidgetCallback) => void;
+            LF_Boolean: (setW: import("../types/widgets").HistoryWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_ControlPanel: (setW: import("../types/widgets").ControlPanelWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_DisplayJSON: (setW: import("../types/widgets").CodeWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_Float: (setW: import("../types/widgets").HistoryWidgetsSetter, addW: BaseWidgetCallback) => void;

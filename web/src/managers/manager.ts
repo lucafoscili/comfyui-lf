@@ -10,6 +10,7 @@ import { ComfyAPIs, LogSeverity } from '../types/manager.js';
 import { Extension } from '../types/nodes.js';
 import {
   BlurImagesPayload,
+  BooleanPayload,
   DisplayJSONPayload,
   EventName,
   FloatPayload,
@@ -99,6 +100,16 @@ export class LFManager {
     );
     this.#APIS.event(EventName.blurImages, (e: CustomEvent<BlurImagesPayload>) => {
       nodes.eventHandlers.LF_BlurImages(e, widgets.adders.KUL_IMAGE_PREVIEW_B64);
+    });
+    /*-------------------------------------------------------------------*/
+    /*                      I n i t   B o o l e a n                      */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_Boolean(
+      widgets.setters.KUL_HISTORY,
+      widgets.adders.KUL_HISTORY,
+    );
+    this.#APIS.event(EventName.boolean, (e: CustomEvent<BooleanPayload>) => {
+      nodes.eventHandlers.LF_Boolean(e, widgets.adders.KUL_HISTORY);
     });
     /*-------------------------------------------------------------------*/
     /*               I n i t   C o n t r o l   P a n e l                 */

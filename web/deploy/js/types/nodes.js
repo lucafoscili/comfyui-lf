@@ -4,6 +4,7 @@
 export var NodeName;
 (function (NodeName) {
     NodeName["blurImages"] = "LF_BlurImages";
+    NodeName["boolean"] = "LF_Boolean";
     NodeName["controlPanel"] = "LF_ControlPanel";
     NodeName["displayJson"] = "LF_DisplayJSON";
     NodeName["float"] = "LF_Float";

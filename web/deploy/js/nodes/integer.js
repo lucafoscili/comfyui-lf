@@ -15,10 +15,10 @@ export const integerFactory = {
             const list = getCustomWidget(node, CustomWidgetName.history, addW);
             if (list) {
                 const value = payload.value;
-                const strValue = value?.toString();
+                const strValue = String(value).valueOf();
                 const comp = list.options.getComp();
                 const dataset = comp.kulData;
-                if (value) {
+                if (strValue) {
                     const newNode = {
                         icon: 'history',
                         id: strValue,

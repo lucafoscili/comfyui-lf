@@ -3,10 +3,10 @@ import { LogSeverity } from '../types/manager.js';
 import { NodeName } from '../types/nodes.js';
 import { CustomWidgetName } from '../types/widgets.js';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common.js';
-const NAME = NodeName.float;
-export const floatFactory = {
+const NAME = NodeName.boolean;
+export const booleanFactory = {
     eventHandler: (event, addW) => {
-        const name = EventName.string;
+        const name = EventName.boolean;
         getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
         const payload = event.detail;
         const isHistoryEnabled = payload.isHistoryEnabled;
@@ -14,7 +14,7 @@ export const floatFactory = {
         if (isHistoryEnabled && node) {
             const list = getCustomWidget(node, CustomWidgetName.history, addW);
             if (list) {
-                const value = payload.value.toFixed(3);
+                const value = payload.value;
                 const strValue = String(value).valueOf();
                 const comp = list.options.getComp();
                 const dataset = comp.kulData;

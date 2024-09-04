@@ -19,10 +19,10 @@ export const floatFactory = {
       const list = getCustomWidget(node, CustomWidgetName.history, addW);
       if (list) {
         const value = payload.value.toFixed(3);
-        const strValue = value?.toString();
+        const strValue = String(value).valueOf();
         const comp = list.options.getComp();
         const dataset = comp.kulData;
-        if (value) {
+        if (strValue) {
           const newNode: KulDataNode = {
             icon: 'history',
             id: strValue,

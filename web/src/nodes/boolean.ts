@@ -1,15 +1,15 @@
-import { EventName, IntegerPayload } from '../types/events';
+import { EventName, BooleanPayload } from '../types/events';
 import { KulDataNode } from '../types/ketchup-lite/components';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import { CustomWidgetName, HistoryWidgetsSetter, type BaseWidgetCallback } from '../types/widgets';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 
-const NAME = NodeName.integer;
+const NAME = NodeName.boolean;
 
-export const integerFactory = {
-  eventHandler: (event: CustomEvent<IntegerPayload>, addW: BaseWidgetCallback) => {
-    const name = EventName.string;
+export const booleanFactory = {
+  eventHandler: (event: CustomEvent<BooleanPayload>, addW: BaseWidgetCallback) => {
+    const name = EventName.boolean;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
 
     const payload = event.detail;

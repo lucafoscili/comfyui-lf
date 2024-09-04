@@ -6,6 +6,7 @@ import { CustomWidgetName } from './widgets';
 
 export enum NodeName {
   blurImages = 'LF_BlurImages',
+  boolean = 'LF_Boolean',
   controlPanel = 'LF_ControlPanel',
   displayJson = 'LF_DisplayJSON',
   float = 'LF_Float',

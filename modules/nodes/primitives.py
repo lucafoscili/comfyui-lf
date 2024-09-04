@@ -2,6 +2,32 @@ from server import PromptServer
 
 category = "LF Nodes/Primitives"
     
+class LF_Boolean:
+    @classmethod 
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "boolean": ("BOOLEAN", {"default": False, "tooltip": "Boolean value."}),
+                "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
+            },
+            "hidden": { "node_id": "UNIQUE_ID" }
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    RETURN_NAMES = ("boolean",)
+    RETURN_TYPES = ("BOOLEAN",)
+
+    def on_exec(self, node_id, boolean, enable_history):
+
+        PromptServer.instance.send_sync("lf-boolean", {
+            "node": node_id, 
+            "isHistoryEnabled": enable_history,
+            "value": boolean,
+        })
+
+        return (boolean,)
+    
 class LF_Float:
     @classmethod 
     def INPUT_TYPES(cls):
@@ -81,11 +107,13 @@ class LF_String:
         return (string,)
     
 NODE_CLASS_MAPPINGS = {
+    "LF_Boolean": LF_Boolean,
     "LF_Float": LF_Float,
     "LF_Integer": LF_Integer,
     "LF_String": LF_String
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
+    "LF_Boolean": "Boolean",
     "LF_Float": "Float",
     "LF_Integer": "Integer",
     "LF_String": "String"

@@ -54,6 +54,7 @@ export const historyFactory = {
 
     content.classList.add(historyFactory.cssClasses.content);
     history.classList.add(historyFactory.cssClasses.history);
+    history.kulEmptyLabel = 'History is empty!';
     history.kulEnableDeletions = true;
     history.kulSelectable = true;
     history.addEventListener('kul-list-event', (e) => {
@@ -69,11 +70,15 @@ export const historyFactory = {
 
 const handleEvent = (e: CustomEvent<KulListEventPayload>, comfyNode: NodeType) => {
   const { eventType, node } = e.detail;
-  if (eventType === 'click' && node?.value) {
+  const strValue = node ? String(node.value).valueOf() : '';
+  if (eventType === 'click' && strValue) {
+    const boolW = getWidget(comfyNode, ComfyWidgetName.boolean);
     const floatW = getWidget(comfyNode, ComfyWidgetName.float);
     const intW = getWidget(comfyNode, ComfyWidgetName.integer);
     const stringW = getWidget(comfyNode, ComfyWidgetName.string);
-    if (floatW) {
+    if (boolW) {
+      boolW.value = node.value;
+    } else if (floatW) {
       floatW.value = node.value;
     } else if (intW) {
       intW.value = node.value;
