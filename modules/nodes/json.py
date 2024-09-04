@@ -47,7 +47,31 @@ class LF_GetRandomKeyFromJSON:
         selected_key = random.choice(keys)
         print("Selected Key:", selected_key)  # Debugging line to confirm the selected key
         return (selected_key,)
-    
+
+class LF_SetValueInJSON:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "json": ("JSON", {"tooltip": "JSON Object."}),
+                "key": ("STRING", {"tooltip": "Key to update or insert."}),
+                "value": ("STRING", {"tooltip": "Value to set."}),
+            }
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    RETURN_NAMES = ("json_output",)
+    RETURN_TYPES = ("JSON",)
+
+    def on_exec(self, json: dict, key: str, value: str):
+        # Set or replace the value for the given key
+        json[key] = value
+
+        # Return the updated JSON object
+        return (json,)
+
+   
 class LF_GetValueFromJSON:
     @classmethod
     def INPUT_TYPES(cls):
@@ -181,7 +205,7 @@ class LF_StringToJSON:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "string": ("STRING", {"default": "\{\}", "multiline": True, "tooltip": "Stringified JSON"}),
+                "string": ("STRING", {"default": "{}", "multiline": True, "tooltip": "Stringified JSON"}),
             },
             "hidden": { "node_id": "UNIQUE_ID" }
         }
@@ -194,10 +218,6 @@ class LF_StringToJSON:
     def on_exec(self, string: str, node_id: str):
         try:
             json_data = json.loads(string)
-            PromptServer.instance.send_sync("lf-writejson", {
-                "node": node_id,
-                "json": json_data
-            })
             return (json_data,)
         
         except json.JSONDecodeError as e:
@@ -220,6 +240,7 @@ NODE_CLASS_MAPPINGS = {
     "LF_DisplayJSON": LF_DisplayJSON,
     "LF_GetRandomKeyFromJSON": LF_GetRandomKeyFromJSON,
     "LF_GetValueFromJSON": LF_GetValueFromJSON,
+    "LF_SetValueInJSON": LF_SetValueInJSON,
     "LF_LoadLocalJSON": LF_LoadLocalJSON,
     "LF_WriteJSON": LF_WriteJSON,
     "LF_StringToJSON": LF_StringToJSON,
@@ -228,6 +249,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_DisplayJSON": "Display JSON",
     "LF_GetRandomKeyFromJSON": "Get Random Key From JSON",
     "LF_GetValueFromJSON": "Get Value from JSON",
+    "LF_SetValueInJSON" : "Set/Create a Value in a JSON Object",
     "LF_LoadLocalJSON": "Load local JSON",
     "LF_WriteJSON": "Write JSON",
     "LF_StringToJSON": "Convert string to JSON"
