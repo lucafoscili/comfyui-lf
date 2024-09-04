@@ -14,6 +14,7 @@ import { blurImagesFactory } from '../nodes/blurImages';
 import { imageResizeByEdgeFactory } from '../nodes/imageResizeByEdge';
 import { llmChatFactory } from '../nodes/llmChat';
 import { stringFactory } from '../nodes/string';
+import { integerFactory } from '../nodes/integer';
 
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
@@ -25,6 +26,7 @@ export class LFNodes {
     [NodeName.displayJson]: displayJsonFactory.eventHandler,
     [NodeName.imageHistogram]: imageHistogramFactory.eventHandler,
     [NodeName.imageResizeByEdge]: imageResizeByEdgeFactory.eventHandler,
+    [NodeName.integer]: integerFactory.eventHandler,
     [NodeName.loadImages]: loadImagesFactory.eventHandler,
     [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.eventHandler,
     [NodeName.string]: stringFactory.eventHandler,
@@ -41,6 +43,7 @@ export class LFNodes {
     [NodeName.displayJson]: displayJsonFactory.register,
     [NodeName.imageHistogram]: imageHistogramFactory.register,
     [NodeName.imageResizeByEdge]: imageResizeByEdgeFactory.register,
+    [NodeName.integer]: integerFactory.register,
     [NodeName.llmChat]: llmChatFactory.register,
     [NodeName.loadImages]: loadImagesFactory.register,
     [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.register,

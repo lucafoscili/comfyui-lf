@@ -1,7 +1,18 @@
 import { KulDataDataset } from './ketchup-lite/components';
+export type ComfyWidgetCallback = <T extends ComfyWidgetName>(node: NodeType, name: T) => {
+    widget: Widget;
+};
 export type BaseWidgetCallback = <T extends CustomWidgetName>(node: NodeType, name: T) => {
     widget: Widget;
 };
+export type ComfyWidgetMap = {
+    [ComfyWidgetName.integer]: Widget;
+    [ComfyWidgetName.string]: Widget;
+};
+export declare enum ComfyWidgetName {
+    integer = "INTEGER",
+    string = "STRING"
+}
 export declare enum CustomWidgetName {
     booleanViewer = "KUL_BOOLEAN_VIEWER",
     chart = "KUL_CHART",
@@ -11,7 +22,6 @@ export declare enum CustomWidgetName {
     imagePreview = "IMAGE_PREVIEW_B64",
     jsonInput = "KUL_JSON_INPUT",
     list = "KUL_LIST",
-    string = "STRING",
     tree = "KUL_TREE"
 }
 export interface CustomWidgetSetters {
@@ -52,7 +62,6 @@ export type CustomWidgetMap = {
     [CustomWidgetName.imagePreview]: ImagePreviewWidget;
     [CustomWidgetName.jsonInput]: JsonInputWidget;
     [CustomWidgetName.list]: ListWidget;
-    [CustomWidgetName.string]: Widget;
     [CustomWidgetName.tree]: TreeWidget;
 };
 export type CustomWidgetOptions = BooleanViewerWidgetOptions | ChartWidgetOptions | ChatWidgetOptions | CodeWidgetOptions | ControlPanelWidgetOptions | ImagePreviewWidgetOptions | JsonInputWidgetOptions | ListWidgetOptions | TreeWidgetOptions;

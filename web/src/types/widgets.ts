@@ -13,9 +13,11 @@ export type BaseWidgetCallback = <T extends CustomWidgetName>(
   name: T,
 ) => { widget: Widget };
 export type ComfyWidgetMap = {
+  [ComfyWidgetName.integer]: Widget;
   [ComfyWidgetName.string]: Widget;
 };
 export enum ComfyWidgetName {
+  integer = 'INTEGER',
   string = 'STRING',
 }
 export enum CustomWidgetName {

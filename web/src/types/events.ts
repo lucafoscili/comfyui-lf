@@ -14,6 +14,7 @@ export enum EventName {
   displayJson = 'lf-displayjson',
   imageHistogram = 'lf-imagehistogram',
   imageResizeByEdge = 'lf-imageresizebyedge',
+  integer = 'lf-integer',
   loadImages = 'lf-loadimages',
   multipleImageResizeForWeb = 'lf-multipleimageresizeforweb',
   string = 'lf-string',
@@ -28,6 +29,7 @@ export type EventPayload =
   | DisplayJSONPayload
   | ImageHistogramPayload
   | ImageResizeByEdgePayload
+  | IntegerPayload
   | LoadImagesPayload
   | MultipleImageResizeForWebPayload
   | StringPayload
@@ -72,6 +74,14 @@ export interface ImageResizeByEdgePayload extends BaseEventPayload {
   original_heights: number[];
   original_widths: number[];
   widths: number[];
+}
+
+/*-------------------------------------------------------------------*/
+/*              I n t e g e r   D e c l a r a t i o n s              */
+/*-------------------------------------------------------------------*/
+
+export interface IntegerPayload extends BaseEventPayload {
+  value: number;
 }
 
 /*-------------------------------------------------------------------*/

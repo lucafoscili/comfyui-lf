@@ -1,5 +1,5 @@
 import { LogSeverity } from '../types/manager.js';
-import { CustomWidgetName } from '../types/widgets.js';
+import { ComfyWidgetName, CustomWidgetName } from '../types/widgets.js';
 import { createDOMWidget, getLFManager, getWidget, unescapeJson } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-list';
 const TYPE = CustomWidgetName.list;
@@ -65,7 +65,13 @@ export const listFactory = {
 const handleEvent = (e, comfyNode) => {
     const { eventType, node } = e.detail;
     if (eventType === 'click' && node?.value) {
-        const stringW = getWidget(comfyNode, CustomWidgetName.string);
-        stringW.options.setValue(node.value);
+        const intW = getWidget(comfyNode, ComfyWidgetName.integer);
+        const stringW = getWidget(comfyNode, ComfyWidgetName.string);
+        if (intW) {
+            intW.value = node.value;
+        }
+        else if (stringW) {
+            stringW.options.setValue(node.value);
+        }
     }
 };

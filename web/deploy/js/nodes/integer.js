@@ -3,8 +3,8 @@ import { LogSeverity } from '../types/manager.js';
 import { NodeName } from '../types/nodes.js';
 import { CustomWidgetName } from '../types/widgets.js';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common.js';
-const NAME = NodeName.string;
-export const stringFactory = {
+const NAME = NodeName.integer;
+export const integerFactory = {
     eventHandler: (event, addW) => {
         const name = EventName.string;
         getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
@@ -14,17 +14,18 @@ export const stringFactory = {
             const list = getCustomWidget(node, CustomWidgetName.list, addW);
             if (list) {
                 const value = payload.value;
+                const strValue = value?.toString();
                 const comp = list.options.getComp();
                 const dataset = comp.kulData;
-                if (value) {
+                if (value || value === 0) {
                     const newNode = {
                         icon: 'history',
-                        id: value,
+                        id: strValue,
                         description: 'Execution date: ' + new Date().toLocaleString() + '.',
                         value,
                     };
                     if (dataset) {
-                        const existingNode = dataset?.nodes?.find((n) => n.id === value);
+                        const existingNode = dataset?.nodes?.find((n) => n.id === strValue);
                         if (existingNode) {
                             existingNode.description = newNode.description;
                             comp.refresh();

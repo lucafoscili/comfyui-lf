@@ -70,7 +70,12 @@ export const listFactory = {
 const handleEvent = (e: CustomEvent<KulListEventPayload>, comfyNode: NodeType) => {
   const { eventType, node } = e.detail;
   if (eventType === 'click' && node?.value) {
+    const intW = getWidget(comfyNode, ComfyWidgetName.integer);
     const stringW = getWidget(comfyNode, ComfyWidgetName.string);
-    stringW.options.setValue(node.value);
+    if (intW) {
+      intW.value = node.value;
+    } else if (stringW) {
+      stringW.options.setValue(node.value);
+    }
   }
 };
