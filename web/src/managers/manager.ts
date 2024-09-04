@@ -10,8 +10,10 @@ import { ComfyAPIs, LogSeverity } from '../types/manager.js';
 import { Extension } from '../types/nodes.js';
 import {
   BlurImagesPayload,
+  BooleanPayload,
   DisplayJSONPayload,
   EventName,
+  FloatPayload,
   ImageHistogramPayload,
   ImageResizeByEdgePayload,
   IntegerPayload,
@@ -93,11 +95,21 @@ export class LFManager {
     /*                    I n i t   B l u r I m a g e s                  */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_BlurImages(
-      widgets.setters.IMAGE_PREVIEW_B64,
-      widgets.adders.IMAGE_PREVIEW_B64,
+      widgets.setters.KUL_IMAGE_PREVIEW_B64,
+      widgets.adders.KUL_IMAGE_PREVIEW_B64,
     );
     this.#APIS.event(EventName.blurImages, (e: CustomEvent<BlurImagesPayload>) => {
-      nodes.eventHandlers.LF_BlurImages(e, widgets.adders.IMAGE_PREVIEW_B64);
+      nodes.eventHandlers.LF_BlurImages(e, widgets.adders.KUL_IMAGE_PREVIEW_B64);
+    });
+    /*-------------------------------------------------------------------*/
+    /*                      I n i t   B o o l e a n                      */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_Boolean(
+      widgets.setters.KUL_HISTORY,
+      widgets.adders.KUL_HISTORY,
+    );
+    this.#APIS.event(EventName.boolean, (e: CustomEvent<BooleanPayload>) => {
+      nodes.eventHandlers.LF_Boolean(e, widgets.adders.KUL_HISTORY);
     });
     /*-------------------------------------------------------------------*/
     /*               I n i t   C o n t r o l   P a n e l                 */
@@ -112,6 +124,13 @@ export class LFManager {
     this.#MANAGERS.nodes.register.LF_DisplayJSON(widgets.setters.KUL_CODE, widgets.adders.KUL_CODE);
     this.#APIS.event(EventName.displayJson, (e: CustomEvent<DisplayJSONPayload>) => {
       nodes.eventHandlers.LF_DisplayJSON(e, widgets.adders.KUL_CODE);
+    });
+    /*-------------------------------------------------------------------*/
+    /*                        I n i t   F l o a t                        */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_Float(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
+    this.#APIS.event(EventName.float, (e: CustomEvent<FloatPayload>) => {
+      nodes.eventHandlers.LF_Float(e, widgets.adders.KUL_HISTORY);
     });
     /*-------------------------------------------------------------------*/
     /*               I n i t   I m a g e H i s t o g r a m               */
@@ -138,18 +157,21 @@ export class LFManager {
     /*                I n i t   I m a g e s L o a d e r                  */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_LoadImages(
-      widgets.setters.IMAGE_PREVIEW_B64,
-      widgets.adders.IMAGE_PREVIEW_B64,
+      widgets.setters.KUL_IMAGE_PREVIEW_B64,
+      widgets.adders.KUL_IMAGE_PREVIEW_B64,
     );
     this.#APIS.event(EventName.loadImages, (e: CustomEvent<LoadImagesPayload>) => {
-      nodes.eventHandlers.LF_LoadImages(e, widgets.adders.IMAGE_PREVIEW_B64);
+      nodes.eventHandlers.LF_LoadImages(e, widgets.adders.KUL_IMAGE_PREVIEW_B64);
     });
     /*-------------------------------------------------------------------*/
     /*                      I n i t   I n t e g e r                      */
     /*-------------------------------------------------------------------*/
-    this.#MANAGERS.nodes.register.LF_Integer(widgets.setters.KUL_LIST, widgets.adders.KUL_LIST);
+    this.#MANAGERS.nodes.register.LF_Integer(
+      widgets.setters.KUL_HISTORY,
+      widgets.adders.KUL_HISTORY,
+    );
     this.#APIS.event(EventName.integer, (e: CustomEvent<IntegerPayload>) => {
-      nodes.eventHandlers.LF_Integer(e, widgets.adders.KUL_LIST);
+      nodes.eventHandlers.LF_Integer(e, widgets.adders.KUL_HISTORY);
     });
     /*-------------------------------------------------------------------*/
     /*                     I n i t   L L M C h a t                       */
@@ -158,9 +180,12 @@ export class LFManager {
     /*-------------------------------------------------------------------*/
     /*                      I n i t   S t r i n g                        */
     /*-------------------------------------------------------------------*/
-    this.#MANAGERS.nodes.register.LF_String(widgets.setters.KUL_LIST, widgets.adders.KUL_LIST);
+    this.#MANAGERS.nodes.register.LF_String(
+      widgets.setters.KUL_HISTORY,
+      widgets.adders.KUL_HISTORY,
+    );
     this.#APIS.event(EventName.string, (e: CustomEvent<StringPayload>) => {
-      nodes.eventHandlers.LF_String(e, widgets.adders.KUL_LIST);
+      nodes.eventHandlers.LF_String(e, widgets.adders.KUL_HISTORY);
     });
     /*-------------------------------------------------------------------*/
     /*     I n i t   M u l t i p l e   R e s i z e   F o r   W e b       */

@@ -5,8 +5,10 @@ export interface BaseEventPayload {
 export type EventCallback<T extends EventPayload> = (e: CustomEvent<T>) => void;
 export declare enum EventName {
     blurImages = "lf-blurimages",
+    boolean = "lf-boolean",
     controlPanel = "lf-controlpanel",
     displayJson = "lf-displayjson",
+    float = "lf-float",
     imageHistogram = "lf-imagehistogram",
     imageResizeByEdge = "lf-imageresizebyedge",
     integer = "lf-integer",
@@ -19,13 +21,21 @@ export declare enum EventName {
     switchString = "lf-switchstring",
     writeJson = "lf-writejson"
 }
-export type EventPayload = BlurImagesPayload | DisplayJSONPayload | ImageHistogramPayload | ImageResizeByEdgePayload | IntegerPayload | LoadImagesPayload | MultipleImageResizeForWebPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | WriteJSONPayload;
+export type EventPayload = BlurImagesPayload | BooleanPayload | DisplayJSONPayload | FloatPayload | ImageHistogramPayload | ImageResizeByEdgePayload | IntegerPayload | LoadImagesPayload | MultipleImageResizeForWebPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | WriteJSONPayload;
 export interface BlurImagesPayload extends BaseEventPayload {
     fileNames: Array<string>;
     images: Array<string>;
 }
+export interface BooleanPayload extends BaseEventPayload {
+    isHistoryEnabled: boolean;
+    value: boolean;
+}
 export interface DisplayJSONPayload extends BaseEventPayload {
     json: Record<string, unknown>;
+}
+export interface FloatPayload extends BaseEventPayload {
+    isHistoryEnabled: boolean;
+    value: number;
 }
 export interface ImageHistogramPayload extends BaseEventPayload {
     dataset: KulDataDataset;
@@ -38,6 +48,7 @@ export interface ImageResizeByEdgePayload extends BaseEventPayload {
     widths: number[];
 }
 export interface IntegerPayload extends BaseEventPayload {
+    isHistoryEnabled: boolean;
     value: number;
 }
 export interface LoadImagesPayload extends BaseEventPayload {
@@ -48,6 +59,7 @@ export interface MultipleImageResizeForWebPayload extends BaseEventPayload {
     dataset: KulDataDataset;
 }
 export interface StringPayload extends BaseEventPayload {
+    isHistoryEnabled: boolean;
     value: string;
 }
 export interface SwitchImagePayload extends BaseEventPayload {

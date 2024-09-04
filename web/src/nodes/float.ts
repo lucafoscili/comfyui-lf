@@ -1,14 +1,14 @@
-import { EventName, IntegerPayload } from '../types/events';
+import { EventName, FloatPayload } from '../types/events';
 import { KulDataNode } from '../types/ketchup-lite/components';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import { CustomWidgetName, HistoryWidgetsSetter, type BaseWidgetCallback } from '../types/widgets';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 
-const NAME = NodeName.integer;
+const NAME = NodeName.float;
 
-export const integerFactory = {
-  eventHandler: (event: CustomEvent<IntegerPayload>, addW: BaseWidgetCallback) => {
+export const floatFactory = {
+  eventHandler: (event: CustomEvent<FloatPayload>, addW: BaseWidgetCallback) => {
     const name = EventName.string;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
 
@@ -18,7 +18,7 @@ export const integerFactory = {
     if (isHistoryEnabled && node) {
       const list = getCustomWidget(node, CustomWidgetName.history, addW);
       if (list) {
-        const value = payload.value;
+        const value = payload.value.toFixed(3);
         const strValue = String(value).valueOf();
         const comp = list.options.getComp();
         const dataset = comp.kulData;

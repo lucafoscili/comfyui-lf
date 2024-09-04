@@ -2,7 +2,9 @@ import { BaseWidgetCallback } from '../types/widgets';
 export declare class LFNodes {
     eventHandler: {
         LF_BlurImages: (event: CustomEvent<import("../types/events").BlurImagesPayload>, addW: BaseWidgetCallback) => void;
+        LF_Boolean: (event: CustomEvent<import("../types/events").BooleanPayload>, addW: BaseWidgetCallback) => void;
         LF_DisplayJSON: (event: CustomEvent<import("../types/events").DisplayJSONPayload>, addW: BaseWidgetCallback) => void;
+        LF_Float: (event: CustomEvent<import("../types/events").FloatPayload>, addW: BaseWidgetCallback) => void;
         LF_ImageHistogram: (event: CustomEvent<import("../types/events").ImageHistogramPayload>, addW: BaseWidgetCallback) => void;
         LF_ImageResizeByEdge: (event: CustomEvent<import("../types/events").ImageResizeByEdgePayload>, addW: BaseWidgetCallback) => void;
         LF_Integer: (event: CustomEvent<import("../types/events").IntegerPayload>, addW: BaseWidgetCallback) => void;
@@ -17,15 +19,17 @@ export declare class LFNodes {
     };
     register: {
         LF_BlurImages: (setW: import("../types/widgets").ImagePreviewWidgetsSetter, addW: BaseWidgetCallback) => void;
+        LF_Boolean: (setW: import("../types/widgets").HistoryWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_ControlPanel: (setW: import("../types/widgets").ControlPanelWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_DisplayJSON: (setW: import("../types/widgets").CodeWidgetsSetter, addW: BaseWidgetCallback) => void;
+        LF_Float: (setW: import("../types/widgets").HistoryWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_ImageHistogram: (setW: import("../types/widgets").ChartWidgetsSetter, addW: BaseWidgetCallback, resizeHandlerW: (node: NodeType) => void) => void;
         LF_ImageResizeByEdge: (setW: import("../types/widgets").TreeWidgetsSetter, addW: BaseWidgetCallback) => void;
-        LF_Integer: (setW: import("../types/widgets").ListWidgetsSetter, addW: BaseWidgetCallback) => void;
+        LF_Integer: (setW: import("../types/widgets").HistoryWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_LLMChat: (setW: import("../types/widgets").ChatWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_LoadImages: (setW: import("../types/widgets").ImagePreviewWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_MultipleImageResizeForWeb: (setW: import("../types/widgets").TreeWidgetsSetter, addW: BaseWidgetCallback) => void;
-        LF_String: (setW: import("../types/widgets").ListWidgetsSetter, addW: BaseWidgetCallback) => void;
+        LF_String: (setW: import("../types/widgets").HistoryWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_SwitchImage: (setW: import("../types/widgets").BooleanViewerWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_SwitchInteger: (setW: import("../types/widgets").BooleanViewerWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_SwitchJSON: (setW: import("../types/widgets").BooleanViewerWidgetsSetter, addW: BaseWidgetCallback) => void;
@@ -35,7 +39,9 @@ export declare class LFNodes {
     get: {
         eventHandlers: {
             LF_BlurImages: (event: CustomEvent<import("../types/events").BlurImagesPayload>, addW: BaseWidgetCallback) => void;
+            LF_Boolean: (event: CustomEvent<import("../types/events").BooleanPayload>, addW: BaseWidgetCallback) => void;
             LF_DisplayJSON: (event: CustomEvent<import("../types/events").DisplayJSONPayload>, addW: BaseWidgetCallback) => void;
+            LF_Float: (event: CustomEvent<import("../types/events").FloatPayload>, addW: BaseWidgetCallback) => void;
             LF_ImageHistogram: (event: CustomEvent<import("../types/events").ImageHistogramPayload>, addW: BaseWidgetCallback) => void;
             LF_ImageResizeByEdge: (event: CustomEvent<import("../types/events").ImageResizeByEdgePayload>, addW: BaseWidgetCallback) => void;
             LF_Integer: (event: CustomEvent<import("../types/events").IntegerPayload>, addW: BaseWidgetCallback) => void;
@@ -50,15 +56,17 @@ export declare class LFNodes {
         };
         registrations: {
             LF_BlurImages: (setW: import("../types/widgets").ImagePreviewWidgetsSetter, addW: BaseWidgetCallback) => void;
+            LF_Boolean: (setW: import("../types/widgets").HistoryWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_ControlPanel: (setW: import("../types/widgets").ControlPanelWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_DisplayJSON: (setW: import("../types/widgets").CodeWidgetsSetter, addW: BaseWidgetCallback) => void;
+            LF_Float: (setW: import("../types/widgets").HistoryWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_ImageHistogram: (setW: import("../types/widgets").ChartWidgetsSetter, addW: BaseWidgetCallback, resizeHandlerW: (node: NodeType) => void) => void;
             LF_ImageResizeByEdge: (setW: import("../types/widgets").TreeWidgetsSetter, addW: BaseWidgetCallback) => void;
-            LF_Integer: (setW: import("../types/widgets").ListWidgetsSetter, addW: BaseWidgetCallback) => void;
+            LF_Integer: (setW: import("../types/widgets").HistoryWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_LLMChat: (setW: import("../types/widgets").ChatWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_LoadImages: (setW: import("../types/widgets").ImagePreviewWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_MultipleImageResizeForWeb: (setW: import("../types/widgets").TreeWidgetsSetter, addW: BaseWidgetCallback) => void;
-            LF_String: (setW: import("../types/widgets").ListWidgetsSetter, addW: BaseWidgetCallback) => void;
+            LF_String: (setW: import("../types/widgets").HistoryWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_SwitchImage: (setW: import("../types/widgets").BooleanViewerWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_SwitchInteger: (setW: import("../types/widgets").BooleanViewerWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_SwitchJSON: (setW: import("../types/widgets").BooleanViewerWidgetsSetter, addW: BaseWidgetCallback) => void;

@@ -1,23 +1,23 @@
 import { LogSeverity } from '../types/manager.js';
 import { ComfyWidgetName, CustomWidgetName } from '../types/widgets.js';
 import { createDOMWidget, getLFManager, getWidget, unescapeJson } from '../utils/common.js';
-const BASE_CSS_CLASS = 'lf-list';
-const TYPE = CustomWidgetName.list;
-export const listFactory = {
+const BASE_CSS_CLASS = 'lf-history';
+const TYPE = CustomWidgetName.history;
+export const historyFactory = {
     cssClasses: {
         content: BASE_CSS_CLASS,
-        list: `${BASE_CSS_CLASS}__widget`,
+        history: `${BASE_CSS_CLASS}__widget`,
     },
-    options: (list) => {
+    options: (history) => {
         return {
             hideOnZoom: true,
             getComp() {
-                return list;
+                return history;
             },
             getValue() {
-                const nodes = list?.kulData?.nodes;
+                const nodes = history?.kulData?.nodes;
                 if (nodes?.length) {
-                    return JSON.stringify(list.kulData);
+                    return JSON.stringify(history.kulData);
                 }
                 return '';
             },
@@ -25,22 +25,22 @@ export const listFactory = {
                 for (const key in props) {
                     if (Object.prototype.hasOwnProperty.call(props, key)) {
                         const prop = props[key];
-                        list[prop] = prop;
+                        history[prop] = prop;
                     }
                 }
             },
             setValue(value) {
                 try {
                     if (typeof value === 'string') {
-                        list.kulData = unescapeJson(value).parsedJson;
+                        history.kulData = unescapeJson(value).parsedJson;
                     }
                     else {
-                        list.kulData = value;
+                        history.kulData = value;
                     }
                 }
                 catch (error) {
-                    getLFManager().log('Error when setting value!', { error, list }, LogSeverity.Error);
-                    list.kulData = null;
+                    getLFManager().log('Error when setting value!', { error, history }, LogSeverity.Error);
+                    history.kulData = null;
                 }
             },
         };
@@ -48,27 +48,33 @@ export const listFactory = {
     render: (node, name) => {
         const wrapper = document.createElement('div');
         const content = document.createElement('div');
-        const list = document.createElement('kul-list');
-        const options = listFactory.options(list);
-        content.classList.add(listFactory.cssClasses.content);
-        list.classList.add(listFactory.cssClasses.list);
-        list.kulEnableDeletions = true;
-        list.kulSelectable = true;
-        list.addEventListener('kul-list-event', (e) => {
+        const history = document.createElement('kul-list');
+        const options = historyFactory.options(history);
+        content.classList.add(historyFactory.cssClasses.content);
+        history.classList.add(historyFactory.cssClasses.history);
+        history.kulEmptyLabel = 'History is empty!';
+        history.kulEnableDeletions = true;
+        history.kulSelectable = true;
+        history.addEventListener('kul-list-event', (e) => {
             handleEvent(e, node);
         });
-        content.appendChild(list);
+        content.appendChild(history);
         wrapper.appendChild(content);
         return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };
     },
 };
 const handleEvent = (e, comfyNode) => {
     const { eventType, node } = e.detail;
-    if (eventType === 'click' && node?.value) {
+    const strValue = node ? String(node.value).valueOf() : '';
+    if (eventType === 'click' && strValue) {
+        const boolW = getWidget(comfyNode, ComfyWidgetName.boolean);
         const floatW = getWidget(comfyNode, ComfyWidgetName.float);
         const intW = getWidget(comfyNode, ComfyWidgetName.integer);
         const stringW = getWidget(comfyNode, ComfyWidgetName.string);
-        if (floatW) {
+        if (boolW) {
+            boolW.value = node.value;
+        }
+        else if (floatW) {
             floatW.value = node.value;
         }
         else if (intW) {

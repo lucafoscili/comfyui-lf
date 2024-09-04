@@ -6,10 +6,14 @@ export type BaseWidgetCallback = <T extends CustomWidgetName>(node: NodeType, na
     widget: Widget;
 };
 export type ComfyWidgetMap = {
+    [ComfyWidgetName.boolean]: Widget;
+    [ComfyWidgetName.float]: Widget;
     [ComfyWidgetName.integer]: Widget;
     [ComfyWidgetName.string]: Widget;
 };
 export declare enum ComfyWidgetName {
+    boolean = "BOOLEAN",
+    float = "FLOAT",
     integer = "INTEGER",
     string = "STRING"
 }
@@ -19,9 +23,9 @@ export declare enum CustomWidgetName {
     chat = "KUL_CHAT",
     code = "KUL_CODE",
     controlPanel = "KUL_CONTROL_PANEL",
-    imagePreview = "IMAGE_PREVIEW_B64",
+    imagePreview = "KUL_IMAGE_PREVIEW_B64",
     jsonInput = "KUL_JSON_INPUT",
-    list = "KUL_LIST",
+    history = "KUL_HISTORY",
     tree = "KUL_TREE"
 }
 export interface CustomWidgetSetters {
@@ -46,8 +50,8 @@ export interface CustomWidgetSetters {
     [CustomWidgetName.jsonInput](node: NodeType, name: CustomWidgetName.jsonInput): {
         widget: JsonInputWidget;
     };
-    [CustomWidgetName.list](node: NodeType, name: CustomWidgetName.list): {
-        widget: ListWidget;
+    [CustomWidgetName.history](node: NodeType, name: CustomWidgetName.history): {
+        widget: HistoryWidget;
     };
     [CustomWidgetName.tree](node: NodeType, name: CustomWidgetName.tree): {
         widget: TreeWidget;
@@ -61,10 +65,10 @@ export type CustomWidgetMap = {
     [CustomWidgetName.controlPanel]: ControlPanelWidget;
     [CustomWidgetName.imagePreview]: ImagePreviewWidget;
     [CustomWidgetName.jsonInput]: JsonInputWidget;
-    [CustomWidgetName.list]: ListWidget;
+    [CustomWidgetName.history]: HistoryWidget;
     [CustomWidgetName.tree]: TreeWidget;
 };
-export type CustomWidgetOptions = BooleanViewerWidgetOptions | ChartWidgetOptions | ChatWidgetOptions | CodeWidgetOptions | ControlPanelWidgetOptions | ImagePreviewWidgetOptions | JsonInputWidgetOptions | ListWidgetOptions | TreeWidgetOptions;
+export type CustomWidgetOptions = BooleanViewerWidgetOptions | ChartWidgetOptions | ChatWidgetOptions | CodeWidgetOptions | ControlPanelWidgetOptions | ImagePreviewWidgetOptions | JsonInputWidgetOptions | HistoryWidgetOptions | TreeWidgetOptions;
 export interface BooleanViewerWidget extends Widget {
     options: BooleanViewerWidgetOptions;
     type: [CustomWidgetName.booleanViewer];
@@ -140,19 +144,21 @@ export interface ControlPanelWidgetValue {
     debug: boolean;
     themes: string;
 }
-export interface JsonInputWidget extends Widget {
-    options: JsonInputWidgetOptions;
-    type: [CustomWidgetName.jsonInput];
+export interface HistoryWidget extends Widget {
+    options: HistoryWidgetOptions;
+    type: [CustomWidgetName.history];
 }
-export interface JsonInputWidgetOptions {
+export interface HistoryWidgetOptions {
     hideOnZoom: boolean;
-    getValue(): JsonInputWidgetValue;
-    setValue(value: JsonInputWidgetValue): void;
+    getComp(): HTMLKulListElement;
+    getValue(): HistoryWidgetValue;
+    setProps(props: Partial<HTMLKulListElement>): void;
+    setValue(value: HistoryWidgetValue): void;
 }
-export declare type JsonInputWidgetsSetter = () => {
-    [CustomWidgetName.jsonInput]: BaseWidgetCallback;
+export declare type HistoryWidgetsSetter = () => {
+    [CustomWidgetName.history]: BaseWidgetCallback;
 };
-export type JsonInputWidgetValue = string | Record<string, unknown>;
+export type HistoryWidgetValue = string | KulDataDataset;
 export interface ImagePreviewWidget extends Widget {
     options: ImagePreviewWidgetOptions;
     type: [CustomWidgetName.imagePreview];
@@ -169,21 +175,19 @@ export interface ImagePreviewWidgetValue {
     fileNames: string[];
     images: string[];
 }
-export interface ListWidget extends Widget {
-    options: ListWidgetOptions;
-    type: [CustomWidgetName.list];
+export interface JsonInputWidget extends Widget {
+    options: JsonInputWidgetOptions;
+    type: [CustomWidgetName.jsonInput];
 }
-export interface ListWidgetOptions {
+export interface JsonInputWidgetOptions {
     hideOnZoom: boolean;
-    getComp(): HTMLKulListElement;
-    getValue(): ListWidgetValue;
-    setProps(props: Partial<HTMLKulListElement>): void;
-    setValue(value: ListWidgetValue): void;
+    getValue(): JsonInputWidgetValue;
+    setValue(value: JsonInputWidgetValue): void;
 }
-export declare type ListWidgetsSetter = () => {
-    [CustomWidgetName.list]: BaseWidgetCallback;
+export declare type JsonInputWidgetsSetter = () => {
+    [CustomWidgetName.jsonInput]: BaseWidgetCallback;
 };
-export type ListWidgetValue = string | KulDataDataset;
+export type JsonInputWidgetValue = string | Record<string, unknown>;
 export interface TreeWidget extends Widget {
     options: TreeWidgetOptions;
     type: [CustomWidgetName.tree];

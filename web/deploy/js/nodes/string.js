@@ -9,9 +9,10 @@ export const stringFactory = {
         const name = EventName.string;
         getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
         const payload = event.detail;
+        const isHistoryEnabled = payload.isHistoryEnabled;
         const node = getApiRoutes().getNodeById(payload.id);
-        if (node) {
-            const list = getCustomWidget(node, CustomWidgetName.list, addW);
+        if (isHistoryEnabled && node) {
+            const list = getCustomWidget(node, CustomWidgetName.history, addW);
             if (list) {
                 const value = payload.value;
                 const comp = list.options.getComp();
@@ -50,7 +51,7 @@ export const stringFactory = {
                     nodeType.prototype.onNodeCreated = function () {
                         const r = onNodeCreated?.apply(this, arguments);
                         const node = this;
-                        addW(node, CustomWidgetName.list);
+                        addW(node, CustomWidgetName.history);
                         return r;
                     };
                 }

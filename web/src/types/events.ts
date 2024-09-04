@@ -10,8 +10,10 @@ export interface BaseEventPayload {
 export type EventCallback<T extends EventPayload> = (e: CustomEvent<T>) => void;
 export enum EventName {
   blurImages = 'lf-blurimages',
+  boolean = 'lf-boolean',
   controlPanel = 'lf-controlpanel',
   displayJson = 'lf-displayjson',
+  float = 'lf-float',
   imageHistogram = 'lf-imagehistogram',
   imageResizeByEdge = 'lf-imageresizebyedge',
   integer = 'lf-integer',
@@ -26,7 +28,9 @@ export enum EventName {
 }
 export type EventPayload =
   | BlurImagesPayload
+  | BooleanPayload
   | DisplayJSONPayload
+  | FloatPayload
   | ImageHistogramPayload
   | ImageResizeByEdgePayload
   | IntegerPayload
@@ -49,11 +53,29 @@ export interface BlurImagesPayload extends BaseEventPayload {
 }
 
 /*-------------------------------------------------------------------*/
+/*             B o o l e a n   D e c l a r a t i o n s               */
+/*-------------------------------------------------------------------*/
+
+export interface BooleanPayload extends BaseEventPayload {
+  isHistoryEnabled: boolean;
+  value: boolean;
+}
+
+/*-------------------------------------------------------------------*/
 /*         D i s p l a y J S O N   D e c l a r a t i o n s           */
 /*-------------------------------------------------------------------*/
 
 export interface DisplayJSONPayload extends BaseEventPayload {
   json: Record<string, unknown>;
+}
+
+/*-------------------------------------------------------------------*/
+/*               F l o a t   D e c l a r a t i o n s                 */
+/*-------------------------------------------------------------------*/
+
+export interface FloatPayload extends BaseEventPayload {
+  isHistoryEnabled: boolean;
+  value: number;
 }
 
 /*-------------------------------------------------------------------*/
@@ -81,6 +103,7 @@ export interface ImageResizeByEdgePayload extends BaseEventPayload {
 /*-------------------------------------------------------------------*/
 
 export interface IntegerPayload extends BaseEventPayload {
+  isHistoryEnabled: boolean;
   value: number;
 }
 
@@ -106,6 +129,7 @@ export interface MultipleImageResizeForWebPayload extends BaseEventPayload {
 /*-------------------------------------------------------------------*/
 
 export interface StringPayload extends BaseEventPayload {
+  isHistoryEnabled: boolean;
   value: string;
 }
 

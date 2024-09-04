@@ -15,6 +15,8 @@ import { imageResizeByEdgeFactory } from '../nodes/imageResizeByEdge';
 import { llmChatFactory } from '../nodes/llmChat';
 import { stringFactory } from '../nodes/string';
 import { integerFactory } from '../nodes/integer';
+import { floatFactory } from '../nodes/float';
+import { booleanFactory } from '../nodes/boolean';
 
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
@@ -23,7 +25,9 @@ import { integerFactory } from '../nodes/integer';
 export class LFNodes {
   eventHandler = {
     [NodeName.blurImages]: blurImagesFactory.eventHandler,
+    [NodeName.boolean]: booleanFactory.eventHandler,
     [NodeName.displayJson]: displayJsonFactory.eventHandler,
+    [NodeName.float]: floatFactory.eventHandler,
     [NodeName.imageHistogram]: imageHistogramFactory.eventHandler,
     [NodeName.imageResizeByEdge]: imageResizeByEdgeFactory.eventHandler,
     [NodeName.integer]: integerFactory.eventHandler,
@@ -39,8 +43,10 @@ export class LFNodes {
 
   register = {
     [NodeName.blurImages]: blurImagesFactory.register,
+    [NodeName.boolean]: booleanFactory.register,
     [NodeName.controlPanel]: controlPanelFactory.register,
     [NodeName.displayJson]: displayJsonFactory.register,
+    [NodeName.float]: floatFactory.register,
     [NodeName.imageHistogram]: imageHistogramFactory.register,
     [NodeName.imageResizeByEdge]: imageResizeByEdgeFactory.register,
     [NodeName.integer]: integerFactory.register,

@@ -3,10 +3,10 @@ import { LogSeverity } from '../types/manager.js';
 import { NodeName } from '../types/nodes.js';
 import { CustomWidgetName } from '../types/widgets.js';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common.js';
-const NAME = NodeName.integer;
-export const integerFactory = {
+const NAME = NodeName.boolean;
+export const booleanFactory = {
     eventHandler: (event, addW) => {
-        const name = EventName.string;
+        const name = EventName.boolean;
         getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
         const payload = event.detail;
         const isHistoryEnabled = payload.isHistoryEnabled;
