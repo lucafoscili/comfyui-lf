@@ -6,7 +6,7 @@ import {
   type BaseWidgetCallback,
   type CodeWidgetsSetter,
 } from '../types/widgets';
-import { getApiRoutes, getLFManager, getWidget } from '../utils/common';
+import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 
 const NAME = NodeName.displayJson;
 
@@ -18,7 +18,7 @@ export const displayJsonFactory = {
     const payload = event.detail;
     const node = getApiRoutes().getNodeById(payload.id);
     if (node) {
-      const widget = getWidget(node, CustomWidgetName.code, addW);
+      const widget = getCustomWidget(node, CustomWidgetName.code, addW);
       const comp = widget.options.getComp();
       comp.kulLanguage = 'json';
       widget.options.setValue(event.detail.json);

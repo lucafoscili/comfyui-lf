@@ -3,7 +3,7 @@ import { KulDataNode } from '../types/ketchup-lite/components';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import { CustomWidgetName, ListWidgetsSetter, type BaseWidgetCallback } from '../types/widgets';
-import { getApiRoutes, getLFManager, getWidget } from '../utils/common';
+import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 
 const NAME = NodeName.string;
 
@@ -15,7 +15,7 @@ export const stringFactory = {
     const payload = event.detail;
     const node = getApiRoutes().getNodeById(payload.id);
     if (node) {
-      const list = getWidget(node, CustomWidgetName.list, addW);
+      const list = getCustomWidget(node, CustomWidgetName.list, addW);
       if (list) {
         const value = payload.value;
         const comp = list.options.getComp();

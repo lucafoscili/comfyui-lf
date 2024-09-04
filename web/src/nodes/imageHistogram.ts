@@ -6,7 +6,7 @@ import {
   type BaseWidgetCallback,
   type ChartWidgetsSetter,
 } from '../types/widgets';
-import { getApiRoutes, getLFManager, getWidget } from '../utils/common';
+import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 
 const NAME = NodeName.imageHistogram;
 
@@ -18,7 +18,7 @@ export const imageHistogramFactory = {
     const payload = event.detail;
     const node = getApiRoutes().getNodeById(payload.id);
     if (node) {
-      const widget = getWidget(node, CustomWidgetName.chart, addW);
+      const widget = getCustomWidget(node, CustomWidgetName.chart, addW);
       const comp = widget.options.getComp();
       comp.refresh();
       widget.options.setValue(event.detail.dataset);
