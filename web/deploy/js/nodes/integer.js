@@ -17,7 +17,7 @@ export const integerFactory = {
                 const strValue = value?.toString();
                 const comp = list.options.getComp();
                 const dataset = comp.kulData;
-                if (value || value === 0) {
+                if (value) {
                     const newNode = {
                         icon: 'history',
                         id: strValue,
