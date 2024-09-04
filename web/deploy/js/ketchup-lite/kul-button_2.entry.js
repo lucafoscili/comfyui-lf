@@ -358,6 +358,7 @@ KulButton.style = KulButtonStyle0;
 var KulListProps;
 (function (KulListProps) {
     KulListProps["kulData"] = "The actual data of the list.";
+    KulListProps["kulEmptyLabel"] = "Text displayed when the list is empty.";
     KulListProps["kulEnableDeletions"] = "Defines whether items can be removed from the list or not.";
     KulListProps["kulNavigation"] = "When true, enables items' navigation through arrow keys.";
     KulListProps["kulRipple"] = "When set to true, the pointerdown event will trigger a ripple effect.";
@@ -382,6 +383,7 @@ const KulList = class {
         this.focused = undefined;
         this.selected = undefined;
         this.kulData = null;
+        this.kulEmptyLabel = '';
         this.kulEnableDeletions = false;
         this.kulNavigation = true;
         this.kulRipple = true;
@@ -588,7 +590,7 @@ const KulList = class {
         return node.description ? (h("div", { class: "node__subtitle" }, node.description)) : undefined;
     }
     #prepTitle(node) {
-        return node.value ? (h("div", { class: "node__title" }, node.value)) : undefined;
+        return String(node.value).valueOf() ? (h("div", { class: "node__title" }, String(node.value).valueOf())) : undefined;
     }
     /*-------------------------------------------------*/
     /*          L i f e c y c l e   H o o k s          */
@@ -619,7 +621,8 @@ const KulList = class {
             'list--empty': isEmpty,
             'list--selectable': this.kulSelectable,
         };
-        return (h(Host, { key: '8cd0cbb1e18f50d6265eae7c41f92cdc3707811c' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '147d9420abc69406f36bc35558a4062288c16443', id: KUL_WRAPPER_ID }, isEmpty ? (h("div", { class: "empty-data" }, h("div", { class: "empty-data__text" }, this.#kulManager.language.translate(KulLanguageGeneric.EMPTY_DATA)))) : (h("ul", { "aria-multiselectable": 'false', class: className, role: 'listbox' }, this.kulData.nodes.map((item, index) => this.#prepNode(item, index)))))));
+        return (h(Host, { key: '47334224da5c4fcd5b1549c1fa6c1ea73c40fdd1' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'c10800bd325fd54e78663f5cd117c20f99585f88', id: KUL_WRAPPER_ID }, isEmpty ? (h("div", { class: "empty-data" }, h("div", { class: "empty-data__text" }, this.kulEmptyLabel ||
+            this.#kulManager.language.translate(KulLanguageGeneric.EMPTY_DATA)))) : (h("ul", { "aria-multiselectable": 'false', class: className, role: 'listbox' }, this.kulData.nodes.map((item, index) => this.#prepNode(item, index)))))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);
