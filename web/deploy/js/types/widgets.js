@@ -14,7 +14,7 @@ export var CustomWidgetName;
     CustomWidgetName["chat"] = "KUL_CHAT";
     CustomWidgetName["code"] = "KUL_CODE";
     CustomWidgetName["controlPanel"] = "KUL_CONTROL_PANEL";
-    CustomWidgetName["imagePreview"] = "IMAGE_PREVIEW_B64";
+    CustomWidgetName["imagePreview"] = "KUL_IMAGE_PREVIEW_B64";
     CustomWidgetName["jsonInput"] = "KUL_JSON_INPUT";
     CustomWidgetName["history"] = "KUL_HISTORY";
     CustomWidgetName["tree"] = "KUL_TREE";

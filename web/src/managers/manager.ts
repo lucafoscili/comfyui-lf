@@ -94,11 +94,11 @@ export class LFManager {
     /*                    I n i t   B l u r I m a g e s                  */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_BlurImages(
-      widgets.setters.IMAGE_PREVIEW_B64,
-      widgets.adders.IMAGE_PREVIEW_B64,
+      widgets.setters.KUL_IMAGE_PREVIEW_B64,
+      widgets.adders.KUL_IMAGE_PREVIEW_B64,
     );
     this.#APIS.event(EventName.blurImages, (e: CustomEvent<BlurImagesPayload>) => {
-      nodes.eventHandlers.LF_BlurImages(e, widgets.adders.IMAGE_PREVIEW_B64);
+      nodes.eventHandlers.LF_BlurImages(e, widgets.adders.KUL_IMAGE_PREVIEW_B64);
     });
     /*-------------------------------------------------------------------*/
     /*               I n i t   C o n t r o l   P a n e l                 */
@@ -146,11 +146,11 @@ export class LFManager {
     /*                I n i t   I m a g e s L o a d e r                  */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_LoadImages(
-      widgets.setters.IMAGE_PREVIEW_B64,
-      widgets.adders.IMAGE_PREVIEW_B64,
+      widgets.setters.KUL_IMAGE_PREVIEW_B64,
+      widgets.adders.KUL_IMAGE_PREVIEW_B64,
     );
     this.#APIS.event(EventName.loadImages, (e: CustomEvent<LoadImagesPayload>) => {
-      nodes.eventHandlers.LF_LoadImages(e, widgets.adders.IMAGE_PREVIEW_B64);
+      nodes.eventHandlers.LF_LoadImages(e, widgets.adders.KUL_IMAGE_PREVIEW_B64);
     });
     /*-------------------------------------------------------------------*/
     /*                      I n i t   I n t e g e r                      */

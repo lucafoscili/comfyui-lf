@@ -28,7 +28,7 @@ export enum CustomWidgetName {
   chat = 'KUL_CHAT',
   code = 'KUL_CODE',
   controlPanel = 'KUL_CONTROL_PANEL',
-  imagePreview = 'IMAGE_PREVIEW_B64',
+  imagePreview = 'KUL_IMAGE_PREVIEW_B64',
   jsonInput = 'KUL_JSON_INPUT',
   history = 'KUL_HISTORY',
   tree = 'KUL_TREE',
