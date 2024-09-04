@@ -87,12 +87,12 @@ Loads JSON data from a local file specified by a URL. This node is useful for im
 #### SetValueInJSON
 
 Sets a new key or updates an existing one with a new value.
-![SetValueInJSON](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/SetValueInJSON.png "JSON updated with the new value")
+![SetValueInJSON](https://github.com/lucafoscili/comfyui-lf/blob/460888f68f9568b05d390add9733dc480ee0950f/docs/images/SetValueInJSON.png "JSON updated with the new value")
 
 #### StringToJSON
 
 Converts a string to a JSON object.
-![StringToJSON](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/StringToJSON.png "JSON output from a string")
+![StringToJSON](https://github.com/lucafoscili/comfyui-lf/blob/460888f68f9568b05d390add9733dc480ee0950f/docs/images/StringToJSON.png "JSON output from a string")
 
 #### WriteJSON
 
@@ -152,7 +152,7 @@ Returns one of two string values based on a boolean condition, allowing for flex
 #### Integer
 
 Used to select an integer. It keeps record of old values, displaying a clickable list below the widget.
-![Integer](https://github.com/lucafoscili/comfyui-lf/blob/22813956c616ec89b97b53411a0fc77dedef747b/docs/images/Integer.png "Integer node with history")
+![Integer](https://github.com/lucafoscili/comfyui-lf/blob/460888f68f9568b05d390add9733dc480ee0950f/docs/images/Integer.png "Integer node with history")
 
 #### String
 
