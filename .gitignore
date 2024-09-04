@@ -184,6 +184,3 @@ web/deploy/js/ketchup-lite/*showcase*
 !web/deploy/assets/svg/keyboard_voice.svg
 !web/deploy/assets/svg/refresh.svg
 !web/deploy/assets/svg/style.svg
-
-# Kethup Lite (add Prism js to keep here)
-!web/deploy/assets/prism/prism-json.min.js
