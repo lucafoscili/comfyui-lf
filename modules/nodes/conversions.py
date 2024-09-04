@@ -3,6 +3,7 @@ import json
 import random
 import re
 
+from itertools import combinations
 from PIL import Image, ImageFilter
 from server import PromptServer
 
@@ -387,14 +388,14 @@ class LF_Something2Number:
         integer_sum = sum(integer_values)
 
         return (float_sum, integer_sum, float_values, integer_values,)
-
+    
 class LF_Something2String:
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {},
             "optional": {
-                "JSON": ("JSON", {"tooltip": "JSON value to convert to string."}) ,
+                "JSON": ("JSON", {"tooltip": "JSON value to convert to string."}),
                 "boolean": ("BOOLEAN", {"tooltip": "Boolean value to convert to string."}),
                 "float": ("FLOAT", {"tooltip": "Float value to convert to string."}),
                 "integer": ("INT", {"tooltip": "Integer value to convert to string."})
@@ -403,29 +404,45 @@ class LF_Something2String:
 
     CATEGORY = category
     FUNCTION = "on_exec"
-    OUTPUT_IS_LIST = (False, True,)
-    RETURN_TYPES = ("STRING", "STRING",)
-    RETURN_NAMES = ("concatenate", "list",)
+
+    # Generating all combinations of inputs
+    input_keys = ["JSON", "boolean", "float", "integer"]
+    combinations_list = []
+
+    for r in range(1, len(input_keys) + 1):
+        for combo in combinations(input_keys, r):
+            combo_name = "_".join(combo)
+            combinations_list.append(combo_name)
+
+    # Dynamically generating OUTPUT_IS_LIST, RETURN_TYPES, and RETURN_NAMES
+    OUTPUT_IS_LIST = tuple([False] * len(combinations_list))
+    RETURN_TYPES = tuple(["STRING"] * len(combinations_list))
+    RETURN_NAMES = tuple(combinations_list)
 
     def on_exec(self, **kwargs):
         """
-        Converts multiple inputs to strings, handling nested structures and mixed types.
+        Converts multiple inputs to strings and generates specific combinations.
         """
-        flattened_values = []
-        
         def flatten_input(input_item):
             if isinstance(input_item, list):
-                for item in input_item:
-                    flatten_input(item)
+                return [str(sub_item) for item in input_item for sub_item in flatten_input(item)]
             elif isinstance(input_item, str):
-                flattened_values.append(input_item)
+                return [input_item]
             else:
-                flattened_values.append(str(input_item))
+                return [str(input_item)]
+        
+        # Prepare output based on each combination
+        results = []
 
-        for _, value in kwargs.items():
-            flatten_input(value)
+        for combo_name in self.RETURN_NAMES:
+            items = combo_name.split("_")
+            flattened_combo = []
+            for item in items:
+                if item in kwargs:
+                    flattened_combo.extend(flatten_input(kwargs[item]))
+            results.append("".join(flattened_combo))
 
-        return (flattened_values, flattened_values,)
+        return tuple(results)
     
 class LF_WallOfText:
     @classmethod 

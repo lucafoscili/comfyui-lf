@@ -9,6 +9,7 @@ export enum NodeName {
   controlPanel = 'LF_ControlPanel',
   displayJson = 'LF_DisplayJSON',
   imageHistogram = 'LF_ImageHistogram',
+  integer = 'LF_Integer',
   llmChat = 'LF_LLMChat',
   loadImages = 'LF_LoadImages',
   multipleImageResizeForWeb = 'LF_MultipleImageResizeForWeb',

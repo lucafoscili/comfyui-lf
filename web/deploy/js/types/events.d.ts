@@ -9,6 +9,7 @@ export declare enum EventName {
     displayJson = "lf-displayjson",
     imageHistogram = "lf-imagehistogram",
     imageResizeByEdge = "lf-imageresizebyedge",
+    integer = "lf-integer",
     loadImages = "lf-loadimages",
     multipleImageResizeForWeb = "lf-multipleimageresizeforweb",
     string = "lf-string",
@@ -18,7 +19,7 @@ export declare enum EventName {
     switchString = "lf-switchstring",
     writeJson = "lf-writejson"
 }
-export type EventPayload = BlurImagesPayload | DisplayJSONPayload | ImageHistogramPayload | ImageResizeByEdgePayload | LoadImagesPayload | MultipleImageResizeForWebPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | WriteJSONPayload;
+export type EventPayload = BlurImagesPayload | DisplayJSONPayload | ImageHistogramPayload | ImageResizeByEdgePayload | IntegerPayload | LoadImagesPayload | MultipleImageResizeForWebPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | WriteJSONPayload;
 export interface BlurImagesPayload extends BaseEventPayload {
     fileNames: Array<string>;
     images: Array<string>;
@@ -35,6 +36,9 @@ export interface ImageResizeByEdgePayload extends BaseEventPayload {
     original_heights: number[];
     original_widths: number[];
     widths: number[];
+}
+export interface IntegerPayload extends BaseEventPayload {
+    value: number;
 }
 export interface LoadImagesPayload extends BaseEventPayload {
     fileNames: Array<string>;

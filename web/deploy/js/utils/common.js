@@ -37,11 +37,14 @@ export const getKulThemes = () => {
 export const getLFManager = () => {
     return WINDOW.lfManager;
 };
+export const getCustomWidget = (node, name, addW) => {
+    return (node?.widgets?.find((w) => w.name.toLowerCase() === name.toLowerCase()) || (addW ? addW(node, name).widget : undefined));
+};
+export const getWidget = (node, name) => {
+    return node?.widgets?.find((w) => w.name.toLowerCase() === name.toLowerCase());
+};
 export const kulManagerExists = () => {
     return !!DOM.ketchupLite;
-};
-export const getWidget = (node, name, addW) => {
-    return (node?.widgets?.find((w) => w.name.toLowerCase() === name.toLowerCase()) || (addW ? addW(node, name).widget : undefined));
 };
 export const log = () => {
     return WINDOW.lfManager.log;

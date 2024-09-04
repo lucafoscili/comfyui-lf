@@ -6,7 +6,7 @@ import {
   type BaseWidgetCallback,
   type ImagePreviewWidgetsSetter,
 } from '../types/widgets';
-import { getApiRoutes, getLFManager, getWidget } from '../utils/common';
+import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 
 const NAME = NodeName.loadImages;
 
@@ -18,7 +18,7 @@ export const loadImagesFactory = {
     const payload = event.detail;
     const node = getApiRoutes().getNodeById(payload.id);
     if (node) {
-      const widget = getWidget(node, CustomWidgetName.imagePreview, addW);
+      const widget = getCustomWidget(node, CustomWidgetName.imagePreview, addW);
       widget.options.setValue(payload);
       getApiRoutes().redraw();
     }

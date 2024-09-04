@@ -3,6 +3,8 @@ import type { KulDom } from '../types/ketchup-lite/managers/kul-manager/kul-mana
 import type { LFWindow } from '../managers/manager';
 import type {
   BaseWidgetCallback,
+  ComfyWidgetMap,
+  ComfyWidgetName,
   CustomWidgetMap,
   CustomWidgetName,
   CustomWidgetOptions,
@@ -67,7 +69,7 @@ export const getLFManager = () => {
   return WINDOW.lfManager;
 };
 
-export const getWidget = <T extends CustomWidgetName>(
+export const getCustomWidget = <T extends CustomWidgetName>(
   node: NodeType,
   name: T,
   addW?: BaseWidgetCallback,
@@ -77,6 +79,15 @@ export const getWidget = <T extends CustomWidgetName>(
       (w) => w.name.toLowerCase() === name.toLowerCase(),
     ) as CustomWidgetMap[T]) || (addW ? (addW(node, name).widget as CustomWidgetMap[T]) : undefined)
   );
+};
+
+export const getWidget = <T extends ComfyWidgetName>(
+  node: NodeType,
+  name: T,
+): ComfyWidgetMap[T] => {
+  return node?.widgets?.find(
+    (w) => w.name.toLowerCase() === name.toLowerCase(),
+  ) as ComfyWidgetMap[T];
 };
 
 export const kulManagerExists = () => {

@@ -2,7 +2,7 @@ import { EventName } from '../types/events.js';
 import { LogSeverity } from '../types/manager.js';
 import { NodeName } from '../types/nodes.js';
 import { CustomWidgetName, } from '../types/widgets.js';
-import { getApiRoutes, getLFManager, getWidget } from '../utils/common.js';
+import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common.js';
 const NAME = NodeName.blurImages;
 export const blurImagesFactory = {
     eventHandler: (event, addW) => {
@@ -11,7 +11,7 @@ export const blurImagesFactory = {
         const payload = event.detail;
         const node = getApiRoutes().getNodeById(payload.id);
         if (node) {
-            const widget = getWidget(node, CustomWidgetName.imagePreview, addW);
+            const widget = getCustomWidget(node, CustomWidgetName.imagePreview, addW);
             widget.options.setValue(payload);
             getApiRoutes().redraw();
         }

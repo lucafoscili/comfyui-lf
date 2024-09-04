@@ -1,6 +1,6 @@
 import { KulDataDataset, KulListEventPayload } from '../types/ketchup-lite/components';
 import { LogSeverity } from '../types/manager';
-import { CustomWidgetName } from '../types/widgets';
+import { ComfyWidgetName, CustomWidgetName } from '../types/widgets';
 import { createDOMWidget, getLFManager, getWidget, unescapeJson } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-list';
@@ -70,7 +70,12 @@ export const listFactory = {
 const handleEvent = (e: CustomEvent<KulListEventPayload>, comfyNode: NodeType) => {
   const { eventType, node } = e.detail;
   if (eventType === 'click' && node?.value) {
-    const stringW = getWidget(comfyNode, CustomWidgetName.string);
-    stringW.options.setValue(node.value);
+    const intW = getWidget(comfyNode, ComfyWidgetName.integer);
+    const stringW = getWidget(comfyNode, ComfyWidgetName.string);
+    if (intW) {
+      intW.value = node.value;
+    } else if (stringW) {
+      stringW.options.setValue(node.value);
+    }
   }
 };

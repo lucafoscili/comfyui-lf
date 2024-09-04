@@ -6,7 +6,7 @@ import {
   JsonInputWidgetsSetter,
   type BaseWidgetCallback,
 } from '../types/widgets';
-import { getApiRoutes, getLFManager, getWidget } from '../utils/common';
+import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 
 const NAME = NodeName.writeJson;
 
@@ -18,7 +18,7 @@ export const writeJsonFactory = {
     const payload = event.detail;
     const node = getApiRoutes().getNodeById(payload.id);
     if (node) {
-      const widget = getWidget(node, CustomWidgetName.jsonInput, addW);
+      const widget = getCustomWidget(node, CustomWidgetName.jsonInput, addW);
       widget.options.setValue(event.detail.json);
       getApiRoutes().redraw();
     }

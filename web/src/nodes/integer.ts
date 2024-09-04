@@ -1,14 +1,14 @@
-import { EventName, StringPayload } from '../types/events';
+import { EventName, IntegerPayload } from '../types/events';
 import { KulDataNode } from '../types/ketchup-lite/components';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import { CustomWidgetName, ListWidgetsSetter, type BaseWidgetCallback } from '../types/widgets';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 
-const NAME = NodeName.string;
+const NAME = NodeName.integer;
 
-export const stringFactory = {
-  eventHandler: (event: CustomEvent<StringPayload>, addW: BaseWidgetCallback) => {
+export const integerFactory = {
+  eventHandler: (event: CustomEvent<IntegerPayload>, addW: BaseWidgetCallback) => {
     const name = EventName.string;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
 
@@ -18,17 +18,18 @@ export const stringFactory = {
       const list = getCustomWidget(node, CustomWidgetName.list, addW);
       if (list) {
         const value = payload.value;
+        const strValue = value?.toString();
         const comp = list.options.getComp();
         const dataset = comp.kulData;
         if (value) {
           const newNode: KulDataNode = {
             icon: 'history',
-            id: value,
+            id: strValue,
             description: 'Execution date: ' + new Date().toLocaleString() + '.',
             value,
           };
           if (dataset) {
-            const existingNode = dataset?.nodes?.find((n) => n.id === value);
+            const existingNode = dataset?.nodes?.find((n) => n.id === strValue);
             if (existingNode) {
               existingNode.description = newNode.description;
               comp.refresh();

@@ -2,7 +2,7 @@ import { EventName, ImageResizeByEdgePayload } from '../types/events';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import { CustomWidgetName, TreeWidgetsSetter, type BaseWidgetCallback } from '../types/widgets';
-import { getApiRoutes, getLFManager, getWidget } from '../utils/common';
+import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 
 const NAME = NodeName.imageResizeByEdge;
 
@@ -14,7 +14,7 @@ export const imageResizeByEdgeFactory = {
     const payload = event.detail;
     const node = getApiRoutes().getNodeById(payload.id);
     if (node) {
-      const widget = getWidget(node, CustomWidgetName.tree, addW);
+      const widget = getCustomWidget(node, CustomWidgetName.tree, addW);
       const comp = widget.options.getComp();
       comp.kulAccordionLayout = true;
       comp.kulSelectable = false;

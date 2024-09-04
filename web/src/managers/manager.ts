@@ -14,6 +14,7 @@ import {
   EventName,
   ImageHistogramPayload,
   ImageResizeByEdgePayload,
+  IntegerPayload,
   LoadImagesPayload,
   MultipleImageResizeForWebPayload,
   StringPayload,
@@ -142,6 +143,13 @@ export class LFManager {
     );
     this.#APIS.event(EventName.loadImages, (e: CustomEvent<LoadImagesPayload>) => {
       nodes.eventHandlers.LF_LoadImages(e, widgets.adders.IMAGE_PREVIEW_B64);
+    });
+    /*-------------------------------------------------------------------*/
+    /*                      I n i t   I n t e g e r                      */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_Integer(widgets.setters.KUL_LIST, widgets.adders.KUL_LIST);
+    this.#APIS.event(EventName.integer, (e: CustomEvent<IntegerPayload>) => {
+      nodes.eventHandlers.LF_Integer(e, widgets.adders.KUL_LIST);
     });
     /*-------------------------------------------------------------------*/
     /*                     I n i t   L L M C h a t                       */
