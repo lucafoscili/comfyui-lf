@@ -46,7 +46,7 @@ class LF_UrandomSeedGenerator:
     RETURN_NAMES = tuple(["fixed_seeds_dataset"] + ["seed"] * 20)
     RETURN_TYPES = tuple(["JSON"] + ["INT"] * 20)
     
-    def on_exec(self, node_id, enable_history: bool, fixed_seeds=None, regen_each_run=True):
+    def on_exec(self, node_id, enable_history: bool, regen_each_run, fixed_seeds=None):
         # If fixed_seeds are provided, attempt to load them
         existing_seeds = [None] * 20  # Placeholder for 20 seeds
         if fixed_seeds:
@@ -89,12 +89,14 @@ class LF_UrandomSeedGenerator:
             "node": node_id, 
             "dataset": json_dataset,
             "isHistoryEnabled": enable_history,
+            "regenEachRun": regen_each_run,
         })
 
         return (json_dataset, *existing_seeds)
 
     @classmethod
-    def IS_CHANGED(cls, regen_each_run):
+    def IS_CHANGED(cls, **kwargs):
+        regen_each_run = kwargs.get('regen_each_run', False)
         if regen_each_run:
             return float("NaN")
     
