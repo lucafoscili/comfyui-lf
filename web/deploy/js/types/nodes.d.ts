@@ -16,6 +16,7 @@ export declare enum NodeName {
     switchInteger = "LF_SwitchInteger",
     switchJson = "LF_SwitchJSON",
     switchString = "LF_SwitchString",
+    urandomSeedGenerator = "LF_UrandomSeedGenerator",
     writeJson = "LF_WriteJSON"
 }
 type AtLeastOne<T, U = {

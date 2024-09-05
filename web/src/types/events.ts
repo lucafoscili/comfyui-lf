@@ -24,6 +24,7 @@ export enum EventName {
   switchInteger = 'lf-switchinteger',
   switchJson = 'lf-switchjson',
   switchString = 'lf-switchstring',
+  urandomSeedGenerator = 'lf-urandomseedgenerator',
   writeJson = 'lf-writejson',
 }
 export type EventPayload =
@@ -41,6 +42,7 @@ export type EventPayload =
   | SwitchIntegerPayload
   | SwitchJSONPayload
   | SwitchStringPayload
+  | UrandomSeedGeneratorPayload
   | WriteJSONPayload;
 
 /*-------------------------------------------------------------------*/
@@ -165,6 +167,15 @@ export interface SwitchJSONPayload extends BaseEventPayload {
 
 export interface SwitchStringPayload extends BaseEventPayload {
   bool: boolean;
+}
+
+/*-------------------------------------------------------------------*/
+/*           U r a n d o m   S e e d   G e n e r a t o r             */
+/*-------------------------------------------------------------------*/
+
+export interface UrandomSeedGeneratorPayload extends BaseEventPayload {
+  dataset: KulDataDataset;
+  isHistoryEnabled: boolean;
 }
 
 /*-------------------------------------------------------------------*/

@@ -15,6 +15,7 @@ export declare class LFNodes {
         LF_SwitchInteger: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
         LF_SwitchJSON: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
         LF_SwitchString: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
+        LF_UrandomSeedGenerator: (event: CustomEvent<import("../types/events").UrandomSeedGeneratorPayload>, addW: BaseWidgetCallback) => void;
         LF_WriteJSON: (event: CustomEvent<import("../types/events").WriteJSONPayload>, addW: BaseWidgetCallback) => void;
     };
     register: {
@@ -34,6 +35,7 @@ export declare class LFNodes {
         LF_SwitchInteger: (setW: import("../types/widgets").BooleanViewerWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_SwitchJSON: (setW: import("../types/widgets").BooleanViewerWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_SwitchString: (setW: import("../types/widgets").BooleanViewerWidgetsSetter, addW: BaseWidgetCallback) => void;
+        LF_UrandomSeedGenerator: (setW: import("../types/widgets").TreeWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_WriteJSON: (setW: import("../types/widgets").JsonInputWidgetsSetter) => void;
     };
     get: {
@@ -52,6 +54,7 @@ export declare class LFNodes {
             LF_SwitchInteger: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
             LF_SwitchJSON: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
             LF_SwitchString: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
+            LF_UrandomSeedGenerator: (event: CustomEvent<import("../types/events").UrandomSeedGeneratorPayload>, addW: BaseWidgetCallback) => void;
             LF_WriteJSON: (event: CustomEvent<import("../types/events").WriteJSONPayload>, addW: BaseWidgetCallback) => void;
         };
         registrations: {
@@ -71,6 +74,7 @@ export declare class LFNodes {
             LF_SwitchInteger: (setW: import("../types/widgets").BooleanViewerWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_SwitchJSON: (setW: import("../types/widgets").BooleanViewerWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_SwitchString: (setW: import("../types/widgets").BooleanViewerWidgetsSetter, addW: BaseWidgetCallback) => void;
+            LF_UrandomSeedGenerator: (setW: import("../types/widgets").TreeWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_WriteJSON: (setW: import("../types/widgets").JsonInputWidgetsSetter) => void;
         };
     };

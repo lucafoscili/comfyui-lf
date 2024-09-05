@@ -5,7 +5,7 @@ import requests
 from ..utils.llm import *
 from ..constants.llm import *
 
-category = "LF Nodes/LLM"
+category = "✨ LF Nodes/LLM"
 
 class LF_CharacterImpersonator:
     @classmethod

@@ -4,7 +4,7 @@ import requests
 
 from server import PromptServer
 
-category = "LF Nodes/JSON"
+category = "✨ LF Nodes/JSON"
 
 class LF_DisplayJSON:
     @classmethod

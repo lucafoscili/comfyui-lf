@@ -16,6 +16,7 @@ import { stringFactory } from '../nodes/string.js';
 import { integerFactory } from '../nodes/integer.js';
 import { floatFactory } from '../nodes/float.js';
 import { booleanFactory } from '../nodes/boolean.js';
+import { uRandomSeedGeneratorFactory } from '../nodes/urandomSeedGenerator.js';
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
 /*-------------------------------------------------*/
@@ -36,6 +37,7 @@ export class LFNodes {
             [NodeName.switchInteger]: switchIntegerFactory.eventHandler,
             [NodeName.switchJson]: switchJsonFactory.eventHandler,
             [NodeName.switchString]: switchStringFactory.eventHandler,
+            [NodeName.urandomSeedGenerator]: uRandomSeedGeneratorFactory.eventHandler,
             [NodeName.writeJson]: writeJsonFactory.eventHandler,
         };
         this.register = {
@@ -55,6 +57,7 @@ export class LFNodes {
             [NodeName.switchInteger]: switchIntegerFactory.register,
             [NodeName.switchJson]: switchJsonFactory.register,
             [NodeName.switchString]: switchStringFactory.register,
+            [NodeName.urandomSeedGenerator]: uRandomSeedGeneratorFactory.register,
             [NodeName.writeJson]: writeJsonFactory.register,
         };
         this.get = {

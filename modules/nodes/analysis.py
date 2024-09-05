@@ -2,7 +2,7 @@ from server import PromptServer
 
 from ..utils.analysis import *
 
-category = "LF Nodes/Analysis"
+category = "✨ LF Nodes/Analysis"
 
 class LF_ImageHistogram:
     @classmethod
