@@ -1,3 +1,5 @@
+import random
+
 from server import PromptServer
 
 category = "✨ LF Nodes/Primitives"
@@ -105,16 +107,51 @@ class LF_String:
         })
 
         return (string,)
-    
+
+class LF_RandomBoolean:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "chance_true": ("FLOAT", {"default": 50.0, "step": 1, "min": 0, "max": 100, "tooltip": "Percentage chance for True output, 0-100."}),
+            },
+            "hidden": { "node_id": "UNIQUE_ID" }
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    RETURN_NAMES = ("boolean",)
+    RETURN_TYPES = ("BOOLEAN",)
+
+    def on_exec(self, node_id, chance_true: float):
+        chance_true = max(0, min(100, chance_true))
+        random_value = random.uniform(0, 100)
+
+        result = random_value <= chance_true
+
+        PromptServer.instance.send_sync("lf-randomboolean", {
+            "node": node_id, 
+            "boolean": result,
+            "chanceTrue": chance_true,
+        })
+
+        return (result,)
+
+    @classmethod
+    def IS_CHANGED(cls, **kwargs):
+        return float("NaN")
+
 NODE_CLASS_MAPPINGS = {
     "LF_Boolean": LF_Boolean,
     "LF_Float": LF_Float,
     "LF_Integer": LF_Integer,
+    "LF_RandomBoolean": LF_RandomBoolean,
     "LF_String": LF_String
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_Boolean": "Boolean",
     "LF_Float": "Float",
     "LF_Integer": "Integer",
+    "LF_RandomBoolean": "Random boolean",
     "LF_String": "String"
 }

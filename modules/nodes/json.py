@@ -16,7 +16,7 @@ class LF_DisplayJSON:
             "hidden": { "node_id": "UNIQUE_ID" } 
         }        
 
-    CATEGORY = "LF Nodes/JSON"
+    CATEGORY = category
     FUNCTION = "on_exec"
     OUTPUT_NODE = True
     RETURN_TYPES = ()
