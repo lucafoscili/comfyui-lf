@@ -167,7 +167,7 @@ Used to select a string. It keeps record of old prompts, displaying a clickable 
 #### RandomBoolean
 
 Outputs False or True depending on the chances specified by the percentage widget. 0 always false, 100 always true.
-![RandomBoolean](https://github.com/lucafoscili/comfyui-lf/blob/7deb085a3649ec873435cb092308c4e7a01cefe9/docs/images/RandomBoolean.png "20% chance to return True")
+![RandomBoolean](https://github.com/lucafoscili/comfyui-lf/blob/d45405d1e87b73b6bf7f42f8827aecf1ababc582/docs/images/RandomBoolean.png "20% chance to return True")
 
 ### Seed generation nodes (`seeds.py`)
 
