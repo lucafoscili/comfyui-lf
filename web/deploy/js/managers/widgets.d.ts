@@ -54,12 +54,13 @@ export declare class LFWidgets {
             getValue(): string;
             setValue(value: Record<string, unknown> | string): void;
         };
-        KUL_IMAGE_PREVIEW_B64: (content: HTMLDivElement) => {
+        KUL_IMAGE_PREVIEW_B64: (content: HTMLDivElement, isSelectable: boolean) => {
             hideOnZoom: boolean;
             getValue(): {
-                fileNames: any[];
-                images: any[];
+                selectedIndex: number;
+                selectedName: string;
             };
+            selectable: boolean;
             setValue(value: import("../types/widgets.js").ImagePreviewWidgetValue): void;
         };
         KUL_HISTORY: (history: HTMLKulListElement) => {
@@ -176,12 +177,13 @@ export declare class LFWidgets {
                 getValue(): string;
                 setValue(value: Record<string, unknown> | string): void;
             };
-            KUL_IMAGE_PREVIEW_B64: (content: HTMLDivElement) => {
+            KUL_IMAGE_PREVIEW_B64: (content: HTMLDivElement, isSelectable: boolean) => {
                 hideOnZoom: boolean;
                 getValue(): {
-                    fileNames: any[];
-                    images: any[];
+                    selectedIndex: number;
+                    selectedName: string;
                 };
+                selectable: boolean;
                 setValue(value: import("../types/widgets.js").ImagePreviewWidgetValue): void;
             };
             KUL_HISTORY: (history: HTMLKulListElement) => {

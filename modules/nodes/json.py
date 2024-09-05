@@ -1,6 +1,7 @@
 import json
 import random
 import requests
+
 from server import PromptServer
 
 category = "LF Nodes/JSON"

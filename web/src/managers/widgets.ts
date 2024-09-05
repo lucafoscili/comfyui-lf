@@ -92,8 +92,8 @@ export class LFWidgets {
     [CustomWidgetName.controlPanel]: () => controlPanelFactory.options(),
     [CustomWidgetName.jsonInput]: (content: HTMLTextAreaElement) =>
       jsonInputFactory.options(content),
-    [CustomWidgetName.imagePreview]: (content: HTMLDivElement) =>
-      imagePreviewFactory.options(content),
+    [CustomWidgetName.imagePreview]: (content: HTMLDivElement, isSelectable: boolean) =>
+      imagePreviewFactory.options(content, isSelectable),
     [CustomWidgetName.history]: (history: HTMLKulListElement) => historyFactory.options(history),
     [CustomWidgetName.tree]: (tree: HTMLKulTreeElement) => treeFactory.options(tree),
   };

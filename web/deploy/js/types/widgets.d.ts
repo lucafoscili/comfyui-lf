@@ -166,14 +166,17 @@ export interface ImagePreviewWidget extends Widget {
 export interface ImagePreviewWidgetOptions {
     hideOnZoom: boolean;
     getValue(): ImagePreviewWidgetValue;
+    selectable: boolean;
     setValue(value: ImagePreviewWidgetValue): void;
 }
 export declare type ImagePreviewWidgetsSetter = () => {
     [CustomWidgetName.imagePreview]: BaseWidgetCallback;
 };
 export interface ImagePreviewWidgetValue {
-    fileNames: string[];
-    images: string[];
+    fileNames?: string[];
+    images?: string[];
+    selectedIndex: number;
+    selectedName: string;
 }
 export interface JsonInputWidget extends Widget {
     options: JsonInputWidgetOptions;

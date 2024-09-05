@@ -4,14 +4,18 @@ export declare const imagePreviewFactory: {
         content: string;
         doge: string;
         grid: string;
+        gridCell: string;
+        gridCellSelectable: string;
+        gridCellSelected: string;
         image: string;
     };
-    options: (content: HTMLDivElement) => {
+    options: (domWidget: HTMLDivElement, isSelectable: boolean) => {
         hideOnZoom: boolean;
         getValue(): {
-            fileNames: any[];
-            images: any[];
+            selectedIndex: number;
+            selectedName: string;
         };
+        selectable: boolean;
         setValue(value: ImagePreviewWidgetValue): void;
     };
     render: (node: NodeType, name: CustomWidgetName) => {

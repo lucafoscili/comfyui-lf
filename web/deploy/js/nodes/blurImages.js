@@ -12,7 +12,7 @@ export const blurImagesFactory = {
         const node = getApiRoutes().getNodeById(payload.id);
         if (node) {
             const widget = getCustomWidget(node, CustomWidgetName.imagePreview, addW);
-            widget.options.setValue(payload);
+            widget.options.setValue({ ...payload, selectedIndex: undefined, selectedName: undefined });
             getApiRoutes().redraw();
         }
     },
