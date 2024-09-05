@@ -1,6 +1,6 @@
 from server import PromptServer
 
-category = "LF Nodes/Logic"
+category = "✨ LF Nodes/Logic"
 
 class LF_SwitchImage:
     @classmethod

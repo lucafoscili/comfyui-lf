@@ -19,9 +19,10 @@ export declare enum EventName {
     switchInteger = "lf-switchinteger",
     switchJson = "lf-switchjson",
     switchString = "lf-switchstring",
+    urandomSeedGenerator = "lf-urandomseedgenerator",
     writeJson = "lf-writejson"
 }
-export type EventPayload = BlurImagesPayload | BooleanPayload | DisplayJSONPayload | FloatPayload | ImageHistogramPayload | ImageResizeByEdgePayload | IntegerPayload | LoadImagesPayload | MultipleImageResizeForWebPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | WriteJSONPayload;
+export type EventPayload = BlurImagesPayload | BooleanPayload | DisplayJSONPayload | FloatPayload | ImageHistogramPayload | ImageResizeByEdgePayload | IntegerPayload | LoadImagesPayload | MultipleImageResizeForWebPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | UrandomSeedGeneratorPayload | WriteJSONPayload;
 export interface BlurImagesPayload extends BaseEventPayload {
     fileNames: Array<string>;
     images: Array<string>;
@@ -75,6 +76,10 @@ export interface SwitchJSONPayload extends BaseEventPayload {
 }
 export interface SwitchStringPayload extends BaseEventPayload {
     bool: boolean;
+}
+export interface UrandomSeedGeneratorPayload extends BaseEventPayload {
+    dataset: KulDataDataset;
+    isHistoryEnabled: boolean;
 }
 export interface WriteJSONPayload extends BaseEventPayload {
     error: string;

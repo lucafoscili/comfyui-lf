@@ -42,11 +42,6 @@ Processes a LoRA tag to extract keywords and count them. This node is useful for
 The node takes a list of images as input and generates eight additional images, each resized to common web resolutions (256px, 320px, 512px, 640px, 1024px, 1280px, 2048px, 2560px) along the longest edge.
 ![MultipleImageResizeForWeb](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/MultipleImageResizeForWeb.png "Batch resize GUI showing multiple common web resolutions")
 
-#### SequentialSeedsGenerator
-
-Generates a series of unique seeds based on a global seed value. This node is useful for creating reproducible random sequences in workflows.
-![SequentialSeedsGenerator](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/SequentialSeedGenerator.png "Visualization of the generated seed series for sequences")
-
 #### Something2Number
 
 Converts multiple inputs to integers and floats, handling nested structures and mixed types. If multiple numbers are sent to the node, they are summed.
@@ -152,12 +147,12 @@ Returns one of two string values based on a boolean condition, allowing for flex
 #### Boolean
 
 Used to select a boolean. It keeps record of old values, displaying a clickable list below the widget.
-![Boolean](https://github.com/lucafoscili/comfyui-lf/blob/460888f68f9568b05d390add9733dc480ee0950f/docs/images/Boolean.png "Boolean node with history")
+![Boolean](https://github.com/lucafoscili/comfyui-lf/blob/7deb085a3649ec873435cb092308c4e7a01cefe9/docs/images/Boolean.png "Boolean node with history")
 
 #### Float
 
 Used to select a float. It keeps record of old values, displaying a clickable list below the widget.
-![Float](https://github.com/lucafoscili/comfyui-lf/blob/460888f68f9568b05d390add9733dc480ee0950f/docs/images/Float.png "Float node with history")
+![Float](https://github.com/lucafoscili/comfyui-lf/blob/7deb085a3649ec873435cb092308c4e7a01cefe9/docs/images/Float.png "Float node with history")
 
 #### Integer
 
@@ -169,13 +164,25 @@ Used to select an integer. It keeps record of old values, displaying a clickable
 Used to select a string. It keeps record of old prompts, displaying a clickable list below the textarea.
 ![String](https://github.com/lucafoscili/comfyui-lf/blob/22813956c616ec89b97b53411a0fc77dedef747b/docs/images/String.png "String node with history")
 
+### Seed generation nodes (`seeds.py`)
+
+#### SequentialSeedsGenerator
+
+Generates a series of unique seeds based on a global seed value. This node is useful for creating reproducible random sequences in workflows.
+![SequentialSeedsGenerator](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/SequentialSeedGenerator.png "Visualization of the generated seed series for sequences")
+
+#### UrandomSeedGenerator
+
+Generates up to 20 different seeds through the use of the Python urandom function which leverages CPU generated entropy for increased randomness.
+![UrandomSeedGenerator](https://github.com/lucafoscili/comfyui-lf/blob/7deb085a3649ec873435cb092308c4e7a01cefe9/docs/images/UrandomSeedGenerator.png "Random seeds with history enabled")
+
 ## Installation
 
 ### Manager
 
 - Open ComfyUI Manager.
 - Search LF Nodes.
-- Click install.
+- Install the node suite and restart ComfyUI.
 
 ### Manual
 

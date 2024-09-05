@@ -168,6 +168,13 @@ export class LFManager {
             nodes.eventHandlers.LF_SwitchString(e, widgets.adders.KUL_BOOLEAN_VIEWER);
         });
         /*-------------------------------------------------------------------*/
+        /*      I n i t   U r a n d o m   S e e d   G e n e r a t o r        */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_UrandomSeedGenerator(widgets.setters.KUL_TREE, widgets.adders.KUL_TREE);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.urandomSeedGenerator, (e) => {
+            nodes.eventHandlers.LF_UrandomSeedGenerator(e, widgets.adders.KUL_TREE);
+        });
+        /*-------------------------------------------------------------------*/
         /*                       W r i t e   J S O N                         */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_WriteJSON(widgets.setters.KUL_JSON_INPUT);

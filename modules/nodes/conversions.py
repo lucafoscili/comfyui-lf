@@ -9,7 +9,7 @@ from server import PromptServer
 
 from ..utils.conversions import *
 
-category = "LF Nodes/Conversions"
+category = "✨ LF Nodes/Conversions"
 
 class LF_BlurImages:
     @classmethod
@@ -296,23 +296,6 @@ class LF_MultipleImageResizeForWeb:
         })
 
         return (output_images, output_file_names, output_file_names_with_dir,dataset)
-    
-class LF_SequentialSeedsGenerator:
-    @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "global_seed": ("INT", {"default": 0, "tooltip": "Seed value from which the other seeds will be progressively increased."}),
-            }
-        }
-    
-    CATEGORY = category
-    FUNCTION = "on_exec"
-    RETURN_TYPES = ("INT",) * 30
-
-    def on_exec(self, global_seed: int):
-        seeds = [global_seed + i for i in range(20)] 
-        return seeds
 
 class LF_Something2Number:
     @classmethod
@@ -487,6 +470,7 @@ class LF_WallOfText:
             wall_of_text = texts[0]
 
         return (wall_of_text,)
+    
 
 NODE_CLASS_MAPPINGS = {
     "LF_BlurImages": LF_BlurImages,
@@ -494,7 +478,6 @@ NODE_CLASS_MAPPINGS = {
     "LF_Lora2Prompt": LF_Lora2Prompt,
     "LF_LoraTag2Prompt": LF_LoraTag2Prompt,
     "LF_MultipleImageResizeForWeb": LF_MultipleImageResizeForWeb,
-    "LF_SequentialSeedsGenerator": LF_SequentialSeedsGenerator,
     "LF_Something2Number": LF_Something2Number,
     "LF_Something2String": LF_Something2String,
     "LF_WallOfText": LF_WallOfText,
@@ -505,7 +488,6 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_Lora2Prompt": "Convert prompt and LoRAs",
     "LF_LoraTag2Prompt": "Convert LoRA tag to prompt",
     "LF_MultipleImageResizeForWeb": "Multiple image resize for Web",
-    "LF_SequentialSeedsGenerator": "Generate sequential seeds",
     "LF_Something2Number": "Convert something to INT or FLOAT",
     "LF_Something2String": "Convert something to STRING",
     "LF_WallOfText": "Wall of text (string concatenate)",

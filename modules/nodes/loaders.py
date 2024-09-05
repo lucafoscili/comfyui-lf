@@ -10,7 +10,7 @@ from server import PromptServer
 
 from ..utils.loaders import *
 
-category = "LF Nodes/Loaders"
+category = "✨ LF Nodes/Loaders"
  
 class LF_LoadImages:
     @classmethod

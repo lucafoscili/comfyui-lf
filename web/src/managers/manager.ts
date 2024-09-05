@@ -24,6 +24,7 @@ import {
   SwitchIntegerPayload,
   SwitchJSONPayload,
   SwitchStringPayload,
+  UrandomSeedGeneratorPayload,
   WriteJSONPayload,
 } from '../types/events.js';
 
@@ -240,6 +241,19 @@ export class LFManager {
     this.#APIS.event(EventName.switchString, (e: CustomEvent<SwitchStringPayload>) => {
       nodes.eventHandlers.LF_SwitchString(e, widgets.adders.KUL_BOOLEAN_VIEWER);
     });
+    /*-------------------------------------------------------------------*/
+    /*      I n i t   U r a n d o m   S e e d   G e n e r a t o r        */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_UrandomSeedGenerator(
+      widgets.setters.KUL_TREE,
+      widgets.adders.KUL_TREE,
+    );
+    this.#APIS.event(
+      EventName.urandomSeedGenerator,
+      (e: CustomEvent<UrandomSeedGeneratorPayload>) => {
+        nodes.eventHandlers.LF_UrandomSeedGenerator(e, widgets.adders.KUL_TREE);
+      },
+    );
     /*-------------------------------------------------------------------*/
     /*                       W r i t e   J S O N                         */
     /*-------------------------------------------------------------------*/

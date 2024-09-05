@@ -1,6 +1,6 @@
 from server import PromptServer
 
-category = "LF Nodes/Primitives"
+category = "✨ LF Nodes/Primitives"
     
 class LF_Boolean:
     @classmethod 
@@ -33,7 +33,7 @@ class LF_Float:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "float": ("FLOAT", {"default": 0, "step": 0.1, "tooltip": "Float value."}),
+                "float": ("FLOAT", {"default": 0, "max": 0xFFFFFFFFFFFFFFFF, "step": 0.1, "tooltip": "Float value."}),
                 "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
             },
             "hidden": { "node_id": "UNIQUE_ID" }
@@ -59,7 +59,7 @@ class LF_Integer:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "integer": ("INT", {"default": 0, "tooltip": "Integer value."}),
+                "integer": ("INT", {"default": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Integer value."}),
                 "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
             },
             "hidden": { "node_id": "UNIQUE_ID" }

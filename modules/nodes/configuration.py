@@ -1,6 +1,6 @@
 from server import PromptServer
 
-category = "LF Nodes/Configuration"
+category = "✨ LF Nodes/Configuration"
 
 class LF_ControlPanel:
     @classmethod
