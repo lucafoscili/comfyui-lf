@@ -147,12 +147,12 @@ Returns one of two string values based on a boolean condition, allowing for flex
 #### Boolean
 
 Used to select a boolean. It keeps record of old values, displaying a clickable list below the widget.
-![Boolean](https://github.com/lucafoscili/comfyui-lf/blob/460888f68f9568b05d390add9733dc480ee0950f/docs/images/Boolean.png "Boolean node with history")
+![Boolean](https://github.com/lucafoscili/comfyui-lf/blob/7deb085a3649ec873435cb092308c4e7a01cefe9/docs/images/Boolean.png "Boolean node with history")
 
 #### Float
 
 Used to select a float. It keeps record of old values, displaying a clickable list below the widget.
-![Float](https://github.com/lucafoscili/comfyui-lf/blob/460888f68f9568b05d390add9733dc480ee0950f/docs/images/Float.png "Float node with history")
+![Float](https://github.com/lucafoscili/comfyui-lf/blob/7deb085a3649ec873435cb092308c4e7a01cefe9/docs/images/Float.png "Float node with history")
 
 #### Integer
 
@@ -174,7 +174,7 @@ Generates a series of unique seeds based on a global seed value. This node is us
 #### UrandomSeedGenerator
 
 Generates up to 20 different seeds through the use of the Python urandom function which leverages CPU generated entropy for increased randomness.
-![LF_UrandomSeedGenerator](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/LF_UrandomSeedGenerator.png "Random seeds with history enabled")
+![UrandomSeedGenerator](https://github.com/lucafoscili/comfyui-lf/blob/7deb085a3649ec873435cb092308c4e7a01cefe9/docs/images/UrandomSeedGenerator.png "Random seeds with history enabled")
 
 ## Installation
 
