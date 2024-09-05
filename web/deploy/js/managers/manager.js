@@ -140,6 +140,10 @@ export class LFManager {
             nodes.eventHandlers.LF_MultipleImageResizeForWeb(e, widgets.adders.KUL_TREE);
         });
         /*-------------------------------------------------------------------*/
+        /*               I n i t   R a n d o m   B o o l e a n               */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event('lf-randomboolean', () => { }); //TODO: add progress bar widget when ready
+        /*-------------------------------------------------------------------*/
         /*                 I n i t   S w i t c h   I m a g e                 */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_SwitchImage(widgets.setters.KUL_BOOLEAN_VIEWER, widgets.adders.KUL_BOOLEAN_VIEWER);

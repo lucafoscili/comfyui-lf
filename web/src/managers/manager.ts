@@ -202,6 +202,10 @@ export class LFManager {
       },
     );
     /*-------------------------------------------------------------------*/
+    /*               I n i t   R a n d o m   B o o l e a n               */
+    /*-------------------------------------------------------------------*/
+    this.#APIS.event('lf-randomboolean' as any, () => {}); //TODO: add progress bar widget when ready
+    /*-------------------------------------------------------------------*/
     /*                 I n i t   S w i t c h   I m a g e                 */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_SwitchImage(

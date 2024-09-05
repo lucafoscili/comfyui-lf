@@ -164,6 +164,11 @@ Used to select an integer. It keeps record of old values, displaying a clickable
 Used to select a string. It keeps record of old prompts, displaying a clickable list below the textarea.
 ![String](https://github.com/lucafoscili/comfyui-lf/blob/22813956c616ec89b97b53411a0fc77dedef747b/docs/images/String.png "String node with history")
 
+#### RandomBoolean
+
+Outputs False or True depending on the chances specified by the percentage widget. 0 always false, 100 always true.
+![RandomBoolean](https://github.com/lucafoscili/comfyui-lf/blob/7deb085a3649ec873435cb092308c4e7a01cefe9/docs/images/RandomBoolean.png "20% chance to return True")
+
 ### Seed generation nodes (`seeds.py`)
 
 #### SequentialSeedsGenerator
