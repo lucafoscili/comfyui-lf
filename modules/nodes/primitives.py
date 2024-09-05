@@ -33,7 +33,7 @@ class LF_Float:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "float": ("FLOAT", {"default": 0, "tooltip": "Float value."}),
+                "float": ("FLOAT", {"default": 0, "step": 0.1, "tooltip": "Float value."}),
                 "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
             },
             "hidden": { "node_id": "UNIQUE_ID" }

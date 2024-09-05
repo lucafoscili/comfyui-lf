@@ -66,7 +66,7 @@ export class LFWidgets {
             [CustomWidgetName.code]: (code) => codeFactory.options(code),
             [CustomWidgetName.controlPanel]: () => controlPanelFactory.options(),
             [CustomWidgetName.jsonInput]: (content) => jsonInputFactory.options(content),
-            [CustomWidgetName.imagePreview]: (content) => imagePreviewFactory.options(content),
+            [CustomWidgetName.imagePreview]: (content, isSelectable) => imagePreviewFactory.options(content, isSelectable),
             [CustomWidgetName.history]: (history) => historyFactory.options(history),
             [CustomWidgetName.tree]: (tree) => treeFactory.options(tree),
         };

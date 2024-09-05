@@ -1,5 +1,6 @@
 import io
 import base64
+import json
 import os
 import numpy as np
 import torch
@@ -22,16 +23,19 @@ class LF_LoadImages:
                 "load_cap": ("INT", {"default": 0, "label": "Maximum images to load, 0 to disable.", "tooltip": "Maximum number of images to load before stopping. Set 0 for an unlimited amount."}),
                 "dummy_output": ("BOOLEAN", {"default": False, "label": "Outputs a dummy image in tensor format when the list is empty", "tooltip": "Flag indicating whether to output a dummy image tensor and string when the list is empty."}),
             },
-            "hidden": { "node_id": "UNIQUE_ID" } 
+            "hidden": { 
+                "node_id": "UNIQUE_ID",
+                "KUL_IMAGE_PREVIEW_B64": ("KUL_IMAGE_PREVIEW_B64", {"default": ""})
+            } 
         }
 
     CATEGORY = category
     FUNCTION = "on_exec"
-    OUTPUT_IS_LIST = (True, True, False)
-    RETURN_NAMES = ("images", "names", "nr")
-    RETURN_TYPES = ("IMAGE", "STRING", "INT")
+    OUTPUT_IS_LIST = (True, True, False, False, False, False)
+    RETURN_NAMES = ("images", "names", "nr", "selected_image", "selected_index", "selected_name")
+    RETURN_TYPES = ("IMAGE", "STRING", "INT", "IMAGE", "INT", "STRING")
 
-    def on_exec(self, dir, subdir, strip_ext, load_cap, dummy_output, node_id):
+    def on_exec(self, dir, subdir, strip_ext, load_cap, dummy_output, node_id, KUL_IMAGE_PREVIEW_B64):
         """
         Loads images from a specified directory and subdirectories, optionally stripping extensions from filenames.
         Images are converted to tensors and returned along with their filenames and the total number of images processed.
@@ -55,6 +59,22 @@ class LF_LoadImages:
         images = []
         file_names = []
         count = 0
+        selected_image = None
+
+        try:
+            json_string = json.dumps(KUL_IMAGE_PREVIEW_B64)
+            json_data = json.loads(json_string)
+            selected_index = json_data.get("selectedIndex", None)
+            selected_name = json_data.get("selectedName", None)
+        except json.JSONDecodeError:
+            selected_index = None
+            selected_name = None
+        except KeyError:
+            selected_index = None
+            selected_name = None
+        except Exception as e:
+            selected_index = None
+            selected_name = None
 
         for root, dirs, files in os.walk(dir):
             if not subdir:
@@ -89,6 +109,11 @@ class LF_LoadImages:
                         if strip_ext:
                             file = os.path.splitext(file)[0]
                         file_names.append(file)  
+                        # Assign selected image if index or name matches
+                        if count == selected_index and file == selected_name:
+                            selected_image = img_tensor
+                            selected_index = count
+                            selected_name = file
  
                     # Stop loading images if the cap is reached
                         count += 1
@@ -99,19 +124,24 @@ class LF_LoadImages:
             if load_cap > 0 and count >= load_cap:
                 break
 
-        # Check if we should output the dummy image and string
         if dummy_output and not images:
-            # Add a dummy image tensor to the list
             file_names.append("empty")
-            images.append(create_dummy_image_tensor())
-        
+            selected_image = create_dummy_image_tensor()
+            images.append(selected_image)         
+
+        if dummy_output and images and selected_image is None:
+            selected_image = create_dummy_image_tensor()
+
+
         PromptServer.instance.send_sync("lf-loadimages", {
             "node": node_id, 
             "fileNames": file_names,
             "images": images_buffer,
+            "selectedIndex": selected_index,
+            "selectedName": selected_name
         })
 
-        return (images, file_names, count)
+        return (images, file_names, count, selected_image, selected_index, selected_name)
 
 NODE_CLASS_MAPPINGS = {
     "LF_LoadImages": LF_LoadImages,

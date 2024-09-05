@@ -114,6 +114,8 @@ export interface IntegerPayload extends BaseEventPayload {
 export interface LoadImagesPayload extends BaseEventPayload {
   fileNames: Array<string>;
   images: Array<string>;
+  selectedIndex: number;
+  selectedName: string;
 }
 
 /*-------------------------------------------------------------------*/
