@@ -1,8 +1,8 @@
 import { KulDataDataset } from './ketchup-lite/components';
-export type ComfyWidgetCallback = <T extends ComfyWidgetName>(node: NodeType, name: T) => {
+export type BaseWidgetCallback = <T extends CustomWidgetName>(node: NodeType, name: T) => {
     widget: Widget;
 };
-export type BaseWidgetCallback = <T extends CustomWidgetName>(node: NodeType, name: T) => {
+export type ComfyWidgetCallback = <T extends ComfyWidgetName>(node: NodeType, name: T) => {
     widget: Widget;
 };
 export type ComfyWidgetMap = {
@@ -17,6 +17,18 @@ export declare enum ComfyWidgetName {
     integer = "INTEGER",
     string = "STRING"
 }
+export type CustomWidgetMap = {
+    [CustomWidgetName.booleanViewer]: BooleanViewerWidget;
+    [CustomWidgetName.chart]: ChartWidget;
+    [CustomWidgetName.chat]: ChatWidget;
+    [CustomWidgetName.code]: CodeWidget;
+    [CustomWidgetName.controlPanel]: ControlPanelWidget;
+    [CustomWidgetName.history]: HistoryWidget;
+    [CustomWidgetName.imagePreview]: ImagePreviewWidget;
+    [CustomWidgetName.jsonInput]: JsonInputWidget;
+    [CustomWidgetName.rollViewer]: RollViewerWidget;
+    [CustomWidgetName.tree]: TreeWidget;
+};
 export declare enum CustomWidgetName {
     booleanViewer = "KUL_BOOLEAN_VIEWER",
     chart = "KUL_CHART",
@@ -26,8 +38,10 @@ export declare enum CustomWidgetName {
     imagePreview = "KUL_IMAGE_PREVIEW_B64",
     jsonInput = "KUL_JSON_INPUT",
     history = "KUL_HISTORY",
+    rollViewer = "KUL_ROLL_VIEWER",
     tree = "KUL_TREE"
 }
+export type CustomWidgetOptions = BooleanViewerWidgetOptions | ChartWidgetOptions | ChatWidgetOptions | CodeWidgetOptions | ControlPanelWidgetOptions | HistoryWidgetOptions | ImagePreviewWidgetOptions | JsonInputWidgetOptions | RollViewerWidgetOptions | TreeWidgetOptions;
 export interface CustomWidgetSetters {
     [CustomWidgetName.booleanViewer](node: NodeType, name: CustomWidgetName.booleanViewer): {
         widget: BooleanViewerWidget;
@@ -44,31 +58,22 @@ export interface CustomWidgetSetters {
     [CustomWidgetName.controlPanel](node: NodeType, name: CustomWidgetName.controlPanel): {
         widget: ControlPanelWidget;
     };
+    [CustomWidgetName.history](node: NodeType, name: CustomWidgetName.history): {
+        widget: HistoryWidget;
+    };
     [CustomWidgetName.imagePreview](node: NodeType, name: CustomWidgetName.imagePreview): {
         widget: ImagePreviewWidget;
     };
     [CustomWidgetName.jsonInput](node: NodeType, name: CustomWidgetName.jsonInput): {
         widget: JsonInputWidget;
     };
-    [CustomWidgetName.history](node: NodeType, name: CustomWidgetName.history): {
-        widget: HistoryWidget;
+    [CustomWidgetName.rollViewer](node: NodeType, name: CustomWidgetName.rollViewer): {
+        widget: RollViewerWidget;
     };
     [CustomWidgetName.tree](node: NodeType, name: CustomWidgetName.tree): {
         widget: TreeWidget;
     };
 }
-export type CustomWidgetMap = {
-    [CustomWidgetName.booleanViewer]: BooleanViewerWidget;
-    [CustomWidgetName.chart]: ChartWidget;
-    [CustomWidgetName.chat]: ChatWidget;
-    [CustomWidgetName.code]: CodeWidget;
-    [CustomWidgetName.controlPanel]: ControlPanelWidget;
-    [CustomWidgetName.imagePreview]: ImagePreviewWidget;
-    [CustomWidgetName.jsonInput]: JsonInputWidget;
-    [CustomWidgetName.history]: HistoryWidget;
-    [CustomWidgetName.tree]: TreeWidget;
-};
-export type CustomWidgetOptions = BooleanViewerWidgetOptions | ChartWidgetOptions | ChatWidgetOptions | CodeWidgetOptions | ControlPanelWidgetOptions | ImagePreviewWidgetOptions | JsonInputWidgetOptions | HistoryWidgetOptions | TreeWidgetOptions;
 export interface BooleanViewerWidget extends Widget {
     options: BooleanViewerWidgetOptions;
     type: [CustomWidgetName.booleanViewer];
@@ -108,7 +113,7 @@ export interface ChatWidgetOptions {
     getComp(): HTMLKulChatElement;
     getValue(): void;
     setProps(props: Partial<HTMLKulChatElement>): void;
-    setValue(): void;
+    setValue(history: string): void;
 }
 export type ChatWidgetsSetter = () => {
     [CustomWidgetName.chat]: BaseWidgetCallback;
@@ -191,6 +196,24 @@ export declare type JsonInputWidgetsSetter = () => {
     [CustomWidgetName.jsonInput]: BaseWidgetCallback;
 };
 export type JsonInputWidgetValue = string | Record<string, unknown>;
+export interface RollViewerWidget extends Widget {
+    options: RollViewerWidgetOptions;
+    type: [CustomWidgetName.rollViewer];
+}
+export interface RollViewerWidgetOptions {
+    hideOnZoom: boolean;
+    getComp(): HTMLKulProgressbarElement;
+    getValue(): RollViewerWidgetValue;
+    setProps(props: Partial<HTMLKulProgressbarElement>): void;
+    setValue(value: RollViewerWidgetValue): void;
+}
+export declare type RollViewerWidgetsSetter = () => {
+    [CustomWidgetName.rollViewer]: BaseWidgetCallback;
+};
+export type RollViewerWidgetValue = {
+    bool: boolean;
+    roll: number;
+};
 export interface TreeWidget extends Widget {
     options: TreeWidgetOptions;
     type: [CustomWidgetName.tree];

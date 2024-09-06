@@ -9,6 +9,7 @@ import { jsonInputFactory } from '../widgets/jsonInput.js';
 import { treeFactory } from '../widgets/tree.js';
 import { chatFactory } from '../widgets/chat.js';
 import { historyFactory } from '../widgets/history.js';
+import { rollViewerFactory } from '../widgets/rollViewer.js';
 
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
@@ -56,6 +57,13 @@ export class LFWidgets {
       ).widget;
       return widget;
     },
+    [CustomWidgetName.history]: (nodeType: NodeType) => {
+      const widget = app.widgets[CustomWidgetName.history](
+        nodeType,
+        CustomWidgetName.history,
+      ).widget;
+      return widget;
+    },
     [CustomWidgetName.jsonInput]: (nodeType: NodeType) => {
       const widget = app.widgets[CustomWidgetName.jsonInput](
         nodeType,
@@ -70,10 +78,10 @@ export class LFWidgets {
       ).widget;
       return widget;
     },
-    [CustomWidgetName.history]: (nodeType: NodeType) => {
-      const widget = app.widgets[CustomWidgetName.history](
+    [CustomWidgetName.rollViewer]: (nodeType: NodeType) => {
+      const widget = app.widgets[CustomWidgetName.rollViewer](
         nodeType,
-        CustomWidgetName.history,
+        CustomWidgetName.rollViewer,
       ).widget;
       return widget;
     },
@@ -90,11 +98,13 @@ export class LFWidgets {
     [CustomWidgetName.chat]: (chat: HTMLKulChatElement) => chatFactory.options(chat),
     [CustomWidgetName.code]: (code: HTMLKulCodeElement) => codeFactory.options(code),
     [CustomWidgetName.controlPanel]: () => controlPanelFactory.options(),
+    [CustomWidgetName.history]: (history: HTMLKulListElement) => historyFactory.options(history),
     [CustomWidgetName.jsonInput]: (content: HTMLTextAreaElement) =>
       jsonInputFactory.options(content),
     [CustomWidgetName.imagePreview]: (content: HTMLDivElement, isSelectable: boolean) =>
       imagePreviewFactory.options(content, isSelectable),
-    [CustomWidgetName.history]: (history: HTMLKulListElement) => historyFactory.options(history),
+    [CustomWidgetName.rollViewer]: (rollViewer: HTMLKulProgressbarElement) =>
+      rollViewerFactory.options(rollViewer),
     [CustomWidgetName.tree]: (tree: HTMLKulTreeElement) => treeFactory.options(tree),
   };
 
@@ -138,6 +148,13 @@ export class LFWidgets {
         },
       };
     },
+    [CustomWidgetName.history]: () => {
+      return {
+        [CustomWidgetName.history]: (nodeType: NodeType, name: CustomWidgetName) => {
+          return historyFactory.render(nodeType, name);
+        },
+      };
+    },
     [CustomWidgetName.jsonInput]: () => {
       return {
         [CustomWidgetName.jsonInput]: (nodeType: NodeType, name: CustomWidgetName) => {
@@ -152,10 +169,10 @@ export class LFWidgets {
         },
       };
     },
-    [CustomWidgetName.history]: () => {
+    [CustomWidgetName.rollViewer]: () => {
       return {
-        [CustomWidgetName.history]: (nodeType: NodeType, name: CustomWidgetName) => {
-          return historyFactory.render(nodeType, name);
+        [CustomWidgetName.rollViewer]: (nodeType: NodeType, name: CustomWidgetName) => {
+          return rollViewerFactory.render(nodeType, name);
         },
       };
     },

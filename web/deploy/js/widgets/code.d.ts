@@ -1,16 +1,10 @@
-import { CustomWidgetName } from '../types/widgets';
+import { CodeWidgetOptions, CustomWidgetName } from '../types/widgets';
 export declare const codeFactory: {
     cssClasses: {
         content: string;
         code: string;
     };
-    options: (code: HTMLKulCodeElement) => {
-        hideOnZoom: boolean;
-        getComp(): HTMLKulCodeElement;
-        getValue(): string;
-        setProps(props: Partial<HTMLKulCodeElement>): void;
-        setValue(value: Record<string, unknown> | string): void;
-    };
+    options: (code: HTMLKulCodeElement) => CodeWidgetOptions;
     render: (node: NodeType, name: CustomWidgetName) => {
         widget: Widget;
     };

@@ -1,4 +1,4 @@
-import { CustomWidgetName } from '../types/widgets';
+import { ControlPanelWidgetOptions, CustomWidgetName } from '../types/widgets';
 export declare const controlPanelFactory: {
     cssClasses: {
         content: string;
@@ -6,13 +6,7 @@ export declare const controlPanelFactory: {
         spinner: string;
         themes: string;
     };
-    options: () => {
-        getValue(): {
-            debug: boolean;
-            themes: string;
-        };
-        setValue(value: any): void;
-    };
+    options: () => ControlPanelWidgetOptions;
     render: (node: NodeType, name: CustomWidgetName) => {
         widget: Widget;
     };

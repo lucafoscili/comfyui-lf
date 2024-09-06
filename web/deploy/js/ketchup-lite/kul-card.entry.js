@@ -1,5 +1,5 @@
 import { h, r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, H as Host } from './index-9aa60797.js';
-import { R as RIPPLE_SURFACE_CLASS, k as kulManagerInstance, g as getProps, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './kul-manager-3484bcf1.js';
+import { R as RIPPLE_SURFACE_CLASS, k as kulManagerInstance, g as getProps, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './kul-manager-dc9a333c.js';
 import { K as KulDataCyAttributes } from './GenericTypes-8038330a.js';
 
 var KulCardCSSClasses;

@@ -1,5 +1,9 @@
 import { NodeName } from '../types/nodes';
-import { CustomWidgetName, type ImagePreviewWidgetValue } from '../types/widgets';
+import {
+  CustomWidgetName,
+  ImagePreviewWidgetOptions,
+  type ImagePreviewWidgetValue,
+} from '../types/widgets';
 import { createDOMWidget } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-imagepreview';
@@ -78,7 +82,7 @@ export const imagePreviewFactory = {
           }
         }
       },
-    };
+    } as ImagePreviewWidgetOptions;
   },
   render: (node: NodeType, name: CustomWidgetName) => {
     const wrapper = document.createElement('div');

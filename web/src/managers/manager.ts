@@ -19,6 +19,7 @@ import {
   IntegerPayload,
   LoadImagesPayload,
   MultipleImageResizeForWebPayload,
+  RandomBooleanPayload,
   StringPayload,
   SwitchImagePayload,
   SwitchIntegerPayload,
@@ -204,7 +205,13 @@ export class LFManager {
     /*-------------------------------------------------------------------*/
     /*               I n i t   R a n d o m   B o o l e a n               */
     /*-------------------------------------------------------------------*/
-    this.#APIS.event('lf-randomboolean' as any, () => {}); //TODO: add progress bar widget when ready
+    this.#MANAGERS.nodes.register.LF_RandomBoolean(
+      widgets.setters.KUL_ROLL_VIEWER,
+      widgets.adders.KUL_ROLL_VIEWER,
+    );
+    this.#APIS.event(EventName.randomBoolean, (e: CustomEvent<RandomBooleanPayload>) => {
+      nodes.eventHandlers.LF_RandomBoolean(e, widgets.adders.KUL_ROLL_VIEWER);
+    });
     /*-------------------------------------------------------------------*/
     /*                 I n i t   S w i t c h   I m a g e                 */
     /*-------------------------------------------------------------------*/

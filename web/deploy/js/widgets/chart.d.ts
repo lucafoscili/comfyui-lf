@@ -1,16 +1,10 @@
-import { CustomWidgetName } from '../types/widgets';
+import { ChartWidgetOptions, CustomWidgetName } from '../types/widgets';
 export declare const chartFactory: {
     cssClasses: {
         content: string;
         chart: string;
     };
-    options: (chart: HTMLKulChartElement) => {
-        hideOnZoom: boolean;
-        getComp(): HTMLKulChartElement;
-        getValue(): string;
-        setProps(props: Partial<HTMLKulChartElement>): void;
-        setValue(value: Record<string, unknown> | string): void;
-    };
+    options: (chart: HTMLKulChartElement) => ChartWidgetOptions;
     render: (node: NodeType, name: CustomWidgetName) => {
         widget: Widget;
     };

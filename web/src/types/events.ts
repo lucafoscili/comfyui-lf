@@ -19,6 +19,7 @@ export enum EventName {
   integer = 'lf-integer',
   loadImages = 'lf-loadimages',
   multipleImageResizeForWeb = 'lf-multipleimageresizeforweb',
+  randomBoolean = 'lf-randomboolean',
   string = 'lf-string',
   switchImage = 'lf-switchimage',
   switchInteger = 'lf-switchinteger',
@@ -37,6 +38,7 @@ export type EventPayload =
   | IntegerPayload
   | LoadImagesPayload
   | MultipleImageResizeForWebPayload
+  | RandomBooleanPayload
   | StringPayload
   | SwitchImagePayload
   | SwitchIntegerPayload
@@ -126,6 +128,14 @@ export interface LoadImagesPayload extends BaseEventPayload {
 
 export interface MultipleImageResizeForWebPayload extends BaseEventPayload {
   dataset: KulDataDataset;
+}
+/*-------------------------------------------------------------------*/
+/*       R a n d o m   B o o l e a n   D e c l a r a t i o n s       */
+/*-------------------------------------------------------------------*/
+
+export interface RandomBooleanPayload extends BaseEventPayload {
+  bool: boolean;
+  roll: number;
 }
 
 /*-------------------------------------------------------------------*/

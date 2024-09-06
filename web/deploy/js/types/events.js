@@ -10,6 +10,7 @@ export var EventName;
     EventName["integer"] = "lf-integer";
     EventName["loadImages"] = "lf-loadimages";
     EventName["multipleImageResizeForWeb"] = "lf-multipleimageresizeforweb";
+    EventName["randomBoolean"] = "lf-randomboolean";
     EventName["string"] = "lf-string";
     EventName["switchImage"] = "lf-switchimage";
     EventName["switchInteger"] = "lf-switchinteger";

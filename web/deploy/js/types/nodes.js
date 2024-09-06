@@ -14,6 +14,7 @@ export var NodeName;
     NodeName["loadImages"] = "LF_LoadImages";
     NodeName["multipleImageResizeForWeb"] = "LF_MultipleImageResizeForWeb";
     NodeName["imageResizeByEdge"] = "LF_ImageResizeByEdge";
+    NodeName["randomBoolean"] = "LF_RandomBoolean";
     NodeName["string"] = "LF_String";
     NodeName["switchImage"] = "LF_SwitchImage";
     NodeName["switchInteger"] = "LF_SwitchInteger";

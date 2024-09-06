@@ -16,6 +16,7 @@ export enum NodeName {
   loadImages = 'LF_LoadImages',
   multipleImageResizeForWeb = 'LF_MultipleImageResizeForWeb',
   imageResizeByEdge = 'LF_ImageResizeByEdge',
+  randomBoolean = 'LF_RandomBoolean',
   string = 'LF_String',
   switchImage = 'LF_SwitchImage',
   switchInteger = 'LF_SwitchInteger',

@@ -3,7 +3,7 @@ import type {
   KulListEventPayload,
   KulSwitchEventPayload,
 } from '../types/ketchup-lite/components';
-import { CustomWidgetName } from '../types/widgets';
+import { ControlPanelWidgetOptions, CustomWidgetName } from '../types/widgets';
 import { createDOMWidget, getKulManager, getKulThemes, getLFManager } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-controlpanel';
@@ -46,7 +46,7 @@ export const controlPanelFactory = {
           document.addEventListener('kul-manager-ready', managerCb);
         }
       },
-    };
+    } as ControlPanelWidgetOptions;
   },
   render: (node: NodeType, name: CustomWidgetName) => {
     const wrapper = document.createElement('div');

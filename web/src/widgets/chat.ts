@@ -1,6 +1,6 @@
 import { LogSeverity } from '../types/manager';
 import { NodeName } from '../types/nodes';
-import { CustomWidgetName } from '../types/widgets';
+import { ChatWidgetOptions, CustomWidgetName } from '../types/widgets';
 import { createDOMWidget, findWidget, getLFManager } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-chat';
@@ -31,7 +31,7 @@ export const chatFactory = {
       setValue(history: string) {
         chat.setHistory(history);
       },
-    };
+    } as ChatWidgetOptions;
   },
   render: (node: NodeType, name: CustomWidgetName) => {
     const w = findWidget(node, TYPE);

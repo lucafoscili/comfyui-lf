@@ -14,6 +14,7 @@ export declare enum EventName {
     integer = "lf-integer",
     loadImages = "lf-loadimages",
     multipleImageResizeForWeb = "lf-multipleimageresizeforweb",
+    randomBoolean = "lf-randomboolean",
     string = "lf-string",
     switchImage = "lf-switchimage",
     switchInteger = "lf-switchinteger",
@@ -22,7 +23,7 @@ export declare enum EventName {
     urandomSeedGenerator = "lf-urandomseedgenerator",
     writeJson = "lf-writejson"
 }
-export type EventPayload = BlurImagesPayload | BooleanPayload | DisplayJSONPayload | FloatPayload | ImageHistogramPayload | ImageResizeByEdgePayload | IntegerPayload | LoadImagesPayload | MultipleImageResizeForWebPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | UrandomSeedGeneratorPayload | WriteJSONPayload;
+export type EventPayload = BlurImagesPayload | BooleanPayload | DisplayJSONPayload | FloatPayload | ImageHistogramPayload | ImageResizeByEdgePayload | IntegerPayload | LoadImagesPayload | MultipleImageResizeForWebPayload | RandomBooleanPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | UrandomSeedGeneratorPayload | WriteJSONPayload;
 export interface BlurImagesPayload extends BaseEventPayload {
     fileNames: Array<string>;
     images: Array<string>;
@@ -60,6 +61,10 @@ export interface LoadImagesPayload extends BaseEventPayload {
 }
 export interface MultipleImageResizeForWebPayload extends BaseEventPayload {
     dataset: KulDataDataset;
+}
+export interface RandomBooleanPayload extends BaseEventPayload {
+    bool: boolean;
+    roll: number;
 }
 export interface StringPayload extends BaseEventPayload {
     isHistoryEnabled: boolean;

@@ -1,15 +1,9 @@
-import { CustomWidgetName } from '../types/widgets';
+import { BooleanViewerWidgetOptions, CustomWidgetName } from '../types/widgets';
 export declare const booleanViewerFactory: {
     cssClasses: {
         content: string;
     };
-    options: (booleanViewer: HTMLKulTextfieldElement) => {
-        hideOnZoom: boolean;
-        getComp(): HTMLKulTextfieldElement;
-        getValue(): string;
-        setProps(props: Partial<HTMLKulTextfieldElement>): void;
-        setValue(value: string): void;
-    };
+    options: (booleanViewer: HTMLKulTextfieldElement) => BooleanViewerWidgetOptions;
     render: (node: NodeType, name: CustomWidgetName) => {
         widget: Widget;
     };
