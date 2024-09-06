@@ -15,6 +15,7 @@ import { jsonInputFactory } from '../widgets/jsonInput.js';
 import { treeFactory } from '../widgets/tree.js';
 import { chatFactory } from '../widgets/chat.js';
 import { historyFactory } from '../widgets/history.js';
+import { rollViewerFactory } from '../widgets/rollViewer.js';
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
 /*-------------------------------------------------*/
@@ -42,6 +43,10 @@ export class LFWidgets {
                 const widget = app.widgets[CustomWidgetName.controlPanel](nodeType, CustomWidgetName.controlPanel).widget;
                 return widget;
             },
+            [CustomWidgetName.history]: (nodeType) => {
+                const widget = app.widgets[CustomWidgetName.history](nodeType, CustomWidgetName.history).widget;
+                return widget;
+            },
             [CustomWidgetName.jsonInput]: (nodeType) => {
                 const widget = app.widgets[CustomWidgetName.jsonInput](nodeType, CustomWidgetName.jsonInput).widget;
                 return widget;
@@ -50,8 +55,8 @@ export class LFWidgets {
                 const widget = app.widgets[CustomWidgetName.imagePreview](nodeType, CustomWidgetName.imagePreview).widget;
                 return widget;
             },
-            [CustomWidgetName.history]: (nodeType) => {
-                const widget = app.widgets[CustomWidgetName.history](nodeType, CustomWidgetName.history).widget;
+            [CustomWidgetName.rollViewer]: (nodeType) => {
+                const widget = app.widgets[CustomWidgetName.rollViewer](nodeType, CustomWidgetName.rollViewer).widget;
                 return widget;
             },
             [CustomWidgetName.tree]: (nodeType) => {
@@ -65,9 +70,10 @@ export class LFWidgets {
             [CustomWidgetName.chat]: (chat) => chatFactory.options(chat),
             [CustomWidgetName.code]: (code) => codeFactory.options(code),
             [CustomWidgetName.controlPanel]: () => controlPanelFactory.options(),
+            [CustomWidgetName.history]: (history) => historyFactory.options(history),
             [CustomWidgetName.jsonInput]: (content) => jsonInputFactory.options(content),
             [CustomWidgetName.imagePreview]: (content, isSelectable) => imagePreviewFactory.options(content, isSelectable),
-            [CustomWidgetName.history]: (history) => historyFactory.options(history),
+            [CustomWidgetName.rollViewer]: (rollViewer) => rollViewerFactory.options(rollViewer),
             [CustomWidgetName.tree]: (tree) => treeFactory.options(tree),
         };
         this.resizerHandler = {
@@ -109,6 +115,13 @@ export class LFWidgets {
                     },
                 };
             },
+            [CustomWidgetName.history]: () => {
+                return {
+                    [CustomWidgetName.history]: (nodeType, name) => {
+                        return historyFactory.render(nodeType, name);
+                    },
+                };
+            },
             [CustomWidgetName.jsonInput]: () => {
                 return {
                     [CustomWidgetName.jsonInput]: (nodeType, name) => {
@@ -123,10 +136,10 @@ export class LFWidgets {
                     },
                 };
             },
-            [CustomWidgetName.history]: () => {
+            [CustomWidgetName.rollViewer]: () => {
                 return {
-                    [CustomWidgetName.history]: (nodeType, name) => {
-                        return historyFactory.render(nodeType, name);
+                    [CustomWidgetName.rollViewer]: (nodeType, name) => {
+                        return rollViewerFactory.render(nodeType, name);
                     },
                 };
             },

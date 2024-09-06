@@ -1,6 +1,6 @@
 import { KulDataDataset } from '../types/ketchup-lite/components';
 import { LogSeverity } from '../types/manager';
-import { CustomWidgetName } from '../types/widgets';
+import { CustomWidgetName, TreeWidgetOptions } from '../types/widgets';
 import { createDOMWidget, getLFManager, unescapeJson } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-tree';
@@ -40,7 +40,7 @@ export const treeFactory = {
           tree.kulData = null;
         }
       },
-    };
+    } as TreeWidgetOptions;
   },
   render: (node: NodeType, name: CustomWidgetName) => {
     const wrapper = document.createElement('div');

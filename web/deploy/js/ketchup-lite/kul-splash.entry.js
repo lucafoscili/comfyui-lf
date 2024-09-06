@@ -1,5 +1,5 @@
 import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-9aa60797.js';
-import { k as kulManagerInstance, g as getProps, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './kul-manager-3484bcf1.js';
+import { k as kulManagerInstance, g as getProps, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './kul-manager-dc9a333c.js';
 
 var KulSplashProps;
 (function (KulSplashProps) {
@@ -99,8 +99,8 @@ const KulSplash = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: '4c527ae770328393778bb3245c600cd2514d1733' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'ce817fc53e5261c78a6d40fdd1a79a4acb01f5ec', id: KUL_WRAPPER_ID }, h("div", { key: '29cc1094182cddc0d05e47c4d1727fd26d47fadf', class: 'modal' +
-                (this.state === 'unmounting' ? ' active' : '') }, h("div", { key: '63e0eae5271dc17172c62b6b39d51e2d7adba360', class: "wrapper" }, h("div", { key: '2acb90d7e6eb362eac83b00dd671ceb418e523ce', class: "widget" }, h("slot", { key: 'b30b1a8ca74f57002d1691faf93af3fa1d8a6379' })), h("div", { key: '01c7ba49c93347576778e6aefd7760d626e4213a', class: "label" }, this.state === 'unmounting'
+        return (h(Host, { key: '280850b3397aba33ffb85a1378cd51df7c5f6807' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'c902e5fc4413d6664b9943b87ca5aa09ca9a365b', id: KUL_WRAPPER_ID }, h("div", { key: '31164671284d1d929ba3db7a2af56c49756f4479', class: 'modal' +
+                (this.state === 'unmounting' ? ' active' : '') }, h("div", { key: 'f1114b388018a2674da8d6755d8d01879287da65', class: "wrapper" }, h("div", { key: '60aaab20a4965c0743615ae30b2aa392824f3b2e', class: "widget" }, h("slot", { key: '044d71df78443b1d5d33a99f480a87c438116d6b' })), h("div", { key: '2250f136110083a28fc2e22620ef84ca5418965a', class: "label" }, this.state === 'unmounting'
             ? 'Ready!'
             : this.kulLabel))))));
     }

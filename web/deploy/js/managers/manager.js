@@ -142,7 +142,10 @@ export class LFManager {
         /*-------------------------------------------------------------------*/
         /*               I n i t   R a n d o m   B o o l e a n               */
         /*-------------------------------------------------------------------*/
-        __classPrivateFieldGet(this, _LFManager_APIS, "f").event('lf-randomboolean', () => { }); //TODO: add progress bar widget when ready
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_RandomBoolean(widgets.setters.KUL_ROLL_VIEWER, widgets.adders.KUL_ROLL_VIEWER);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.randomBoolean, (e) => {
+            nodes.eventHandlers.LF_RandomBoolean(e, widgets.adders.KUL_ROLL_VIEWER);
+        });
         /*-------------------------------------------------------------------*/
         /*                 I n i t   S w i t c h   I m a g e                 */
         /*-------------------------------------------------------------------*/

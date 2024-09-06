@@ -1,6 +1,6 @@
 import { KulDataDataset, KulListEventPayload } from '../types/ketchup-lite/components';
 import { LogSeverity } from '../types/manager';
-import { ComfyWidgetName, CustomWidgetName } from '../types/widgets';
+import { ComfyWidgetName, CustomWidgetName, HistoryWidgetOptions } from '../types/widgets';
 import { createDOMWidget, getLFManager, getWidget, unescapeJson } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-history';
@@ -44,7 +44,7 @@ export const historyFactory = {
           history.kulData = null;
         }
       },
-    };
+    } as HistoryWidgetOptions;
   },
   render: (node: NodeType, name: CustomWidgetName) => {
     const wrapper = document.createElement('div');

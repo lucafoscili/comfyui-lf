@@ -18,6 +18,7 @@ import { integerFactory } from '../nodes/integer';
 import { floatFactory } from '../nodes/float';
 import { booleanFactory } from '../nodes/boolean';
 import { uRandomSeedGeneratorFactory } from '../nodes/urandomSeedGenerator';
+import { randomBooleanFactory } from '../nodes/randomBoolean';
 
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
@@ -34,6 +35,7 @@ export class LFNodes {
     [NodeName.integer]: integerFactory.eventHandler,
     [NodeName.loadImages]: loadImagesFactory.eventHandler,
     [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.eventHandler,
+    [NodeName.randomBoolean]: randomBooleanFactory.eventHandler,
     [NodeName.string]: stringFactory.eventHandler,
     [NodeName.switchImage]: switchImageFactory.eventHandler,
     [NodeName.switchInteger]: switchIntegerFactory.eventHandler,
@@ -55,6 +57,7 @@ export class LFNodes {
     [NodeName.llmChat]: llmChatFactory.register,
     [NodeName.loadImages]: loadImagesFactory.register,
     [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.register,
+    [NodeName.randomBoolean]: randomBooleanFactory.register,
     [NodeName.string]: stringFactory.register,
     [NodeName.switchImage]: switchImageFactory.register,
     [NodeName.switchInteger]: switchIntegerFactory.register,

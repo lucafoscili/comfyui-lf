@@ -1,4 +1,4 @@
-import { CustomWidgetName } from '../types/widgets';
+import { BooleanViewerWidgetOptions, CustomWidgetName } from '../types/widgets';
 import { createDOMWidget } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-booleanviewer';
@@ -40,7 +40,7 @@ export const booleanViewerFactory = {
           booleanViewer.kulLabel = LABEL;
         }
       },
-    };
+    } as BooleanViewerWidgetOptions;
   },
   render: (node: NodeType, name: CustomWidgetName) => {
     const wrapper = document.createElement('div');

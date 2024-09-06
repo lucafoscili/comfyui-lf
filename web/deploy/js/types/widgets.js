@@ -1,6 +1,3 @@
-/*-------------------------------------------------------------------*/
-/*                C o m m o n   D e c l a r a t i o n s              */
-/*-------------------------------------------------------------------*/
 export var ComfyWidgetName;
 (function (ComfyWidgetName) {
     ComfyWidgetName["boolean"] = "BOOLEAN";
@@ -18,5 +15,6 @@ export var CustomWidgetName;
     CustomWidgetName["imagePreview"] = "KUL_IMAGE_PREVIEW_B64";
     CustomWidgetName["jsonInput"] = "KUL_JSON_INPUT";
     CustomWidgetName["history"] = "KUL_HISTORY";
+    CustomWidgetName["rollViewer"] = "KUL_ROLL_VIEWER";
     CustomWidgetName["tree"] = "KUL_TREE";
 })(CustomWidgetName || (CustomWidgetName = {}));

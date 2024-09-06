@@ -131,8 +131,9 @@ class LF_RandomBoolean:
 
         PromptServer.instance.send_sync("lf-randomboolean", {
             "node": node_id, 
-            "boolean": result,
+            "bool": result,
             "chanceTrue": chance_true,
+            "roll": random_value,
         })
 
         return (result,)

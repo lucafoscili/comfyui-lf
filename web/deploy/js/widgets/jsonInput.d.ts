@@ -1,14 +1,10 @@
-import { CustomWidgetName } from '../types/widgets';
+import { CustomWidgetName, JsonInputWidgetOptions } from '../types/widgets';
 export declare const jsonInputFactory: {
     cssClasses: {
         content: string;
         widget: string;
         widgetError: string;
     };
-    options: (jsonInput: HTMLTextAreaElement) => {
-        hideOnZoom: boolean;
-        getValue(): string;
-        setValue(value: Record<string, unknown> | string): void;
-    };
+    options: (jsonInput: HTMLTextAreaElement) => JsonInputWidgetOptions;
     render: (node: NodeType, name: CustomWidgetName) => any;
 };

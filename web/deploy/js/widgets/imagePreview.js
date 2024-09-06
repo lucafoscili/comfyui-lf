@@ -1,5 +1,5 @@
 import { NodeName } from '../types/nodes.js';
-import { CustomWidgetName } from '../types/widgets.js';
+import { CustomWidgetName, } from '../types/widgets.js';
 import { createDOMWidget } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-imagepreview';
 const DOGE = `

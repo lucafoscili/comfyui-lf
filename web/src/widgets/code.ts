@@ -1,5 +1,5 @@
 import { LogSeverity } from '../types/manager';
-import { CustomWidgetName } from '../types/widgets';
+import { CodeWidgetOptions, CustomWidgetName } from '../types/widgets';
 import { createDOMWidget, getLFManager, unescapeJson } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-code';
@@ -52,7 +52,7 @@ export const codeFactory = {
           }
         }
       },
-    };
+    } as CodeWidgetOptions;
   },
   render: (node: NodeType, name: CustomWidgetName) => {
     const wrapper = document.createElement('div');
