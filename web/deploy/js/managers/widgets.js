@@ -82,10 +82,6 @@ export class LFWidgets {
             [CustomWidgetName.rollViewer]: (rollViewer) => rollViewerFactory.options(rollViewer),
             [CustomWidgetName.tree]: (tree) => treeFactory.options(tree),
         };
-        this.resizerHandler = {
-            [CustomWidgetName.countBarChart]: (nodeType) => countBarChartFactory.resize(nodeType),
-            [CustomWidgetName.histogram]: (nodeType) => histogramFactory.resize(nodeType),
-        };
         this.set = {
             [CustomWidgetName.booleanViewer]: () => {
                 return {
@@ -168,7 +164,6 @@ export class LFWidgets {
         this.get = {
             adders: this.add,
             options: this.option,
-            resizerHandlers: this.resizerHandler,
             setters: this.set,
         };
         for (let index = 0; index < __classPrivateFieldGet(this, _LFWidgets_CSS_EMBEDS, "f").length; index++) {

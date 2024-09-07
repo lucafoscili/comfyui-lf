@@ -28,10 +28,6 @@ export declare class LFWidgets {
         KUL_ROLL_VIEWER: (rollViewer: HTMLKulProgressbarElement) => import("../types/widgets.js").RollViewerWidgetOptions;
         KUL_TREE: (tree: HTMLKulTreeElement) => import("../types/widgets.js").TreeWidgetOptions;
     };
-    resizerHandler: {
-        KUL_COUNT_BAR_CHART: (nodeType: NodeType) => void;
-        KUL_HISTOGRAM: (nodeType: NodeType) => void;
-    };
     set: {
         KUL_BOOLEAN_VIEWER: () => {
             KUL_BOOLEAN_VIEWER: (nodeType: NodeType, name: CustomWidgetName) => {
@@ -111,10 +107,6 @@ export declare class LFWidgets {
             KUL_IMAGE_PREVIEW_B64: (content: HTMLDivElement, isSelectable: boolean) => import("../types/widgets.js").ImagePreviewWidgetOptions;
             KUL_ROLL_VIEWER: (rollViewer: HTMLKulProgressbarElement) => import("../types/widgets.js").RollViewerWidgetOptions;
             KUL_TREE: (tree: HTMLKulTreeElement) => import("../types/widgets.js").TreeWidgetOptions;
-        };
-        resizerHandlers: {
-            KUL_COUNT_BAR_CHART: (nodeType: NodeType) => void;
-            KUL_HISTOGRAM: (nodeType: NodeType) => void;
         };
         setters: {
             KUL_BOOLEAN_VIEWER: () => {

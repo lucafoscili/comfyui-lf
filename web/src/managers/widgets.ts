@@ -122,11 +122,6 @@ export class LFWidgets {
     [CustomWidgetName.tree]: (tree: HTMLKulTreeElement) => treeFactory.options(tree),
   };
 
-  resizerHandler = {
-    [CustomWidgetName.countBarChart]: (nodeType: NodeType) => countBarChartFactory.resize(nodeType),
-    [CustomWidgetName.histogram]: (nodeType: NodeType) => histogramFactory.resize(nodeType),
-  };
-
   set = {
     [CustomWidgetName.booleanViewer]: () => {
       return {
@@ -210,7 +205,6 @@ export class LFWidgets {
   get = {
     adders: this.add,
     options: this.option,
-    resizerHandlers: this.resizerHandler,
     setters: this.set,
   };
 }

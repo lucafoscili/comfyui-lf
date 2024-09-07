@@ -4,9 +4,8 @@ export declare const countBarChartFactory: {
         content: string;
         widget: string;
     };
-    options: (countbarchart: HTMLKulChartElement) => CountBarChartWidgetOptions;
+    options: (countBarChart: HTMLKulChartElement) => CountBarChartWidgetOptions;
     render: (node: NodeType, name: CustomWidgetName) => {
         widget: Widget;
     };
-    resize: (node: NodeType) => void;
 };
