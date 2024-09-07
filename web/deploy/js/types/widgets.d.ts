@@ -19,10 +19,10 @@ export declare enum ComfyWidgetName {
 }
 export type CustomWidgetMap = {
     [CustomWidgetName.booleanViewer]: BooleanViewerWidget;
-    [CustomWidgetName.chart]: ChartWidget;
     [CustomWidgetName.chat]: ChatWidget;
     [CustomWidgetName.code]: CodeWidget;
     [CustomWidgetName.controlPanel]: ControlPanelWidget;
+    [CustomWidgetName.histogram]: HistogramWidget;
     [CustomWidgetName.history]: HistoryWidget;
     [CustomWidgetName.imagePreview]: ImagePreviewWidget;
     [CustomWidgetName.jsonInput]: JsonInputWidget;
@@ -31,23 +31,20 @@ export type CustomWidgetMap = {
 };
 export declare enum CustomWidgetName {
     booleanViewer = "KUL_BOOLEAN_VIEWER",
-    chart = "KUL_CHART",
     chat = "KUL_CHAT",
     code = "KUL_CODE",
     controlPanel = "KUL_CONTROL_PANEL",
+    histogram = "KUL_HISTOGRAM",
     imagePreview = "KUL_IMAGE_PREVIEW_B64",
     jsonInput = "KUL_JSON_INPUT",
     history = "KUL_HISTORY",
     rollViewer = "KUL_ROLL_VIEWER",
     tree = "KUL_TREE"
 }
-export type CustomWidgetOptions = BooleanViewerWidgetOptions | ChartWidgetOptions | ChatWidgetOptions | CodeWidgetOptions | ControlPanelWidgetOptions | HistoryWidgetOptions | ImagePreviewWidgetOptions | JsonInputWidgetOptions | RollViewerWidgetOptions | TreeWidgetOptions;
+export type CustomWidgetOptions = BooleanViewerWidgetOptions | ChatWidgetOptions | CodeWidgetOptions | ControlPanelWidgetOptions | HistogramWidgetOptions | HistoryWidgetOptions | ImagePreviewWidgetOptions | JsonInputWidgetOptions | RollViewerWidgetOptions | TreeWidgetOptions;
 export interface CustomWidgetSetters {
     [CustomWidgetName.booleanViewer](node: NodeType, name: CustomWidgetName.booleanViewer): {
         widget: BooleanViewerWidget;
-    };
-    [CustomWidgetName.chart](node: NodeType, name: CustomWidgetName.chart): {
-        widget: ChartWidget;
     };
     [CustomWidgetName.chat](node: NodeType, name: CustomWidgetName.chat): {
         widget: ChatWidget;
@@ -57,6 +54,9 @@ export interface CustomWidgetSetters {
     };
     [CustomWidgetName.controlPanel](node: NodeType, name: CustomWidgetName.controlPanel): {
         widget: ControlPanelWidget;
+    };
+    [CustomWidgetName.histogram](node: NodeType, name: CustomWidgetName.histogram): {
+        widget: HistogramWidget;
     };
     [CustomWidgetName.history](node: NodeType, name: CustomWidgetName.history): {
         widget: HistoryWidget;
@@ -89,21 +89,21 @@ export declare type BooleanViewerWidgetsSetter = () => {
     [CustomWidgetName.booleanViewer]: BaseWidgetCallback;
 };
 export type BooleanViewerWidgetValue = string;
-export interface ChartWidget extends Widget {
-    options: ChartWidgetOptions;
-    type: [CustomWidgetName.chart];
+export interface HistogramWidget extends Widget {
+    options: HistogramWidgetOptions;
+    type: [CustomWidgetName.histogram];
 }
-export interface ChartWidgetOptions {
+export interface HistogramWidgetOptions {
     hideOnZoom: boolean;
     getComp(): HTMLKulChartElement;
     getValue(): string;
     setProps(props: Partial<HTMLKulChartElement>): void;
     setValue(value: KulDataDataset | string): void;
 }
-export type ChartWidgetsSetter = () => {
-    [CustomWidgetName.chart]: BaseWidgetCallback;
+export type HistogramWidgetsSetter = () => {
+    [CustomWidgetName.histogram]: BaseWidgetCallback;
 };
-export type ChartWidgetValue = string;
+export type HistogramWidgetValue = string;
 export interface ChatWidget extends Widget {
     options: ChatWidgetOptions;
     type: [CustomWidgetName.chat];

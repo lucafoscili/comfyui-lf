@@ -7,7 +7,7 @@ var _LFWidgets_CSS_EMBEDS;
 import { app } from '/scripts/app.js';
 import { controlPanelFactory } from '../widgets/controlPanel.js';
 import { codeFactory } from '../widgets/code.js';
-import { chartFactory } from '../widgets/chart.js';
+import { histogramFactory } from '../widgets/histogram.js';
 import { CustomWidgetName } from '../types/widgets.js';
 import { imagePreviewFactory } from '../widgets/imagePreview.js';
 import { booleanViewerFactory } from '../widgets/booleanViewer.js';
@@ -27,10 +27,6 @@ export class LFWidgets {
                 const widget = app.widgets[CustomWidgetName.booleanViewer](nodeType, CustomWidgetName.booleanViewer).widget;
                 return widget;
             },
-            [CustomWidgetName.chart]: (nodeType) => {
-                const widget = app.widgets[CustomWidgetName.chart](nodeType, CustomWidgetName.chart).widget;
-                return widget;
-            },
             [CustomWidgetName.chat]: (nodeType) => {
                 const widget = app.widgets[CustomWidgetName.chat](nodeType, CustomWidgetName.chat).widget;
                 return widget;
@@ -41,6 +37,10 @@ export class LFWidgets {
             },
             [CustomWidgetName.controlPanel]: (nodeType) => {
                 const widget = app.widgets[CustomWidgetName.controlPanel](nodeType, CustomWidgetName.controlPanel).widget;
+                return widget;
+            },
+            [CustomWidgetName.histogram]: (nodeType) => {
+                const widget = app.widgets[CustomWidgetName.histogram](nodeType, CustomWidgetName.histogram).widget;
                 return widget;
             },
             [CustomWidgetName.history]: (nodeType) => {
@@ -66,10 +66,10 @@ export class LFWidgets {
         };
         this.option = {
             [CustomWidgetName.booleanViewer]: (booleanViewer) => booleanViewerFactory.options(booleanViewer),
-            [CustomWidgetName.chart]: (chart) => chartFactory.options(chart),
             [CustomWidgetName.chat]: (chat) => chatFactory.options(chat),
             [CustomWidgetName.code]: (code) => codeFactory.options(code),
             [CustomWidgetName.controlPanel]: () => controlPanelFactory.options(),
+            [CustomWidgetName.histogram]: (histogram) => histogramFactory.options(histogram),
             [CustomWidgetName.history]: (history) => historyFactory.options(history),
             [CustomWidgetName.jsonInput]: (content) => jsonInputFactory.options(content),
             [CustomWidgetName.imagePreview]: (content, isSelectable) => imagePreviewFactory.options(content, isSelectable),
@@ -77,20 +77,13 @@ export class LFWidgets {
             [CustomWidgetName.tree]: (tree) => treeFactory.options(tree),
         };
         this.resizerHandler = {
-            [CustomWidgetName.chart]: (nodeType) => chartFactory.resize(nodeType),
+            [CustomWidgetName.histogram]: (nodeType) => histogramFactory.resize(nodeType),
         };
         this.set = {
             [CustomWidgetName.booleanViewer]: () => {
                 return {
                     [CustomWidgetName.booleanViewer]: (nodeType, name) => {
                         return booleanViewerFactory.render(nodeType, name);
-                    },
-                };
-            },
-            [CustomWidgetName.chart]: () => {
-                return {
-                    [CustomWidgetName.chart]: (nodeType, name) => {
-                        return chartFactory.render(nodeType, name);
                     },
                 };
             },
@@ -112,6 +105,13 @@ export class LFWidgets {
                 return {
                     [CustomWidgetName.controlPanel]: (nodeType, name) => {
                         return controlPanelFactory.render(nodeType, name);
+                    },
+                };
+            },
+            [CustomWidgetName.histogram]: () => {
+                return {
+                    [CustomWidgetName.histogram]: (nodeType, name) => {
+                        return histogramFactory.render(nodeType, name);
                     },
                 };
             },

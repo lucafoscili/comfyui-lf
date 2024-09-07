@@ -26,10 +26,10 @@ export enum ComfyWidgetName {
 }
 export type CustomWidgetMap = {
   [CustomWidgetName.booleanViewer]: BooleanViewerWidget;
-  [CustomWidgetName.chart]: ChartWidget;
   [CustomWidgetName.chat]: ChatWidget;
   [CustomWidgetName.code]: CodeWidget;
   [CustomWidgetName.controlPanel]: ControlPanelWidget;
+  [CustomWidgetName.histogram]: HistogramWidget;
   [CustomWidgetName.history]: HistoryWidget;
   [CustomWidgetName.imagePreview]: ImagePreviewWidget;
   [CustomWidgetName.jsonInput]: JsonInputWidget;
@@ -38,10 +38,10 @@ export type CustomWidgetMap = {
 };
 export enum CustomWidgetName {
   booleanViewer = 'KUL_BOOLEAN_VIEWER',
-  chart = 'KUL_CHART',
   chat = 'KUL_CHAT',
   code = 'KUL_CODE',
   controlPanel = 'KUL_CONTROL_PANEL',
+  histogram = 'KUL_HISTOGRAM',
   imagePreview = 'KUL_IMAGE_PREVIEW_B64',
   jsonInput = 'KUL_JSON_INPUT',
   history = 'KUL_HISTORY',
@@ -50,10 +50,10 @@ export enum CustomWidgetName {
 }
 export type CustomWidgetOptions =
   | BooleanViewerWidgetOptions
-  | ChartWidgetOptions
   | ChatWidgetOptions
   | CodeWidgetOptions
   | ControlPanelWidgetOptions
+  | HistogramWidgetOptions
   | HistoryWidgetOptions
   | ImagePreviewWidgetOptions
   | JsonInputWidgetOptions
@@ -64,13 +64,16 @@ export interface CustomWidgetSetters {
     node: NodeType,
     name: CustomWidgetName.booleanViewer,
   ): { widget: BooleanViewerWidget };
-  [CustomWidgetName.chart](node: NodeType, name: CustomWidgetName.chart): { widget: ChartWidget };
   [CustomWidgetName.chat](node: NodeType, name: CustomWidgetName.chat): { widget: ChatWidget };
   [CustomWidgetName.code](node: NodeType, name: CustomWidgetName.code): { widget: CodeWidget };
   [CustomWidgetName.controlPanel](
     node: NodeType,
     name: CustomWidgetName.controlPanel,
   ): { widget: ControlPanelWidget };
+  [CustomWidgetName.histogram](
+    node: NodeType,
+    name: CustomWidgetName.histogram,
+  ): { widget: HistogramWidget };
   [CustomWidgetName.history](
     node: NodeType,
     name: CustomWidgetName.history,
@@ -114,21 +117,21 @@ export type BooleanViewerWidgetValue = string;
 /*                C h a r t   D e c l a r a t i o n s                */
 /*-------------------------------------------------------------------*/
 
-export interface ChartWidget extends Widget {
-  options: ChartWidgetOptions;
-  type: [CustomWidgetName.chart];
+export interface HistogramWidget extends Widget {
+  options: HistogramWidgetOptions;
+  type: [CustomWidgetName.histogram];
 }
-export interface ChartWidgetOptions {
+export interface HistogramWidgetOptions {
   hideOnZoom: boolean;
   getComp(): HTMLKulChartElement;
   getValue(): string;
   setProps(props: Partial<HTMLKulChartElement>): void;
   setValue(value: KulDataDataset | string): void;
 }
-export type ChartWidgetsSetter = () => {
-  [CustomWidgetName.chart]: BaseWidgetCallback;
+export type HistogramWidgetsSetter = () => {
+  [CustomWidgetName.histogram]: BaseWidgetCallback;
 };
-export type ChartWidgetValue = string;
+export type HistogramWidgetValue = string;
 
 /*-------------------------------------------------------------------*/
 /*                 C h a t   D e c l a r a t i o n s                 */

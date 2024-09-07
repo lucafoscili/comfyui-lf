@@ -11,7 +11,7 @@ export const imageHistogramFactory = {
         const payload = event.detail;
         const node = getApiRoutes().getNodeById(payload.id);
         if (node) {
-            const widget = getCustomWidget(node, CustomWidgetName.chart, addW);
+            const widget = getCustomWidget(node, CustomWidgetName.histogram, addW);
             const comp = widget.options.getComp();
             comp.refresh();
             widget.options.setValue(event.detail.dataset);
@@ -27,7 +27,7 @@ export const imageHistogramFactory = {
                     nodeType.prototype.onNodeCreated = function () {
                         const r = onNodeCreated?.apply(this, arguments);
                         const node = this;
-                        addW(node, CustomWidgetName.chart);
+                        addW(node, CustomWidgetName.histogram);
                         return r;
                     };
                     const onResize = nodeType.prototype.onResize;

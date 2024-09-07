@@ -138,12 +138,12 @@ export class LFManager {
     /*               I n i t   I m a g e H i s t o g r a m               */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_ImageHistogram(
-      widgets.setters.KUL_CHART,
-      widgets.adders.KUL_CHART,
-      widgets.resizerHandlers.KUL_CHART,
+      widgets.setters.KUL_HISTOGRAM,
+      widgets.adders.KUL_HISTOGRAM,
+      widgets.resizerHandlers.KUL_HISTOGRAM,
     );
     this.#APIS.event(EventName.imageHistogram, (e: CustomEvent<ImageHistogramPayload>) => {
-      nodes.eventHandlers.LF_ImageHistogram(e, widgets.adders.KUL_CHART);
+      nodes.eventHandlers.LF_ImageHistogram(e, widgets.adders.KUL_HISTOGRAM);
     });
     /*-------------------------------------------------------------------*/
     /*            I n i t   I m a g e R e s i z e B y E d g e            */
