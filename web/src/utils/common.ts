@@ -1,7 +1,7 @@
 import type { KulDataDataset } from '../types/ketchup-lite/components';
 import type { KulDom } from '../types/ketchup-lite/managers/kul-manager/kul-manager-declarations';
 import type { LFWindow } from '../managers/manager';
-import type {
+import {
   BaseWidgetCallback,
   ComfyWidgetMap,
   ComfyWidgetName,
@@ -9,6 +9,7 @@ import type {
   CustomWidgetName,
   CustomWidgetOptions,
 } from '../types/widgets';
+import { LogSeverity } from '../types/manager';
 
 const DOM = document.documentElement as KulDom;
 const WINDOW = window as unknown as LFWindow;
@@ -96,6 +97,24 @@ export const kulManagerExists = () => {
 
 export const log = () => {
   return WINDOW.lfManager.log;
+};
+
+export const refreshChart = (node: NodeType) => {
+  try {
+    const domWidget =
+      findWidget(node, CustomWidgetName.countBarChart)?.element ||
+      findWidget(node, CustomWidgetName.histogram)?.element;
+    if (domWidget) {
+      const chart = domWidget.querySelector('kul-chart') as HTMLKulChartElement;
+      if (chart) {
+        const canvas = chart.shadowRoot.querySelector('canvas');
+        if (canvas?.clientWidth < chart.clientWidth || canvas?.clientHeight < chart.clientHeight)
+          chart.refresh();
+      }
+    }
+  } catch (error) {
+    getLFManager().log('Whoops! It seems there is no chart. :V', { error }, LogSeverity.Error);
+  }
 };
 
 export const splitByLastSpaceBeforeAnyBracket = (input: string) => {

@@ -141,7 +141,6 @@ export class LFManager {
     this.#MANAGERS.nodes.register.LF_ImageHistogram(
       widgets.setters.KUL_HISTOGRAM,
       widgets.adders.KUL_HISTOGRAM,
-      widgets.resizerHandlers.KUL_HISTOGRAM,
     );
     this.#APIS.event(EventName.imageHistogram, (e: CustomEvent<ImageHistogramPayload>) => {
       nodes.eventHandlers.LF_ImageHistogram(e, widgets.adders.KUL_HISTOGRAM);
@@ -182,7 +181,6 @@ export class LFManager {
     this.#MANAGERS.nodes.register.LF_KeywordCounter(
       widgets.setters.KUL_COUNT_BAR_CHART,
       widgets.adders.KUL_COUNT_BAR_CHART,
-      widgets.resizerHandlers.KUL_COUNT_BAR_CHART,
     );
     this.#APIS.event(EventName.keywordCounter, (e: CustomEvent<KeywordCounterPayload>) => {
       nodes.eventHandlers.LF_KeywordCounter(e, widgets.adders.KUL_COUNT_BAR_CHART);

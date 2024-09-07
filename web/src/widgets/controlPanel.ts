@@ -53,7 +53,7 @@ export const controlPanelFactory = {
     const options = controlPanelFactory.options();
 
     contentCb(wrapper, false);
-    wrapper.dataset.isInVisibleNodes = 'true';
+
     return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };
   },
 };

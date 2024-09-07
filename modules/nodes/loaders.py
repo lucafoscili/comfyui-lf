@@ -36,26 +36,7 @@ class LF_LoadImages:
     RETURN_TYPES = ("IMAGE", "STRING", "INT", "IMAGE", "INT", "STRING")
 
     def on_exec(self, dir, subdir, strip_ext, load_cap, dummy_output, node_id, KUL_IMAGE_PREVIEW_B64):
-        """
-        Loads images from a specified directory and subdirectories, optionally stripping extensions from filenames.
-        Images are converted to tensors and returned along with their filenames and the total number of images processed.
-        If the 'dummy_output' flag is set and no images are found, a dummy image tensor is appended to the image list and a dummy string is appended to the file names string.
-
-        Parameters:
-            dir (str): The root directory from which to load images.
-            subdir (bool): Indicates whether to also load images from subdirectories.
-            strip_ext (bool): Whether to remove file extensions from filenames.
-            load_cap (int): Maximum number of images to load before stopping. Set 0 for an unlimited amount.
-            node_id (str): Unique identifier for the node instance.
-            dummy_output (bool): Flag indicating whether to output a dummy image tensorand string when the list is empty. Defaults to False.
-
-        Returns:
-            tuple: A tuple containing three elements:
-                - list[torch.Tensor]: A list of image tensors.
-                - list[str]: A list of image filenames.
-                - int: The total number of images processed.
-        """
-        images_buffer = []  # List to hold image buffers (for the GUI)
+        images_buffer = []
         images = []
         file_names = []
         count = 0
@@ -82,45 +63,29 @@ class LF_LoadImages:
             for file in files:
                 if file.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif')):
                     image_path = os.path.join(root, file)
-                    # Load image using PIL and convert to tensor
                     with open(image_path, 'rb') as img_file:
                         img_data = img_file.read()
                         img = Image.open(io.BytesIO(img_data)).convert("RGB")
-
-                        # Resize the image for front-end
                         img_resized = resize_image(img, max_size=1024)
-                        
-                        # Convert PIL Image to BytesIO buffer
                         buffered = io.BytesIO()
                         img_resized.save(buffered, format="JPEG")
-                        
-                        # Encode BytesIO buffer to base64 string
                         img_base64 = base64.b64encode(buffered.getvalue()).decode('utf-8')
-                        
-                        # Append base64-encoded string to the GUI list
-                        images_buffer.append(img_base64)                    
-
-                        # Convert the original (non-resized) image to tensor
+                        images_buffer.append(img_base64)
                         img_tensor = torch.from_numpy(np.array(img).astype(np.float32) / 255.0).unsqueeze(0)
-
-                        # Append image in tensor format to the tensor list
                         images.append(img_tensor)
  
                         if strip_ext:
                             file = os.path.splitext(file)[0]
                         file_names.append(file)  
-                        # Assign selected image if index or name matches
                         if count == selected_index and file == selected_name:
                             selected_image = img_tensor
                             selected_index = count
                             selected_name = file
  
-                    # Stop loading images if the cap is reached
                         count += 1
                         if load_cap > 0 and count >= load_cap:
                             break
 
-            # Break out of the outer loop as well if the cap is reached
             if load_cap > 0 and count >= load_cap:
                 break
 
@@ -143,10 +108,55 @@ class LF_LoadImages:
 
         return (images, file_names, count, selected_image, selected_index, selected_name)
 
+class LF_LoadMetadata:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "dir": ("STRING", {"label": "Directory path", "multiline": True, "tooltip": "Path to the directory containing the images to load."}),
+            }
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    RETURN_NAMES = ("metadata_list",)
+    RETURN_TYPES = ("JSON",)
+
+    def on_exec(self, dir):
+        valid_extensions = {'.jpg', '.jpeg', '.png'}
+        metadata_list = []
+
+        for file_name in os.listdir(dir):
+            file_ext = os.path.splitext(file_name)[1].lower()
+            if file_ext not in valid_extensions:
+                continue
+
+            file_path = os.path.join(dir, file_name)
+            if os.path.isfile(file_path):
+                try:
+                    with open(file_path, 'rb') as f:
+                        image_bytes = f.read()
+                        pil_image = Image.open(io.BytesIO(image_bytes))
+
+                        if pil_image.format == "JPEG":
+                            metadata = extract_jpeg_metadata(pil_image, file_name)
+                        elif pil_image.format == "PNG":
+                            metadata = extract_png_metadata(pil_image)
+                        else:
+                            metadata = {"error": f"Unsupported image format for {file_name}"}
+                        
+                        metadata_list.append({"file": file_name, "metadata": metadata})
+                except Exception as e:
+                    metadata_list.append({"file": file_name, "error": str(e)})
+
+        return (metadata_list,)
+
 NODE_CLASS_MAPPINGS = {
     "LF_LoadImages": LF_LoadImages,
+    "LF_LoadMetadata": LF_LoadMetadata
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_LoadImages": "Load images from disk",
+    "LF_LoadMetadata": "Load metadata from image"
 }

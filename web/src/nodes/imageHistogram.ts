@@ -6,7 +6,7 @@ import {
   type BaseWidgetCallback,
   type HistogramWidgetsSetter,
 } from '../types/widgets';
-import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
+import { getApiRoutes, getCustomWidget, getLFManager, refreshChart } from '../utils/common';
 
 const NAME = NodeName.imageHistogram;
 
@@ -25,27 +25,24 @@ export const imageHistogramFactory = {
       getApiRoutes().redraw();
     }
   },
-  register: (
-    setW: HistogramWidgetsSetter,
-    addW: BaseWidgetCallback,
-    resizeHandlerW: (node: NodeType) => void,
-  ) => {
+  register: (setW: HistogramWidgetsSetter, addW: BaseWidgetCallback) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {
         if (nodeType.comfyClass === NAME) {
+          const onDrawBackground = nodeType.prototype.onDrawBackground;
+          nodeType.prototype.onDrawBackground = function () {
+            const r = onDrawBackground?.apply(this, arguments);
+            const node = this;
+            refreshChart(node);
+            return r;
+          };
+
           const onNodeCreated = nodeType.prototype.onNodeCreated;
           nodeType.prototype.onNodeCreated = function () {
             const r = onNodeCreated?.apply(this, arguments);
             const node = this;
             addW(node, CustomWidgetName.histogram);
-            return r;
-          };
-          const onResize = nodeType.prototype.onResize;
-          nodeType.prototype.onResize = function () {
-            const r = onResize?.apply(this, arguments);
-            const node = this;
-            resizeHandlerW(node);
             return r;
           };
         }

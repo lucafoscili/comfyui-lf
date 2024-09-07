@@ -47,38 +47,14 @@ export const histogramFactory = {
         const content = document.createElement('div');
         const histogram = document.createElement('kul-chart');
         const options = histogramFactory.options(histogram);
-        const readyCb = ({ detail }) => {
-            getLFManager().log(`Histogram ready, resizing`, { detail });
-            const { eventType } = detail;
-            if (eventType === 'ready') {
-                histogram.kulAxis = 'Axis_0';
-                histogram.kulColors = ['red', 'green', 'blue'];
-                histogram.kulSeries = ['Series_0', 'Series_1', 'Series_2'];
-                histogram.removeEventListener('kul-chart-event', readyCb);
-            }
-        };
         content.classList.add(histogramFactory.cssClasses.content);
         histogram.classList.add(histogramFactory.cssClasses.widget);
+        histogram.kulAxis = 'Axis_0';
+        histogram.kulColors = ['red', 'green', 'blue'];
+        histogram.kulSeries = ['Series_0', 'Series_1', 'Series_2'];
         histogram.kulTypes = ['area'];
-        histogram.addEventListener('kul-chart-event', readyCb);
         content.appendChild(histogram);
         wrapper.appendChild(content);
         return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };
-    },
-    resize: (node) => {
-        try {
-            const histogram = node.widgets
-                .find((w) => w.type === TYPE)
-                ?.element?.querySelector('kul-histogram');
-            if (histogram && !TIMEOUT) {
-                TIMEOUT = setTimeout(() => {
-                    histogram.refresh();
-                    TIMEOUT = null;
-                }, 125);
-            }
-        }
-        catch (error) {
-            getLFManager().log('Whoops! It seems there is no histogram. :V', { error }, LogSeverity.Error);
-        }
     },
 };

@@ -8,5 +8,4 @@ export declare const histogramFactory: {
     render: (node: NodeType, name: CustomWidgetName) => {
         widget: Widget;
     };
-    resize: (node: NodeType) => void;
 };

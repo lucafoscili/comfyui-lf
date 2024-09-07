@@ -2,7 +2,7 @@ import { EventName } from '../types/events.js';
 import { LogSeverity } from '../types/manager.js';
 import { NodeName } from '../types/nodes.js';
 import { CustomWidgetName, } from '../types/widgets.js';
-import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common.js';
+import { getApiRoutes, getCustomWidget, getLFManager, refreshChart } from '../utils/common.js';
 const NAME = NodeName.keywordCounter;
 export const keywordCounterFactory = {
     eventHandler: (event, addW) => {
@@ -18,23 +18,23 @@ export const keywordCounterFactory = {
             getApiRoutes().redraw();
         }
     },
-    register: (setW, addW, resizeHandlerW) => {
+    register: (setW, addW) => {
         const extension = {
             name: 'LFExt_' + NAME,
             beforeRegisterNodeDef: async (nodeType) => {
                 if (nodeType.comfyClass === NAME) {
+                    const onDrawBackground = nodeType.prototype.onDrawBackground;
+                    nodeType.prototype.onDrawBackground = function () {
+                        const r = onDrawBackground?.apply(this, arguments);
+                        const node = this;
+                        refreshChart(node);
+                        return r;
+                    };
                     const onNodeCreated = nodeType.prototype.onNodeCreated;
                     nodeType.prototype.onNodeCreated = function () {
                         const r = onNodeCreated?.apply(this, arguments);
                         const node = this;
                         addW(node, CustomWidgetName.countBarChart);
-                        return r;
-                    };
-                    const onResize = nodeType.prototype.onResize;
-                    nodeType.prototype.onResize = function () {
-                        const r = onResize?.apply(this, arguments);
-                        const node = this;
-                        resizeHandlerW(node);
                         return r;
                     };
                 }

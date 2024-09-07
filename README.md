@@ -125,6 +125,10 @@ It's possible to select the last messages as an output, sending them to the next
 Node used to load multiple images from the disk given a directory. Optionally, it can fetch images from subdirectories.
 ![LoadImages](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/LoadImages.png "Node interface showing disk-based image loading with optional subdirectory fetching")
 
+#### LoadMetadata (draft)
+
+Loads the metadata attached to PNGs/JPGs from a directory.
+
 ### Logic nodes (`logic.py`)
 
 #### SwitchImage

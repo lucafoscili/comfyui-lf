@@ -44,7 +44,6 @@ export const controlPanelFactory = {
         const wrapper = document.createElement('div');
         const options = controlPanelFactory.options();
         contentCb(wrapper, false);
-        wrapper.dataset.isInVisibleNodes = 'true';
         return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };
     },
 };

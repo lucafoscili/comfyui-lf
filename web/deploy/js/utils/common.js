@@ -1,3 +1,5 @@
+import { CustomWidgetName, } from '../types/widgets.js';
+import { LogSeverity } from '../types/manager.js';
 const DOM = document.documentElement;
 const WINDOW = window;
 export const capitalize = (input) => {
@@ -48,6 +50,23 @@ export const kulManagerExists = () => {
 };
 export const log = () => {
     return WINDOW.lfManager.log;
+};
+export const refreshChart = (node) => {
+    try {
+        const domWidget = findWidget(node, CustomWidgetName.countBarChart)?.element ||
+            findWidget(node, CustomWidgetName.histogram)?.element;
+        if (domWidget) {
+            const chart = domWidget.querySelector('kul-chart');
+            if (chart) {
+                const canvas = chart.shadowRoot.querySelector('canvas');
+                if (canvas?.clientWidth < chart.clientWidth || canvas?.clientHeight < chart.clientHeight)
+                    chart.refresh();
+            }
+        }
+    }
+    catch (error) {
+        getLFManager().log('Whoops! It seems there is no chart. :V', { error }, LogSeverity.Error);
+    }
 };
 export const splitByLastSpaceBeforeAnyBracket = (input) => {
     const match = input.match(/\s+(.+)\[.*?\]/);
