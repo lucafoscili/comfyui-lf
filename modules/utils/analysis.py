@@ -66,7 +66,35 @@ def adapt_histograms_for_kuldata(histograms):
                 "Series_2": {"value": histograms["blue_hist"][i]},
                 "Series_3": {"value": histograms["sum_hist"][i] if i < len(histograms["sum_hist"]) else 0},
             },
-            "id": str(i)
+            "id": str(i),
+        }
+        kuldata["nodes"].append(node)
+
+    return kuldata
+
+def adapt_keyword_count_for_kuldata(keyword_count):
+    """
+    Adapt the keyword count data to the KulDataDataset format for use in a bar chart.
+    Args:
+        keyword_count (dict): Dictionary containing keyword counts.
+    Returns:
+        dict: A KulDataDataset-compatible dictionary.
+    """
+    kuldata = {
+        "columns": [
+            {"id": "Axis_0", "title": "Keyword"},
+            {"id": "Series_0", "shape": "number", "title": "Count"},
+        ],
+        "nodes": []
+    }
+    
+    for idx, (keyword, count) in enumerate(keyword_count.items()):
+        node = {
+            "cells": {
+                "Axis_0": {"value": keyword},
+                "Series_0": {"value": count},
+            },
+            "id": str(idx)
         }
         kuldata["nodes"].append(node)
 
