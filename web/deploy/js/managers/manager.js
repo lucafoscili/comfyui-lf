@@ -96,9 +96,9 @@ export class LFManager {
         /*-------------------------------------------------------------------*/
         /*               I n i t   I m a g e H i s t o g r a m               */
         /*-------------------------------------------------------------------*/
-        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_ImageHistogram(widgets.setters.KUL_CHART, widgets.adders.KUL_CHART, widgets.resizerHandlers.KUL_CHART);
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_ImageHistogram(widgets.setters.KUL_HISTOGRAM, widgets.adders.KUL_HISTOGRAM, widgets.resizerHandlers.KUL_HISTOGRAM);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.imageHistogram, (e) => {
-            nodes.eventHandlers.LF_ImageHistogram(e, widgets.adders.KUL_CHART);
+            nodes.eventHandlers.LF_ImageHistogram(e, widgets.adders.KUL_HISTOGRAM);
         });
         /*-------------------------------------------------------------------*/
         /*            I n i t   I m a g e R e s i z e B y E d g e            */
@@ -120,6 +120,13 @@ export class LFManager {
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_Integer(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.integer, (e) => {
             nodes.eventHandlers.LF_Integer(e, widgets.adders.KUL_HISTORY);
+        });
+        /*-------------------------------------------------------------------*/
+        /*               I n i t   K e y w o r d C o u n t e r               */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_KeywordCounter(widgets.setters.KUL_COUNT_BAR_CHART, widgets.adders.KUL_COUNT_BAR_CHART, widgets.resizerHandlers.KUL_COUNT_BAR_CHART);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.keywordCounter, (e) => {
+            nodes.eventHandlers.LF_KeywordCounter(e, widgets.adders.KUL_COUNT_BAR_CHART);
         });
         /*-------------------------------------------------------------------*/
         /*                     I n i t   L L M C h a t                       */

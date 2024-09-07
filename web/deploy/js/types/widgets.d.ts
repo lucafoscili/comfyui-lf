@@ -19,35 +19,34 @@ export declare enum ComfyWidgetName {
 }
 export type CustomWidgetMap = {
     [CustomWidgetName.booleanViewer]: BooleanViewerWidget;
-    [CustomWidgetName.chart]: ChartWidget;
     [CustomWidgetName.chat]: ChatWidget;
     [CustomWidgetName.code]: CodeWidget;
     [CustomWidgetName.controlPanel]: ControlPanelWidget;
+    [CustomWidgetName.histogram]: HistogramWidget;
     [CustomWidgetName.history]: HistoryWidget;
     [CustomWidgetName.imagePreview]: ImagePreviewWidget;
+    [CustomWidgetName.countBarChart]: CountBarChartWidget;
     [CustomWidgetName.jsonInput]: JsonInputWidget;
     [CustomWidgetName.rollViewer]: RollViewerWidget;
     [CustomWidgetName.tree]: TreeWidget;
 };
 export declare enum CustomWidgetName {
     booleanViewer = "KUL_BOOLEAN_VIEWER",
-    chart = "KUL_CHART",
     chat = "KUL_CHAT",
     code = "KUL_CODE",
     controlPanel = "KUL_CONTROL_PANEL",
+    histogram = "KUL_HISTOGRAM",
     imagePreview = "KUL_IMAGE_PREVIEW_B64",
     jsonInput = "KUL_JSON_INPUT",
+    countBarChart = "KUL_COUNT_BAR_CHART",
     history = "KUL_HISTORY",
     rollViewer = "KUL_ROLL_VIEWER",
     tree = "KUL_TREE"
 }
-export type CustomWidgetOptions = BooleanViewerWidgetOptions | ChartWidgetOptions | ChatWidgetOptions | CodeWidgetOptions | ControlPanelWidgetOptions | HistoryWidgetOptions | ImagePreviewWidgetOptions | JsonInputWidgetOptions | RollViewerWidgetOptions | TreeWidgetOptions;
+export type CustomWidgetOptions = BooleanViewerWidgetOptions | ChatWidgetOptions | CodeWidgetOptions | ControlPanelWidgetOptions | HistogramWidgetOptions | HistoryWidgetOptions | ImagePreviewWidgetOptions | JsonInputWidgetOptions | CountBarChartWidgetOptions | RollViewerWidgetOptions | TreeWidgetOptions;
 export interface CustomWidgetSetters {
     [CustomWidgetName.booleanViewer](node: NodeType, name: CustomWidgetName.booleanViewer): {
         widget: BooleanViewerWidget;
-    };
-    [CustomWidgetName.chart](node: NodeType, name: CustomWidgetName.chart): {
-        widget: ChartWidget;
     };
     [CustomWidgetName.chat](node: NodeType, name: CustomWidgetName.chat): {
         widget: ChatWidget;
@@ -58,6 +57,9 @@ export interface CustomWidgetSetters {
     [CustomWidgetName.controlPanel](node: NodeType, name: CustomWidgetName.controlPanel): {
         widget: ControlPanelWidget;
     };
+    [CustomWidgetName.histogram](node: NodeType, name: CustomWidgetName.histogram): {
+        widget: HistogramWidget;
+    };
     [CustomWidgetName.history](node: NodeType, name: CustomWidgetName.history): {
         widget: HistoryWidget;
     };
@@ -66,6 +68,9 @@ export interface CustomWidgetSetters {
     };
     [CustomWidgetName.jsonInput](node: NodeType, name: CustomWidgetName.jsonInput): {
         widget: JsonInputWidget;
+    };
+    [CustomWidgetName.countBarChart](node: NodeType, name: CustomWidgetName.countBarChart): {
+        widget: CountBarChartWidget;
     };
     [CustomWidgetName.rollViewer](node: NodeType, name: CustomWidgetName.rollViewer): {
         widget: RollViewerWidget;
@@ -89,21 +94,6 @@ export declare type BooleanViewerWidgetsSetter = () => {
     [CustomWidgetName.booleanViewer]: BaseWidgetCallback;
 };
 export type BooleanViewerWidgetValue = string;
-export interface ChartWidget extends Widget {
-    options: ChartWidgetOptions;
-    type: [CustomWidgetName.chart];
-}
-export interface ChartWidgetOptions {
-    hideOnZoom: boolean;
-    getComp(): HTMLKulChartElement;
-    getValue(): string;
-    setProps(props: Partial<HTMLKulChartElement>): void;
-    setValue(value: KulDataDataset | string): void;
-}
-export type ChartWidgetsSetter = () => {
-    [CustomWidgetName.chart]: BaseWidgetCallback;
-};
-export type ChartWidgetValue = string;
 export interface ChatWidget extends Widget {
     options: ChatWidgetOptions;
     type: [CustomWidgetName.chat];
@@ -149,6 +139,21 @@ export interface ControlPanelWidgetValue {
     debug: boolean;
     themes: string;
 }
+export interface HistogramWidget extends Widget {
+    options: HistogramWidgetOptions;
+    type: [CustomWidgetName.histogram];
+}
+export interface HistogramWidgetOptions {
+    hideOnZoom: boolean;
+    getComp(): HTMLKulChartElement;
+    getValue(): string;
+    setProps(props: Partial<HTMLKulChartElement>): void;
+    setValue(value: KulDataDataset | string): void;
+}
+export type HistogramWidgetsSetter = () => {
+    [CustomWidgetName.histogram]: BaseWidgetCallback;
+};
+export type HistogramWidgetValue = string;
 export interface HistoryWidget extends Widget {
     options: HistoryWidgetOptions;
     type: [CustomWidgetName.history];
@@ -196,6 +201,21 @@ export declare type JsonInputWidgetsSetter = () => {
     [CustomWidgetName.jsonInput]: BaseWidgetCallback;
 };
 export type JsonInputWidgetValue = string | Record<string, unknown>;
+export interface CountBarChartWidget extends Widget {
+    options: CountBarChartWidgetOptions;
+    type: [CustomWidgetName.countBarChart];
+}
+export interface CountBarChartWidgetOptions {
+    hideOnZoom: boolean;
+    getComp(): HTMLKulChartElement;
+    getValue(): string;
+    setProps(props: Partial<HTMLKulChartElement>): void;
+    setValue(value: KulDataDataset | string): void;
+}
+export type CountBarChartWidgetsSetter = () => {
+    [CustomWidgetName.countBarChart]: BaseWidgetCallback;
+};
+export type CountBarChartWidgetValue = string;
 export interface RollViewerWidget extends Widget {
     options: RollViewerWidgetOptions;
     type: [CustomWidgetName.rollViewer];

@@ -1,7 +1,7 @@
 import { app } from '/scripts/app.js';
 import { controlPanelFactory } from '../widgets/controlPanel.js';
 import { codeFactory } from '../widgets/code.js';
-import { chartFactory } from '../widgets/chart.js';
+import { histogramFactory } from '../widgets/histogram.js';
 import { CustomWidgetName } from '../types/widgets.js';
 import { imagePreviewFactory } from '../widgets/imagePreview.js';
 import { booleanViewerFactory } from '../widgets/booleanViewer.js';
@@ -10,6 +10,7 @@ import { treeFactory } from '../widgets/tree.js';
 import { chatFactory } from '../widgets/chat.js';
 import { historyFactory } from '../widgets/history.js';
 import { rollViewerFactory } from '../widgets/rollViewer.js';
+import { countBarChartFactory } from '../widgets/countBarChart.js';
 
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
@@ -38,10 +39,6 @@ export class LFWidgets {
       ).widget;
       return widget;
     },
-    [CustomWidgetName.chart]: (nodeType: NodeType) => {
-      const widget = app.widgets[CustomWidgetName.chart](nodeType, CustomWidgetName.chart).widget;
-      return widget;
-    },
     [CustomWidgetName.chat]: (nodeType: NodeType) => {
       const widget = app.widgets[CustomWidgetName.chat](nodeType, CustomWidgetName.chat).widget;
       return widget;
@@ -54,6 +51,20 @@ export class LFWidgets {
       const widget = app.widgets[CustomWidgetName.controlPanel](
         nodeType,
         CustomWidgetName.controlPanel,
+      ).widget;
+      return widget;
+    },
+    [CustomWidgetName.countBarChart]: (nodeType: NodeType) => {
+      const widget = app.widgets[CustomWidgetName.countBarChart](
+        nodeType,
+        CustomWidgetName.countBarChart,
+      ).widget;
+      return widget;
+    },
+    [CustomWidgetName.histogram]: (nodeType: NodeType) => {
+      const widget = app.widgets[CustomWidgetName.histogram](
+        nodeType,
+        CustomWidgetName.histogram,
       ).widget;
       return widget;
     },
@@ -94,10 +105,13 @@ export class LFWidgets {
   option = {
     [CustomWidgetName.booleanViewer]: (booleanViewer: HTMLKulTextfieldElement) =>
       booleanViewerFactory.options(booleanViewer),
-    [CustomWidgetName.chart]: (chart: HTMLKulChartElement) => chartFactory.options(chart),
     [CustomWidgetName.chat]: (chat: HTMLKulChatElement) => chatFactory.options(chat),
     [CustomWidgetName.code]: (code: HTMLKulCodeElement) => codeFactory.options(code),
     [CustomWidgetName.controlPanel]: () => controlPanelFactory.options(),
+    [CustomWidgetName.countBarChart]: (countBarChart: HTMLKulChartElement) =>
+      countBarChartFactory.options(countBarChart),
+    [CustomWidgetName.histogram]: (histogram: HTMLKulChartElement) =>
+      histogramFactory.options(histogram),
     [CustomWidgetName.history]: (history: HTMLKulListElement) => historyFactory.options(history),
     [CustomWidgetName.jsonInput]: (content: HTMLTextAreaElement) =>
       jsonInputFactory.options(content),
@@ -109,7 +123,8 @@ export class LFWidgets {
   };
 
   resizerHandler = {
-    [CustomWidgetName.chart]: (nodeType: NodeType) => chartFactory.resize(nodeType),
+    [CustomWidgetName.countBarChart]: (nodeType: NodeType) => countBarChartFactory.resize(nodeType),
+    [CustomWidgetName.histogram]: (nodeType: NodeType) => histogramFactory.resize(nodeType),
   };
 
   set = {
@@ -117,13 +132,6 @@ export class LFWidgets {
       return {
         [CustomWidgetName.booleanViewer]: (nodeType: NodeType, name: CustomWidgetName) => {
           return booleanViewerFactory.render(nodeType, name);
-        },
-      };
-    },
-    [CustomWidgetName.chart]: () => {
-      return {
-        [CustomWidgetName.chart]: (nodeType: NodeType, name: CustomWidgetName) => {
-          return chartFactory.render(nodeType, name);
         },
       };
     },
@@ -145,6 +153,20 @@ export class LFWidgets {
       return {
         [CustomWidgetName.controlPanel]: (nodeType: NodeType, name: CustomWidgetName) => {
           return controlPanelFactory.render(nodeType, name);
+        },
+      };
+    },
+    [CustomWidgetName.countBarChart]: () => {
+      return {
+        [CustomWidgetName.countBarChart]: (nodeType: NodeType, name: CustomWidgetName) => {
+          return countBarChartFactory.render(nodeType, name);
+        },
+      };
+    },
+    [CustomWidgetName.histogram]: () => {
+      return {
+        [CustomWidgetName.histogram]: (nodeType: NodeType, name: CustomWidgetName) => {
+          return histogramFactory.render(nodeType, name);
         },
       };
     },

@@ -1,24 +1,24 @@
-import { EventName, ImageHistogramPayload } from '../types/events';
+import { EventName, KeywordCounterPayload } from '../types/events';
 import { LogSeverity } from '../types/manager';
 import { Extension, NodeName } from '../types/nodes';
 import {
   CustomWidgetName,
   type BaseWidgetCallback,
-  type HistogramWidgetsSetter,
+  type CountBarChartWidgetsSetter,
 } from '../types/widgets';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 
-const NAME = NodeName.imageHistogram;
+const NAME = NodeName.keywordCounter;
 
-export const imageHistogramFactory = {
-  eventHandler: (event: CustomEvent<ImageHistogramPayload>, addW: BaseWidgetCallback) => {
-    const name = EventName.imageHistogram;
+export const keywordCounterFactory = {
+  eventHandler: (event: CustomEvent<KeywordCounterPayload>, addW: BaseWidgetCallback) => {
+    const name = EventName.keywordCounter;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
 
     const payload = event.detail;
     const node = getApiRoutes().getNodeById(payload.id);
     if (node) {
-      const widget = getCustomWidget(node, CustomWidgetName.histogram, addW);
+      const widget = getCustomWidget(node, CustomWidgetName.countBarChart, addW);
       const comp = widget.options.getComp();
       comp.refresh();
       widget.options.setValue(event.detail.dataset);
@@ -26,7 +26,7 @@ export const imageHistogramFactory = {
     }
   },
   register: (
-    setW: HistogramWidgetsSetter,
+    setW: CountBarChartWidgetsSetter,
     addW: BaseWidgetCallback,
     resizeHandlerW: (node: NodeType) => void,
   ) => {
@@ -38,7 +38,7 @@ export const imageHistogramFactory = {
           nodeType.prototype.onNodeCreated = function () {
             const r = onNodeCreated?.apply(this, arguments);
             const node = this;
-            addW(node, CustomWidgetName.histogram);
+            addW(node, CustomWidgetName.countBarChart);
             return r;
           };
           const onResize = nodeType.prototype.onResize;

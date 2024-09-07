@@ -15,6 +15,11 @@ There is a big JS bundled coming from another side-project of mine, [a webcompon
 Displays a widget that plots the RGB channels of a photo in tensor format on a line chart.
 ![ImageHistogram](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/ImageHistogram.png "Screenshot of RGB histogram plotted by the node")
 
+#### KeywordCounter
+
+Counts the number of each keyword in a prompt and displays a bar chart showing the distribution.
+![KeywordCounter](https://github.com/lucafoscili/comfyui-lf/blob/e1c7ba3c0ad300cb4ab1a15abcd23d6f696b3e88/docs/images/KeywordCounter.png "1girl was added twice to the count")
+
 ### Conversions nodes (`conversions.py`)
 
 #### BlurImages

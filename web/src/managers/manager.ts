@@ -17,6 +17,7 @@ import {
   ImageHistogramPayload,
   ImageResizeByEdgePayload,
   IntegerPayload,
+  KeywordCounterPayload,
   LoadImagesPayload,
   MultipleImageResizeForWebPayload,
   RandomBooleanPayload,
@@ -138,12 +139,12 @@ export class LFManager {
     /*               I n i t   I m a g e H i s t o g r a m               */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_ImageHistogram(
-      widgets.setters.KUL_CHART,
-      widgets.adders.KUL_CHART,
-      widgets.resizerHandlers.KUL_CHART,
+      widgets.setters.KUL_HISTOGRAM,
+      widgets.adders.KUL_HISTOGRAM,
+      widgets.resizerHandlers.KUL_HISTOGRAM,
     );
     this.#APIS.event(EventName.imageHistogram, (e: CustomEvent<ImageHistogramPayload>) => {
-      nodes.eventHandlers.LF_ImageHistogram(e, widgets.adders.KUL_CHART);
+      nodes.eventHandlers.LF_ImageHistogram(e, widgets.adders.KUL_HISTOGRAM);
     });
     /*-------------------------------------------------------------------*/
     /*            I n i t   I m a g e R e s i z e B y E d g e            */
@@ -174,6 +175,17 @@ export class LFManager {
     );
     this.#APIS.event(EventName.integer, (e: CustomEvent<IntegerPayload>) => {
       nodes.eventHandlers.LF_Integer(e, widgets.adders.KUL_HISTORY);
+    });
+    /*-------------------------------------------------------------------*/
+    /*               I n i t   K e y w o r d C o u n t e r               */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_KeywordCounter(
+      widgets.setters.KUL_COUNT_BAR_CHART,
+      widgets.adders.KUL_COUNT_BAR_CHART,
+      widgets.resizerHandlers.KUL_COUNT_BAR_CHART,
+    );
+    this.#APIS.event(EventName.keywordCounter, (e: CustomEvent<KeywordCounterPayload>) => {
+      nodes.eventHandlers.LF_KeywordCounter(e, widgets.adders.KUL_COUNT_BAR_CHART);
     });
     /*-------------------------------------------------------------------*/
     /*                     I n i t   L L M C h a t                       */

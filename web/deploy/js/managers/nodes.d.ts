@@ -8,6 +8,7 @@ export declare class LFNodes {
         LF_ImageHistogram: (event: CustomEvent<import("../types/events").ImageHistogramPayload>, addW: BaseWidgetCallback) => void;
         LF_ImageResizeByEdge: (event: CustomEvent<import("../types/events").ImageResizeByEdgePayload>, addW: BaseWidgetCallback) => void;
         LF_Integer: (event: CustomEvent<import("../types/events").IntegerPayload>, addW: BaseWidgetCallback) => void;
+        LF_KeywordCounter: (event: CustomEvent<import("../types/events").KeywordCounterPayload>, addW: BaseWidgetCallback) => void;
         LF_LoadImages: (event: CustomEvent<import("../types/events").LoadImagesPayload>, addW: BaseWidgetCallback) => void;
         LF_MultipleImageResizeForWeb: (event: CustomEvent<import("../types/events").MultipleImageResizeForWebPayload>, addW: BaseWidgetCallback) => void;
         LF_RandomBoolean: (event: CustomEvent<import("../types/events").RandomBooleanPayload>, addW: BaseWidgetCallback) => void;
@@ -25,9 +26,10 @@ export declare class LFNodes {
         LF_ControlPanel: (setW: import("../types/widgets").ControlPanelWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_DisplayJSON: (setW: import("../types/widgets").CodeWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_Float: (setW: import("../types/widgets").HistoryWidgetsSetter, addW: BaseWidgetCallback) => void;
-        LF_ImageHistogram: (setW: import("../types/widgets").ChartWidgetsSetter, addW: BaseWidgetCallback, resizeHandlerW: (node: NodeType) => void) => void;
+        LF_ImageHistogram: (setW: import("../types/widgets").HistogramWidgetsSetter, addW: BaseWidgetCallback, resizeHandlerW: (node: NodeType) => void) => void;
         LF_ImageResizeByEdge: (setW: import("../types/widgets").TreeWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_Integer: (setW: import("../types/widgets").HistoryWidgetsSetter, addW: BaseWidgetCallback) => void;
+        LF_KeywordCounter: (setW: import("../types/widgets").CountBarChartWidgetsSetter, addW: BaseWidgetCallback, resizeHandlerW: (node: NodeType) => void) => void;
         LF_LLMChat: (setW: import("../types/widgets").ChatWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_LoadImages: (setW: import("../types/widgets").ImagePreviewWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_MultipleImageResizeForWeb: (setW: import("../types/widgets").TreeWidgetsSetter, addW: BaseWidgetCallback) => void;
@@ -49,6 +51,7 @@ export declare class LFNodes {
             LF_ImageHistogram: (event: CustomEvent<import("../types/events").ImageHistogramPayload>, addW: BaseWidgetCallback) => void;
             LF_ImageResizeByEdge: (event: CustomEvent<import("../types/events").ImageResizeByEdgePayload>, addW: BaseWidgetCallback) => void;
             LF_Integer: (event: CustomEvent<import("../types/events").IntegerPayload>, addW: BaseWidgetCallback) => void;
+            LF_KeywordCounter: (event: CustomEvent<import("../types/events").KeywordCounterPayload>, addW: BaseWidgetCallback) => void;
             LF_LoadImages: (event: CustomEvent<import("../types/events").LoadImagesPayload>, addW: BaseWidgetCallback) => void;
             LF_MultipleImageResizeForWeb: (event: CustomEvent<import("../types/events").MultipleImageResizeForWebPayload>, addW: BaseWidgetCallback) => void;
             LF_RandomBoolean: (event: CustomEvent<import("../types/events").RandomBooleanPayload>, addW: BaseWidgetCallback) => void;
@@ -66,9 +69,10 @@ export declare class LFNodes {
             LF_ControlPanel: (setW: import("../types/widgets").ControlPanelWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_DisplayJSON: (setW: import("../types/widgets").CodeWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_Float: (setW: import("../types/widgets").HistoryWidgetsSetter, addW: BaseWidgetCallback) => void;
-            LF_ImageHistogram: (setW: import("../types/widgets").ChartWidgetsSetter, addW: BaseWidgetCallback, resizeHandlerW: (node: NodeType) => void) => void;
+            LF_ImageHistogram: (setW: import("../types/widgets").HistogramWidgetsSetter, addW: BaseWidgetCallback, resizeHandlerW: (node: NodeType) => void) => void;
             LF_ImageResizeByEdge: (setW: import("../types/widgets").TreeWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_Integer: (setW: import("../types/widgets").HistoryWidgetsSetter, addW: BaseWidgetCallback) => void;
+            LF_KeywordCounter: (setW: import("../types/widgets").CountBarChartWidgetsSetter, addW: BaseWidgetCallback, resizeHandlerW: (node: NodeType) => void) => void;
             LF_LLMChat: (setW: import("../types/widgets").ChatWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_LoadImages: (setW: import("../types/widgets").ImagePreviewWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_MultipleImageResizeForWeb: (setW: import("../types/widgets").TreeWidgetsSetter, addW: BaseWidgetCallback) => void;

@@ -8,6 +8,7 @@ export var EventName;
     EventName["imageHistogram"] = "lf-imagehistogram";
     EventName["imageResizeByEdge"] = "lf-imageresizebyedge";
     EventName["integer"] = "lf-integer";
+    EventName["keywordCounter"] = "lf-keywordcounter";
     EventName["loadImages"] = "lf-loadimages";
     EventName["multipleImageResizeForWeb"] = "lf-multipleimageresizeforweb";
     EventName["randomBoolean"] = "lf-randomboolean";

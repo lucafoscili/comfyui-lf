@@ -1,6 +1,6 @@
 import { ImageHistogramPayload } from '../types/events';
-import { type BaseWidgetCallback, type ChartWidgetsSetter } from '../types/widgets';
+import { type BaseWidgetCallback, type HistogramWidgetsSetter } from '../types/widgets';
 export declare const imageHistogramFactory: {
     eventHandler: (event: CustomEvent<ImageHistogramPayload>, addW: BaseWidgetCallback) => void;
-    register: (setW: ChartWidgetsSetter, addW: BaseWidgetCallback, resizeHandlerW: (node: NodeType) => void) => void;
+    register: (setW: HistogramWidgetsSetter, addW: BaseWidgetCallback, resizeHandlerW: (node: NodeType) => void) => void;
 };
