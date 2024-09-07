@@ -1,6 +1,9 @@
+import json
 import numpy as np
+import piexif
 import torch
 
+from PIL.ExifTags import TAGS
 from PIL import Image
 
 def create_dummy_image_tensor():
@@ -19,6 +22,66 @@ def create_dummy_image_tensor():
     img_tensor = torch.from_numpy(np.array(img)).float() / 255.0
     
     return img_tensor.unsqueeze(0)
+
+def extract_jpeg_metadata(pil_image, file_name):
+    """
+    Extract EXIF metadata from a JPEG image.
+    """
+    try:
+        exif_bytes = pil_image.info.get('exif', None)
+        if exif_bytes is None:
+            return {"error": f"No EXIF metadata found in {file_name}"}
+
+        exif_data = piexif.load(exif_bytes)
+        
+        if isinstance(exif_data, bytes):
+            return {"format": "JPEG", "metadata": {}}
+        
+        if not exif_data:
+            return {"error": f"Failed to load EXIF data from {file_name}"}
+
+        exif_json = {}
+        
+        def safe_convert_value(v):
+            if isinstance(v, bytes):
+                return v.decode('utf-8', errors='ignore')
+            elif isinstance(v, list):
+                return [safe_convert_value(i) for i in v]
+            else:
+                return v
+        
+        for item in exif_data.values():
+            if hasattr(item, 'items'):
+                for tag, value in item.items():
+                    tag_name = TAGS.get(tag, tag)
+                    exif_json[tag_name] = safe_convert_value(value)
+        
+        try:
+            json.dumps(exif_json)
+        except TypeError as e:
+            for k, v in list(exif_json.items()):
+                try:
+                    json.dumps({k: v})
+                except TypeError:
+                    del exif_json[k]
+        
+        return {"format": "JPEG", "metadata": exif_json}
+    
+    except Exception as e:
+        return {"error": f"An unexpected error occurred while extracting EXIF data from {file_name}: {str(e)}"}
+
+def extract_png_metadata(pil_image):
+    """
+    Extract metadata from PNG text chunks.
+    """
+    png_info = pil_image.info
+    metadata = {"format": "PNG", "metadata": {}}
+    
+    for key, value in png_info.items():
+        if isinstance(value, str):
+            metadata["metadata"][key] = value
+    
+    return metadata
 
 def resize_image(img, max_size=1024):
     """
