@@ -19,6 +19,7 @@ import { floatFactory } from '../nodes/float';
 import { booleanFactory } from '../nodes/boolean';
 import { uRandomSeedGeneratorFactory } from '../nodes/urandomSeedGenerator';
 import { randomBooleanFactory } from '../nodes/randomBoolean';
+import { keywordCounterFactory } from '../nodes/keywordCounter';
 
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
@@ -33,6 +34,7 @@ export class LFNodes {
     [NodeName.imageHistogram]: imageHistogramFactory.eventHandler,
     [NodeName.imageResizeByEdge]: imageResizeByEdgeFactory.eventHandler,
     [NodeName.integer]: integerFactory.eventHandler,
+    [NodeName.keywordCounter]: keywordCounterFactory.eventHandler,
     [NodeName.loadImages]: loadImagesFactory.eventHandler,
     [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.eventHandler,
     [NodeName.randomBoolean]: randomBooleanFactory.eventHandler,
@@ -54,6 +56,7 @@ export class LFNodes {
     [NodeName.imageHistogram]: imageHistogramFactory.register,
     [NodeName.imageResizeByEdge]: imageResizeByEdgeFactory.register,
     [NodeName.integer]: integerFactory.register,
+    [NodeName.keywordCounter]: keywordCounterFactory.register,
     [NodeName.llmChat]: llmChatFactory.register,
     [NodeName.loadImages]: loadImagesFactory.register,
     [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.register,

@@ -9,6 +9,7 @@ export declare enum NodeName {
     integer = "LF_Integer",
     llmChat = "LF_LLMChat",
     loadImages = "LF_LoadImages",
+    keywordCounter = "LF_KeywordCounter",
     multipleImageResizeForWeb = "LF_MultipleImageResizeForWeb",
     imageResizeByEdge = "LF_ImageResizeByEdge",
     randomBoolean = "LF_RandomBoolean",

@@ -16,6 +16,7 @@ import { treeFactory } from '../widgets/tree.js';
 import { chatFactory } from '../widgets/chat.js';
 import { historyFactory } from '../widgets/history.js';
 import { rollViewerFactory } from '../widgets/rollViewer.js';
+import { countBarChartFactory } from '../widgets/countBarChart.js';
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
 /*-------------------------------------------------*/
@@ -37,6 +38,10 @@ export class LFWidgets {
             },
             [CustomWidgetName.controlPanel]: (nodeType) => {
                 const widget = app.widgets[CustomWidgetName.controlPanel](nodeType, CustomWidgetName.controlPanel).widget;
+                return widget;
+            },
+            [CustomWidgetName.countBarChart]: (nodeType) => {
+                const widget = app.widgets[CustomWidgetName.countBarChart](nodeType, CustomWidgetName.countBarChart).widget;
                 return widget;
             },
             [CustomWidgetName.histogram]: (nodeType) => {
@@ -69,6 +74,7 @@ export class LFWidgets {
             [CustomWidgetName.chat]: (chat) => chatFactory.options(chat),
             [CustomWidgetName.code]: (code) => codeFactory.options(code),
             [CustomWidgetName.controlPanel]: () => controlPanelFactory.options(),
+            [CustomWidgetName.countBarChart]: (countBarChart) => countBarChartFactory.options(countBarChart),
             [CustomWidgetName.histogram]: (histogram) => histogramFactory.options(histogram),
             [CustomWidgetName.history]: (history) => historyFactory.options(history),
             [CustomWidgetName.jsonInput]: (content) => jsonInputFactory.options(content),
@@ -77,6 +83,7 @@ export class LFWidgets {
             [CustomWidgetName.tree]: (tree) => treeFactory.options(tree),
         };
         this.resizerHandler = {
+            [CustomWidgetName.countBarChart]: (nodeType) => countBarChartFactory.resize(nodeType),
             [CustomWidgetName.histogram]: (nodeType) => histogramFactory.resize(nodeType),
         };
         this.set = {
@@ -105,6 +112,13 @@ export class LFWidgets {
                 return {
                     [CustomWidgetName.controlPanel]: (nodeType, name) => {
                         return controlPanelFactory.render(nodeType, name);
+                    },
+                };
+            },
+            [CustomWidgetName.countBarChart]: () => {
+                return {
+                    [CustomWidgetName.countBarChart]: (nodeType, name) => {
+                        return countBarChartFactory.render(nodeType, name);
                     },
                 };
             },

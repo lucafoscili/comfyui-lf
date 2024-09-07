@@ -1,13 +1,13 @@
-.lf-histogram {
+.lf-countbarchart {
   background: var(--kul-background-color);
   height: 100%;
   overflow: auto;
   position: relative;
   width: 100%;
 }
-.lf-histogram__widget {
+.lf-countbarchart__widget {
   height: 100%;
   width: 100%;
 }
 
-/*# sourceMappingURL=histogram.css.map */
+/*# sourceMappingURL=countBarChart.css.map */

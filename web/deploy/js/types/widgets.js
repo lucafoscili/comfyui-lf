@@ -14,6 +14,7 @@ export var CustomWidgetName;
     CustomWidgetName["histogram"] = "KUL_HISTOGRAM";
     CustomWidgetName["imagePreview"] = "KUL_IMAGE_PREVIEW_B64";
     CustomWidgetName["jsonInput"] = "KUL_JSON_INPUT";
+    CustomWidgetName["countBarChart"] = "KUL_COUNT_BAR_CHART";
     CustomWidgetName["history"] = "KUL_HISTORY";
     CustomWidgetName["rollViewer"] = "KUL_ROLL_VIEWER";
     CustomWidgetName["tree"] = "KUL_TREE";

@@ -32,6 +32,7 @@ export type CustomWidgetMap = {
   [CustomWidgetName.histogram]: HistogramWidget;
   [CustomWidgetName.history]: HistoryWidget;
   [CustomWidgetName.imagePreview]: ImagePreviewWidget;
+  [CustomWidgetName.countBarChart]: CountBarChartWidget;
   [CustomWidgetName.jsonInput]: JsonInputWidget;
   [CustomWidgetName.rollViewer]: RollViewerWidget;
   [CustomWidgetName.tree]: TreeWidget;
@@ -44,6 +45,7 @@ export enum CustomWidgetName {
   histogram = 'KUL_HISTOGRAM',
   imagePreview = 'KUL_IMAGE_PREVIEW_B64',
   jsonInput = 'KUL_JSON_INPUT',
+  countBarChart = 'KUL_COUNT_BAR_CHART',
   history = 'KUL_HISTORY',
   rollViewer = 'KUL_ROLL_VIEWER',
   tree = 'KUL_TREE',
@@ -57,6 +59,7 @@ export type CustomWidgetOptions =
   | HistoryWidgetOptions
   | ImagePreviewWidgetOptions
   | JsonInputWidgetOptions
+  | CountBarChartWidgetOptions
   | RollViewerWidgetOptions
   | TreeWidgetOptions;
 export interface CustomWidgetSetters {
@@ -86,6 +89,10 @@ export interface CustomWidgetSetters {
     node: NodeType,
     name: CustomWidgetName.jsonInput,
   ): { widget: JsonInputWidget };
+  [CustomWidgetName.countBarChart](
+    node: NodeType,
+    name: CustomWidgetName.countBarChart,
+  ): { widget: CountBarChartWidget };
   [CustomWidgetName.rollViewer](
     node: NodeType,
     name: CustomWidgetName.rollViewer,
@@ -112,26 +119,6 @@ export declare type BooleanViewerWidgetsSetter = () => {
   [CustomWidgetName.booleanViewer]: BaseWidgetCallback;
 };
 export type BooleanViewerWidgetValue = string;
-
-/*-------------------------------------------------------------------*/
-/*                C h a r t   D e c l a r a t i o n s                */
-/*-------------------------------------------------------------------*/
-
-export interface HistogramWidget extends Widget {
-  options: HistogramWidgetOptions;
-  type: [CustomWidgetName.histogram];
-}
-export interface HistogramWidgetOptions {
-  hideOnZoom: boolean;
-  getComp(): HTMLKulChartElement;
-  getValue(): string;
-  setProps(props: Partial<HTMLKulChartElement>): void;
-  setValue(value: KulDataDataset | string): void;
-}
-export type HistogramWidgetsSetter = () => {
-  [CustomWidgetName.histogram]: BaseWidgetCallback;
-};
-export type HistogramWidgetValue = string;
 
 /*-------------------------------------------------------------------*/
 /*                 C h a t   D e c l a r a t i o n s                 */
@@ -194,6 +181,26 @@ export interface ControlPanelWidgetValue {
 }
 
 /*-------------------------------------------------------------------*/
+/*            H i s t o g r a m   D e c l a r a t i o n s            */
+/*-------------------------------------------------------------------*/
+
+export interface HistogramWidget extends Widget {
+  options: HistogramWidgetOptions;
+  type: [CustomWidgetName.histogram];
+}
+export interface HistogramWidgetOptions {
+  hideOnZoom: boolean;
+  getComp(): HTMLKulChartElement;
+  getValue(): string;
+  setProps(props: Partial<HTMLKulChartElement>): void;
+  setValue(value: KulDataDataset | string): void;
+}
+export type HistogramWidgetsSetter = () => {
+  [CustomWidgetName.histogram]: BaseWidgetCallback;
+};
+export type HistogramWidgetValue = string;
+
+/*-------------------------------------------------------------------*/
 /*              H i s t o r y   D e c l a r a t i o n s              */
 /*-------------------------------------------------------------------*/
 
@@ -254,6 +261,26 @@ export declare type JsonInputWidgetsSetter = () => {
   [CustomWidgetName.jsonInput]: BaseWidgetCallback;
 };
 export type JsonInputWidgetValue = string | Record<string, unknown>;
+
+/*-------------------------------------------------------------------*/
+/*      K e y w o r d s   C o u n t   D e c l a r a t i o n s        */
+/*-------------------------------------------------------------------*/
+
+export interface CountBarChartWidget extends Widget {
+  options: CountBarChartWidgetOptions;
+  type: [CustomWidgetName.countBarChart];
+}
+export interface CountBarChartWidgetOptions {
+  hideOnZoom: boolean;
+  getComp(): HTMLKulChartElement;
+  getValue(): string;
+  setProps(props: Partial<HTMLKulChartElement>): void;
+  setValue(value: KulDataDataset | string): void;
+}
+export type CountBarChartWidgetsSetter = () => {
+  [CustomWidgetName.countBarChart]: BaseWidgetCallback;
+};
+export type CountBarChartWidgetValue = string;
 
 /*-------------------------------------------------------------------*/
 /*           R o l l   V i e w e r   D e c l a r a t i o n s         */

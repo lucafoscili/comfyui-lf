@@ -122,6 +122,13 @@ export class LFManager {
             nodes.eventHandlers.LF_Integer(e, widgets.adders.KUL_HISTORY);
         });
         /*-------------------------------------------------------------------*/
+        /*               I n i t   K e y w o r d C o u n t e r               */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_KeywordCounter(widgets.setters.KUL_COUNT_BAR_CHART, widgets.adders.KUL_COUNT_BAR_CHART, widgets.resizerHandlers.KUL_COUNT_BAR_CHART);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.keywordCounter, (e) => {
+            nodes.eventHandlers.LF_KeywordCounter(e, widgets.adders.KUL_COUNT_BAR_CHART);
+        });
+        /*-------------------------------------------------------------------*/
         /*                     I n i t   L L M C h a t                       */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_LLMChat(widgets.setters.KUL_CHAT, widgets.adders.KUL_CHAT);

@@ -7,6 +7,7 @@ export declare class LFWidgets {
         KUL_CHAT: (nodeType: NodeType) => any;
         KUL_CODE: (nodeType: NodeType) => any;
         KUL_CONTROL_PANEL: (nodeType: NodeType) => any;
+        KUL_COUNT_BAR_CHART: (nodeType: NodeType) => any;
         KUL_HISTOGRAM: (nodeType: NodeType) => any;
         KUL_HISTORY: (nodeType: NodeType) => any;
         KUL_JSON_INPUT: (nodeType: NodeType) => any;
@@ -19,6 +20,7 @@ export declare class LFWidgets {
         KUL_CHAT: (chat: HTMLKulChatElement) => import("../types/widgets.js").ChatWidgetOptions;
         KUL_CODE: (code: HTMLKulCodeElement) => import("../types/widgets.js").CodeWidgetOptions;
         KUL_CONTROL_PANEL: () => import("../types/widgets.js").ControlPanelWidgetOptions;
+        KUL_COUNT_BAR_CHART: (countBarChart: HTMLKulChartElement) => import("../types/widgets.js").CountBarChartWidgetOptions;
         KUL_HISTOGRAM: (histogram: HTMLKulChartElement) => import("../types/widgets.js").HistogramWidgetOptions;
         KUL_HISTORY: (history: HTMLKulListElement) => import("../types/widgets.js").HistoryWidgetOptions;
         KUL_JSON_INPUT: (content: HTMLTextAreaElement) => import("../types/widgets.js").JsonInputWidgetOptions;
@@ -27,6 +29,7 @@ export declare class LFWidgets {
         KUL_TREE: (tree: HTMLKulTreeElement) => import("../types/widgets.js").TreeWidgetOptions;
     };
     resizerHandler: {
+        KUL_COUNT_BAR_CHART: (nodeType: NodeType) => void;
         KUL_HISTOGRAM: (nodeType: NodeType) => void;
     };
     set: {
@@ -45,6 +48,11 @@ export declare class LFWidgets {
         };
         KUL_CONTROL_PANEL: () => {
             KUL_CONTROL_PANEL: (nodeType: NodeType, name: CustomWidgetName) => {
+                widget: Widget;
+            };
+        };
+        KUL_COUNT_BAR_CHART: () => {
+            KUL_COUNT_BAR_CHART: (nodeType: NodeType, name: CustomWidgetName) => {
                 widget: Widget;
             };
         };
@@ -83,6 +91,7 @@ export declare class LFWidgets {
             KUL_CHAT: (nodeType: NodeType) => any;
             KUL_CODE: (nodeType: NodeType) => any;
             KUL_CONTROL_PANEL: (nodeType: NodeType) => any;
+            KUL_COUNT_BAR_CHART: (nodeType: NodeType) => any;
             KUL_HISTOGRAM: (nodeType: NodeType) => any;
             KUL_HISTORY: (nodeType: NodeType) => any;
             KUL_JSON_INPUT: (nodeType: NodeType) => any;
@@ -95,6 +104,7 @@ export declare class LFWidgets {
             KUL_CHAT: (chat: HTMLKulChatElement) => import("../types/widgets.js").ChatWidgetOptions;
             KUL_CODE: (code: HTMLKulCodeElement) => import("../types/widgets.js").CodeWidgetOptions;
             KUL_CONTROL_PANEL: () => import("../types/widgets.js").ControlPanelWidgetOptions;
+            KUL_COUNT_BAR_CHART: (countBarChart: HTMLKulChartElement) => import("../types/widgets.js").CountBarChartWidgetOptions;
             KUL_HISTOGRAM: (histogram: HTMLKulChartElement) => import("../types/widgets.js").HistogramWidgetOptions;
             KUL_HISTORY: (history: HTMLKulListElement) => import("../types/widgets.js").HistoryWidgetOptions;
             KUL_JSON_INPUT: (content: HTMLTextAreaElement) => import("../types/widgets.js").JsonInputWidgetOptions;
@@ -103,6 +113,7 @@ export declare class LFWidgets {
             KUL_TREE: (tree: HTMLKulTreeElement) => import("../types/widgets.js").TreeWidgetOptions;
         };
         resizerHandlers: {
+            KUL_COUNT_BAR_CHART: (nodeType: NodeType) => void;
             KUL_HISTOGRAM: (nodeType: NodeType) => void;
         };
         setters: {
@@ -121,6 +132,11 @@ export declare class LFWidgets {
             };
             KUL_CONTROL_PANEL: () => {
                 KUL_CONTROL_PANEL: (nodeType: NodeType, name: CustomWidgetName) => {
+                    widget: Widget;
+                };
+            };
+            KUL_COUNT_BAR_CHART: () => {
+                KUL_COUNT_BAR_CHART: (nodeType: NodeType, name: CustomWidgetName) => {
                     widget: Widget;
                 };
             };

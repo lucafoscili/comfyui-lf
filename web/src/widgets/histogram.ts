@@ -11,7 +11,7 @@ let TIMEOUT: NodeJS.Timeout;
 export const histogramFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
-    histogram: `${BASE_CSS_CLASS}__histogram`,
+    widget: `${BASE_CSS_CLASS}__widget`,
   },
   options: (histogram: HTMLKulChartElement) => {
     return {
@@ -64,7 +64,7 @@ export const histogramFactory = {
     };
 
     content.classList.add(histogramFactory.cssClasses.content);
-    histogram.classList.add(histogramFactory.cssClasses.histogram);
+    histogram.classList.add(histogramFactory.cssClasses.widget);
     histogram.kulTypes = ['area'];
     histogram.addEventListener('kul-chart-event', readyCb);
 

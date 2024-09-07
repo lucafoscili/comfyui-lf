@@ -1,42 +1,42 @@
 import { LogSeverity } from '../types/manager.js';
 import { CustomWidgetName } from '../types/widgets.js';
 import { createDOMWidget, getLFManager, unescapeJson } from '../utils/common.js';
-const BASE_CSS_CLASS = 'lf-histogram';
-const TYPE = CustomWidgetName.histogram;
+const BASE_CSS_CLASS = 'lf-countbarchart';
+const TYPE = CustomWidgetName.countBarChart;
 let TIMEOUT;
-export const histogramFactory = {
+export const countBarChartFactory = {
     cssClasses: {
         content: BASE_CSS_CLASS,
         widget: `${BASE_CSS_CLASS}__widget`,
     },
-    options: (histogram) => {
+    options: (countbarchart) => {
         return {
             hideOnZoom: false,
             getComp() {
-                return histogram;
+                return countbarchart;
             },
             getValue() {
-                return histogram.kulData?.nodes ? JSON.stringify(histogram.kulData) : undefined;
+                return countbarchart.kulData?.nodes ? JSON.stringify(countbarchart.kulData) : undefined;
             },
             setProps(props) {
                 for (const key in props) {
                     if (Object.prototype.hasOwnProperty.call(props, key)) {
                         const prop = props[key];
-                        histogram[prop] = prop;
+                        countbarchart[prop] = prop;
                     }
                 }
             },
             setValue(value) {
-                histogram.kulData = value;
+                countbarchart.kulData = value;
                 try {
                     if (typeof value === 'string') {
-                        histogram.kulData = unescapeJson(value).parsedJson;
+                        countbarchart.kulData = unescapeJson(value).parsedJson;
                     }
                 }
                 catch (error) {
-                    getLFManager().log('Error when setting value!', { error, histogram }, LogSeverity.Error);
+                    getLFManager().log('Error when setting value!', { error, countbarchart }, LogSeverity.Error);
                     if (value === undefined || value === '') {
-                        histogram.kulData = undefined;
+                        countbarchart.kulData = undefined;
                     }
                 }
             },
@@ -45,40 +45,39 @@ export const histogramFactory = {
     render: (node, name) => {
         const wrapper = document.createElement('div');
         const content = document.createElement('div');
-        const histogram = document.createElement('kul-chart');
-        const options = histogramFactory.options(histogram);
+        const countbarchart = document.createElement('kul-chart');
+        const options = countBarChartFactory.options(countbarchart);
         const readyCb = ({ detail }) => {
-            getLFManager().log(`Histogram ready, resizing`, { detail });
+            getLFManager().log(`CountBarChart ready, resizing`, { detail });
             const { eventType } = detail;
             if (eventType === 'ready') {
-                histogram.kulAxis = 'Axis_0';
-                histogram.kulColors = ['red', 'green', 'blue'];
-                histogram.kulSeries = ['Series_0', 'Series_1', 'Series_2'];
-                histogram.removeEventListener('kul-chart-event', readyCb);
+                countbarchart.kulAxis = 'Axis_0';
+                countbarchart.kulSeries = ['Series_0'];
+                countbarchart.removeEventListener('kul-chart-event', readyCb);
             }
         };
-        content.classList.add(histogramFactory.cssClasses.content);
-        histogram.classList.add(histogramFactory.cssClasses.widget);
-        histogram.kulTypes = ['area'];
-        histogram.addEventListener('kul-chart-event', readyCb);
-        content.appendChild(histogram);
+        content.classList.add(countBarChartFactory.cssClasses.content);
+        countbarchart.classList.add(countBarChartFactory.cssClasses.widget);
+        countbarchart.kulTypes = ['bar'];
+        countbarchart.addEventListener('kul-chart-event', readyCb);
+        content.appendChild(countbarchart);
         wrapper.appendChild(content);
         return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };
     },
     resize: (node) => {
         try {
-            const histogram = node.widgets
+            const countbarchart = node.widgets
                 .find((w) => w.type === TYPE)
-                ?.element?.querySelector('kul-histogram');
-            if (histogram && !TIMEOUT) {
+                ?.element?.querySelector('kul-countbarchart');
+            if (countbarchart && !TIMEOUT) {
                 TIMEOUT = setTimeout(() => {
-                    histogram.refresh();
+                    countbarchart.refresh();
                     TIMEOUT = null;
                 }, 125);
             }
         }
         catch (error) {
-            getLFManager().log('Whoops! It seems there is no histogram. :V', { error }, LogSeverity.Error);
+            getLFManager().log('Whoops! It seems there is no countbarchart. :V', { error }, LogSeverity.Error);
         }
     },
 };

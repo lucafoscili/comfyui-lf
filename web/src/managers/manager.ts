@@ -17,6 +17,7 @@ import {
   ImageHistogramPayload,
   ImageResizeByEdgePayload,
   IntegerPayload,
+  KeywordCounterPayload,
   LoadImagesPayload,
   MultipleImageResizeForWebPayload,
   RandomBooleanPayload,
@@ -174,6 +175,17 @@ export class LFManager {
     );
     this.#APIS.event(EventName.integer, (e: CustomEvent<IntegerPayload>) => {
       nodes.eventHandlers.LF_Integer(e, widgets.adders.KUL_HISTORY);
+    });
+    /*-------------------------------------------------------------------*/
+    /*               I n i t   K e y w o r d C o u n t e r               */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_KeywordCounter(
+      widgets.setters.KUL_COUNT_BAR_CHART,
+      widgets.adders.KUL_COUNT_BAR_CHART,
+      widgets.resizerHandlers.KUL_COUNT_BAR_CHART,
+    );
+    this.#APIS.event(EventName.keywordCounter, (e: CustomEvent<KeywordCounterPayload>) => {
+      nodes.eventHandlers.LF_KeywordCounter(e, widgets.adders.KUL_COUNT_BAR_CHART);
     });
     /*-------------------------------------------------------------------*/
     /*                     I n i t   L L M C h a t                       */

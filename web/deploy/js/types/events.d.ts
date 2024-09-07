@@ -12,6 +12,7 @@ export declare enum EventName {
     imageHistogram = "lf-imagehistogram",
     imageResizeByEdge = "lf-imageresizebyedge",
     integer = "lf-integer",
+    keywordCounter = "lf-keywordcounter",
     loadImages = "lf-loadimages",
     multipleImageResizeForWeb = "lf-multipleimageresizeforweb",
     randomBoolean = "lf-randomboolean",
@@ -23,7 +24,7 @@ export declare enum EventName {
     urandomSeedGenerator = "lf-urandomseedgenerator",
     writeJson = "lf-writejson"
 }
-export type EventPayload = BlurImagesPayload | BooleanPayload | DisplayJSONPayload | FloatPayload | ImageHistogramPayload | ImageResizeByEdgePayload | IntegerPayload | LoadImagesPayload | MultipleImageResizeForWebPayload | RandomBooleanPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | UrandomSeedGeneratorPayload | WriteJSONPayload;
+export type EventPayload = BlurImagesPayload | BooleanPayload | DisplayJSONPayload | FloatPayload | ImageHistogramPayload | ImageResizeByEdgePayload | IntegerPayload | KeywordCounterPayload | LoadImagesPayload | MultipleImageResizeForWebPayload | RandomBooleanPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | UrandomSeedGeneratorPayload | WriteJSONPayload;
 export interface BlurImagesPayload extends BaseEventPayload {
     fileNames: Array<string>;
     images: Array<string>;
@@ -52,6 +53,9 @@ export interface ImageResizeByEdgePayload extends BaseEventPayload {
 export interface IntegerPayload extends BaseEventPayload {
     isHistoryEnabled: boolean;
     value: number;
+}
+export interface KeywordCounterPayload extends BaseEventPayload {
+    dataset: KulDataDataset;
 }
 export interface LoadImagesPayload extends BaseEventPayload {
     fileNames: Array<string>;

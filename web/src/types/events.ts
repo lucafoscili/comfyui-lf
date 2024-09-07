@@ -17,6 +17,7 @@ export enum EventName {
   imageHistogram = 'lf-imagehistogram',
   imageResizeByEdge = 'lf-imageresizebyedge',
   integer = 'lf-integer',
+  keywordCounter = 'lf-keywordcounter',
   loadImages = 'lf-loadimages',
   multipleImageResizeForWeb = 'lf-multipleimageresizeforweb',
   randomBoolean = 'lf-randomboolean',
@@ -36,6 +37,7 @@ export type EventPayload =
   | ImageHistogramPayload
   | ImageResizeByEdgePayload
   | IntegerPayload
+  | KeywordCounterPayload
   | LoadImagesPayload
   | MultipleImageResizeForWebPayload
   | RandomBooleanPayload
@@ -109,6 +111,14 @@ export interface ImageResizeByEdgePayload extends BaseEventPayload {
 export interface IntegerPayload extends BaseEventPayload {
   isHistoryEnabled: boolean;
   value: number;
+}
+
+/*-------------------------------------------------------------------*/
+/*       K e y w o r d C o u n t e r   D e c l a r a t i o n s       */
+/*-------------------------------------------------------------------*/
+
+export interface KeywordCounterPayload extends BaseEventPayload {
+  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/

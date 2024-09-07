@@ -10,6 +10,7 @@ import { treeFactory } from '../widgets/tree.js';
 import { chatFactory } from '../widgets/chat.js';
 import { historyFactory } from '../widgets/history.js';
 import { rollViewerFactory } from '../widgets/rollViewer.js';
+import { countBarChartFactory } from '../widgets/countBarChart.js';
 
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
@@ -50,6 +51,13 @@ export class LFWidgets {
       const widget = app.widgets[CustomWidgetName.controlPanel](
         nodeType,
         CustomWidgetName.controlPanel,
+      ).widget;
+      return widget;
+    },
+    [CustomWidgetName.countBarChart]: (nodeType: NodeType) => {
+      const widget = app.widgets[CustomWidgetName.countBarChart](
+        nodeType,
+        CustomWidgetName.countBarChart,
       ).widget;
       return widget;
     },
@@ -100,6 +108,8 @@ export class LFWidgets {
     [CustomWidgetName.chat]: (chat: HTMLKulChatElement) => chatFactory.options(chat),
     [CustomWidgetName.code]: (code: HTMLKulCodeElement) => codeFactory.options(code),
     [CustomWidgetName.controlPanel]: () => controlPanelFactory.options(),
+    [CustomWidgetName.countBarChart]: (countBarChart: HTMLKulChartElement) =>
+      countBarChartFactory.options(countBarChart),
     [CustomWidgetName.histogram]: (histogram: HTMLKulChartElement) =>
       histogramFactory.options(histogram),
     [CustomWidgetName.history]: (history: HTMLKulListElement) => historyFactory.options(history),
@@ -113,6 +123,7 @@ export class LFWidgets {
   };
 
   resizerHandler = {
+    [CustomWidgetName.countBarChart]: (nodeType: NodeType) => countBarChartFactory.resize(nodeType),
     [CustomWidgetName.histogram]: (nodeType: NodeType) => histogramFactory.resize(nodeType),
   };
 
@@ -142,6 +153,13 @@ export class LFWidgets {
       return {
         [CustomWidgetName.controlPanel]: (nodeType: NodeType, name: CustomWidgetName) => {
           return controlPanelFactory.render(nodeType, name);
+        },
+      };
+    },
+    [CustomWidgetName.countBarChart]: () => {
+      return {
+        [CustomWidgetName.countBarChart]: (nodeType: NodeType, name: CustomWidgetName) => {
+          return countBarChartFactory.render(nodeType, name);
         },
       };
     },
