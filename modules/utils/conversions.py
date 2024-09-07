@@ -176,6 +176,60 @@ def tensor_to_base64(tensors):
     else:
         return convert_single_tensor(tensors)
 
+def tensor_to_bytes(tensor, format):
+    """
+    Convert the tensor to image bytes (JPEG or PNG).
+
+    Args:
+        tensor (torch.Tensor): The input tensor representing the image.
+            It should be a 4D tensor with shape [B, H, W, C] or a 3D tensor with shape [H, W, C].
+        format (string): The format of the image.
+    """
+    if isinstance(tensor, torch.Tensor):
+        tensor = tensor.detach().cpu().numpy()
+    
+    if len(tensor.shape) == 4 and tensor.shape[0] == 1:
+        tensor = tensor.squeeze(0)
+    
+    tensor = np.clip(tensor * 255, 0, 255).astype(np.uint8)
+    
+    img = Image.fromarray(tensor)
+    image_bytes = io.BytesIO()
+    img.save(image_bytes, format)
+    return image_bytes.getvalue()
+
+def tensor_to_numpy(tensor):
+    """
+    Convert a PyTorch tensor to a NumPy array.
+
+    Args:
+        tensor (torch.Tensor): The input tensor representing the image.
+            It should be a 4D tensor with shape [B, H, W, C] or a 3D tensor with shape [H, W, C].
+
+    Returns:
+        numpy.ndarray: The converted NumPy array.
+
+    Raises:
+        Exception: If there's an error during the conversion process.
+
+    Notes:
+        - If the input tensor is 4D, it will use the first image in the batch.
+        - The tensor values are scaled from [0, 1] to [0, 255] and converted to uint8.
+    """
+    try:
+        # Ensure that the tensor is 4D [B, H, W, C]
+        if tensor.dim() == 4:
+            tensor = tensor[0]  # Use the first image in the batch
+
+        # Convert the tensor from [H, W, C] format
+        numpy_array = tensor.cpu().numpy()  # Convert to a NumPy array
+        numpy_array = (numpy_array * 255).astype("uint8")  # Convert to uint8
+
+        return numpy_array
+    except Exception as e:
+        print(f"Error converting tensor to NumPy array: {e}")
+        raise
+    
 def tensor_to_pil(tensor):
     """
     Convert a PyTorch tensor to a PIL Image.
