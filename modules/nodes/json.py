@@ -1,6 +1,5 @@
 import json
 import random
-import requests
 
 from server import PromptServer
 
@@ -114,29 +113,6 @@ class LF_GetValueFromJSON:
 
         return (json_output, string_output, number_output, int_output, float_output, boolean_output)
 
-class LF_LoadLocalJSON:
-    @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "url": ("STRING", {"default": "", "multiline": True, "tooltip": "The local URL where the JSON file is stored (i.e.: file://C:/myjson.json)."}),
-            },
-        }
-
-    CATEGORY = category
-    FUNCTION = "on_exec"
-    RETURN_TYPES = ("JSON",)
-
-    def on_exec(self, url: str):
-        if not url.startswith("file://"):
-            url = "file://" + url
-        
-        file_path = requests.utils.unquote(url[7:])
-        with open(file_path, 'r') as file:
-            data = json.load(file)
-
-        return (data,)
-
 class LF_SetValueInJSON:
     @classmethod
     def INPUT_TYPES(cls):
@@ -240,7 +216,6 @@ NODE_CLASS_MAPPINGS = {
     "LF_DisplayJSON": LF_DisplayJSON,
     "LF_GetRandomKeyFromJSON": LF_GetRandomKeyFromJSON,
     "LF_GetValueFromJSON": LF_GetValueFromJSON,
-    "LF_LoadLocalJSON": LF_LoadLocalJSON,
     "LF_SetValueInJSON": LF_SetValueInJSON,
     "LF_StringToJSON": LF_StringToJSON,
     "LF_WriteJSON": LF_WriteJSON
@@ -249,7 +224,6 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_DisplayJSON": "Display JSON",
     "LF_GetRandomKeyFromJSON": "Get Random Key From JSON",
     "LF_GetValueFromJSON": "Get Value from JSON",
-    "LF_LoadLocalJSON": "Load local JSON",
     "LF_SetValueInJSON" : "Set/Create a Value in a JSON Object",
     "LF_StringToJSON": "Convert string to JSON",
     "LF_WriteJSON": "Write JSON"
