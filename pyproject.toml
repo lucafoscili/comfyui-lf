@@ -3,7 +3,7 @@ name = "comfyui-lf"
 description = "Custom nodes with a touch of extra UX, including: history for primitives, JSON manipulation, logic switches with visual feedback, LLM chat... and more!"
 version = "3.1.6"
 license = {file = "LICENSE"}
-dependencies = ["numpy", "openai==1.12.0", "Pillow", "torch", "requests"]
+dependencies = ["numpy", "openai==1.12.0", "piexif", "Pillow", "torch", "requests"]
 
 [project.urls]
 Repository = "https://github.com/lucafoscili/comfyui-lf"
