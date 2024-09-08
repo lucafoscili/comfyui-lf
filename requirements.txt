@@ -1,5 +1,6 @@
 numpy
 openai==1.12.0
+piexif
 Pillow
 torch
 requests

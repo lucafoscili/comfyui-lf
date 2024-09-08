@@ -118,7 +118,7 @@ Real-time chat with an LLM model served through Koboldcpp (<http://localhost:500
 It's possible to select the last messages as an output, sending them to the next node.
 ![LLMChat](https://github.com/lucafoscili/comfyui-lf/blob/69181cfe1c3b2062a40035e8b59cece8e8688483/docs/images/LLMChat.png "Example of LLM chat")
 
-### Loader nodes (`loaders.py`)
+### IO Operations nodes (`io.py`)
 
 #### LoadImages
 
@@ -128,6 +128,10 @@ Node used to load multiple images from the disk given a directory. Optionally, i
 #### LoadMetadata (draft)
 
 Loads the metadata attached to PNGs/JPGs from a directory.
+
+#### SaveImageForCivitAI (draft)
+
+Saves images with [CivitAI](https://civitai.com) compatible metadata.
 
 ### Logic nodes (`logic.py`)
 

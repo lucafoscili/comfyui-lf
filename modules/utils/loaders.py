@@ -1,3 +1,4 @@
+import hashlib
 import json
 import numpy as np
 import piexif
@@ -5,6 +6,39 @@ import torch
 
 from PIL.ExifTags import TAGS
 from PIL import Image
+
+
+SAMPLER_MAP = {
+    "euler": "Euler",
+    "euler_cfg_pp": "Euler a",
+    "euler_ancestral": "Euler a",
+    "heun": "Heun",
+    "dpm_2": "DPM2",
+    "dpm_2_ancestral": "DPM2 a",
+    "lms": "LMS",
+    "dpmpp_2s_ancestral": "DPM++ 2S a",
+    "dpmpp_sde": "DPM++ SDE",
+    "dpmpp_2m": "DPM++ 2M",
+    "dpmpp_2m_sde": "DPM++ 2M SDE",
+    "dpmpp_3m_sde": "DPM++ 3M SDE",
+    "ddpm": "DDPM",
+    "dpm_fast": "DPM fast",
+    "dpm_adaptive": "DPM adaptive",
+    "ipndm": "IPNDM",
+    "ipndm_v": "IPNDM V",
+    "deis": "DEIS",
+    "restart": "Restart"
+}
+
+SCHEDULER_MAP = {
+    "normal": "Normal",
+    "karras": "Karras",
+    "exponential": "Exponential",
+    "sgm_uniform": "SGM Uniform",
+    "simple": "Simple",
+    "ddim_uniform": "DDIM",
+    "beta": "Beta"
+}
 
 def create_dummy_image_tensor():
     """
@@ -65,7 +99,7 @@ def extract_jpeg_metadata(pil_image, file_name):
                 except TypeError:
                     del exif_json[k]
         
-        return {"format": "JPEG", "metadata": exif_json}
+        return  exif_json
     
     except Exception as e:
         return {"error": f"An unexpected error occurred while extracting EXIF data from {file_name}: {str(e)}"}
@@ -75,13 +109,22 @@ def extract_png_metadata(pil_image):
     Extract metadata from PNG text chunks.
     """
     png_info = pil_image.info
-    metadata = {"format": "PNG", "metadata": {}}
+    metadata = {}
     
     for key, value in png_info.items():
         if isinstance(value, str):
-            metadata["metadata"][key] = value
+            metadata[key] = value
     
     return metadata
+
+def get_sha256(file_path):
+    sha256_value = hashlib.sha256()
+
+    with open(file_path, "rb") as file:
+        for byte_block in iter(lambda: file.read(4096), b""):
+            sha256_value.update(byte_block)
+
+    return sha256_value.hexdigest()
 
 def resize_image(img, max_size=1024):
     """
