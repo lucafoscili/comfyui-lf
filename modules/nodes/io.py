@@ -258,7 +258,6 @@ class LF_SaveImageForCivitAI:
             filepath = f"{filepath}_{timestamp}"
 
         batch_size = images.shape[0]
-        output_images = []
 
         positive_prompt = positive_prompt + lora_tags
 
@@ -307,19 +306,19 @@ class LF_SaveImageForCivitAI:
                 piexif.insert(exif_bytes, output_file)
             else:
                 img.save(output_file, format=extension.upper(), quality=quality)
-            
-            output_images.append(output_file)
 
-        return { "ui": { "images": output_images } }
+        return ()
     
 NODE_CLASS_MAPPINGS = {
     "LF_LoadImages": LF_LoadImages,
+    "LF_LoadLocalJSON": LF_LoadLocalJSON,
     "LF_LoadMetadata": LF_LoadMetadata,
     "LF_SaveImageForCivitAI": LF_SaveImageForCivitAI
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_LoadImages": "Load images from disk",
+    "LF_LoadLocalJSON": "Load JSON from disk",
     "LF_LoadMetadata": "Load metadata from image",
     "LF_SaveImageForCivitAI": "Save image with CivitAI-compatible metadata"
 }
