@@ -2,8 +2,8 @@ import io
 import base64
 import folder_paths
 import json
-import os
 import numpy as np
+import os
 import piexif
 import requests
 import torch
@@ -15,7 +15,7 @@ from PIL import Image
 from PIL.PngImagePlugin import PngInfo
 from server import PromptServer
 
-from ..utils.loaders import *
+from ..utils.io import *
 
 category = "✨ LF Nodes/IO Operations"
  
@@ -192,17 +192,9 @@ class LF_SaveImageForCivitAI:
                 "add_timestamp": ("BOOLEAN", {"default": True, "tooltip": "Sets the execution time's timestamp as a suffix of the file name."}),
                 "extension": (['png', 'jpeg', 'webp'], {"tooltip": "Supported file formats."}),
                 "quality": ("INT", {"default": 100, "min": 1, "max": 100, "tooltip": "Quality of saved images in jpeg or webp format."}),
-                "checkpoint": (folder_paths.get_filename_list("checkpoints"), {"tooltip": "Checkpoint used to generate the image."}),
-                "lora_tags": ("STRING", {"default": '', "multiline": True, "tooltip": "Tags of the LoRAs used to generate the image."}),
-                "sampler": (KSampler.SAMPLERS, {"tooltip": "Sampler used to generate the image."}),
-                "scheduler": (KSampler.SCHEDULERS, {"tooltip": "Scheduler used to generate the image."}),
-                "positive_prompt": ("STRING", {"default": '', "multiline": True, "tooltip": "Prompt to generate the image."}),
-                "negative_prompt": ("STRING", {"default": '', "multiline": True, "tooltip": "Negative prompt used to generate the image."}),
-                "steps": ("INT", {"default": 30, "min": 1, "max": 10000, "tooltip": "Steps used to generate the image."}),
-                "cfg": ("FLOAT", {"default": 7.0, "min": 0.0, "max": 30.0, "tooltip": "CFG used to generate the image."}),
-                "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff, "tooltip": "Seed used to generate the image."}),
-                "width": ("INT", {"default": 512, "min": 1, "step": 8, "tooltip": "Width of the image."}),
-                "height": ("INT", {"default": 512, "min": 1, "step": 8, "tooltip": "Height of the image."}),
+            },
+            "optional": {
+                "civitai_metadata": ("STRING", {"defaultInput": True, "tooltip": "String containing CivitAI compatible metadata (created by the node LF_CivitAIMetadataSetup)."}),
             },
             "hidden": {
                 "extra_pnginfo": "EXTRA_PNGINFO",
@@ -216,65 +208,20 @@ class LF_SaveImageForCivitAI:
     OUTPUT_NODE = True
     RETURN_TYPES = ()
 
-    def on_exec(self, extra_pnginfo, node_id, prompt, images, filepath, add_timestamp, extension, quality, checkpoint, lora_tags, sampler, scheduler, positive_prompt, negative_prompt, steps, cfg, seed, width, height):
+    def on_exec(self, extra_pnginfo, node_id, prompt, images, filepath, add_timestamp, extension, quality, civitai_metadata):
+        
         output_dir = folder_paths.output_directory
+        batch_size = images.shape[0]
 
-        # Get checkpoint details (name and hash)
-        checkpoint_path = folder_paths.get_full_path("checkpoints", checkpoint)
-        try:
-            checkpoint_hash = get_sha256(checkpoint_path)
-        except Exception as e:
-            checkpoint_hash = "Unknown"
-            print(f"Error calculating hash for checkpoint: {e}")
-
-        checkpoint_name = os.path.basename(checkpoint_path)
-
-        # Parse and process LoRA tags
-        lora_hashes = []
-        if lora_tags:
-            lora_entries = [tag.strip('<>').split(':') for tag in lora_tags.split(',')]
-            for lora_entry in lora_entries:
-                if len(lora_entry) >= 2:
-                    lora_name = lora_entry[1].strip()
-                    lora_file_path = folder_paths.get_full_path("loras", lora_name)
-                    try:
-                        lora_hash = get_sha256(lora_file_path)
-                        lora_hashes.append(f"{lora_name}:{lora_hash}")
-                    except Exception as e:
-                        print(f"Error calculating hash for LoRA {lora_name}: {e}")
-                        lora_hashes.append(f"{lora_name}:Unknown")
-
-        # Convert lists into formatted LoRA hashes string
-        lora_hashes_str = ", ".join(lora_hashes) if lora_hashes else "None"
-
-        # Map sampler and scheduler names to A1111 equivalents
-        sampler_a1111 = SAMPLER_MAP.get(sampler, sampler)
-        scheduler_a1111 = SCHEDULER_MAP.get(scheduler, scheduler)
-
-        # Add timestamp to filepath if requested
         if add_timestamp:
             ts = datetime.now()
             timestamp = ts.strftime("%Y%m%d-%H%M%S")
             filepath = f"{filepath}_{timestamp}"
 
-        batch_size = images.shape[0]
-
-        positive_prompt = positive_prompt + lora_tags
-
-        # Metadata string
-        metadata_string = (
-            f"{positive_prompt}\n"
-            f"Negative prompt: {negative_prompt}\n"
-            f"Steps: {steps}, Sampler: {sampler_a1111}, Schedule type: {scheduler_a1111}, CFG scale: {cfg}, Seed: {seed}, Size: {width}x{height}, "
-            f"Model hash: {checkpoint_hash}, Model: {checkpoint_name}, Lora hashes: \"{lora_hashes_str}\", Version: ComfyUI.LFNodes"
-        )
-
-        # Iterate through the image batch and save each image with metadata
         for i in range(batch_size):
             img_array = images[i].cpu().numpy()
             img = Image.fromarray(np.clip(img_array * 255, 0, 255).astype(np.uint8))
 
-            # Ensure correct directory structure
             directory, filename = os.path.split(filepath)
             directory = os.path.join(output_dir, directory)
             if not os.path.exists(directory):
@@ -283,10 +230,10 @@ class LF_SaveImageForCivitAI:
             file_name = f"{filename}_{i}.{extension}"
             output_file = os.path.join(directory, file_name)
             
-            # Save images with appropriate format and metadata
             if extension == 'png':
                 png_info = PngInfo()
-                png_info.add_text("parameters", metadata_string)
+                if civitai_metadata:
+                    png_info.add_text("parameters", civitai_metadata)
 
                 if not args.disable_metadata:
                     if prompt is not None:
@@ -296,10 +243,10 @@ class LF_SaveImageForCivitAI:
                             png_info.add_text(x, json.dumps(extra_pnginfo[x]))                
                     img.save(output_file, format="PNG", pnginfo=png_info, optimize=True)
                     
-            elif extension == 'jpeg':
+            elif extension == 'jpeg' and civitai_metadata:
                 exif_bytes = piexif.dump({
                     "Exif": {
-                        piexif.ExifIFD.UserComment: piexif.helper.UserComment.dump(metadata_string, encoding="unicode")
+                        piexif.ExifIFD.UserComment: piexif.helper.UserComment.dump(civitai_metadata, encoding="unicode")
                     }
                 })
                 img.save(output_file, format="JPEG", quality=quality)
