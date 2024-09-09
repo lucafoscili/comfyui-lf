@@ -124,7 +124,7 @@ def get_sha256(file_path):
         for byte_block in iter(lambda: file.read(4096), b""):
             sha256_value.update(byte_block)
 
-    return sha256_value.hexdigest()
+    return sha256_value.hexdigest()[:10]
 
 def resize_image(img, max_size=1024):
     """
