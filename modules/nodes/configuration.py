@@ -36,12 +36,14 @@ class LF_CivitAIMetadataSetup:
     
     CATEGORY = category
     FUNCTION = "on_exec"
-    RETURN_NAMES = ("metadata_string", "checkpoint", "vae", "sampler", "scheduler", "embeddings", "lora_tags",
-                     "pos_prompt", "neg_prompt", "steps", "denoising", "clip_skip", "cfg", "seed", 
-                     "width", "height", "hires_upscaler", "hires_upscale")
-    RETURN_TYPES = ("STRING", "COMBO", "COMBO", "COMBO", "COMBO", "STRING", "STRING",
-                     "STRING", "STRING", "INT", "FLOAT", "INT", "FLOAT", "INT",
-                     "INT", "INT", "FLOAT", "COMBO")
+    RETURN_NAMES = ("metadata_string", "checkpoint", "vae", 
+                    "sampler", "scheduler", "embeddings", "lora_tags",
+                    "full_pos_prompt", "neg_prompt", "steps", "denoising", "clip_skip", "cfg", "seed", 
+                    "width", "height", "hires_upscaler", "hires_upscale")
+    RETURN_TYPES = ("STRING", folder_paths.get_filename_list("checkpoints"), folder_paths.get_filename_list("vae"),
+                    KSampler.SAMPLERS, KSampler.SCHEDULERS, "STRING", "STRING",
+                    "STRING", "STRING", "INT", "FLOAT", "INT", "FLOAT", "INT",
+                    "INT", "INT", folder_paths.get_filename_list("upscale_models"), "FLOAT")
 
     def on_exec(self, node_id, checkpoint, vae, sampler, scheduler, positive_prompt, negative_prompt,
                 steps, denoising, clip_skip, cfg, seed, width, height, hires_upscale, hires_upscaler, embeddings:str, lora_tags):
@@ -78,16 +80,8 @@ class LF_CivitAIMetadataSetup:
         sampler_a1111 = SAMPLER_MAP.get(sampler, sampler)
         scheduler_a1111 = SCHEDULER_MAP.get(scheduler, scheduler)
 
-        positive_prompt = clean_prompt(positive_prompt + " " + lora_tags)
-        negative_prompt = clean_prompt(negative_prompt)
-        lora_hashes_str = clean_prompt(lora_hashes_str)
-        emb_hashes_str = clean_prompt(emb_hashes_str)
-        upscaler_name = clean_prompt(upscaler_name)
-        checkpoint_name = clean_prompt(checkpoint_name)
-        vae_name = clean_prompt(vae_name)
-
         metadata_string = (
-            f"{positive_prompt}\n"
+            f"{positive_prompt}, {embeddings.replace('embedding:','')}, {lora_tags}\n"
             f"Negative prompt: {negative_prompt}\n"
             f"Steps: {steps}, Sampler: {sampler_a1111}, Schedule type: {scheduler_a1111}, CFG scale: {cfg}, Seed: {seed}, Size: {width}x{height}, "
             f"Denoising strength: {denoising}, Clip skip: {abs(clip_skip)},  "
@@ -103,8 +97,12 @@ class LF_CivitAIMetadataSetup:
             "metadataString": metadata_string, 
         })
 
-        return (metadata_string, checkpoint, vae, sampler, scheduler, embeddings, lora_tags, 
-                positive_prompt, negative_prompt, steps, denoising, clip_skip, cfg, seed, width, height, hires_upscaler, hires_upscale)
+        output_prompt = positive_prompt + ", " + embeddings if embeddings else positive_prompt
+
+        return (metadata_string, checkpoint, vae, 
+                sampler, scheduler, embeddings, lora_tags, 
+                output_prompt, negative_prompt, steps, denoising, clip_skip, cfg, seed,
+                width, height, hires_upscaler, hires_upscale)
     
 class LF_ControlPanel:
     @classmethod
