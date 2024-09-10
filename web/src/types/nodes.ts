@@ -7,6 +7,7 @@ import { CustomWidgetName } from './widgets';
 export enum NodeName {
   blurImages = 'LF_BlurImages',
   boolean = 'LF_Boolean',
+  civitaiMetadataSetup = 'LF_CivitAIMetadataSetup',
   controlPanel = 'LF_ControlPanel',
   displayJson = 'LF_DisplayJSON',
   float = 'LF_Float',
@@ -18,6 +19,7 @@ export enum NodeName {
   multipleImageResizeForWeb = 'LF_MultipleImageResizeForWeb',
   imageResizeByEdge = 'LF_ImageResizeByEdge',
   randomBoolean = 'LF_RandomBoolean',
+  saveImageForCivitai = 'LF_SaveImageForCivitAI',
   string = 'LF_String',
   switchImage = 'LF_SwitchImage',
   switchInteger = 'LF_SwitchInteger',

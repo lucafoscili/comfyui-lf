@@ -3,16 +3,16 @@ import { LogSeverity } from '../types/manager.js';
 import { NodeName } from '../types/nodes.js';
 import { CustomWidgetName, } from '../types/widgets.js';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common.js';
-const NAME = NodeName.displayJson;
-export const displayJsonFactory = {
+const NAME = NodeName.saveImageForCivitai;
+export const saveImageForCivitaiFactory = {
     eventHandler: (event, addW) => {
-        const name = EventName.displayJson;
+        const name = EventName.saveImageForCivitAI;
         getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
         const payload = event.detail;
         const node = getApiRoutes().getNodeById(payload.id);
         if (node) {
-            const widget = getCustomWidget(node, CustomWidgetName.code, addW);
-            widget.options.setValue(event.detail.json);
+            const widget = getCustomWidget(node, CustomWidgetName.imagePreview, addW);
+            widget.options.setValue(payload);
             getApiRoutes().redraw();
         }
     },
@@ -25,7 +25,7 @@ export const displayJsonFactory = {
                     nodeType.prototype.onNodeCreated = function () {
                         const r = onNodeCreated?.apply(this, arguments);
                         const node = this;
-                        addW(node, CustomWidgetName.code);
+                        addW(node, CustomWidgetName.imagePreview);
                         return r;
                     };
                 }

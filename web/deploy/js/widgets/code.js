@@ -1,4 +1,5 @@
 import { LogSeverity } from '../types/manager.js';
+import { NodeName } from '../types/nodes.js';
 import { CustomWidgetName } from '../types/widgets.js';
 import { createDOMWidget, getLFManager, unescapeJson } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-code';
@@ -60,8 +61,16 @@ export const codeFactory = {
         const options = codeFactory.options(code);
         content.classList.add(codeFactory.cssClasses.content);
         code.classList.add(codeFactory.cssClasses.code);
-        code.kulLanguage = 'json';
-        code.kulValue = EMPTY;
+        switch (node.comfyClass) {
+            case NodeName.civitaiMetadataSetup:
+                code.kulLanguage = 'text';
+                code.kulStyle = '.language-text { white-space: break-spaces; }';
+                break;
+            case NodeName.displayJson:
+                code.kulLanguage = 'json';
+                code.kulValue = EMPTY;
+                break;
+        }
         content.appendChild(code);
         wrapper.appendChild(content);
         return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };

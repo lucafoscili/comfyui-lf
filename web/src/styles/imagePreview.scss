@@ -13,9 +13,21 @@
   }
 
   &__grid {
-    align-items: center;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    & {
+      align-items: center;
+      display: grid;
+      grid-template-columns: var(--lf_grid_template_columns);
+    }
+
+    &--waterfall {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__switch-view {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
   }
 
   &__grid-cell {

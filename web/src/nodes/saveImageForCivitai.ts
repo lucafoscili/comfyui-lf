@@ -1,29 +1,29 @@
-import { DisplayJSONPayload, EventName } from '../types/events';
+import { EventName, SaveImageForCivitAIPayload } from '../types/events';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import {
   CustomWidgetName,
   type BaseWidgetCallback,
-  type CodeWidgetsSetter,
+  type ImagePreviewWidgetsSetter,
 } from '../types/widgets';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 
-const NAME = NodeName.displayJson;
+const NAME = NodeName.saveImageForCivitai;
 
-export const displayJsonFactory = {
-  eventHandler: (event: CustomEvent<DisplayJSONPayload>, addW: BaseWidgetCallback) => {
-    const name = EventName.displayJson;
+export const saveImageForCivitaiFactory = {
+  eventHandler: (event: CustomEvent<SaveImageForCivitAIPayload>, addW: BaseWidgetCallback) => {
+    const name = EventName.saveImageForCivitAI;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
 
     const payload = event.detail;
     const node = getApiRoutes().getNodeById(payload.id);
     if (node) {
-      const widget = getCustomWidget(node, CustomWidgetName.code, addW);
-      widget.options.setValue(event.detail.json);
+      const widget = getCustomWidget(node, CustomWidgetName.imagePreview, addW);
+      widget.options.setValue(payload);
       getApiRoutes().redraw();
     }
   },
-  register: (setW: CodeWidgetsSetter, addW: BaseWidgetCallback) => {
+  register: (setW: ImagePreviewWidgetsSetter, addW: BaseWidgetCallback) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {
@@ -32,7 +32,7 @@ export const displayJsonFactory = {
           nodeType.prototype.onNodeCreated = function () {
             const r = onNodeCreated?.apply(this, arguments);
             const node = this;
-            addW(node, CustomWidgetName.code);
+            addW(node, CustomWidgetName.imagePreview);
             return r;
           };
         }

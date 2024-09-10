@@ -2,6 +2,7 @@ export var EventName;
 (function (EventName) {
     EventName["blurImages"] = "lf-blurimages";
     EventName["boolean"] = "lf-boolean";
+    EventName["civitAIMetadataSetup"] = "lf-civitaimetadatasetup";
     EventName["controlPanel"] = "lf-controlpanel";
     EventName["displayJson"] = "lf-displayjson";
     EventName["float"] = "lf-float";
@@ -12,6 +13,7 @@ export var EventName;
     EventName["loadImages"] = "lf-loadimages";
     EventName["multipleImageResizeForWeb"] = "lf-multipleimageresizeforweb";
     EventName["randomBoolean"] = "lf-randomboolean";
+    EventName["saveImageForCivitAI"] = "lf-saveimageforcivitai";
     EventName["string"] = "lf-string";
     EventName["switchImage"] = "lf-switchimage";
     EventName["switchInteger"] = "lf-switchinteger";

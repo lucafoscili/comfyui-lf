@@ -20,6 +20,8 @@ import { booleanFactory } from '../nodes/boolean';
 import { uRandomSeedGeneratorFactory } from '../nodes/urandomSeedGenerator';
 import { randomBooleanFactory } from '../nodes/randomBoolean';
 import { keywordCounterFactory } from '../nodes/keywordCounter';
+import { saveImageForCivitaiFactory } from '../nodes/saveImageForCivitai';
+import { civitaiMetadataSetupFactory } from '../nodes/civitaiMetadataSetup';
 
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
@@ -29,6 +31,7 @@ export class LFNodes {
   eventHandler = {
     [NodeName.blurImages]: blurImagesFactory.eventHandler,
     [NodeName.boolean]: booleanFactory.eventHandler,
+    [NodeName.civitaiMetadataSetup]: civitaiMetadataSetupFactory.eventHandler,
     [NodeName.displayJson]: displayJsonFactory.eventHandler,
     [NodeName.float]: floatFactory.eventHandler,
     [NodeName.imageHistogram]: imageHistogramFactory.eventHandler,
@@ -38,6 +41,7 @@ export class LFNodes {
     [NodeName.loadImages]: loadImagesFactory.eventHandler,
     [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.eventHandler,
     [NodeName.randomBoolean]: randomBooleanFactory.eventHandler,
+    [NodeName.saveImageForCivitai]: saveImageForCivitaiFactory.eventHandler,
     [NodeName.string]: stringFactory.eventHandler,
     [NodeName.switchImage]: switchImageFactory.eventHandler,
     [NodeName.switchInteger]: switchIntegerFactory.eventHandler,
@@ -50,6 +54,7 @@ export class LFNodes {
   register = {
     [NodeName.blurImages]: blurImagesFactory.register,
     [NodeName.boolean]: booleanFactory.register,
+    [NodeName.civitaiMetadataSetup]: civitaiMetadataSetupFactory.register,
     [NodeName.controlPanel]: controlPanelFactory.register,
     [NodeName.displayJson]: displayJsonFactory.register,
     [NodeName.float]: floatFactory.register,
@@ -61,6 +66,7 @@ export class LFNodes {
     [NodeName.loadImages]: loadImagesFactory.register,
     [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.register,
     [NodeName.randomBoolean]: randomBooleanFactory.register,
+    [NodeName.saveImageForCivitai]: saveImageForCivitaiFactory.register,
     [NodeName.string]: stringFactory.register,
     [NodeName.switchImage]: switchImageFactory.register,
     [NodeName.switchInteger]: switchIntegerFactory.register,

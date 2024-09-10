@@ -4,10 +4,12 @@ export declare const imagePreviewFactory: {
         content: string;
         doge: string;
         grid: string;
+        gridWaterfall: string;
         gridCell: string;
         gridCellSelectable: string;
         gridCellSelected: string;
         image: string;
+        switchView: string;
     };
     options: (domWidget: HTMLDivElement, isSelectable: boolean) => ImagePreviewWidgetOptions;
     render: (node: NodeType, name: CustomWidgetName) => {

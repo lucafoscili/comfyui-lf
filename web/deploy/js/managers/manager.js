@@ -76,6 +76,13 @@ export class LFManager {
             nodes.eventHandlers.LF_Boolean(e, widgets.adders.KUL_HISTORY);
         });
         /*-------------------------------------------------------------------*/
+        /*         I n i t   C i v i t A I M e t a d a t a S e t u p         */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_CivitAIMetadataSetup(widgets.setters.KUL_CODE, widgets.adders.KUL_CODE);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.civitAIMetadataSetup, (e) => {
+            nodes.eventHandlers.LF_CivitAIMetadataSetup(e, widgets.adders.KUL_CODE);
+        });
+        /*-------------------------------------------------------------------*/
         /*               I n i t   C o n t r o l   P a n e l                 */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_ControlPanel(widgets.setters.KUL_CONTROL_PANEL, widgets.adders.KUL_CONTROL_PANEL);
@@ -154,6 +161,13 @@ export class LFManager {
             nodes.eventHandlers.LF_RandomBoolean(e, widgets.adders.KUL_ROLL_VIEWER);
         });
         /*-------------------------------------------------------------------*/
+        /*          I n i t   S a v e I m a g e F o r C i v i t A I          */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_SaveImageForCivitAI(widgets.setters.KUL_IMAGE_PREVIEW_B64, widgets.adders.KUL_IMAGE_PREVIEW_B64);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.saveImageForCivitAI, (e) => {
+            nodes.eventHandlers.LF_SaveImageForCivitAI(e, widgets.adders.KUL_IMAGE_PREVIEW_B64);
+        });
+        /*-------------------------------------------------------------------*/
         /*                 I n i t   S w i t c h   I m a g e                 */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_SwitchImage(widgets.setters.KUL_BOOLEAN_VIEWER, widgets.adders.KUL_BOOLEAN_VIEWER);
@@ -189,7 +203,7 @@ export class LFManager {
             nodes.eventHandlers.LF_UrandomSeedGenerator(e, widgets.adders.KUL_TREE);
         });
         /*-------------------------------------------------------------------*/
-        /*                       W r i t e   J S O N                         */
+        /*                    I n i t   W r i t e   J S O N                  */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_WriteJSON(widgets.setters.KUL_JSON_INPUT);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.writeJson, (e) => {

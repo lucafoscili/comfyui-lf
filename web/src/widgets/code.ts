@@ -1,4 +1,5 @@
 import { LogSeverity } from '../types/manager';
+import { NodeName } from '../types/nodes';
 import { CodeWidgetOptions, CustomWidgetName } from '../types/widgets';
 import { createDOMWidget, getLFManager, unescapeJson } from '../utils/common';
 
@@ -62,8 +63,17 @@ export const codeFactory = {
 
     content.classList.add(codeFactory.cssClasses.content);
     code.classList.add(codeFactory.cssClasses.code);
-    code.kulLanguage = 'json';
-    code.kulValue = EMPTY;
+
+    switch (node.comfyClass) {
+      case NodeName.civitaiMetadataSetup:
+        code.kulLanguage = 'text';
+        code.kulStyle = '.language-text { white-space: break-spaces; }';
+        break;
+      case NodeName.displayJson:
+        code.kulLanguage = 'json';
+        code.kulValue = EMPTY;
+        break;
+    }
 
     content.appendChild(code);
     wrapper.appendChild(content);

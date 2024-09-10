@@ -5,6 +5,7 @@ export var NodeName;
 (function (NodeName) {
     NodeName["blurImages"] = "LF_BlurImages";
     NodeName["boolean"] = "LF_Boolean";
+    NodeName["civitaiMetadataSetup"] = "LF_CivitAIMetadataSetup";
     NodeName["controlPanel"] = "LF_ControlPanel";
     NodeName["displayJson"] = "LF_DisplayJSON";
     NodeName["float"] = "LF_Float";
@@ -16,6 +17,7 @@ export var NodeName;
     NodeName["multipleImageResizeForWeb"] = "LF_MultipleImageResizeForWeb";
     NodeName["imageResizeByEdge"] = "LF_ImageResizeByEdge";
     NodeName["randomBoolean"] = "LF_RandomBoolean";
+    NodeName["saveImageForCivitai"] = "LF_SaveImageForCivitAI";
     NodeName["string"] = "LF_String";
     NodeName["switchImage"] = "LF_SwitchImage";
     NodeName["switchInteger"] = "LF_SwitchInteger";

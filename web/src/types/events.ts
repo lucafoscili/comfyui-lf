@@ -11,6 +11,7 @@ export type EventCallback<T extends EventPayload> = (e: CustomEvent<T>) => void;
 export enum EventName {
   blurImages = 'lf-blurimages',
   boolean = 'lf-boolean',
+  civitAIMetadataSetup = 'lf-civitaimetadatasetup',
   controlPanel = 'lf-controlpanel',
   displayJson = 'lf-displayjson',
   float = 'lf-float',
@@ -21,6 +22,7 @@ export enum EventName {
   loadImages = 'lf-loadimages',
   multipleImageResizeForWeb = 'lf-multipleimageresizeforweb',
   randomBoolean = 'lf-randomboolean',
+  saveImageForCivitAI = 'lf-saveimageforcivitai',
   string = 'lf-string',
   switchImage = 'lf-switchimage',
   switchInteger = 'lf-switchinteger',
@@ -32,6 +34,7 @@ export enum EventName {
 export type EventPayload =
   | BlurImagesPayload
   | BooleanPayload
+  | CivitAIMetadataSetupPayload
   | DisplayJSONPayload
   | FloatPayload
   | ImageHistogramPayload
@@ -41,6 +44,7 @@ export type EventPayload =
   | LoadImagesPayload
   | MultipleImageResizeForWebPayload
   | RandomBooleanPayload
+  | SaveImageForCivitAIPayload
   | StringPayload
   | SwitchImagePayload
   | SwitchIntegerPayload
@@ -65,6 +69,14 @@ export interface BlurImagesPayload extends BaseEventPayload {
 export interface BooleanPayload extends BaseEventPayload {
   isHistoryEnabled: boolean;
   value: boolean;
+}
+
+/*-------------------------------------------------------------------*/
+/* C i v i t A I M e t a d a t a S e t u p   D e c l a r a t i o n s */
+/*-------------------------------------------------------------------*/
+
+export interface CivitAIMetadataSetupPayload extends BaseEventPayload {
+  metadataString: string;
 }
 
 /*-------------------------------------------------------------------*/
@@ -146,6 +158,15 @@ export interface MultipleImageResizeForWebPayload extends BaseEventPayload {
 export interface RandomBooleanPayload extends BaseEventPayload {
   bool: boolean;
   roll: number;
+}
+
+/*-------------------------------------------------------------------*/
+/*  S a v e I m a g e F o r C i v i t A I   D e c l a r a t i o n s  */
+/*-------------------------------------------------------------------*/
+
+export interface SaveImageForCivitAIPayload extends BaseEventPayload {
+  fileNames: Array<string>;
+  images: Array<string>;
 }
 
 /*-------------------------------------------------------------------*/

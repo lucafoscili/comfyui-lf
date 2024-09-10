@@ -183,10 +183,10 @@ export declare type ImagePreviewWidgetsSetter = () => {
     [CustomWidgetName.imagePreview]: BaseWidgetCallback;
 };
 export interface ImagePreviewWidgetValue {
-    fileNames?: string[];
-    images?: string[];
-    selectedIndex: number;
-    selectedName: string;
+    fileNames: string[];
+    images: string[];
+    selectedIndex?: number;
+    selectedName?: string;
 }
 export interface JsonInputWidget extends Widget {
     options: JsonInputWidgetOptions;
