@@ -184,3 +184,5 @@ web/deploy/js/ketchup-lite/*showcase*
 !web/deploy/assets/svg/keyboard_voice.svg
 !web/deploy/assets/svg/refresh.svg
 !web/deploy/assets/svg/style.svg
+!web/deploy/assets/svg/view_comfy.svg
+!web/deploy/assets/svg/view_day.svg

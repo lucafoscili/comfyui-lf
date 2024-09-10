@@ -20,7 +20,6 @@ Displays a widget that plots the RGB channels of a photo in tensor format on a l
 Counts the number of each keyword in a prompt and displays a bar chart showing the distribution.
 ![KeywordCounter](https://github.com/lucafoscili/comfyui-lf/blob/e1c7ba3c0ad300cb4ab1a15abcd23d6f696b3e88/docs/images/KeywordCounter.png "1girl was added twice to the count")
 
-
 ### Configuration nodes (`configuration.py`)
 
 #### CivitAIMetadataSetup
