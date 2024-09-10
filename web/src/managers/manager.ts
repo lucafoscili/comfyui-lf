@@ -11,6 +11,7 @@ import { Extension } from '../types/nodes.js';
 import {
   BlurImagesPayload,
   BooleanPayload,
+  CivitAIMetadataSetupPayload,
   DisplayJSONPayload,
   EventName,
   FloatPayload,
@@ -21,6 +22,7 @@ import {
   LoadImagesPayload,
   MultipleImageResizeForWebPayload,
   RandomBooleanPayload,
+  SaveImageForCivitAIPayload,
   StringPayload,
   SwitchImagePayload,
   SwitchIntegerPayload,
@@ -42,6 +44,12 @@ export class LFManager {
   #APIS: ComfyAPIs = {
     event: (name, callback) => {
       api.addEventListener(name, callback);
+    },
+    fetch: async (body) => {
+      return await api.fetchApi('/upload/image', {
+        method: 'POST',
+        body,
+      });
     },
     getNodeById: (id: string) => {
       return app.graph.getNodeById(+(id || app.runningNodeId));
@@ -114,6 +122,19 @@ export class LFManager {
     this.#APIS.event(EventName.boolean, (e: CustomEvent<BooleanPayload>) => {
       nodes.eventHandlers.LF_Boolean(e, widgets.adders.KUL_HISTORY);
     });
+    /*-------------------------------------------------------------------*/
+    /*         I n i t   C i v i t A I M e t a d a t a S e t u p         */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_CivitAIMetadataSetup(
+      widgets.setters.KUL_CODE,
+      widgets.adders.KUL_CODE,
+    );
+    this.#APIS.event(
+      EventName.civitAIMetadataSetup,
+      (e: CustomEvent<CivitAIMetadataSetupPayload>) => {
+        nodes.eventHandlers.LF_CivitAIMetadataSetup(e, widgets.adders.KUL_CODE);
+      },
+    );
     /*-------------------------------------------------------------------*/
     /*               I n i t   C o n t r o l   P a n e l                 */
     /*-------------------------------------------------------------------*/
@@ -190,6 +211,10 @@ export class LFManager {
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_LLMChat(widgets.setters.KUL_CHAT, widgets.adders.KUL_CHAT);
     /*-------------------------------------------------------------------*/
+    /*                I n i t   L o a d M e t a d a t a                  */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_LoadMetadata(widgets.setters.KUL_UPLOAD);
+    /*-------------------------------------------------------------------*/
     /*                      I n i t   S t r i n g                        */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_String(
@@ -222,6 +247,19 @@ export class LFManager {
     this.#APIS.event(EventName.randomBoolean, (e: CustomEvent<RandomBooleanPayload>) => {
       nodes.eventHandlers.LF_RandomBoolean(e, widgets.adders.KUL_ROLL_VIEWER);
     });
+    /*-------------------------------------------------------------------*/
+    /*          I n i t   S a v e I m a g e F o r C i v i t A I          */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_SaveImageForCivitAI(
+      widgets.setters.KUL_IMAGE_PREVIEW_B64,
+      widgets.adders.KUL_IMAGE_PREVIEW_B64,
+    );
+    this.#APIS.event(
+      EventName.saveImageForCivitAI,
+      (e: CustomEvent<SaveImageForCivitAIPayload>) => {
+        nodes.eventHandlers.LF_SaveImageForCivitAI(e, widgets.adders.KUL_IMAGE_PREVIEW_B64);
+      },
+    );
     /*-------------------------------------------------------------------*/
     /*                 I n i t   S w i t c h   I m a g e                 */
     /*-------------------------------------------------------------------*/
@@ -276,7 +314,7 @@ export class LFManager {
       },
     );
     /*-------------------------------------------------------------------*/
-    /*                       W r i t e   J S O N                         */
+    /*                    I n i t   W r i t e   J S O N                  */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_WriteJSON(widgets.setters.KUL_JSON_INPUT);
     this.#APIS.event(EventName.writeJson, (e: CustomEvent<WriteJSONPayload>) => {

@@ -2,20 +2,19 @@ import io
 import base64
 import folder_paths
 import json
-import os
 import numpy as np
+import os
 import piexif
 import requests
 import torch
 
 from comfy.cli_args import args
-from comfy.samplers import KSampler
 from datetime import datetime
 from PIL import Image
 from PIL.PngImagePlugin import PngInfo
 from server import PromptServer
 
-from ..utils.loaders import *
+from ..utils.io import *
 
 category = "✨ LF Nodes/IO Operations"
  
@@ -104,7 +103,6 @@ class LF_LoadImages:
         if dummy_output and images and selected_image is None:
             selected_image = create_dummy_image_tensor()
 
-
         PromptServer.instance.send_sync("lf-loadimages", {
             "node": node_id, 
             "fileNames": file_names,
@@ -114,7 +112,6 @@ class LF_LoadImages:
         })
 
         return (images, file_names, count, selected_image, selected_index, selected_name)
-
 
 class LF_LoadLocalJSON:
     @classmethod
@@ -144,7 +141,7 @@ class LF_LoadMetadata:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "dir": ("STRING", {"label": "Directory path", "multiline": True, "tooltip": "Path to the directory containing the images to load."}),
+                "file_names": ("KUL_UPLOAD", {"label": "File Names", "tooltip": "List of file names separated by semicolons (e.g., file1.jpg;file2.png;file3.jpg)."}),
             }
         }
 
@@ -153,32 +150,28 @@ class LF_LoadMetadata:
     RETURN_NAMES = ("metadata_list",)
     RETURN_TYPES = ("JSON",)
 
-    def on_exec(self, dir):
-        valid_extensions = {'.jpg', '.jpeg', '.png'}
+    def on_exec(self, file_names):
+        input_dir = folder_paths.get_input_directory()
         metadata_list = []
 
-        for file_name in os.listdir(dir):
-            file_ext = os.path.splitext(file_name)[1].lower()
-            if file_ext not in valid_extensions:
-                continue
+        file_names_list = file_names.split(';')
 
-            file_path = os.path.join(dir, file_name)
-            if os.path.isfile(file_path):
-                try:
-                    with open(file_path, 'rb') as f:
-                        image_bytes = f.read()
-                        pil_image = Image.open(io.BytesIO(image_bytes))
+        for file_name in file_names_list:
+            file_path = os.path.join(input_dir, file_name.strip())
 
-                        if pil_image.format == "JPEG":
-                            metadata = extract_jpeg_metadata(pil_image, file_name)
-                        elif pil_image.format == "PNG":
-                            metadata = extract_png_metadata(pil_image)
-                        else:
-                            metadata = {"error": f"Unsupported image format for {file_name}"}
-                        
-                        metadata_list.append({"file": file_name, "metadata": metadata})
-                except Exception as e:
-                    metadata_list.append({"file": file_name, "error": str(e)})
+            try:
+                pil_image = Image.open(file_path)
+                
+                if pil_image.format == "JPEG":
+                    metadata = extract_jpeg_metadata(pil_image, file_name)
+                elif pil_image.format == "PNG":
+                    metadata = extract_png_metadata(pil_image)
+                else:
+                    metadata = {"error": f"Unsupported image format for {file_name}"}
+
+                metadata_list.append({"file": file_name, "metadata": metadata})
+            except Exception as e:
+                metadata_list.append({"file": file_name, "error": str(e)})
 
         return (metadata_list,)
 
@@ -188,21 +181,13 @@ class LF_SaveImageForCivitAI:
         return {
             "required": {
                 "images": ("IMAGE", {"label": "Images tensor", "tooltip": "Input image tensor batch to save with metadata."}),
-                "filepath": ("STRING", {"default": '', "multiline": True, "tooltip": "Path and filename. Use slashes to specify directories."}),
+                "filepath": ("STRING", {"default": '', "tooltip": "Path and filename. Use slashes to specify directories."}),
                 "add_timestamp": ("BOOLEAN", {"default": True, "tooltip": "Sets the execution time's timestamp as a suffix of the file name."}),
                 "extension": (['png', 'jpeg', 'webp'], {"tooltip": "Supported file formats."}),
                 "quality": ("INT", {"default": 100, "min": 1, "max": 100, "tooltip": "Quality of saved images in jpeg or webp format."}),
-                "checkpoint": (folder_paths.get_filename_list("checkpoints"), {"tooltip": "Checkpoint used to generate the image."}),
-                "lora_tags": ("STRING", {"default": '', "multiline": True, "tooltip": "Tags of the LoRAs used to generate the image."}),
-                "sampler": (KSampler.SAMPLERS, {"tooltip": "Sampler used to generate the image."}),
-                "scheduler": (KSampler.SCHEDULERS, {"tooltip": "Scheduler used to generate the image."}),
-                "positive_prompt": ("STRING", {"default": '', "multiline": True, "tooltip": "Prompt to generate the image."}),
-                "negative_prompt": ("STRING", {"default": '', "multiline": True, "tooltip": "Negative prompt used to generate the image."}),
-                "steps": ("INT", {"default": 30, "min": 1, "max": 10000, "tooltip": "Steps used to generate the image."}),
-                "cfg": ("FLOAT", {"default": 7.0, "min": 0.0, "max": 30.0, "tooltip": "CFG used to generate the image."}),
-                "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff, "tooltip": "Seed used to generate the image."}),
-                "width": ("INT", {"default": 512, "min": 1, "step": 8, "tooltip": "Width of the image."}),
-                "height": ("INT", {"default": 512, "min": 1, "step": 8, "tooltip": "Height of the image."}),
+            },
+            "optional": {
+                "civitai_metadata": ("STRING", {"defaultInput": True, "tooltip": "String containing CivitAI compatible metadata (created by the node LF_CivitAIMetadataSetup)."}),
             },
             "hidden": {
                 "extra_pnginfo": "EXTRA_PNGINFO",
@@ -216,96 +201,70 @@ class LF_SaveImageForCivitAI:
     OUTPUT_NODE = True
     RETURN_TYPES = ()
 
-    def on_exec(self, extra_pnginfo, node_id, prompt, images, filepath, add_timestamp, extension, quality, checkpoint, lora_tags, sampler, scheduler, positive_prompt, negative_prompt, steps, cfg, seed, width, height):
+    def on_exec(self, extra_pnginfo, node_id, prompt, images, filepath, add_timestamp, extension, quality, civitai_metadata):
+        
+        file_names = []
+        images_buffer = []
         output_dir = folder_paths.output_directory
+        batch_size = images.shape[0]
 
-        # Get checkpoint details (name and hash)
-        checkpoint_path = folder_paths.get_full_path("checkpoints", checkpoint)
-        try:
-            checkpoint_hash = get_sha256(checkpoint_path)
-        except Exception as e:
-            checkpoint_hash = "Unknown"
-            print(f"Error calculating hash for checkpoint: {e}")
-
-        checkpoint_name = os.path.basename(checkpoint_path)
-
-        # Parse and process LoRA tags
-        lora_hashes = []
-        if lora_tags:
-            lora_entries = [tag.strip('<>').split(':') for tag in lora_tags.split(',')]
-            for lora_entry in lora_entries:
-                if len(lora_entry) >= 2:
-                    lora_name = lora_entry[1].strip()
-                    lora_file_path = folder_paths.get_full_path("loras", lora_name)
-                    try:
-                        lora_hash = get_sha256(lora_file_path)
-                        lora_hashes.append(f"{lora_name}:{lora_hash}")
-                    except Exception as e:
-                        print(f"Error calculating hash for LoRA {lora_name}: {e}")
-                        lora_hashes.append(f"{lora_name}:Unknown")
-
-        # Convert lists into formatted LoRA hashes string
-        lora_hashes_str = ", ".join(lora_hashes) if lora_hashes else "None"
-
-        # Map sampler and scheduler names to A1111 equivalents
-        sampler_a1111 = SAMPLER_MAP.get(sampler, sampler)
-        scheduler_a1111 = SCHEDULER_MAP.get(scheduler, scheduler)
-
-        # Add timestamp to filepath if requested
         if add_timestamp:
             ts = datetime.now()
             timestamp = ts.strftime("%Y%m%d-%H%M%S")
             filepath = f"{filepath}_{timestamp}"
 
-        batch_size = images.shape[0]
-
-        positive_prompt = positive_prompt + lora_tags
-
-        # Metadata string
-        metadata_string = (
-            f"{positive_prompt}\n"
-            f"Negative prompt: {negative_prompt}\n"
-            f"Steps: {steps}, Sampler: {sampler_a1111}, Schedule type: {scheduler_a1111}, CFG scale: {cfg}, Seed: {seed}, Size: {width}x{height}, "
-            f"Model hash: {checkpoint_hash}, Model: {checkpoint_name}, Lora hashes: \"{lora_hashes_str}\", Version: ComfyUI.LFNodes"
-        )
-
-        # Iterate through the image batch and save each image with metadata
         for i in range(batch_size):
             img_array = images[i].cpu().numpy()
             img = Image.fromarray(np.clip(img_array * 255, 0, 255).astype(np.uint8))
 
-            # Ensure correct directory structure
             directory, filename = os.path.split(filepath)
+            file_name = f"{filename}_{i}.{extension}"
+
             directory = os.path.join(output_dir, directory)
             if not os.path.exists(directory):
                 os.makedirs(directory, exist_ok=True)
 
-            file_name = f"{filename}_{i}.{extension}"
             output_file = os.path.join(directory, file_name)
-            
-            # Save images with appropriate format and metadata
+
             if extension == 'png':
                 png_info = PngInfo()
-                png_info.add_text("parameters", metadata_string)
-
                 if not args.disable_metadata:
                     if prompt is not None:
                         png_info.add_text("prompt", json.dumps(prompt))
                     if extra_pnginfo is not None:
                         for x in extra_pnginfo:
-                            png_info.add_text(x, json.dumps(extra_pnginfo[x]))                
-                    img.save(output_file, format="PNG", pnginfo=png_info, optimize=True)
-                    
+                            png_info.add_text(x, json.dumps(extra_pnginfo[x]))
+
+                if civitai_metadata:
+                    png_info.add_text("parameters", civitai_metadata)
+
+                img.save(output_file, format="PNG", pnginfo=png_info)
+
             elif extension == 'jpeg':
                 exif_bytes = piexif.dump({
                     "Exif": {
-                        piexif.ExifIFD.UserComment: piexif.helper.UserComment.dump(metadata_string, encoding="unicode")
+                        piexif.ExifIFD.UserComment: piexif.helper.UserComment.dump(civitai_metadata, encoding="unicode")
                     }
-                })
+                }) if civitai_metadata else None
                 img.save(output_file, format="JPEG", quality=quality)
-                piexif.insert(exif_bytes, output_file)
+                if exif_bytes:
+                    piexif.insert(exif_bytes, output_file)
             else:
                 img.save(output_file, format=extension.upper(), quality=quality)
+
+            img_resized = resize_image(img, max_size=1024)
+            buffered = io.BytesIO()
+            img_resized.save(buffered, format="JPEG")
+            img_base64 = base64.b64encode(buffered.getvalue()).decode('utf-8')
+            images_buffer.append(img_base64)
+
+            file_names.append(output_file)
+
+        PromptServer.instance.send_sync("lf-saveimageforcivitai", {
+            "node": node_id, 
+            "fileNames": file_names,
+            "images": images_buffer,
+        })
 
         return ()
     

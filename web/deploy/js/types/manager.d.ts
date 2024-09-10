@@ -2,6 +2,7 @@ import { BaseEventPayload, EventName } from './events';
 import { Extension } from './nodes';
 export interface ComfyAPIs {
     event: <T extends BaseEventPayload>(name: EventName, callback: (event: CustomEvent<T>) => void) => void;
+    fetch: (body: unknown) => Promise<Response>;
     getNodeById: (id: string) => NodeType;
     redraw: () => void;
     register: (extension: Extension) => void;
@@ -12,3 +13,7 @@ export declare enum LogSeverity {
     Warning = "warning",
     Error = "error"
 }
+export type IDBFileMetadata = {
+    id: string;
+    base64: string;
+};

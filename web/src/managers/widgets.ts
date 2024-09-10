@@ -11,6 +11,7 @@ import { chatFactory } from '../widgets/chat.js';
 import { historyFactory } from '../widgets/history.js';
 import { rollViewerFactory } from '../widgets/rollViewer.js';
 import { countBarChartFactory } from '../widgets/countBarChart.js';
+import { uploadFactory } from '../widgets/upload.js';
 
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
@@ -100,6 +101,10 @@ export class LFWidgets {
       const widget = app.widgets[CustomWidgetName.tree](nodeType, CustomWidgetName.tree).widget;
       return widget;
     },
+    [CustomWidgetName.upload]: (nodeType: NodeType) => {
+      const widget = app.widgets[CustomWidgetName.upload](nodeType, CustomWidgetName.upload).widget;
+      return widget;
+    },
   };
 
   option = {
@@ -120,6 +125,7 @@ export class LFWidgets {
     [CustomWidgetName.rollViewer]: (rollViewer: HTMLKulProgressbarElement) =>
       rollViewerFactory.options(rollViewer),
     [CustomWidgetName.tree]: (tree: HTMLKulTreeElement) => treeFactory.options(tree),
+    [CustomWidgetName.upload]: (upload: HTMLKulUploadElement) => uploadFactory.options(upload),
   };
 
   set = {
@@ -197,6 +203,13 @@ export class LFWidgets {
       return {
         [CustomWidgetName.tree]: (nodeType: NodeType, name: CustomWidgetName) => {
           return treeFactory.render(nodeType, name);
+        },
+      };
+    },
+    [CustomWidgetName.upload]: () => {
+      return {
+        [CustomWidgetName.upload]: (nodeType: NodeType, name: CustomWidgetName) => {
+          return uploadFactory.render(nodeType, name);
         },
       };
     },

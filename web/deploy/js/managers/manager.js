@@ -24,6 +24,12 @@ export class LFManager {
             event: (name, callback) => {
                 api.addEventListener(name, callback);
             },
+            fetch: async (body) => {
+                return await api.fetchApi('/upload/image', {
+                    method: 'POST',
+                    body,
+                });
+            },
             getNodeById: (id) => {
                 return app.graph.getNodeById(+(id || app.runningNodeId));
             },
@@ -74,6 +80,13 @@ export class LFManager {
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_Boolean(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.boolean, (e) => {
             nodes.eventHandlers.LF_Boolean(e, widgets.adders.KUL_HISTORY);
+        });
+        /*-------------------------------------------------------------------*/
+        /*         I n i t   C i v i t A I M e t a d a t a S e t u p         */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_CivitAIMetadataSetup(widgets.setters.KUL_CODE, widgets.adders.KUL_CODE);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.civitAIMetadataSetup, (e) => {
+            nodes.eventHandlers.LF_CivitAIMetadataSetup(e, widgets.adders.KUL_CODE);
         });
         /*-------------------------------------------------------------------*/
         /*               I n i t   C o n t r o l   P a n e l                 */
@@ -133,6 +146,10 @@ export class LFManager {
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_LLMChat(widgets.setters.KUL_CHAT, widgets.adders.KUL_CHAT);
         /*-------------------------------------------------------------------*/
+        /*                I n i t   L o a d M e t a d a t a                  */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_LoadMetadata(widgets.setters.KUL_UPLOAD);
+        /*-------------------------------------------------------------------*/
         /*                      I n i t   S t r i n g                        */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_String(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
@@ -152,6 +169,13 @@ export class LFManager {
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_RandomBoolean(widgets.setters.KUL_ROLL_VIEWER, widgets.adders.KUL_ROLL_VIEWER);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.randomBoolean, (e) => {
             nodes.eventHandlers.LF_RandomBoolean(e, widgets.adders.KUL_ROLL_VIEWER);
+        });
+        /*-------------------------------------------------------------------*/
+        /*          I n i t   S a v e I m a g e F o r C i v i t A I          */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_SaveImageForCivitAI(widgets.setters.KUL_IMAGE_PREVIEW_B64, widgets.adders.KUL_IMAGE_PREVIEW_B64);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.saveImageForCivitAI, (e) => {
+            nodes.eventHandlers.LF_SaveImageForCivitAI(e, widgets.adders.KUL_IMAGE_PREVIEW_B64);
         });
         /*-------------------------------------------------------------------*/
         /*                 I n i t   S w i t c h   I m a g e                 */
@@ -189,7 +213,7 @@ export class LFManager {
             nodes.eventHandlers.LF_UrandomSeedGenerator(e, widgets.adders.KUL_TREE);
         });
         /*-------------------------------------------------------------------*/
-        /*                       W r i t e   J S O N                         */
+        /*                    I n i t   W r i t e   J S O N                  */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_WriteJSON(widgets.setters.KUL_JSON_INPUT);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.writeJson, (e) => {

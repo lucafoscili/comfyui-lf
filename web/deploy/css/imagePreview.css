@@ -12,7 +12,15 @@
 .lf-imagepreview__grid {
   align-items: center;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  grid-template-columns: var(--lf_grid_template_columns);
+}
+.lf-imagepreview__grid--waterfall {
+  grid-template-columns: 1fr;
+}
+.lf-imagepreview__switch-view {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
 }
 .lf-imagepreview__grid-cell {
   position: relative;

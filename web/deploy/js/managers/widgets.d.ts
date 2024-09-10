@@ -14,6 +14,7 @@ export declare class LFWidgets {
         KUL_IMAGE_PREVIEW_B64: (nodeType: NodeType) => any;
         KUL_ROLL_VIEWER: (nodeType: NodeType) => any;
         KUL_TREE: (nodeType: NodeType) => any;
+        KUL_UPLOAD: (nodeType: NodeType) => any;
     };
     option: {
         KUL_BOOLEAN_VIEWER: (booleanViewer: HTMLKulTextfieldElement) => import("../types/widgets.js").BooleanViewerWidgetOptions;
@@ -27,6 +28,7 @@ export declare class LFWidgets {
         KUL_IMAGE_PREVIEW_B64: (content: HTMLDivElement, isSelectable: boolean) => import("../types/widgets.js").ImagePreviewWidgetOptions;
         KUL_ROLL_VIEWER: (rollViewer: HTMLKulProgressbarElement) => import("../types/widgets.js").RollViewerWidgetOptions;
         KUL_TREE: (tree: HTMLKulTreeElement) => import("../types/widgets.js").TreeWidgetOptions;
+        KUL_UPLOAD: (upload: HTMLKulUploadElement) => import("../types/widgets.js").UploadWidgetOptions;
     };
     set: {
         KUL_BOOLEAN_VIEWER: () => {
@@ -80,6 +82,11 @@ export declare class LFWidgets {
                 widget: Widget;
             };
         };
+        KUL_UPLOAD: () => {
+            KUL_UPLOAD: (nodeType: NodeType, name: CustomWidgetName) => {
+                widget: Widget;
+            };
+        };
     };
     get: {
         adders: {
@@ -94,6 +101,7 @@ export declare class LFWidgets {
             KUL_IMAGE_PREVIEW_B64: (nodeType: NodeType) => any;
             KUL_ROLL_VIEWER: (nodeType: NodeType) => any;
             KUL_TREE: (nodeType: NodeType) => any;
+            KUL_UPLOAD: (nodeType: NodeType) => any;
         };
         options: {
             KUL_BOOLEAN_VIEWER: (booleanViewer: HTMLKulTextfieldElement) => import("../types/widgets.js").BooleanViewerWidgetOptions;
@@ -107,6 +115,7 @@ export declare class LFWidgets {
             KUL_IMAGE_PREVIEW_B64: (content: HTMLDivElement, isSelectable: boolean) => import("../types/widgets.js").ImagePreviewWidgetOptions;
             KUL_ROLL_VIEWER: (rollViewer: HTMLKulProgressbarElement) => import("../types/widgets.js").RollViewerWidgetOptions;
             KUL_TREE: (tree: HTMLKulTreeElement) => import("../types/widgets.js").TreeWidgetOptions;
+            KUL_UPLOAD: (upload: HTMLKulUploadElement) => import("../types/widgets.js").UploadWidgetOptions;
         };
         setters: {
             KUL_BOOLEAN_VIEWER: () => {
@@ -157,6 +166,11 @@ export declare class LFWidgets {
             };
             KUL_TREE: () => {
                 KUL_TREE: (nodeType: NodeType, name: CustomWidgetName) => {
+                    widget: Widget;
+                };
+            };
+            KUL_UPLOAD: () => {
+                KUL_UPLOAD: (nodeType: NodeType, name: CustomWidgetName) => {
                     widget: Widget;
                 };
             };

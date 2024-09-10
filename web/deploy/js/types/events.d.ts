@@ -6,6 +6,7 @@ export type EventCallback<T extends EventPayload> = (e: CustomEvent<T>) => void;
 export declare enum EventName {
     blurImages = "lf-blurimages",
     boolean = "lf-boolean",
+    civitAIMetadataSetup = "lf-civitaimetadatasetup",
     controlPanel = "lf-controlpanel",
     displayJson = "lf-displayjson",
     float = "lf-float",
@@ -16,6 +17,7 @@ export declare enum EventName {
     loadImages = "lf-loadimages",
     multipleImageResizeForWeb = "lf-multipleimageresizeforweb",
     randomBoolean = "lf-randomboolean",
+    saveImageForCivitAI = "lf-saveimageforcivitai",
     string = "lf-string",
     switchImage = "lf-switchimage",
     switchInteger = "lf-switchinteger",
@@ -24,7 +26,7 @@ export declare enum EventName {
     urandomSeedGenerator = "lf-urandomseedgenerator",
     writeJson = "lf-writejson"
 }
-export type EventPayload = BlurImagesPayload | BooleanPayload | DisplayJSONPayload | FloatPayload | ImageHistogramPayload | ImageResizeByEdgePayload | IntegerPayload | KeywordCounterPayload | LoadImagesPayload | MultipleImageResizeForWebPayload | RandomBooleanPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | UrandomSeedGeneratorPayload | WriteJSONPayload;
+export type EventPayload = BlurImagesPayload | BooleanPayload | CivitAIMetadataSetupPayload | DisplayJSONPayload | FloatPayload | ImageHistogramPayload | ImageResizeByEdgePayload | IntegerPayload | KeywordCounterPayload | LoadImagesPayload | MultipleImageResizeForWebPayload | RandomBooleanPayload | SaveImageForCivitAIPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | UrandomSeedGeneratorPayload | WriteJSONPayload;
 export interface BlurImagesPayload extends BaseEventPayload {
     fileNames: Array<string>;
     images: Array<string>;
@@ -32,6 +34,9 @@ export interface BlurImagesPayload extends BaseEventPayload {
 export interface BooleanPayload extends BaseEventPayload {
     isHistoryEnabled: boolean;
     value: boolean;
+}
+export interface CivitAIMetadataSetupPayload extends BaseEventPayload {
+    metadataString: string;
 }
 export interface DisplayJSONPayload extends BaseEventPayload {
     json: Record<string, unknown>;
@@ -69,6 +74,10 @@ export interface MultipleImageResizeForWebPayload extends BaseEventPayload {
 export interface RandomBooleanPayload extends BaseEventPayload {
     bool: boolean;
     roll: number;
+}
+export interface SaveImageForCivitAIPayload extends BaseEventPayload {
+    fileNames: Array<string>;
+    images: Array<string>;
 }
 export interface StringPayload extends BaseEventPayload {
     isHistoryEnabled: boolean;

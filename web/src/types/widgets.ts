@@ -29,39 +29,42 @@ export type CustomWidgetMap = {
   [CustomWidgetName.chat]: ChatWidget;
   [CustomWidgetName.code]: CodeWidget;
   [CustomWidgetName.controlPanel]: ControlPanelWidget;
+  [CustomWidgetName.countBarChart]: CountBarChartWidget;
   [CustomWidgetName.histogram]: HistogramWidget;
   [CustomWidgetName.history]: HistoryWidget;
   [CustomWidgetName.imagePreview]: ImagePreviewWidget;
-  [CustomWidgetName.countBarChart]: CountBarChartWidget;
   [CustomWidgetName.jsonInput]: JsonInputWidget;
   [CustomWidgetName.rollViewer]: RollViewerWidget;
   [CustomWidgetName.tree]: TreeWidget;
+  [CustomWidgetName.upload]: UploadWidget;
 };
 export enum CustomWidgetName {
   booleanViewer = 'KUL_BOOLEAN_VIEWER',
   chat = 'KUL_CHAT',
   code = 'KUL_CODE',
   controlPanel = 'KUL_CONTROL_PANEL',
+  countBarChart = 'KUL_COUNT_BAR_CHART',
   histogram = 'KUL_HISTOGRAM',
+  history = 'KUL_HISTORY',
   imagePreview = 'KUL_IMAGE_PREVIEW_B64',
   jsonInput = 'KUL_JSON_INPUT',
-  countBarChart = 'KUL_COUNT_BAR_CHART',
-  history = 'KUL_HISTORY',
   rollViewer = 'KUL_ROLL_VIEWER',
   tree = 'KUL_TREE',
+  upload = 'KUL_UPLOAD',
 }
 export type CustomWidgetOptions =
   | BooleanViewerWidgetOptions
   | ChatWidgetOptions
   | CodeWidgetOptions
   | ControlPanelWidgetOptions
+  | CountBarChartWidgetOptions
   | HistogramWidgetOptions
   | HistoryWidgetOptions
   | ImagePreviewWidgetOptions
   | JsonInputWidgetOptions
-  | CountBarChartWidgetOptions
   | RollViewerWidgetOptions
-  | TreeWidgetOptions;
+  | TreeWidgetOptions
+  | UploadWidgetOptions;
 export interface CustomWidgetSetters {
   [CustomWidgetName.booleanViewer](
     node: NodeType,
@@ -73,6 +76,10 @@ export interface CustomWidgetSetters {
     node: NodeType,
     name: CustomWidgetName.controlPanel,
   ): { widget: ControlPanelWidget };
+  [CustomWidgetName.countBarChart](
+    node: NodeType,
+    name: CustomWidgetName.countBarChart,
+  ): { widget: CountBarChartWidget };
   [CustomWidgetName.histogram](
     node: NodeType,
     name: CustomWidgetName.histogram,
@@ -89,15 +96,15 @@ export interface CustomWidgetSetters {
     node: NodeType,
     name: CustomWidgetName.jsonInput,
   ): { widget: JsonInputWidget };
-  [CustomWidgetName.countBarChart](
-    node: NodeType,
-    name: CustomWidgetName.countBarChart,
-  ): { widget: CountBarChartWidget };
   [CustomWidgetName.rollViewer](
     node: NodeType,
     name: CustomWidgetName.rollViewer,
   ): { widget: RollViewerWidget };
   [CustomWidgetName.tree](node: NodeType, name: CustomWidgetName.tree): { widget: TreeWidget };
+  [CustomWidgetName.upload](
+    node: NodeType,
+    name: CustomWidgetName.upload,
+  ): { widget: UploadWidget };
 }
 
 /*-------------------------------------------------------------------*/
@@ -238,10 +245,10 @@ export declare type ImagePreviewWidgetsSetter = () => {
   [CustomWidgetName.imagePreview]: BaseWidgetCallback;
 };
 export interface ImagePreviewWidgetValue {
-  fileNames?: string[];
-  images?: string[];
-  selectedIndex: number;
-  selectedName: string;
+  fileNames: string[];
+  images: string[];
+  selectedIndex?: number;
+  selectedName?: string;
 }
 
 /*-------------------------------------------------------------------*/
@@ -321,3 +328,23 @@ export declare type TreeWidgetsSetter = () => {
   [CustomWidgetName.tree]: BaseWidgetCallback;
 };
 export type TreeWidgetValue = string | KulDataDataset;
+
+/*-------------------------------------------------------------------*/
+/*              U p l o a d   D e c l a r a t i o n s                */
+/*-------------------------------------------------------------------*/
+
+export interface UploadWidget extends Widget {
+  options: UploadWidgetOptions;
+  type: [CustomWidgetName.upload];
+}
+export interface UploadWidgetOptions {
+  hideOnZoom: boolean;
+  getComp(): HTMLKulUploadElement;
+  getValue(): UploadWidgetValue;
+  setProps(props: Partial<HTMLKulUploadElement>): void;
+  setValue(value: UploadWidgetValue): void;
+}
+export declare type UploadWidgetsSetter = () => {
+  [CustomWidgetName.upload]: BaseWidgetCallback;
+};
+export type UploadWidgetValue = string;

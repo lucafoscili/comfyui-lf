@@ -1,4 +1,4 @@
-import { DisplayJSONPayload, EventName } from '../types/events';
+import { CivitAIMetadataSetupPayload, EventName } from '../types/events';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import {
@@ -8,18 +8,18 @@ import {
 } from '../types/widgets';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 
-const NAME = NodeName.displayJson;
+const NAME = NodeName.civitaiMetadataSetup;
 
-export const displayJsonFactory = {
-  eventHandler: (event: CustomEvent<DisplayJSONPayload>, addW: BaseWidgetCallback) => {
-    const name = EventName.displayJson;
+export const civitaiMetadataSetupFactory = {
+  eventHandler: (event: CustomEvent<CivitAIMetadataSetupPayload>, addW: BaseWidgetCallback) => {
+    const name = EventName.civitAIMetadataSetup;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
 
     const payload = event.detail;
     const node = getApiRoutes().getNodeById(payload.id);
     if (node) {
       const widget = getCustomWidget(node, CustomWidgetName.code, addW);
-      widget.options.setValue(event.detail.json);
+      widget.options.setValue(event.detail.metadataString);
       getApiRoutes().redraw();
     }
   },
