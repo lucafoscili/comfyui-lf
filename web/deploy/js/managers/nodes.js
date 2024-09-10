@@ -21,6 +21,7 @@ import { randomBooleanFactory } from '../nodes/randomBoolean.js';
 import { keywordCounterFactory } from '../nodes/keywordCounter.js';
 import { saveImageForCivitaiFactory } from '../nodes/saveImageForCivitai.js';
 import { civitaiMetadataSetupFactory } from '../nodes/civitaiMetadataSetup.js';
+import { loadMetadataFactory } from '../nodes/loadMetadata.js';
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
 /*-------------------------------------------------*/
@@ -61,6 +62,7 @@ export class LFNodes {
             [NodeName.keywordCounter]: keywordCounterFactory.register,
             [NodeName.llmChat]: llmChatFactory.register,
             [NodeName.loadImages]: loadImagesFactory.register,
+            [NodeName.loadMetadata]: loadMetadataFactory.register,
             [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.register,
             [NodeName.randomBoolean]: randomBooleanFactory.register,
             [NodeName.saveImageForCivitai]: saveImageForCivitaiFactory.register,

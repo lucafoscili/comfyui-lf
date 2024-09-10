@@ -78,7 +78,8 @@ Node used to load multiple images from the disk given a directory. Optionally, i
 
 #### LoadMetadata
 
-Loads the metadata attached to PNGs/JPGs from a directory.
+Enables uploading files to the input directory of ComfyUI, then on the workflow's execution the metadata will be extracted from the files included in the uploading process.
+![LoadMetadata](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/LoadMetadata.png "Uploaded files with their metadata.")
 
 #### SaveImageForCivitAI
 

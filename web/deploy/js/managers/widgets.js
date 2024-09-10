@@ -17,6 +17,7 @@ import { chatFactory } from '../widgets/chat.js';
 import { historyFactory } from '../widgets/history.js';
 import { rollViewerFactory } from '../widgets/rollViewer.js';
 import { countBarChartFactory } from '../widgets/countBarChart.js';
+import { uploadFactory } from '../widgets/upload.js';
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
 /*-------------------------------------------------*/
@@ -68,6 +69,10 @@ export class LFWidgets {
                 const widget = app.widgets[CustomWidgetName.tree](nodeType, CustomWidgetName.tree).widget;
                 return widget;
             },
+            [CustomWidgetName.upload]: (nodeType) => {
+                const widget = app.widgets[CustomWidgetName.upload](nodeType, CustomWidgetName.upload).widget;
+                return widget;
+            },
         };
         this.option = {
             [CustomWidgetName.booleanViewer]: (booleanViewer) => booleanViewerFactory.options(booleanViewer),
@@ -81,6 +86,7 @@ export class LFWidgets {
             [CustomWidgetName.imagePreview]: (content, isSelectable) => imagePreviewFactory.options(content, isSelectable),
             [CustomWidgetName.rollViewer]: (rollViewer) => rollViewerFactory.options(rollViewer),
             [CustomWidgetName.tree]: (tree) => treeFactory.options(tree),
+            [CustomWidgetName.upload]: (upload) => uploadFactory.options(upload),
         };
         this.set = {
             [CustomWidgetName.booleanViewer]: () => {
@@ -157,6 +163,13 @@ export class LFWidgets {
                 return {
                     [CustomWidgetName.tree]: (nodeType, name) => {
                         return treeFactory.render(nodeType, name);
+                    },
+                };
+            },
+            [CustomWidgetName.upload]: () => {
+                return {
+                    [CustomWidgetName.upload]: (nodeType, name) => {
+                        return uploadFactory.render(nodeType, name);
                     },
                 };
             },

@@ -13,6 +13,7 @@ export var NodeName;
     NodeName["integer"] = "LF_Integer";
     NodeName["llmChat"] = "LF_LLMChat";
     NodeName["loadImages"] = "LF_LoadImages";
+    NodeName["loadMetadata"] = "LF_LoadMetadata";
     NodeName["keywordCounter"] = "LF_KeywordCounter";
     NodeName["multipleImageResizeForWeb"] = "LF_MultipleImageResizeForWeb";
     NodeName["imageResizeByEdge"] = "LF_ImageResizeByEdge";

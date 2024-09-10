@@ -113,7 +113,6 @@ class LF_LoadImages:
 
         return (images, file_names, count, selected_image, selected_index, selected_name)
 
-
 class LF_LoadLocalJSON:
     @classmethod
     def INPUT_TYPES(cls):
@@ -142,7 +141,7 @@ class LF_LoadMetadata:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "dir": ("STRING", {"label": "Directory path", "multiline": True, "tooltip": "Path to the directory containing the images to load."}),
+                "file_names": ("KUL_UPLOAD", {"label": "File Names", "tooltip": "List of file names separated by semicolons (e.g., file1.jpg;file2.png;file3.jpg)."}),
             }
         }
 
@@ -151,32 +150,28 @@ class LF_LoadMetadata:
     RETURN_NAMES = ("metadata_list",)
     RETURN_TYPES = ("JSON",)
 
-    def on_exec(self, dir):
-        valid_extensions = {'.jpg', '.jpeg', '.png'}
+    def on_exec(self, file_names):
+        input_dir = folder_paths.get_input_directory()
         metadata_list = []
 
-        for file_name in os.listdir(dir):
-            file_ext = os.path.splitext(file_name)[1].lower()
-            if file_ext not in valid_extensions:
-                continue
+        file_names_list = file_names.split(';')
 
-            file_path = os.path.join(dir, file_name)
-            if os.path.isfile(file_path):
-                try:
-                    with open(file_path, 'rb') as f:
-                        image_bytes = f.read()
-                        pil_image = Image.open(io.BytesIO(image_bytes))
+        for file_name in file_names_list:
+            file_path = os.path.join(input_dir, file_name.strip())
 
-                        if pil_image.format == "JPEG":
-                            metadata = extract_jpeg_metadata(pil_image, file_name)
-                        elif pil_image.format == "PNG":
-                            metadata = extract_png_metadata(pil_image)
-                        else:
-                            metadata = {"error": f"Unsupported image format for {file_name}"}
-                        
-                        metadata_list.append({"file": file_name, "metadata": metadata})
-                except Exception as e:
-                    metadata_list.append({"file": file_name, "error": str(e)})
+            try:
+                pil_image = Image.open(file_path)
+                
+                if pil_image.format == "JPEG":
+                    metadata = extract_jpeg_metadata(pil_image, file_name)
+                elif pil_image.format == "PNG":
+                    metadata = extract_png_metadata(pil_image)
+                else:
+                    metadata = {"error": f"Unsupported image format for {file_name}"}
+
+                metadata_list.append({"file": file_name, "metadata": metadata})
+            except Exception as e:
+                metadata_list.append({"file": file_name, "error": str(e)})
 
         return (metadata_list,)
 

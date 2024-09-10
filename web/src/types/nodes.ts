@@ -15,6 +15,7 @@ export enum NodeName {
   integer = 'LF_Integer',
   llmChat = 'LF_LLMChat',
   loadImages = 'LF_LoadImages',
+  loadMetadata = 'LF_LoadMetadata',
   keywordCounter = 'LF_KeywordCounter',
   multipleImageResizeForWeb = 'LF_MultipleImageResizeForWeb',
   imageResizeByEdge = 'LF_ImageResizeByEdge',

@@ -35,6 +35,7 @@ export declare class LFNodes {
         LF_KeywordCounter: (setW: import("../types/widgets").CountBarChartWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_LLMChat: (setW: import("../types/widgets").ChatWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_LoadImages: (setW: import("../types/widgets").ImagePreviewWidgetsSetter, addW: BaseWidgetCallback) => void;
+        LF_LoadMetadata: (setW: import("../types/widgets").UploadWidgetsSetter) => void;
         LF_MultipleImageResizeForWeb: (setW: import("../types/widgets").TreeWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_RandomBoolean: (setW: import("../types/widgets").RollViewerWidgetsSetter, addW: BaseWidgetCallback) => void;
         LF_SaveImageForCivitAI: (setW: import("../types/widgets").ImagePreviewWidgetsSetter, addW: BaseWidgetCallback) => void;
@@ -82,6 +83,7 @@ export declare class LFNodes {
             LF_KeywordCounter: (setW: import("../types/widgets").CountBarChartWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_LLMChat: (setW: import("../types/widgets").ChatWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_LoadImages: (setW: import("../types/widgets").ImagePreviewWidgetsSetter, addW: BaseWidgetCallback) => void;
+            LF_LoadMetadata: (setW: import("../types/widgets").UploadWidgetsSetter) => void;
             LF_MultipleImageResizeForWeb: (setW: import("../types/widgets").TreeWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_RandomBoolean: (setW: import("../types/widgets").RollViewerWidgetsSetter, addW: BaseWidgetCallback) => void;
             LF_SaveImageForCivitAI: (setW: import("../types/widgets").ImagePreviewWidgetsSetter, addW: BaseWidgetCallback) => void;

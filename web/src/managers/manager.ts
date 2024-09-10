@@ -45,6 +45,12 @@ export class LFManager {
     event: (name, callback) => {
       api.addEventListener(name, callback);
     },
+    fetch: async (body) => {
+      return await api.fetchApi('/upload/image', {
+        method: 'POST',
+        body,
+      });
+    },
     getNodeById: (id: string) => {
       return app.graph.getNodeById(+(id || app.runningNodeId));
     },
@@ -204,6 +210,10 @@ export class LFManager {
     /*                     I n i t   L L M C h a t                       */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_LLMChat(widgets.setters.KUL_CHAT, widgets.adders.KUL_CHAT);
+    /*-------------------------------------------------------------------*/
+    /*                I n i t   L o a d M e t a d a t a                  */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_LoadMetadata(widgets.setters.KUL_UPLOAD);
     /*-------------------------------------------------------------------*/
     /*                      I n i t   S t r i n g                        */
     /*-------------------------------------------------------------------*/

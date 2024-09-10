@@ -10,6 +10,7 @@ export interface ComfyAPIs {
     name: EventName,
     callback: (event: CustomEvent<T>) => void,
   ) => void;
+  fetch: (body: unknown) => Promise<Response>;
   getNodeById: (id: string) => NodeType;
   redraw: () => void;
   register: (extension: Extension) => void;
@@ -20,3 +21,7 @@ export enum LogSeverity {
   Warning = 'warning',
   Error = 'error',
 }
+export type IDBFileMetadata = {
+  id: string;
+  base64: string;
+};
