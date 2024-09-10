@@ -9,7 +9,6 @@ import requests
 import torch
 
 from comfy.cli_args import args
-from comfy.samplers import KSampler
 from datetime import datetime
 from PIL import Image
 from PIL.PngImagePlugin import PngInfo
@@ -104,7 +103,6 @@ class LF_LoadImages:
         if dummy_output and images and selected_image is None:
             selected_image = create_dummy_image_tensor()
 
-
         PromptServer.instance.send_sync("lf-loadimages", {
             "node": node_id, 
             "fileNames": file_names,
@@ -188,7 +186,7 @@ class LF_SaveImageForCivitAI:
         return {
             "required": {
                 "images": ("IMAGE", {"label": "Images tensor", "tooltip": "Input image tensor batch to save with metadata."}),
-                "filepath": ("STRING", {"default": '', "multiline": True, "tooltip": "Path and filename. Use slashes to specify directories."}),
+                "filepath": ("STRING", {"default": '', "tooltip": "Path and filename. Use slashes to specify directories."}),
                 "add_timestamp": ("BOOLEAN", {"default": True, "tooltip": "Sets the execution time's timestamp as a suffix of the file name."}),
                 "extension": (['png', 'jpeg', 'webp'], {"tooltip": "Supported file formats."}),
                 "quality": ("INT", {"default": 100, "min": 1, "max": 100, "tooltip": "Quality of saved images in jpeg or webp format."}),
@@ -210,6 +208,8 @@ class LF_SaveImageForCivitAI:
 
     def on_exec(self, extra_pnginfo, node_id, prompt, images, filepath, add_timestamp, extension, quality, civitai_metadata):
         
+        file_names = []
+        images_buffer = []
         output_dir = folder_paths.output_directory
         batch_size = images.shape[0]
 
@@ -223,36 +223,53 @@ class LF_SaveImageForCivitAI:
             img = Image.fromarray(np.clip(img_array * 255, 0, 255).astype(np.uint8))
 
             directory, filename = os.path.split(filepath)
+            file_name = f"{filename}_{i}.{extension}"
+
             directory = os.path.join(output_dir, directory)
             if not os.path.exists(directory):
                 os.makedirs(directory, exist_ok=True)
 
-            file_name = f"{filename}_{i}.{extension}"
             output_file = os.path.join(directory, file_name)
-            
+
             if extension == 'png':
                 png_info = PngInfo()
-                if civitai_metadata:
-                    png_info.add_text("parameters", civitai_metadata)
-
                 if not args.disable_metadata:
                     if prompt is not None:
                         png_info.add_text("prompt", json.dumps(prompt))
                     if extra_pnginfo is not None:
                         for x in extra_pnginfo:
-                            png_info.add_text(x, json.dumps(extra_pnginfo[x]))                
-                    img.save(output_file, format="PNG", pnginfo=png_info, optimize=True)
-                    
-            elif extension == 'jpeg' and civitai_metadata:
+                            png_info.add_text(x, json.dumps(extra_pnginfo[x]))
+
+                if civitai_metadata:
+                    png_info.add_text("parameters", civitai_metadata)
+
+                img.save(output_file, format="PNG", pnginfo=png_info)
+
+            elif extension == 'jpeg':
                 exif_bytes = piexif.dump({
                     "Exif": {
                         piexif.ExifIFD.UserComment: piexif.helper.UserComment.dump(civitai_metadata, encoding="unicode")
                     }
-                })
+                }) if civitai_metadata else None
                 img.save(output_file, format="JPEG", quality=quality)
-                piexif.insert(exif_bytes, output_file)
+                if exif_bytes:
+                    piexif.insert(exif_bytes, output_file)
             else:
                 img.save(output_file, format=extension.upper(), quality=quality)
+
+            img_resized = resize_image(img, max_size=1024)
+            buffered = io.BytesIO()
+            img_resized.save(buffered, format="JPEG")
+            img_base64 = base64.b64encode(buffered.getvalue()).decode('utf-8')
+            images_buffer.append(img_base64)
+
+            file_names.append(output_file)
+
+        PromptServer.instance.send_sync("lf-saveimageforcivitai", {
+            "node": node_id, 
+            "fileNames": file_names,
+            "images": images_buffer,
+        })
 
         return ()
     
