@@ -44,14 +44,14 @@ export const countBarChartFactory = {
     render: (node, name) => {
         const wrapper = document.createElement('div');
         const content = document.createElement('div');
-        const countbarchart = document.createElement('kul-chart');
-        const options = countBarChartFactory.options(countbarchart);
+        const countBarChart = document.createElement('kul-chart');
+        const options = countBarChartFactory.options(countBarChart);
         content.classList.add(countBarChartFactory.cssClasses.content);
-        countbarchart.classList.add(countBarChartFactory.cssClasses.widget);
-        countbarchart.kulAxis = 'Axis_0';
-        countbarchart.kulSeries = ['Series_0'];
-        countbarchart.kulTypes = ['bar'];
-        content.appendChild(countbarchart);
+        countBarChart.classList.add(countBarChartFactory.cssClasses.widget);
+        countBarChart.kulAxis = 'Axis_0';
+        countBarChart.kulSeries = ['Series_0'];
+        countBarChart.kulTypes = ['bar'];
+        content.appendChild(countBarChart);
         wrapper.appendChild(content);
         return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };
     },

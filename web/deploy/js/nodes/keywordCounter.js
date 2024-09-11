@@ -14,7 +14,7 @@ export const keywordCounterFactory = {
             const widget = getCustomWidget(node, CustomWidgetName.countBarChart, addW);
             const comp = widget.options.getComp();
             comp.refresh();
-            widget.options.setValue(event.detail.dataset);
+            widget.options.setValue(event.detail.chartDataset);
             getApiRoutes().redraw();
         }
     },

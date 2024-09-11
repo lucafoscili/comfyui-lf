@@ -20,6 +20,7 @@ export declare enum ComfyWidgetName {
 export type CustomWidgetMap = {
     [CustomWidgetName.booleanViewer]: BooleanViewerWidget;
     [CustomWidgetName.chat]: ChatWidget;
+    [CustomWidgetName.chip]: ChipWidget;
     [CustomWidgetName.code]: CodeWidget;
     [CustomWidgetName.controlPanel]: ControlPanelWidget;
     [CustomWidgetName.countBarChart]: CountBarChartWidget;
@@ -34,6 +35,7 @@ export type CustomWidgetMap = {
 export declare enum CustomWidgetName {
     booleanViewer = "KUL_BOOLEAN_VIEWER",
     chat = "KUL_CHAT",
+    chip = "KUL_CHIP",
     code = "KUL_CODE",
     controlPanel = "KUL_CONTROL_PANEL",
     countBarChart = "KUL_COUNT_BAR_CHART",
@@ -45,7 +47,7 @@ export declare enum CustomWidgetName {
     tree = "KUL_TREE",
     upload = "KUL_UPLOAD"
 }
-export type CustomWidgetOptions = BooleanViewerWidgetOptions | ChatWidgetOptions | CodeWidgetOptions | ControlPanelWidgetOptions | CountBarChartWidgetOptions | HistogramWidgetOptions | HistoryWidgetOptions | ImagePreviewWidgetOptions | JsonInputWidgetOptions | RollViewerWidgetOptions | TreeWidgetOptions | UploadWidgetOptions;
+export type CustomWidgetOptions = BooleanViewerWidgetOptions | ChatWidgetOptions | ChipWidgetOptions | CodeWidgetOptions | ControlPanelWidgetOptions | CountBarChartWidgetOptions | HistogramWidgetOptions | HistoryWidgetOptions | ImagePreviewWidgetOptions | JsonInputWidgetOptions | RollViewerWidgetOptions | TreeWidgetOptions | UploadWidgetOptions;
 export interface CustomWidgetSetters {
     [CustomWidgetName.booleanViewer](node: NodeType, name: CustomWidgetName.booleanViewer): {
         widget: BooleanViewerWidget;
@@ -114,6 +116,21 @@ export type ChatWidgetsSetter = () => {
     [CustomWidgetName.chat]: BaseWidgetCallback;
 };
 export type ChatWidgetValue = string;
+export interface ChipWidget extends Widget {
+    options: ChipWidgetOptions;
+    type: [CustomWidgetName.chip];
+}
+export interface ChipWidgetOptions {
+    hideOnZoom: boolean;
+    getComp(): HTMLKulChipElement;
+    getValue(): ChipWidgetValue;
+    setProps(props: Partial<HTMLKulChipElement>): void;
+    setValue(value: ChipWidgetValue): void;
+}
+export declare type ChipWidgetsSetter = () => {
+    [CustomWidgetName.chip]: BaseWidgetCallback;
+};
+export type ChipWidgetValue = string | KulDataDataset;
 export interface CodeWidget extends Widget {
     options: CodeWidgetOptions;
     type: [CustomWidgetName.code];
