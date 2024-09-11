@@ -268,4 +268,4 @@ export interface UploadWidgetOptions {
 export declare type UploadWidgetsSetter = () => {
     [CustomWidgetName.upload]: BaseWidgetCallback;
 };
-export type UploadWidgetValue = unknown;
+export type UploadWidgetValue = string;

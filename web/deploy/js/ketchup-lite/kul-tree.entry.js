@@ -279,7 +279,7 @@ const KulTree = class {
     render() {
         const isEmpty = !!!this.kulData?.nodes?.length;
         this.#rippleSurface = {};
-        return (h(Host, { key: 'e629f53ccfaba8710617901e22793584530ce572' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'ae53dacd7aeb93b010279ee0fa6c63a584125188', id: KUL_WRAPPER_ID }, h("div", { key: '268c307cd49deabd4aa29e3ea2c8b9983ad0d243', class: "tree" }, this.kulFilter ? (h("kul-textfield", { kulIcon: "magnify", kulFullWidth: true, kulLabel: this.#kulManager.language.translate(KulLanguageSearch.SEARCH), kulStyling: "flat", "onKul-textfield-event": (e) => {
+        return (h(Host, { key: 'a1b98b8bfd89208e45a74b4e02bceaa92e3559d7' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '84a1a0249041bc15000caaf98cfab428f7cae1fc', id: KUL_WRAPPER_ID }, h("div", { key: '1680cb8b3298651dc2e9d65381fe3e5e60b05ef3', class: "tree" }, this.kulFilter ? (h("kul-textfield", { kulIcon: "magnify", kulFullWidth: true, kulLabel: this.#kulManager.language.translate(KulLanguageSearch.SEARCH), kulStyling: "flat", "onKul-textfield-event": (e) => {
                 this.onKulEvent(e, 'kul-event');
                 if (e.detail.eventType === 'input') {
                     this.#filter(e);

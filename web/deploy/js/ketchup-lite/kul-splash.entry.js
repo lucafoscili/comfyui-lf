@@ -99,8 +99,8 @@ const KulSplash = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: '280850b3397aba33ffb85a1378cd51df7c5f6807' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'c902e5fc4413d6664b9943b87ca5aa09ca9a365b', id: KUL_WRAPPER_ID }, h("div", { key: '31164671284d1d929ba3db7a2af56c49756f4479', class: 'modal' +
-                (this.state === 'unmounting' ? ' active' : '') }, h("div", { key: 'f1114b388018a2674da8d6755d8d01879287da65', class: "wrapper" }, h("div", { key: '60aaab20a4965c0743615ae30b2aa392824f3b2e', class: "widget" }, h("slot", { key: '044d71df78443b1d5d33a99f480a87c438116d6b' })), h("div", { key: '2250f136110083a28fc2e22620ef84ca5418965a', class: "label" }, this.state === 'unmounting'
+        return (h(Host, { key: '4e433af55f58d9a5f3bfb20e73d9793fcdbcc225' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '03719445901086e32515a42828f66771339902aa', id: KUL_WRAPPER_ID }, h("div", { key: '1f5758ac1be4b66ac13bad7f0396a4a6f310567c', class: 'modal' +
+                (this.state === 'unmounting' ? ' active' : '') }, h("div", { key: '7337df948dcaddf4ef6f12432679fd7263294bb9', class: "wrapper" }, h("div", { key: '7410e3203f0b6567f10732a53e8c9c422950783c', class: "widget" }, h("slot", { key: '3642e99b0d9d2bde66a8d683e512016c455479e5' })), h("div", { key: 'bc7c6ee8b3fea31b2d015492cb7018f43a1db55c', class: "label" }, this.state === 'unmounting'
             ? 'Ready!'
             : this.kulLabel))))));
     }
