@@ -47,6 +47,15 @@ export const uploadFactory = {
 };
 const handleUpload = async (e, upload) => {
     const { eventType, selectedFiles } = e.detail;
+    switch (eventType) {
+        case 'delete':
+            upload.dataset.files = Array.from(selectedFiles, (file) => file.name).join(';') || '';
+            return;
+        case 'upload':
+            break;
+        default:
+            return;
+    }
     if (eventType !== 'upload') {
         return;
     }
