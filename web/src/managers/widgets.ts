@@ -12,6 +12,7 @@ import { historyFactory } from '../widgets/history.js';
 import { rollViewerFactory } from '../widgets/rollViewer.js';
 import { countBarChartFactory } from '../widgets/countBarChart.js';
 import { uploadFactory } from '../widgets/upload.js';
+import { chipFactory } from '../widgets/chip.js';
 
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
@@ -42,6 +43,10 @@ export class LFWidgets {
     },
     [CustomWidgetName.chat]: (nodeType: NodeType) => {
       const widget = app.widgets[CustomWidgetName.chat](nodeType, CustomWidgetName.chat).widget;
+      return widget;
+    },
+    [CustomWidgetName.chip]: (nodeType: NodeType) => {
+      const widget = app.widgets[CustomWidgetName.chip](nodeType, CustomWidgetName.chip).widget;
       return widget;
     },
     [CustomWidgetName.code]: (nodeType: NodeType) => {
@@ -111,6 +116,7 @@ export class LFWidgets {
     [CustomWidgetName.booleanViewer]: (booleanViewer: HTMLKulTextfieldElement) =>
       booleanViewerFactory.options(booleanViewer),
     [CustomWidgetName.chat]: (chat: HTMLKulChatElement) => chatFactory.options(chat),
+    [CustomWidgetName.chip]: (chip: HTMLKulChipElement) => chipFactory.options(chip),
     [CustomWidgetName.code]: (code: HTMLKulCodeElement) => codeFactory.options(code),
     [CustomWidgetName.controlPanel]: () => controlPanelFactory.options(),
     [CustomWidgetName.countBarChart]: (countBarChart: HTMLKulChartElement) =>
@@ -140,6 +146,13 @@ export class LFWidgets {
       return {
         [CustomWidgetName.chat]: (nodeType: NodeType, name: CustomWidgetName) => {
           return chatFactory.render(nodeType, name);
+        },
+      };
+    },
+    [CustomWidgetName.chip]: () => {
+      return {
+        [CustomWidgetName.chip]: (nodeType: NodeType, name: CustomWidgetName) => {
+          return chipFactory.render(nodeType, name);
         },
       };
     },

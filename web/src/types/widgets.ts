@@ -27,6 +27,7 @@ export enum ComfyWidgetName {
 export type CustomWidgetMap = {
   [CustomWidgetName.booleanViewer]: BooleanViewerWidget;
   [CustomWidgetName.chat]: ChatWidget;
+  [CustomWidgetName.chip]: ChipWidget;
   [CustomWidgetName.code]: CodeWidget;
   [CustomWidgetName.controlPanel]: ControlPanelWidget;
   [CustomWidgetName.countBarChart]: CountBarChartWidget;
@@ -41,6 +42,7 @@ export type CustomWidgetMap = {
 export enum CustomWidgetName {
   booleanViewer = 'KUL_BOOLEAN_VIEWER',
   chat = 'KUL_CHAT',
+  chip = 'KUL_CHIP',
   code = 'KUL_CODE',
   controlPanel = 'KUL_CONTROL_PANEL',
   countBarChart = 'KUL_COUNT_BAR_CHART',
@@ -55,6 +57,7 @@ export enum CustomWidgetName {
 export type CustomWidgetOptions =
   | BooleanViewerWidgetOptions
   | ChatWidgetOptions
+  | ChipWidgetOptions
   | CodeWidgetOptions
   | ControlPanelWidgetOptions
   | CountBarChartWidgetOptions
@@ -146,6 +149,26 @@ export type ChatWidgetsSetter = () => {
   [CustomWidgetName.chat]: BaseWidgetCallback;
 };
 export type ChatWidgetValue = string;
+
+/*-------------------------------------------------------------------*/
+/*                  C h i p   D e c l a r a t i o n s                */
+/*-------------------------------------------------------------------*/
+
+export interface ChipWidget extends Widget {
+  options: ChipWidgetOptions;
+  type: [CustomWidgetName.chip];
+}
+export interface ChipWidgetOptions {
+  hideOnZoom: boolean;
+  getComp(): HTMLKulChipElement;
+  getValue(): ChipWidgetValue;
+  setProps(props: Partial<HTMLKulChipElement>): void;
+  setValue(value: ChipWidgetValue): void;
+}
+export declare type ChipWidgetsSetter = () => {
+  [CustomWidgetName.chip]: BaseWidgetCallback;
+};
+export type ChipWidgetValue = string | KulDataDataset;
 
 /*-------------------------------------------------------------------*/
 /*                 C o d e   D e c l a r a t i o n s                 */
