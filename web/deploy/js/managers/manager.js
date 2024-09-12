@@ -30,6 +30,9 @@ export class LFManager {
                     body,
                 });
             },
+            getLinkById: (id) => {
+                return app.graph.links[String(id).valueOf()];
+            },
             getNodeById: (id) => {
                 return app.graph.getNodeById(+(id || app.runningNodeId));
             },
@@ -134,6 +137,10 @@ export class LFManager {
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.keywordCounter, (e) => {
             nodes.eventHandlers.LF_KeywordCounter(e, widgets.adders.KUL_COUNT_BAR_CHART);
         });
+        /*-------------------------------------------------------------------*/
+        /*        I n i t   K e y w o r d T o g g l e F r o m J S O N        */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_KeywordToggleFromJSON(widgets.setters.KUL_CHIP);
         /*-------------------------------------------------------------------*/
         /*                     I n i t   L L M C h a t                       */
         /*-------------------------------------------------------------------*/

@@ -1,7 +1,8 @@
-import { KulDataDataset } from '../types/ketchup-lite/components';
-import { LogSeverity } from '../types/manager';
+import { KulChipEventPayload } from '../types/ketchup-lite/components';
+import { KulChip } from '../types/ketchup-lite/components/kul-chip/kul-chip';
+import { NodeName } from '../types/nodes';
 import { CustomWidgetName, ChipWidgetOptions } from '../types/widgets';
-import { createDOMWidget, getLFManager, unescapeJson } from '../utils/common';
+import { createDOMWidget, getKulManager } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-chip';
 const TYPE = CustomWidgetName.chip;
@@ -18,26 +19,19 @@ export const chipFactory = {
         return chip;
       },
       getValue() {
-        return chip.kulData?.nodes ? JSON.stringify(chip.kulData) : undefined;
+        return chip?.dataset.selectedChips;
       },
-      setProps(props: Partial<HTMLKulChipElement>) {
-        for (const key in props) {
-          if (Object.prototype.hasOwnProperty.call(props, key)) {
-            const prop = props[key];
-            chip[prop] = prop;
-          }
-        }
-      },
-      setValue(value: KulDataDataset | string) {
-        chip.kulData = value as KulDataDataset;
-        try {
-          if (typeof value === 'string') {
-            chip.kulData = unescapeJson(value).parsedJson;
-          }
-        } catch (error) {
-          getLFManager().log('Error when setting value!', { error, chip }, LogSeverity.Error);
-          if (value === undefined || value === '') {
-            chip.kulData = undefined;
+      setValue(value: string) {
+        if (value) {
+          const kulManager = getKulManager();
+          if (kulManager) {
+            chip.selectNodes(value.split(', '));
+          } else {
+            const managerCb = () => {
+              chip.selectNodes(value.split(', '));
+              document.removeEventListener('kul-manager-ready', managerCb);
+            };
+            document.addEventListener('kul-manager-ready', managerCb);
           }
         }
       },
@@ -51,10 +45,31 @@ export const chipFactory = {
 
     content.classList.add(chipFactory.cssClasses.content);
     chip.classList.add(chipFactory.cssClasses.chip);
+    chip.addEventListener('kul-chip-event', eventHandler);
+
+    switch (node.comfyClass) {
+      case NodeName.keywordToggleFromJson:
+        chip.kulStyling = 'filter';
+        break;
+    }
 
     content.appendChild(chip);
     wrapper.appendChild(content);
 
     return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };
   },
+};
+
+const eventHandler = async (e: CustomEvent<KulChipEventPayload>) => {
+  const { comp, eventType } = e.detail;
+  switch (eventType) {
+    case 'click':
+      const chip = comp as KulChip;
+      const selectedValues: string[] = [];
+      (await chip.getSelected()).forEach((node) => {
+        selectedValues.push(String(node.value).valueOf());
+      });
+      chip.rootElement.dataset.selectedChips = selectedValues.join(', ');
+      break;
+  }
 };

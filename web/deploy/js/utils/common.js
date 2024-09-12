@@ -2,6 +2,9 @@ import { CustomWidgetName, } from '../types/widgets.js';
 import { LogSeverity } from '../types/manager.js';
 const DOM = document.documentElement;
 const WINDOW = window;
+export const areJSONEqual = (a, b) => {
+    return JSON.stringify(a) === JSON.stringify(b);
+};
 export const capitalize = (input) => {
     return input
         .toLowerCase()
@@ -18,6 +21,12 @@ export const findWidget = (node, type) => {
 };
 export const getApiRoutes = () => {
     return WINDOW.lfManager.getApiRoutes();
+};
+export const getCustomWidget = (node, type, addW) => {
+    return (node?.widgets?.find((w) => w.type.toLowerCase() === type.toLowerCase()) || (addW ? addW(node, type).widget : undefined));
+};
+export const getInput = (node, type) => {
+    return node?.inputs?.find((w) => w.type.toLowerCase() === type.toLowerCase());
 };
 export const getKulManager = () => {
     return DOM.ketchupLite;
@@ -39,11 +48,20 @@ export const getKulThemes = () => {
 export const getLFManager = () => {
     return WINDOW.lfManager;
 };
-export const getCustomWidget = (node, type, addW) => {
-    return (node?.widgets?.find((w) => w.type.toLowerCase() === type.toLowerCase()) || (addW ? addW(node, type).widget : undefined));
+export const getOutput = (node, type) => {
+    return node?.outputs?.find((w) => w.type.toLowerCase() === type.toLowerCase());
 };
-export const getWidget = (node, name) => {
-    return node?.widgets?.find((w) => w.name.toLowerCase() === name.toLowerCase());
+export const getWidget = (node, type) => {
+    return node?.widgets?.find((w) => w.type.toLowerCase() === type.toLowerCase());
+};
+export const isValidJSON = (value) => {
+    try {
+        JSON.stringify(value);
+        return true;
+    }
+    catch (error) {
+        return false;
+    }
 };
 export const kulManagerExists = () => {
     return !!DOM.ketchupLite;

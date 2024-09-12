@@ -107,7 +107,16 @@ interface NodeProperties {
   resizable?: boolean; // If it can be resized dragging the corner
   horizontal?: boolean; // If the slots should be placed horizontally on the top and bottom of the node
 }
-
+interface LinkInfo {
+  id?: number;
+  type?: string;
+  origin_id?: number;
+  origin_slot?: number;
+  target_id?: number;
+  target_slot?: number;
+  _data?: any;
+  _pos?: { [key: number]: number };
+}
 interface SlotInfo {
   name?: string;
   type?: string;
@@ -116,6 +125,7 @@ interface SlotInfo {
   dir?: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'; // Optional, direction of the slot
   colorOn?: string; // Color to render when it is connected
   colorOff?: string; // Color to render when it is not connected
+  slot_index?: number;
 }
 interface Widget {
   element?: DOMWidget;

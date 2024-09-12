@@ -16,12 +16,14 @@ export type ComfyWidgetMap = {
   [ComfyWidgetName.boolean]: Widget;
   [ComfyWidgetName.float]: Widget;
   [ComfyWidgetName.integer]: Widget;
+  [ComfyWidgetName.json]: Widget;
   [ComfyWidgetName.string]: Widget;
 };
 export enum ComfyWidgetName {
   boolean = 'BOOLEAN',
   float = 'FLOAT',
   integer = 'INTEGER',
+  json = 'JSON',
   string = 'STRING',
 }
 export type CustomWidgetMap = {
@@ -162,13 +164,12 @@ export interface ChipWidgetOptions {
   hideOnZoom: boolean;
   getComp(): HTMLKulChipElement;
   getValue(): ChipWidgetValue;
-  setProps(props: Partial<HTMLKulChipElement>): void;
   setValue(value: ChipWidgetValue): void;
 }
 export declare type ChipWidgetSetter = () => {
   [CustomWidgetName.chip]: BaseWidgetCallback;
 };
-export type ChipWidgetValue = string | KulDataDataset;
+export type ChipWidgetValue = string;
 
 /*-------------------------------------------------------------------*/
 /*                 C o d e   D e c l a r a t i o n s                 */

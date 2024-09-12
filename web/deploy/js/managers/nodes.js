@@ -23,6 +23,7 @@ import { keywordCounterFactory } from '../nodes/keywordCounter.js';
 import { saveImageForCivitaiFactory } from '../nodes/saveImageForCivitai.js';
 import { civitaiMetadataSetupFactory } from '../nodes/civitaiMetadataSetup.js';
 import { loadMetadataFactory } from '../nodes/loadMetadata.js';
+import { keywordToggleFromJsonFactory } from '../nodes/keywordToggleFromJson.js';
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
 /*-------------------------------------------------*/
@@ -61,6 +62,7 @@ export class LFNodes {
             [NodeName.imageHistogram]: imageHistogramFactory.register,
             [NodeName.integer]: integerFactory.register,
             [NodeName.keywordCounter]: keywordCounterFactory.register,
+            [NodeName.keywordToggleFromJson]: keywordToggleFromJsonFactory.register,
             [NodeName.llmChat]: llmChatFactory.register,
             [NodeName.loadImages]: loadImagesFactory.register,
             [NodeName.loadMetadata]: loadMetadataFactory.register,

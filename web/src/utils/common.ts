@@ -14,6 +14,10 @@ import { LogSeverity } from '../types/manager';
 const DOM = document.documentElement as KulDom;
 const WINDOW = window as unknown as LFWindow;
 
+export const areJSONEqual = (a: unknown, b: unknown) => {
+  return JSON.stringify(a) === JSON.stringify(b);
+};
+
 export const capitalize = (input: string) => {
   return input
     .toLowerCase()
@@ -45,6 +49,22 @@ export const getApiRoutes = () => {
   return WINDOW.lfManager.getApiRoutes();
 };
 
+export const getCustomWidget = <T extends CustomWidgetName>(
+  node: NodeType,
+  type: T,
+  addW?: BaseWidgetCallback,
+): CustomWidgetMap[T] => {
+  return (
+    (node?.widgets?.find(
+      (w) => w.type.toLowerCase() === type.toLowerCase(),
+    ) as CustomWidgetMap[T]) || (addW ? (addW(node, type).widget as CustomWidgetMap[T]) : undefined)
+  );
+};
+
+export const getInput = (node: NodeType, type: ComfyWidgetName | CustomWidgetName): SlotInfo => {
+  return node?.inputs?.find((w) => w.type.toLowerCase() === type.toLowerCase()) as SlotInfo;
+};
+
 export const getKulManager = () => {
   return DOM.ketchupLite;
 };
@@ -70,25 +90,26 @@ export const getLFManager = () => {
   return WINDOW.lfManager;
 };
 
-export const getCustomWidget = <T extends CustomWidgetName>(
-  node: NodeType,
-  type: T,
-  addW?: BaseWidgetCallback,
-): CustomWidgetMap[T] => {
-  return (
-    (node?.widgets?.find(
-      (w) => w.type.toLowerCase() === type.toLowerCase(),
-    ) as CustomWidgetMap[T]) || (addW ? (addW(node, type).widget as CustomWidgetMap[T]) : undefined)
-  );
+export const getOutput = (node: NodeType, type: ComfyWidgetName | CustomWidgetName): SlotInfo => {
+  return node?.outputs?.find((w) => w.type.toLowerCase() === type.toLowerCase()) as SlotInfo;
 };
 
 export const getWidget = <T extends ComfyWidgetName>(
   node: NodeType,
-  name: T,
+  type: T,
 ): ComfyWidgetMap[T] => {
   return node?.widgets?.find(
-    (w) => w.name.toLowerCase() === name.toLowerCase(),
+    (w) => w.type.toLowerCase() === type.toLowerCase(),
   ) as ComfyWidgetMap[T];
+};
+
+export const isValidJSON = (value: unknown) => {
+  try {
+    JSON.stringify(value);
+    return true;
+  } catch (error) {
+    return false;
+  }
 };
 
 export const kulManagerExists = () => {

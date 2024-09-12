@@ -112,6 +112,37 @@ class LF_GetValueFromJSON:
                 float_output = None
 
         return (json_output, string_output, number_output, int_output, float_output, boolean_output)
+    
+class LF_KeywordToggleFromJSON:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "json_input": ("JSON", {"tooltip": "Ketchup Lite compatible JSON dataset."}),
+                "separator": ("STRING", {"default": ", ", "tooltip": "Separator for keywords in the output prompt."}),
+                "chip": ("KUL_CHIP", {"tooltip": "Your custom chip widget."})
+            }
+        }
+    
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    RETURN_NAMES = ("json_output", "keywords_output")
+    RETURN_TYPES = ("JSON", "STRING")
+
+    def on_exec(self, json_input, separator: str, chip:str):
+        selected_keywords = chip.split(", ")
+
+        filtered_json = {
+            "nodes": [
+                node for node in json_input["nodes"]
+                if node["id"] in selected_keywords
+            ]
+        }
+
+        keyword_values = [node["value"] for node in filtered_json["nodes"]]
+        keywords_output = separator.join(keyword_values)
+
+        return (filtered_json, keywords_output)
 
 class LF_SetValueInJSON:
     @classmethod
@@ -216,6 +247,7 @@ NODE_CLASS_MAPPINGS = {
     "LF_DisplayJSON": LF_DisplayJSON,
     "LF_GetRandomKeyFromJSON": LF_GetRandomKeyFromJSON,
     "LF_GetValueFromJSON": LF_GetValueFromJSON,
+    "LF_KeywordToggleFromJSON": LF_KeywordToggleFromJSON,
     "LF_SetValueInJSON": LF_SetValueInJSON,
     "LF_StringToJSON": LF_StringToJSON,
     "LF_WriteJSON": LF_WriteJSON
@@ -224,6 +256,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_DisplayJSON": "Display JSON",
     "LF_GetRandomKeyFromJSON": "Get Random Key From JSON",
     "LF_GetValueFromJSON": "Get Value from JSON",
+    "LF_KeywordToggleFromJSON": "Keyword toggle from JSON",
     "LF_SetValueInJSON" : "Set/Create a Value in a JSON Object",
     "LF_StringToJSON": "Convert string to JSON",
     "LF_WriteJSON": "Write JSON"
