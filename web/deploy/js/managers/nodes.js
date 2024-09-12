@@ -10,7 +10,8 @@ import { switchStringFactory } from '../nodes/switchString.js';
 import { writeJsonFactory } from '../nodes/writeJson.js';
 import { multipleImageResizeForWebFactory } from '../nodes/multipleImageResizeForWeb.js';
 import { blurImagesFactory } from '../nodes/blurImages.js';
-import { imageResizeByEdgeFactory } from '../nodes/imageResizeByEdge.js';
+import { resizeImageByEdgeFactory } from '../nodes/resizeImageByEdge.js';
+import { resizeImageToSquareFactory } from '../nodes/resizeImageToSquare.js';
 import { llmChatFactory } from '../nodes/llmChat.js';
 import { stringFactory } from '../nodes/string.js';
 import { integerFactory } from '../nodes/integer.js';
@@ -34,12 +35,13 @@ export class LFNodes {
             [NodeName.displayJson]: displayJsonFactory.eventHandler,
             [NodeName.float]: floatFactory.eventHandler,
             [NodeName.imageHistogram]: imageHistogramFactory.eventHandler,
-            [NodeName.imageResizeByEdge]: imageResizeByEdgeFactory.eventHandler,
             [NodeName.integer]: integerFactory.eventHandler,
             [NodeName.keywordCounter]: keywordCounterFactory.eventHandler,
             [NodeName.loadImages]: loadImagesFactory.eventHandler,
             [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.eventHandler,
             [NodeName.randomBoolean]: randomBooleanFactory.eventHandler,
+            [NodeName.resizeImageByEdge]: resizeImageByEdgeFactory.eventHandler,
+            [NodeName.resizeImageToSquare]: resizeImageToSquareFactory.eventHandler,
             [NodeName.saveImageForCivitai]: saveImageForCivitaiFactory.eventHandler,
             [NodeName.string]: stringFactory.eventHandler,
             [NodeName.switchImage]: switchImageFactory.eventHandler,
@@ -57,7 +59,6 @@ export class LFNodes {
             [NodeName.displayJson]: displayJsonFactory.register,
             [NodeName.float]: floatFactory.register,
             [NodeName.imageHistogram]: imageHistogramFactory.register,
-            [NodeName.imageResizeByEdge]: imageResizeByEdgeFactory.register,
             [NodeName.integer]: integerFactory.register,
             [NodeName.keywordCounter]: keywordCounterFactory.register,
             [NodeName.llmChat]: llmChatFactory.register,
@@ -65,6 +66,8 @@ export class LFNodes {
             [NodeName.loadMetadata]: loadMetadataFactory.register,
             [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.register,
             [NodeName.randomBoolean]: randomBooleanFactory.register,
+            [NodeName.resizeImageByEdge]: resizeImageByEdgeFactory.register,
+            [NodeName.resizeImageToSquare]: resizeImageToSquareFactory.register,
             [NodeName.saveImageForCivitai]: saveImageForCivitaiFactory.register,
             [NodeName.string]: stringFactory.register,
             [NodeName.switchImage]: switchImageFactory.register,

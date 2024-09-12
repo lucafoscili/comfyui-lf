@@ -39,10 +39,15 @@ Includes a switch that enables verbose debug logs in the browser's console and a
 Applies the gaussian blur filter to a list of images and edits the filename of each image by adding the '_Blur' suffix.
 ![Blurimages](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/BlurImages.png "Screenshot of the list of images processed with Gaussian blur")
 
-#### ImageResizeByEdge
+#### ResizeImageByEdge
 
-Resizes an image in tensor format's longest or shortest edge to the specified size.
-![ImageResizeByEdge](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/ImageResizeByEdge.png "Interface of image resizing node showing edge selection")
+Resizes one or more images in tensor format's longest or shortest edge to the specified size.
+![ResizeImageByEdge](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/ResizeImageByEdge.png "Interface of image resizing node showing edge selection")
+
+#### ResizeImageToSquare
+
+Resizes one or more images in tensor format to fit a square (by cropping when the image is rectangular).
+![ResizeImageToSquare](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/ResizeImageToSquare.png "Interface of image resizing node to square")
 
 #### Lora2Prompt
 

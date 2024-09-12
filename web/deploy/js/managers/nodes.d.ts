@@ -7,12 +7,13 @@ export declare class LFNodes {
         LF_DisplayJSON: (event: CustomEvent<import("../types/events").DisplayJSONPayload>, addW: BaseWidgetCallback) => void;
         LF_Float: (event: CustomEvent<import("../types/events").FloatPayload>, addW: BaseWidgetCallback) => void;
         LF_ImageHistogram: (event: CustomEvent<import("../types/events").ImageHistogramPayload>, addW: BaseWidgetCallback) => void;
-        LF_ImageResizeByEdge: (event: CustomEvent<import("../types/events").ImageResizeByEdgePayload>, addW: BaseWidgetCallback) => void;
         LF_Integer: (event: CustomEvent<import("../types/events").IntegerPayload>, addW: BaseWidgetCallback) => void;
         LF_KeywordCounter: (event: CustomEvent<import("../types/events").KeywordCounterPayload>, addW: BaseWidgetCallback) => void;
         LF_LoadImages: (event: CustomEvent<import("../types/events").LoadImagesPayload>, addW: BaseWidgetCallback) => void;
         LF_MultipleImageResizeForWeb: (event: CustomEvent<import("../types/events").MultipleImageResizeForWebPayload>, addW: BaseWidgetCallback) => void;
         LF_RandomBoolean: (event: CustomEvent<import("../types/events").RandomBooleanPayload>, addW: BaseWidgetCallback) => void;
+        LF_ResizeImageByEdge: (event: CustomEvent<import("../types/events").ResizeImageByEdgePayload>, addW: BaseWidgetCallback) => void;
+        LF_ResizeImageToSquare: (event: CustomEvent<import("../types/events").ResizeImageToSquarePayload>, addW: BaseWidgetCallback) => void;
         LF_SaveImageForCivitAI: (event: CustomEvent<import("../types/events").SaveImageForCivitAIPayload>, addW: BaseWidgetCallback) => void;
         LF_String: (event: CustomEvent<import("../types/events").StringPayload>, addW: BaseWidgetCallback) => void;
         LF_SwitchImage: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
@@ -30,7 +31,6 @@ export declare class LFNodes {
         LF_DisplayJSON: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_Float: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_ImageHistogram: (setW: import("../types/widgets").HistogramWidgetSetter, addW: BaseWidgetCallback) => void;
-        LF_ImageResizeByEdge: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_Integer: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_KeywordCounter: (setW: import("../types/widgets").CountBarChartWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_LLMChat: (setW: import("../types/widgets").ChatWidgetSetter, addW: BaseWidgetCallback) => void;
@@ -38,6 +38,8 @@ export declare class LFNodes {
         LF_LoadMetadata: (setW: import("../types/widgets").UploadWidgetSetter) => void;
         LF_MultipleImageResizeForWeb: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_RandomBoolean: (setW: import("../types/widgets").RollViewerWidgetSetter, addW: BaseWidgetCallback) => void;
+        LF_ResizeImageByEdge: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback) => void;
+        LF_ResizeImageToSquare: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_SaveImageForCivitAI: (setW: import("../types/widgets").ImagePreviewWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_String: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_SwitchImage: (setW: import("../types/widgets").BooleanViewerWidgetSetter, addW: BaseWidgetCallback) => void;
@@ -55,12 +57,13 @@ export declare class LFNodes {
             LF_DisplayJSON: (event: CustomEvent<import("../types/events").DisplayJSONPayload>, addW: BaseWidgetCallback) => void;
             LF_Float: (event: CustomEvent<import("../types/events").FloatPayload>, addW: BaseWidgetCallback) => void;
             LF_ImageHistogram: (event: CustomEvent<import("../types/events").ImageHistogramPayload>, addW: BaseWidgetCallback) => void;
-            LF_ImageResizeByEdge: (event: CustomEvent<import("../types/events").ImageResizeByEdgePayload>, addW: BaseWidgetCallback) => void;
             LF_Integer: (event: CustomEvent<import("../types/events").IntegerPayload>, addW: BaseWidgetCallback) => void;
             LF_KeywordCounter: (event: CustomEvent<import("../types/events").KeywordCounterPayload>, addW: BaseWidgetCallback) => void;
             LF_LoadImages: (event: CustomEvent<import("../types/events").LoadImagesPayload>, addW: BaseWidgetCallback) => void;
             LF_MultipleImageResizeForWeb: (event: CustomEvent<import("../types/events").MultipleImageResizeForWebPayload>, addW: BaseWidgetCallback) => void;
             LF_RandomBoolean: (event: CustomEvent<import("../types/events").RandomBooleanPayload>, addW: BaseWidgetCallback) => void;
+            LF_ResizeImageByEdge: (event: CustomEvent<import("../types/events").ResizeImageByEdgePayload>, addW: BaseWidgetCallback) => void;
+            LF_ResizeImageToSquare: (event: CustomEvent<import("../types/events").ResizeImageToSquarePayload>, addW: BaseWidgetCallback) => void;
             LF_SaveImageForCivitAI: (event: CustomEvent<import("../types/events").SaveImageForCivitAIPayload>, addW: BaseWidgetCallback) => void;
             LF_String: (event: CustomEvent<import("../types/events").StringPayload>, addW: BaseWidgetCallback) => void;
             LF_SwitchImage: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
@@ -78,7 +81,6 @@ export declare class LFNodes {
             LF_DisplayJSON: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_Float: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_ImageHistogram: (setW: import("../types/widgets").HistogramWidgetSetter, addW: BaseWidgetCallback) => void;
-            LF_ImageResizeByEdge: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_Integer: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_KeywordCounter: (setW: import("../types/widgets").CountBarChartWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_LLMChat: (setW: import("../types/widgets").ChatWidgetSetter, addW: BaseWidgetCallback) => void;
@@ -86,6 +88,8 @@ export declare class LFNodes {
             LF_LoadMetadata: (setW: import("../types/widgets").UploadWidgetSetter) => void;
             LF_MultipleImageResizeForWeb: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_RandomBoolean: (setW: import("../types/widgets").RollViewerWidgetSetter, addW: BaseWidgetCallback) => void;
+            LF_ResizeImageByEdge: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback) => void;
+            LF_ResizeImageToSquare: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_SaveImageForCivitAI: (setW: import("../types/widgets").ImagePreviewWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_String: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_SwitchImage: (setW: import("../types/widgets").BooleanViewerWidgetSetter, addW: BaseWidgetCallback) => void;

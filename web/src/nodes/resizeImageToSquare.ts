@@ -1,14 +1,14 @@
-import { EventName, ImageResizeByEdgePayload } from '../types/events';
+import { EventName, ResizeImageToSquarePayload } from '../types/events';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import { CustomWidgetName, TreeWidgetSetter, type BaseWidgetCallback } from '../types/widgets';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 
-const NAME = NodeName.imageResizeByEdge;
+const NAME = NodeName.resizeImageToSquare;
 
-export const imageResizeByEdgeFactory = {
-  eventHandler: (event: CustomEvent<ImageResizeByEdgePayload>, addW: BaseWidgetCallback) => {
-    const name = EventName.imageResizeByEdge;
+export const resizeImageToSquareFactory = {
+  eventHandler: (event: CustomEvent<ResizeImageToSquarePayload>, addW: BaseWidgetCallback) => {
+    const name = EventName.resizeimageToSquare;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
 
     const payload = event.detail;

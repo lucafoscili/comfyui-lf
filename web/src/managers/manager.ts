@@ -16,12 +16,13 @@ import {
   EventName,
   FloatPayload,
   ImageHistogramPayload,
-  ImageResizeByEdgePayload,
   IntegerPayload,
   KeywordCounterPayload,
   LoadImagesPayload,
   MultipleImageResizeForWebPayload,
   RandomBooleanPayload,
+  ResizeImageByEdgePayload,
+  ResizeImageToSquarePayload,
   SaveImageForCivitAIPayload,
   StringPayload,
   SwitchImagePayload,
@@ -167,16 +168,6 @@ export class LFManager {
       nodes.eventHandlers.LF_ImageHistogram(e, widgets.adders.KUL_HISTOGRAM);
     });
     /*-------------------------------------------------------------------*/
-    /*            I n i t   I m a g e R e s i z e B y E d g e            */
-    /*-------------------------------------------------------------------*/
-    this.#MANAGERS.nodes.register.LF_ImageResizeByEdge(
-      widgets.setters.KUL_TREE,
-      widgets.adders.KUL_TREE,
-    );
-    this.#APIS.event(EventName.imageResizeByEdge, (e: CustomEvent<ImageResizeByEdgePayload>) => {
-      nodes.eventHandlers.LF_ImageResizeByEdge(e, widgets.adders.KUL_TREE);
-    });
-    /*-------------------------------------------------------------------*/
     /*                I n i t   I m a g e s L o a d e r                  */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_LoadImages(
@@ -247,6 +238,29 @@ export class LFManager {
     this.#APIS.event(EventName.randomBoolean, (e: CustomEvent<RandomBooleanPayload>) => {
       nodes.eventHandlers.LF_RandomBoolean(e, widgets.adders.KUL_ROLL_VIEWER);
     });
+    /*-------------------------------------------------------------------*/
+    /*            I n i t   R e s i z e I m a g e B y E d g e            */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_ResizeImageByEdge(
+      widgets.setters.KUL_TREE,
+      widgets.adders.KUL_TREE,
+    );
+    this.#APIS.event(EventName.resizeimageByEdge, (e: CustomEvent<ResizeImageByEdgePayload>) => {
+      nodes.eventHandlers.LF_ResizeImageByEdge(e, widgets.adders.KUL_TREE);
+    });
+    /*-------------------------------------------------------------------*/
+    /*          I n i t   R e s i z e I m a g e T o S q u a r e          */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_ResizeImageToSquare(
+      widgets.setters.KUL_TREE,
+      widgets.adders.KUL_TREE,
+    );
+    this.#APIS.event(
+      EventName.resizeimageToSquare,
+      (e: CustomEvent<ResizeImageToSquarePayload>) => {
+        nodes.eventHandlers.LF_ResizeImageToSquare(e, widgets.adders.KUL_TREE);
+      },
+    );
     /*-------------------------------------------------------------------*/
     /*          I n i t   S a v e I m a g e F o r C i v i t A I          */
     /*-------------------------------------------------------------------*/
