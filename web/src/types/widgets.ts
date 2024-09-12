@@ -302,15 +302,19 @@ export interface CountBarChartWidget extends Widget {
 }
 export interface CountBarChartWidgetOptions {
   hideOnZoom: boolean;
-  getComp(): HTMLKulChartElement;
-  getValue(): string;
-  setProps(props: Partial<HTMLKulChartElement>): void;
-  setValue(value: KulDataDataset | string): void;
+  getComp(): { chart: HTMLKulChartElement; chip: HTMLKulChipElement };
+  getValue(): CountBarChartWidgetValue;
+  setValue(value: CountBarChartWidgetValue): void;
 }
 export type CountBarChartWidgetsSetter = () => {
   [CustomWidgetName.countBarChart]: BaseWidgetCallback;
 };
-export type CountBarChartWidgetValue = string;
+export type CountBarChartWidgetValue =
+  | string
+  | {
+      chartDataset: KulDataDataset;
+      chipDataset: KulDataDataset;
+    };
 
 /*-------------------------------------------------------------------*/
 /*           R o l l   V i e w e r   D e c l a r a t i o n s         */

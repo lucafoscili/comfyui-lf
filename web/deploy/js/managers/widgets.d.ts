@@ -23,7 +23,7 @@ export declare class LFWidgets {
         KUL_CHIP: (chip: HTMLKulChipElement) => import("../types/widgets.js").ChipWidgetOptions;
         KUL_CODE: (code: HTMLKulCodeElement) => import("../types/widgets.js").CodeWidgetOptions;
         KUL_CONTROL_PANEL: () => import("../types/widgets.js").ControlPanelWidgetOptions;
-        KUL_COUNT_BAR_CHART: (countBarChart: HTMLKulChartElement) => import("../types/widgets.js").CountBarChartWidgetOptions;
+        KUL_COUNT_BAR_CHART: (chart: HTMLKulChartElement, chip: HTMLKulChipElement, button: HTMLKulButtonElement) => import("../types/widgets.js").CountBarChartWidgetOptions;
         KUL_HISTOGRAM: (histogram: HTMLKulChartElement) => import("../types/widgets.js").HistogramWidgetOptions;
         KUL_HISTORY: (history: HTMLKulListElement) => import("../types/widgets.js").HistoryWidgetOptions;
         KUL_JSON_INPUT: (content: HTMLTextAreaElement) => import("../types/widgets.js").JsonInputWidgetOptions;
@@ -117,7 +117,7 @@ export declare class LFWidgets {
             KUL_CHIP: (chip: HTMLKulChipElement) => import("../types/widgets.js").ChipWidgetOptions;
             KUL_CODE: (code: HTMLKulCodeElement) => import("../types/widgets.js").CodeWidgetOptions;
             KUL_CONTROL_PANEL: () => import("../types/widgets.js").ControlPanelWidgetOptions;
-            KUL_COUNT_BAR_CHART: (countBarChart: HTMLKulChartElement) => import("../types/widgets.js").CountBarChartWidgetOptions;
+            KUL_COUNT_BAR_CHART: (chart: HTMLKulChartElement, chip: HTMLKulChipElement, button: HTMLKulButtonElement) => import("../types/widgets.js").CountBarChartWidgetOptions;
             KUL_HISTOGRAM: (histogram: HTMLKulChartElement) => import("../types/widgets.js").HistogramWidgetOptions;
             KUL_HISTORY: (history: HTMLKulListElement) => import("../types/widgets.js").HistoryWidgetOptions;
             KUL_JSON_INPUT: (content: HTMLTextAreaElement) => import("../types/widgets.js").JsonInputWidgetOptions;

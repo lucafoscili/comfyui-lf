@@ -56,20 +56,10 @@ class LF_KeywordCounter:
     CATEGORY = category
     FUNCTION = "on_exec"
     OUTPUT_NODE = True
-    RETURN_NAMES = ("dataset",)
-    RETURN_TYPES = ("JSON",)
+    RETURN_NAMES = ("chart_dataset", "chip_dataset")
+    RETURN_TYPES = ("JSON", "JSON")
 
     def on_exec(self, prompt, separator, node_id):
-        """
-        Count the occurrence of each keyword in the prompt and output the result in JSON format.
-
-        Args:
-            prompt (str): The input prompt containing the keywords.
-            separator (str): The character(s) used to separate keywords.
-
-        Returns:
-            dict: A KulDataDataset-compatible JSON with the counted keywords.
-        """
         keywords = prompt.split(separator)
         keyword_count = {}
 
@@ -78,14 +68,16 @@ class LF_KeywordCounter:
             if keyword:
                 keyword_count[keyword] = keyword_count.get(keyword, 0) + 1
 
-        dataset = adapt_keyword_count_for_kuldata(keyword_count)
+        chart_dataset = adapt_keyword_count_for_chart(keyword_count)
+        chip_dataset = adapt_keyword_count_for_chip(keyword_count)
 
         PromptServer.instance.send_sync("lf-keywordcounter", {
             "node": node_id, 
-            "dataset": dataset,
+            "chartDataset": chart_dataset,
+            "chipDataset": chip_dataset,
         })
 
-        return (dataset,)
+        return (chart_dataset, chip_dataset)
 
 NODE_CLASS_MAPPINGS = {
     "LF_ImageHistogram": LF_ImageHistogram,

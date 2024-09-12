@@ -119,8 +119,11 @@ export class LFWidgets {
     [CustomWidgetName.chip]: (chip: HTMLKulChipElement) => chipFactory.options(chip),
     [CustomWidgetName.code]: (code: HTMLKulCodeElement) => codeFactory.options(code),
     [CustomWidgetName.controlPanel]: () => controlPanelFactory.options(),
-    [CustomWidgetName.countBarChart]: (countBarChart: HTMLKulChartElement) =>
-      countBarChartFactory.options(countBarChart),
+    [CustomWidgetName.countBarChart]: (
+      chart: HTMLKulChartElement,
+      chip: HTMLKulChipElement,
+      button: HTMLKulButtonElement,
+    ) => countBarChartFactory.options(chart, chip, button),
     [CustomWidgetName.histogram]: (histogram: HTMLKulChartElement) =>
       histogramFactory.options(histogram),
     [CustomWidgetName.history]: (history: HTMLKulListElement) => historyFactory.options(history),

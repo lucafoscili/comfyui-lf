@@ -85,7 +85,7 @@ export class LFWidgets {
             [CustomWidgetName.chip]: (chip) => chipFactory.options(chip),
             [CustomWidgetName.code]: (code) => codeFactory.options(code),
             [CustomWidgetName.controlPanel]: () => controlPanelFactory.options(),
-            [CustomWidgetName.countBarChart]: (countBarChart) => countBarChartFactory.options(countBarChart),
+            [CustomWidgetName.countBarChart]: (chart, chip, button) => countBarChartFactory.options(chart, chip, button),
             [CustomWidgetName.histogram]: (histogram) => histogramFactory.options(histogram),
             [CustomWidgetName.history]: (history) => historyFactory.options(history),
             [CustomWidgetName.jsonInput]: (content) => jsonInputFactory.options(content),

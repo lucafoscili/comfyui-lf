@@ -19,9 +19,7 @@ export const keywordCounterFactory = {
     const node = getApiRoutes().getNodeById(payload.id);
     if (node) {
       const widget = getCustomWidget(node, CustomWidgetName.countBarChart, addW);
-      const comp = widget.options.getComp();
-      comp.refresh();
-      widget.options.setValue(event.detail.dataset);
+      widget.options.setValue(event.detail);
       getApiRoutes().redraw();
     }
   },

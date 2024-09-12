@@ -229,15 +229,20 @@ export interface CountBarChartWidget extends Widget {
 }
 export interface CountBarChartWidgetOptions {
     hideOnZoom: boolean;
-    getComp(): HTMLKulChartElement;
-    getValue(): string;
-    setProps(props: Partial<HTMLKulChartElement>): void;
-    setValue(value: KulDataDataset | string): void;
+    getComp(): {
+        chart: HTMLKulChartElement;
+        chip: HTMLKulChipElement;
+    };
+    getValue(): CountBarChartWidgetValue;
+    setValue(value: CountBarChartWidgetValue): void;
 }
 export type CountBarChartWidgetsSetter = () => {
     [CustomWidgetName.countBarChart]: BaseWidgetCallback;
 };
-export type CountBarChartWidgetValue = string;
+export type CountBarChartWidgetValue = string | {
+    chartDataset: KulDataDataset;
+    chipDataset: KulDataDataset;
+};
 export interface RollViewerWidget extends Widget {
     options: RollViewerWidgetOptions;
     type: [CustomWidgetName.rollViewer];
