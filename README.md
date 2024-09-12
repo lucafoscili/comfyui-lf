@@ -47,7 +47,7 @@ Resizes one or more images in tensor format's longest or shortest edge to the sp
 #### ResizeImageToSquare
 
 Resizes one or more images in tensor format to fit a square (by cropping when the image is rectangular).
-![ResizeImageToSquare](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/ResizeImageToSquare.png "Interface of image resizing node to square")
+![ResizeImageToSquare](https://github.com/lucafoscili/comfyui-lf/blob/f146784989b4511a10dfc5e4be1eeb5fa1d93ae1/docs/images/ResizeImageToSquare.png "Interface of image resizing node to square")
 
 #### Lora2Prompt
 
@@ -116,7 +116,7 @@ Extracts a specific value from a JSON object based on a provided key. This node 
 #### KeywordToggleFromJSON
 
 Allows the selection of keywords received from a Ketchup Lite compatible JSON dataset. Values are refreshed every time the input changes.
-![KeywordToggleFromJSON](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/KeywordToggleFromJSON.png "Keywords toggled with a chip set")
+![KeywordToggleFromJSON](https://github.com/lucafoscili/comfyui-lf/blob/f146784989b4511a10dfc5e4be1eeb5fa1d93ae1/docs/images/KeywordToggleFromJSON.png "Keywords toggled with a chip set")
 
 #### LoadLocalJSON
 
