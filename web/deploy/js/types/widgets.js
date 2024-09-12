@@ -3,6 +3,7 @@ export var ComfyWidgetName;
     ComfyWidgetName["boolean"] = "BOOLEAN";
     ComfyWidgetName["float"] = "FLOAT";
     ComfyWidgetName["integer"] = "INTEGER";
+    ComfyWidgetName["json"] = "JSON";
     ComfyWidgetName["string"] = "STRING";
 })(ComfyWidgetName || (ComfyWidgetName = {}));
 export var CustomWidgetName;

@@ -201,7 +201,7 @@ class LF_SaveImageForCivitAI:
     OUTPUT_NODE = True
     RETURN_TYPES = ()
 
-    def on_exec(self, extra_pnginfo, node_id, prompt, images, filepath, add_timestamp, extension, quality, civitai_metadata):
+    def on_exec(self, extra_pnginfo, node_id, prompt, images, filepath, add_timestamp, extension, quality, civitai_metadata=None):
         
         file_names = []
         images_buffer = []

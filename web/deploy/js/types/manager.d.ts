@@ -3,6 +3,7 @@ import { Extension } from './nodes';
 export interface ComfyAPIs {
     event: <T extends BaseEventPayload>(name: EventName, callback: (event: CustomEvent<T>) => void) => void;
     fetch: (body: unknown) => Promise<Response>;
+    getLinkById: (id: string) => LinkInfo;
     getNodeById: (id: string) => NodeType;
     redraw: () => void;
     register: (extension: Extension) => void;

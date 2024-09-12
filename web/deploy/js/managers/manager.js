@@ -30,6 +30,9 @@ export class LFManager {
                     body,
                 });
             },
+            getLinkById: (id) => {
+                return app.graph.links[String(id).valueOf()];
+            },
             getNodeById: (id) => {
                 return app.graph.getNodeById(+(id || app.runningNodeId));
             },
@@ -114,13 +117,6 @@ export class LFManager {
             nodes.eventHandlers.LF_ImageHistogram(e, widgets.adders.KUL_HISTOGRAM);
         });
         /*-------------------------------------------------------------------*/
-        /*            I n i t   I m a g e R e s i z e B y E d g e            */
-        /*-------------------------------------------------------------------*/
-        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_ImageResizeByEdge(widgets.setters.KUL_TREE, widgets.adders.KUL_TREE);
-        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.imageResizeByEdge, (e) => {
-            nodes.eventHandlers.LF_ImageResizeByEdge(e, widgets.adders.KUL_TREE);
-        });
-        /*-------------------------------------------------------------------*/
         /*                I n i t   I m a g e s L o a d e r                  */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_LoadImages(widgets.setters.KUL_IMAGE_PREVIEW_B64, widgets.adders.KUL_IMAGE_PREVIEW_B64);
@@ -141,6 +137,10 @@ export class LFManager {
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.keywordCounter, (e) => {
             nodes.eventHandlers.LF_KeywordCounter(e, widgets.adders.KUL_COUNT_BAR_CHART);
         });
+        /*-------------------------------------------------------------------*/
+        /*        I n i t   K e y w o r d T o g g l e F r o m J S O N        */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_KeywordToggleFromJSON(widgets.setters.KUL_CHIP);
         /*-------------------------------------------------------------------*/
         /*                     I n i t   L L M C h a t                       */
         /*-------------------------------------------------------------------*/
@@ -169,6 +169,20 @@ export class LFManager {
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_RandomBoolean(widgets.setters.KUL_ROLL_VIEWER, widgets.adders.KUL_ROLL_VIEWER);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.randomBoolean, (e) => {
             nodes.eventHandlers.LF_RandomBoolean(e, widgets.adders.KUL_ROLL_VIEWER);
+        });
+        /*-------------------------------------------------------------------*/
+        /*            I n i t   R e s i z e I m a g e B y E d g e            */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_ResizeImageByEdge(widgets.setters.KUL_TREE, widgets.adders.KUL_TREE);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.resizeimageByEdge, (e) => {
+            nodes.eventHandlers.LF_ResizeImageByEdge(e, widgets.adders.KUL_TREE);
+        });
+        /*-------------------------------------------------------------------*/
+        /*          I n i t   R e s i z e I m a g e T o S q u a r e          */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_ResizeImageToSquare(widgets.setters.KUL_TREE, widgets.adders.KUL_TREE);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.resizeimageToSquare, (e) => {
+            nodes.eventHandlers.LF_ResizeImageToSquare(e, widgets.adders.KUL_TREE);
         });
         /*-------------------------------------------------------------------*/
         /*          I n i t   S a v e I m a g e F o r C i v i t A I          */

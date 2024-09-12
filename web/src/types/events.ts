@@ -16,12 +16,13 @@ export enum EventName {
   displayJson = 'lf-displayjson',
   float = 'lf-float',
   imageHistogram = 'lf-imagehistogram',
-  imageResizeByEdge = 'lf-imageresizebyedge',
   integer = 'lf-integer',
   keywordCounter = 'lf-keywordcounter',
   loadImages = 'lf-loadimages',
   multipleImageResizeForWeb = 'lf-multipleimageresizeforweb',
   randomBoolean = 'lf-randomboolean',
+  resizeimageByEdge = 'lf-resizeimagebyedge',
+  resizeimageToSquare = 'lf-resizeimagetosquare',
   saveImageForCivitAI = 'lf-saveimageforcivitai',
   string = 'lf-string',
   switchImage = 'lf-switchimage',
@@ -38,12 +39,13 @@ export type EventPayload =
   | DisplayJSONPayload
   | FloatPayload
   | ImageHistogramPayload
-  | ImageResizeByEdgePayload
   | IntegerPayload
   | KeywordCounterPayload
   | LoadImagesPayload
   | MultipleImageResizeForWebPayload
   | RandomBooleanPayload
+  | ResizeImageByEdgePayload
+  | ResizeImageToSquarePayload
   | SaveImageForCivitAIPayload
   | StringPayload
   | SwitchImagePayload
@@ -105,18 +107,6 @@ export interface ImageHistogramPayload extends BaseEventPayload {
 }
 
 /*-------------------------------------------------------------------*/
-/*    I m a g e R e s i z e B y E d g e   D e c l a r a t i o n s    */
-/*-------------------------------------------------------------------*/
-
-export interface ImageResizeByEdgePayload extends BaseEventPayload {
-  dataset: KulDataDataset;
-  heights: number[];
-  original_heights: number[];
-  original_widths: number[];
-  widths: number[];
-}
-
-/*-------------------------------------------------------------------*/
 /*              I n t e g e r   D e c l a r a t i o n s              */
 /*-------------------------------------------------------------------*/
 
@@ -159,6 +149,26 @@ export interface MultipleImageResizeForWebPayload extends BaseEventPayload {
 export interface RandomBooleanPayload extends BaseEventPayload {
   bool: boolean;
   roll: number;
+}
+
+/*-------------------------------------------------------------------*/
+/*    R e s i z e I m a g e B y E d g e   D e c l a r a t i o n s    */
+/*-------------------------------------------------------------------*/
+
+export interface ResizeImageByEdgePayload extends BaseEventPayload {
+  dataset: KulDataDataset;
+  heights: number[];
+  original_heights: number[];
+  original_widths: number[];
+  widths: number[];
+}
+
+/*-------------------------------------------------------------------*/
+/*  R e s i z e I m a g e T o S q u a r e   D e c l a r a t i o n s  */
+/*-------------------------------------------------------------------*/
+
+export interface ResizeImageToSquarePayload extends BaseEventPayload {
+  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/

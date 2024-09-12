@@ -16,12 +16,13 @@ import {
   EventName,
   FloatPayload,
   ImageHistogramPayload,
-  ImageResizeByEdgePayload,
   IntegerPayload,
   KeywordCounterPayload,
   LoadImagesPayload,
   MultipleImageResizeForWebPayload,
   RandomBooleanPayload,
+  ResizeImageByEdgePayload,
+  ResizeImageToSquarePayload,
   SaveImageForCivitAIPayload,
   StringPayload,
   SwitchImagePayload,
@@ -50,6 +51,9 @@ export class LFManager {
         method: 'POST',
         body,
       });
+    },
+    getLinkById: (id: string) => {
+      return app.graph.links[String(id).valueOf()];
     },
     getNodeById: (id: string) => {
       return app.graph.getNodeById(+(id || app.runningNodeId));
@@ -167,16 +171,6 @@ export class LFManager {
       nodes.eventHandlers.LF_ImageHistogram(e, widgets.adders.KUL_HISTOGRAM);
     });
     /*-------------------------------------------------------------------*/
-    /*            I n i t   I m a g e R e s i z e B y E d g e            */
-    /*-------------------------------------------------------------------*/
-    this.#MANAGERS.nodes.register.LF_ImageResizeByEdge(
-      widgets.setters.KUL_TREE,
-      widgets.adders.KUL_TREE,
-    );
-    this.#APIS.event(EventName.imageResizeByEdge, (e: CustomEvent<ImageResizeByEdgePayload>) => {
-      nodes.eventHandlers.LF_ImageResizeByEdge(e, widgets.adders.KUL_TREE);
-    });
-    /*-------------------------------------------------------------------*/
     /*                I n i t   I m a g e s L o a d e r                  */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_LoadImages(
@@ -206,6 +200,10 @@ export class LFManager {
     this.#APIS.event(EventName.keywordCounter, (e: CustomEvent<KeywordCounterPayload>) => {
       nodes.eventHandlers.LF_KeywordCounter(e, widgets.adders.KUL_COUNT_BAR_CHART);
     });
+    /*-------------------------------------------------------------------*/
+    /*        I n i t   K e y w o r d T o g g l e F r o m J S O N        */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_KeywordToggleFromJSON(widgets.setters.KUL_CHIP);
     /*-------------------------------------------------------------------*/
     /*                     I n i t   L L M C h a t                       */
     /*-------------------------------------------------------------------*/
@@ -247,6 +245,29 @@ export class LFManager {
     this.#APIS.event(EventName.randomBoolean, (e: CustomEvent<RandomBooleanPayload>) => {
       nodes.eventHandlers.LF_RandomBoolean(e, widgets.adders.KUL_ROLL_VIEWER);
     });
+    /*-------------------------------------------------------------------*/
+    /*            I n i t   R e s i z e I m a g e B y E d g e            */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_ResizeImageByEdge(
+      widgets.setters.KUL_TREE,
+      widgets.adders.KUL_TREE,
+    );
+    this.#APIS.event(EventName.resizeimageByEdge, (e: CustomEvent<ResizeImageByEdgePayload>) => {
+      nodes.eventHandlers.LF_ResizeImageByEdge(e, widgets.adders.KUL_TREE);
+    });
+    /*-------------------------------------------------------------------*/
+    /*          I n i t   R e s i z e I m a g e T o S q u a r e          */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_ResizeImageToSquare(
+      widgets.setters.KUL_TREE,
+      widgets.adders.KUL_TREE,
+    );
+    this.#APIS.event(
+      EventName.resizeimageToSquare,
+      (e: CustomEvent<ResizeImageToSquarePayload>) => {
+        nodes.eventHandlers.LF_ResizeImageToSquare(e, widgets.adders.KUL_TREE);
+      },
+    );
     /*-------------------------------------------------------------------*/
     /*          I n i t   S a v e I m a g e F o r C i v i t A I          */
     /*-------------------------------------------------------------------*/

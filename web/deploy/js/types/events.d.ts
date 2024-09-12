@@ -11,12 +11,13 @@ export declare enum EventName {
     displayJson = "lf-displayjson",
     float = "lf-float",
     imageHistogram = "lf-imagehistogram",
-    imageResizeByEdge = "lf-imageresizebyedge",
     integer = "lf-integer",
     keywordCounter = "lf-keywordcounter",
     loadImages = "lf-loadimages",
     multipleImageResizeForWeb = "lf-multipleimageresizeforweb",
     randomBoolean = "lf-randomboolean",
+    resizeimageByEdge = "lf-resizeimagebyedge",
+    resizeimageToSquare = "lf-resizeimagetosquare",
     saveImageForCivitAI = "lf-saveimageforcivitai",
     string = "lf-string",
     switchImage = "lf-switchimage",
@@ -26,7 +27,7 @@ export declare enum EventName {
     urandomSeedGenerator = "lf-urandomseedgenerator",
     writeJson = "lf-writejson"
 }
-export type EventPayload = BlurImagesPayload | BooleanPayload | CivitAIMetadataSetupPayload | DisplayJSONPayload | FloatPayload | ImageHistogramPayload | ImageResizeByEdgePayload | IntegerPayload | KeywordCounterPayload | LoadImagesPayload | MultipleImageResizeForWebPayload | RandomBooleanPayload | SaveImageForCivitAIPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | UrandomSeedGeneratorPayload | WriteJSONPayload;
+export type EventPayload = BlurImagesPayload | BooleanPayload | CivitAIMetadataSetupPayload | DisplayJSONPayload | FloatPayload | ImageHistogramPayload | IntegerPayload | KeywordCounterPayload | LoadImagesPayload | MultipleImageResizeForWebPayload | RandomBooleanPayload | ResizeImageByEdgePayload | ResizeImageToSquarePayload | SaveImageForCivitAIPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | UrandomSeedGeneratorPayload | WriteJSONPayload;
 export interface BlurImagesPayload extends BaseEventPayload {
     fileNames: Array<string>;
     images: Array<string>;
@@ -48,13 +49,6 @@ export interface FloatPayload extends BaseEventPayload {
 export interface ImageHistogramPayload extends BaseEventPayload {
     dataset: KulDataDataset;
 }
-export interface ImageResizeByEdgePayload extends BaseEventPayload {
-    dataset: KulDataDataset;
-    heights: number[];
-    original_heights: number[];
-    original_widths: number[];
-    widths: number[];
-}
 export interface IntegerPayload extends BaseEventPayload {
     isHistoryEnabled: boolean;
     value: number;
@@ -75,6 +69,16 @@ export interface MultipleImageResizeForWebPayload extends BaseEventPayload {
 export interface RandomBooleanPayload extends BaseEventPayload {
     bool: boolean;
     roll: number;
+}
+export interface ResizeImageByEdgePayload extends BaseEventPayload {
+    dataset: KulDataDataset;
+    heights: number[];
+    original_heights: number[];
+    original_widths: number[];
+    widths: number[];
+}
+export interface ResizeImageToSquarePayload extends BaseEventPayload {
+    dataset: KulDataDataset;
 }
 export interface SaveImageForCivitAIPayload extends BaseEventPayload {
     fileNames: Array<string>;
