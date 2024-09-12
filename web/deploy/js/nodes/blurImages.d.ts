@@ -1,6 +1,6 @@
 import { BlurImagesPayload } from '../types/events';
-import { type BaseWidgetCallback, type ImagePreviewWidgetsSetter } from '../types/widgets';
+import { type BaseWidgetCallback, type ImagePreviewWidgetSetter } from '../types/widgets';
 export declare const blurImagesFactory: {
     eventHandler: (event: CustomEvent<BlurImagesPayload>, addW: BaseWidgetCallback) => void;
-    register: (setW: ImagePreviewWidgetsSetter, addW: BaseWidgetCallback) => void;
+    register: (setW: ImagePreviewWidgetSetter, addW: BaseWidgetCallback) => void;
 };

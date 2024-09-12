@@ -125,7 +125,7 @@ export interface BooleanViewerWidgetOptions {
   setProps(props: Partial<HTMLKulTextfieldElement>): void;
   setValue(value: BooleanViewerWidgetValue): void;
 }
-export declare type BooleanViewerWidgetsSetter = () => {
+export declare type BooleanViewerWidgetSetter = () => {
   [CustomWidgetName.booleanViewer]: BaseWidgetCallback;
 };
 export type BooleanViewerWidgetValue = string;
@@ -145,7 +145,7 @@ export interface ChatWidgetOptions {
   setProps(props: Partial<HTMLKulChatElement>): void;
   setValue(history: string): void;
 }
-export type ChatWidgetsSetter = () => {
+export type ChatWidgetSetter = () => {
   [CustomWidgetName.chat]: BaseWidgetCallback;
 };
 export type ChatWidgetValue = string;
@@ -165,7 +165,7 @@ export interface ChipWidgetOptions {
   setProps(props: Partial<HTMLKulChipElement>): void;
   setValue(value: ChipWidgetValue): void;
 }
-export declare type ChipWidgetsSetter = () => {
+export declare type ChipWidgetSetter = () => {
   [CustomWidgetName.chip]: BaseWidgetCallback;
 };
 export type ChipWidgetValue = string | KulDataDataset;
@@ -185,7 +185,7 @@ export interface CodeWidgetOptions {
   setProps(props: Partial<HTMLKulCodeElement>): void;
   setValue(value: Record<string, unknown> | string): void;
 }
-export type CodeWidgetsSetter = () => {
+export type CodeWidgetSetter = () => {
   [CustomWidgetName.code]: BaseWidgetCallback;
 };
 export type CodeWidgetValue = string;
@@ -202,7 +202,7 @@ export interface ControlPanelWidgetOptions {
   getValue(): ControlPanelWidgetValue;
   setValue(value: ControlPanelWidgetValue): void;
 }
-export type ControlPanelWidgetsSetter = () => {
+export type ControlPanelWidgetSetter = () => {
   [CustomWidgetName.controlPanel]: BaseWidgetCallback;
 };
 export interface ControlPanelWidgetValue {
@@ -225,7 +225,7 @@ export interface HistogramWidgetOptions {
   setProps(props: Partial<HTMLKulChartElement>): void;
   setValue(value: KulDataDataset | string): void;
 }
-export type HistogramWidgetsSetter = () => {
+export type HistogramWidgetSetter = () => {
   [CustomWidgetName.histogram]: BaseWidgetCallback;
 };
 export type HistogramWidgetValue = string;
@@ -245,7 +245,7 @@ export interface HistoryWidgetOptions {
   setProps(props: Partial<HTMLKulListElement>): void;
   setValue(value: HistoryWidgetValue): void;
 }
-export declare type HistoryWidgetsSetter = () => {
+export declare type HistoryWidgetSetter = () => {
   [CustomWidgetName.history]: BaseWidgetCallback;
 };
 export type HistoryWidgetValue = string | KulDataDataset;
@@ -264,7 +264,7 @@ export interface ImagePreviewWidgetOptions {
   selectable: boolean;
   setValue(value: ImagePreviewWidgetValue): void;
 }
-export declare type ImagePreviewWidgetsSetter = () => {
+export declare type ImagePreviewWidgetSetter = () => {
   [CustomWidgetName.imagePreview]: BaseWidgetCallback;
 };
 export interface ImagePreviewWidgetValue {
@@ -287,7 +287,7 @@ export interface JsonInputWidgetOptions {
   getValue(): JsonInputWidgetValue;
   setValue(value: JsonInputWidgetValue): void;
 }
-export declare type JsonInputWidgetsSetter = () => {
+export declare type JsonInputWidgetSetter = () => {
   [CustomWidgetName.jsonInput]: BaseWidgetCallback;
 };
 export type JsonInputWidgetValue = string | Record<string, unknown>;
@@ -306,7 +306,7 @@ export interface CountBarChartWidgetOptions {
   getValue(): CountBarChartWidgetValue;
   setValue(value: CountBarChartWidgetValue): void;
 }
-export type CountBarChartWidgetsSetter = () => {
+export type CountBarChartWidgetSetter = () => {
   [CustomWidgetName.countBarChart]: BaseWidgetCallback;
 };
 export type CountBarChartWidgetValue =
@@ -331,7 +331,7 @@ export interface RollViewerWidgetOptions {
   setProps(props: Partial<HTMLKulProgressbarElement>): void;
   setValue(value: RollViewerWidgetValue): void;
 }
-export declare type RollViewerWidgetsSetter = () => {
+export declare type RollViewerWidgetSetter = () => {
   [CustomWidgetName.rollViewer]: BaseWidgetCallback;
 };
 export type RollViewerWidgetValue = { bool: boolean; roll: number };
@@ -351,7 +351,7 @@ export interface TreeWidgetOptions {
   setProps(props: Partial<HTMLKulTreeElement>): void;
   setValue(value: TreeWidgetValue): void;
 }
-export declare type TreeWidgetsSetter = () => {
+export declare type TreeWidgetSetter = () => {
   [CustomWidgetName.tree]: BaseWidgetCallback;
 };
 export type TreeWidgetValue = string | KulDataDataset;
@@ -371,7 +371,7 @@ export interface UploadWidgetOptions {
   setProps(props: Partial<HTMLKulUploadElement>): void;
   setValue(value: UploadWidgetValue): void;
 }
-export declare type UploadWidgetsSetter = () => {
+export declare type UploadWidgetSetter = () => {
   [CustomWidgetName.upload]: BaseWidgetCallback;
 };
 export type UploadWidgetValue = string;

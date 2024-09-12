@@ -4,7 +4,7 @@ import { NodeName, type Extension } from '../types/nodes';
 import {
   CustomWidgetName,
   type BaseWidgetCallback,
-  type ImagePreviewWidgetsSetter,
+  type ImagePreviewWidgetSetter,
 } from '../types/widgets';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 
@@ -23,7 +23,7 @@ export const saveImageForCivitaiFactory = {
       getApiRoutes().redraw();
     }
   },
-  register: (setW: ImagePreviewWidgetsSetter, addW: BaseWidgetCallback) => {
+  register: (setW: ImagePreviewWidgetSetter, addW: BaseWidgetCallback) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

@@ -2,7 +2,7 @@ import { EventName, IntegerPayload } from '../types/events';
 import { KulDataNode } from '../types/ketchup-lite/components';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
-import { CustomWidgetName, HistoryWidgetsSetter, type BaseWidgetCallback } from '../types/widgets';
+import { CustomWidgetName, HistoryWidgetSetter, type BaseWidgetCallback } from '../types/widgets';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 
 const NAME = NodeName.integer;
@@ -46,7 +46,7 @@ export const integerFactory = {
       getApiRoutes().redraw();
     }
   },
-  register: (setW: HistoryWidgetsSetter, addW: BaseWidgetCallback) => {
+  register: (setW: HistoryWidgetSetter, addW: BaseWidgetCallback) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

@@ -1,4 +1,4 @@
-import { type BaseWidgetCallback, type ControlPanelWidgetsSetter } from '../types/widgets';
+import { type BaseWidgetCallback, type ControlPanelWidgetSetter } from '../types/widgets';
 export declare const controlPanelFactory: {
-    register: (setW: ControlPanelWidgetsSetter, addW: BaseWidgetCallback) => void;
+    register: (setW: ControlPanelWidgetSetter, addW: BaseWidgetCallback) => void;
 };

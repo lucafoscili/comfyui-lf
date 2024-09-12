@@ -2,14 +2,14 @@ import { NodeName, type Extension } from '../types/nodes';
 import {
   CustomWidgetName,
   type BaseWidgetCallback,
-  type ControlPanelWidgetsSetter,
+  type ControlPanelWidgetSetter,
 } from '../types/widgets';
 import { getApiRoutes } from '../utils/common';
 
 const NAME = NodeName.controlPanel;
 
 export const controlPanelFactory = {
-  register: (setW: ControlPanelWidgetsSetter, addW: BaseWidgetCallback) => {
+  register: (setW: ControlPanelWidgetSetter, addW: BaseWidgetCallback) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

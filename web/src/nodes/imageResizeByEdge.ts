@@ -1,7 +1,7 @@
 import { EventName, ImageResizeByEdgePayload } from '../types/events';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
-import { CustomWidgetName, TreeWidgetsSetter, type BaseWidgetCallback } from '../types/widgets';
+import { CustomWidgetName, TreeWidgetSetter, type BaseWidgetCallback } from '../types/widgets';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 
 const NAME = NodeName.imageResizeByEdge;
@@ -22,7 +22,7 @@ export const imageResizeByEdgeFactory = {
       getApiRoutes().redraw();
     }
   },
-  register: (setW: TreeWidgetsSetter, addW: BaseWidgetCallback) => {
+  register: (setW: TreeWidgetSetter, addW: BaseWidgetCallback) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

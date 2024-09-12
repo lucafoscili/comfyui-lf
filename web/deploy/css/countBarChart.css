@@ -18,6 +18,8 @@
   visibility: hidden;
 }
 .lf-countbarchart__chip {
+  border-top: 1px solid var(--kul-border-color);
+  border-bottom: 1px solid var(--kul-border-color);
   box-sizing: border-box;
   overflow: auto;
   padding: 4px 0;

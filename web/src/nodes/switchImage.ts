@@ -2,7 +2,7 @@ import { EventName, SwitchImagePayload } from '../types/events';
 import { LogSeverity } from '../types/manager';
 import { Extension, NodeName } from '../types/nodes';
 import {
-  BooleanViewerWidgetsSetter,
+  BooleanViewerWidgetSetter,
   CustomWidgetName,
   type BaseWidgetCallback,
 } from '../types/widgets';
@@ -25,7 +25,7 @@ export const switchImageFactory = {
       getApiRoutes().redraw();
     }
   },
-  register: (setW: BooleanViewerWidgetsSetter, addW: BaseWidgetCallback) => {
+  register: (setW: BooleanViewerWidgetSetter, addW: BaseWidgetCallback) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

@@ -4,7 +4,7 @@ import { Extension, NodeName } from '../types/nodes';
 import {
   CustomWidgetName,
   type BaseWidgetCallback,
-  type CountBarChartWidgetsSetter,
+  type CountBarChartWidgetSetter,
 } from '../types/widgets';
 import { getApiRoutes, getCustomWidget, getLFManager, refreshChart } from '../utils/common';
 
@@ -23,7 +23,7 @@ export const keywordCounterFactory = {
       getApiRoutes().redraw();
     }
   },
-  register: (setW: CountBarChartWidgetsSetter, addW: BaseWidgetCallback) => {
+  register: (setW: CountBarChartWidgetSetter, addW: BaseWidgetCallback) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

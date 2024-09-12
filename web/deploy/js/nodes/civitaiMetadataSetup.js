@@ -1,7 +1,7 @@
 import { EventName } from '../types/events.js';
 import { LogSeverity } from '../types/manager.js';
 import { NodeName } from '../types/nodes.js';
-import { CustomWidgetName, } from '../types/widgets.js';
+import { CustomWidgetName } from '../types/widgets.js';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common.js';
 const NAME = NodeName.civitaiMetadataSetup;
 export const civitaiMetadataSetupFactory = {
