@@ -113,6 +113,11 @@ Extracts a random key from a given JSON object. This can be used to introduce va
 Extracts a specific value from a JSON object based on a provided key. This node supports extracting various types of values including JSON objects, strings, numbers, integers, floats, and booleans.
 ![GetValueFromJSON](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/GetValueFromJSON.png "Interface displaying node to retrieve specific JSON values")
 
+#### KeywordToggleFromJSON
+
+Allows the selection of keywords received from a Ketchup Lite compatible JSON dataset. Values are refreshed every time the input changes.
+![KeywordToggleFromJSON](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/KeywordToggleFromJSON.png "Keywords toggled with a chip set")
+
 #### LoadLocalJSON
 
 Loads JSON data from a local file specified by a URL. This node is useful for importing static JSON configurations or datasets directly into ComfyUI workflows.
