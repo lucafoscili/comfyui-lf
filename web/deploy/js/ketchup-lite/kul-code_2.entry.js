@@ -3043,11 +3043,11 @@ const KulCode = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: '081682eba55e0bc009bcca6b73913d76a4d18a66' }, this.kulStyle && (h("style", { key: 'be5a034d08d91e07e1c8c47b718045522c9847d2', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: '7a85dd4f3ee42eb21e0a573556d5b27211ba5819', id: KUL_WRAPPER_ID }, h("div", { key: '44032c87d4f5e9dd34aad29a29632b8996dffe38', class: "container" }, h("div", { key: '369e290f97c74dd78c2912a6a612666d8a79c3fd', class: "header" }, h("span", { key: 'e78fcdca539d46e0a4774ab2f45ce4f152f96796', class: "title" }, this.kulLanguage), h("kul-button", { key: 'd689f32cff06d2cd105ffbc2baf0c09cde6a5478', class: 'kul-slim kul-full-height', kulIcon: "content_copy", kulLabel: "Copy", kulStyling: "flat", "onKul-button-event": (e) => this.#copy(e) })), h("pre", { class: 'language-' + this.kulLanguage, key: this.value, ref: (el) => {
+        return (h(Host, { key: 'e9e451cec63ca415d1b094ab19da97b7bd266b56' }, this.kulStyle && (h("style", { key: '021390dfb16d69724d1121f4578d6d42e16ab4eb', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: '66b8071e32f2c14dc36a01abb98acc4ed89b59b5', id: KUL_WRAPPER_ID }, h("div", { key: 'da2b1e9dc608f296dbdc17529f9bdc47471c0df5', class: "container" }, h("div", { key: '327107dbe29cb9f2b34198c2385e5c5a3d175b4d', class: "header" }, h("span", { key: '9907a076025db086ab8b8d375cc55ccf61ff08db', class: "title" }, this.kulLanguage), h("kul-button", { key: '12c1766aa203083042119d5b797d9c206fcfa418', class: 'kul-slim kul-full-height', kulIcon: "content_copy", kulLabel: "Copy", kulStyling: "flat", "onKul-button-event": (e) => this.#copy(e) })), h("pre", { class: 'language-' + this.kulLanguage, key: this.value, ref: (el) => {
                 if (el) {
                     this.#el = el;
                 }
-            } }, h("code", { key: '565ffadafc975b6073679b5295e95aaa90b86966' }, this.value))))));
+            } }, h("code", { key: 'a0d6aacbf29d849c60b20813677cb205e4b62e8e' }, this.value))))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);
@@ -3313,7 +3313,7 @@ const KulTextfield = class {
         this.status.forEach((status) => {
             classList.push(`textfield--${status}`);
         });
-        return (h(Host, { key: '117447565c5d838a1a73562fe6c114113c646fed' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '9002272bf40f3aa06c71781a7e3bfa163987e2ab', id: KUL_WRAPPER_ID }, h("div", { key: '6380b4b94be7db4d1632e968a92f0c3a5d79a67b', class: classList.join(' ') }, this.kulStyling === 'textarea'
+        return (h(Host, { key: '0bcbac95053a28004036fab21f7651a555ef2c32' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '2a21d2b330e297fdcb50fbe595d0203e9f563fee', id: KUL_WRAPPER_ID }, h("div", { key: '55c771629434882237b1a59a5425487857de87e3', class: classList.join(' ') }, this.kulStyling === 'textarea'
             ? [
                 this.#prepCounter(),
                 this.#prepIcon(),

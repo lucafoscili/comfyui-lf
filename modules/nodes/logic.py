@@ -7,10 +7,10 @@ class LF_SwitchImage:
     def INPUT_TYPES(cls):
         return {
             "required": {
-            "on_true": ("IMAGE", { "tooltip": "Value to return if the boolean condition is true."}),
-            "on_false": ("IMAGE", { "tooltip": "Value to return if the boolean condition is false."}),
-            "boolean": ("BOOLEAN", {"default": False, "tooltip": "Boolean condition to switch between 'on_true' and 'on_false' values."}),
-        },
+                "on_true": ("IMAGE", {"lazy": True, "tooltip": "Value to return if the boolean condition is true."}),
+                "on_false": ("IMAGE", {"lazy": True, "tooltip": "Value to return if the boolean condition is false."}),
+                "boolean": ("BOOLEAN", {"default": False, "tooltip": "Boolean condition to switch between 'on_true' and 'on_false' values."}),
+            },
             "hidden": { "node_id": "UNIQUE_ID" }
         }
 
@@ -18,22 +18,29 @@ class LF_SwitchImage:
     FUNCTION = "on_exec"
     RETURN_TYPES = ("IMAGE",)
 
+    def check_lazy_status(self, **kwargs):
+        switch_value = kwargs["boolean"]
+        if switch_value:
+            return ["on_true"]
+        else:
+            return ["on_false"]
+
     def on_exec(self, node_id, on_true, on_false, boolean: bool):
-        
         PromptServer.instance.send_sync("lf-switchimage", {
             "node": node_id, 
             "bool": boolean, 
         })
 
         return (on_true if boolean else on_false,)
+
     
 class LF_SwitchInteger:
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
-            "on_true": ("INT", {"default": 0, "tooltip": "Value to return if the boolean condition is true."}),
-            "on_false": ("INT", {"default": 0, "tooltip": "Value to return if the boolean condition is false."}),
+            "on_true": ("INT", {"lazy": True, "default": 0, "tooltip": "Value to return if the boolean condition is true."}),
+            "on_false": ("INT", {"lazy": True, "default": 0, "tooltip": "Value to return if the boolean condition is false."}),
             "boolean": ("BOOLEAN", {"default": False, "tooltip": "Boolean condition to switch between 'on_true' and 'on_false' values."}),
         },
             "hidden": { "node_id": "UNIQUE_ID" }
@@ -42,6 +49,13 @@ class LF_SwitchInteger:
     CATEGORY = category
     FUNCTION = "on_exec"
     RETURN_TYPES = ("INT",)
+
+    def check_lazy_status(self, **kwargs):
+        switch_value = kwargs["boolean"]
+        if switch_value:
+            return ["on_true"]
+        else:
+            return ["on_false"]
 
     def on_exec(self, node_id, on_true: int, on_false: int, boolean: bool):
         
@@ -57,8 +71,8 @@ class LF_SwitchJSON:
     def INPUT_TYPES(cls):
         return {
             "required": {
-            "on_true": ("JSON", { "tooltip": "Value to return if the boolean condition is true."}),
-            "on_false": ("JSON", { "tooltip": "Value to return if the boolean condition is false."}),
+            "on_true": ("JSON", {"lazy": True, "tooltip": "Value to return if the boolean condition is true."}),
+            "on_false": ("JSON", {"lazy": True, "tooltip": "Value to return if the boolean condition is false."}),
             "boolean": ("BOOLEAN", {"default": False, "tooltip": "Boolean condition to switch between 'on_true' and 'on_false' values."}),
         },
             "hidden": { "node_id": "UNIQUE_ID" }
@@ -67,6 +81,13 @@ class LF_SwitchJSON:
     CATEGORY = category
     FUNCTION = "on_exec"
     RETURN_TYPES = ("JSON",)
+
+    def check_lazy_status(self, **kwargs):
+        switch_value = kwargs["boolean"]
+        if switch_value:
+            return ["on_true"]
+        else:
+            return ["on_false"]
 
     def on_exec(self, node_id, on_true:dict, on_false:dict, boolean: bool):
         
@@ -82,8 +103,8 @@ class LF_SwitchString:
     def INPUT_TYPES(cls):
         return {
             "required": {
-            "on_true": ("STRING", { "multiline": True, "tooltip": "Value to return if the boolean condition is true."}),
-            "on_false": ("STRING", { "multiline": True, "tooltip": "Value to return if the boolean condition is false."}),
+            "on_true": ("STRING", {"lazy": True, "multiline": True, "tooltip": "Value to return if the boolean condition is true."}),
+            "on_false": ("STRING", {"lazy": True, "multiline": True, "tooltip": "Value to return if the boolean condition is false."}),
             "boolean": ("BOOLEAN", {"default": False, "tooltip": "Boolean condition to switch between 'on_true' and 'on_false' values."}),
         },
             "hidden": { "node_id": "UNIQUE_ID" }
@@ -92,6 +113,13 @@ class LF_SwitchString:
     CATEGORY = category
     FUNCTION = "on_exec"
     RETURN_TYPES = ("STRING",)
+
+    def check_lazy_status(self, **kwargs):
+        switch_value = kwargs["boolean"]
+        if switch_value:
+            return ["on_true"]
+        else:
+            return ["on_false"]
 
     def on_exec(self, node_id, on_true: str, on_false: str, boolean: bool):
         

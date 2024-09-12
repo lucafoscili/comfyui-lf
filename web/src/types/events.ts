@@ -130,7 +130,8 @@ export interface IntegerPayload extends BaseEventPayload {
 /*-------------------------------------------------------------------*/
 
 export interface KeywordCounterPayload extends BaseEventPayload {
-  dataset: KulDataDataset;
+  chartDataset: KulDataDataset;
+  chipDataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/

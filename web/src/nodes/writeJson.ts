@@ -1,11 +1,7 @@
 import { EventName, WriteJSONPayload } from '../types/events';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
-import {
-  CustomWidgetName,
-  JsonInputWidgetsSetter,
-  type BaseWidgetCallback,
-} from '../types/widgets';
+import { CustomWidgetName, JsonInputWidgetSetter, type BaseWidgetCallback } from '../types/widgets';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 
 const NAME = NodeName.writeJson;
@@ -23,7 +19,7 @@ export const writeJsonFactory = {
       getApiRoutes().redraw();
     }
   },
-  register: (setW: JsonInputWidgetsSetter) => {
+  register: (setW: JsonInputWidgetSetter) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

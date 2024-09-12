@@ -2,9 +2,13 @@ import { CountBarChartWidgetOptions, CustomWidgetName } from '../types/widgets';
 export declare const countBarChartFactory: {
     cssClasses: {
         content: string;
-        widget: string;
+        grid: string;
+        chart: string;
+        chip: string;
+        button: string;
+        buttonHidden: string;
     };
-    options: (countBarChart: HTMLKulChartElement) => CountBarChartWidgetOptions;
+    options: (chart: HTMLKulChartElement, chip: HTMLKulChipElement, button: HTMLKulButtonElement) => CountBarChartWidgetOptions;
     render: (node: NodeType, name: CustomWidgetName) => {
         widget: Widget;
     };

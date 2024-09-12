@@ -1,11 +1,11 @@
 import { NodeName, type Extension } from '../types/nodes';
-import { BaseWidgetCallback, CustomWidgetName, UploadWidgetsSetter } from '../types/widgets';
+import { BaseWidgetCallback, CustomWidgetName, UploadWidgetSetter } from '../types/widgets';
 import { getApiRoutes } from '../utils/common';
 
 const NAME = NodeName.loadMetadata;
 
 export const loadMetadataFactory = {
-  register: (setW: UploadWidgetsSetter) => {
+  register: (setW: UploadWidgetSetter) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

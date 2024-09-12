@@ -1,4 +1,4 @@
-import { UploadWidgetsSetter } from '../types/widgets';
+import { UploadWidgetSetter } from '../types/widgets';
 export declare const loadMetadataFactory: {
-    register: (setW: UploadWidgetsSetter) => void;
+    register: (setW: UploadWidgetSetter) => void;
 };

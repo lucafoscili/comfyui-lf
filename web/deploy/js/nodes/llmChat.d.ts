@@ -1,4 +1,4 @@
-import { ChatWidgetsSetter, type BaseWidgetCallback } from '../types/widgets';
+import { ChatWidgetSetter, type BaseWidgetCallback } from '../types/widgets';
 export declare const llmChatFactory: {
-    register: (setW: ChatWidgetsSetter, addW: BaseWidgetCallback) => void;
+    register: (setW: ChatWidgetSetter, addW: BaseWidgetCallback) => void;
 };

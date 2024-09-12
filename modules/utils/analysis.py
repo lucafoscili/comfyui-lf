@@ -72,7 +72,7 @@ def adapt_histograms_for_kuldata(histograms):
 
     return kuldata
 
-def adapt_keyword_count_for_kuldata(keyword_count):
+def adapt_keyword_count_for_chart(keyword_count):
     """
     Adapt the keyword count data to the KulDataDataset format for use in a bar chart.
     Args:
@@ -95,6 +95,27 @@ def adapt_keyword_count_for_kuldata(keyword_count):
                 "Series_0": {"value": count},
             },
             "id": str(idx)
+        }
+        kuldata["nodes"].append(node)
+
+    return kuldata
+
+def adapt_keyword_count_for_chip(keyword_count):
+    """
+    Adapt the keyword count data to the KulDataDataset format for use in a chip set.
+    Args:
+        keyword_count (dict): Dictionary containing keyword counts.
+    Returns:
+        dict: A KulDataDataset-compatible dictionary.
+    """
+    kuldata = {
+        "nodes": []
+    }
+    
+    for keyword in keyword_count:
+        node = {
+            "id": keyword,
+            "value": keyword
         }
         kuldata["nodes"].append(node)
 

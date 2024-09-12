@@ -60,7 +60,8 @@ export interface IntegerPayload extends BaseEventPayload {
     value: number;
 }
 export interface KeywordCounterPayload extends BaseEventPayload {
-    dataset: KulDataDataset;
+    chartDataset: KulDataDataset;
+    chipDataset: KulDataDataset;
 }
 export interface LoadImagesPayload extends BaseEventPayload {
     fileNames: Array<string>;

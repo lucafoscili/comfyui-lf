@@ -3,12 +3,12 @@ import { BaseWidgetCallback, ComfyWidgetMap, ComfyWidgetName, CustomWidgetMap, C
 import { LogSeverity } from '../types/manager';
 export declare const capitalize: (input: string) => string;
 export declare const createDOMWidget: (name: string, type: CustomWidgetName, element: HTMLDivElement, node: NodeType, options?: CustomWidgetOptions) => Widget;
-export declare const findWidget: <T extends CustomWidgetName>(node: NodeType, name: T) => CustomWidgetMap[T];
+export declare const findWidget: <T extends CustomWidgetName>(node: NodeType, type: T) => CustomWidgetMap[T];
 export declare const getApiRoutes: () => import("../types/manager").ComfyAPIs;
 export declare const getKulManager: () => import("../types/ketchup-lite/managers/kul-manager/kul-manager-declarations").KulManager;
 export declare const getKulThemes: () => KulDataDataset;
 export declare const getLFManager: () => import("../managers/manager").LFManager;
-export declare const getCustomWidget: <T extends CustomWidgetName>(node: NodeType, name: T, addW?: BaseWidgetCallback) => CustomWidgetMap[T];
+export declare const getCustomWidget: <T extends CustomWidgetName>(node: NodeType, type: T, addW?: BaseWidgetCallback) => CustomWidgetMap[T];
 export declare const getWidget: <T extends ComfyWidgetName>(node: NodeType, name: T) => ComfyWidgetMap[T];
 export declare const kulManagerExists: () => boolean;
 export declare const log: () => (message: string, args?: Record<string, unknown>, severity?: LogSeverity) => void;

@@ -5,6 +5,7 @@ export declare class LFWidgets {
     add: {
         KUL_BOOLEAN_VIEWER: (nodeType: NodeType) => any;
         KUL_CHAT: (nodeType: NodeType) => any;
+        KUL_CHIP: (nodeType: NodeType) => any;
         KUL_CODE: (nodeType: NodeType) => any;
         KUL_CONTROL_PANEL: (nodeType: NodeType) => any;
         KUL_COUNT_BAR_CHART: (nodeType: NodeType) => any;
@@ -19,9 +20,10 @@ export declare class LFWidgets {
     option: {
         KUL_BOOLEAN_VIEWER: (booleanViewer: HTMLKulTextfieldElement) => import("../types/widgets.js").BooleanViewerWidgetOptions;
         KUL_CHAT: (chat: HTMLKulChatElement) => import("../types/widgets.js").ChatWidgetOptions;
+        KUL_CHIP: (chip: HTMLKulChipElement) => import("../types/widgets.js").ChipWidgetOptions;
         KUL_CODE: (code: HTMLKulCodeElement) => import("../types/widgets.js").CodeWidgetOptions;
         KUL_CONTROL_PANEL: () => import("../types/widgets.js").ControlPanelWidgetOptions;
-        KUL_COUNT_BAR_CHART: (countBarChart: HTMLKulChartElement) => import("../types/widgets.js").CountBarChartWidgetOptions;
+        KUL_COUNT_BAR_CHART: (chart: HTMLKulChartElement, chip: HTMLKulChipElement, button: HTMLKulButtonElement) => import("../types/widgets.js").CountBarChartWidgetOptions;
         KUL_HISTOGRAM: (histogram: HTMLKulChartElement) => import("../types/widgets.js").HistogramWidgetOptions;
         KUL_HISTORY: (history: HTMLKulListElement) => import("../types/widgets.js").HistoryWidgetOptions;
         KUL_JSON_INPUT: (content: HTMLTextAreaElement) => import("../types/widgets.js").JsonInputWidgetOptions;
@@ -38,6 +40,11 @@ export declare class LFWidgets {
         };
         KUL_CHAT: () => {
             KUL_CHAT: (nodeType: NodeType, name: CustomWidgetName) => any;
+        };
+        KUL_CHIP: () => {
+            KUL_CHIP: (nodeType: NodeType, name: CustomWidgetName) => {
+                widget: Widget;
+            };
         };
         KUL_CODE: () => {
             KUL_CODE: (nodeType: NodeType, name: CustomWidgetName) => {
@@ -92,6 +99,7 @@ export declare class LFWidgets {
         adders: {
             KUL_BOOLEAN_VIEWER: (nodeType: NodeType) => any;
             KUL_CHAT: (nodeType: NodeType) => any;
+            KUL_CHIP: (nodeType: NodeType) => any;
             KUL_CODE: (nodeType: NodeType) => any;
             KUL_CONTROL_PANEL: (nodeType: NodeType) => any;
             KUL_COUNT_BAR_CHART: (nodeType: NodeType) => any;
@@ -106,9 +114,10 @@ export declare class LFWidgets {
         options: {
             KUL_BOOLEAN_VIEWER: (booleanViewer: HTMLKulTextfieldElement) => import("../types/widgets.js").BooleanViewerWidgetOptions;
             KUL_CHAT: (chat: HTMLKulChatElement) => import("../types/widgets.js").ChatWidgetOptions;
+            KUL_CHIP: (chip: HTMLKulChipElement) => import("../types/widgets.js").ChipWidgetOptions;
             KUL_CODE: (code: HTMLKulCodeElement) => import("../types/widgets.js").CodeWidgetOptions;
             KUL_CONTROL_PANEL: () => import("../types/widgets.js").ControlPanelWidgetOptions;
-            KUL_COUNT_BAR_CHART: (countBarChart: HTMLKulChartElement) => import("../types/widgets.js").CountBarChartWidgetOptions;
+            KUL_COUNT_BAR_CHART: (chart: HTMLKulChartElement, chip: HTMLKulChipElement, button: HTMLKulButtonElement) => import("../types/widgets.js").CountBarChartWidgetOptions;
             KUL_HISTOGRAM: (histogram: HTMLKulChartElement) => import("../types/widgets.js").HistogramWidgetOptions;
             KUL_HISTORY: (history: HTMLKulListElement) => import("../types/widgets.js").HistoryWidgetOptions;
             KUL_JSON_INPUT: (content: HTMLTextAreaElement) => import("../types/widgets.js").JsonInputWidgetOptions;
@@ -125,6 +134,11 @@ export declare class LFWidgets {
             };
             KUL_CHAT: () => {
                 KUL_CHAT: (nodeType: NodeType, name: CustomWidgetName) => any;
+            };
+            KUL_CHIP: () => {
+                KUL_CHIP: (nodeType: NodeType, name: CustomWidgetName) => {
+                    widget: Widget;
+                };
             };
             KUL_CODE: () => {
                 KUL_CODE: (nodeType: NodeType, name: CustomWidgetName) => {

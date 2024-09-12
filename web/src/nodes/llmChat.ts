@@ -1,11 +1,11 @@
 import { NodeName, type Extension } from '../types/nodes';
-import { ChatWidgetsSetter, CustomWidgetName, type BaseWidgetCallback } from '../types/widgets';
+import { ChatWidgetSetter, CustomWidgetName, type BaseWidgetCallback } from '../types/widgets';
 import { getApiRoutes } from '../utils/common';
 
 const NAME = NodeName.llmChat;
 
 export const llmChatFactory = {
-  register: (setW: ChatWidgetsSetter, addW: BaseWidgetCallback) => {
+  register: (setW: ChatWidgetSetter, addW: BaseWidgetCallback) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

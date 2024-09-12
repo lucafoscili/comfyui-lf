@@ -18,6 +18,7 @@ import { historyFactory } from '../widgets/history.js';
 import { rollViewerFactory } from '../widgets/rollViewer.js';
 import { countBarChartFactory } from '../widgets/countBarChart.js';
 import { uploadFactory } from '../widgets/upload.js';
+import { chipFactory } from '../widgets/chip.js';
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
 /*-------------------------------------------------*/
@@ -31,6 +32,10 @@ export class LFWidgets {
             },
             [CustomWidgetName.chat]: (nodeType) => {
                 const widget = app.widgets[CustomWidgetName.chat](nodeType, CustomWidgetName.chat).widget;
+                return widget;
+            },
+            [CustomWidgetName.chip]: (nodeType) => {
+                const widget = app.widgets[CustomWidgetName.chip](nodeType, CustomWidgetName.chip).widget;
                 return widget;
             },
             [CustomWidgetName.code]: (nodeType) => {
@@ -77,9 +82,10 @@ export class LFWidgets {
         this.option = {
             [CustomWidgetName.booleanViewer]: (booleanViewer) => booleanViewerFactory.options(booleanViewer),
             [CustomWidgetName.chat]: (chat) => chatFactory.options(chat),
+            [CustomWidgetName.chip]: (chip) => chipFactory.options(chip),
             [CustomWidgetName.code]: (code) => codeFactory.options(code),
             [CustomWidgetName.controlPanel]: () => controlPanelFactory.options(),
-            [CustomWidgetName.countBarChart]: (countBarChart) => countBarChartFactory.options(countBarChart),
+            [CustomWidgetName.countBarChart]: (chart, chip, button) => countBarChartFactory.options(chart, chip, button),
             [CustomWidgetName.histogram]: (histogram) => histogramFactory.options(histogram),
             [CustomWidgetName.history]: (history) => historyFactory.options(history),
             [CustomWidgetName.jsonInput]: (content) => jsonInputFactory.options(content),
@@ -100,6 +106,13 @@ export class LFWidgets {
                 return {
                     [CustomWidgetName.chat]: (nodeType, name) => {
                         return chatFactory.render(nodeType, name);
+                    },
+                };
+            },
+            [CustomWidgetName.chip]: () => {
+                return {
+                    [CustomWidgetName.chip]: (nodeType, name) => {
+                        return chipFactory.render(nodeType, name);
                     },
                 };
             },

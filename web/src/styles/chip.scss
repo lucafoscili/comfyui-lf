@@ -1,0 +1,14 @@
+.lf-chip {
+  & {
+    background: var(--kul-background-color);
+    max-height: 100%;
+    max-width: 100%;
+    overflow: auto;
+    width: 100%;
+  }
+
+  &__widget {
+    height: 100%;
+    width: 100%;
+  }
+}

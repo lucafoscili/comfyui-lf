@@ -36,9 +36,9 @@ export const createDOMWidget = (
 
 export const findWidget = <T extends CustomWidgetName>(
   node: NodeType,
-  name: T,
+  type: T,
 ): CustomWidgetMap[T] => {
-  return node?.widgets?.find((w) => w.name === name) as CustomWidgetMap[T];
+  return node?.widgets?.find((w) => w.type === type) as CustomWidgetMap[T];
 };
 
 export const getApiRoutes = () => {
@@ -72,13 +72,13 @@ export const getLFManager = () => {
 
 export const getCustomWidget = <T extends CustomWidgetName>(
   node: NodeType,
-  name: T,
+  type: T,
   addW?: BaseWidgetCallback,
 ): CustomWidgetMap[T] => {
   return (
     (node?.widgets?.find(
-      (w) => w.name.toLowerCase() === name.toLowerCase(),
-    ) as CustomWidgetMap[T]) || (addW ? (addW(node, name).widget as CustomWidgetMap[T]) : undefined)
+      (w) => w.type.toLowerCase() === type.toLowerCase(),
+    ) as CustomWidgetMap[T]) || (addW ? (addW(node, type).widget as CustomWidgetMap[T]) : undefined)
   );
 };
 
@@ -108,8 +108,13 @@ export const refreshChart = (node: NodeType) => {
       const chart = domWidget.querySelector('kul-chart') as HTMLKulChartElement;
       if (chart) {
         const canvas = chart.shadowRoot.querySelector('canvas');
-        if (canvas?.clientWidth < chart.clientWidth || canvas?.clientHeight < chart.clientHeight)
+        const isSmaller =
+          canvas?.clientWidth < chart.clientWidth || canvas?.clientHeight < chart.clientHeight;
+        const isBigger =
+          canvas?.clientWidth > chart.clientWidth || canvas?.clientHeight > chart.clientHeight;
+        if (isSmaller || isBigger) {
           chart.refresh();
+        }
       }
     }
   } catch (error) {

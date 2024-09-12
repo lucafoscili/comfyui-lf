@@ -85487,7 +85487,7 @@ const KulChart = class {
             this.#initChart();
         }
         else {
-            this.#kulManager.debug.logMessage(this, 'Not enough data. (' + JSON.stringify(this.kulData) + ')', 'warning');
+            this.#kulManager.debug.logMessage(this, 'Not enough data. (' + JSON.stringify(this.kulData) + ')', 'informational');
         }
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
@@ -85496,7 +85496,7 @@ const KulChart = class {
             '--kul_chart_height': this.kulSizeY ? this.kulSizeY : '100%',
             '--kul_chart_width': this.kulSizeX ? this.kulSizeX : '100%',
         };
-        return (h(Host, { key: '1fddd4d498f7a82293e15a94c9e76718583730ea', style: style }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'f3640972c77344bad7a9f0b62423ba5984e20da3', id: KUL_WRAPPER_ID, ref: (chartContainer) => (this.#chartContainer = chartContainer) })));
+        return (h(Host, { key: '532673815fcea4e79b24a9d5d2c15d94db84bc6a', style: style }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '0a9b59dfb6f35f95f827a0b8be54c73c1c493db9', id: KUL_WRAPPER_ID, ref: (chartContainer) => (this.#chartContainer = chartContainer) })));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

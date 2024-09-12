@@ -3,7 +3,7 @@ import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import {
   CustomWidgetName,
-  RollViewerWidgetsSetter,
+  RollViewerWidgetSetter,
   type BaseWidgetCallback,
 } from '../types/widgets';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
@@ -23,7 +23,7 @@ export const randomBooleanFactory = {
       getApiRoutes().redraw();
     }
   },
-  register: (setW: RollViewerWidgetsSetter, addW: BaseWidgetCallback) => {
+  register: (setW: RollViewerWidgetSetter, addW: BaseWidgetCallback) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

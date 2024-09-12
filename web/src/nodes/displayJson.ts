@@ -1,11 +1,7 @@
 import { DisplayJSONPayload, EventName } from '../types/events';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
-import {
-  CustomWidgetName,
-  type BaseWidgetCallback,
-  type CodeWidgetsSetter,
-} from '../types/widgets';
+import { CustomWidgetName, type BaseWidgetCallback, type CodeWidgetSetter } from '../types/widgets';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 
 const NAME = NodeName.displayJson;
@@ -23,7 +19,7 @@ export const displayJsonFactory = {
       getApiRoutes().redraw();
     }
   },
-  register: (setW: CodeWidgetsSetter, addW: BaseWidgetCallback) => {
+  register: (setW: CodeWidgetSetter, addW: BaseWidgetCallback) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {
