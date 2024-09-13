@@ -14,16 +14,20 @@ export type ComfyWidgetCallback = <T extends ComfyWidgetName>(
 ) => { widget: Widget };
 export type ComfyWidgetMap = {
   [ComfyWidgetName.boolean]: Widget;
+  [ComfyWidgetName.customtext]: Widget;
   [ComfyWidgetName.float]: Widget;
   [ComfyWidgetName.integer]: Widget;
   [ComfyWidgetName.json]: Widget;
+  [ComfyWidgetName.number]: Widget;
   [ComfyWidgetName.string]: Widget;
 };
 export enum ComfyWidgetName {
   boolean = 'BOOLEAN',
+  customtext = 'CUSTOMTEXT',
   float = 'FLOAT',
   integer = 'INTEGER',
   json = 'JSON',
+  number = 'NUMBER',
   string = 'STRING',
 }
 export type CustomWidgetMap = {
