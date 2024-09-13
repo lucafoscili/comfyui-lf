@@ -39,16 +39,6 @@ Includes a switch that enables verbose debug logs in the browser's console and a
 Applies the gaussian blur filter to a list of images and edits the filename of each image by adding the '_Blur' suffix.
 ![Blurimages](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/BlurImages.png "Screenshot of the list of images processed with Gaussian blur")
 
-#### ResizeImageByEdge
-
-Resizes one or more images in tensor format's longest or shortest edge to the specified size.
-![ResizeImageByEdge](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/ResizeImageByEdge.png "Interface of image resizing node showing edge selection")
-
-#### ResizeImageToSquare
-
-Resizes one or more images in tensor format to fit a square (by cropping when the image is rectangular).
-![ResizeImageToSquare](https://github.com/lucafoscili/comfyui-lf/blob/f146784989b4511a10dfc5e4be1eeb5fa1d93ae1/docs/images/ResizeImageToSquare.png "Interface of image resizing node to square")
-
 #### Lora2Prompt
 
 Converts a prompt and LoRAs to a formatted string.
@@ -63,6 +53,16 @@ Processes a LoRA tag to extract keywords and count them. This node is useful for
 
 The node takes a list of images as input and generates eight additional images, each resized to common web resolutions (256px, 320px, 512px, 640px, 1024px, 1280px, 2048px, 2560px) along the longest edge.
 ![MultipleImageResizeForWeb](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/MultipleImageResizeForWeb.png "Batch resize GUI showing multiple common web resolutions")
+
+#### ResizeImageByEdge
+
+Resizes one or more images in tensor format's longest or shortest edge to the specified size.
+![ResizeImageByEdge](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/ResizeImageByEdge.png "Interface of image resizing node showing edge selection")
+
+#### ResizeImageToSquare
+
+Resizes one or more images in tensor format to fit a square (by cropping when the image is rectangular).
+![ResizeImageToSquare](https://github.com/lucafoscili/comfyui-lf/blob/f146784989b4511a10dfc5e4be1eeb5fa1d93ae1/docs/images/ResizeImageToSquare.png "Interface of image resizing node to square")
 
 #### Something2Number
 

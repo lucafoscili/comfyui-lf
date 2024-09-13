@@ -1,9 +1,11 @@
 export var ComfyWidgetName;
 (function (ComfyWidgetName) {
     ComfyWidgetName["boolean"] = "BOOLEAN";
+    ComfyWidgetName["customtext"] = "CUSTOMTEXT";
     ComfyWidgetName["float"] = "FLOAT";
     ComfyWidgetName["integer"] = "INTEGER";
     ComfyWidgetName["json"] = "JSON";
+    ComfyWidgetName["number"] = "NUMBER";
     ComfyWidgetName["string"] = "STRING";
 })(ComfyWidgetName || (ComfyWidgetName = {}));
 export var CustomWidgetName;

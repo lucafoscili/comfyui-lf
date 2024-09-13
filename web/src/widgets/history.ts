@@ -73,17 +73,23 @@ const handleEvent = (e: CustomEvent<KulListEventPayload>, comfyNode: NodeType) =
   const strValue = node ? String(node.value).valueOf() : '';
   if (eventType === 'click' && strValue) {
     const boolW = getWidget(comfyNode, ComfyWidgetName.boolean);
+    const customtextW = getWidget(comfyNode, ComfyWidgetName.customtext);
     const floatW = getWidget(comfyNode, ComfyWidgetName.float);
     const intW = getWidget(comfyNode, ComfyWidgetName.integer);
+    const numberW = getWidget(comfyNode, ComfyWidgetName.number);
     const stringW = getWidget(comfyNode, ComfyWidgetName.string);
     if (boolW) {
-      boolW.value = node.value;
+      boolW.value = Boolean(node.value).valueOf();
     } else if (floatW) {
-      floatW.value = node.value;
+      floatW.value = Number(node.value).valueOf();
     } else if (intW) {
-      intW.value = node.value;
+      intW.value = Number(node.value).valueOf();
     } else if (stringW) {
       stringW.options.setValue(node.value);
+    } else if (customtextW) {
+      customtextW.options.setValue(node.value);
+    } else if (numberW) {
+      numberW.value = Number(node.value).valueOf();
     }
   }
 };

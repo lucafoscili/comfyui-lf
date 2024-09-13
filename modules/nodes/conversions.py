@@ -286,7 +286,7 @@ class LF_ResizeImageByEdge:
         dataset["nodes"][0]["id"] = summary_message
         dataset["nodes"][0]["value"] = summary_message
 
-        PromptServer.instance.send_sync("lf-imageresizebyedge", {
+        PromptServer.instance.send_sync("lf-resizeimagebyedge", {
             "node": node_id,
             "dataset": dataset,
             "original_heights": original_heights,
