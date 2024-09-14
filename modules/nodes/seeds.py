@@ -1,5 +1,6 @@
 import json
 import os
+import time
 
 from datetime import datetime
 
@@ -69,6 +70,7 @@ class LF_UrandomSeedGenerator:
         for i in range(20):
             if existing_seeds[i] is None:  # If no seed exists at this index, generate one
                 existing_seeds[i] = int.from_bytes(os.urandom(4), 'big')
+                time.sleep(0.1)  # Add a tiny delay to let system entropy pool refresh
 
         # Generate JSON output
         execution_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
