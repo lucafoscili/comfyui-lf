@@ -35,6 +35,7 @@ export declare class LFNodes {
         LF_KeywordCounter: (setW: import("../types/widgets").CountBarChartWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_KeywordToggleFromJSON: (setW: import("../types/widgets").ChipWidgetSetter) => void;
         LF_LLMChat: (setW: import("../types/widgets").ChatWidgetSetter, addW: BaseWidgetCallback) => void;
+        LF_LLMMessenger: (setW: import("../types/widgets").MessengerWidgetSetter) => void;
         LF_LoadImages: (setW: import("../types/widgets").ImagePreviewWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_LoadMetadata: (setW: import("../types/widgets").UploadWidgetSetter) => void;
         LF_MultipleImageResizeForWeb: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback) => void;
@@ -86,6 +87,7 @@ export declare class LFNodes {
             LF_KeywordCounter: (setW: import("../types/widgets").CountBarChartWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_KeywordToggleFromJSON: (setW: import("../types/widgets").ChipWidgetSetter) => void;
             LF_LLMChat: (setW: import("../types/widgets").ChatWidgetSetter, addW: BaseWidgetCallback) => void;
+            LF_LLMMessenger: (setW: import("../types/widgets").MessengerWidgetSetter) => void;
             LF_LoadImages: (setW: import("../types/widgets").ImagePreviewWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_LoadMetadata: (setW: import("../types/widgets").UploadWidgetSetter) => void;
             LF_MultipleImageResizeForWeb: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback) => void;

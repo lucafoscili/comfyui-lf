@@ -24,6 +24,7 @@ import { saveImageForCivitaiFactory } from '../nodes/saveImageForCivitai.js';
 import { civitaiMetadataSetupFactory } from '../nodes/civitaiMetadataSetup.js';
 import { loadMetadataFactory } from '../nodes/loadMetadata.js';
 import { keywordToggleFromJsonFactory } from '../nodes/keywordToggleFromJson.js';
+import { llmMessengerFactory } from '../nodes/llmMessenger.js';
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
 /*-------------------------------------------------*/
@@ -64,6 +65,7 @@ export class LFNodes {
             [NodeName.keywordCounter]: keywordCounterFactory.register,
             [NodeName.keywordToggleFromJson]: keywordToggleFromJsonFactory.register,
             [NodeName.llmChat]: llmChatFactory.register,
+            [NodeName.llmMessenger]: llmMessengerFactory.register,
             [NodeName.loadImages]: loadImagesFactory.register,
             [NodeName.loadMetadata]: loadMetadataFactory.register,
             [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.register,

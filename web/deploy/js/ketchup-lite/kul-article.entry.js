@@ -167,3 +167,5 @@ const KulArticle = class {
 KulArticle.style = KulArticleStyle0;
 
 export { KulArticle as kul_article };
+
+//# sourceMappingURL=kul-article.entry.js.map

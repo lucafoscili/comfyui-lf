@@ -196,3 +196,5 @@ const KulAccordion = class {
 KulAccordion.style = KulAccordionStyle0;
 
 export { KulAccordion as kul_accordion };
+
+//# sourceMappingURL=kul-accordion.entry.js.map

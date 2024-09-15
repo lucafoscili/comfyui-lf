@@ -1321,3 +1321,5 @@ var nextTick = (cb) => promiseResolve().then(cb);
 var writeTask = /* @__PURE__ */ queueTask(queueDomWrites, true);
 
 export { Fragment as F, Host as H, getAssetPath as a, bootstrapLazy as b, createEvent as c, setAssetPath as d, forceUpdate as f, getElement as g, h, promiseResolve as p, registerInstance as r, setNonce as s };
+
+//# sourceMappingURL=index-9aa60797.js.map

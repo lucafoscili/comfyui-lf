@@ -114,7 +114,7 @@ const KulToast = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: 'a05c40ec6822f36050be264a1d4c601639aff931' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '2d24d104a3aa2f8825f8152b50bc1bea9935bd02', id: KUL_WRAPPER_ID }, h("div", { key: 'df9bec49089fbfa7824a04537dc7a9241132b2f3', class: "toast" }, h("div", { key: '18ea49e266e0f059ad28e6ec4a2fa9666bd33cb6', class: `toast__accent ${this.kulTimer ? 'toast__accent--temporary' : ''}` }), h("div", { key: '6414aff5dac7b0dcb2e83e1047871d2ebf1e44ac', class: "toast__message-wrapper" }, this.kulIcon ? (h("div", { class: "toast__icon" }, h("kul-image", { ...this.kulIcon }))) : undefined, this.kulMessage ? (h("div", { class: "toast__message" }, this.kulMessage)) : undefined, this.kulCloseIcon ? (h("div", { class: "toast__icon toast__icon--close", onClick: () => this.kulCloseCallback() }, h("kul-image", { ...this.kulCloseIcon }))) : undefined)))));
+        return (h(Host, { key: 'ace0cdd166d7bc769674223002c229e4eb68553d' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '181837ede82e7c81df76e42bb3128fc7dd340a4b', id: KUL_WRAPPER_ID }, h("div", { key: 'aec9f5d5da105e009bae63239a519284fb9c62c8', class: "toast" }, h("div", { key: 'ef0d9a07c680242713c05a526b94ce81af1083a8', class: `toast__accent ${this.kulTimer ? 'toast__accent--temporary' : ''}` }), h("div", { key: '51dc6e24b2201a844d2c3ec289201ae52b0caea0', class: "toast__message-wrapper" }, this.kulIcon ? (h("div", { class: "toast__icon" }, h("kul-image", { ...this.kulIcon }))) : undefined, this.kulMessage ? (h("div", { class: "toast__message" }, this.kulMessage)) : undefined, this.kulCloseIcon ? (h("div", { class: "toast__icon toast__icon--close", onClick: () => this.kulCloseCallback() }, h("kul-image", { ...this.kulCloseIcon }))) : undefined)))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);
@@ -123,3 +123,5 @@ const KulToast = class {
 KulToast.style = KulToastStyle0;
 
 export { KulToast as kul_toast };
+
+//# sourceMappingURL=kul-toast.entry.js.map

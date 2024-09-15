@@ -11,6 +11,7 @@ export declare enum NodeName {
     keywordCounter = "LF_KeywordCounter",
     keywordToggleFromJson = "LF_KeywordToggleFromJSON",
     llmChat = "LF_LLMChat",
+    llmMessenger = "LF_LLMMessenger",
     loadImages = "LF_LoadImages",
     loadMetadata = "LF_LoadMetadata",
     multipleImageResizeForWeb = "LF_MultipleImageResizeForWeb",

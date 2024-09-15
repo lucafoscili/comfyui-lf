@@ -153,13 +153,38 @@ class LF_LLMChat:
         last_llm_message = next((message["content"] for message in reversed(chat_data) if message["role"] == "llm"), "")
         return (chat_data, last_message, last_user_message, last_llm_message, json.dumps(all_messages))
 
+class LF_LLMMessenger:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "config": ("JSON", {"tooltip": "The configuration JSON containing characters to talk to."}),
+                "messenger": ("KUL_MESSENGER", {"tooltip": "Chatting interface with characters controlled by an LLM."}),
+            }
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    RETURN_NAMES = ("chat_history_json", "last_message", "last_user_message", "last_llm_message")
+    RETURN_TYPES = ("JSON", "STRING", "STRING", "STRING")
+
+    def on_exec(self, config, messenger):
+        chat_data = json.loads(messenger)
+        all_messages = [message["content"] for message in chat_data]
+        last_message = all_messages[-1]
+        last_user_message = next((message["content"] for message in reversed(chat_data) if message["role"] == "user"), "")
+        last_llm_message = next((message["content"] for message in reversed(chat_data) if message["role"] == "llm"), "")
+        return (chat_data, last_message, last_user_message, last_llm_message, json.dumps(all_messages))
+
 NODE_CLASS_MAPPINGS = {
     "LF_CharacterImpersonator": LF_CharacterImpersonator,
     "LF_ImageClassifier": LF_ImageClassifier,
     "LF_LLMChat": LF_LLMChat,
+    "LF_LLMMessenger": LF_LLMMessenger,
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_CharacterImpersonator": "LLM <-> Character",
     "LF_ImageClassifier": "LLM Image classifier",
-    "LF_LLMChat": "LLM Chat"
+    "LF_LLMChat": "LLM Chat",
+    "LF_LLMMessenger": "LLM Messenger"
 }

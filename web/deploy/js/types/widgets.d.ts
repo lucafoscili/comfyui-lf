@@ -34,6 +34,7 @@ export type CustomWidgetMap = {
     [CustomWidgetName.history]: HistoryWidget;
     [CustomWidgetName.imagePreview]: ImagePreviewWidget;
     [CustomWidgetName.jsonInput]: JsonInputWidget;
+    [CustomWidgetName.messenger]: MessengerWidget;
     [CustomWidgetName.rollViewer]: RollViewerWidget;
     [CustomWidgetName.tree]: TreeWidget;
     [CustomWidgetName.upload]: UploadWidget;
@@ -49,11 +50,12 @@ export declare enum CustomWidgetName {
     history = "KUL_HISTORY",
     imagePreview = "KUL_IMAGE_PREVIEW_B64",
     jsonInput = "KUL_JSON_INPUT",
+    messenger = "KUL_MESSENGER",
     rollViewer = "KUL_ROLL_VIEWER",
     tree = "KUL_TREE",
     upload = "KUL_UPLOAD"
 }
-export type CustomWidgetOptions = BooleanViewerWidgetOptions | ChatWidgetOptions | ChipWidgetOptions | CodeWidgetOptions | ControlPanelWidgetOptions | CountBarChartWidgetOptions | HistogramWidgetOptions | HistoryWidgetOptions | ImagePreviewWidgetOptions | JsonInputWidgetOptions | RollViewerWidgetOptions | TreeWidgetOptions | UploadWidgetOptions;
+export type CustomWidgetOptions = BooleanViewerWidgetOptions | ChatWidgetOptions | ChipWidgetOptions | CodeWidgetOptions | ControlPanelWidgetOptions | CountBarChartWidgetOptions | HistogramWidgetOptions | HistoryWidgetOptions | ImagePreviewWidgetOptions | JsonInputWidgetOptions | MessengerWidgetOptions | RollViewerWidgetOptions | TreeWidgetOptions | UploadWidgetOptions;
 export interface CustomWidgetSetters {
     [CustomWidgetName.booleanViewer](node: NodeType, name: CustomWidgetName.booleanViewer): {
         widget: BooleanViewerWidget;
@@ -81,6 +83,9 @@ export interface CustomWidgetSetters {
     };
     [CustomWidgetName.jsonInput](node: NodeType, name: CustomWidgetName.jsonInput): {
         widget: JsonInputWidget;
+    };
+    [CustomWidgetName.messenger](node: NodeType, name: CustomWidgetName.messenger): {
+        widget: MessengerWidget;
     };
     [CustomWidgetName.rollViewer](node: NodeType, name: CustomWidgetName.rollViewer): {
         widget: RollViewerWidget;
@@ -248,6 +253,20 @@ export type CountBarChartWidgetValue = string | {
     chartDataset: KulDataDataset;
     chipDataset: KulDataDataset;
 };
+export interface MessengerWidget extends Widget {
+    options: MessengerWidgetOptions;
+    type: [CustomWidgetName.messenger];
+}
+export interface MessengerWidgetOptions {
+    hideOnZoom: boolean;
+    getComp(): HTMLKulMessengerElement;
+    getValue(): void;
+    setValue(): void;
+}
+export type MessengerWidgetSetter = () => {
+    [CustomWidgetName.messenger]: BaseWidgetCallback;
+};
+export type MessengerWidgetValue = string;
 export interface RollViewerWidget extends Widget {
     options: RollViewerWidgetOptions;
     type: [CustomWidgetName.rollViewer];

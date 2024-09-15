@@ -12,3 +12,5 @@ var KulDataCyAttributes;
 })(KulDataCyAttributes || (KulDataCyAttributes = {}));
 
 export { KulDataCyAttributes as K };
+
+//# sourceMappingURL=GenericTypes-8038330a.js.map

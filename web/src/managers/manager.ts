@@ -209,6 +209,10 @@ export class LFManager {
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_LLMChat(widgets.setters.KUL_CHAT, widgets.adders.KUL_CHAT);
     /*-------------------------------------------------------------------*/
+    /*                I n i t   L L M M e s s e n g e r                  */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_LLMMessenger(widgets.setters.KUL_MESSENGER);
+    /*-------------------------------------------------------------------*/
     /*                I n i t   L o a d M e t a d a t a                  */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_LoadMetadata(widgets.setters.KUL_UPLOAD);

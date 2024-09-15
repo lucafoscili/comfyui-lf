@@ -43,7 +43,7 @@ export const chatFactory = {
         content.classList.add(chatFactory.cssClasses.content);
         chat.classList.add(chatFactory.cssClasses.chat);
         chat.addEventListener('kul-chat-event', (e) => {
-            getLFManager().log('Setting new history on chat widget', { chat: e.detail.comp }, LogSeverity.Error);
+            getLFManager().log('Setting new history on chat widget', { chat: e.detail }, LogSeverity.Error);
             const { history } = e.detail;
             chat.dataset.history = history;
         });
