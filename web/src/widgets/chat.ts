@@ -50,7 +50,7 @@ export const chatFactory = {
     chat.addEventListener('kul-chat-event', (e) => {
       getLFManager().log(
         'Setting new history on chat widget',
-        { chat: e.detail.comp },
+        { chat: e.detail },
         LogSeverity.Error,
       );
       const { history } = e.detail;

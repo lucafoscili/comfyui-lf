@@ -168,15 +168,18 @@ node_modules/
 
 # Kethup Lite
 web/src/types/ketchup-lite
-web/deploy/assets/media
+web/deploy/assets/media/*splash*
 web/deploy/assets/svg/*
 web/deploy/assets/prism
 web/deploy/js/ketchup-lite/*showcase*
 
 # Kethup Lite (add icons to keep here)
+!web/deploy/assets/svg/account.svg
 !web/deploy/assets/svg/arrow_drop_down.svg
 !web/deploy/assets/svg/audiotrack.svg
 !web/deploy/assets/svg/check.svg
+!web/deploy/assets/svg/chevron_left.svg
+!web/deploy/assets/svg/chevron_right.svg
 !web/deploy/assets/svg/clear.svg
 !web/deploy/assets/svg/content_copy.svg
 !web/deploy/assets/svg/delete.svg
@@ -185,7 +188,10 @@ web/deploy/js/ketchup-lite/*showcase*
 !web/deploy/assets/svg/hotel.svg
 !web/deploy/assets/svg/keyboard_voice.svg
 !web/deploy/assets/svg/image.svg
+!web/deploy/assets/svg/landscape.svg
+!web/deploy/assets/svg/loyalty.svg
 !web/deploy/assets/svg/movie.svg
+!web/deploy/assets/svg/portrait.svg
 !web/deploy/assets/svg/refresh.svg
 !web/deploy/assets/svg/style.svg
 !web/deploy/assets/svg/view_comfy.svg

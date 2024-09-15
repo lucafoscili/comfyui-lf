@@ -41,6 +41,7 @@ export type CustomWidgetMap = {
   [CustomWidgetName.history]: HistoryWidget;
   [CustomWidgetName.imagePreview]: ImagePreviewWidget;
   [CustomWidgetName.jsonInput]: JsonInputWidget;
+  [CustomWidgetName.messenger]: MessengerWidget;
   [CustomWidgetName.rollViewer]: RollViewerWidget;
   [CustomWidgetName.tree]: TreeWidget;
   [CustomWidgetName.upload]: UploadWidget;
@@ -56,6 +57,7 @@ export enum CustomWidgetName {
   history = 'KUL_HISTORY',
   imagePreview = 'KUL_IMAGE_PREVIEW_B64',
   jsonInput = 'KUL_JSON_INPUT',
+  messenger = 'KUL_MESSENGER',
   rollViewer = 'KUL_ROLL_VIEWER',
   tree = 'KUL_TREE',
   upload = 'KUL_UPLOAD',
@@ -71,6 +73,7 @@ export type CustomWidgetOptions =
   | HistoryWidgetOptions
   | ImagePreviewWidgetOptions
   | JsonInputWidgetOptions
+  | MessengerWidgetOptions
   | RollViewerWidgetOptions
   | TreeWidgetOptions
   | UploadWidgetOptions;
@@ -105,6 +108,10 @@ export interface CustomWidgetSetters {
     node: NodeType,
     name: CustomWidgetName.jsonInput,
   ): { widget: JsonInputWidget };
+  [CustomWidgetName.messenger](
+    node: NodeType,
+    name: CustomWidgetName.messenger,
+  ): { widget: MessengerWidget };
   [CustomWidgetName.rollViewer](
     node: NodeType,
     name: CustomWidgetName.rollViewer,
@@ -320,6 +327,25 @@ export type CountBarChartWidgetValue =
       chartDataset: KulDataDataset;
       chipDataset: KulDataDataset;
     };
+
+/*-------------------------------------------------------------------*/
+/*            M e s s e n g e r   D e c l a r a t i o n s            */
+/*-------------------------------------------------------------------*/
+
+export interface MessengerWidget extends Widget {
+  options: MessengerWidgetOptions;
+  type: [CustomWidgetName.messenger];
+}
+export interface MessengerWidgetOptions {
+  hideOnZoom: boolean;
+  getComp(): HTMLKulMessengerElement;
+  getValue(): void;
+  setValue(): void;
+}
+export type MessengerWidgetSetter = () => {
+  [CustomWidgetName.messenger]: BaseWidgetCallback;
+};
+export type MessengerWidgetValue = string;
 
 /*-------------------------------------------------------------------*/
 /*           R o l l   V i e w e r   D e c l a r a t i o n s         */

@@ -11,8 +11,9 @@ export declare class LFWidgets {
         KUL_COUNT_BAR_CHART: (nodeType: NodeType) => any;
         KUL_HISTOGRAM: (nodeType: NodeType) => any;
         KUL_HISTORY: (nodeType: NodeType) => any;
-        KUL_JSON_INPUT: (nodeType: NodeType) => any;
         KUL_IMAGE_PREVIEW_B64: (nodeType: NodeType) => any;
+        KUL_JSON_INPUT: (nodeType: NodeType) => any;
+        KUL_MESSENGER: (nodeType: NodeType) => any;
         KUL_ROLL_VIEWER: (nodeType: NodeType) => any;
         KUL_TREE: (nodeType: NodeType) => any;
         KUL_UPLOAD: (nodeType: NodeType) => any;
@@ -28,6 +29,7 @@ export declare class LFWidgets {
         KUL_HISTORY: (history: HTMLKulListElement) => import("../types/widgets.js").HistoryWidgetOptions;
         KUL_JSON_INPUT: (content: HTMLTextAreaElement) => import("../types/widgets.js").JsonInputWidgetOptions;
         KUL_IMAGE_PREVIEW_B64: (content: HTMLDivElement, isSelectable: boolean) => import("../types/widgets.js").ImagePreviewWidgetOptions;
+        KUL_MESSENGER: (messenger: HTMLKulMessengerElement) => import("../types/widgets.js").MessengerWidgetOptions;
         KUL_ROLL_VIEWER: (rollViewer: HTMLKulProgressbarElement) => import("../types/widgets.js").RollViewerWidgetOptions;
         KUL_TREE: (tree: HTMLKulTreeElement) => import("../types/widgets.js").TreeWidgetOptions;
         KUL_UPLOAD: (upload: HTMLKulUploadElement) => import("../types/widgets.js").UploadWidgetOptions;
@@ -79,6 +81,11 @@ export declare class LFWidgets {
                 widget: Widget;
             };
         };
+        KUL_MESSENGER: () => {
+            KUL_MESSENGER: (nodeType: NodeType, name: CustomWidgetName) => {
+                widget: Widget;
+            };
+        };
         KUL_ROLL_VIEWER: () => {
             KUL_ROLL_VIEWER: (nodeType: NodeType, name: CustomWidgetName) => {
                 widget: Widget;
@@ -105,8 +112,9 @@ export declare class LFWidgets {
             KUL_COUNT_BAR_CHART: (nodeType: NodeType) => any;
             KUL_HISTOGRAM: (nodeType: NodeType) => any;
             KUL_HISTORY: (nodeType: NodeType) => any;
-            KUL_JSON_INPUT: (nodeType: NodeType) => any;
             KUL_IMAGE_PREVIEW_B64: (nodeType: NodeType) => any;
+            KUL_JSON_INPUT: (nodeType: NodeType) => any;
+            KUL_MESSENGER: (nodeType: NodeType) => any;
             KUL_ROLL_VIEWER: (nodeType: NodeType) => any;
             KUL_TREE: (nodeType: NodeType) => any;
             KUL_UPLOAD: (nodeType: NodeType) => any;
@@ -122,6 +130,7 @@ export declare class LFWidgets {
             KUL_HISTORY: (history: HTMLKulListElement) => import("../types/widgets.js").HistoryWidgetOptions;
             KUL_JSON_INPUT: (content: HTMLTextAreaElement) => import("../types/widgets.js").JsonInputWidgetOptions;
             KUL_IMAGE_PREVIEW_B64: (content: HTMLDivElement, isSelectable: boolean) => import("../types/widgets.js").ImagePreviewWidgetOptions;
+            KUL_MESSENGER: (messenger: HTMLKulMessengerElement) => import("../types/widgets.js").MessengerWidgetOptions;
             KUL_ROLL_VIEWER: (rollViewer: HTMLKulProgressbarElement) => import("../types/widgets.js").RollViewerWidgetOptions;
             KUL_TREE: (tree: HTMLKulTreeElement) => import("../types/widgets.js").TreeWidgetOptions;
             KUL_UPLOAD: (upload: HTMLKulUploadElement) => import("../types/widgets.js").UploadWidgetOptions;
@@ -170,6 +179,11 @@ export declare class LFWidgets {
             };
             KUL_IMAGE_PREVIEW_B64: () => {
                 KUL_IMAGE_PREVIEW_B64: (nodeType: NodeType, name: CustomWidgetName) => {
+                    widget: Widget;
+                };
+            };
+            KUL_MESSENGER: () => {
+                KUL_MESSENGER: (nodeType: NodeType, name: CustomWidgetName) => {
                     widget: Widget;
                 };
             };

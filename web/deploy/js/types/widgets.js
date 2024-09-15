@@ -20,6 +20,7 @@ export var CustomWidgetName;
     CustomWidgetName["history"] = "KUL_HISTORY";
     CustomWidgetName["imagePreview"] = "KUL_IMAGE_PREVIEW_B64";
     CustomWidgetName["jsonInput"] = "KUL_JSON_INPUT";
+    CustomWidgetName["messenger"] = "KUL_MESSENGER";
     CustomWidgetName["rollViewer"] = "KUL_ROLL_VIEWER";
     CustomWidgetName["tree"] = "KUL_TREE";
     CustomWidgetName["upload"] = "KUL_UPLOAD";

@@ -85505,3 +85505,5 @@ const KulChart = class {
 KulChart.style = KulChartStyle0;
 
 export { KulChart as kul_chart };
+
+//# sourceMappingURL=kul-chart.entry.js.map

@@ -124,7 +124,7 @@ const KulProgressbar = class {
             ['--kul_progressbar_percentage_width']: `${this.kulValue}%`,
             ['--kul_progressbar_transform']: `rotate(${this.kulValue * 3.6}deg)`,
         };
-        return (h(Host, { key: 'f6a97c0e4caa8007ff0f4d60ba69cf6ede8dbbc5' }, this.kulStyle && (h("style", { key: '1a2d9f54458f18c5105b9234e7eac5624c579f81', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: '59b3bd56034db0a5a91ad6b00f6b3d67ee4c9e54', id: KUL_WRAPPER_ID, style: style }, this.kulIsRadial
+        return (h(Host, { key: 'f25c35323db123e01745ccf33089d0bd6a225921' }, this.kulStyle && (h("style", { key: '79301f9305224ee9293e3c7317c7e4347889e0e8', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: '21b8aa3718a0b2c64f8c29a5fd1aa72bc99a2924', id: KUL_WRAPPER_ID, style: style }, this.kulIsRadial
             ? this.#prepRadialBar()
             : this.#prepProgressBar())));
     }
@@ -135,3 +135,5 @@ const KulProgressbar = class {
 KulProgressbar.style = KulProgressbarStyle0;
 
 export { KulProgressbar as kul_progressbar };
+
+//# sourceMappingURL=kul-progressbar.entry.js.map

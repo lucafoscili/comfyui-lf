@@ -1,6 +1,5 @@
-import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, a as getAssetPath, H as Host } from './index-9570d2db.js';
-import { k as kulManagerInstance, g as getProps } from './kul-manager-18eb90c7.js';
-import { K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './GenericVariables-0efba181.js';
+import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, a as getAssetPath, H as Host } from './index-9aa60797.js';
+import { k as kulManagerInstance, g as getProps, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './kul-manager-dc9a333c.js';
 import { K as KulDataCyAttributes } from './GenericTypes-8038330a.js';
 
 var KulTextfieldProps;
@@ -49,6 +48,7 @@ const KulTextfield = class {
     /*       I n t e r n a l   V a r i a b l e s       */
     /*-------------------------------------------------*/
     #hasOutline;
+    #input;
     #kulManager = kulManagerInstance();
     #maxLength;
     /*-------------------------------------------------*/
@@ -110,6 +110,11 @@ const KulTextfield = class {
      */
     async refresh() {
         forceUpdate(this);
+    } /**
+     * Focuses the input element.
+     */
+    async setFocus() {
+        this.#input.focus();
     }
     /**
      * Sets the component's state.
@@ -171,7 +176,11 @@ const KulTextfield = class {
                 this.onKulEvent(e, 'focus');
             }, onInput: (e) => {
                 this.onKulEvent(e, 'input');
-            }, placeholder: this.kulFullWidth ? this.kulLabel : undefined, value: this.kulValue }));
+            }, placeholder: this.kulFullWidth ? this.kulLabel : undefined, ref: (el) => {
+                if (el) {
+                    this.#input = el;
+                }
+            }, value: this.value }));
     }
     #prepLabel() {
         if (this.kulFullWidth) {
@@ -197,7 +206,11 @@ const KulTextfield = class {
                 this.onKulEvent(e, 'focus');
             }, onInput: (e) => {
                 this.onKulEvent(e, 'input');
-            }, value: this.kulValue })));
+            }, ref: (el) => {
+                if (el) {
+                    this.#input = el;
+                }
+            }, value: this.value })));
     }
     #updateStatus() {
         const propertiesToUpdateStatus = [
@@ -246,7 +259,7 @@ const KulTextfield = class {
         this.status.forEach((status) => {
             classList.push(`textfield--${status}`);
         });
-        return (h(Host, { key: '6cf33c559d6eeb705c0869402903d72ea2de6cb9' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '8f24bab83dd05f53290c25a795aef4b40ed7809d', id: KUL_WRAPPER_ID }, h("div", { key: '2ebd46ad56a4e7a91124ca5cc10c8bb27b52c39c', class: classList.join(' ') }, this.kulStyling === 'textarea'
+        return (h(Host, { key: 'a9036567bf3d79366ee6af4fb93f69abe310e07c' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '8644a1df5df37168e3a48156364bc9c4592d507f', id: KUL_WRAPPER_ID }, h("div", { key: 'df11bf130f38776aa61eabf975bc2a063b35f8e4', class: classList.join(' ') }, this.kulStyling === 'textarea'
             ? [
                 this.#prepCounter(),
                 this.#prepIcon(),
@@ -270,3 +283,5 @@ const KulTextfield = class {
 KulTextfield.style = KulTextfieldStyle0;
 
 export { KulTextfield as kul_textfield };
+
+//# sourceMappingURL=kul-textfield.entry.js.map

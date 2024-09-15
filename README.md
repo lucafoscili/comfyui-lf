@@ -157,6 +157,12 @@ Real-time chat with an LLM model served through Koboldcpp (<http://localhost:500
 It's possible to select the last messages as an output, sending them to the next node.
 ![LLMChat](https://github.com/lucafoscili/comfyui-lf/blob/69181cfe1c3b2062a40035e8b59cece8e8688483/docs/images/LLMChat.png "Example of LLM chat")
 
+#### LLMMessenger (super alpha version!)
+
+A user interface that loads character through a JSON and then connects to your local Koboldcpp instance (<http://localhost:5001>).
+It's in early development so there are a lot of missing features that will probably be added/changed in the future.
+![LLMMessenger](https://github.com/lucafoscili/comfyui-lf/blob/69181cfe1c3b2062a40035e8b59cece8e8688483/docs/images/LLMMessenger.png "Example of LLM Messenger")
+
 ### Logic nodes (`logic.py`)
 
 #### SwitchImage

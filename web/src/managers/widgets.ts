@@ -13,6 +13,7 @@ import { rollViewerFactory } from '../widgets/rollViewer.js';
 import { countBarChartFactory } from '../widgets/countBarChart.js';
 import { uploadFactory } from '../widgets/upload.js';
 import { chipFactory } from '../widgets/chip.js';
+import { messengerFactory } from '../widgets/messenger.js';
 
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
@@ -81,6 +82,13 @@ export class LFWidgets {
       ).widget;
       return widget;
     },
+    [CustomWidgetName.imagePreview]: (nodeType: NodeType) => {
+      const widget = app.widgets[CustomWidgetName.imagePreview](
+        nodeType,
+        CustomWidgetName.imagePreview,
+      ).widget;
+      return widget;
+    },
     [CustomWidgetName.jsonInput]: (nodeType: NodeType) => {
       const widget = app.widgets[CustomWidgetName.jsonInput](
         nodeType,
@@ -88,10 +96,10 @@ export class LFWidgets {
       ).widget;
       return widget;
     },
-    [CustomWidgetName.imagePreview]: (nodeType: NodeType) => {
-      const widget = app.widgets[CustomWidgetName.imagePreview](
+    [CustomWidgetName.messenger]: (nodeType: NodeType) => {
+      const widget = app.widgets[CustomWidgetName.messenger](
         nodeType,
-        CustomWidgetName.imagePreview,
+        CustomWidgetName.messenger,
       ).widget;
       return widget;
     },
@@ -131,6 +139,8 @@ export class LFWidgets {
       jsonInputFactory.options(content),
     [CustomWidgetName.imagePreview]: (content: HTMLDivElement, isSelectable: boolean) =>
       imagePreviewFactory.options(content, isSelectable),
+    [CustomWidgetName.messenger]: (messenger: HTMLKulMessengerElement) =>
+      messengerFactory.options(messenger),
     [CustomWidgetName.rollViewer]: (rollViewer: HTMLKulProgressbarElement) =>
       rollViewerFactory.options(rollViewer),
     [CustomWidgetName.tree]: (tree: HTMLKulTreeElement) => treeFactory.options(tree),
@@ -205,6 +215,13 @@ export class LFWidgets {
       return {
         [CustomWidgetName.imagePreview]: (nodeType: NodeType, name: CustomWidgetName) => {
           return imagePreviewFactory.render(nodeType, name);
+        },
+      };
+    },
+    [CustomWidgetName.messenger]: () => {
+      return {
+        [CustomWidgetName.messenger]: (nodeType: NodeType, name: CustomWidgetName) => {
+          return messengerFactory.render(nodeType, name);
         },
       };
     },

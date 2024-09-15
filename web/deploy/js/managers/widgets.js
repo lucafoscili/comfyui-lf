@@ -19,6 +19,7 @@ import { rollViewerFactory } from '../widgets/rollViewer.js';
 import { countBarChartFactory } from '../widgets/countBarChart.js';
 import { uploadFactory } from '../widgets/upload.js';
 import { chipFactory } from '../widgets/chip.js';
+import { messengerFactory } from '../widgets/messenger.js';
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
 /*-------------------------------------------------*/
@@ -58,12 +59,16 @@ export class LFWidgets {
                 const widget = app.widgets[CustomWidgetName.history](nodeType, CustomWidgetName.history).widget;
                 return widget;
             },
+            [CustomWidgetName.imagePreview]: (nodeType) => {
+                const widget = app.widgets[CustomWidgetName.imagePreview](nodeType, CustomWidgetName.imagePreview).widget;
+                return widget;
+            },
             [CustomWidgetName.jsonInput]: (nodeType) => {
                 const widget = app.widgets[CustomWidgetName.jsonInput](nodeType, CustomWidgetName.jsonInput).widget;
                 return widget;
             },
-            [CustomWidgetName.imagePreview]: (nodeType) => {
-                const widget = app.widgets[CustomWidgetName.imagePreview](nodeType, CustomWidgetName.imagePreview).widget;
+            [CustomWidgetName.messenger]: (nodeType) => {
+                const widget = app.widgets[CustomWidgetName.messenger](nodeType, CustomWidgetName.messenger).widget;
                 return widget;
             },
             [CustomWidgetName.rollViewer]: (nodeType) => {
@@ -90,6 +95,7 @@ export class LFWidgets {
             [CustomWidgetName.history]: (history) => historyFactory.options(history),
             [CustomWidgetName.jsonInput]: (content) => jsonInputFactory.options(content),
             [CustomWidgetName.imagePreview]: (content, isSelectable) => imagePreviewFactory.options(content, isSelectable),
+            [CustomWidgetName.messenger]: (messenger) => messengerFactory.options(messenger),
             [CustomWidgetName.rollViewer]: (rollViewer) => rollViewerFactory.options(rollViewer),
             [CustomWidgetName.tree]: (tree) => treeFactory.options(tree),
             [CustomWidgetName.upload]: (upload) => uploadFactory.options(upload),
@@ -162,6 +168,13 @@ export class LFWidgets {
                 return {
                     [CustomWidgetName.imagePreview]: (nodeType, name) => {
                         return imagePreviewFactory.render(nodeType, name);
+                    },
+                };
+            },
+            [CustomWidgetName.messenger]: () => {
+                return {
+                    [CustomWidgetName.messenger]: (nodeType, name) => {
+                        return messengerFactory.render(nodeType, name);
                     },
                 };
             },

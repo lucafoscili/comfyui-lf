@@ -117,9 +117,9 @@ const KulPhotoframe = class {
         if (this.isInViewport && !this.#renderValue) {
             this.#renderValue = true;
         }
-        return (h(Host, { key: 'd5c6961c10eaf41a5d85183095b236905729249e' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '5a93000ed0af761a055f03ae80be09c62df05d50', id: KUL_WRAPPER_ID, ref: (el) => {
+        return (h(Host, { key: '587c62f325dc95cf804902b515137344b5c2a4c7' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '856d3b1918290955a8d69ce399f5e78a0f0db644', id: KUL_WRAPPER_ID, ref: (el) => {
                 this.#wrapperEl = el;
-            } }, h("img", { key: '049f614614c70d4fa1a466cf676627cf626516a7', ...this.kulPlaceholder, class: "placeholder", ref: (el) => (this.#placeholderEl = el), onLoad: (e) => {
+            } }, h("img", { key: 'e97b1f01e31d7a02f9efcd1229f6f23f0cc373be', ...this.kulPlaceholder, class: "placeholder", ref: (el) => (this.#placeholderEl = el), onLoad: (e) => {
                 if (this.#placeholderEl.naturalWidth >
                     this.#placeholderEl.naturalHeight) {
                     this.#wrapperEl.classList.add('horizontal');
@@ -144,3 +144,5 @@ const KulPhotoframe = class {
 KulPhotoframe.style = KulPhotoframeStyle0;
 
 export { KulPhotoframe as kul_photoframe };
+
+//# sourceMappingURL=kul-photoframe.entry.js.map
