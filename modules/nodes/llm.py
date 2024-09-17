@@ -158,7 +158,7 @@ class LF_LLMMessenger:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "messenger": ("KUL_MESSENGER", {"tooltip": "Chatting interface with characters controlled by an LLM."}),
+                "messenger": ("KUL_MESSENGER", {}),
             },
             "optional": {
                 "dataset": ("JSON", {"tooltip": "The dataset JSON containing characters to talk to."}),
