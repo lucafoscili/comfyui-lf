@@ -30,7 +30,8 @@ export const messengerFactory = {
                             if (typeof config === 'string') {
                                 const unescapeConfig = unescapeJson(config);
                                 messenger.dataset.config = unescapeConfig.unescapedStr;
-                                messenger.kulValue = unescapeJson(config).parsedJson;
+                                messenger.kulValue = unescapeJson(config)
+                                    .parsedJson;
                             }
                             else if (isValidJSON(config)) {
                                 messenger.dataset.config = JSON.stringify(config);
@@ -65,10 +66,10 @@ export const messengerFactory = {
         content.classList.add(messengerFactory.cssClasses.content);
         messenger.classList.add(messengerFactory.cssClasses.messenger);
         messenger.addEventListener('kul-messenger-event', (e) => {
-            const { eventType, initialization } = e.detail;
+            const { eventType, config } = e.detail;
             switch (eventType) {
                 case 'save':
-                    messenger.dataset.config = JSON.stringify(initialization);
+                    messenger.dataset.config = JSON.stringify(config);
                     break;
             }
         });

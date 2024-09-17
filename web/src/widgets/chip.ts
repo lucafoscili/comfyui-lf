@@ -24,6 +24,7 @@ export const chipFactory = {
       setValue(value: string) {
         if (value) {
           const kulManager = getKulManager();
+          chip.dataset.selectedChips = value;
           if (kulManager) {
             chip.setSelectedNodes(value.split(', '));
           } else {

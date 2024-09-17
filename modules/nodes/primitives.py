@@ -30,6 +30,56 @@ class LF_Boolean:
 
         return (boolean,)
     
+class LF_DisplayPrimitiveAsJSON:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "result": ("KUL_TREE", {}),
+            },
+            "optional": {
+                "integer": ("INT", {"default": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Integer value."}),
+                "float": ("FLOAT", {"default": 0.0, "step": 0.1, "tooltip": "Float value."}),
+                "string": ("STRING", {"default": "", "multiline": True, "tooltip": "String value."}),
+                "boolean": ("BOOLEAN", {"default": False, "tooltip": "Boolean value."}),
+            },
+            "hidden": {"node_id": "UNIQUE_ID"}
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    RETURN_NAMES = ("json",)
+    RETURN_TYPES = ("JSON",)
+
+    def on_exec(self, **kwargs):
+        dataset = {"nodes": []}
+        
+        node_id = kwargs.get("node_id")
+        integer = kwargs.get("integer")
+        float_val = kwargs.get("float")
+        string = kwargs.get("string")
+        boolean = kwargs.get("boolean")
+
+        if boolean is not None:
+            dataset["nodes"].append({"children": [{"id": "boolean", "value": str(boolean)}],
+                                      "description": str(boolean), "id": "boolean", "value": "boolean"})
+        if float_val is not None:
+            dataset["nodes"].append({"children":[{"id": "float", "value":  str(float_val)}],
+                                      "description": str(float_val), "id": "float", "value": "float"})
+        if integer is not None:
+            dataset["nodes"].append({"children":[{"id": "integer", "value": str(integer)}],
+                                      "description": str(integer), "id": "integer", "value": "integer"})
+        if string is not None:
+            dataset["nodes"].append({"children":[{"id": "string", "value": string}],
+                                      "description": string, "id": "string", "value": "string"})
+
+        PromptServer.instance.send_sync("lf-displayprimitiveasjson", {
+            "node": node_id,
+            "dataset": dataset
+        })
+
+        return (dataset,)
+    
 class LF_Float:
     @classmethod 
     def INPUT_TYPES(cls):
@@ -144,6 +194,7 @@ class LF_RandomBoolean:
 
 NODE_CLASS_MAPPINGS = {
     "LF_Boolean": LF_Boolean,
+    "LF_DisplayPrimitiveAsJSON": LF_DisplayPrimitiveAsJSON,
     "LF_Float": LF_Float,
     "LF_Integer": LF_Integer,
     "LF_RandomBoolean": LF_RandomBoolean,
@@ -151,6 +202,7 @@ NODE_CLASS_MAPPINGS = {
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_Boolean": "Boolean",
+    "LF_DisplayPrimitiveAsJSON": "Display primitive as JSON",
     "LF_Float": "Float",
     "LF_Integer": "Integer",
     "LF_RandomBoolean": "Random boolean",

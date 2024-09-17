@@ -9,6 +9,7 @@ export declare enum EventName {
     civitAIMetadataSetup = "lf-civitaimetadatasetup",
     controlPanel = "lf-controlpanel",
     displayJson = "lf-displayjson",
+    displayPrimitiveAsJson = "lf-displayprimitiveasjson",
     float = "lf-float",
     imageHistogram = "lf-imagehistogram",
     integer = "lf-integer",
@@ -20,6 +21,7 @@ export declare enum EventName {
     resizeimageToSquare = "lf-resizeimagetosquare",
     saveImageForCivitAI = "lf-saveimageforcivitai",
     string = "lf-string",
+    switchFloat = "lf-switchfloat",
     switchImage = "lf-switchimage",
     switchInteger = "lf-switchinteger",
     switchJson = "lf-switchjson",
@@ -38,6 +40,9 @@ export interface BooleanPayload extends BaseEventPayload {
 }
 export interface CivitAIMetadataSetupPayload extends BaseEventPayload {
     metadataString: string;
+}
+export interface DisplayPrimitiveAsJSONPayload extends BaseEventPayload {
+    dataset: KulDataDataset;
 }
 export interface DisplayJSONPayload extends BaseEventPayload {
     json: Record<string, unknown>;
@@ -87,6 +92,9 @@ export interface SaveImageForCivitAIPayload extends BaseEventPayload {
 export interface StringPayload extends BaseEventPayload {
     isHistoryEnabled: boolean;
     value: string;
+}
+export interface SwitchFloatPayload extends BaseEventPayload {
+    bool: boolean;
 }
 export interface SwitchImagePayload extends BaseEventPayload {
     bool: boolean;

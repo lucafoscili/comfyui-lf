@@ -14,6 +14,7 @@ export enum EventName {
   civitAIMetadataSetup = 'lf-civitaimetadatasetup',
   controlPanel = 'lf-controlpanel',
   displayJson = 'lf-displayjson',
+  displayPrimitiveAsJson = 'lf-displayprimitiveasjson',
   float = 'lf-float',
   imageHistogram = 'lf-imagehistogram',
   integer = 'lf-integer',
@@ -25,6 +26,7 @@ export enum EventName {
   resizeimageToSquare = 'lf-resizeimagetosquare',
   saveImageForCivitAI = 'lf-saveimageforcivitai',
   string = 'lf-string',
+  switchFloat = 'lf-switchfloat',
   switchImage = 'lf-switchimage',
   switchInteger = 'lf-switchinteger',
   switchJson = 'lf-switchjson',
@@ -79,6 +81,14 @@ export interface BooleanPayload extends BaseEventPayload {
 
 export interface CivitAIMetadataSetupPayload extends BaseEventPayload {
   metadataString: string;
+}
+
+/*-------------------------------------------------------------------*/
+/*    D i s p l a y P r i m i t i v e A s J S O N   D e c l a r .    */
+/*-------------------------------------------------------------------*/
+
+export interface DisplayPrimitiveAsJSONPayload extends BaseEventPayload {
+  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/
@@ -187,6 +197,14 @@ export interface SaveImageForCivitAIPayload extends BaseEventPayload {
 export interface StringPayload extends BaseEventPayload {
   isHistoryEnabled: boolean;
   value: string;
+}
+
+/*-------------------------------------------------------------------*/
+/*         S w i t c h   F l o a t   D e c l a r a t i o n s         */
+/*-------------------------------------------------------------------*/
+
+export interface SwitchFloatPayload extends BaseEventPayload {
+  bool: boolean;
 }
 
 /*-------------------------------------------------------------------*/
