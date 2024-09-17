@@ -162,8 +162,8 @@ It's possible to select the last messages as an output, sending them to the next
 A user interface that loads character through a JSON and then connects to your local Koboldcpp instance (<http://localhost:5001>).
 It's in early development so there are a lot of missing features that will probably be added/changed in the future.
 The location, outfit and style options are currently unused, they will be used together with the biography to give an identity to the LLM, in order to generate dynamic prompts with those settings.
-![LLMMessenger_1](https://github.com/lucafoscili/comfyui-lf/blob/24f662a796d7cf1c0314848710099e3e2300eea7/docs/images/LLMMessenger_1.png "Example of LLM Messenger")
-![LLMMessenger_2](https://github.com/lucafoscili/comfyui-lf/blob/24f662a796d7cf1c0314848710099e3e2300eea7/docs/images/LLMMessenger_2.png "Example of LLM Messenger")
+![LLMMessenger_1](https://github.com/lucafoscili/comfyui-lf/blob/ffea37a12ce963313f2568e8fef16fd8fb2ce164/docs/images/LLMMessenger_1.png "Example of LLM Messenger")
+![LLMMessenger_2](https://github.com/lucafoscili/comfyui-lf/blob/ffea37a12ce963313f2568e8fef16fd8fb2ce164/docs/images/LLMMessenger_2.png "Example of LLM Messenger")
 
 ### Logic nodes (`logic.py`)
 
