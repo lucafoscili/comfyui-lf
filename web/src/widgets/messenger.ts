@@ -1,3 +1,4 @@
+import { KulMessengerConfig } from '../types/ketchup-lite/components';
 import { LogSeverity } from '../types/manager';
 import { MessengerWidgetOptions, CustomWidgetName, MessengerWidgetValue } from '../types/widgets';
 import { createDOMWidget, getLFManager, isValidJSON, unescapeJson } from '../utils/common';
@@ -32,7 +33,8 @@ export const messengerFactory = {
               if (typeof config === 'string') {
                 const unescapeConfig = unescapeJson(config);
                 messenger.dataset.config = unescapeConfig.unescapedStr;
-                messenger.kulValue = unescapeJson(config).parsedJson;
+                messenger.kulValue = unescapeJson(config)
+                  .parsedJson as unknown as KulMessengerConfig;
               } else if (isValidJSON(config)) {
                 messenger.dataset.config = JSON.stringify(config);
               }
@@ -66,10 +68,10 @@ export const messengerFactory = {
     messenger.classList.add(messengerFactory.cssClasses.messenger);
 
     messenger.addEventListener('kul-messenger-event', (e) => {
-      const { eventType, initialization } = e.detail;
+      const { eventType, config } = e.detail;
       switch (eventType) {
         case 'save':
-          messenger.dataset.config = JSON.stringify(initialization);
+          messenger.dataset.config = JSON.stringify(config);
           break;
       }
     });

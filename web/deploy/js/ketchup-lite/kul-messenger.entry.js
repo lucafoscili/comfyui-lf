@@ -10,6 +10,8 @@ var KulMessengerProps;
     KulMessengerProps["kulValue"] = "Sets the initial configuration, including active character and filters.";
 })(KulMessengerProps || (KulMessengerProps = {}));
 
+const LEFT_EXPANDER_ICON = 'chevron_left';
+const RIGHT_EXPANDER_ICON = 'chevron_right';
 const AVATAR_COVER = 'portrait';
 const LOCATION_COVER = 'landscape';
 const OUTFIT_COVER = 'loyalty';
@@ -82,7 +84,7 @@ const NAV_DATASET = {
     nodes: [
         {
             description: 'Previous character',
-            icon: 'chevron_left',
+            icon: LEFT_EXPANDER_ICON,
             id: 'previous',
             value: '',
         },
@@ -94,7 +96,7 @@ const NAV_DATASET = {
         },
         {
             description: 'Next character',
-            icon: 'chevron_right',
+            icon: RIGHT_EXPANDER_ICON,
             id: 'next',
             value: '',
         },
@@ -103,7 +105,8 @@ const NAV_DATASET = {
 
 let TIMEOUT;
 const prepLeft = (adapter) => {
-    return (h("div", { class: "messenger__left" },
+    const isCollapsed = adapter.get.messenger.ui().panels.isLeftCollapsed;
+    return (h("div", { class: `messenger__left ${isCollapsed ? 'messenger__left--collapsed' : ''}` },
         h("div", { class: "messenger__avatar" }, prepAvatar(adapter)),
         h("div", { class: "messenger__biography" }, prepBiography(adapter))));
 };
@@ -190,9 +193,20 @@ const listClickHandler = async (adapter, e) => {
 };
 
 const prepCenter = (adapter) => {
+    const buttons = prepExpanderButtons(adapter);
     return (h("div", { class: "messenger__center" },
+        h("div", { class: "messenger__expander messenger__expander--left" }, buttons.left),
         h("div", { class: "messenger__navigation" }, prepNavigation(adapter)),
-        h("div", { class: "messenger__chat" }, prepChat(adapter))));
+        h("div", { class: "messenger__chat" }, prepChat(adapter)),
+        h("div", { class: "messenger__expander messenger__expander--right" }, buttons.right)));
+};
+const prepExpanderButtons = (adapter) => {
+    const left = (h("kul-button", { class: "kul-full-height", id: "left", kulIcon: LEFT_EXPANDER_ICON, kulStyling: "flat", "onKul-button-event": expanderEventHandler.bind(expanderEventHandler, adapter), title: "Expand/collapse this section" }));
+    const right = (h("kul-button", { class: "kul-full-height", id: "right", kulIcon: RIGHT_EXPANDER_ICON, kulStyling: "flat", "onKul-button-event": expanderEventHandler.bind(expanderEventHandler, adapter), title: "Expand/collapse this section" }));
+    return {
+        left,
+        right,
+    };
 };
 const prepNavigation = (adapter) => {
     return (h("kul-tabbar", { kulData: NAV_DATASET, "onKul-tabbar-event": tabbarEventHandler.bind(tabbarEventHandler, adapter) }));
@@ -244,6 +258,27 @@ const chatEventHandler = (adapter, e) => {
             adapter.set.character.status(status);
     }
 };
+const expanderEventHandler = (adapter, e) => {
+    const { comp, eventType } = e.detail;
+    const button = comp;
+    switch (eventType) {
+        case 'click':
+            switch (button.rootElement.id) {
+                case 'left':
+                    const newLeft = adapter.set.messenger.ui.panel('left');
+                    button.kulIcon = newLeft
+                        ? RIGHT_EXPANDER_ICON
+                        : LEFT_EXPANDER_ICON;
+                    break;
+                case 'right':
+                    const newRight = adapter.set.messenger.ui.panel('right');
+                    button.kulIcon = newRight
+                        ? LEFT_EXPANDER_ICON
+                        : RIGHT_EXPANDER_ICON;
+                    break;
+            }
+    }
+};
 const getDynamicPrompts = (adapter) => {
     const biography = adapter.get.character.biography();
     const location = adapter.get.image.asCover('locations').node;
@@ -272,7 +307,8 @@ const getDynamicPrompts = (adapter) => {
 };
 
 const prepRight = (adapter) => {
-    return (h("div", { class: "messenger__right" },
+    const isCollapsed = adapter.get.messenger.ui().panels.isRightCollapsed;
+    return (h("div", { class: `messenger__right ${isCollapsed ? 'messenger__right--collapsed' : ''}` },
         h("div", { class: "messenger__options__active" }, prepOptions(adapter)),
         h("div", { class: "messenger__options__filters" }, prepFilters(adapter)),
         h("div", { class: "messenger__options__list" }, prepList(adapter))));
@@ -305,7 +341,7 @@ const prepFilters = (adapter) => {
 };
 const prepList = (adapter) => {
     const elements = [];
-    const filters = adapter.get.image.filters();
+    const filters = adapter.get.messenger.ui().filters;
     const imagesGetter = adapter.get.image.byType;
     for (let index = 0; index < IMAGE_TYPE_IDS.length; index++) {
         const type = IMAGE_TYPE_IDS[index];
@@ -337,7 +373,7 @@ const imageEventHandler = (adapter, node, index) => {
 };
 const chipEventHandler = (adapter, e) => {
     const { comp, eventType, selectedNodes } = e.detail;
-    const filtersSetter = adapter.set.image.filters;
+    const filtersSetter = adapter.set.messenger.ui.filters;
     switch (eventType) {
         case 'click':
             const newFilters = {
@@ -352,7 +388,7 @@ const chipEventHandler = (adapter, e) => {
             filtersSetter(newFilters);
             break;
         case 'ready':
-            const filters = adapter.get.image.filters();
+            const filters = adapter.get.messenger.ui().filters;
             const nodes = [];
             for (const key in filters) {
                 if (Object.prototype.hasOwnProperty.call(filters, key)) {
@@ -381,7 +417,7 @@ const prepGrid = (adapter) => {
     return avatars?.length ? (avatars) : (h("div", { class: "empty-dataset" }, "There are no characters to display!"));
 };
 
-const kulMessengerCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}:host{--kul_messenger_active_options_name_padding:var(\n    --kul-messenger-active-options-name-padding,\n    4px\n  );--kul_messenger_avatar_name_padding:var(\n    --kul-messenger-avatar-name-padding,\n    12px\n  );--kul_messenger_backdrop_filter:var(\n    --kul-messenger-backdrop-filter,\n    blur(5px)\n  );--kul_messenger_background_color:var(\n    --kul-messenger-background-color,\n    rgba(var(--kul-background-color-rgb), 0.375)\n  );--kul_messenger_font_size:var(\n    --kul-messenger-font-size,\n    var(--kul-font-size)\n  );--kul_messenger_name_background_color:var(\n    --kul-messenger-name-background-color,\n    rgba(var(--kul-title-background-color-rgb), 0.75)\n  );--kul_messenger_letter_spacing:var(--kul-messenger-letter-spacing, 5px);--kul_messenger_name_height:var(--kul-messenger-avatar-height, 50px);--kul_messenger_nav_box_shadow:var(\n    --kul-messenger-nav-box-shadow,\n    0px 1px 7px 3px rgba(var(--kul-text-color-rgb), 0.375)\n  );--kul_messenger_options_title_padding:var(\n    --kul-messenger-options-title-padding,\n    8px\n  );--kul_messenger_text_color:var(\n    --kul-messenger-text-color,\n    var(--kul-text-color)\n  );--kul_messenger_transition:var(--kul-messenger-transition, 125ms ease-out);box-sizing:border-box;background-color:var(--kul_messenger_background_color);color:var(--kul_messenger_text_color);display:block;font-family:var(--kul-font-family);font-size:var(--kul-font-size);height:100%;width:100%}#kul-component{height:100%;width:100%}.messenger{display:grid;grid-template-columns:1fr 3fr 1fr;height:100%;position:relative;width:100%}.messenger__left{display:grid;grid-template-rows:minmax(auto, 40%) minmax(auto, 1fr);height:100%;overflow:auto}.messenger__center{display:grid;grid-template-rows:auto 1fr;height:100%;overflow:auto}.messenger__navigation{box-shadow:var(--kul_messenger_nav_box_shadow)}.messenger__right{display:grid;grid-template-rows:minmax(10%, auto) auto 1fr;height:100%;overflow:auto}.messenger__avatar{position:relative}.messenger__avatar__image{display:block;height:100%;object-fit:cover;width:100%}.messenger__avatar__label{display:flex}.messenger__avatar__status{padding-right:8px}.messenger__avatar__name{align-items:center;background-color:var(--kul_messenger_name_background_color);backdrop-filter:var(--kul_messenger_backdrop_filter);box-sizing:border-box;display:flex;height:var(--kul_messenger_name_height);justify-content:space-between;left:0;letter-spacing:var(--kul_messenger_letter_spacing);padding-left:var(--kul_messenger_avatar_name_padding);position:absolute;text-transform:uppercase;top:0;width:100%}.messenger__biography{font-size:0.8em;overflow:auto}.messenger__chat{--kul-chat-padding:16px 8px 0 8px;--kul-chat-buttons-padding:8px 0 0 0;overflow:auto}.messenger__options__active{display:grid;grid-template-columns:repeat(3, 1fr)}.messenger__options__wrapper{position:relative}.messenger__options__outfit,.messenger__options__location,.messenger__options__style{display:block;height:100%;object-fit:cover;width:100%}.messenger__options__filters{padding:16px 0}.messenger__options__list{display:grid;overflow:auto}.messenger__options__name{background:var(--kul_messenger_name_background_color);bottom:0;box-sizing:border-box;overflow:hidden;padding:var(--kul_messenger_active_options_name_padding);position:absolute;text-align:center;width:100%}.messenger__options__title{background:var(--kul-title-background-color);color:var(--kul-title-color);letter-spacing:var(--kul_messenger_letter_spacing);overflow:hidden;padding:var(--kul_messenger_options_title_padding);position:sticky;text-align:center;text-overflow:ellipsis;text-transform:uppercase;top:-1px;z-index:1}.messenger__options__section{display:grid;grid-template-rows:auto 1fr;height:100%}.messenger__options__images{display:grid;grid-template-columns:repeat(3, 1fr);overflow:auto;width:100%}.messenger__options__image-wrapper{position:relative}.messenger__options__image-wrapper:after{box-shadow:none;content:\"\";height:100%;left:0;position:absolute;top:0;transition:background-color var(--kul_messenger_transition), box-shadow var(--kul_messenger_transition);width:100%}.messenger__options__image-wrapper:hover:not(.messenger__options__image-wrapper--selected):after{box-shadow:inset 0 0 5px 3px var(--kul-primary-color, white);pointer-events:none}.messenger__options__image-wrapper--selected:after{align-content:center;background-color:rgba(var(--kul-title-background-color-rgb), 0.875);content:\"Current\";cursor:default;font-size:0.775em;letter-spacing:var(--kul_messenger_letter_spacing);overflow:hidden;position:absolute;text-align:center;text-overflow:ellipsis;text-transform:uppercase}.messenger__options__image{cursor:pointer;display:block;height:100%;object-fit:cover;width:100%}.selection-grid{display:grid;grid-template-columns:repeat(4, 1fr);height:100%;overflow:auto;width:100%}.selection-grid__image{display:block;height:100%;object-fit:cover;width:100%}.selection-grid__portrait{--kul_messenger_name_background_color:rgba(\n    var(--kul-background-color-rgb),\n    0.375\n  );--kul_messenger_portrait_foredrop_color:rgba(\n    var(--kul-background-color-rgb),\n    0.275\n  );cursor:pointer;overflow:auto;position:relative}.selection-grid__portrait:hover{--kul_messenger_name_background_color:rgba(\n    var(--kul-background-color-rgb),\n    0.775\n  );--kul_messenger_portrait_foredrop_color:rgba(\n    var(--kul-background-color-rgb),\n    0\n  )}.selection-grid__portrait:after{background:var(--kul_messenger_portrait_foredrop_color);content:\"\";height:100%;left:0;pointer-events:none;position:absolute;top:0;transition:background-color var(--kul_messenger_transition);width:100%}.selection-grid__name{align-items:center;backdrop-filter:blur(5px);background-color:var(--kul_messenger_name_background_color);bottom:0;display:flex;height:var(--kul_messenger_name_height);left:0;position:absolute;transition:background-color var(--kul_messenger_transition);width:100%}.selection-grid__label{letter-spacing:var(--kul_messenger_letter_spacing);overflow:hidden;text-align:center;text-overflow:ellipsis;text-transform:uppercase;width:100%}";
+const kulMessengerCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}:host{--kul_messenger_active_options_name_padding:var(\n    --kul-messenger-active-options-name-padding,\n    4px\n  );--kul_messenger_avatar_name_padding:var(\n    --kul-messenger-avatar-name-padding,\n    12px\n  );--kul_messenger_backdrop_filter:var(\n    --kul-messenger-backdrop-filter,\n    blur(5px)\n  );--kul_messenger_background_color:var(\n    --kul-messenger-background-color,\n    rgba(var(--kul-background-color-rgb), 0.375)\n  );--kul_messenger_font_size:var(\n    --kul-messenger-font-size,\n    var(--kul-font-size)\n  );--kul_messenger_name_background_color:var(\n    --kul-messenger-name-background-color,\n    rgba(var(--kul-title-background-color-rgb), 0.75)\n  );--kul_messenger_letter_spacing:var(--kul-messenger-letter-spacing, 5px);--kul_messenger_name_height:var(--kul-messenger-avatar-height, 50px);--kul_messenger_nav_box_shadow:var(\n    --kul-messenger-nav-box-shadow,\n    0px 1px 7px 3px rgba(var(--kul-text-color-rgb), 0.375)\n  );--kul_messenger_options_title_padding:var(\n    --kul-messenger-options-title-padding,\n    8px\n  );--kul_messenger_text_color:var(\n    --kul-messenger-text-color,\n    var(--kul-text-color)\n  );--kul_messenger_transition:var(--kul-messenger-transition, 125ms ease-out);box-sizing:border-box;background-color:var(--kul_messenger_background_color);color:var(--kul_messenger_text_color);display:block;font-family:var(--kul-font-family);font-size:var(--kul-font-size);height:100%;width:100%}#kul-component{height:100%;width:100%}.messenger{display:grid;grid-template-columns:1fr 3fr 1fr;height:100%;position:relative;width:100%}.messenger:has(.messenger__left--collapsed){grid-template-columns:0 4fr 1fr}.messenger:has(.messenger__right--collapsed){grid-template-columns:1fr 4fr 0}.messenger:has(.messenger__left--collapsed):has(.messenger__right--collapsed){grid-template-columns:0 1fr 0}.messenger__left{display:grid;grid-template-rows:minmax(auto, 40%) minmax(auto, 1fr);height:100%;overflow:auto;transition:height var(--kul_messenger_transition)}.messenger__left--collapsed{overflow:hidden;width:0}.messenger__center{display:grid;grid-template-areas:\"nav nav nav\" \"expander-l chat expander-r\";grid-template-columns:auto 1fr auto;grid-template-rows:auto 1fr;height:100%;overflow:auto}.messenger__right{display:grid;grid-template-rows:minmax(10%, auto) auto 1fr;height:100%;overflow:auto;transition:height var(--kul_messenger_transition)}.messenger__right--collapsed{overflow:hidden;width:0}.messenger__avatar{position:relative}.messenger__avatar__image{display:block;height:100%;object-fit:cover;width:100%}.messenger__avatar__label{display:flex}.messenger__avatar__status{padding-right:8px}.messenger__avatar__name{align-items:center;background-color:var(--kul_messenger_name_background_color);backdrop-filter:var(--kul_messenger_backdrop_filter);box-sizing:border-box;display:flex;height:var(--kul_messenger_name_height);justify-content:space-between;left:0;letter-spacing:var(--kul_messenger_letter_spacing);padding-left:var(--kul_messenger_avatar_name_padding);position:absolute;text-transform:uppercase;top:0;width:100%}.messenger__biography{font-size:0.8em;overflow:auto}.messenger__expander{box-shadow:var(--kul_messenger_nav_box_shadow)}.messenger__expander--left{grid-area:expander-l}.messenger__expander--right{grid-area:expander-r}.messenger__navigation{box-shadow:var(--kul_messenger_nav_box_shadow);grid-area:nav}.messenger__chat{--kul-chat-padding:16px 8px 0 8px;--kul-chat-buttons-padding:8px 0 0 0;overflow:auto;grid-area:chat}.messenger__options__active{display:grid;grid-template-columns:repeat(3, 1fr)}.messenger__options__wrapper{position:relative}.messenger__options__outfit,.messenger__options__location,.messenger__options__style{display:block;height:100%;object-fit:cover;width:100%}.messenger__options__filters{padding:16px 0}.messenger__options__list{display:grid;overflow:auto}.messenger__options__name{background:var(--kul_messenger_name_background_color);bottom:0;box-sizing:border-box;overflow:hidden;padding:var(--kul_messenger_active_options_name_padding);position:absolute;text-align:center;width:100%}.messenger__options__title{background:var(--kul-title-background-color);color:var(--kul-title-color);letter-spacing:var(--kul_messenger_letter_spacing);overflow:hidden;padding:var(--kul_messenger_options_title_padding);position:sticky;text-align:center;text-overflow:ellipsis;text-transform:uppercase;top:-1px;z-index:1}.messenger__options__section{display:grid;grid-template-rows:auto 1fr;height:100%}.messenger__options__images{display:grid;grid-template-columns:repeat(3, 1fr);overflow:auto;width:100%}.messenger__options__image-wrapper{position:relative}.messenger__options__image-wrapper:after{box-shadow:none;content:\"\";height:100%;left:0;position:absolute;top:0;transition:background-color var(--kul_messenger_transition), box-shadow var(--kul_messenger_transition);width:100%}.messenger__options__image-wrapper:hover:not(.messenger__options__image-wrapper--selected):after{box-shadow:inset 0 0 5px 3px var(--kul-primary-color, white);pointer-events:none}.messenger__options__image-wrapper--selected:after{align-content:center;background-color:rgba(var(--kul-title-background-color-rgb), 0.875);content:\"Current\";cursor:default;font-size:0.775em;letter-spacing:var(--kul_messenger_letter_spacing);overflow:hidden;position:absolute;text-align:center;text-overflow:ellipsis;text-transform:uppercase}.messenger__options__image{cursor:pointer;display:block;height:100%;object-fit:cover;width:100%}.selection-grid{display:grid;grid-template-columns:repeat(4, 1fr);height:100%;overflow:auto;width:100%}.selection-grid__image{display:block;height:100%;object-fit:cover;width:100%}.selection-grid__portrait{--kul_messenger_name_background_color:rgba(\n    var(--kul-background-color-rgb),\n    0.375\n  );--kul_messenger_portrait_foredrop_color:rgba(\n    var(--kul-background-color-rgb),\n    0.275\n  );cursor:pointer;overflow:auto;position:relative}.selection-grid__portrait:hover{--kul_messenger_name_background_color:rgba(\n    var(--kul-background-color-rgb),\n    0.775\n  );--kul_messenger_portrait_foredrop_color:rgba(\n    var(--kul-background-color-rgb),\n    0\n  )}.selection-grid__portrait:after{background:var(--kul_messenger_portrait_foredrop_color);content:\"\";height:100%;left:0;pointer-events:none;position:absolute;top:0;transition:background-color var(--kul_messenger_transition);width:100%}.selection-grid__name{align-items:center;backdrop-filter:blur(5px);background-color:var(--kul_messenger_name_background_color);bottom:0;display:flex;height:var(--kul_messenger_name_height);left:0;position:absolute;transition:background-color var(--kul_messenger_transition);width:100%}.selection-grid__label{letter-spacing:var(--kul_messenger_letter_spacing);overflow:hidden;text-align:center;text-overflow:ellipsis;text-transform:uppercase;width:100%}";
 const KulMessengerStyle0 = kulMessengerCss;
 
 const KulMessenger = class {
@@ -398,7 +434,18 @@ const KulMessenger = class {
         this.currentCharacter = undefined;
         this.history = {};
         this.covers = {};
-        this.filters = {};
+        this.ui = {
+            filters: {
+                avatars: false,
+                locations: false,
+                outfits: false,
+                styles: false,
+            },
+            panels: {
+                isLeftCollapsed: false,
+                isRightCollapsed: false,
+            },
+        };
         this.status = 'offline';
         this.kulAutosave = true;
         this.kulData = null;
@@ -418,16 +465,16 @@ const KulMessenger = class {
      */
     kulEvent;
     onKulEvent(e, eventType) {
-        const initialization = {
+        const config = {
             currentCharacter: this.currentCharacter?.id,
-            filters: this.filters,
+            ui: this.ui,
         };
         this.kulEvent.emit({
             comp: this,
             id: this.rootElement.id,
             originalEvent: e,
             eventType,
-            initialization,
+            config,
         });
     }
     /*-------------------------------------------------*/
@@ -460,11 +507,14 @@ const KulMessenger = class {
     async reset() {
         this.covers = {};
         this.currentCharacter = null;
-        this.filters = {
-            avatars: false,
-            locations: false,
-            outfits: false,
-            styles: false,
+        this.ui = {
+            filters: {
+                avatars: false,
+                locations: false,
+                outfits: false,
+                styles: false,
+            },
+            panels: { isLeftCollapsed: false, isRightCollapsed: false },
         };
         this.history = {};
         this.#initStates();
@@ -553,7 +603,6 @@ const KulMessenger = class {
                 coverIndex: (type, character = this.currentCharacter) => {
                     return this.covers[character.id][type];
                 },
-                filters: () => this.filters,
                 root: (type, character = this.currentCharacter) => {
                     const node = character.children.find((n) => n.id === type);
                     if (!node) {
@@ -577,11 +626,12 @@ const KulMessenger = class {
                 config: () => {
                     return {
                         currentCharacter: this.currentCharacter.id,
-                        filters: this.filters,
+                        ui: this.ui,
                     };
                 },
                 data: () => this.kulData,
                 history: () => this.history,
+                ui: () => this.ui,
             },
         },
         set: {
@@ -613,7 +663,6 @@ const KulMessenger = class {
                     this.covers[character.id][type] = value;
                     this.refresh();
                 },
-                filters: (filters) => (this.filters = filters),
             },
             messenger: {
                 data: async () => {
@@ -657,6 +706,26 @@ const KulMessenger = class {
                     }
                     this.onKulEvent(new CustomEvent('save'), 'save');
                 },
+                ui: {
+                    filters: (filters) => {
+                        this.ui.filters = filters;
+                        this.refresh();
+                    },
+                    panel: (panel, value = panel === 'left'
+                        ? !this.ui.panels.isLeftCollapsed
+                        : !this.ui.panels.isRightCollapsed) => {
+                        switch (panel) {
+                            case 'left':
+                                this.ui.panels.isLeftCollapsed = value;
+                                break;
+                            case 'right':
+                                this.ui.panels.isRightCollapsed = value;
+                                break;
+                        }
+                        this.refresh();
+                        return value;
+                    },
+                },
             },
         },
     };
@@ -684,16 +753,23 @@ const KulMessenger = class {
         }
         if (this.kulValue) {
             const currentCharacter = this.kulValue.currentCharacter;
-            const filters = this.kulValue.filters;
-            for (const key in filters) {
-                if (Object.prototype.hasOwnProperty.call(filters, key)) {
-                    const filter = filters[key];
-                    this.filters[key] = filter;
-                }
-            }
+            const filters = this.kulValue.ui.filters;
+            const panels = this.kulValue.ui.panels;
             if (currentCharacter) {
                 this.currentCharacter =
                     this.#adapter.get.character.byId(currentCharacter);
+            }
+            for (const key in filters) {
+                if (Object.prototype.hasOwnProperty.call(filters, key)) {
+                    const filter = filters[key];
+                    this.ui.filters[key] = filter;
+                }
+            }
+            for (const key in panels) {
+                if (Object.prototype.hasOwnProperty.call(panels, key)) {
+                    const panel = panels[key];
+                    this.ui.panels[key] = panel;
+                }
             }
         }
     }
