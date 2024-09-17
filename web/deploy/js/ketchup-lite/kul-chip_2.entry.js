@@ -88,6 +88,7 @@ const KulChip = class {
             id: this.rootElement.id,
             originalEvent: e,
             node,
+            selectedNodes: this.selectedNodes,
         });
     }
     /*-------------------------------------------------*/
@@ -112,7 +113,7 @@ const KulChip = class {
      * Returns the selected nodes.
      * @returns {Promise<KulChipNode[]>} Selected nodes.
      */
-    async getSelected() {
+    async getSelectedNodes() {
         return this.selectedNodes;
     }
     /**
@@ -120,7 +121,7 @@ const KulChip = class {
      * @param {KulDataNode[] | string[]} nodes - An array of KulDataNode objects or node IDs to be selected.
      * @returns {Promise<void>}
      */
-    async selectNodes(nodes) {
+    async setSelectedNodes(nodes) {
         const nodesToAdd = new Set();
         const isStringArray = Array.isArray(nodes) &&
             nodes.every((item) => typeof item === 'string');
@@ -297,7 +298,7 @@ const KulChip = class {
             'chip-set--filter': this.#isFilter(),
             'chip-set--input': this.#isInput(),
         };
-        return (h(Host, { key: '7238f2381581a0ce625e420e029964b4027b7788' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'd2750a2485e3e4e8cb330947e6934c455c0de41f', id: KUL_WRAPPER_ID }, h("div", { key: '2c8507784a662931c4a3805df942e39586861243', class: className, role: "grid" }, this.#prepChipSet()))));
+        return (h(Host, { key: 'e0c814860deb70f9b1df858853197679ce18489b' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '04998dc231ff6044010f1eb3908525093d804b9c', id: KUL_WRAPPER_ID }, h("div", { key: 'f6b9768ce4f9375ba49ed660b111a9d1937c6a7f', class: className, role: "grid" }, this.#prepChipSet()))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

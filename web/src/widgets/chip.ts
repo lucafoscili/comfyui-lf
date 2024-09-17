@@ -25,10 +25,10 @@ export const chipFactory = {
         if (value) {
           const kulManager = getKulManager();
           if (kulManager) {
-            chip.selectNodes(value.split(', '));
+            chip.setSelectedNodes(value.split(', '));
           } else {
             const managerCb = () => {
-              chip.selectNodes(value.split(', '));
+              chip.setSelectedNodes(value.split(', '));
               document.removeEventListener('kul-manager-ready', managerCb);
             };
             document.addEventListener('kul-manager-ready', managerCb);
@@ -66,7 +66,7 @@ const eventHandler = async (e: CustomEvent<KulChipEventPayload>) => {
     case 'click':
       const chip = comp as KulChip;
       const selectedValues: string[] = [];
-      (await chip.getSelected()).forEach((node) => {
+      (await chip.getSelectedNodes()).forEach((node) => {
         selectedValues.push(String(node.value).valueOf());
       });
       chip.rootElement.dataset.selectedChips = selectedValues.join(', ');

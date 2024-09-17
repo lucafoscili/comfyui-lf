@@ -90,7 +90,7 @@ const copy = async (e, chip) => {
     if (eventType === 'pointerdown') {
         const button = comp;
         const selectedChips = [];
-        (await chip.getSelected()).forEach((n) => {
+        (await chip.getSelectedNodes()).forEach((n) => {
             selectedChips.push(n.id);
         });
         navigator.clipboard.writeText(selectedChips.join(', '));

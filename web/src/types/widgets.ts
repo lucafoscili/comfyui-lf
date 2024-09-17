@@ -1,4 +1,4 @@
-import { KulDataDataset } from './ketchup-lite/components';
+import { KulDataDataset, KulMessengerDataset, KulMessengerConfig } from './ketchup-lite/components';
 
 /*-------------------------------------------------------------------*/
 /*                C o m m o n   D e c l a r a t i o n s              */
@@ -339,13 +339,18 @@ export interface MessengerWidget extends Widget {
 export interface MessengerWidgetOptions {
   hideOnZoom: boolean;
   getComp(): HTMLKulMessengerElement;
-  getValue(): void;
-  setValue(): void;
+  getValue(): MessengerWidgetValue;
+  setValue(value: MessengerWidgetValue): void;
 }
 export type MessengerWidgetSetter = () => {
   [CustomWidgetName.messenger]: BaseWidgetCallback;
 };
-export type MessengerWidgetValue = string;
+export type MessengerWidgetValue =
+  | string
+  | {
+      dataset: KulMessengerDataset;
+      config: KulMessengerConfig;
+    };
 
 /*-------------------------------------------------------------------*/
 /*           R o l l   V i e w e r   D e c l a r a t i o n s         */

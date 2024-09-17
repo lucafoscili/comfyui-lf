@@ -1,4 +1,4 @@
-import { KulDataDataset } from './ketchup-lite/components';
+import { KulDataDataset, KulMessengerDataset, KulMessengerConfig } from './ketchup-lite/components';
 export type BaseWidgetCallback = <T extends CustomWidgetName>(node: NodeType, name: T) => {
     widget: Widget;
 };
@@ -260,13 +260,16 @@ export interface MessengerWidget extends Widget {
 export interface MessengerWidgetOptions {
     hideOnZoom: boolean;
     getComp(): HTMLKulMessengerElement;
-    getValue(): void;
-    setValue(): void;
+    getValue(): MessengerWidgetValue;
+    setValue(value: MessengerWidgetValue): void;
 }
 export type MessengerWidgetSetter = () => {
     [CustomWidgetName.messenger]: BaseWidgetCallback;
 };
-export type MessengerWidgetValue = string;
+export type MessengerWidgetValue = string | {
+    dataset: KulMessengerDataset;
+    config: KulMessengerConfig;
+};
 export interface RollViewerWidget extends Widget {
     options: RollViewerWidgetOptions;
     type: [CustomWidgetName.rollViewer];
