@@ -196,6 +196,13 @@ export class LFManager {
             nodes.eventHandlers.LF_SaveImageForCivitAI(e, widgets.adders.KUL_IMAGE_PREVIEW_B64);
         });
         /*-------------------------------------------------------------------*/
+        /*                 I n i t   S w i t c h   F l o a t                 */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_SwitchFloat(widgets.setters.KUL_BOOLEAN_VIEWER, widgets.adders.KUL_BOOLEAN_VIEWER);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.switchFloat, (e) => {
+            nodes.eventHandlers.LF_SwitchFloat(e, widgets.adders.KUL_BOOLEAN_VIEWER);
+        });
+        /*-------------------------------------------------------------------*/
         /*                 I n i t   S w i t c h   I m a g e                 */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_SwitchImage(widgets.setters.KUL_BOOLEAN_VIEWER, widgets.adders.KUL_BOOLEAN_VIEWER);

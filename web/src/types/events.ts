@@ -25,6 +25,7 @@ export enum EventName {
   resizeimageToSquare = 'lf-resizeimagetosquare',
   saveImageForCivitAI = 'lf-saveimageforcivitai',
   string = 'lf-string',
+  switchFloat = 'lf-switchfloat',
   switchImage = 'lf-switchimage',
   switchInteger = 'lf-switchinteger',
   switchJson = 'lf-switchjson',
@@ -187,6 +188,14 @@ export interface SaveImageForCivitAIPayload extends BaseEventPayload {
 export interface StringPayload extends BaseEventPayload {
   isHistoryEnabled: boolean;
   value: string;
+}
+
+/*-------------------------------------------------------------------*/
+/*         S w i t c h   F l o a t   D e c l a r a t i o n s         */
+/*-------------------------------------------------------------------*/
+
+export interface SwitchFloatPayload extends BaseEventPayload {
+  bool: boolean;
 }
 
 /*-------------------------------------------------------------------*/

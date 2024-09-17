@@ -25,6 +25,7 @@ import { civitaiMetadataSetupFactory } from '../nodes/civitaiMetadataSetup.js';
 import { loadMetadataFactory } from '../nodes/loadMetadata.js';
 import { keywordToggleFromJsonFactory } from '../nodes/keywordToggleFromJson.js';
 import { llmMessengerFactory } from '../nodes/llmMessenger.js';
+import { switchFloatFactory } from '../nodes/switchFloat.js';
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
 /*-------------------------------------------------*/
@@ -46,6 +47,7 @@ export class LFNodes {
             [NodeName.resizeImageToSquare]: resizeImageToSquareFactory.eventHandler,
             [NodeName.saveImageForCivitai]: saveImageForCivitaiFactory.eventHandler,
             [NodeName.string]: stringFactory.eventHandler,
+            [NodeName.switchFloat]: switchFloatFactory.eventHandler,
             [NodeName.switchImage]: switchImageFactory.eventHandler,
             [NodeName.switchInteger]: switchIntegerFactory.eventHandler,
             [NodeName.switchJson]: switchJsonFactory.eventHandler,
@@ -74,6 +76,7 @@ export class LFNodes {
             [NodeName.resizeImageToSquare]: resizeImageToSquareFactory.register,
             [NodeName.saveImageForCivitai]: saveImageForCivitaiFactory.register,
             [NodeName.string]: stringFactory.register,
+            [NodeName.switchFloat]: switchFloatFactory.register,
             [NodeName.switchImage]: switchImageFactory.register,
             [NodeName.switchInteger]: switchIntegerFactory.register,
             [NodeName.switchJson]: switchJsonFactory.register,

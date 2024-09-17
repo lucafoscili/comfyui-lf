@@ -23,6 +23,7 @@ export var NodeName;
     NodeName["resizeImageToSquare"] = "LF_ResizeImageToSquare";
     NodeName["saveImageForCivitai"] = "LF_SaveImageForCivitAI";
     NodeName["string"] = "LF_String";
+    NodeName["switchFloat"] = "LF_SwitchFloat";
     NodeName["switchImage"] = "LF_SwitchImage";
     NodeName["switchInteger"] = "LF_SwitchInteger";
     NodeName["switchJson"] = "LF_SwitchJSON";

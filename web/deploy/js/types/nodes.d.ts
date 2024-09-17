@@ -20,6 +20,7 @@ export declare enum NodeName {
     resizeImageToSquare = "LF_ResizeImageToSquare",
     saveImageForCivitai = "LF_SaveImageForCivitAI",
     string = "LF_String",
+    switchFloat = "LF_SwitchFloat",
     switchImage = "LF_SwitchImage",
     switchInteger = "LF_SwitchInteger",
     switchJson = "LF_SwitchJSON",

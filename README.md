@@ -167,24 +167,29 @@ The location, outfit and style options are currently unused, they will be used t
 
 ### Logic nodes (`logic.py`)
 
+#### SwitchFloat
+
+Returns one of two float values depending on a boolean condition.
+![SwitchFloat](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/SwitchFloat.png "Choose between two float values based on a boolean condition")
+
 #### SwitchImage
 
-Returns one of two images in tensor format based on a boolean condition, allowing for dynamic switching between input images.
+Returns one of two images in tensor format based on a boolean condition.
 ![SwitchImage](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/SwitchImage.png "Switch between two images in tensor format based on a boolean condition")
 
 #### SwitchInteger
 
-Returns one of two integer values depending on a boolean condition, making it useful for conditional logic in workflows.
+Returns one of two integer values depending on a boolean condition.
 ![SwitchInteger](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/SwitchInteger.png "Choose between two integer values based on a boolean condition")
 
 #### SwitchJSON
 
-Returns one of two JSON objects depending on a boolean condition, helping to dynamically adjust JSON data used in workflows.
+Returns one of two JSON objects depending on a boolean condition.
 ![SwitchJSON](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/SwitchJSON.png "Conditionally select between two JSON objects using a boolean condition")
 
 #### SwitchString
 
-Returns one of two string values based on a boolean condition, allowing for flexible text-based responses in workflows.
+Returns one of two string values based on a boolean condition.
 ![SwitchString](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/SwitchString.png "Dynamically choose between two string values based on a boolean condition.")
 
 ### Primitive nodes (`primitives.py`)

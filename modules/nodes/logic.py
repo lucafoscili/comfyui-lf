@@ -2,6 +2,38 @@ from server import PromptServer
 
 category = "✨ LF Nodes/Logic"
 
+class LF_SwitchFloat:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+            "on_true": ("FLOAT", {"lazy": True, "default": 0, "tooltip": "Value to return if the boolean condition is true."}),
+            "on_false": ("FLOAT", {"lazy": True, "default": 0, "tooltip": "Value to return if the boolean condition is false."}),
+            "boolean": ("BOOLEAN", {"default": False, "tooltip": "Boolean condition to switch between 'on_true' and 'on_false' values."}),
+        },
+            "hidden": { "node_id": "UNIQUE_ID" }
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    RETURN_TYPES = ("FLOAT",)
+
+    def check_lazy_status(self, **kwargs):
+        switch_value = kwargs["boolean"]
+        if switch_value:
+            return ["on_true"]
+        else:
+            return ["on_false"]
+
+    def on_exec(self, node_id, on_true: int, on_false: int, boolean: bool):
+        
+        PromptServer.instance.send_sync("lf-switchfloat", {
+            "node": node_id, 
+            "bool": boolean, 
+        })
+
+        return (on_true if boolean else on_false,)
+
 class LF_SwitchImage:
     @classmethod
     def INPUT_TYPES(cls):
@@ -131,12 +163,14 @@ class LF_SwitchString:
         return (on_true if boolean else on_false,)
     
 NODE_CLASS_MAPPINGS = {
+    "LF_SwitchFloat": LF_SwitchFloat,
     "LF_SwitchImage": LF_SwitchImage,
     "LF_SwitchInteger": LF_SwitchInteger,
     "LF_SwitchJSON": LF_SwitchJSON,
     "LF_SwitchString": LF_SwitchString,
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
+    "LF_SwitchFloat": "Switch Float",
     "LF_SwitchImage": "Switch Image",
     "LF_SwitchInteger": "Switch Integer",
     "LF_SwitchJSON": "Switch JSON",

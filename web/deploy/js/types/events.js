@@ -16,6 +16,7 @@ export var EventName;
     EventName["resizeimageToSquare"] = "lf-resizeimagetosquare";
     EventName["saveImageForCivitAI"] = "lf-saveimageforcivitai";
     EventName["string"] = "lf-string";
+    EventName["switchFloat"] = "lf-switchfloat";
     EventName["switchImage"] = "lf-switchimage";
     EventName["switchInteger"] = "lf-switchinteger";
     EventName["switchJson"] = "lf-switchjson";

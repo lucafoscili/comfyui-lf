@@ -25,6 +25,7 @@ import {
   ResizeImageToSquarePayload,
   SaveImageForCivitAIPayload,
   StringPayload,
+  SwitchFloatPayload,
   SwitchImagePayload,
   SwitchIntegerPayload,
   SwitchJSONPayload,
@@ -285,6 +286,16 @@ export class LFManager {
         nodes.eventHandlers.LF_SaveImageForCivitAI(e, widgets.adders.KUL_IMAGE_PREVIEW_B64);
       },
     );
+    /*-------------------------------------------------------------------*/
+    /*                 I n i t   S w i t c h   F l o a t                 */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_SwitchFloat(
+      widgets.setters.KUL_BOOLEAN_VIEWER,
+      widgets.adders.KUL_BOOLEAN_VIEWER,
+    );
+    this.#APIS.event(EventName.switchFloat, (e: CustomEvent<SwitchFloatPayload>) => {
+      nodes.eventHandlers.LF_SwitchFloat(e, widgets.adders.KUL_BOOLEAN_VIEWER);
+    });
     /*-------------------------------------------------------------------*/
     /*                 I n i t   S w i t c h   I m a g e                 */
     /*-------------------------------------------------------------------*/

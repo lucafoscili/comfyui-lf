@@ -16,6 +16,7 @@ export declare class LFNodes {
         LF_ResizeImageToSquare: (event: CustomEvent<import("../types/events").ResizeImageToSquarePayload>, addW: BaseWidgetCallback) => void;
         LF_SaveImageForCivitAI: (event: CustomEvent<import("../types/events").SaveImageForCivitAIPayload>, addW: BaseWidgetCallback) => void;
         LF_String: (event: CustomEvent<import("../types/events").StringPayload>, addW: BaseWidgetCallback) => void;
+        LF_SwitchFloat: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
         LF_SwitchImage: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
         LF_SwitchInteger: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
         LF_SwitchJSON: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
@@ -44,6 +45,7 @@ export declare class LFNodes {
         LF_ResizeImageToSquare: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_SaveImageForCivitAI: (setW: import("../types/widgets").ImagePreviewWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_String: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
+        LF_SwitchFloat: (setW: import("../types/widgets").BooleanViewerWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_SwitchImage: (setW: import("../types/widgets").BooleanViewerWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_SwitchInteger: (setW: import("../types/widgets").BooleanViewerWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_SwitchJSON: (setW: import("../types/widgets").BooleanViewerWidgetSetter, addW: BaseWidgetCallback) => void;
@@ -68,6 +70,7 @@ export declare class LFNodes {
             LF_ResizeImageToSquare: (event: CustomEvent<import("../types/events").ResizeImageToSquarePayload>, addW: BaseWidgetCallback) => void;
             LF_SaveImageForCivitAI: (event: CustomEvent<import("../types/events").SaveImageForCivitAIPayload>, addW: BaseWidgetCallback) => void;
             LF_String: (event: CustomEvent<import("../types/events").StringPayload>, addW: BaseWidgetCallback) => void;
+            LF_SwitchFloat: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
             LF_SwitchImage: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
             LF_SwitchInteger: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
             LF_SwitchJSON: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
@@ -96,6 +99,7 @@ export declare class LFNodes {
             LF_ResizeImageToSquare: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_SaveImageForCivitAI: (setW: import("../types/widgets").ImagePreviewWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_String: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
+            LF_SwitchFloat: (setW: import("../types/widgets").BooleanViewerWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_SwitchImage: (setW: import("../types/widgets").BooleanViewerWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_SwitchInteger: (setW: import("../types/widgets").BooleanViewerWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_SwitchJSON: (setW: import("../types/widgets").BooleanViewerWidgetSetter, addW: BaseWidgetCallback) => void;
