@@ -13,6 +13,7 @@ import {
   BooleanPayload,
   CivitAIMetadataSetupPayload,
   DisplayJSONPayload,
+  DisplayPrimitiveAsJSONPayload,
   EventName,
   FloatPayload,
   ImageHistogramPayload,
@@ -154,6 +155,16 @@ export class LFManager {
     this.#APIS.event(EventName.displayJson, (e: CustomEvent<DisplayJSONPayload>) => {
       nodes.eventHandlers.LF_DisplayJSON(e, widgets.adders.KUL_CODE);
     });
+    /*-------------------------------------------------------------------*/
+    /*       I n i t   D i s p l a y P r i m i t i v e A s J S O N       */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_DisplayPrimitiveAsJSON(widgets.setters.KUL_TREE);
+    this.#APIS.event(
+      EventName.displayPrimitiveAsJson,
+      (e: CustomEvent<DisplayPrimitiveAsJSONPayload>) => {
+        nodes.eventHandlers.LF_DisplayPrimitiveAsJSON(e, widgets.adders.KUL_TREE);
+      },
+    );
     /*-------------------------------------------------------------------*/
     /*                        I n i t   F l o a t                        */
     /*-------------------------------------------------------------------*/

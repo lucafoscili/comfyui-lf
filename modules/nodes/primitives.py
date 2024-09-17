@@ -34,7 +34,9 @@ class LF_DisplayPrimitiveAsJSON:
     @classmethod
     def INPUT_TYPES(cls):
         return {
-            "required": {},
+            "required": {
+                "result": ("KUL_TREE", {}),
+            },
             "optional": {
                 "integer": ("INT", {"default": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Integer value."}),
                 "float": ("FLOAT", {"default": 0.0, "step": 0.1, "tooltip": "Float value."}),
@@ -59,15 +61,19 @@ class LF_DisplayPrimitiveAsJSON:
         boolean = kwargs.get("boolean")
 
         if boolean is not None:
-            dataset["nodes"].append({"id": "boolean", "value": str(boolean)})
+            dataset["nodes"].append({"children": [{"id": "boolean", "value": str(boolean)}],
+                                      "description": str(boolean), "id": "boolean", "value": "boolean"})
         if float_val is not None:
-            dataset["nodes"].append({"id": "float", "value": str(float_val)})
+            dataset["nodes"].append({"children":[{"id": "float", "value":  str(float_val)}],
+                                      "description": str(float_val), "id": "float", "value": "float"})
         if integer is not None:
-            dataset["nodes"].append({"id": "integer", "value": str(integer)})
+            dataset["nodes"].append({"children":[{"id": "integer", "value": str(integer)}],
+                                      "description": str(integer), "id": "integer", "value": "integer"})
         if string is not None:
-            dataset["nodes"].append({"id": "string", "value": string})
+            dataset["nodes"].append({"children":[{"id": "string", "value": string}],
+                                      "description": string, "id": "string", "value": "string"})
 
-        PromptServer.instance.send_sync("lf-displayprimitive", {
+        PromptServer.instance.send_sync("lf-displayprimitiveasjson", {
             "node": node_id,
             "dataset": dataset
         })

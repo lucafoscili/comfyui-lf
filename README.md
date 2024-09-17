@@ -199,6 +199,11 @@ Returns one of two string values based on a boolean condition.
 Used to select a boolean. It keeps record of old values, displaying a clickable list below the widget.
 ![Boolean](https://github.com/lucafoscili/comfyui-lf/blob/7deb085a3649ec873435cb092308c4e7a01cefe9/docs/images/Boolean.png "Boolean node with history")
 
+#### DisplayPrimitiveAsJSON
+
+Displays different primitive values as a JSON output or directly in-widget through a tree-like view.
+![DisplayPrimitiveAsJSON](https://github.com/lucafoscili/comfyui-lf/blob/460888f68f9568b05d390add9733dc480ee0950f/docs/images/DisplayPrimitiveAsJSON.png "Primitive values displayed as JSON")
+
 #### Float
 
 Used to select a float. It keeps record of old values, displaying a clickable list below the widget.

@@ -14,6 +14,7 @@ export enum EventName {
   civitAIMetadataSetup = 'lf-civitaimetadatasetup',
   controlPanel = 'lf-controlpanel',
   displayJson = 'lf-displayjson',
+  displayPrimitiveAsJson = 'lf-displayprimitiveasjson',
   float = 'lf-float',
   imageHistogram = 'lf-imagehistogram',
   integer = 'lf-integer',
@@ -80,6 +81,14 @@ export interface BooleanPayload extends BaseEventPayload {
 
 export interface CivitAIMetadataSetupPayload extends BaseEventPayload {
   metadataString: string;
+}
+
+/*-------------------------------------------------------------------*/
+/*    D i s p l a y P r i m i t i v e A s J S O N   D e c l a r .    */
+/*-------------------------------------------------------------------*/
+
+export interface DisplayPrimitiveAsJSONPayload extends BaseEventPayload {
+  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/

@@ -27,6 +27,7 @@ import { loadMetadataFactory } from '../nodes/loadMetadata';
 import { keywordToggleFromJsonFactory } from '../nodes/keywordToggleFromJson';
 import { llmMessengerFactory } from '../nodes/llmMessenger';
 import { switchFloatFactory } from '../nodes/switchFloat';
+import { displayPrimitiveAsJsonFactory } from '../nodes/displayPrimitiveAsJson';
 
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
@@ -38,6 +39,7 @@ export class LFNodes {
     [NodeName.boolean]: booleanFactory.eventHandler,
     [NodeName.civitaiMetadataSetup]: civitaiMetadataSetupFactory.eventHandler,
     [NodeName.displayJson]: displayJsonFactory.eventHandler,
+    [NodeName.displayPrimitiveAsJson]: displayPrimitiveAsJsonFactory.eventHandler,
     [NodeName.float]: floatFactory.eventHandler,
     [NodeName.imageHistogram]: imageHistogramFactory.eventHandler,
     [NodeName.integer]: integerFactory.eventHandler,
@@ -64,6 +66,7 @@ export class LFNodes {
     [NodeName.civitaiMetadataSetup]: civitaiMetadataSetupFactory.register,
     [NodeName.controlPanel]: controlPanelFactory.register,
     [NodeName.displayJson]: displayJsonFactory.register,
+    [NodeName.displayPrimitiveAsJson]: displayPrimitiveAsJsonFactory.register,
     [NodeName.float]: floatFactory.register,
     [NodeName.imageHistogram]: imageHistogramFactory.register,
     [NodeName.integer]: integerFactory.register,

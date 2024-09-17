@@ -8,6 +8,7 @@ export var NodeName;
     NodeName["civitaiMetadataSetup"] = "LF_CivitAIMetadataSetup";
     NodeName["controlPanel"] = "LF_ControlPanel";
     NodeName["displayJson"] = "LF_DisplayJSON";
+    NodeName["displayPrimitiveAsJson"] = "LF_DisplayPrimitiveAsJSON";
     NodeName["float"] = "LF_Float";
     NodeName["imageHistogram"] = "LF_ImageHistogram";
     NodeName["integer"] = "LF_Integer";

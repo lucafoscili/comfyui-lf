@@ -9,6 +9,7 @@ export declare enum EventName {
     civitAIMetadataSetup = "lf-civitaimetadatasetup",
     controlPanel = "lf-controlpanel",
     displayJson = "lf-displayjson",
+    displayPrimitiveAsJson = "lf-displayprimitiveasjson",
     float = "lf-float",
     imageHistogram = "lf-imagehistogram",
     integer = "lf-integer",
@@ -39,6 +40,9 @@ export interface BooleanPayload extends BaseEventPayload {
 }
 export interface CivitAIMetadataSetupPayload extends BaseEventPayload {
     metadataString: string;
+}
+export interface DisplayPrimitiveAsJSONPayload extends BaseEventPayload {
+    dataset: KulDataDataset;
 }
 export interface DisplayJSONPayload extends BaseEventPayload {
     json: Record<string, unknown>;
