@@ -170,7 +170,7 @@ The location, outfit and style options are currently unused, they will be used t
 #### SwitchFloat
 
 Returns one of two float values depending on a boolean condition.
-![SwitchFloat](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/SwitchFloat.png "Choose between two float values based on a boolean condition")
+![SwitchFloat](https://github.com/lucafoscili/comfyui-lf/blob/e2d71390d90b44841cf2080afcfd3869793de573/docs/images/SwitchFloat.png "Choose between two float values based on a boolean condition")
 
 #### SwitchImage
 
@@ -202,7 +202,7 @@ Used to select a boolean. It keeps record of old values, displaying a clickable 
 #### DisplayPrimitiveAsJSON
 
 Displays different primitive values as a JSON output or directly in-widget through a tree-like view.
-![DisplayPrimitiveAsJSON](https://github.com/lucafoscili/comfyui-lf/blob/460888f68f9568b05d390add9733dc480ee0950f/docs/images/DisplayPrimitiveAsJSON.png "Primitive values displayed as JSON")
+![DisplayPrimitiveAsJSON](https://github.com/lucafoscili/comfyui-lf/blob/e2d71390d90b44841cf2080afcfd3869793de573/docs/images/DisplayPrimitiveAsJSON.png "Primitive values displayed as JSON")
 
 #### Float
 
