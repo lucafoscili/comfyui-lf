@@ -158,8 +158,11 @@ class LF_LLMMessenger:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "config": ("JSON", {"tooltip": "The configuration JSON containing characters to talk to."}),
                 "messenger": ("KUL_MESSENGER", {"tooltip": "Chatting interface with characters controlled by an LLM."}),
+            },
+            "optional": {
+                "dataset": ("JSON", {"tooltip": "The dataset JSON containing characters to talk to."}),
+                "config": ("JSON", {"tooltip": "Set of parameters that initializes the interface."}),
             }
         }
 
@@ -168,10 +171,44 @@ class LF_LLMMessenger:
     RETURN_NAMES = ("chat_history_json", "last_message", "last_user_message", "last_llm_message")
     RETURN_TYPES = ("JSON", "STRING", "STRING", "STRING")
 
-    def on_exec(self, config, messenger):
-        chat_data = json.loads(messenger)
+    def on_exec(self, **kwargs):
+        
+        messenger = kwargs["messenger"]
+
+        try:
+            payload = json.loads(messenger)
+            dataset = payload["dataset"]
+            config = payload["config"]
+        except (json.JSONDecodeError, KeyError):
+            raise ValueError("It looks like the chat is empty!")
+        
+        def find_node_by_id(dataset, target_id):
+            for node in dataset:
+                if isinstance(node, dict) and 'id' in node and node['id'] == target_id:
+                    return node
+            return None
+        
+        if isinstance(config, str):
+            try:
+                config = json.loads(config)
+            except json.JSONDecodeError:
+                raise ValueError("Invalid config format")
+
+        if "currentCharacter" not in config:
+             raise ValueError("You must choose a character")
+        
+        character_data = find_node_by_id(dataset["nodes"], config["currentCharacter"])
+        if character_data is None:
+            raise ValueError(f"Character with id {config['currentCharacter']} not found in dataset")
+        
+        try:
+            chat_node = find_node_by_id(character_data["children"], "chat")
+            chat_data = chat_node["cells"]["kulChat"]["value"]
+        except (json.JSONDecodeError, KeyError):
+            raise ValueError(f"It looks like the chat with {config['currentCharacter']} is empty")
+        
         all_messages = [message["content"] for message in chat_data]
-        last_message = all_messages[-1]
+        last_message = all_messages[-1] if all_messages else ""
         last_user_message = next((message["content"] for message in reversed(chat_data) if message["role"] == "user"), "")
         last_llm_message = next((message["content"] for message in reversed(chat_data) if message["role"] == "llm"), "")
         return (chat_data, last_message, last_user_message, last_llm_message, json.dumps(all_messages))

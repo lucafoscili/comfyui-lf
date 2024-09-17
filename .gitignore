@@ -183,6 +183,7 @@ web/deploy/js/ketchup-lite/*showcase*
 !web/deploy/assets/svg/clear.svg
 !web/deploy/assets/svg/content_copy.svg
 !web/deploy/assets/svg/delete.svg
+!web/deploy/assets/svg/download.svg
 !web/deploy/assets/svg/file.svg
 !web/deploy/assets/svg/history.svg
 !web/deploy/assets/svg/hotel.svg
@@ -191,8 +192,11 @@ web/deploy/js/ketchup-lite/*showcase*
 !web/deploy/assets/svg/landscape.svg
 !web/deploy/assets/svg/loyalty.svg
 !web/deploy/assets/svg/movie.svg
+!web/deploy/assets/svg/people.svg
 !web/deploy/assets/svg/portrait.svg
 !web/deploy/assets/svg/refresh.svg
+!web/deploy/assets/svg/save.svg
+!web/deploy/assets/svg/settings.svg
 !web/deploy/assets/svg/style.svg
 !web/deploy/assets/svg/view_comfy.svg
 !web/deploy/assets/svg/view_day.svg

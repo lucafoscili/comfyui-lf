@@ -1,6 +1,6 @@
 import { LogSeverity } from '../types/manager.js';
 import { CustomWidgetName } from '../types/widgets.js';
-import { createDOMWidget, getLFManager } from '../utils/common.js';
+import { createDOMWidget, getLFManager, isValidJSON, unescapeJson } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-messenger';
 const TYPE = CustomWidgetName.messenger;
 export const messengerFactory = {
@@ -15,9 +15,46 @@ export const messengerFactory = {
                 return messenger;
             },
             getValue() {
-                return messenger?.dataset.history;
+                const dataset = messenger.kulData ?? JSON.stringify(messenger.kulData);
+                const config = messenger.dataset.config ?? JSON.stringify(messenger.dataset.config);
+                return JSON.stringify({ dataset, config });
             },
-            setValue() { },
+            setValue(value) {
+                try {
+                    if (typeof value === 'string') {
+                        const parsed = unescapeJson(value).parsedJson;
+                        const dataset = parsed['dataset'];
+                        const config = parsed['config'];
+                        messenger.kulData = dataset;
+                        if (config) {
+                            if (typeof config === 'string') {
+                                const unescapeConfig = unescapeJson(config);
+                                messenger.dataset.config = unescapeConfig.unescapedStr;
+                                messenger.kulValue = unescapeJson(config).parsedJson;
+                            }
+                            else if (isValidJSON(config)) {
+                                messenger.dataset.config = JSON.stringify(config);
+                            }
+                        }
+                    }
+                    else {
+                        const { dataset, config } = value;
+                        if (dataset) {
+                            messenger.kulData = dataset;
+                        }
+                        if (config) {
+                            messenger.kulValue = config;
+                            messenger.dataset.config = JSON.stringify(config);
+                        }
+                    }
+                }
+                catch (error) {
+                    getLFManager().log('Error when setting value!', { error, messenger }, LogSeverity.Error);
+                    if (value === undefined || value === '') {
+                        messenger.kulData = undefined;
+                    }
+                }
+            },
         };
     },
     render: (node, name) => {
@@ -27,11 +64,13 @@ export const messengerFactory = {
         const options = messengerFactory.options(messenger);
         content.classList.add(messengerFactory.cssClasses.content);
         messenger.classList.add(messengerFactory.cssClasses.messenger);
-        messenger.addEventListener('kul-chat-event', (e) => {
-            const detail = e.detail;
-            getLFManager().log('Setting new history on messenger widget', { messenger }, LogSeverity.Error);
-            const { history } = detail;
-            messenger.dataset.history = history;
+        messenger.addEventListener('kul-messenger-event', (e) => {
+            const { eventType, initialization } = e.detail;
+            switch (eventType) {
+                case 'save':
+                    messenger.dataset.config = JSON.stringify(initialization);
+                    break;
+            }
         });
         content.appendChild(messenger);
         wrapper.appendChild(content);

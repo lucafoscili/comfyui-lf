@@ -105,7 +105,7 @@ const copy = async (e: CustomEvent<KulButtonEventPayload>, chip: HTMLKulChipElem
   if (eventType === 'pointerdown') {
     const button = comp as KulButton;
     const selectedChips: string[] = [];
-    (await chip.getSelected()).forEach((n) => {
+    (await chip.getSelectedNodes()).forEach((n) => {
       selectedChips.push(n.id);
     });
     navigator.clipboard.writeText(selectedChips.join(', '));
