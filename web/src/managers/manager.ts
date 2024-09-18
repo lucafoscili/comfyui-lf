@@ -158,11 +158,11 @@ export class LFManager {
     /*-------------------------------------------------------------------*/
     /*       I n i t   D i s p l a y P r i m i t i v e A s J S O N       */
     /*-------------------------------------------------------------------*/
-    this.#MANAGERS.nodes.register.LF_DisplayPrimitiveAsJSON(widgets.setters.KUL_TREE);
+    this.#MANAGERS.nodes.register.LF_DisplayPrimitiveAsJSON(widgets.setters.KUL_CODE);
     this.#APIS.event(
       EventName.displayPrimitiveAsJson,
       (e: CustomEvent<DisplayPrimitiveAsJSONPayload>) => {
-        nodes.eventHandlers.LF_DisplayPrimitiveAsJSON(e, widgets.adders.KUL_TREE);
+        nodes.eventHandlers.LF_DisplayPrimitiveAsJSON(e, widgets.adders.KUL_CODE);
       },
     );
     /*-------------------------------------------------------------------*/

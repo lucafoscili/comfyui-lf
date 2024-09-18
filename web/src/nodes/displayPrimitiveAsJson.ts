@@ -1,7 +1,7 @@
 import { DisplayPrimitiveAsJSONPayload, EventName } from '../types/events';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
-import { CustomWidgetName, TreeWidgetSetter, type BaseWidgetCallback } from '../types/widgets';
+import { CodeWidgetSetter, CustomWidgetName, type BaseWidgetCallback } from '../types/widgets';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 
 const NAME = NodeName.displayPrimitiveAsJson;
@@ -14,14 +14,12 @@ export const displayPrimitiveAsJsonFactory = {
     const payload = event.detail;
     const node = getApiRoutes().getNodeById(payload.id);
     if (node) {
-      const widget = getCustomWidget(node, CustomWidgetName.tree, addW);
-      const comp = widget.options.getComp();
-      comp.kulAccordionLayout = true;
-      widget.options.setValue(event.detail.dataset);
+      const widget = getCustomWidget(node, CustomWidgetName.code, addW);
+      widget.options.setValue(event.detail.dataset as Record<string, unknown>);
       getApiRoutes().redraw();
     }
   },
-  register: (setW: TreeWidgetSetter) => {
+  register: (setW: CodeWidgetSetter) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       getCustomWidgets: setW,

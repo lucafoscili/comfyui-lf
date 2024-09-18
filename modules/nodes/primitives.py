@@ -35,7 +35,7 @@ class LF_DisplayPrimitiveAsJSON:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "result": ("KUL_TREE", {}),
+                "json": ("KUL_CODE", {}),
             },
             "optional": {
                 "integer": ("INT", {"default": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Integer value."}),
@@ -48,6 +48,7 @@ class LF_DisplayPrimitiveAsJSON:
 
     CATEGORY = category
     FUNCTION = "on_exec"
+    OUTPUT_NODE = True
     RETURN_NAMES = ("json",)
     RETURN_TYPES = ("JSON",)
 
