@@ -70,6 +70,7 @@ export const codeFactory = {
         code.kulStyle = '.language-text { white-space: break-spaces; }';
         break;
       case NodeName.displayJson:
+      case NodeName.displayPrimitiveAsJson:
         code.kulLanguage = 'json';
         code.kulValue = EMPTY;
         break;

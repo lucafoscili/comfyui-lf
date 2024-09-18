@@ -11,9 +11,7 @@ export const displayPrimitiveAsJsonFactory = {
         const payload = event.detail;
         const node = getApiRoutes().getNodeById(payload.id);
         if (node) {
-            const widget = getCustomWidget(node, CustomWidgetName.tree, addW);
-            const comp = widget.options.getComp();
-            comp.kulAccordionLayout = true;
+            const widget = getCustomWidget(node, CustomWidgetName.code, addW);
             widget.options.setValue(event.detail.dataset);
             getApiRoutes().redraw();
         }

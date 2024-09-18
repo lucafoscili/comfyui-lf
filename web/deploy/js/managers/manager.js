@@ -105,9 +105,9 @@ export class LFManager {
         /*-------------------------------------------------------------------*/
         /*       I n i t   D i s p l a y P r i m i t i v e A s J S O N       */
         /*-------------------------------------------------------------------*/
-        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_DisplayPrimitiveAsJSON(widgets.setters.KUL_TREE);
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_DisplayPrimitiveAsJSON(widgets.setters.KUL_CODE);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.displayPrimitiveAsJson, (e) => {
-            nodes.eventHandlers.LF_DisplayPrimitiveAsJSON(e, widgets.adders.KUL_TREE);
+            nodes.eventHandlers.LF_DisplayPrimitiveAsJSON(e, widgets.adders.KUL_CODE);
         });
         /*-------------------------------------------------------------------*/
         /*                        I n i t   F l o a t                        */
