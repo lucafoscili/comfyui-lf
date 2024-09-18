@@ -31,7 +31,7 @@ export declare class LFNodes {
         LF_CivitAIMetadataSetup: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_ControlPanel: (setW: import("../types/widgets").ControlPanelWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_DisplayJSON: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback) => void;
-        LF_DisplayPrimitiveAsJSON: (setW: import("../types/widgets").TreeWidgetSetter) => void;
+        LF_DisplayPrimitiveAsJSON: (setW: import("../types/widgets").CodeWidgetSetter) => void;
         LF_Float: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_ImageHistogram: (setW: import("../types/widgets").HistogramWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_Integer: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
@@ -87,7 +87,7 @@ export declare class LFNodes {
             LF_CivitAIMetadataSetup: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_ControlPanel: (setW: import("../types/widgets").ControlPanelWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_DisplayJSON: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback) => void;
-            LF_DisplayPrimitiveAsJSON: (setW: import("../types/widgets").TreeWidgetSetter) => void;
+            LF_DisplayPrimitiveAsJSON: (setW: import("../types/widgets").CodeWidgetSetter) => void;
             LF_Float: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_ImageHistogram: (setW: import("../types/widgets").HistogramWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_Integer: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;

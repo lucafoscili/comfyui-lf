@@ -168,13 +168,12 @@ class LF_LLMMessenger:
 
     CATEGORY = category
     FUNCTION = "on_exec"
-    RETURN_NAMES = ("chat_history_json", "last_message", "last_user_message", "last_llm_message")
-    RETURN_TYPES = ("JSON", "STRING", "STRING", "STRING")
+    RETURN_NAMES = ("chat_history_json", "chat_history_string", "last_message", "last_user_message", "last_llm_message", "styled_prompt", "character_name")
+    RETURN_TYPES = ("JSON", "STRING", "STRING", "STRING", "STRING", "STRING", "STRING")
 
     def on_exec(self, **kwargs):
-        
         messenger = kwargs["messenger"]
-
+    
         try:
             payload = json.loads(messenger)
             dataset = payload["dataset"]
@@ -193,25 +192,68 @@ class LF_LLMMessenger:
                 config = json.loads(config)
             except json.JSONDecodeError:
                 raise ValueError("Invalid config format")
-
+    
         if "currentCharacter" not in config:
-             raise ValueError("You must choose a character")
+            raise ValueError("You must choose a character")
         
         character_data = find_node_by_id(dataset["nodes"], config["currentCharacter"])
         if character_data is None:
             raise ValueError(f"Character with id {config['currentCharacter']} not found in dataset")
         
+        character_name = character_data["value"]
+        
         try:
             chat_node = find_node_by_id(character_data["children"], "chat")
             chat_data = chat_node["cells"]["kulChat"]["value"]
         except (json.JSONDecodeError, KeyError):
-            raise ValueError(f"It looks like the chat with {config['currentCharacter']} is empty")
+            raise ValueError(f"It looks like the chat with {character_name} is empty")
         
         all_messages = [message["content"] for message in chat_data]
         last_message = all_messages[-1] if all_messages else ""
         last_user_message = next((message["content"] for message in reversed(chat_data) if message["role"] == "user"), "")
         last_llm_message = next((message["content"] for message in reversed(chat_data) if message["role"] == "llm"), "")
-        return (chat_data, last_message, last_user_message, last_llm_message, json.dumps(all_messages))
+    
+        # chat_history_string
+        chat_history_string = "\n".join([
+            f"User: \"{message['content']}\"" if message["role"] == "user" else f"{character_data['value']}: \"{message['content']}\""
+            for message in chat_data
+        ])
+        
+        # styled_prompt
+        try:
+            style_root = find_node_by_id(character_data["children"], "styles")
+            location_root = find_node_by_id(character_data["children"], "locations")
+            outfit_root = find_node_by_id(character_data["children"], "outfits")
+
+            style_node = style_root['children'][style_root["value"]]
+            location_node = location_root['children'][location_root["value"]]
+            outfit_node = outfit_root['children'][outfit_root["value"]]
+
+            style_str = f"{style_node['value']}"
+            location_str = f"{location_node['value']}" if location_node else ""
+            outfit_str = f"{outfit_node['value']}" if outfit_node else ""
+
+            if 'description' in style_node:
+                style_str += f", {style_node['description']}"
+            if 'description' in location_node:
+                location_str += f", {location_node['description']}"
+            if 'description' in outfit_node:
+                outfit_str += f", {outfit_node['description']}"
+
+            if style_node and last_llm_message:
+                styled_prompt = f"Envision the scene described below from the viewer's point of view.\n"
+                styled_prompt += f"{character_name} said to the viewer:\n"
+                styled_prompt += f"\"{last_llm_message}\"\n"
+                styled_prompt += f"Style of the image: {style_str}\n"
+                styled_prompt += f"{character_name}'s outfit: \"{outfit_str}\"\n" if outfit_node else ""
+                styled_prompt += f"Location: \"{location_str}\"\n" if location_node else ""
+            else:
+                styled_prompt = None
+        except Exception as e:
+            styled_prompt = str(e)
+    
+        return (chat_data, chat_history_string, last_message, last_user_message, last_llm_message, styled_prompt, character_name)
+
 
 NODE_CLASS_MAPPINGS = {
     "LF_CharacterImpersonator": LF_CharacterImpersonator,

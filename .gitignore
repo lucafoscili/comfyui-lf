@@ -200,3 +200,6 @@ web/deploy/js/ketchup-lite/*showcase*
 !web/deploy/assets/svg/style.svg
 !web/deploy/assets/svg/view_comfy.svg
 !web/deploy/assets/svg/view_day.svg
+
+# Messenger - custom characters
+web/deploy/assets/media/custom_characters

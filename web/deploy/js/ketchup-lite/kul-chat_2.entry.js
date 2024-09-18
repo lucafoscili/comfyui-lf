@@ -227,7 +227,7 @@ const KulChat = class {
         catch (error) {
             this.status = 'offline';
         }
-        this.onKulEvent(new CustomEvent('update'), 'update');
+        this.onKulEvent(new CustomEvent('polling'), 'polling');
     }
     #disableInteractivity = (status) => {
         this.#clearButton.kulDisabled = status;
@@ -408,7 +408,7 @@ const KulChat = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: 'cc05db42777691643c432cf1838214fe65cfa3cc' }, this.kulStyle && (h("style", { key: '80bf79b4758eaca61d150bdad6991faed674fedd', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: 'f28a13d7c4e57c7e78aaacd84bd4222a2f19c78c', id: KUL_WRAPPER_ID }, h("div", { key: '042a3a9ce757904d8067213b0a034924faffce5a', class: `wrapper wrapper--${this.kulLayout} wrapper--${this.status}` }, this.status === 'ready'
+        return (h(Host, { key: '6d0ba6174bc9dbca4e43c89a71afd6978afda529' }, this.kulStyle && (h("style", { key: '50d28c170c224b7ccaa5a401670c94e416838eb3', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: '5829a44da79c8b385b87a9eea2b841819cafd659', id: KUL_WRAPPER_ID }, h("div", { key: 'e732fc1f87c76183359e2624ed75eb48892e3950', class: `wrapper wrapper--${this.kulLayout} wrapper--${this.status}` }, this.status === 'ready'
             ? this.#prepReady()
             : this.status === 'connecting'
                 ? this.#prepConnecting()
@@ -1206,7 +1206,7 @@ var Prism = (function (_self) {
 	// Typescript note:
 	// The following can be used to import the Token type in JSDoc:
 	//
-	//   @typedef {InstanceType<import("./prism-core.js")["Token"]>} Token
+	//   @typedef {InstanceType<import("./prism-core")["Token"]>} Token
 
 	/**
 	 * Creates a new token.

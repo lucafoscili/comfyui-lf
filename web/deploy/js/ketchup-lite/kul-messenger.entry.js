@@ -103,7 +103,6 @@ const NAV_DATASET = {
     ],
 };
 
-let TIMEOUT;
 const prepLeft = (adapter) => {
     const isCollapsed = adapter.get.messenger.ui().panels.isLeftCollapsed;
     return (h("div", { class: `messenger__left ${isCollapsed ? 'messenger__left--collapsed' : ''}` },
@@ -112,7 +111,7 @@ const prepLeft = (adapter) => {
 };
 const prepAvatar = (adapter) => {
     const image = adapter.get.image.asCover('avatars');
-    const status = adapter.get.character.status();
+    const status = adapter.get.messenger.status.connection();
     return (h(Fragment, null,
         h("img", { alt: image.title || '', class: "messenger__avatar__image", src: image.value, title: image.title || '' }),
         h("div", { class: "messenger__avatar__name" },
@@ -127,34 +126,31 @@ const prepAvatar = (adapter) => {
                             ? 'This character seems to be offline...'
                             : 'Contacting this character...' }),
                 adapter.get.character.name()),
-            h("kul-button", { kulData: MENU_DATASET, kulIcon: "save", kulLabel: "Save", kulStyling: "flat", "onKul-button-event": buttonClickHandler.bind(buttonClickHandler, adapter), title: "Update the dataset with current settings." },
-                h("kul-spinner", { kulActive: true, kulDimensions: "0.6em", kulLayout: 4, slot: "spinner" })))));
+            prepSaveButton(adapter))));
+};
+const prepSaveButton = (adapter) => {
+    const saveInProgress = adapter.get.messenger.status.save.inProgress();
+    const props = {
+        kulIcon: saveInProgress ? '' : 'save',
+        kulLabel: saveInProgress ? 'Saving...' : 'Save',
+        kulShowSpinner: saveInProgress ? true : false,
+    };
+    return (h("kul-button", { ...props, kulData: MENU_DATASET, kulStyling: "flat", "onKul-button-event": buttonClickHandler.bind(buttonClickHandler, adapter), ref: (el) => {
+            adapter.set.messenger.status.save.button(el);
+        }, title: "Update the dataset with current settings." },
+        h("kul-spinner", { kulActive: true, kulDimensions: "0.6em", kulLayout: 4, slot: "spinner" })));
 };
 const prepBiography = (adapter) => {
     return (h("kul-code", { kulLanguage: "markdown", kulValue: adapter.get.character.biography() }));
 };
 const buttonClickHandler = async (adapter, e) => {
-    const { comp, eventType, originalEvent } = e.detail;
-    const button = comp;
+    const { eventType, originalEvent } = e.detail;
     switch (eventType) {
         case 'click':
-            button.kulLabel = 'Saving...';
-            button.kulShowSpinner = true;
-            adapter.set.messenger.data().then(() => {
-                requestAnimationFrame(() => {
-                    button.kulIcon = 'check';
-                    button.kulLabel = 'Saved!';
-                    button.kulShowSpinner = false;
-                    if (TIMEOUT) {
-                        clearTimeout(TIMEOUT);
-                    }
-                    TIMEOUT = setTimeout(() => {
-                        button.kulIcon = 'save';
-                        button.kulLabel = 'Save';
-                        TIMEOUT = null;
-                    }, 1000);
-                });
-            });
+            const saveInProgress = adapter.get.messenger.status.save.inProgress();
+            if (!saveInProgress) {
+                adapter.set.messenger.data();
+            }
             break;
         case 'kul-event':
             listClickHandler(adapter, originalEvent);
@@ -253,9 +249,12 @@ const tabbarEventHandler = (adapter, e) => {
 const chatEventHandler = (adapter, e) => {
     const { eventType, history, status } = e.detail;
     switch (eventType) {
+        case 'polling':
+            adapter.set.messenger.status.connection(status);
+            break;
         case 'update':
             adapter.set.character.history(history);
-            adapter.set.character.status(status);
+            break;
     }
 };
 const expanderEventHandler = (adapter, e) => {
@@ -321,15 +320,15 @@ const prepOptions = (adapter) => {
         h("div", { class: "messenger__options__wrapper" },
             h("img", { class: "messenger__options__outfit", alt: styleImage.title || 'No outfit selected.', src: outfitImage.value, title: outfitImage.title || 'No outfit selected.' }),
             h("div", { class: "messenger__options__name" },
-                h("div", { class: "messenger__options__label" }, "Outfit"))),
+                h("div", { class: "messenger__options__label", title: "Active outfit." }, "Outfit"))),
         h("div", { class: "messenger__options__wrapper" },
             h("img", { class: "messenger__options__location", alt: styleImage.title || 'No location selected.', src: locationImage.value, title: locationImage.title || 'No location selected.' }),
             h("div", { class: "messenger__options__name" },
-                h("div", { class: "messenger__options__label" }, "Location"))),
+                h("div", { class: "messenger__options__label", title: "Active location." }, "Location"))),
         h("div", { class: "messenger__options__wrapper" },
             h("img", { class: "messenger__options__style", alt: styleImage.title || 'No style selected.', src: styleImage.value, title: styleImage.title || 'No style selected.' }),
             h("div", { class: "messenger__options__name" },
-                h("div", { class: "messenger__options__label" }, "Style"))),
+                h("div", { class: "messenger__options__label", title: "Active style." }, "Style"))),
     ];
 };
 const prepFilters = (adapter) => {
@@ -417,7 +416,7 @@ const prepGrid = (adapter) => {
     return avatars?.length ? (avatars) : (h("div", { class: "empty-dataset" }, "There are no characters to display!"));
 };
 
-const kulMessengerCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}:host{--kul_messenger_active_options_name_padding:var(\n    --kul-messenger-active-options-name-padding,\n    4px\n  );--kul_messenger_avatar_name_padding:var(\n    --kul-messenger-avatar-name-padding,\n    12px\n  );--kul_messenger_backdrop_filter:var(\n    --kul-messenger-backdrop-filter,\n    blur(5px)\n  );--kul_messenger_background_color:var(\n    --kul-messenger-background-color,\n    rgba(var(--kul-background-color-rgb), 0.375)\n  );--kul_messenger_font_size:var(\n    --kul-messenger-font-size,\n    var(--kul-font-size)\n  );--kul_messenger_name_background_color:var(\n    --kul-messenger-name-background-color,\n    rgba(var(--kul-title-background-color-rgb), 0.75)\n  );--kul_messenger_letter_spacing:var(--kul-messenger-letter-spacing, 5px);--kul_messenger_name_height:var(--kul-messenger-avatar-height, 50px);--kul_messenger_nav_box_shadow:var(\n    --kul-messenger-nav-box-shadow,\n    0px 1px 7px 3px rgba(var(--kul-text-color-rgb), 0.375)\n  );--kul_messenger_options_title_padding:var(\n    --kul-messenger-options-title-padding,\n    8px\n  );--kul_messenger_text_color:var(\n    --kul-messenger-text-color,\n    var(--kul-text-color)\n  );--kul_messenger_transition:var(--kul-messenger-transition, 125ms ease-out);box-sizing:border-box;background-color:var(--kul_messenger_background_color);color:var(--kul_messenger_text_color);display:block;font-family:var(--kul-font-family);font-size:var(--kul-font-size);height:100%;width:100%}#kul-component{height:100%;width:100%}.messenger{display:grid;grid-template-columns:1fr 3fr 1fr;height:100%;position:relative;width:100%}.messenger:has(.messenger__left--collapsed){grid-template-columns:0 4fr 1fr}.messenger:has(.messenger__right--collapsed){grid-template-columns:1fr 4fr 0}.messenger:has(.messenger__left--collapsed):has(.messenger__right--collapsed){grid-template-columns:0 1fr 0}.messenger__left{display:grid;grid-template-rows:minmax(auto, 40%) minmax(auto, 1fr);height:100%;overflow:auto;transition:height var(--kul_messenger_transition)}.messenger__left--collapsed{overflow:hidden;width:0}.messenger__center{display:grid;grid-template-areas:\"nav nav nav\" \"expander-l chat expander-r\";grid-template-columns:auto 1fr auto;grid-template-rows:auto 1fr;height:100%;overflow:auto}.messenger__right{display:grid;grid-template-rows:minmax(10%, auto) auto 1fr;height:100%;overflow:auto;transition:height var(--kul_messenger_transition)}.messenger__right--collapsed{overflow:hidden;width:0}.messenger__avatar{position:relative}.messenger__avatar__image{display:block;height:100%;object-fit:cover;width:100%}.messenger__avatar__label{display:flex}.messenger__avatar__status{padding-right:8px}.messenger__avatar__name{align-items:center;background-color:var(--kul_messenger_name_background_color);backdrop-filter:var(--kul_messenger_backdrop_filter);box-sizing:border-box;display:flex;height:var(--kul_messenger_name_height);justify-content:space-between;left:0;letter-spacing:var(--kul_messenger_letter_spacing);padding-left:var(--kul_messenger_avatar_name_padding);position:absolute;text-transform:uppercase;top:0;width:100%}.messenger__biography{font-size:0.8em;overflow:auto}.messenger__expander{box-shadow:var(--kul_messenger_nav_box_shadow)}.messenger__expander--left{grid-area:expander-l}.messenger__expander--right{grid-area:expander-r}.messenger__navigation{box-shadow:var(--kul_messenger_nav_box_shadow);grid-area:nav}.messenger__chat{--kul-chat-padding:16px 8px 0 8px;--kul-chat-buttons-padding:8px 0 0 0;overflow:auto;grid-area:chat}.messenger__options__active{display:grid;grid-template-columns:repeat(3, 1fr)}.messenger__options__wrapper{position:relative}.messenger__options__outfit,.messenger__options__location,.messenger__options__style{display:block;height:100%;object-fit:cover;width:100%}.messenger__options__filters{padding:16px 0}.messenger__options__list{display:grid;overflow:auto}.messenger__options__name{background:var(--kul_messenger_name_background_color);bottom:0;box-sizing:border-box;overflow:hidden;padding:var(--kul_messenger_active_options_name_padding);position:absolute;text-align:center;width:100%}.messenger__options__title{background:var(--kul-title-background-color);color:var(--kul-title-color);letter-spacing:var(--kul_messenger_letter_spacing);overflow:hidden;padding:var(--kul_messenger_options_title_padding);position:sticky;text-align:center;text-overflow:ellipsis;text-transform:uppercase;top:-1px;z-index:1}.messenger__options__section{display:grid;grid-template-rows:auto 1fr;height:100%}.messenger__options__images{display:grid;grid-template-columns:repeat(3, 1fr);overflow:auto;width:100%}.messenger__options__image-wrapper{position:relative}.messenger__options__image-wrapper:after{box-shadow:none;content:\"\";height:100%;left:0;position:absolute;top:0;transition:background-color var(--kul_messenger_transition), box-shadow var(--kul_messenger_transition);width:100%}.messenger__options__image-wrapper:hover:not(.messenger__options__image-wrapper--selected):after{box-shadow:inset 0 0 5px 3px var(--kul-primary-color, white);pointer-events:none}.messenger__options__image-wrapper--selected:after{align-content:center;background-color:rgba(var(--kul-title-background-color-rgb), 0.875);content:\"Current\";cursor:default;font-size:0.775em;letter-spacing:var(--kul_messenger_letter_spacing);overflow:hidden;position:absolute;text-align:center;text-overflow:ellipsis;text-transform:uppercase}.messenger__options__image{cursor:pointer;display:block;height:100%;object-fit:cover;width:100%}.selection-grid{display:grid;grid-template-columns:repeat(4, 1fr);height:100%;overflow:auto;width:100%}.selection-grid__image{display:block;height:100%;object-fit:cover;width:100%}.selection-grid__portrait{--kul_messenger_name_background_color:rgba(\n    var(--kul-background-color-rgb),\n    0.375\n  );--kul_messenger_portrait_foredrop_color:rgba(\n    var(--kul-background-color-rgb),\n    0.275\n  );cursor:pointer;overflow:auto;position:relative}.selection-grid__portrait:hover{--kul_messenger_name_background_color:rgba(\n    var(--kul-background-color-rgb),\n    0.775\n  );--kul_messenger_portrait_foredrop_color:rgba(\n    var(--kul-background-color-rgb),\n    0\n  )}.selection-grid__portrait:after{background:var(--kul_messenger_portrait_foredrop_color);content:\"\";height:100%;left:0;pointer-events:none;position:absolute;top:0;transition:background-color var(--kul_messenger_transition);width:100%}.selection-grid__name{align-items:center;backdrop-filter:blur(5px);background-color:var(--kul_messenger_name_background_color);bottom:0;display:flex;height:var(--kul_messenger_name_height);left:0;position:absolute;transition:background-color var(--kul_messenger_transition);width:100%}.selection-grid__label{letter-spacing:var(--kul_messenger_letter_spacing);overflow:hidden;text-align:center;text-overflow:ellipsis;text-transform:uppercase;width:100%}";
+const kulMessengerCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}:host{--kul_messenger_active_options_name_padding:var(\n    --kul-messenger-active-options-name-padding,\n    4px\n  );--kul_messenger_avatar_name_padding:var(\n    --kul-messenger-avatar-name-padding,\n    12px\n  );--kul_messenger_backdrop_filter:var(\n    --kul-messenger-backdrop-filter,\n    blur(5px)\n  );--kul_messenger_background_color:var(\n    --kul-messenger-background-color,\n    rgba(var(--kul-background-color-rgb), 0.375)\n  );--kul_messenger_font_size:var(\n    --kul-messenger-font-size,\n    var(--kul-font-size)\n  );--kul_messenger_name_background_color:var(\n    --kul-messenger-name-background-color,\n    rgba(var(--kul-title-background-color-rgb), 0.75)\n  );--kul_messenger_letter_spacing:var(--kul-messenger-letter-spacing, 5px);--kul_messenger_name_height:var(--kul-messenger-avatar-height, 50px);--kul_messenger_nav_box_shadow:var(\n    --kul-messenger-nav-box-shadow,\n    0px 1px 7px 3px rgba(var(--kul-text-color-rgb), 0.375)\n  );--kul_messenger_options_title_padding:var(\n    --kul-messenger-options-title-padding,\n    8px\n  );--kul_messenger_text_color:var(\n    --kul-messenger-text-color,\n    var(--kul-text-color)\n  );--kul_messenger_transition:var(--kul-messenger-transition, 125ms ease-out);box-sizing:border-box;background-color:var(--kul_messenger_background_color);color:var(--kul_messenger_text_color);display:block;font-family:var(--kul-font-family);font-size:var(--kul-font-size);height:100%;width:100%}#kul-component{height:100%;width:100%}.messenger{display:grid;grid-template-columns:1fr 3fr 1fr;height:100%;position:relative;width:100%}.messenger:has(.messenger__left--collapsed){grid-template-columns:0 4fr 1fr}.messenger:has(.messenger__right--collapsed){grid-template-columns:1fr 4fr 0}.messenger:has(.messenger__left--collapsed):has(.messenger__right--collapsed){grid-template-columns:0 1fr 0}.messenger__left{display:grid;grid-template-rows:minmax(auto, 40%) minmax(auto, 1fr);height:100%;overflow:auto;transition:height var(--kul_messenger_transition)}.messenger__left--collapsed{overflow:hidden;width:0}.messenger__center{display:grid;grid-template-areas:\"nav nav nav\" \"expander-l chat expander-r\";grid-template-columns:auto 1fr auto;grid-template-rows:auto 1fr;height:100%;overflow:auto}.messenger__right{display:grid;grid-template-rows:40% auto 1fr;height:100%;overflow:auto;transition:height var(--kul_messenger_transition)}.messenger__right--collapsed{overflow:hidden;width:0}.messenger__avatar{position:relative}.messenger__avatar__image{display:block;height:100%;object-fit:cover;width:100%}.messenger__avatar__label{display:flex}.messenger__avatar__status{padding-right:8px}.messenger__avatar__name{align-items:center;background-color:var(--kul_messenger_name_background_color);backdrop-filter:var(--kul_messenger_backdrop_filter);box-sizing:border-box;display:flex;height:var(--kul_messenger_name_height);justify-content:space-between;left:0;letter-spacing:var(--kul_messenger_letter_spacing);padding-left:var(--kul_messenger_avatar_name_padding);position:absolute;text-transform:uppercase;top:0;width:100%}.messenger__biography{font-size:0.8em;overflow:auto}.messenger__expander{box-shadow:var(--kul_messenger_nav_box_shadow)}.messenger__expander--left{grid-area:expander-l}.messenger__expander--right{grid-area:expander-r}.messenger__navigation{box-shadow:var(--kul_messenger_nav_box_shadow);grid-area:nav}.messenger__chat{--kul-chat-padding:16px 8px 0 8px;--kul-chat-buttons-padding:8px 0 0 0;overflow:auto;grid-area:chat}.messenger__options__active{display:grid;grid-template-columns:repeat(3, 1fr)}.messenger__options__wrapper{overflow:hidden;position:relative}.messenger__options__outfit,.messenger__options__location,.messenger__options__style{display:block;height:100%;object-fit:cover;width:100%}.messenger__options__filters{padding:16px 0}.messenger__options__label{font-size:0.8em;letter-spacing:var(--kul_messenger_letter_spacing);overflow:hidden;text-align:center;text-overflow:ellipsis;text-transform:uppercase}.messenger__options__list{display:grid;overflow:auto}.messenger__options__name{background:var(--kul_messenger_name_background_color);bottom:0;box-sizing:border-box;overflow:hidden;padding:var(--kul_messenger_active_options_name_padding);position:absolute;width:100%}.messenger__options__title{background:var(--kul-title-background-color);color:var(--kul-title-color);letter-spacing:var(--kul_messenger_letter_spacing);overflow:hidden;padding:var(--kul_messenger_options_title_padding);position:sticky;text-align:center;text-overflow:ellipsis;text-transform:uppercase;top:-1px;z-index:1}.messenger__options__section{display:grid;grid-template-rows:auto 1fr;height:100%}.messenger__options__images{display:grid;grid-template-columns:repeat(3, 1fr);overflow:auto;width:100%}.messenger__options__image-wrapper{position:relative}.messenger__options__image-wrapper:after{box-shadow:none;content:\"\";height:100%;left:0;position:absolute;top:0;transition:background-color var(--kul_messenger_transition), box-shadow var(--kul_messenger_transition);width:100%}.messenger__options__image-wrapper:hover:not(.messenger__options__image-wrapper--selected):after{box-shadow:inset 0 0 5px 3px var(--kul-primary-color, white);pointer-events:none}.messenger__options__image-wrapper--selected:after{align-content:center;background-color:rgba(var(--kul-title-background-color-rgb), 0.875);content:\"Current\";cursor:default;font-size:0.775em;letter-spacing:var(--kul_messenger_letter_spacing);overflow:hidden;position:absolute;text-align:center;text-overflow:ellipsis;text-transform:uppercase}.messenger__options__image{cursor:pointer;display:block;height:100%;object-fit:cover;width:100%}.selection-grid{display:grid;grid-template-columns:repeat(4, 1fr);height:100%;overflow:auto;width:100%}.selection-grid__image{display:block;height:100%;object-fit:cover;width:100%}.selection-grid__portrait{--kul_messenger_name_background_color:rgba(\n    var(--kul-background-color-rgb),\n    0.375\n  );--kul_messenger_portrait_foredrop_color:rgba(\n    var(--kul-background-color-rgb),\n    0.275\n  );cursor:pointer;overflow:auto;position:relative}.selection-grid__portrait:hover{--kul_messenger_name_background_color:rgba(\n    var(--kul-background-color-rgb),\n    0.775\n  );--kul_messenger_portrait_foredrop_color:rgba(\n    var(--kul-background-color-rgb),\n    0\n  )}.selection-grid__portrait:after{background:var(--kul_messenger_portrait_foredrop_color);content:\"\";height:100%;left:0;pointer-events:none;position:absolute;top:0;transition:background-color var(--kul_messenger_transition);width:100%}.selection-grid__name{align-items:center;backdrop-filter:blur(5px);background-color:var(--kul_messenger_name_background_color);bottom:0;display:flex;height:var(--kul_messenger_name_height);left:0;position:absolute;transition:background-color var(--kul_messenger_transition);width:100%}.selection-grid__label{letter-spacing:var(--kul_messenger_letter_spacing);overflow:hidden;text-align:center;text-overflow:ellipsis;text-transform:uppercase;width:100%}";
 const KulMessengerStyle0 = kulMessengerCss;
 
 const KulMessenger = class {
@@ -446,7 +445,8 @@ const KulMessenger = class {
                 isRightCollapsed: false,
             },
         };
-        this.status = 'offline';
+        this.saveInProgress = false;
+        this.connectionStatus = 'offline';
         this.kulAutosave = true;
         this.kulData = null;
         this.kulStyle = '';
@@ -523,6 +523,7 @@ const KulMessenger = class {
     /*           P r i v a t e   M e t h o d s         */
     /*-------------------------------------------------*/
     #adapter = {
+        components: { saveButton: null },
         get: {
             character: {
                 biography: (character = this.currentCharacter) => {
@@ -538,9 +539,7 @@ const KulMessenger = class {
                 },
                 byId: (id) => this.kulData.nodes.find((n) => n.id === id),
                 current: () => this.currentCharacter,
-                history: (character = this.currentCharacter) => {
-                    return this.history[character.id];
-                },
+                history: (character = this.currentCharacter) => this.history[character.id],
                 name: (character = this.currentCharacter) => character.value ||
                     character.id ||
                     character.description ||
@@ -564,7 +563,6 @@ const KulMessenger = class {
                     const prevIdx = (currentIdx + nodes.length - 1) % nodes.length;
                     return nodes[prevIdx];
                 },
-                status: () => this.status,
             },
             image: {
                 asCover: (type, character = this.currentCharacter) => {
@@ -631,6 +629,13 @@ const KulMessenger = class {
                 },
                 data: () => this.kulData,
                 history: () => this.history,
+                status: {
+                    connection: () => this.connectionStatus,
+                    save: {
+                        button: () => this.#adapter.components.saveButton,
+                        inProgress: () => this.saveInProgress,
+                    },
+                },
                 ui: () => this.ui,
             },
         },
@@ -641,6 +646,9 @@ const KulMessenger = class {
                 },
                 history: (history, character = this.currentCharacter) => {
                     this.history[character.id] = history;
+                    if (this.kulAutosave) {
+                        this.#adapter.set.messenger.data();
+                    }
                 },
                 next: (character = this.currentCharacter) => {
                     if (!this.#hasCharacters()) {
@@ -656,7 +664,6 @@ const KulMessenger = class {
                     const previousC = this.#adapter.get.character.previous(character);
                     this.#adapter.set.character.current(previousC);
                 },
-                status: (status) => (this.status = status),
             },
             image: {
                 cover: (type, value, character = this.currentCharacter) => {
@@ -665,46 +672,29 @@ const KulMessenger = class {
                 },
             },
             messenger: {
-                data: async () => {
+                data: () => {
                     if (!this.#hasNodes()) {
                         return;
                     }
-                    for (let index = 0; index < this.kulData.nodes.length; index++) {
-                        const character = this.kulData.nodes[index];
-                        const id = character.id;
-                        const chat = character.children.find((n) => n.id === 'chat');
-                        const avatars = this.#adapter.get.image.root('avatars');
-                        const locations = this.#adapter.get.image.root('locations');
-                        const outfits = this.#adapter.get.image.root('outfits');
-                        const styles = this.#adapter.get.image.root('styles');
-                        if (this.history[id] && chat) {
-                            const historyJson = JSON.parse(this.history[id]);
-                            try {
-                                chat.cells.kulChat.value = historyJson;
-                            }
-                            catch (error) {
-                                chat.cells = {
-                                    kulChat: {
-                                        shape: 'chat',
-                                        value: historyJson,
-                                    },
-                                };
-                            }
-                        }
-                        if (this.covers[id] && avatars) {
-                            avatars.value = this.covers[id].avatars;
-                        }
-                        if (this.covers[id] && locations) {
-                            locations.value = this.covers[id].locations;
-                        }
-                        if (this.covers[id] && outfits) {
-                            outfits.value = this.covers[id].outfits;
-                        }
-                        if (this.covers[id] && styles) {
-                            styles.value = this.covers[id].styles;
-                        }
-                    }
-                    this.onKulEvent(new CustomEvent('save'), 'save');
+                    this.saveInProgress = true;
+                    this.#save().then(() => {
+                        requestAnimationFrame(() => {
+                            const button = this.#adapter.components.saveButton;
+                            button.kulIcon = 'check';
+                            button.kulLabel = 'Saved!';
+                            button.kulShowSpinner = false;
+                        });
+                        setTimeout(() => {
+                            requestAnimationFrame(() => (this.saveInProgress = false));
+                        }, 1000);
+                    });
+                },
+                status: {
+                    connection: (status) => (this.connectionStatus = status),
+                    save: {
+                        button: (button) => (this.#adapter.components.saveButton = button),
+                        inProgress: (value) => (this.saveInProgress = value),
+                    },
                 },
                 ui: {
                     filters: (filters) => {
@@ -772,6 +762,44 @@ const KulMessenger = class {
                 }
             }
         }
+    }
+    async #save() {
+        for (let index = 0; index < this.kulData.nodes.length; index++) {
+            const character = this.kulData.nodes[index];
+            const id = character.id;
+            const chat = character.children.find((n) => n.id === 'chat');
+            const avatars = this.#adapter.get.image.root('avatars');
+            const locations = this.#adapter.get.image.root('locations');
+            const outfits = this.#adapter.get.image.root('outfits');
+            const styles = this.#adapter.get.image.root('styles');
+            if (this.history[id] && chat) {
+                const historyJson = JSON.parse(this.history[id]);
+                try {
+                    chat.cells.kulChat.value = historyJson;
+                }
+                catch (error) {
+                    chat.cells = {
+                        kulChat: {
+                            shape: 'chat',
+                            value: historyJson,
+                        },
+                    };
+                }
+            }
+            if (this.covers[id] && avatars) {
+                avatars.value = this.covers[id].avatars;
+            }
+            if (this.covers[id] && locations) {
+                locations.value = this.covers[id].locations;
+            }
+            if (this.covers[id] && outfits) {
+                outfits.value = this.covers[id].outfits;
+            }
+            if (this.covers[id] && styles) {
+                styles.value = this.covers[id].styles;
+            }
+        }
+        this.onKulEvent(new CustomEvent('save'), 'save');
     }
     /*-------------------------------------------------*/
     /*          L i f e c y c l e   H o o k s          */
