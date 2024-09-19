@@ -1206,7 +1206,7 @@ var Prism = (function (_self) {
 	// Typescript note:
 	// The following can be used to import the Token type in JSDoc:
 	//
-	//   @typedef {InstanceType<import("./prism-core")["Token"]>} Token
+	//   @typedef {InstanceType<import("./prism-core.js")["Token"]>} Token
 
 	/**
 	 * Creates a new token.

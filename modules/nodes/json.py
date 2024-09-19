@@ -1,6 +1,9 @@
 import json
 import random
 
+from ..utils.io import image_to_base64
+from ..utils.json import *
+
 from server import PromptServer
 
 category = "✨ LF Nodes/JSON"
@@ -112,6 +115,59 @@ class LF_GetValueFromJSON:
                 float_output = None
 
         return (json_output, string_output, number_output, int_output, float_output, boolean_output)
+    
+class LF_ImageListFromJSON:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "json_input": ("JSON", {"tooltip": "Input JSON containing keys to determine batch size."}),
+                "add_noise": ("BOOLEAN", {"default": True, "tooltip": "Add noise to the images."}),
+                "width": ("INT", {"default": 1024, "min": 1, "max": 4096, "tooltip": "Width of the images."}),
+                "height": ("INT", {"default": 1024, "min": 1, "max": 4096, "tooltip": "Height of the images."}),
+                "seed": ("INT", {"default": 42, "tooltip": "Seed for generating random noise."}),
+                "previews": ("KUL_IMAGE_PREVIEW_B64", {}),
+            },
+            "hidden": { "node_id": "UNIQUE_ID" }
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    OUTPUT_IS_LIST = (True, True, False, False, False)
+    RETURN_NAMES = ("images", "keys", "nr", "width", "height")
+    RETURN_TYPES = ("IMAGE", "STRING", "INT", "INT", "INT")
+
+    def on_exec(self, **kwargs):
+        node_id = kwargs["node_id"]
+        json_input = kwargs["json_input"]
+        add_noise = kwargs["add_noise"]
+        width = kwargs["width"]
+        height = kwargs["height"]
+        seed = kwargs["seed"]
+
+        keys = list(json_input.keys())
+        num_images = len(keys)
+        image_batch = []
+
+        np.random.seed(seed)
+
+        image_batch = []
+        for _ in range(num_images):
+            if add_noise:
+                image = create_noisy_image(width, height)
+            else:
+                image = create_blank_image(width, height)
+            image_batch.append(image)
+
+        PromptServer.instance.send_sync("lf-imagelistfromjson", {
+            "node": node_id,
+            "fileNames": keys,
+            "images": image_to_base64(image_batch)
+        })
+
+        images = pil_batch_to_tensor_bhwc(image_batch)
+
+        return (images, keys, num_images, width, height)
     
 class LF_KeywordToggleFromJSON:
     @classmethod
@@ -247,6 +303,7 @@ NODE_CLASS_MAPPINGS = {
     "LF_DisplayJSON": LF_DisplayJSON,
     "LF_GetRandomKeyFromJSON": LF_GetRandomKeyFromJSON,
     "LF_GetValueFromJSON": LF_GetValueFromJSON,
+    "LF_ImageListFromJSON": LF_ImageListFromJSON,
     "LF_KeywordToggleFromJSON": LF_KeywordToggleFromJSON,
     "LF_SetValueInJSON": LF_SetValueInJSON,
     "LF_StringToJSON": LF_StringToJSON,
@@ -256,6 +313,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_DisplayJSON": "Display JSON",
     "LF_GetRandomKeyFromJSON": "Get Random Key From JSON",
     "LF_GetValueFromJSON": "Get Value from JSON",
+    "LF_ImageListFromJSON": "Image list from JSON",
     "LF_KeywordToggleFromJSON": "Keyword toggle from JSON",
     "LF_SetValueInJSON" : "Set/Create a Value in a JSON Object",
     "LF_StringToJSON": "Convert string to JSON",
