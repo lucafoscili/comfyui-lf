@@ -116,7 +116,7 @@ Extracts a specific value from a JSON object based on a provided key. This node 
 #### ImageListFromJSON
 
 Creates a list of images with the number set by the number of keys inside the input JSON. It also outputs the list of keys themselves.
-![ImageListFromJSON](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/ImageListFromJSON.png "Node UI to randomly extract keys from a JSON object")
+![ImageListFromJSON](https://github.com/lucafoscili/comfyui-lf/blob/89937003edcebb4941e18af64eee08941bf9e5db/docs/images/ImageListFromJSON.png "Node UI to randomly extract keys from a JSON object")
 
 #### KeywordToggleFromJSON
 
