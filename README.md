@@ -113,6 +113,11 @@ Extracts a random key from a given JSON object. This can be used to introduce va
 Extracts a specific value from a JSON object based on a provided key. This node supports extracting various types of values including JSON objects, strings, numbers, integers, floats, and booleans.
 ![GetValueFromJSON](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/GetValueFromJSON.png "Interface displaying node to retrieve specific JSON values")
 
+#### ImageListFromJSON
+
+Creates a list of images with the number set by the number of keys inside the input JSON. It also outputs the list of keys themselves.
+![ImageListFromJSON](https://github.com/lucafoscili/comfyui-lf/blob/89937003edcebb4941e18af64eee08941bf9e5db/docs/images/ImageListFromJSON.png "Node UI to randomly extract keys from a JSON object")
+
 #### KeywordToggleFromJSON
 
 Allows the selection of keywords received from a Ketchup Lite compatible JSON dataset. Values are refreshed every time the input changes.

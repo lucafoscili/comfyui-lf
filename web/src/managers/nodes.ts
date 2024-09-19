@@ -28,6 +28,7 @@ import { keywordToggleFromJsonFactory } from '../nodes/keywordToggleFromJson';
 import { llmMessengerFactory } from '../nodes/llmMessenger';
 import { switchFloatFactory } from '../nodes/switchFloat';
 import { displayPrimitiveAsJsonFactory } from '../nodes/displayPrimitiveAsJson';
+import { imageListFromJsonFactory } from '../nodes/imageListFromJson';
 
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
@@ -41,6 +42,7 @@ export class LFNodes {
     [NodeName.displayJson]: displayJsonFactory.eventHandler,
     [NodeName.displayPrimitiveAsJson]: displayPrimitiveAsJsonFactory.eventHandler,
     [NodeName.float]: floatFactory.eventHandler,
+    [NodeName.imageListFromJSON]: imageListFromJsonFactory.eventHandler,
     [NodeName.imageHistogram]: imageHistogramFactory.eventHandler,
     [NodeName.integer]: integerFactory.eventHandler,
     [NodeName.keywordCounter]: keywordCounterFactory.eventHandler,
@@ -68,6 +70,7 @@ export class LFNodes {
     [NodeName.displayJson]: displayJsonFactory.register,
     [NodeName.displayPrimitiveAsJson]: displayPrimitiveAsJsonFactory.register,
     [NodeName.float]: floatFactory.register,
+    [NodeName.imageListFromJSON]: imageListFromJsonFactory.register,
     [NodeName.imageHistogram]: imageHistogramFactory.register,
     [NodeName.integer]: integerFactory.register,
     [NodeName.keywordCounter]: keywordCounterFactory.register,

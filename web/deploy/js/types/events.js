@@ -7,6 +7,7 @@ export var EventName;
     EventName["displayJson"] = "lf-displayjson";
     EventName["displayPrimitiveAsJson"] = "lf-displayprimitiveasjson";
     EventName["float"] = "lf-float";
+    EventName["imageListFromJSON"] = "lf-imagelistfromjson";
     EventName["imageHistogram"] = "lf-imagehistogram";
     EventName["integer"] = "lf-integer";
     EventName["keywordCounter"] = "lf-keywordcounter";

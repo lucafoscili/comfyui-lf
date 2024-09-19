@@ -16,6 +16,7 @@ import {
   DisplayPrimitiveAsJSONPayload,
   EventName,
   FloatPayload,
+  ImageListFromJSONPayload,
   ImageHistogramPayload,
   IntegerPayload,
   KeywordCounterPayload,
@@ -171,6 +172,13 @@ export class LFManager {
     this.#MANAGERS.nodes.register.LF_Float(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
     this.#APIS.event(EventName.float, (e: CustomEvent<FloatPayload>) => {
       nodes.eventHandlers.LF_Float(e, widgets.adders.KUL_HISTORY);
+    });
+    /*-------------------------------------------------------------------*/
+    /*            I n i t   I m a g e L i s t F r o m J S O N            */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_ImageListFromJSON(widgets.setters.KUL_IMAGE_PREVIEW_B64);
+    this.#APIS.event(EventName.imageListFromJSON, (e: CustomEvent<ImageListFromJSONPayload>) => {
+      nodes.eventHandlers.LF_ImageListFromJSON(e, widgets.adders.KUL_IMAGE_PREVIEW_B64);
     });
     /*-------------------------------------------------------------------*/
     /*               I n i t   I m a g e H i s t o g r a m               */

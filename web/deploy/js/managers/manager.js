@@ -117,6 +117,13 @@ export class LFManager {
             nodes.eventHandlers.LF_Float(e, widgets.adders.KUL_HISTORY);
         });
         /*-------------------------------------------------------------------*/
+        /*            I n i t   I m a g e L i s t F r o m J S O N            */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_ImageListFromJSON(widgets.setters.KUL_IMAGE_PREVIEW_B64);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.imageListFromJSON, (e) => {
+            nodes.eventHandlers.LF_ImageListFromJSON(e, widgets.adders.KUL_IMAGE_PREVIEW_B64);
+        });
+        /*-------------------------------------------------------------------*/
         /*               I n i t   I m a g e H i s t o g r a m               */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_ImageHistogram(widgets.setters.KUL_HISTOGRAM, widgets.adders.KUL_HISTOGRAM);

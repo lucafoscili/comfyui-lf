@@ -16,6 +16,7 @@ export enum EventName {
   displayJson = 'lf-displayjson',
   displayPrimitiveAsJson = 'lf-displayprimitiveasjson',
   float = 'lf-float',
+  imageListFromJSON = 'lf-imagelistfromjson',
   imageHistogram = 'lf-imagehistogram',
   integer = 'lf-integer',
   keywordCounter = 'lf-keywordcounter',
@@ -40,6 +41,7 @@ export type EventPayload =
   | CivitAIMetadataSetupPayload
   | DisplayJSONPayload
   | FloatPayload
+  | ImageListFromJSONPayload
   | ImageHistogramPayload
   | IntegerPayload
   | KeywordCounterPayload
@@ -109,7 +111,16 @@ export interface FloatPayload extends BaseEventPayload {
 }
 
 /*-------------------------------------------------------------------*/
-/*       I m a g e H i s t o g r a m    D e c l a r a t i o n s      */
+/*    I m a g e L i s t F r o m J S O N   D e c l a r a t i o n s    */
+/*-------------------------------------------------------------------*/
+
+export interface ImageListFromJSONPayload extends BaseEventPayload {
+  fileNames: Array<string>;
+  images: Array<string>;
+}
+
+/*-------------------------------------------------------------------*/
+/*       I m a g e H i s t o g r a m   D e c l a r a t i o n s       */
 /*-------------------------------------------------------------------*/
 
 export interface ImageHistogramPayload extends BaseEventPayload {

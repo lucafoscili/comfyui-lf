@@ -73,13 +73,12 @@ class LF_LoadImages:
                         img_data = img_file.read()
                         img = Image.open(io.BytesIO(img_data)).convert("RGB")
                         img_resized = resize_image(img, max_size=1024)
-                        buffered = io.BytesIO()
-                        img_resized.save(buffered, format="JPEG")
-                        img_base64 = base64.b64encode(buffered.getvalue()).decode('utf-8')
+
+                        img_base64 = image_to_base64(img_resized)
                         images_buffer.append(img_base64)
+
                         img_tensor = torch.from_numpy(np.array(img).astype(np.float32) / 255.0).unsqueeze(0)
-                        images.append(img_tensor)
- 
+                        images.append(img_tensor) 
                         if strip_ext:
                             file = os.path.splitext(file)[0]
                         file_names.append(file)  

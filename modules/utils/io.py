@@ -1,3 +1,5 @@
+import base64
+import io
 import json
 import numpy as np
 import piexif
@@ -82,6 +84,37 @@ def extract_png_metadata(pil_image):
             metadata[key] = value
     
     return metadata
+
+def image_to_base64(image):
+    """
+    Converts a PIL image or a list of PIL images to Base64-encoded string(s).
+    
+    Args:
+        image (PIL.Image or list of PIL.Image): The image(s) to be converted.
+        
+    Returns:
+        str or list: The Base64 string representation(s) of the image(s).
+    """
+    if isinstance(image, list):
+        # Handle list of images
+        return [convert_single_image_to_base64(img) for img in image]
+    else:
+        # Handle single image
+        return convert_single_image_to_base64(image)
+
+def convert_single_image_to_base64(image):
+    """
+    Helper function to convert a single PIL image to Base64.
+    
+    Args:
+        image (PIL.Image): A single image.
+        
+    Returns:
+        str: The Base64 string representation of the image.
+    """
+    buffered = io.BytesIO()
+    image.save(buffered, format="JPEG")
+    return base64.b64encode(buffered.getvalue()).decode('utf-8')
 
 def resize_image(img, max_size=1024):
     """

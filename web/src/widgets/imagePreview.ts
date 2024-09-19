@@ -132,7 +132,7 @@ const drawGrid = (
   for (let index = 0; index < images.length; index++) {
     const gridCell = document.createElement('div');
     const image = document.createElement('img');
-    const title = fileNames[index];
+    const title = fileNames?.[index] || '';
     const image64 = images[index];
 
     gridCell.classList.add(imagePreviewFactory.cssClasses.gridCell);

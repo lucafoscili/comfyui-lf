@@ -11,6 +11,7 @@ export declare enum EventName {
     displayJson = "lf-displayjson",
     displayPrimitiveAsJson = "lf-displayprimitiveasjson",
     float = "lf-float",
+    imageListFromJSON = "lf-imagelistfromjson",
     imageHistogram = "lf-imagehistogram",
     integer = "lf-integer",
     keywordCounter = "lf-keywordcounter",
@@ -29,7 +30,7 @@ export declare enum EventName {
     urandomSeedGenerator = "lf-urandomseedgenerator",
     writeJson = "lf-writejson"
 }
-export type EventPayload = BlurImagesPayload | BooleanPayload | CivitAIMetadataSetupPayload | DisplayJSONPayload | FloatPayload | ImageHistogramPayload | IntegerPayload | KeywordCounterPayload | LoadImagesPayload | MultipleImageResizeForWebPayload | RandomBooleanPayload | ResizeImageByEdgePayload | ResizeImageToSquarePayload | SaveImageForCivitAIPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | UrandomSeedGeneratorPayload | WriteJSONPayload;
+export type EventPayload = BlurImagesPayload | BooleanPayload | CivitAIMetadataSetupPayload | DisplayJSONPayload | FloatPayload | ImageListFromJSONPayload | ImageHistogramPayload | IntegerPayload | KeywordCounterPayload | LoadImagesPayload | MultipleImageResizeForWebPayload | RandomBooleanPayload | ResizeImageByEdgePayload | ResizeImageToSquarePayload | SaveImageForCivitAIPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | UrandomSeedGeneratorPayload | WriteJSONPayload;
 export interface BlurImagesPayload extends BaseEventPayload {
     fileNames: Array<string>;
     images: Array<string>;
@@ -50,6 +51,10 @@ export interface DisplayJSONPayload extends BaseEventPayload {
 export interface FloatPayload extends BaseEventPayload {
     isHistoryEnabled: boolean;
     value: number;
+}
+export interface ImageListFromJSONPayload extends BaseEventPayload {
+    fileNames: Array<string>;
+    images: Array<string>;
 }
 export interface ImageHistogramPayload extends BaseEventPayload {
     dataset: KulDataDataset;
