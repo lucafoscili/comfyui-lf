@@ -42,7 +42,7 @@ Applies the gaussian blur filter to a list of images and edits the filename of e
 #### Extractor
 
 Extracts text enclosed by a starting and ending delimiter.
-![Extractor](https://github.com/lucafoscili/comfyui-lf/blob/460888f68f9568b05d390add9733dc480ee0950f/docs/images/Extractor.png "Extraction")
+![Extractor](https://github.com/lucafoscili/comfyui-lf/blob/713db4caae57bf6ac9c4b14633bc21734667c42a/docs/images/Extractor.png "Extraction")
 
 #### Lora2Prompt
 
@@ -89,7 +89,7 @@ Concatenates up to 10 strings, with the optional toggle to shuffle the order of 
 #### LoadFileOnce
 
 Loads a file from a directory and then saves the name to the history. Files present in the history are skipped.
-![LoadFileOnce](https://github.com/lucafoscili/comfyui-lf/blob/460888f68f9568b05d390add9733dc480ee0950f/docs/images/LoadFileOnce.png "Load the content of the directory only once")
+![LoadFileOnce](https://github.com/lucafoscili/comfyui-lf/blob/713db4caae57bf6ac9c4b14633bc21734667c42a/docs/images/LoadFileOnce.png "Load the content of the directory only once")
 
 #### LoadImages
 
