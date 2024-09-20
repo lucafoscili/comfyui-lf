@@ -28,6 +28,8 @@ import { llmMessengerFactory } from '../nodes/llmMessenger.js';
 import { switchFloatFactory } from '../nodes/switchFloat.js';
 import { displayPrimitiveAsJsonFactory } from '../nodes/displayPrimitiveAsJson.js';
 import { imageListFromJsonFactory } from '../nodes/imageListFromJson.js';
+import { loadFileOnceFactory } from '../nodes/loadFileOnce.js';
+import { extractorFactory } from '../nodes/extractor.js';
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
 /*-------------------------------------------------*/
@@ -40,10 +42,12 @@ export class LFNodes {
             [NodeName.displayJson]: displayJsonFactory.eventHandler,
             [NodeName.displayPrimitiveAsJson]: displayPrimitiveAsJsonFactory.eventHandler,
             [NodeName.float]: floatFactory.eventHandler,
+            [NodeName.extractor]: extractorFactory.eventHandler,
             [NodeName.imageListFromJSON]: imageListFromJsonFactory.eventHandler,
             [NodeName.imageHistogram]: imageHistogramFactory.eventHandler,
             [NodeName.integer]: integerFactory.eventHandler,
             [NodeName.keywordCounter]: keywordCounterFactory.eventHandler,
+            [NodeName.loadFileOnce]: loadFileOnceFactory.eventHandler,
             [NodeName.loadImages]: loadImagesFactory.eventHandler,
             [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.eventHandler,
             [NodeName.randomBoolean]: randomBooleanFactory.eventHandler,
@@ -67,6 +71,7 @@ export class LFNodes {
             [NodeName.displayJson]: displayJsonFactory.register,
             [NodeName.displayPrimitiveAsJson]: displayPrimitiveAsJsonFactory.register,
             [NodeName.float]: floatFactory.register,
+            [NodeName.extractor]: extractorFactory.register,
             [NodeName.imageListFromJSON]: imageListFromJsonFactory.register,
             [NodeName.imageHistogram]: imageHistogramFactory.register,
             [NodeName.integer]: integerFactory.register,
@@ -74,6 +79,7 @@ export class LFNodes {
             [NodeName.keywordToggleFromJson]: keywordToggleFromJsonFactory.register,
             [NodeName.llmChat]: llmChatFactory.register,
             [NodeName.llmMessenger]: llmMessengerFactory.register,
+            [NodeName.loadFileOnce]: loadFileOnceFactory.register,
             [NodeName.loadImages]: loadImagesFactory.register,
             [NodeName.loadMetadata]: loadMetadataFactory.register,
             [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.register,

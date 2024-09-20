@@ -39,6 +39,11 @@ Includes a switch that enables verbose debug logs in the browser's console and a
 Applies the gaussian blur filter to a list of images and edits the filename of each image by adding the '_Blur' suffix.
 ![Blurimages](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/BlurImages.png "Screenshot of the list of images processed with Gaussian blur")
 
+#### Extractor
+
+Extracts text enclosed by a starting and ending delimiter.
+![Extractor](https://github.com/lucafoscili/comfyui-lf/blob/460888f68f9568b05d390add9733dc480ee0950f/docs/images/Extractor.png "Extraction")
+
 #### Lora2Prompt
 
 Converts a prompt and LoRAs to a formatted string.
@@ -80,6 +85,11 @@ Concatenates up to 10 strings, with the optional toggle to shuffle the order of 
 ![WallOfText](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/WallOfText.png "Output example of concatenated text sequences")
 
 ### IO Operations nodes (`io.py`)
+
+#### LoadFileOnce
+
+Loads a file from a directory and then saves the name to the history. Files present in the history are skipped.
+![LoadFileOnce](https://github.com/lucafoscili/comfyui-lf/blob/460888f68f9568b05d390add9733dc480ee0950f/docs/images/LoadFileOnce.png "Load the content of the directory only once")
 
 #### LoadImages
 

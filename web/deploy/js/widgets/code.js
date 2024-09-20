@@ -19,21 +19,13 @@ export const codeFactory = {
             getValue() {
                 return code.kulValue;
             },
-            setProps(props) {
-                for (const key in props) {
-                    if (Object.prototype.hasOwnProperty.call(props, key)) {
-                        const prop = props[key];
-                        code[prop] = prop;
-                    }
-                }
-            },
             setValue(value) {
                 if (value === '' ||
                     value === null ||
                     value === undefined ||
                     value === '{}' ||
                     !Object.keys(value).length) {
-                    code.kulValue = EMPTY;
+                    code.kulValue = code.kulLanguage === 'json' ? EMPTY : '';
                 }
                 else {
                     try {
@@ -63,8 +55,8 @@ export const codeFactory = {
         code.classList.add(codeFactory.cssClasses.code);
         switch (node.comfyClass) {
             case NodeName.civitaiMetadataSetup:
+            case NodeName.extractor:
                 code.kulLanguage = 'text';
-                code.kulStyle = '.language-text { white-space: break-spaces; }';
                 break;
             case NodeName.displayJson:
             case NodeName.displayPrimitiveAsJson:

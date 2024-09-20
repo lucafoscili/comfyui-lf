@@ -34,6 +34,8 @@ import {
   SwitchStringPayload,
   UrandomSeedGeneratorPayload,
   WriteJSONPayload,
+  LoadFileOncePayload,
+  ExtractorPayload,
 } from '../types/events.js';
 
 /*-------------------------------------------------*/
@@ -174,6 +176,13 @@ export class LFManager {
       nodes.eventHandlers.LF_Float(e, widgets.adders.KUL_HISTORY);
     });
     /*-------------------------------------------------------------------*/
+    /*                     I n i t   E x t r a c t o r                   */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_Extractor(widgets.setters.KUL_CODE);
+    this.#APIS.event(EventName.extractor, (e: CustomEvent<ExtractorPayload>) => {
+      nodes.eventHandlers.LF_Extractor(e, widgets.adders.KUL_CODE);
+    });
+    /*-------------------------------------------------------------------*/
     /*            I n i t   I m a g e L i s t F r o m J S O N            */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_ImageListFromJSON(widgets.setters.KUL_IMAGE_PREVIEW_B64);
@@ -232,6 +241,13 @@ export class LFManager {
     /*                I n i t   L L M M e s s e n g e r                  */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_LLMMessenger(widgets.setters.KUL_MESSENGER);
+    /*-------------------------------------------------------------------*/
+    /*                I n i t   L o a d F i l e O n c e                  */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_LoadFileOnce(widgets.setters.KUL_HISTORY);
+    this.#APIS.event(EventName.loadFileOnce, (e: CustomEvent<LoadFileOncePayload>) => {
+      nodes.eventHandlers.LF_LoadFileOnce(e, widgets.adders.KUL_HISTORY);
+    });
     /*-------------------------------------------------------------------*/
     /*                I n i t   L o a d M e t a d a t a                  */
     /*-------------------------------------------------------------------*/

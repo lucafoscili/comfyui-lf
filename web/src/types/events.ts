@@ -15,11 +15,13 @@ export enum EventName {
   controlPanel = 'lf-controlpanel',
   displayJson = 'lf-displayjson',
   displayPrimitiveAsJson = 'lf-displayprimitiveasjson',
+  extractor = 'lf-extractor',
   float = 'lf-float',
   imageListFromJSON = 'lf-imagelistfromjson',
   imageHistogram = 'lf-imagehistogram',
   integer = 'lf-integer',
   keywordCounter = 'lf-keywordcounter',
+  loadFileOnce = 'lf-loadfileonce',
   loadImages = 'lf-loadimages',
   multipleImageResizeForWeb = 'lf-multipleimageresizeforweb',
   randomBoolean = 'lf-randomboolean',
@@ -40,6 +42,7 @@ export type EventPayload =
   | BooleanPayload
   | CivitAIMetadataSetupPayload
   | DisplayJSONPayload
+  | ExtractorPayload
   | FloatPayload
   | ImageListFromJSONPayload
   | ImageHistogramPayload
@@ -102,6 +105,14 @@ export interface DisplayJSONPayload extends BaseEventPayload {
 }
 
 /*-------------------------------------------------------------------*/
+/*            E x t r a c t o r   D e c l a r a t i o n s            */
+/*-------------------------------------------------------------------*/
+
+export interface ExtractorPayload extends BaseEventPayload {
+  result: string;
+}
+
+/*-------------------------------------------------------------------*/
 /*               F l o a t   D e c l a r a t i o n s                 */
 /*-------------------------------------------------------------------*/
 
@@ -143,6 +154,15 @@ export interface IntegerPayload extends BaseEventPayload {
 export interface KeywordCounterPayload extends BaseEventPayload {
   chartDataset: KulDataDataset;
   chipDataset: KulDataDataset;
+}
+
+/*-------------------------------------------------------------------*/
+/*          L o a d   F i l e s   D e c l a r a t i o n s            */
+/*-------------------------------------------------------------------*/
+
+export interface LoadFileOncePayload extends BaseEventPayload {
+  isHistoryEnabled: boolean;
+  value: string;
 }
 
 /*-------------------------------------------------------------------*/

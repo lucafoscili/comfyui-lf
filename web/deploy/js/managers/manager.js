@@ -117,6 +117,13 @@ export class LFManager {
             nodes.eventHandlers.LF_Float(e, widgets.adders.KUL_HISTORY);
         });
         /*-------------------------------------------------------------------*/
+        /*                     I n i t   E x t r a c t o r                   */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_Extractor(widgets.setters.KUL_CODE);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.extractor, (e) => {
+            nodes.eventHandlers.LF_Extractor(e, widgets.adders.KUL_CODE);
+        });
+        /*-------------------------------------------------------------------*/
         /*            I n i t   I m a g e L i s t F r o m J S O N            */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_ImageListFromJSON(widgets.setters.KUL_IMAGE_PREVIEW_B64);
@@ -163,6 +170,13 @@ export class LFManager {
         /*                I n i t   L L M M e s s e n g e r                  */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_LLMMessenger(widgets.setters.KUL_MESSENGER);
+        /*-------------------------------------------------------------------*/
+        /*                I n i t   L o a d F i l e O n c e                  */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_LoadFileOnce(widgets.setters.KUL_HISTORY);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.loadFileOnce, (e) => {
+            nodes.eventHandlers.LF_LoadFileOnce(e, widgets.adders.KUL_HISTORY);
+        });
         /*-------------------------------------------------------------------*/
         /*                I n i t   L o a d M e t a d a t a                  */
         /*-------------------------------------------------------------------*/

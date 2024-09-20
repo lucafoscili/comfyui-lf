@@ -194,7 +194,6 @@ export interface CodeWidgetOptions {
   hideOnZoom: boolean;
   getComp(): HTMLKulCodeElement;
   getValue(): string;
-  setProps(props: Partial<HTMLKulCodeElement>): void;
   setValue(value: Record<string, unknown> | string): void;
 }
 export type CodeWidgetSetter = () => {
@@ -254,7 +253,6 @@ export interface HistoryWidgetOptions {
   hideOnZoom: boolean;
   getComp(): HTMLKulListElement;
   getValue(): HistoryWidgetValue;
-  setProps(props: Partial<HTMLKulListElement>): void;
   setValue(value: HistoryWidgetValue): void;
 }
 export declare type HistoryWidgetSetter = () => {

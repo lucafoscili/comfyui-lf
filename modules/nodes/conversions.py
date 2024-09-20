@@ -70,6 +70,44 @@ class LF_BlurImages:
         })
 
         return (blurred_images, blurred_file_names,)
+
+class LF_Extractor:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "text": ("STRING", {"default": "", "multiline": True, "tooltip": "The string from which the output will be extracted."}),
+                "starting_delimiter": ("STRING", {"default": "{", "tooltip": "The delimiter where extraction starts."}),
+                "ending_delimiter": ("STRING", {"default": "}", "tooltip": "The delimiter where extraction ends."}),
+                "result": ("KUL_CODE", {"tooltip": "Extracted string."}),
+            },
+            "hidden": { "node_id": "UNIQUE_ID" },
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    RETURN_NAMES = ("result_as_json", "extracted_text", "result_as_int", "result_as_float", "result_as_boolean")
+    RETURN_TYPES = ("JSON", "STRING", "INT", "FLOAT", "BOOLEAN")
+
+    def on_exec(self, **kwargs):
+        node_id = kwargs["node_id"]
+        text = kwargs["text"]
+        starting_delimiter = kwargs["starting_delimiter"]
+        ending_delimiter = kwargs["ending_delimiter"]
+
+        extracted_text = extract_nested(text, starting_delimiter, ending_delimiter)
+        
+        result_as_json = convert_to_json(extracted_text)
+        result_as_int = convert_to_int(extracted_text)
+        result_as_float = convert_to_float(extracted_text)
+        result_as_boolean = convert_to_boolean(extracted_text)
+
+        PromptServer.instance.send_sync("lf-extractor", {
+            "node": node_id, 
+            "result": extracted_text,
+        })
+        
+        return (result_as_json, extracted_text, result_as_int, result_as_float, result_as_boolean)
         
 class LF_Lora2Prompt:
     @classmethod
@@ -545,6 +583,7 @@ class LF_WallOfText:
 
 NODE_CLASS_MAPPINGS = {
     "LF_BlurImages": LF_BlurImages,
+    "LF_Extractor": LF_Extractor,
     "LF_Lora2Prompt": LF_Lora2Prompt,
     "LF_LoraTag2Prompt": LF_LoraTag2Prompt,
     "LF_MultipleImageResizeForWeb": LF_MultipleImageResizeForWeb,
@@ -556,6 +595,7 @@ NODE_CLASS_MAPPINGS = {
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_BlurImages": "Blur images",
+    "LF_Extractor": "Extracts something from text",
     "LF_Lora2Prompt": "Convert prompt and LoRAs",
     "LF_LoraTag2Prompt": "Convert LoRA tag to prompt",
     "LF_MultipleImageResizeForWeb": "Multiple image resize for Web",
