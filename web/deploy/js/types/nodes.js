@@ -10,6 +10,7 @@ export var NodeName;
     NodeName["displayJson"] = "LF_DisplayJSON";
     NodeName["displayPrimitiveAsJson"] = "LF_DisplayPrimitiveAsJSON";
     NodeName["float"] = "LF_Float";
+    NodeName["extractor"] = "LF_Extractor";
     NodeName["imageListFromJSON"] = "LF_ImageListFromJSON";
     NodeName["imageHistogram"] = "LF_ImageHistogram";
     NodeName["integer"] = "LF_Integer";

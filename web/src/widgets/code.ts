@@ -66,6 +66,7 @@ export const codeFactory = {
 
     switch (node.comfyClass) {
       case NodeName.civitaiMetadataSetup:
+      case NodeName.extractor:
         code.kulLanguage = 'text';
         code.kulStyle = '.language-text { white-space: break-spaces; }';
         break;

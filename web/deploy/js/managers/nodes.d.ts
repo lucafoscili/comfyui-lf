@@ -7,6 +7,7 @@ export declare class LFNodes {
         LF_DisplayJSON: (event: CustomEvent<import("../types/events").DisplayJSONPayload>, addW: BaseWidgetCallback) => void;
         LF_DisplayPrimitiveAsJSON: (event: CustomEvent<import("../types/events").DisplayPrimitiveAsJSONPayload>, addW: BaseWidgetCallback) => void;
         LF_Float: (event: CustomEvent<import("../types/events").FloatPayload>, addW: BaseWidgetCallback) => void;
+        LF_Extractor: (event: CustomEvent<import("../types/events").ExtractorPayload>, addW: BaseWidgetCallback) => void;
         LF_ImageListFromJSON: (event: CustomEvent<import("../types/events").ImageListFromJSONPayload>, addW: BaseWidgetCallback) => void;
         LF_ImageHistogram: (event: CustomEvent<import("../types/events").ImageHistogramPayload>, addW: BaseWidgetCallback) => void;
         LF_Integer: (event: CustomEvent<import("../types/events").IntegerPayload>, addW: BaseWidgetCallback) => void;
@@ -35,6 +36,7 @@ export declare class LFNodes {
         LF_DisplayJSON: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_DisplayPrimitiveAsJSON: (setW: import("../types/widgets").CodeWidgetSetter) => void;
         LF_Float: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
+        LF_Extractor: (setW: import("../types/widgets").CodeWidgetSetter) => void;
         LF_ImageListFromJSON: (setW: import("../types/widgets").ImagePreviewWidgetSetter) => void;
         LF_ImageHistogram: (setW: import("../types/widgets").HistogramWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_Integer: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
@@ -67,6 +69,7 @@ export declare class LFNodes {
             LF_DisplayJSON: (event: CustomEvent<import("../types/events").DisplayJSONPayload>, addW: BaseWidgetCallback) => void;
             LF_DisplayPrimitiveAsJSON: (event: CustomEvent<import("../types/events").DisplayPrimitiveAsJSONPayload>, addW: BaseWidgetCallback) => void;
             LF_Float: (event: CustomEvent<import("../types/events").FloatPayload>, addW: BaseWidgetCallback) => void;
+            LF_Extractor: (event: CustomEvent<import("../types/events").ExtractorPayload>, addW: BaseWidgetCallback) => void;
             LF_ImageListFromJSON: (event: CustomEvent<import("../types/events").ImageListFromJSONPayload>, addW: BaseWidgetCallback) => void;
             LF_ImageHistogram: (event: CustomEvent<import("../types/events").ImageHistogramPayload>, addW: BaseWidgetCallback) => void;
             LF_Integer: (event: CustomEvent<import("../types/events").IntegerPayload>, addW: BaseWidgetCallback) => void;
@@ -95,6 +98,7 @@ export declare class LFNodes {
             LF_DisplayJSON: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_DisplayPrimitiveAsJSON: (setW: import("../types/widgets").CodeWidgetSetter) => void;
             LF_Float: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
+            LF_Extractor: (setW: import("../types/widgets").CodeWidgetSetter) => void;
             LF_ImageListFromJSON: (setW: import("../types/widgets").ImagePreviewWidgetSetter) => void;
             LF_ImageHistogram: (setW: import("../types/widgets").HistogramWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_Integer: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;

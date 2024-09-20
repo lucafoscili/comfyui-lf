@@ -15,6 +15,7 @@ export enum EventName {
   controlPanel = 'lf-controlpanel',
   displayJson = 'lf-displayjson',
   displayPrimitiveAsJson = 'lf-displayprimitiveasjson',
+  extractor = 'lf-extractor',
   float = 'lf-float',
   imageListFromJSON = 'lf-imagelistfromjson',
   imageHistogram = 'lf-imagehistogram',
@@ -41,6 +42,7 @@ export type EventPayload =
   | BooleanPayload
   | CivitAIMetadataSetupPayload
   | DisplayJSONPayload
+  | ExtractorPayload
   | FloatPayload
   | ImageListFromJSONPayload
   | ImageHistogramPayload
@@ -100,6 +102,14 @@ export interface DisplayPrimitiveAsJSONPayload extends BaseEventPayload {
 
 export interface DisplayJSONPayload extends BaseEventPayload {
   json: Record<string, unknown>;
+}
+
+/*-------------------------------------------------------------------*/
+/*            E x t r a c t o r   D e c l a r a t i o n s            */
+/*-------------------------------------------------------------------*/
+
+export interface ExtractorPayload extends BaseEventPayload {
+  result: string;
 }
 
 /*-------------------------------------------------------------------*/

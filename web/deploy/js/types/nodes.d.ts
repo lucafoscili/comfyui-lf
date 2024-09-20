@@ -7,6 +7,7 @@ export declare enum NodeName {
     displayJson = "LF_DisplayJSON",
     displayPrimitiveAsJson = "LF_DisplayPrimitiveAsJSON",
     float = "LF_Float",
+    extractor = "LF_Extractor",
     imageListFromJSON = "LF_ImageListFromJSON",
     imageHistogram = "LF_ImageHistogram",
     integer = "LF_Integer",

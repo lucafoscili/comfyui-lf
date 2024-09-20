@@ -30,6 +30,7 @@ import { switchFloatFactory } from '../nodes/switchFloat';
 import { displayPrimitiveAsJsonFactory } from '../nodes/displayPrimitiveAsJson';
 import { imageListFromJsonFactory } from '../nodes/imageListFromJson';
 import { loadFileOnceFactory } from '../nodes/loadFileOnce';
+import { extractorFactory } from '../nodes/extractor';
 
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
@@ -43,6 +44,7 @@ export class LFNodes {
     [NodeName.displayJson]: displayJsonFactory.eventHandler,
     [NodeName.displayPrimitiveAsJson]: displayPrimitiveAsJsonFactory.eventHandler,
     [NodeName.float]: floatFactory.eventHandler,
+    [NodeName.extractor]: extractorFactory.eventHandler,
     [NodeName.imageListFromJSON]: imageListFromJsonFactory.eventHandler,
     [NodeName.imageHistogram]: imageHistogramFactory.eventHandler,
     [NodeName.integer]: integerFactory.eventHandler,
@@ -72,6 +74,7 @@ export class LFNodes {
     [NodeName.displayJson]: displayJsonFactory.register,
     [NodeName.displayPrimitiveAsJson]: displayPrimitiveAsJsonFactory.register,
     [NodeName.float]: floatFactory.register,
+    [NodeName.extractor]: extractorFactory.register,
     [NodeName.imageListFromJSON]: imageListFromJsonFactory.register,
     [NodeName.imageHistogram]: imageHistogramFactory.register,
     [NodeName.integer]: integerFactory.register,
