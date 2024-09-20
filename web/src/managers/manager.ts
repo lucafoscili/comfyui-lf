@@ -34,6 +34,7 @@ import {
   SwitchStringPayload,
   UrandomSeedGeneratorPayload,
   WriteJSONPayload,
+  LoadFileOncePayload,
 } from '../types/events.js';
 
 /*-------------------------------------------------*/
@@ -232,6 +233,13 @@ export class LFManager {
     /*                I n i t   L L M M e s s e n g e r                  */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_LLMMessenger(widgets.setters.KUL_MESSENGER);
+    /*-------------------------------------------------------------------*/
+    /*                I n i t   L o a d F i l e O n c e                  */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_LoadFileOnce(widgets.setters.KUL_HISTORY);
+    this.#APIS.event(EventName.loadFileOnce, (e: CustomEvent<LoadFileOncePayload>) => {
+      nodes.eventHandlers.LF_LoadFileOnce(e, widgets.adders.KUL_HISTORY);
+    });
     /*-------------------------------------------------------------------*/
     /*                I n i t   L o a d M e t a d a t a                  */
     /*-------------------------------------------------------------------*/

@@ -17,6 +17,7 @@ export var NodeName;
     NodeName["keywordToggleFromJson"] = "LF_KeywordToggleFromJSON";
     NodeName["llmChat"] = "LF_LLMChat";
     NodeName["llmMessenger"] = "LF_LLMMessenger";
+    NodeName["loadFileOnce"] = "LF_LoadFileOnce";
     NodeName["loadImages"] = "LF_LoadImages";
     NodeName["loadMetadata"] = "LF_LoadMetadata";
     NodeName["multipleImageResizeForWeb"] = "LF_MultipleImageResizeForWeb";

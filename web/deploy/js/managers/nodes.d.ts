@@ -11,6 +11,7 @@ export declare class LFNodes {
         LF_ImageHistogram: (event: CustomEvent<import("../types/events").ImageHistogramPayload>, addW: BaseWidgetCallback) => void;
         LF_Integer: (event: CustomEvent<import("../types/events").IntegerPayload>, addW: BaseWidgetCallback) => void;
         LF_KeywordCounter: (event: CustomEvent<import("../types/events").KeywordCounterPayload>, addW: BaseWidgetCallback) => void;
+        LF_LoadFileOnce: (event: CustomEvent<import("../types/events").LoadFileOncePayload>, addW: BaseWidgetCallback) => void;
         LF_LoadImages: (event: CustomEvent<import("../types/events").LoadImagesPayload>, addW: BaseWidgetCallback) => void;
         LF_MultipleImageResizeForWeb: (event: CustomEvent<import("../types/events").MultipleImageResizeForWebPayload>, addW: BaseWidgetCallback) => void;
         LF_RandomBoolean: (event: CustomEvent<import("../types/events").RandomBooleanPayload>, addW: BaseWidgetCallback) => void;
@@ -41,6 +42,7 @@ export declare class LFNodes {
         LF_KeywordToggleFromJSON: (setW: import("../types/widgets").ChipWidgetSetter) => void;
         LF_LLMChat: (setW: import("../types/widgets").ChatWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_LLMMessenger: (setW: import("../types/widgets").MessengerWidgetSetter) => void;
+        LF_LoadFileOnce: (setW: import("../types/widgets").HistoryWidgetSetter) => void;
         LF_LoadImages: (setW: import("../types/widgets").ImagePreviewWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_LoadMetadata: (setW: import("../types/widgets").UploadWidgetSetter) => void;
         LF_MultipleImageResizeForWeb: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback) => void;
@@ -69,6 +71,7 @@ export declare class LFNodes {
             LF_ImageHistogram: (event: CustomEvent<import("../types/events").ImageHistogramPayload>, addW: BaseWidgetCallback) => void;
             LF_Integer: (event: CustomEvent<import("../types/events").IntegerPayload>, addW: BaseWidgetCallback) => void;
             LF_KeywordCounter: (event: CustomEvent<import("../types/events").KeywordCounterPayload>, addW: BaseWidgetCallback) => void;
+            LF_LoadFileOnce: (event: CustomEvent<import("../types/events").LoadFileOncePayload>, addW: BaseWidgetCallback) => void;
             LF_LoadImages: (event: CustomEvent<import("../types/events").LoadImagesPayload>, addW: BaseWidgetCallback) => void;
             LF_MultipleImageResizeForWeb: (event: CustomEvent<import("../types/events").MultipleImageResizeForWebPayload>, addW: BaseWidgetCallback) => void;
             LF_RandomBoolean: (event: CustomEvent<import("../types/events").RandomBooleanPayload>, addW: BaseWidgetCallback) => void;
@@ -99,6 +102,7 @@ export declare class LFNodes {
             LF_KeywordToggleFromJSON: (setW: import("../types/widgets").ChipWidgetSetter) => void;
             LF_LLMChat: (setW: import("../types/widgets").ChatWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_LLMMessenger: (setW: import("../types/widgets").MessengerWidgetSetter) => void;
+            LF_LoadFileOnce: (setW: import("../types/widgets").HistoryWidgetSetter) => void;
             LF_LoadImages: (setW: import("../types/widgets").ImagePreviewWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_LoadMetadata: (setW: import("../types/widgets").UploadWidgetSetter) => void;
             LF_MultipleImageResizeForWeb: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback) => void;

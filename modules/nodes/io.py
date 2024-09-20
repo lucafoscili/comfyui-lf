@@ -18,6 +18,61 @@ from ..utils.io import *
 
 category = "✨ LF Nodes/IO Operations"
  
+import json
+
+class LF_LoadFileOnce:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "dir": ("STRING", {"label": "Directory path", "tooltip": "Path to the directory containing the images to load."}),
+                "subdir": ("BOOLEAN", {"default": False, "label": "Load from subdir", "tooltip": "Indicates whether to also load images from subdirectories."}),
+                "strip_ext": ("BOOLEAN", {"default": True, "label": "Strip extension from name", "tooltip": "Whether to remove file extensions from filenames."}),
+                "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget to prevent the same filename to be loaded twice."}),
+                "history": ("KUL_HISTORY", {}),
+            },
+            "hidden": { 
+                "node_id": "UNIQUE_ID",
+            } 
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    RETURN_NAMES = ("files", "names")
+    RETURN_TYPES = ("*", "STRING")
+
+    def on_exec(self, node_id, dir, subdir, strip_ext, enable_history, history):
+        previous_files = set()
+        if history:
+            try:
+                history_data = json.loads(history)
+                previous_files = {entry['value'] for entry in history_data.get('nodes', [])}
+            except (json.JSONDecodeError, KeyError):
+                pass
+
+        for root, dirs, filenames in os.walk(dir):
+            if not subdir:
+                dirs[:] = []
+            for filename in filenames:
+                file_name_stripped = os.path.splitext(filename)[0] if strip_ext else filename
+                
+                if file_name_stripped in previous_files:
+                    continue
+
+                file_path = os.path.join(root, filename)
+                with open(file_path, 'rb') as f:
+                    file_data = f.read()
+                    file = file_data
+                    file_name = file_name_stripped
+
+        PromptServer.instance.send_sync("lf-loadfileonce", {
+            "node": node_id,
+            "isHistoryEnabled": enable_history,
+            "value": file_name,
+        })
+
+        return (file, file_name)
+
 class LF_LoadImages:
     @classmethod
     def INPUT_TYPES(cls):
@@ -268,6 +323,7 @@ class LF_SaveImageForCivitAI:
         return ()
     
 NODE_CLASS_MAPPINGS = {
+    "LF_LoadFileOnce": LF_LoadFileOnce,
     "LF_LoadImages": LF_LoadImages,
     "LF_LoadLocalJSON": LF_LoadLocalJSON,
     "LF_LoadMetadata": LF_LoadMetadata,
@@ -275,6 +331,7 @@ NODE_CLASS_MAPPINGS = {
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
+    "LF_LoadFileOnce": "Load file from disk once",
     "LF_LoadImages": "Load images from disk",
     "LF_LoadLocalJSON": "Load JSON from disk",
     "LF_LoadMetadata": "Load metadata from image",

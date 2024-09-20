@@ -11,6 +11,7 @@ export var EventName;
     EventName["imageHistogram"] = "lf-imagehistogram";
     EventName["integer"] = "lf-integer";
     EventName["keywordCounter"] = "lf-keywordcounter";
+    EventName["loadFileOnce"] = "lf-loadfileonce";
     EventName["loadImages"] = "lf-loadimages";
     EventName["multipleImageResizeForWeb"] = "lf-multipleimageresizeforweb";
     EventName["randomBoolean"] = "lf-randomboolean";

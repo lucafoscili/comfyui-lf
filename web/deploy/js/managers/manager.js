@@ -164,6 +164,13 @@ export class LFManager {
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_LLMMessenger(widgets.setters.KUL_MESSENGER);
         /*-------------------------------------------------------------------*/
+        /*                I n i t   L o a d F i l e O n c e                  */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_LoadFileOnce(widgets.setters.KUL_HISTORY);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.loadFileOnce, (e) => {
+            nodes.eventHandlers.LF_LoadFileOnce(e, widgets.adders.KUL_HISTORY);
+        });
+        /*-------------------------------------------------------------------*/
         /*                I n i t   L o a d M e t a d a t a                  */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_LoadMetadata(widgets.setters.KUL_UPLOAD);

@@ -15,6 +15,7 @@ export declare enum EventName {
     imageHistogram = "lf-imagehistogram",
     integer = "lf-integer",
     keywordCounter = "lf-keywordcounter",
+    loadFileOnce = "lf-loadfileonce",
     loadImages = "lf-loadimages",
     multipleImageResizeForWeb = "lf-multipleimageresizeforweb",
     randomBoolean = "lf-randomboolean",
@@ -66,6 +67,10 @@ export interface IntegerPayload extends BaseEventPayload {
 export interface KeywordCounterPayload extends BaseEventPayload {
     chartDataset: KulDataDataset;
     chipDataset: KulDataDataset;
+}
+export interface LoadFileOncePayload extends BaseEventPayload {
+    isHistoryEnabled: boolean;
+    value: string;
 }
 export interface LoadImagesPayload extends BaseEventPayload {
     fileNames: Array<string>;

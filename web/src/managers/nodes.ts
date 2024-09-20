@@ -29,6 +29,7 @@ import { llmMessengerFactory } from '../nodes/llmMessenger';
 import { switchFloatFactory } from '../nodes/switchFloat';
 import { displayPrimitiveAsJsonFactory } from '../nodes/displayPrimitiveAsJson';
 import { imageListFromJsonFactory } from '../nodes/imageListFromJson';
+import { loadFileOnceFactory } from '../nodes/loadFileOnce';
 
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
@@ -46,6 +47,7 @@ export class LFNodes {
     [NodeName.imageHistogram]: imageHistogramFactory.eventHandler,
     [NodeName.integer]: integerFactory.eventHandler,
     [NodeName.keywordCounter]: keywordCounterFactory.eventHandler,
+    [NodeName.loadFileOnce]: loadFileOnceFactory.eventHandler,
     [NodeName.loadImages]: loadImagesFactory.eventHandler,
     [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.eventHandler,
     [NodeName.randomBoolean]: randomBooleanFactory.eventHandler,
@@ -77,6 +79,7 @@ export class LFNodes {
     [NodeName.keywordToggleFromJson]: keywordToggleFromJsonFactory.register,
     [NodeName.llmChat]: llmChatFactory.register,
     [NodeName.llmMessenger]: llmMessengerFactory.register,
+    [NodeName.loadFileOnce]: loadFileOnceFactory.register,
     [NodeName.loadImages]: loadImagesFactory.register,
     [NodeName.loadMetadata]: loadMetadataFactory.register,
     [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.register,

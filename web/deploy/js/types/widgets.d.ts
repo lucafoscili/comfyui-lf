@@ -194,7 +194,6 @@ export interface HistoryWidgetOptions {
     hideOnZoom: boolean;
     getComp(): HTMLKulListElement;
     getValue(): HistoryWidgetValue;
-    setProps(props: Partial<HTMLKulListElement>): void;
     setValue(value: HistoryWidgetValue): void;
 }
 export declare type HistoryWidgetSetter = () => {

@@ -1,5 +1,6 @@
 import { KulDataDataset, KulListEventPayload } from '../types/ketchup-lite/components';
 import { LogSeverity } from '../types/manager';
+import { NodeName } from '../types/nodes';
 import { ComfyWidgetName, CustomWidgetName, HistoryWidgetOptions } from '../types/widgets';
 import { createDOMWidget, getLFManager, getWidget, unescapeJson } from '../utils/common';
 
@@ -23,14 +24,6 @@ export const historyFactory = {
           return JSON.stringify(history.kulData);
         }
         return '';
-      },
-      setProps(props: Partial<HTMLKulListElement>) {
-        for (const key in props) {
-          if (Object.prototype.hasOwnProperty.call(props, key)) {
-            const prop = props[key];
-            history[prop] = prop;
-          }
-        }
       },
       setValue(value: KulDataDataset | string) {
         try {
@@ -56,7 +49,15 @@ export const historyFactory = {
     history.classList.add(historyFactory.cssClasses.history);
     history.kulEmptyLabel = 'History is empty!';
     history.kulEnableDeletions = true;
-    history.kulSelectable = true;
+
+    switch (node.comfyClass) {
+      case NodeName.loadFileOnce:
+        break;
+      default:
+        history.kulSelectable = true;
+        break;
+    }
+
     history.addEventListener('kul-list-event', (e) => {
       handleEvent(e, node);
     });
