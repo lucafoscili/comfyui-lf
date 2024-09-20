@@ -77,18 +77,24 @@ class LF_Extractor:
         return {
             "required": {
                 "text": ("STRING", {"default": "", "multiline": True, "tooltip": "The string from which the output will be extracted."}),
-                "starting_delimiter": ("STRING", {"default": "[", "tooltip": "The opening delimiter."}),
-                "ending_delimiter": ("STRING", {"default": "]", "tooltip": "The closing delimiter."}),
+                "starting_delimiter": ("STRING", {"default": "{", "tooltip": "The delimiter where extraction starts."}),
+                "ending_delimiter": ("STRING", {"default": "}", "tooltip": "The delimiter where extraction ends."}),
+                "result": ("KUL_CODE", {"tooltip": "Extracted string."}),
             },
             "hidden": { "node_id": "UNIQUE_ID" },
         }
-        
+
     CATEGORY = category
     FUNCTION = "on_exec"
-    RETURN_NAMES = ("as_json", "as_text", "as_int", "as_float", "as_boolean") 
+    RETURN_NAMES = ("result_as_json", "extracted_text", "result_as_int", "result_as_float", "result_as_boolean")
     RETURN_TYPES = ("JSON", "STRING", "INT", "FLOAT", "BOOLEAN")
 
-    def on_exec(self, node_id, text: str, starting_delimiter: str, ending_delimiter: str):
+    def on_exec(self, **kwargs):
+        node_id = kwargs["node_id"]
+        text = kwargs["text"]
+        starting_delimiter = kwargs["starting_delimiter"]
+        ending_delimiter = kwargs["ending_delimiter"]
+
         extracted_text = extract_nested(text, starting_delimiter, ending_delimiter)
         
         result_as_json = convert_to_json(extracted_text)
