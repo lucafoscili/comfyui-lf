@@ -109,7 +109,7 @@ Saves images with [CivitAI](https://civitai.com)-compatible metadata generated b
 #### SaveJSON
 
 Saves a JSON file at the specified path.
-![SaveJSON](https://github.com/lucafoscili/comfyui-lf/blob/273b908521957c51c655be8203efc4819bcf1e81/docs/images/SaveJSON.png "SaveJSON node.")
+![SaveJSON](https://github.com/lucafoscili/comfyui-lf/blob/b21290182b780330c9d35d6dac0a617237311e4c/docs/images/SaveJSON.png "SaveJSON node.")
 
 ### JSON nodes (`json.py`)
 
