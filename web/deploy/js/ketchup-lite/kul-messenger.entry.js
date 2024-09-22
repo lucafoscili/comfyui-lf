@@ -48,22 +48,10 @@ const MENU_DATASET = {
                     description: 'Download the Ketchup Lite JSON, used as a dataset.',
                     icon: 'download',
                     id: 'kulData',
-                    value: 'Download characters',
+                    value: 'Download dataset',
                 },
                 {
-                    description: 'Download the chat history with this character.',
-                    icon: 'history',
-                    id: 'history',
-                    value: 'Download history',
-                },
-                {
-                    description: 'Download the chat history for all characters.',
-                    icon: 'people',
-                    id: 'full_history',
-                    value: 'Download complete history',
-                },
-                {
-                    description: 'Download the widget configuration.',
+                    description: 'Download the current configuration settings.',
                     icon: 'settings',
                     id: 'settings',
                     value: 'Download configuration',
@@ -135,8 +123,8 @@ const prepSaveButton = (adapter) => {
         kulLabel: saveInProgress ? 'Saving...' : 'Save',
         kulShowSpinner: saveInProgress ? true : false,
     };
-    return (h("kul-button", { ...props, kulData: MENU_DATASET, kulStyling: "flat", "onKul-button-event": buttonClickHandler.bind(buttonClickHandler, adapter), ref: (el) => {
-            adapter.set.messenger.status.save.button(el);
+    return (h("kul-button", { class: 'kul-full-height', ...props, kulData: MENU_DATASET, kulStyling: "flat", "onKul-button-event": buttonClickHandler.bind(buttonClickHandler, adapter), ref: (el) => {
+            adapter.components.saveButton = el;
         }, title: "Update the dataset with current settings." },
         h("kul-spinner", { kulActive: true, kulDimensions: "0.6em", kulLayout: 4, slot: "spinner" })));
 };
@@ -229,7 +217,8 @@ const prepChat = (adapter) => {
     `;
     const history = adapter.get.character.history();
     const historyJ = JSON.parse(history);
-    return (h("kul-chat", { key: adapter.get.character.current().id, "onKul-chat-event": chatEventHandler.bind(chatEventHandler, adapter), kulLayout: "bottom-textarea", kulSystem: system, kulValue: historyJ }));
+    const props = adapter.get.character.chat();
+    return (h("kul-chat", { key: adapter.get.character.current().id, kulLayout: "bottom-textarea", kulSystem: system, kulValue: historyJ, ...props, "onKul-chat-event": chatEventHandler.bind(chatEventHandler, adapter) }));
 };
 const tabbarEventHandler = (adapter, e) => {
     const { eventType, node } = e.detail;
@@ -247,8 +236,18 @@ const tabbarEventHandler = (adapter, e) => {
     }
 };
 const chatEventHandler = (adapter, e) => {
-    const { eventType, history, status } = e.detail;
+    const { comp, eventType, history, status } = e.detail;
+    const chat = comp;
     switch (eventType) {
+        case 'config':
+            adapter.set.character.chat({
+                kulEndpointUrl: chat.kulEndpointUrl,
+                kulMaxTokens: chat.kulMaxTokens,
+                kulPollingInterval: chat.kulPollingInterval,
+                kulSystem: chat.kulSystem,
+                kulTemperature: chat.kulTemperature,
+            });
+            break;
         case 'polling':
             adapter.set.messenger.status.connection(status);
             break;
@@ -431,8 +430,9 @@ const KulMessenger = class {
             startTime: performance.now(),
         };
         this.currentCharacter = undefined;
-        this.history = {};
+        this.chat = {};
         this.covers = {};
+        this.history = {};
         this.ui = {
             filters: {
                 avatars: false,
@@ -538,6 +538,7 @@ const KulMessenger = class {
                     }
                 },
                 byId: (id) => this.kulData.nodes.find((n) => n.id === id),
+                chat: (character = this.currentCharacter) => this.chat[character.id],
                 current: () => this.currentCharacter,
                 history: (character = this.currentCharacter) => this.history[character.id],
                 name: (character = this.currentCharacter) => character.value ||
@@ -632,7 +633,6 @@ const KulMessenger = class {
                 status: {
                     connection: () => this.connectionStatus,
                     save: {
-                        button: () => this.#adapter.components.saveButton,
                         inProgress: () => this.saveInProgress,
                     },
                 },
@@ -641,13 +641,16 @@ const KulMessenger = class {
         },
         set: {
             character: {
+                chat: (chat, character = this.currentCharacter) => (this.chat[character.id] = chat),
                 current: (character) => {
                     this.currentCharacter = character;
                 },
                 history: (history, character = this.currentCharacter) => {
-                    this.history[character.id] = history;
-                    if (this.kulAutosave) {
-                        this.#adapter.set.messenger.data();
+                    if (this.history[character.id] !== history) {
+                        this.history[character.id] = history;
+                        if (this.kulAutosave) {
+                            this.#adapter.set.messenger.data();
+                        }
                     }
                 },
                 next: (character = this.currentCharacter) => {
@@ -692,7 +695,6 @@ const KulMessenger = class {
                 status: {
                     connection: (status) => (this.connectionStatus = status),
                     save: {
-                        button: (button) => (this.#adapter.components.saveButton = button),
                         inProgress: (value) => (this.saveInProgress = value),
                     },
                 },
@@ -736,10 +738,19 @@ const KulMessenger = class {
                 outfits: imageRootGetter('outfits', character).value || 0,
                 styles: imageRootGetter('styles', character).value || 0,
             };
-            const history = character.children?.find((n) => n.id === 'chat')?.cells?.kulChat
-                .value || [];
-            this.covers[character.id] = covers;
+            const chat = character.children?.find((n) => n.id === 'chat');
+            this.chat[character.id] = {};
+            const chatCell = chat?.cells?.kulChat;
+            if (chatCell) {
+                const characterChat = this.chat[character.id];
+                characterChat.kulEndpointUrl = chatCell.kulEndpointUrl;
+                characterChat.kulMaxTokens = chatCell.kulMaxTokens;
+                characterChat.kulPollingInterval = chatCell.kulPollingInterval;
+                characterChat.kulTemperature = chatCell.kulTemperature;
+            }
+            const history = chatCell?.kulValue || chatCell?.value || [];
             this.history[character.id] = JSON.stringify(history);
+            this.covers[character.id] = covers;
         }
         if (this.kulValue) {
             const currentCharacter = this.kulValue.currentCharacter;
@@ -767,37 +778,52 @@ const KulMessenger = class {
         for (let index = 0; index < this.kulData.nodes.length; index++) {
             const character = this.kulData.nodes[index];
             const id = character.id;
-            const chat = character.children.find((n) => n.id === 'chat');
-            const avatars = this.#adapter.get.image.root('avatars');
-            const locations = this.#adapter.get.image.root('locations');
-            const outfits = this.#adapter.get.image.root('outfits');
-            const styles = this.#adapter.get.image.root('styles');
-            if (this.history[id] && chat) {
-                const historyJson = JSON.parse(this.history[id]);
-                try {
-                    chat.cells.kulChat.value = historyJson;
+            const chatNode = character.children.find((n) => n.id === 'chat');
+            const chatComp = this.#adapter.get.character.chat(character);
+            const saveChat = () => {
+                if (this.history[id] && chatNode) {
+                    const historyJson = JSON.parse(this.history[id]);
+                    try {
+                        chatNode.cells.kulChat.value = historyJson;
+                    }
+                    catch (error) {
+                        chatNode.cells = {
+                            kulChat: {
+                                shape: 'chat',
+                                value: historyJson,
+                            },
+                        };
+                    }
+                    chatNode.cells.kulChat.kulEndpointUrl =
+                        chatComp.kulEndpointUrl;
+                    chatNode.cells.kulChat.kulMaxTokens = chatComp.kulMaxTokens;
+                    chatNode.cells.kulChat.kulPollingInterval =
+                        chatComp.kulPollingInterval;
+                    chatNode.cells.kulChat.kulSystem = chatComp.kulSystem;
+                    chatNode.cells.kulChat.kulTemperature =
+                        chatComp.kulTemperature;
                 }
-                catch (error) {
-                    chat.cells = {
-                        kulChat: {
-                            shape: 'chat',
-                            value: historyJson,
-                        },
-                    };
+            };
+            const saveCovers = () => {
+                const avatars = this.#adapter.get.image.root('avatars');
+                const locations = this.#adapter.get.image.root('locations');
+                const outfits = this.#adapter.get.image.root('outfits');
+                const styles = this.#adapter.get.image.root('styles');
+                if (this.covers[id] && avatars) {
+                    avatars.value = this.covers[id].avatars;
                 }
-            }
-            if (this.covers[id] && avatars) {
-                avatars.value = this.covers[id].avatars;
-            }
-            if (this.covers[id] && locations) {
-                locations.value = this.covers[id].locations;
-            }
-            if (this.covers[id] && outfits) {
-                outfits.value = this.covers[id].outfits;
-            }
-            if (this.covers[id] && styles) {
-                styles.value = this.covers[id].styles;
-            }
+                if (this.covers[id] && locations) {
+                    locations.value = this.covers[id].locations;
+                }
+                if (this.covers[id] && outfits) {
+                    outfits.value = this.covers[id].outfits;
+                }
+                if (this.covers[id] && styles) {
+                    styles.value = this.covers[id].styles;
+                }
+            };
+            saveChat();
+            saveCovers();
         }
         this.onKulEvent(new CustomEvent('save'), 'save');
     }
@@ -824,7 +850,7 @@ const KulMessenger = class {
         if (!this.#hasNodes()) {
             return;
         }
-        return (h(Host, null, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { id: KUL_WRAPPER_ID }, this.currentCharacter ? (h("div", { class: "messenger", key: 'messenger_' + this.currentCharacter.id }, prepLeft(this.#adapter), prepCenter(this.#adapter), prepRight(this.#adapter))) : (h("div", { class: "selection-grid" }, prepGrid(this.#adapter))))));
+        return (h(Host, null, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { id: KUL_WRAPPER_ID }, this.currentCharacter ? (h("div", { class: "messenger" }, prepLeft(this.#adapter), prepCenter(this.#adapter), prepRight(this.#adapter))) : (h("div", { class: "selection-grid" }, prepGrid(this.#adapter))))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

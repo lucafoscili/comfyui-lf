@@ -168,8 +168,10 @@ class LF_LLMMessenger:
 
     CATEGORY = category
     FUNCTION = "on_exec"
-    RETURN_NAMES = ("chat_history_json", "chat_history_string", "last_message", "last_user_message", "last_llm_message", "styled_prompt", "character_name")
-    RETURN_TYPES = ("JSON", "STRING", "STRING", "STRING", "STRING", "STRING", "STRING")
+    RETURN_NAMES = ("chat_history_json", "chat_history_string", 
+                    "last_message", "last_user_message", "last_llm_message", "styled_prompt", 
+                    "character_name", "outfit_name", "location_name", "style_name")
+    RETURN_TYPES = ("JSON", "STRING", "STRING", "STRING", "STRING", "STRING", "STRING", "STRING", "STRING", "STRING")
 
     def on_exec(self, **kwargs):
         messenger = kwargs["messenger"]
@@ -230,8 +232,11 @@ class LF_LLMMessenger:
             outfit_node = outfit_root['children'][outfit_root["value"]]
 
             style_str = f"{style_node['value']}"
+            style_name = style_str
             location_str = f"{location_node['value']}" if location_node else ""
+            location_name = location_str
             outfit_str = f"{outfit_node['value']}" if outfit_node else ""
+            outfit_name = outfit_str
 
             if 'description' in style_node:
                 style_str += f", {style_node['description']}"
@@ -248,11 +253,16 @@ class LF_LLMMessenger:
                 styled_prompt += f"{character_name}'s outfit: \"{outfit_str}\"\n" if outfit_node else ""
                 styled_prompt += f"Location: \"{location_str}\"\n" if location_node else ""
             else:
+                outfit_name = None
+                location_name = None
+                style_name = None
                 styled_prompt = None
         except Exception as e:
             styled_prompt = str(e)
     
-        return (chat_data, chat_history_string, last_message, last_user_message, last_llm_message, styled_prompt, character_name)
+        return (chat_data, chat_history_string, 
+                last_message, last_user_message, last_llm_message, styled_prompt, 
+                character_name, outfit_name, location_name, style_name)
 
 
 NODE_CLASS_MAPPINGS = {
