@@ -38,5 +38,5 @@
     "target": "ES2020"
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", "web/deploy"]
+  "exclude": ["node_modules", "web/deploy", "web/src/ketchup-lite/loader.ts"]
 }
