@@ -217,12 +217,19 @@ class LF_SetValueInJSON:
     RETURN_TYPES = ("JSON",)
 
     def on_exec(self, json: dict, key: str, value: str):
-        # Set or replace the value for the given key
-        json[key] = value
+        if isinstance(json, dict):
+            json[key] = value
+        elif isinstance(json, list):
+            for json_obj in json:
+                if isinstance(json_obj, dict):
+                    json_obj[key] = value
+                else:
+                    raise TypeError(f"Expected a dictionary inside the list, but got {type(json_obj)}")
+        else:
+            raise TypeError(f"Unsupported input type for 'json': {type(json)}")
 
-        # Return the updated JSON object
         return (json,)
-        
+
 class LF_StringToJSON:
     @classmethod
     def INPUT_TYPES(cls):
@@ -265,7 +272,7 @@ class LF_StringToJSON:
                 "error": error_message
             })
             return None
-    
+
 class LF_WriteJSON:
     @classmethod
     def INPUT_TYPES(cls):
