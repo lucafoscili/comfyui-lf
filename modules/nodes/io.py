@@ -92,15 +92,16 @@ class LF_LoadImages:
 
     CATEGORY = category
     FUNCTION = "on_exec"
-    OUTPUT_IS_LIST = (True, True, False, False, False, False)
-    RETURN_NAMES = ("images", "names", "nr", "selected_image", "selected_index", "selected_name")
-    RETURN_TYPES = ("IMAGE", "STRING", "INT", "IMAGE", "INT", "STRING")
+    OUTPUT_IS_LIST = (True, True, True, False, False, False, False)
+    RETURN_NAMES = ("images", "names", "creation_dates", "nr", "selected_image", "selected_index", "selected_name")
+    RETURN_TYPES = ("IMAGE", "STRING",  "STRING", "INT", "IMAGE", "INT", "STRING")
 
     def on_exec(self, dir, subdir, strip_ext, load_cap, dummy_output, node_id, KUL_IMAGE_PREVIEW_B64):
+        count = 0
+        file_names = []
         images_buffer = []
         images = []
-        file_names = []
-        count = 0
+        output_creation_dates = []
         selected_image = None
 
         try:
@@ -125,6 +126,11 @@ class LF_LoadImages:
                 if file.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif')):
                     image_path = os.path.join(root, file)
                     with open(image_path, 'rb') as img_file:
+              
+                        file_creation_time = os.path.getctime(image_path)
+                        creation_date = datetime.fromtimestamp(file_creation_time).strftime('%Y-%m-%d')
+                        output_creation_dates.append(creation_date)
+
                         img_data = img_file.read()
                         img = Image.open(io.BytesIO(img_data)).convert("RGB")
                         img_resized = resize_image(img, max_size=1024)
@@ -165,7 +171,7 @@ class LF_LoadImages:
             "selectedName": selected_name
         })
 
-        return (images, file_names, count, selected_image, selected_index, selected_name)
+        return (images, file_names, output_creation_dates, count, selected_image, selected_index, selected_name)
 
 class LF_LoadLocalJSON:
     @classmethod
@@ -322,11 +328,56 @@ class LF_SaveImageForCivitAI:
 
         return ()
     
+class LF_SaveJSON:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "json_data": ("JSON", {"tooltip": "JSON data to save."}),
+                "filepath": ("STRING", {"default": '', "tooltip": "Path and filename for saving the JSON. Use slashes to specify directories."}),
+                "add_timestamp": ("BOOLEAN", {"default": True, "tooltip": "Add timestamp to the filename as a suffix."}),
+            },
+        }
+    
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    OUTPUT_NODE = True
+    RETURN_TYPES = ()
+
+    def on_exec(self, json_data, filepath, add_timestamp):
+        output_dir = folder_paths.output_directory
+
+        try:
+            if add_timestamp:
+                ts = datetime.now()
+                timestamp = ts.strftime("%Y%m%d-%H%M%S")
+                filepath = f"{filepath}_{timestamp}.json"
+            else:
+                filepath = f"{filepath}.json"
+
+            directory = os.path.dirname(filepath)
+            directory = os.path.join(output_dir, directory)
+
+            output_file = os.path.join(directory, filepath)
+
+            if not os.path.exists(directory):
+                os.makedirs(directory, exist_ok=True)
+
+            with open(output_file, 'w', encoding='utf-8') as json_file:
+                json.dump(json_data, json_file, ensure_ascii=False, indent=4)
+
+            return ()
+        
+        except Exception:
+            return None
+
+    
 NODE_CLASS_MAPPINGS = {
     "LF_LoadFileOnce": LF_LoadFileOnce,
     "LF_LoadImages": LF_LoadImages,
     "LF_LoadLocalJSON": LF_LoadLocalJSON,
     "LF_LoadMetadata": LF_LoadMetadata,
+    "LF_SaveJSON": LF_SaveJSON,
     "LF_SaveImageForCivitAI": LF_SaveImageForCivitAI
 }
 
@@ -335,5 +386,6 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_LoadImages": "Load images from disk",
     "LF_LoadLocalJSON": "Load JSON from disk",
     "LF_LoadMetadata": "Load metadata from image",
+    "LF_SaveJSON": "Save JSON",
     "LF_SaveImageForCivitAI": "Save image with CivitAI-compatible metadata"
 }

@@ -199,13 +199,10 @@ class LF_MultipleImageResizeForWeb:
             base_name = file_name.split('.')[0]  # Strip extension for prefixing
             original_extension = file_name.split('.')[-1].lower()  # Get the original file extension and make it lowercase
 
-            # Convert the tensor to a PIL Image
             image = tensor_to_pil(image_data)
 
-            # HD version (no resizing, original quality)
             img_byte_arr = io.BytesIO()
 
-            # Handling image format, with a fallback to PNG if needed
             try:
                 image_format = 'PNG' if original_extension not in ['jpeg', 'jpg', 'png', 'webp'] else original_extension.upper()
                 image.save(img_byte_arr, format=image_format)
@@ -225,11 +222,15 @@ class LF_MultipleImageResizeForWeb:
                 "value": base_name
             }
 
-            # Resized versions
             for resolution in resolutions:
-                resized_image = image.resize(
-                    (resolution, int(image.height * resolution / image.width)), Image.Resampling.LANCZOS
-                )
+                if image.width > image.height:
+                    new_width = resolution
+                    new_height = int(image.height * resolution / image.width)
+                else:
+                    new_height = resolution
+                    new_width = int(image.width * resolution / image.height)
+
+                resized_image = image.resize((new_width, new_height), Image.Resampling.LANCZOS)
 
                 img_byte_arr = io.BytesIO()
                 resized_image.save(img_byte_arr, format='WEBP', quality=60)
@@ -252,7 +253,7 @@ class LF_MultipleImageResizeForWeb:
             "dataset": dataset,
         })
 
-        return (output_images, output_file_names, output_file_names_with_dir,dataset)
+        return (output_images, output_file_names, output_file_names_with_dir, dataset)
 
 class LF_ResizeImageByEdge:
     @classmethod
