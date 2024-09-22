@@ -345,6 +345,8 @@ class LF_SaveJSON:
     RETURN_TYPES = ()
 
     def on_exec(self, json_data, filepath, add_timestamp):
+        output_dir = folder_paths.output_directory
+
         try:
             if add_timestamp:
                 ts = datetime.now()
@@ -354,10 +356,14 @@ class LF_SaveJSON:
                 filepath = f"{filepath}.json"
 
             directory = os.path.dirname(filepath)
+            directory = os.path.join(output_dir, directory)
+
+            output_file = os.path.join(directory, filepath)
+
             if not os.path.exists(directory):
                 os.makedirs(directory, exist_ok=True)
 
-            with open(filepath, 'w', encoding='utf-8') as json_file:
+            with open(output_file, 'w', encoding='utf-8') as json_file:
                 json.dump(json_data, json_file, ensure_ascii=False, indent=4)
 
             return ()
