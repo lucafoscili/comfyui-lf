@@ -235,25 +235,32 @@ class LF_StringToJSON:
 
     CATEGORY = category
     FUNCTION = "on_exec"
+    INPUT_IS_LIST = True
     OUTPUT_NODE = True
     RETURN_TYPES = ("JSON",)
 
     def on_exec(self, string: str, node_id: str):
         try:
-            json_data = json.loads(string)
+            if isinstance(string, str):
+                json_data = json.loads(string)
+            elif isinstance(string, list):
+                json_data = [json.loads(s) for s in string]
+            else:
+                raise TypeError(f"Unsupported input type: {type(string)}")
+
             return (json_data,)
-        
+
         except json.JSONDecodeError as e:
             error_message = f"Invalid JSON: {str(e)}"
-            PromptServer.instance.send_sync("lf-writejson-error", {
+            PromptServer.instance.send_sync("lf-stringtojson-error", {
                 "node": node_id,
                 "error": error_message
             })
             return None
-        
+
         except Exception as e:
             error_message = f"Unexpected error: {str(e)}"
-            PromptServer.instance.send_sync("lf-writejson-error", {
+            PromptServer.instance.send_sync("lf-stringtojson-error", {
                 "node": node_id,
                 "error": error_message
             })
