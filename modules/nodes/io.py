@@ -328,11 +328,50 @@ class LF_SaveImageForCivitAI:
 
         return ()
     
+class LF_SaveJSON:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "json_data": ("JSON", {"tooltip": "JSON data to save."}),
+                "filepath": ("STRING", {"default": '', "tooltip": "Path and filename for saving the JSON. Use slashes to specify directories."}),
+                "add_timestamp": ("BOOLEAN", {"default": True, "tooltip": "Add timestamp to the filename as a suffix."}),
+            },
+        }
+    
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    OUTPUT_NODE = True
+    RETURN_TYPES = ()
+
+    def on_exec(self, json_data, filepath, add_timestamp):
+        try:
+            if add_timestamp:
+                ts = datetime.now()
+                timestamp = ts.strftime("%Y%m%d-%H%M%S")
+                filepath = f"{filepath}_{timestamp}.json"
+            else:
+                filepath = f"{filepath}.json"
+
+            directory = os.path.dirname(filepath)
+            if not os.path.exists(directory):
+                os.makedirs(directory, exist_ok=True)
+
+            with open(filepath, 'w', encoding='utf-8') as json_file:
+                json.dump(json_data, json_file, ensure_ascii=False, indent=4)
+
+            return ()
+        
+        except Exception:
+            return None
+
+    
 NODE_CLASS_MAPPINGS = {
     "LF_LoadFileOnce": LF_LoadFileOnce,
     "LF_LoadImages": LF_LoadImages,
     "LF_LoadLocalJSON": LF_LoadLocalJSON,
     "LF_LoadMetadata": LF_LoadMetadata,
+    "LF_SaveJSON": LF_SaveJSON,
     "LF_SaveImageForCivitAI": LF_SaveImageForCivitAI
 }
 
@@ -341,5 +380,6 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_LoadImages": "Load images from disk",
     "LF_LoadLocalJSON": "Load JSON from disk",
     "LF_LoadMetadata": "Load metadata from image",
+    "LF_SaveJSON": "Save JSON",
     "LF_SaveImageForCivitAI": "Save image with CivitAI-compatible metadata"
 }
