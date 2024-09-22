@@ -1,9 +1,11 @@
-import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, H as Host, a as getAssetPath } from './index-9aa60797.js';
+import { h, F as Fragment, r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, H as Host, a as getAssetPath } from './index-9aa60797.js';
 import { k as kulManagerInstance, g as getProps, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID, e as commonjsGlobal } from './kul-manager-dc9a333c.js';
 
 var KulChatProps;
 (function (KulChatProps) {
+    KulChatProps["kulContextWindow"] = "How many tokens the context window can handle, used to calculate the occupied space.";
     KulChatProps["kulEndpointUrl"] = "URL of the endpoint where the LLM is hosted.";
+    KulChatProps["kulLayout"] = "Sets the layout of the chat.";
     KulChatProps["kulMaxTokens"] = "Maximum number of tokens allowed in the LLM's answer.";
     KulChatProps["kulPollingInterval"] = "How often the component checks whether the LLM endpoint is online or not.";
     KulChatProps["kulSeed"] = "Seed value for the LLM's answer generation.";
@@ -51,7 +53,7 @@ const speechToText = (kulManager, textarea, button) => {
     }
 };
 
-const send = async ({ history, max_tokens, seed, system, temperature, url, }) => {
+const send = async (adapter, { history, max_tokens, seed, system, temperature, url }) => {
     const request = {
         temperature,
         max_tokens,
@@ -69,9 +71,11 @@ const send = async ({ history, max_tokens, seed, system, temperature, url, }) =>
     }
     try {
         const response = await callLLM(request, url);
+        const message = response.choices?.[0]?.message?.content;
+        adapter.set.status.usage(response.usage);
         const llmMessage = {
             role: 'llm',
-            content: response,
+            content: message,
         };
         return llmMessage;
     }
@@ -93,7 +97,7 @@ const callLLM = async (request, url) => {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        return data.choices?.[0]?.message?.content || '';
+        return data;
     }
     catch (error) {
         console.error('Error calling LLM:', error);
@@ -101,7 +105,233 @@ const callLLM = async (request, url) => {
     }
 };
 
-const kulChatCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}:host{--kul_chat_blur_radius:var(--kul-chat-blur-radius, 3.5px);--kul_chat_border_radius:var(--kul-chat-border-radius, 8px);--kul_chat_buttons_padding:var(--kul-chat-buttons-padding, 1em 0);--kul_chat_grid_gap:var(--kul-chat-grid-gap, 16px);--kul_chat_inner_padding:var(--kul-chat-inner-padding, 0 16px);--kul_chat_margin_bottom:var(--kul-chat-margin-bottom, 16px);--kul_chat_margin_top:var(--kul-chat-margin-top, 16px);--kul_chat_outer_grid_gap:var(--kul-chat-outer-grid-gap, 12px);--kul_chat_padding:var(--kul-chat-padding, 18px);--kul-chat_small_font_size:var(--kul-chat-small-font-size, 0.875em);--kul_chat_spinner_size:var(--kul-chat-spinner-size, 48px);--kul_chat_title_font_size:var(--kul-chat-title-font-size, 2em);color:var(--kul-text-color);display:block;height:100%;width:100%}#kul-component{height:100%;position:relative;width:100%}.wrapper{backdrop-filter:blur(var(--kul_chat_blur_radius));box-sizing:border-box;display:grid;height:100%;margin:auto;padding:var(--kul_chat_padding)}.wrapper--bottom-textarea{align-content:center;grid-gap:var(--kul_chat_outer_grid_gap);grid-template-areas:\"chat\" \"spinner\" \"query\";grid-template-rows:1fr auto auto}.wrapper--top-textarea{grid-gap:var(--kul_chat_outer_grid_gap);grid-template-areas:\"query\" \"chat\" \"spinner\";grid-template-rows:auto 1fr auto}.query-area{box-sizing:border-box;grid-area:query;max-width:100%;padding:var(--kul_chat_inner_padding);width:100%}.chat-area{align-content:start;box-sizing:border-box;display:grid;grid-area:chat;grid-gap:var(--kul_chat_grid_gap);grid-template-columns:1fr;margin-bottom:var(--kul_chat_margin_top);margin-top:var(--kul_chat_margin_top);overflow:auto;padding:var(--kul_chat_inner_padding);white-space:pre-line;width:100%;word-break:normal}.spinner{grid-area:spinner;height:var(--kul_chat_spinner_size);margin:auto;width:var(--kul_chat_spinner_size)}.title{text-align:center;font-size:var(--kul_chat_title_font_size)}.empty,.text{font-size:var(--kul_chat_small_font_size);font-style:italic;opacity:0.5;text-align:center}.buttons{align-items:center;display:flex;justify-content:space-evenly;padding:var(--kul_chat_buttons_padding)}.stt{padding:0 1em}.user{display:flex;justify-content:end}.user,.llm{font-family:var(--kul-font-family);font-size:calc(var(--kul-font-size) * 1.125);max-width:100%;padding:12px}.message-container{backdrop-filter:blur(var(--kul_chat_blur_radius));background-color:rgba(var(--kul-background-color-rgb), 0.125);border:1px solid rgba(var(--kul-text-color-rgb), 0.5);border-radius:var(--kul_chat_border_radius);height:max-content;max-width:80%;position:relative;transition:background-color 225ms ease}.message-container:hover{background-color:rgba(var(--kup-primary-color-rgb), 0.325)}.message-container--assistant{justify-self:start}.message-container--user{justify-self:end}.message-container:hover .toolbar{height:50px;opacity:1;padding:8px}.toolbar{background:rgba(var(--kul-background-color-rgb), 0.775);border:0;border-bottom-left-radius:var(--kul_chat_border_radius);border-bottom-right-radius:var(--kul_chat_border_radius);border-top:1px inset rgba(var(--kul-text-color-rgb), 0.225);box-sizing:border-box;display:flex;height:0;justify-content:end;opacity:0;overflow:hidden;padding:0;transition:height 125ms ease, opacity 125ms ease, padding 125ms ease}.toolbar__button{margin:0 4px}.spinner-bar-wrapper{bottom:0;height:4px;left:0;position:absolute;width:100%}";
+const OPTIONS_IDS = {
+    contextWindow: 'context-option',
+    endpointUrl: 'endpoint-option',
+    maxTokens: 'maxtokens-option',
+    polling: 'polling-option',
+    system: 'system-option',
+    temperature: 'temperature-option',
+};
+const prepSettings = (adapter) => {
+    return (h(Fragment, null,
+        prepButton(adapter),
+        h("div", { class: "settings__options" }, prepFields(adapter)),
+        h("kul-textfield", { id: OPTIONS_IDS.system, class: "settings__system kul-full-height", kulLabel: "System prompt", kulStyling: "textarea", kulValue: adapter.get.props.system(), "onKul-textfield-event": textfieldEventHandler.bind(textfieldEventHandler, adapter) })));
+};
+const prepButton = (adapter) => {
+    return (h("kul-button", { class: "kul-full-width", kulIcon: "arrow_back", kulLabel: "Back", "onKul-button-event": backEventHandler.bind(backEventHandler, adapter) }));
+};
+const prepFields = (adapter) => {
+    return (h(Fragment, null,
+        h("kul-textfield", { id: OPTIONS_IDS.contextWindow, kulHtmlAttributes: {
+                min: 10,
+                step: 100,
+                type: 'number',
+            }, kulIcon: "data_usage", kulLabel: "Context window length", kulValue: String(adapter.get.props.contextWindow()).valueOf(), "onKul-textfield-event": textfieldEventHandler.bind(textfieldEventHandler, adapter) }),
+        h("kul-textfield", { id: OPTIONS_IDS.temperature, kulHtmlAttributes: {
+                min: 0,
+                step: 0.1,
+                type: 'number',
+            }, kulIcon: "thermometer", kulLabel: "Temperature", kulValue: String(adapter.get.props.temperature()).valueOf(), "onKul-textfield-event": textfieldEventHandler.bind(textfieldEventHandler, adapter) }),
+        h("kul-textfield", { id: OPTIONS_IDS.endpointUrl, kulIcon: "http", kulLabel: "Endpoint URL", kulValue: adapter.get.props.endpointUrl(), "onKul-textfield-event": textfieldEventHandler.bind(textfieldEventHandler, adapter) }),
+        h("kul-textfield", { id: OPTIONS_IDS.maxTokens, kulHtmlAttributes: {
+                min: 10,
+                step: 100,
+                type: 'number',
+            }, kulIcon: "plus_one", kulLabel: "Max tokens count", kulValue: String(adapter.get.props.maxTokens()).valueOf(), "onKul-textfield-event": textfieldEventHandler.bind(textfieldEventHandler, adapter) }),
+        h("kul-textfield", { id: OPTIONS_IDS.polling, kulHtmlAttributes: {
+                min: 10,
+                step: 10,
+                type: 'number',
+            }, kulIcon: "timer", kulLabel: "Polling interval", kulValue: String(adapter.get.props.pollingInterval()).valueOf(), "onKul-textfield-event": textfieldEventHandler.bind(textfieldEventHandler, adapter) })));
+};
+const backEventHandler = (adapter, e) => {
+    const { eventType } = e.detail;
+    switch (eventType) {
+        case 'click':
+            adapter.emit.event('config');
+            adapter.set.status.view('chat');
+            break;
+    }
+};
+const textfieldEventHandler = (adapter, e) => {
+    const { eventType, id, value } = e.detail;
+    switch (eventType) {
+        case 'change':
+            switch (id) {
+                case OPTIONS_IDS.contextWindow:
+                    adapter.set.props.contextWindow(parseInt(value));
+                    break;
+                case OPTIONS_IDS.endpointUrl:
+                    adapter.set.props.endpointUrl(value);
+                    break;
+                case OPTIONS_IDS.maxTokens:
+                    adapter.set.props.maxTokens(parseInt(value));
+                    break;
+                case OPTIONS_IDS.polling:
+                    adapter.set.props.pollingInterval(parseInt(value));
+                    break;
+                case OPTIONS_IDS.system:
+                    adapter.set.props.system(value);
+                    break;
+                case OPTIONS_IDS.temperature:
+                    adapter.set.props.temperature(parseFloat(value));
+                    break;
+            }
+            break;
+    }
+};
+
+const prepInputArea = (adapter) => {
+    return (h("div", { class: "chat__request__input" },
+        h("kul-button", { class: "chat__request__input__button kul-full-height", kulIcon: "settings", kulStyling: "flat", "onKul-button-event": settingsEventHandler.bind(settingsEventHandler, adapter), ref: (el) => {
+                if (el) {
+                    adapter.set.ui.button.settings(el);
+                }
+            } }),
+        h("kul-textfield", { class: "chat__request__input__textarea", kulFullWidth: true, kulLabel: "What's on your mind?", kulStyling: "textarea", ref: (el) => {
+                if (el) {
+                    adapter.set.ui.textarea(el);
+                }
+            } }),
+        prepProgressBar(adapter)));
+};
+const prepButtons = (adapter) => {
+    return (h("div", { class: "chat__request__buttons" },
+        h("kul-button", { kulLabel: "Clear", kulStyling: 'flat', "onKul-button-event": clearEventHandler.bind(clearEventHandler, adapter), ref: (el) => {
+                if (el) {
+                    adapter.set.ui.button.clear(el);
+                }
+            } }),
+        h("kul-button", { class: "chat__request__buttons__stt", kulIcon: "keyboard_voice", kulStyling: 'icon', "onKul-button-event": sttEventHandler.bind(sttEventHandler, adapter), ref: (el) => {
+                if (el) {
+                    adapter.set.ui.button.stt(el);
+                }
+            } },
+            h("kul-spinner", { kulActive: true, kulDimensions: "0.6em", kulLayout: 6, slot: "spinner" })),
+        h("kul-button", { kulIcon: "check", kulLabel: "Send", "onKul-button-event": sendEventHandler.bind(sendEventHandler, adapter), ref: (el) => {
+                if (el) {
+                    adapter.set.ui.button.send(el);
+                }
+            } },
+            h("kul-spinner", { kulActive: true, kulDimensions: "0.6em", slot: "spinner" }))));
+};
+const prepProgressBar = (adapter) => {
+    const currentContext = adapter.get.status.usage()?.total_tokens;
+    const maxContext = adapter.get.props?.contextWindow();
+    if (isNaN(currentContext) || isNaN(maxContext)) {
+        return;
+    }
+    const value = (currentContext / maxContext) * 100;
+    const status = value > 80 ? 'kul-danger' : value > 50 ? 'kul-warning' : 'kul-success';
+    const cssClass = {
+        chat__request__input__progressbar: true,
+        [status]: true,
+        ['kul-animated']: true,
+        ['kul-striped']: true,
+    };
+    return (h("kul-progressbar", { class: cssClass, kulCenteredLabel: true, kulIcon: "data_usage", kulLabel: "Remaining context", kulValue: value, title: `Used tokens: ${currentContext}/${maxContext}` }));
+};
+const clearEventHandler = async (adapter, e) => {
+    const { eventType } = e.detail;
+    switch (eventType) {
+        case 'click':
+            await adapter.get.ui.textarea().setValue('');
+            await adapter.get.ui.textarea().setFocus();
+            break;
+    }
+};
+const sendEventHandler = async (adapter, e) => {
+    const { eventType } = e.detail;
+    const value = await adapter.get.ui.textarea().getValue();
+    switch (eventType) {
+        case 'click':
+            if (value) {
+                adapter.actions.send(value);
+            }
+            break;
+    }
+};
+const settingsEventHandler = (adapter, e) => {
+    const { eventType } = e.detail;
+    switch (eventType) {
+        case 'click':
+            adapter.set.status.view('settings');
+            break;
+    }
+};
+const sttEventHandler = (adapter, e) => {
+    const { eventType } = e.detail;
+    switch (eventType) {
+        case 'click':
+            adapter.actions.stt();
+            break;
+    }
+};
+
+const prepMessages = (adapter) => {
+    const elements = [];
+    const history = adapter.get.history();
+    const toolbarMessage = adapter.get.status.toolbarMessage();
+    if (history?.length > 0) {
+        history.forEach((m) => {
+            const element = (h("div", { class: `chat__messages__container chat__messages__container--${m.role}`, onPointerEnter: () => adapter.set.status.toolbarMessage(m), onPointerLeave: () => adapter.set.status.toolbarMessage(null) },
+                h("div", { class: `chat__messages__content chat__messages__content--${m.role}` }, prepContent(m)),
+                m === toolbarMessage ? prepToolbar(adapter, m) : null));
+            elements.push(element);
+        });
+    }
+    else {
+        elements.push(h("div", { class: "chat__messages__empty" }, "Your chat history is empty!"));
+    }
+    return elements;
+};
+const prepToolbar = (adapter, m) => {
+    const cssClass = 'chat__messages__toolbar__button kul-slim';
+    return (h("div", { class: "chat__messages__toolbar" },
+        h("kul-button", { class: cssClass + ' kul-danger', kulIcon: "delete", onClick: () => adapter.actions.delete(m), title: "Remove this message from history." }),
+        h("kul-button", { class: cssClass, kulIcon: "content_copy", onClick: () => navigator.clipboard.writeText(m.content), title: "Copy text to clipboard." }),
+        m.role === 'user' ? (h("kul-button", { class: cssClass, kulIcon: "refresh", onClick: () => adapter.actions.regenerate(m), title: "Regenerate answer to this question." })) : null));
+};
+const prepContent = (message) => {
+    const elements = [];
+    const messageContent = message.content;
+    const codeBlockRegex = /```(\w+)?\n([\s\S]*?)```/g;
+    let lastIndex = 0;
+    let match;
+    while ((match = codeBlockRegex.exec(messageContent)) !== null) {
+        if (match.index > lastIndex) {
+            const textPart = messageContent.slice(lastIndex, match.index);
+            elements.push(h("div", { class: "paragraph" }, textPart));
+        }
+        const language = match[1] ? match[1].trim() : 'text';
+        const codePart = match[2].trim();
+        elements.push(h("kul-code", { class: 'code', kulLanguage: language, kulValue: codePart }));
+        lastIndex = match.index + match[0].length;
+    }
+    if (lastIndex < messageContent.length) {
+        const remainingText = messageContent.slice(lastIndex);
+        elements.push(h("div", { class: "paragraph" }, remainingText));
+    }
+    return elements;
+};
+
+const prepChat = (adapter) => {
+    return (h(Fragment, null,
+        h("div", { class: "chat__request" },
+            prepInputArea(adapter),
+            prepButtons(adapter)),
+        h("div", { class: `chat__messages` }, prepMessages(adapter)),
+        h("div", { class: "chat__spinner-bar" },
+            h("kul-spinner", { kulBarVariant: true, ref: (el) => {
+                    if (el) {
+                        adapter.components.spinner = el;
+                    }
+                } }))));
+};
+
+const kulChatCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}:host{--kul_chat_blur_radius:var(--kul-chat-blur-radius, 3.5px);--kul_chat_border_radius:var(--kul-chat-border-radius, 8px);--kul_chat_buttons_padding:var(--kul-chat-buttons-padding, 1em 0);--kul_chat_grid_gap:var(--kul-chat-grid-gap, 16px);--kul_chat_inner_padding:var(--kul-chat-inner-padding, 0 16px);--kul_chat_margin_bottom:var(--kul-chat-margin-bottom, 16px);--kul_chat_margin_top:var(--kul-chat-margin-top, 16px);--kul_chat_outer_grid_gap:var(--kul-chat-outer-grid-gap, 12px);--kul_chat_padding:var(--kul-chat-padding, 18px);--kul-chat_small_font_size:var(--kul-chat-small-font-size, 0.875em);--kul_chat_spinner_size:var(--kul-chat-spinner-size, 48px);--kul_chat_title_font_size:var(--kul-chat-title-font-size, 2em);color:var(--kul-text-color);display:block;height:100%;width:100%}#kul-component{height:100%;position:relative;width:100%}.chat{backdrop-filter:blur(var(--kul_chat_blur_radius));box-sizing:border-box;display:grid;height:100%;margin:auto;padding:var(--kul_chat_padding)}.chat--bottom-textarea{align-content:center;grid-gap:var(--kul_chat_outer_grid_gap);grid-template-areas:\"messages\" \"spinner\" \"request\";grid-template-rows:1fr auto auto}.chat--top-textarea{grid-gap:var(--kul_chat_outer_grid_gap);grid-template-areas:\"request\" \"messages\" \"spinner\";grid-template-rows:auto 1fr auto}.chat--offline{grid-template-rows:1fr auto}.chat--offline__error{padding:32px}.chat__request{box-sizing:border-box;grid-area:request;max-width:100%;padding:var(--kul_chat_inner_padding);width:100%}.chat__request__input{display:grid;grid-template-areas:\"textarea button\" \"progressbar button\";grid-template-columns:1fr auto}.chat__request__input__button{--kul-button-padding:0 1em;grid-area:button}.chat__request__input__progressbar{--kul-progressbar-height:1.75em;grid-area:progressbar}.chat__request__input__textarea{grid-area:textarea;overflow-x:hidden}.chat__request__buttons{align-items:center;display:flex;justify-content:space-evenly;padding:var(--kul_chat_buttons_padding)}.chat__request__buttons__stt{padding:0 1em}.chat__messages{align-content:start;box-sizing:border-box;display:grid;grid-area:messages;grid-gap:var(--kul_chat_grid_gap);grid-template-columns:1fr;margin-bottom:var(--kul_chat_margin_top);margin-top:var(--kul_chat_margin_top);overflow:auto;padding:var(--kul_chat_inner_padding);white-space:pre-line;width:100%;word-break:normal}.chat__messages__container{backdrop-filter:blur(var(--kul_chat_blur_radius));background-color:rgba(var(--kul-background-color-rgb), 0.125);border:1px solid rgba(var(--kul-text-color-rgb), 0.5);border-radius:var(--kul_chat_border_radius);display:flex;height:max-content;max-width:80%;position:relative;transition:background-color 225ms ease}.chat__messages__container:hover{background-color:rgba(var(--kup-primary-color-rgb), 0.325)}.chat__messages__container--assistant{justify-self:start}.chat__messages__container--user{justify-self:end}.chat__messages__empty{font-size:var(--kul_chat_small_font_size);font-style:italic;opacity:0.5;text-align:center}.chat__messages__content{font-family:var(--kul-font-family);font-size:calc(var(--kul-font-size) * 1.125);max-width:100%;padding:12px}.chat__messages__toolbar{border:0;border-bottom-right-radius:var(--kul_chat_border_radius);border-top-right-radius:var(--kul_chat_border_radius);border-top:1px inset rgba(var(--kul-text-color-rgb), 0.225);box-sizing:border-box;display:flex;flex-direction:column;flex-flow:wrap-reverse;height:100%;justify-content:end;overflow:hidden;padding:12px;transition:width 125ms ease, opacity 125ms ease, padding 125ms ease}.chat__messages__toolbar__button{margin:0 4px}.chat__spinner-bar{bottom:0;grid-area:spinner;height:4px;left:0;position:absolute;width:100%}.chat__title{text-align:center;font-size:var(--kul_chat_title_font_size)}.chat__text{font-size:var(--kul_chat_small_font_size);font-style:italic;opacity:0.5;text-align:center}.settings{display:grid;grid-gap:8px;grid-template-rows:auto auto 1fr;height:100%}.settings__system{box-sizing:border-box;overflow:hidden;padding-top:18px}";
 const KulChatStyle0 = kulChatCss;
 
 const KulChat = class {
@@ -117,6 +347,10 @@ const KulChat = class {
         };
         this.history = [];
         this.status = 'connecting';
+        this.toolbarMessage = undefined;
+        this.usage = undefined;
+        this.view = 'chat';
+        this.kulContextWindow = 8192;
         this.kulEndpointUrl = 'http://localhost:5001';
         this.kulLayout = 'top-textarea';
         this.kulMaxTokens = 250;
@@ -131,13 +365,8 @@ const KulChat = class {
     /*-------------------------------------------------*/
     /*       I n t e r n a l   V a r i a b l e s       */
     /*-------------------------------------------------*/
-    #clearButton;
     #kulManager = kulManagerInstance();
-    #spinnerBar;
     #statusinterval;
-    #sttButton;
-    #submitButton;
-    #textarea;
     /*-------------------------------------------------*/
     /*                   E v e n t s                   */
     /*-------------------------------------------------*/
@@ -211,6 +440,123 @@ const KulChat = class {
     /*-------------------------------------------------*/
     /*           P r i v a t e   M e t h o d s         */
     /*-------------------------------------------------*/
+    #adapter = {
+        actions: {
+            delete: (m) => {
+                const index = this.history.indexOf(m);
+                if (index !== -1) {
+                    const cb = () => this.history.splice(index, 1);
+                    this.#updateHistory(cb);
+                    this.refresh();
+                }
+            },
+            disableInteractivity: (shouldDisable) => {
+                this.#adapter.components.buttons.send.kulShowSpinner =
+                    shouldDisable;
+                this.#adapter.components.textarea.kulDisabled = shouldDisable;
+                this.#adapter.components.buttons.stt.kulDisabled =
+                    shouldDisable;
+            },
+            regenerate: (m) => {
+                const index = this.history.indexOf(m);
+                if (index !== -1) {
+                    const cb = () => (this.history = this.history.slice(0, index + 1));
+                    this.#updateHistory(cb);
+                    this.#sendPrompt();
+                }
+            },
+            send: (prompt) => {
+                const newMessage = {
+                    role: 'user',
+                    content: prompt,
+                };
+                const cb = () => (this.history = [...this.history, newMessage]);
+                this.#updateHistory(cb);
+                this.#sendPrompt();
+            },
+            stt: () => speechToText(this.#kulManager, this.#adapter.get.ui.textarea(), this.#adapter.get.ui.button.stt()),
+        },
+        components: {
+            buttons: {
+                clear: null,
+                send: null,
+                settings: null,
+                stt: null,
+            },
+            spinner: null,
+            textarea: null,
+        },
+        emit: {
+            event: (eventType, e = new CustomEvent(eventType)) => {
+                this.onKulEvent(e, eventType);
+            },
+        },
+        get: {
+            history: () => this.history,
+            status: {
+                connection: () => this.status,
+                toolbarMessage: () => this.toolbarMessage,
+                usage: () => this.usage,
+                view: () => this.view,
+            },
+            props: {
+                contextWindow: () => this.kulContextWindow,
+                endpointUrl: () => this.kulEndpointUrl,
+                maxTokens: () => this.kulMaxTokens,
+                pollingInterval: () => this.kulPollingInterval,
+                system: () => this.kulSystem,
+                temperature: () => this.kulTemperature,
+            },
+            ui: {
+                button: {
+                    clear: () => this.#adapter.components.buttons.clear,
+                    send: () => this.#adapter.components.buttons.send,
+                    settings: () => this.#adapter.components.buttons.settings,
+                    stt: () => this.#adapter.components.buttons.stt,
+                },
+                spinner: () => this.#adapter.components.spinner,
+                textarea: () => this.#adapter.components.textarea,
+            },
+        },
+        set: {
+            props: {
+                contextWindow: (value) => (this.kulContextWindow = value),
+                endpointUrl: (value) => (this.kulEndpointUrl = value),
+                maxTokens: (value) => (this.kulMaxTokens = value),
+                pollingInterval: (value) => (this.kulPollingInterval = value),
+                system: (value) => (this.kulSystem = value),
+                temperature: (value) => (this.kulTemperature = value),
+            },
+            status: {
+                connection: (status) => (this.status = status),
+                toolbarMessage: (element) => (this.toolbarMessage = element),
+                usage: (usage) => (this.usage = usage),
+                view: (view) => (this.view = view),
+            },
+            ui: {
+                button: {
+                    clear: (button) => {
+                        this.#adapter.components.buttons.clear = button;
+                    },
+                    send: (button) => {
+                        this.#adapter.components.buttons.send = button;
+                    },
+                    settings: (button) => {
+                        this.#adapter.components.buttons.settings = button;
+                    },
+                    stt: (button) => {
+                        this.#adapter.components.buttons.stt = button;
+                    },
+                },
+                spinner: (spinner) => {
+                    this.#adapter.components.spinner = spinner;
+                },
+                textarea: (textarea) => {
+                    this.#adapter.components.textarea = textarea;
+                },
+            },
+        },
+    };
     async #checkLLMStatus() {
         if (this.status === 'offline') {
             this.status = 'connecting';
@@ -229,125 +575,24 @@ const KulChat = class {
         }
         this.onKulEvent(new CustomEvent('polling'), 'polling');
     }
-    #disableInteractivity = (status) => {
-        this.#clearButton.kulDisabled = status;
-        this.#textarea.kulDisabled = status;
-        this.#sttButton.kulDisabled = status;
-        this.#submitButton.kulShowSpinner = status;
-    };
-    #prepChat = () => {
-        const nodes = [];
-        if (this.history?.length > 0) {
-            this.history.forEach((m) => {
-                const cssClass = 'kul-slim toolbar__button';
-                nodes.push(h("div", { class: `message-container message-container--${m.role}` }, h("div", { class: m.role }, this.#prepMessage(m)), h("div", { class: "toolbar" }, h("kul-button", { class: cssClass + ' kul-danger', kulIcon: "delete", onClick: () => {
-                        const index = this.history.indexOf(m);
-                        if (index !== -1) {
-                            const cb = () => this.history.splice(index, 1);
-                            this.#updateHistory(cb);
-                            this.refresh();
-                        }
-                    }, title: "Remove this message from history." }), h("kul-button", { class: cssClass, kulIcon: "content_copy", onClick: () => {
-                        navigator.clipboard.writeText(m.content);
-                    }, title: "Copy text to clipboard." }), m.role === 'user' ? (h("kul-button", { class: cssClass, kulIcon: "refresh", onClick: () => {
-                        const index = this.history.indexOf(m);
-                        if (index !== -1) {
-                            const cb = () => (this.history =
-                                this.history.slice(0, index + 1));
-                            this.#updateHistory(cb);
-                            this.#sendPrompt();
-                        }
-                    }, title: "Regenerate answer to this question." })) : null)));
-            });
-        }
-        else {
-            nodes.push(h("div", { class: "empty" }, "Your chat history is empty!"));
-        }
-        return nodes;
-    };
     #prepConnecting = () => {
-        return [
-            h("div", { class: "spinner" }, h("kul-spinner", { kulActive: true, kulLayout: 6, kulDimensions: "7px" })),
-            h("div", { class: "title" }, "Just a moment."),
-            h("div", { class: "text" }, "Contacting your LLM endpoint..."),
-        ];
+        return (h(Fragment, null, h("div", { class: "spinner" }, h("kul-spinner", { kulActive: true, kulLayout: 6, kulDimensions: "7px" })), h("div", { class: "chat__title" }, "Just a moment."), h("div", { class: "chat__text" }, "Contacting your LLM endpoint...")));
     };
-    #prepError = () => {
-        return [
-            h("kul-image", { kulValue: "hotel", kulSizeX: "4em", kulSizeY: "4em" }),
-            h("div", { class: "title" }, "Zzz..."),
-            h("div", { class: "text" }, "The LLM endpoint seems to be offline!"),
-        ];
+    #prepOffline = () => {
+        return (h(Fragment, null, h("div", { class: "chat__error" }, h("kul-image", { kulValue: "hotel", kulSizeX: "4em", kulSizeY: "4em" }), h("div", { class: "chat__title" }, "Zzz..."), h("div", { class: "chat__text" }, "The LLM endpoint seems to be offline!")), h("kul-button", { class: "chat__config kul-full-width", kulIcon: "wrench", kulLabel: "Configuration", kulStyling: "flat", "onKul-button-event": (e) => {
+                const { eventType } = e.detail;
+                switch (eventType) {
+                    case 'click':
+                        this.#adapter.set.status.view('settings');
+                        break;
+                }
+            } })));
     };
-    #prepMessage = (message) => {
-        const elements = [];
-        const messageContent = message.content;
-        const codeBlockRegex = /```(\w+)?\n([\s\S]*?)```/g;
-        let lastIndex = 0;
-        let match;
-        while ((match = codeBlockRegex.exec(messageContent)) !== null) {
-            if (match.index > lastIndex) {
-                const textPart = messageContent.slice(lastIndex, match.index);
-                elements.push(h("div", { class: "paragraph" }, textPart));
-            }
-            const language = match[1] ? match[1].trim() : 'text';
-            const codePart = match[2].trim();
-            elements.push(h("kul-code", { class: 'code', kulLanguage: language, kulValue: codePart }));
-            lastIndex = match.index + match[0].length;
-        }
-        if (lastIndex < messageContent.length) {
-            const remainingText = messageContent.slice(lastIndex);
-            elements.push(h("div", { class: "paragraph" }, remainingText));
-        }
-        return elements;
-    };
-    #prepReady() {
-        return [
-            h("div", { class: "query-area" }, h("kul-textfield", { kulLabel: "What's on your mind?", kulStyling: 'textarea', ref: (el) => {
-                    if (el) {
-                        this.#textarea = el;
-                    }
-                } }), h("div", { class: "buttons" }, h("kul-button", { kulIcon: "clear", kulLabel: "Clear", onClick: () => {
-                    this.#textarea.setValue('');
-                }, kulStyling: 'flat', ref: (el) => {
-                    if (el) {
-                        this.#clearButton = el;
-                    }
-                } }), h("kul-button", { class: "stt", kulIcon: "keyboard_voice", onClick: () => {
-                    speechToText(this.#kulManager, this.#textarea, this.#sttButton);
-                }, ref: (el) => {
-                    if (el) {
-                        this.#sttButton = el;
-                    }
-                }, kulStyling: 'icon' }, h("kul-spinner", { kulActive: true, kulDimensions: "0.6em", kulLayout: 6, slot: "spinner" })), h("kul-button", { kulIcon: "check", kulLabel: "Send", onClick: async () => {
-                    const value = await this.#textarea.getValue();
-                    if (value) {
-                        const newMessage = {
-                            role: 'user',
-                            content: value,
-                        };
-                        const cb = () => (this.history = [
-                            ...this.history,
-                            newMessage,
-                        ]);
-                        this.#updateHistory(cb);
-                        this.#sendPrompt();
-                    }
-                }, ref: (el) => {
-                    if (el) {
-                        this.#submitButton = el;
-                    }
-                } }, h("kul-spinner", { kulActive: true, kulDimensions: "0.6em", slot: "spinner" })))),
-            h("div", { class: `chat-area` }, this.#prepChat()),
-            h("div", { class: "spinner-bar-wrapper" }, h("kul-spinner", { kulBarVariant: true, ref: (el) => {
-                    if (el)
-                        this.#spinnerBar = el;
-                } })),
-        ];
-    }
     async #sendPrompt() {
-        this.#spinnerBar.kulActive = true;
-        this.#disableInteractivity(true);
+        const disabler = this.#adapter.actions.disableInteractivity;
+        const textarea = this.#adapter.get.ui.textarea();
+        this.#adapter.components.spinner.kulActive = true;
+        requestAnimationFrame(() => disabler(true));
         const sendArgs = {
             history: this.history,
             max_tokens: this.kulMaxTokens,
@@ -356,15 +601,15 @@ const KulChat = class {
             temperature: this.kulTemperature,
             url: this.kulEndpointUrl,
         };
-        const llmMessage = await send(sendArgs);
-        if (llmMessage) {
-            const cb = () => this.history.push(llmMessage);
+        const response = await send(this.#adapter, sendArgs);
+        if (response) {
+            const cb = () => this.history.push(response);
             this.#updateHistory(cb);
-            this.#disableInteractivity(false);
-            await this.#textarea.setValue('');
-            this.#spinnerBar.kulActive = false;
             await this.refresh();
-            this.#textarea.setFocus();
+            disabler(false);
+            this.#adapter.get.ui.spinner().kulActive = false;
+            await textarea.setValue('');
+            await textarea.setFocus();
         }
         else {
             const cb = () => this.history.pop();
@@ -408,11 +653,13 @@ const KulChat = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: '6d0ba6174bc9dbca4e43c89a71afd6978afda529' }, this.kulStyle && (h("style", { key: '50d28c170c224b7ccaa5a401670c94e416838eb3', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: '5829a44da79c8b385b87a9eea2b841819cafd659', id: KUL_WRAPPER_ID }, h("div", { key: 'e732fc1f87c76183359e2624ed75eb48892e3950', class: `wrapper wrapper--${this.kulLayout} wrapper--${this.status}` }, this.status === 'ready'
-            ? this.#prepReady()
-            : this.status === 'connecting'
-                ? this.#prepConnecting()
-                : this.#prepError()))));
+        return (h(Host, { key: 'b259b1e6377f72bc8422986d514de7d26801ab96' }, this.kulStyle && (h("style", { key: '5fc970a3cd52e20b0c0dc8d61a213dae7c72dc3d', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: '0767febb652517a3ef010986513b8230d61fa51a', id: KUL_WRAPPER_ID }, h("div", { key: 'd1cc424c7160d4b8fd6e2867efdfe492f1485504', class: `${this.view} ${this.view}--${this.kulLayout} ${this.view}--${this.status}` }, this.view === 'settings'
+            ? prepSettings(this.#adapter)
+            : this.status === 'ready'
+                ? prepChat(this.#adapter)
+                : this.status === 'connecting'
+                    ? this.#prepConnecting()
+                    : this.#prepOffline()))));
     }
     disconnectedCallback() {
         clearInterval(this.#statusinterval);
@@ -3293,7 +3540,7 @@ const STATIC_LANGUAGES = {
     },
 };
 
-const kulCodeCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}:host{--kul_code_background_color:var(\n    --kul-code-background-color,\n    rgba(var(--kul-background-color-rgb) 0.275)\n  );--kul_code_font_family:var(\n    --kul-code-font-family,\n    var(--kul-font-family-monospace)\n  );--kul_code_header_background_color:var(\n    --kul-code-header-background-color,\n    var(--kul-title-background-color)\n  );--kul_code_header_color:var(--kul-code-header-color, var(--kul-title-color));--kul_code_selection_background_color:var(\n    --kul-code-selection-background-color,\n    rgba(var(--kul-border-color-rgb, 0.275))\n  );--kul_code_text_color:var(--kul-code-text-color, var(--kul-text-color));--kul_code_token_color_1:var(\n    --kul-code-token-color-1,\n    var(--kul-chart-color-1)\n  );--kul_code_token_color_2:var(\n    --kul-code-token-color-2,\n    var(--kul-chart-color-2)\n  );--kul_code_token_color_3:var(\n    --kul-code-token-color-3,\n    var(--kul-chart-color-3)\n  );--kul_code_token_color_4:var(\n    --kul-code-token-color-4,\n    var(--kul-chart-color-4)\n  );--kul_code_token_color_5:var(\n    --kul-code-token-color-5,\n    var(--kul-chart-color-5)\n  );display:block;height:100%;width:100%}#kul-component,.container{height:100%;overflow:auto;position:relative;width:100%}.container{display:grid;grid-template-rows:max-content 1fr}.title{font-size:0.85em;letter-spacing:2px;padding:0.5em;text-transform:uppercase}.header{--kul-button-primary-color:var(--kul_code_header_color);align-items:center;background:var(--kul_code_header_background_color);border-color:var(--kul-primary-color);border-left:inset;color:var(--kul_code_header_color);display:flex;height:36px;justify-content:space-between;padding:0.25em 0.75em;position:sticky;top:0;z-index:1}:not(pre)>code,pre{-webkit-backdrop-filter:blur(3.5px);backdrop-filter:blur(3.5px);background:var(--kul_code_background_color);border:1px solid var(--kul_code_header_background_color);border-radius:4px}code,pre{color:var(--kul_code_text_color);font-family:var(--kul_code_font_family);font-size:1em;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}code ::-moz-selection,code::-moz-selection,pre ::-moz-selection,pre::-moz-selection{text-shadow:none;background:var(--kul_code_selection_background_color)}code ::selection,code::selection,pre ::selection,pre::selection{text-shadow:none;background:var(--kul_code_selection_background_color)}.body{white-space:pre-line}pre{box-sizing:border-box;margin:0;min-height:calc(100% - 36px);overflow:auto;padding:1.75em 1em}:not(pre)>code{border-radius:0.3em;padding:0.1em;white-space:normal}.token.cdata,.token.comment,.token.doctype,.token.prolog{color:rgba(var(--kul-text-color-rgb), 0.575)}.token.punctuation{color:rgba(var(--kul-text-color-rgb), 0.875)}.token.namespace{opacity:0.7}.token.bold,.token.important{font-weight:700}.token.italic{font-style:italic}.token.entity{cursor:help}.token.boolean,.token.constant,.token.deleted,.token.number,.token.property,.token.symbol,.token.tag{color:var(--kul_code_token_color_1)}.token.attr-name,.token.builtin,.token.char,.token.inserted,.token.selector,.token.string{color:var(--kul_code_token_color_2)}.token.atrule,.token.attr-value,.token.keyword{color:var(--kul_code_token_color_3)}.token.class-name,.token.function{color:var(--kul_code_token_color_4)}.token.important,.token.regex,.token.variable{color:var(--kul_code_token_color_5)}";
+const kulCodeCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}:host{--kul_code_background_color:var(\n    --kul-code-background-color,\n    rgba(var(--kul-background-color-rgb) 0.275)\n  );--kul_code_font_family:var(\n    --kul-code-font-family,\n    var(--kul-font-family-monospace)\n  );--kul_code_header_background_color:var(\n    --kul-code-header-background-color,\n    var(--kul-title-background-color)\n  );--kul_code_header_color:var(--kul-code-header-color, var(--kul-title-color));--kul_code_selection_background_color:var(\n    --kul-code-selection-background-color,\n    rgba(var(--kul-border-color-rgb, 0.275))\n  );--kul_code_text_color:var(--kul-code-text-color, var(--kul-text-color));--kul_code_token_color_1:var(\n    --kul-code-token-color-1,\n    var(--kul-chart-color-1)\n  );--kul_code_token_color_2:var(\n    --kul-code-token-color-2,\n    var(--kul-chart-color-2)\n  );--kul_code_token_color_3:var(\n    --kul-code-token-color-3,\n    var(--kul-chart-color-3)\n  );--kul_code_token_color_4:var(\n    --kul-code-token-color-4,\n    var(--kul-chart-color-4)\n  );--kul_code_token_color_5:var(\n    --kul-code-token-color-5,\n    var(--kul-chart-color-5)\n  );display:block;height:100%;width:100%}#kul-component,.container{height:100%;overflow:auto;position:relative;width:100%}.container{display:grid;grid-template-rows:max-content 1fr}.title{font-size:0.85em;letter-spacing:2px;padding:0.5em;text-transform:uppercase}.header{--kul-button-primary-color:var(--kul_code_header_color);align-items:center;background:var(--kul_code_header_background_color);border-color:var(--kul-primary-color);border-left:inset;color:var(--kul_code_header_color);display:flex;height:36px;justify-content:space-between;padding:0.25em 0.75em;position:sticky;top:0;z-index:1}:not(pre)>code,pre{-webkit-backdrop-filter:blur(3.5px);backdrop-filter:blur(3.5px);background:var(--kul_code_background_color);border:1px solid var(--kul_code_header_background_color);border-radius:4px}code,pre{color:var(--kul_code_text_color);font-family:var(--kul_code_font_family);font-size:1em;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}code ::-moz-selection,code::-moz-selection,pre ::-moz-selection,pre::-moz-selection{text-shadow:none;background:var(--kul_code_selection_background_color)}code ::selection,code::selection,pre ::selection,pre::selection{text-shadow:none;background:var(--kul_code_selection_background_color)}.body{padding:1em;white-space:pre-line}pre{box-sizing:border-box;margin:0;min-height:calc(100% - 36px);overflow:auto;padding:1.75em 1em;white-space:pre-wrap}:not(pre)>code{border-radius:0.3em;padding:0.1em;white-space:normal}.token.cdata,.token.comment,.token.doctype,.token.prolog{color:rgba(var(--kul-text-color-rgb), 0.575)}.token.punctuation{color:rgba(var(--kul-text-color-rgb), 0.875)}.token.namespace{opacity:0.7}.token.bold,.token.important{font-weight:700}.token.italic{font-style:italic}.token.entity{cursor:help}.token.boolean,.token.constant,.token.deleted,.token.number,.token.property,.token.symbol,.token.tag{color:var(--kul_code_token_color_1)}.token.attr-name,.token.builtin,.token.char,.token.inserted,.token.selector,.token.string{color:var(--kul_code_token_color_2)}.token.atrule,.token.attr-value,.token.keyword{color:var(--kul_code_token_color_3)}.token.class-name,.token.function{color:var(--kul_code_token_color_4)}.token.important,.token.regex,.token.variable{color:var(--kul_code_token_color_5)}";
 const KulCodeStyle0 = kulCodeCss;
 
 const KulCode = class {
