@@ -92,15 +92,16 @@ class LF_LoadImages:
 
     CATEGORY = category
     FUNCTION = "on_exec"
-    OUTPUT_IS_LIST = (True, True, False, False, False, False)
-    RETURN_NAMES = ("images", "names", "nr", "selected_image", "selected_index", "selected_name")
-    RETURN_TYPES = ("IMAGE", "STRING", "INT", "IMAGE", "INT", "STRING")
+    OUTPUT_IS_LIST = (True, True, True, False, False, False, False)
+    RETURN_NAMES = ("images", "names", "creation_dates", "nr", "selected_image", "selected_index", "selected_name")
+    RETURN_TYPES = ("IMAGE", "STRING",  "STRING", "INT", "IMAGE", "INT", "STRING")
 
     def on_exec(self, dir, subdir, strip_ext, load_cap, dummy_output, node_id, KUL_IMAGE_PREVIEW_B64):
+        count = 0
+        file_names = []
         images_buffer = []
         images = []
-        file_names = []
-        count = 0
+        output_creation_dates = []
         selected_image = None
 
         try:
@@ -125,6 +126,11 @@ class LF_LoadImages:
                 if file.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif')):
                     image_path = os.path.join(root, file)
                     with open(image_path, 'rb') as img_file:
+              
+                        file_creation_time = os.path.getctime(image_path)
+                        creation_date = datetime.fromtimestamp(file_creation_time).strftime('%Y-%m-%d')
+                        output_creation_dates.append(creation_date)
+
                         img_data = img_file.read()
                         img = Image.open(io.BytesIO(img_data)).convert("RGB")
                         img_resized = resize_image(img, max_size=1024)
@@ -165,7 +171,7 @@ class LF_LoadImages:
             "selectedName": selected_name
         })
 
-        return (images, file_names, count, selected_image, selected_index, selected_name)
+        return (images, file_names, output_creation_dates, count, selected_image, selected_index, selected_name)
 
 class LF_LoadLocalJSON:
     @classmethod
