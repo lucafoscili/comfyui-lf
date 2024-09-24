@@ -177,13 +177,12 @@ Real-time chat with an LLM model served through Koboldcpp (<http://localhost:500
 It's possible to select the last messages as an output, sending them to the next node.
 ![LLMChat](https://github.com/lucafoscili/comfyui-lf/blob/69181cfe1c3b2062a40035e8b59cece8e8688483/docs/images/LLMChat.png "Example of LLM chat")
 
-#### LLMMessenger (super alpha version!)
+#### LLMMessenger
 
-A user interface that loads character through a JSON and then connects to your local Koboldcpp instance (<http://localhost:5001>).
-It's in early development so there are a lot of missing features that will probably be added/changed in the future.
-The location, outfit and style options are currently unused, they will be used together with the biography to give an identity to the LLM, in order to generate dynamic prompts with those settings.
-![LLMMessenger_1](https://github.com/lucafoscili/comfyui-lf/blob/ffea37a12ce963313f2568e8fef16fd8fb2ce164/docs/images/LLMMessenger_1.png "Example of LLM Messenger")
-![LLMMessenger_2](https://github.com/lucafoscili/comfyui-lf/blob/ffea37a12ce963313f2568e8fef16fd8fb2ce164/docs/images/LLMMessenger_2.png "Example of LLM Messenger")
+A user interface capable of loading characters through a Ketchup Lite-compatible JSON and then connects to your local Koboldcpp instance (<http://localhost:5001>).
+The location, outfit and timeframe options are included in the system prompt to give more context to the LLM.
+Together with the biography, they define the identity of the LLM.
+![LLMMessenger](https://github.com/lucafoscili/comfyui-lf/blob/ffea37a12ce963313f2568e8fef16fd8fb2ce164/docs/images/LLMMessenger.png "Example of chat with Freya")
 
 ### Logic nodes (`logic.py`)
 
