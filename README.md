@@ -182,7 +182,7 @@ It's possible to select the last messages as an output, sending them to the next
 A user interface capable of loading characters through a Ketchup Lite-compatible JSON and then connects to your local Koboldcpp instance (<http://localhost:5001>).
 The location, outfit and timeframe options are included in the system prompt to give more context to the LLM.
 Together with the biography, they define the identity of the LLM.
-![LLMMessenger](https://github.com/lucafoscili/comfyui-lf/blob/ffea37a12ce963313f2568e8fef16fd8fb2ce164/docs/images/LLMMessenger.png "Example of chat with Freya")
+![LLMMessenger](https://github.com/lucafoscili/comfyui-lf/blob/fd52deb44d199e222833fbc159628aceeac48ab9/docs/images/LLMMessenger.png "Example of chat with Freya")
 
 ### Logic nodes (`logic.py`)
 
