@@ -1,5 +1,5 @@
-import { h, F as Fragment, r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, H as Host, a as getAssetPath } from './index-9aa60797.js';
-import { k as kulManagerInstance, g as getProps, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID, e as commonjsGlobal } from './kul-manager-dc9a333c.js';
+import { h, F as Fragment, r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, H as Host, a as getAssetPath } from './index-21ee70d9.js';
+import { k as kulManagerInstance, g as getProps, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID, e as commonjsGlobal } from './kul-manager-8205ca5d.js';
 
 var KulChatProps;
 (function (KulChatProps) {
@@ -15,96 +15,6 @@ var KulChatProps;
     KulChatProps["kulValue"] = "Initial history of the chat.";
 })(KulChatProps || (KulChatProps = {}));
 
-const speechToText = (kulManager, textarea, button) => {
-    const speechConstructor = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!speechConstructor) {
-        alert('Speech recognition is not supported in this browser.');
-        return;
-    }
-    const recognition = new speechConstructor();
-    recognition.lang = kulManager.language.getBCP47();
-    recognition.interimResults = true;
-    recognition.maxAlternatives = 1;
-    recognition.addEventListener('result', (event) => {
-        const transcript = Array.from(event.results)
-            .map((result) => result[0])
-            .map((result) => result.transcript)
-            .join('');
-        kulManager.debug.logMessage('KulChat (stt)', 'STT response: ' + transcript);
-        textarea.setValue(transcript);
-        const isFinal = event.results[event.results.length - 1].isFinal;
-        if (isFinal) {
-            recognition.stop();
-        }
-    });
-    recognition.addEventListener('end', () => {
-        recognition.stop();
-        button.kulShowSpinner = false;
-    });
-    recognition.addEventListener('start', () => {
-        textarea.setFocus();
-        button.kulShowSpinner = true;
-    });
-    try {
-        recognition.start();
-    }
-    catch (err) {
-        kulManager.debug.logMessage('KulChat (stt)', 'Error: ' + err, 'error');
-    }
-};
-
-const send = async (adapter, { history, max_tokens, seed, system, temperature, url }) => {
-    const request = {
-        temperature,
-        max_tokens,
-        seed,
-        messages: history.map((msg) => ({
-            role: msg.role,
-            content: msg.content,
-        })),
-    };
-    if (system) {
-        request.messages.unshift({
-            role: 'system',
-            content: system,
-        });
-    }
-    try {
-        const response = await callLLM(request, url);
-        const message = response.choices?.[0]?.message?.content;
-        adapter.set.status.usage(response.usage);
-        const llmMessage = {
-            role: 'llm',
-            content: message,
-        };
-        return llmMessage;
-    }
-    catch (error) {
-        console.error('Error calling LLM:', error);
-        return undefined;
-    }
-};
-const callLLM = async (request, url) => {
-    try {
-        const response = await fetch(`${url}/v1/chat/completions`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(request),
-        });
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        return data;
-    }
-    catch (error) {
-        console.error('Error calling LLM:', error);
-        throw error;
-    }
-};
-
 const OPTIONS_IDS = {
     contextWindow: 'context-option',
     endpointUrl: 'endpoint-option',
@@ -117,7 +27,11 @@ const prepSettings = (adapter) => {
     return (h(Fragment, null,
         prepButton(adapter),
         h("div", { class: "settings__options" }, prepFields(adapter)),
-        h("kul-textfield", { id: OPTIONS_IDS.system, class: "settings__system kul-full-height", kulLabel: "System prompt", kulStyling: "textarea", kulValue: adapter.get.props.system(), "onKul-textfield-event": textfieldEventHandler.bind(textfieldEventHandler, adapter) })));
+        h("kul-textfield", { id: OPTIONS_IDS.system, class: "settings__system kul-full-height", kulLabel: "System prompt", kulStyling: "textarea", kulValue: adapter.get.props.system(), "onKul-textfield-event": textfieldEventHandler.bind(textfieldEventHandler, adapter), ref: (el) => {
+                if (el) {
+                    adapter.components.textareas.system = el;
+                }
+            } })));
 };
 const prepButton = (adapter) => {
     return (h("kul-button", { class: "kul-full-width", kulIcon: "arrow_back", kulLabel: "Back", "onKul-button-event": backEventHandler.bind(backEventHandler, adapter) }));
@@ -185,36 +99,36 @@ const textfieldEventHandler = (adapter, e) => {
 
 const prepInputArea = (adapter) => {
     return (h("div", { class: "chat__request__input" },
-        h("kul-button", { class: "chat__request__input__button kul-full-height", kulIcon: "settings", kulStyling: "flat", "onKul-button-event": settingsEventHandler.bind(settingsEventHandler, adapter), ref: (el) => {
+        h("kul-button", { class: "chat__request__input__button kul-full-height", id: "settings-button", kulIcon: "settings", kulStyling: "flat", "onKul-button-event": buttonEventHandler.bind(buttonEventHandler, adapter), ref: (el) => {
                 if (el) {
                     adapter.components.buttons.settings = el;
                 }
             } }),
         h("kul-textfield", { class: "chat__request__input__textarea", kulFullWidth: true, kulLabel: "What's on your mind?", kulStyling: "textarea", ref: (el) => {
                 if (el) {
-                    adapter.components.textarea = el;
+                    adapter.components.textareas.prompt = el;
                 }
             } }),
         prepProgressBar(adapter)));
 };
 const prepButtons = (adapter) => {
     return (h("div", { class: "chat__request__buttons" },
-        h("kul-button", { kulLabel: "Clear", kulStyling: 'flat', "onKul-button-event": clearEventHandler.bind(clearEventHandler, adapter), ref: (el) => {
+        h("kul-button", { id: "clear-button", kulLabel: "Clear", kulStyling: 'flat', "onKul-button-event": buttonEventHandler.bind(buttonEventHandler, adapter), ref: (el) => {
                 if (el) {
                     adapter.components.buttons.clear = el;
                 }
-            } }),
-        h("kul-button", { class: "chat__request__buttons__stt", kulIcon: "keyboard_voice", kulStyling: 'icon', "onKul-button-event": sttEventHandler.bind(sttEventHandler, adapter), ref: (el) => {
+            }, title: "Clear the textarea." }),
+        h("kul-button", { id: "stt-button", class: "chat__request__buttons__stt", kulIcon: "keyboard_voice", kulStyling: 'icon', "onKul-button-event": buttonEventHandler.bind(buttonEventHandler, adapter), ref: (el) => {
                 if (el) {
                     adapter.components.buttons.stt = el;
                 }
-            } },
+            }, title: "Activate Speech To Text with your browser's API (if supported)." },
             h("kul-spinner", { kulActive: true, kulDimensions: "0.6em", kulLayout: 6, slot: "spinner" })),
-        h("kul-button", { kulIcon: "check", kulLabel: "Send", "onKul-button-event": sendEventHandler.bind(sendEventHandler, adapter), ref: (el) => {
+        h("kul-button", { id: "send-button", kulIcon: "check", kulLabel: "Send", "onKul-button-event": buttonEventHandler.bind(buttonEventHandler, adapter), ref: (el) => {
                 if (el) {
                     adapter.components.buttons.send = el;
                 }
-            } },
+            }, title: "Send your prompt (CTRL+Enter)." },
             h("kul-spinner", { kulActive: true, kulDimensions: "0.6em", slot: "spinner" }))));
 };
 const prepProgressBar = (adapter) => {
@@ -223,45 +137,39 @@ const prepProgressBar = (adapter) => {
         ['kul-animated']: true,
         ['kul-striped']: true,
     };
-    return (h("kul-progressbar", { class: cssClass, kulCenteredLabel: true, kulIcon: "data_usage", kulLabel: "Context window", ref: (el) => {
+    return (h("kul-progressbar", { class: cssClass, kulCenteredLabel: true, kulIcon: "data_usage", kulLabel: "Context window", "onKul-progressbar-event": progressbarEventHandler.bind(progressbarEventHandler, adapter), ref: (el) => {
             if (el) {
                 adapter.components.progressbar = el;
             }
         } }));
 };
-const clearEventHandler = async (adapter, e) => {
-    const { eventType } = e.detail;
+const buttonEventHandler = async (adapter, e) => {
+    const { eventType, id } = e.detail;
+    const textarea = adapter.components.textareas.prompt;
     switch (eventType) {
         case 'click':
-            await adapter.components.textarea.setValue('');
-            await adapter.components.textarea.setFocus();
-            break;
-    }
-};
-const sendEventHandler = async (adapter, e) => {
-    const { eventType } = e.detail;
-    const value = await adapter.components.textarea.getValue();
-    switch (eventType) {
-        case 'click':
-            if (value) {
-                adapter.actions.send(value);
+            switch (id) {
+                case 'clear-button':
+                    await textarea.setValue('');
+                    await textarea.setFocus();
+                    break;
+                case 'send-button':
+                    adapter.actions.send();
+                    break;
+                case 'settings-button':
+                    adapter.set.status.view('settings');
+                    break;
+                case 'stt-button':
+                    adapter.actions.stt();
+                    break;
             }
-            break;
     }
 };
-const settingsEventHandler = (adapter, e) => {
+const progressbarEventHandler = async (adapter, e) => {
     const { eventType } = e.detail;
     switch (eventType) {
-        case 'click':
-            adapter.set.status.view('settings');
-            break;
-    }
-};
-const sttEventHandler = (adapter, e) => {
-    const { eventType } = e.detail;
-    switch (eventType) {
-        case 'click':
-            adapter.actions.stt();
+        case 'ready':
+            adapter.actions.updateTokenCount();
             break;
     }
 };
@@ -344,7 +252,6 @@ const KulChat = class {
         this.history = [];
         this.status = 'connecting';
         this.toolbarMessage = undefined;
-        this.usage = undefined;
         this.view = 'chat';
         this.kulContextWindow = 8192;
         this.kulEndpointUrl = 'http://localhost:5001';
@@ -378,6 +285,51 @@ const KulChat = class {
             originalEvent: e,
             history: JSON.stringify(this.history) || '',
             status: this.status,
+        });
+    }
+    /*-------------------------------------------------*/
+    /*                L i s t e n e r s                */
+    /*-------------------------------------------------*/
+    listenKeydown(e) {
+        switch (e.key) {
+            case 'Enter':
+                if (e.ctrlKey) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.#adapter.actions.send();
+                }
+                break;
+            default:
+                e.stopPropagation();
+        }
+    }
+    /*-------------------------------------------------*/
+    /*                 W a t c h e r s                 */
+    /*-------------------------------------------------*/
+    async updateTokensCount() {
+        const progressbar = this.#adapter.components.progressbar;
+        const system = this.#adapter.components.textareas.system;
+        if (!this.kulContextWindow || !progressbar) {
+            return;
+        }
+        let count = this.kulSystem ? this.kulSystem.length / 4 : 0;
+        this.history.forEach((m) => (count += m.content.length));
+        const estimated = count / 4;
+        const value = (estimated / this.kulContextWindow) * 100;
+        requestAnimationFrame(() => {
+            if (progressbar) {
+                if (value > 90) {
+                    progressbar.classList.add('kul-danger');
+                }
+                else {
+                    progressbar.classList.remove('kul-danger');
+                }
+                progressbar.kulValue = value;
+                progressbar.title = `Estimated tokens used: ${estimated}/${this.kulContextWindow}`;
+            }
+            if (system) {
+                system.setValue(this.kulSystem);
+            }
         });
     }
     /*-------------------------------------------------*/
@@ -449,7 +401,8 @@ const KulChat = class {
             disableInteractivity: (shouldDisable) => {
                 this.#adapter.components.buttons.send.kulShowSpinner =
                     shouldDisable;
-                this.#adapter.components.textarea.kulDisabled = shouldDisable;
+                this.#adapter.components.textareas.prompt.kulDisabled =
+                    shouldDisable;
                 this.#adapter.components.buttons.stt.kulDisabled =
                     shouldDisable;
             },
@@ -461,31 +414,22 @@ const KulChat = class {
                     this.#sendPrompt();
                 }
             },
-            send: (prompt) => {
-                const newMessage = {
-                    role: 'user',
-                    content: prompt,
-                };
-                const cb = () => (this.history = [...this.history, newMessage]);
-                this.#updateHistory(cb);
-                this.#sendPrompt();
-            },
-            stt: () => speechToText(this.#kulManager, this.#adapter.components.textarea, this.#adapter.components.buttons.stt),
-            updateTokenCount: async () => {
-                const progressbar = this.#adapter.components.progressbar;
-                if (!this.kulContextWindow || !progressbar) {
-                    return;
+            send: async () => {
+                const textarea = this.#adapter.components.textareas.prompt;
+                await textarea.setBlur();
+                const prompt = await textarea.getValue();
+                if (prompt) {
+                    const newMessage = {
+                        role: 'user',
+                        content: prompt,
+                    };
+                    const cb = () => (this.history = [...this.history, newMessage]);
+                    this.#updateHistory(cb);
+                    this.#sendPrompt();
                 }
-                let count = 0;
-                this.history.forEach((m) => (count += m.content.length));
-                if (isNaN(count) || isNaN(this.kulContextWindow)) {
-                    return;
-                }
-                const estimated = count / 4;
-                const value = (estimated / this.kulContextWindow) * 100;
-                progressbar.kulValue = value;
-                progressbar.title = `Estimated tokens used: ${estimated}/${this.kulContextWindow}`;
             },
+            stt: () => this.#kulManager.llm.speechToText(this.#adapter.components.textareas.prompt, this.#adapter.components.buttons.stt),
+            updateTokenCount: async () => this.updateTokensCount(),
         },
         components: {
             buttons: {
@@ -496,7 +440,7 @@ const KulChat = class {
             },
             progressbar: null,
             spinner: null,
-            textarea: null,
+            textareas: { prompt: null, system: null },
         },
         emit: {
             event: (eventType, e = new CustomEvent(eventType)) => {
@@ -505,10 +449,10 @@ const KulChat = class {
         },
         get: {
             history: () => this.history,
+            manager: () => this.#kulManager,
             status: {
                 connection: () => this.status,
                 toolbarMessage: () => this.toolbarMessage,
-                usage: () => this.usage,
                 view: () => this.view,
             },
             props: {
@@ -532,7 +476,6 @@ const KulChat = class {
             status: {
                 connection: (status) => (this.status = status),
                 toolbarMessage: (element) => (this.toolbarMessage = element),
-                usage: (usage) => (this.usage = usage),
                 view: (view) => (this.view = view),
             },
         },
@@ -542,7 +485,7 @@ const KulChat = class {
             this.status = 'connecting';
         }
         try {
-            const response = await fetch(this.kulEndpointUrl);
+            const response = await this.#kulManager.llm.poll(this.kulEndpointUrl);
             if (!response.ok) {
                 this.status = 'offline';
             }
@@ -570,20 +513,32 @@ const KulChat = class {
     };
     async #sendPrompt() {
         const disabler = this.#adapter.actions.disableInteractivity;
-        const textarea = this.#adapter.components.textarea;
+        const textarea = this.#adapter.components.textareas.prompt;
         this.#adapter.components.spinner.kulActive = true;
         requestAnimationFrame(() => disabler(true));
-        const sendArgs = {
-            history: this.history,
+        const request = {
+            temperature: this.kulTemperature,
             max_tokens: this.kulMaxTokens,
             seed: this.kulSeed,
-            system: this.kulSystem,
-            temperature: this.kulTemperature,
-            url: this.kulEndpointUrl,
+            messages: this.history.map((msg) => ({
+                role: msg.role,
+                content: msg.content,
+            })),
         };
-        const response = await send(this.#adapter, sendArgs);
-        if (response) {
-            const cb = () => this.history.push(response);
+        if (this.kulSystem) {
+            request.messages.unshift({
+                role: 'system',
+                content: this.kulSystem,
+            });
+        }
+        try {
+            const response = await this.#kulManager.llm.fetch(request, this.kulEndpointUrl);
+            const message = response.choices?.[0]?.message?.content;
+            const llmMessage = {
+                role: 'assistant',
+                content: message,
+            };
+            const cb = () => this.history.push(llmMessage);
             this.#updateHistory(cb);
             await this.refresh();
             disabler(false);
@@ -591,7 +546,8 @@ const KulChat = class {
             await textarea.setValue('');
             await textarea.setFocus();
         }
-        else {
+        catch (error) {
+            console.error('Error calling LLM:', error);
             const cb = () => this.history.pop();
             this.#updateHistory(cb);
         }
@@ -634,7 +590,7 @@ const KulChat = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: '2ca81a6e5b4c3d09fe7ed84e957f7579b941b718' }, this.kulStyle && (h("style", { key: '0d57df417956ff26a132b6ce6f5c37397e198211', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: '37bc92e115326fcc4037ad78da7895695eedad61', id: KUL_WRAPPER_ID }, h("div", { key: 'a7976981ce10a0e7c985fcba403c254080384c5d', class: `${this.view} ${this.view}--${this.kulLayout} ${this.view}--${this.status}` }, this.view === 'settings'
+        return (h(Host, { key: '59325b3dbe6cbf3f2b13f7cef0f7e7e5a407188c' }, this.kulStyle && (h("style", { key: '3f971f6ffe979f7e579a7c107b6f05b9b3008e0b', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: '02bb8d20465eb97ce506ed78f9f6692f5b53ab60', id: KUL_WRAPPER_ID }, h("div", { key: 'bce2260e562ab561ad3fcf5580fc7136a5eebf37', class: `${this.view} ${this.view}--${this.kulLayout} ${this.view}--${this.status}` }, this.view === 'settings'
             ? prepSettings(this.#adapter)
             : this.status === 'ready'
                 ? prepChat(this.#adapter)
@@ -646,6 +602,9 @@ const KulChat = class {
         clearInterval(this.#statusinterval);
         this.#kulManager.theme.unregister(this);
     }
+    static get watchers() { return {
+        "kulSystem": ["updateTokensCount"]
+    }; }
 };
 KulChat.style = KulChatStyle0;
 

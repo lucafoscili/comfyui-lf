@@ -1,5 +1,5 @@
-import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-9aa60797.js';
-import { k as kulManagerInstance, g as getProps, b as KulThemeColorValues, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './kul-manager-dc9a333c.js';
+import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-21ee70d9.js';
+import { k as kulManagerInstance, g as getProps, b as KulThemeColorValues, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './kul-manager-8205ca5d.js';
 
 var KulChartProps;
 (function (KulChartProps) {
@@ -36608,7 +36608,7 @@ function getDefaultInterpolatedLabel(data, interpolatedValue) {
   return vals.join(' ');
 }
 
-var Symbol$1 = /** @class */function (_super) {
+var Symbol = /** @class */function (_super) {
   __extends$1(Symbol, _super);
   function Symbol(data, idx, seriesScope, opts) {
     var _this = _super.call(this) || this;
@@ -36887,7 +36887,7 @@ var Symbol$1 = /** @class */function (_super) {
 function driftSymbol(dx, dy) {
   this.parent.drift(dx, dy);
 }
-const SymbolClz = Symbol$1;
+const SymbolClz = Symbol;
 
 function symbolNeedsDraw$1(data, point, idx, opt) {
   return point && !isNaN(point[0]) && !isNaN(point[1]) && !(opt.isIgnore && opt.isIgnore(idx))
@@ -85496,7 +85496,7 @@ const KulChart = class {
             '--kul_chart_height': this.kulSizeY ? this.kulSizeY : '100%',
             '--kul_chart_width': this.kulSizeX ? this.kulSizeX : '100%',
         };
-        return (h(Host, { key: '532673815fcea4e79b24a9d5d2c15d94db84bc6a', style: style }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '0a9b59dfb6f35f95f827a0b8be54c73c1c493db9', id: KUL_WRAPPER_ID, ref: (chartContainer) => (this.#chartContainer = chartContainer) })));
+        return (h(Host, { key: 'c17a65acd672db8f6df1b9b9796fba5c20a68e9b', style: style }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'b52b427013978f408f54b9e10703aba522e4d061', id: KUL_WRAPPER_ID, ref: (chartContainer) => (this.#chartContainer = chartContainer) })));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);
