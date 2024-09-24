@@ -8,7 +8,7 @@ export declare const findWidget: <T extends CustomWidgetName>(node: NodeType, ty
 export declare const getApiRoutes: () => import("../types/manager").ComfyAPIs;
 export declare const getCustomWidget: <T extends CustomWidgetName>(node: NodeType, type: T, addW?: BaseWidgetCallback) => CustomWidgetMap[T];
 export declare const getInput: (node: NodeType, type: ComfyWidgetName | CustomWidgetName) => SlotInfo;
-export declare const getKulManager: () => import("../types/ketchup-lite/managers/kul-manager/kul-manager-declarations").KulManager;
+export declare const getKulManager: () => import("../types/ketchup-lite/managers/kul-manager/kul-manager").KulManager;
 export declare const getKulThemes: () => KulDataDataset;
 export declare const getLFManager: () => import("../managers/manager").LFManager;
 export declare const getOutput: (node: NodeType, type: ComfyWidgetName | CustomWidgetName) => SlotInfo;

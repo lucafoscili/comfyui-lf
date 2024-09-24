@@ -1,5 +1,5 @@
-import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, a as getAssetPath, h, H as Host } from './index-9aa60797.js';
-import { k as kulManagerInstance, g as getProps, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './kul-manager-dc9a333c.js';
+import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, a as getAssetPath, h, H as Host } from './index-21ee70d9.js';
+import { k as kulManagerInstance, g as getProps, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './kul-manager-8205ca5d.js';
 import { K as KulDataCyAttributes } from './GenericTypes-8038330a.js';
 
 var KulProgressbarProps;
@@ -243,7 +243,14 @@ const KulTextfield = class {
      */
     async refresh() {
         forceUpdate(this);
-    } /**
+    }
+    /**
+     * Blurs the input element.
+     */
+    async setBlur() {
+        this.#input.blur();
+    }
+    /**
      * Focuses the input element.
      */
     async setFocus() {
@@ -392,7 +399,7 @@ const KulTextfield = class {
         this.status.forEach((status) => {
             classList.push(`textfield--${status}`);
         });
-        return (h(Host, { key: 'a9036567bf3d79366ee6af4fb93f69abe310e07c' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '8644a1df5df37168e3a48156364bc9c4592d507f', id: KUL_WRAPPER_ID }, h("div", { key: 'df11bf130f38776aa61eabf975bc2a063b35f8e4', class: classList.join(' ') }, this.kulStyling === 'textarea'
+        return (h(Host, { key: 'dfbe0c31d1d4a5f495e77629b60d39cd8e9d8c10' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '193a9fb3fe5b1c03f9fb5058a5ac530d76f15c61', id: KUL_WRAPPER_ID }, h("div", { key: '02cbb1613c6cd8a4874658d68c51ec121fc313ae', class: classList.join(' ') }, this.kulStyling === 'textarea'
             ? [
                 this.#prepCounter(),
                 this.#prepIcon(),

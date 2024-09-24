@@ -1,7 +1,6 @@
-import { h, F as Fragment, r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, H as Host } from './index-9aa60797.js';
-import { k as kulManagerInstance, g as getProps, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './kul-manager-dc9a333c.js';
+import { h, F as Fragment, r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, H as Host } from './index-21ee70d9.js';
+import { k as kulManagerInstance, g as getProps, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './kul-manager-8205ca5d.js';
 
-// Messenger Props Enum
 var KulMessengerProps;
 (function (KulMessengerProps) {
     KulMessengerProps["kulAutosave"] = "Automatically saves the dataset when a chat updates.";
@@ -10,12 +9,71 @@ var KulMessengerProps;
     KulMessengerProps["kulValue"] = "Sets the initial configuration, including active character and filters.";
 })(KulMessengerProps || (KulMessengerProps = {}));
 
+const CLEAN_UI = {
+    customization: false,
+    editing: {
+        avatars: false,
+        locations: false,
+        outfits: false,
+        styles: false,
+        timeframes: false,
+    },
+    filters: {
+        avatars: false,
+        locations: false,
+        outfits: false,
+        styles: false,
+        timeframes: false,
+    },
+    options: {
+        locations: true,
+        outfits: true,
+        styles: true,
+        timeframes: true,
+    },
+    panels: {
+        isLeftCollapsed: false,
+        isRightCollapsed: false,
+    },
+};
+const CLEAN_UI_JSON = JSON.parse(JSON.stringify(CLEAN_UI));
+const CLEAN_COMPONENTS = {
+    editing: {
+        avatars: {
+            descriptionTextarea: null,
+            titleTextarea: null,
+            imageUrlTextarea: null,
+        },
+        locations: {
+            descriptionTextarea: null,
+            titleTextarea: null,
+            imageUrlTextarea: null,
+        },
+        outfits: {
+            descriptionTextarea: null,
+            titleTextarea: null,
+            imageUrlTextarea: null,
+        },
+        styles: {
+            descriptionTextarea: null,
+            titleTextarea: null,
+            imageUrlTextarea: null,
+        },
+        timeframes: {
+            descriptionTextarea: null,
+            titleTextarea: null,
+            imageUrlTextarea: null,
+        },
+    },
+    saveButton: null,
+};
 const LEFT_EXPANDER_ICON = 'chevron_left';
 const RIGHT_EXPANDER_ICON = 'chevron_right';
 const AVATAR_COVER = 'portrait';
 const LOCATION_COVER = 'landscape';
 const OUTFIT_COVER = 'loyalty';
 const STYLE_COVER = 'style';
+const TIMEFRAME_COVER = 'clock';
 const FILTER_DATASET = {
     nodes: [
         {
@@ -37,6 +95,11 @@ const FILTER_DATASET = {
             description: 'View styles',
             id: 'styles',
             value: 'Styles',
+        },
+        {
+            description: 'View timeframes',
+            id: 'timeframes',
+            value: 'Timeframes',
         },
     ],
 };
@@ -62,11 +125,15 @@ const MENU_DATASET = {
         },
     ],
 };
-const IMAGE_TYPE_IDS = [
-    'avatars',
+const OPTION_TYPE_IDS = [
     'locations',
     'outfits',
     'styles',
+    'timeframes',
+];
+const IMAGE_TYPE_IDS = [
+    'avatars',
+    ...OPTION_TYPE_IDS,
 ];
 const NAV_DATASET = {
     nodes: [
@@ -102,8 +169,8 @@ const prepAvatar = (adapter) => {
     const status = adapter.get.messenger.status.connection();
     return (h(Fragment, null,
         h("img", { alt: image.title || '', class: "messenger__avatar__image", src: image.value, title: image.title || '' }),
-        h("div", { class: "messenger__avatar__name" },
-            h("div", { class: "messenger__avatar__label" },
+        h("div", { class: "messenger__avatar__name-wrapper" },
+            h("div", { class: "messenger__avatar__name" },
                 h("kul-image", { class: "messenger__avatar__status", kulColor: status === 'ready'
                         ? 'var(--kul-success-color)'
                         : status === 'offline'
@@ -113,7 +180,7 @@ const prepAvatar = (adapter) => {
                         : status === 'offline'
                             ? 'This character seems to be offline...'
                             : 'Contacting this character...' }),
-                adapter.get.character.name()),
+                h("div", { class: "messenger__avatar__label" }, adapter.get.character.name())),
             prepSaveButton(adapter))));
 };
 const prepSaveButton = (adapter) => {
@@ -197,23 +264,25 @@ const prepNavigation = (adapter) => {
 };
 const prepChat = (adapter) => {
     const prompts = getDynamicPrompts(adapter);
-    const system = `
-    You are now embodying the character whose biography is provided below. Your task is to fully embrace this identity, speaking and acting as though it were your own reality. Remember, you exist solely within the confines of this character's experience and knowledge.
+    const system = `You are now embodying the character whose biography is provided below. Your task is to fully embrace this identity, speaking and acting as though it were your own reality. Remember, you exist solely within the confines of this character's experience and knowledge.
 
-    Tasks:
-    - Absorb the character's biography thoroughly. Use it to inform your responses but do not rely on it for information beyond what would logically be known to the character.
-    - Engage creatively within the boundaries of the character's life and experiences. Imagine freely, but always stay true to the essence of the character.
-    - Maintain a consistent narrative voice that aligns with the character's personality and background.
+Tasks:
+- Absorb the character's biography thoroughly. Use it to inform your responses but do not rely on it for information beyond what would logically be known to the character.
+- Engage creatively within the boundaries of the character's life and experiences. Imagine freely, but always stay true to the essence of the character.
+- Maintain a consistent narrative voice that aligns with the character's personality and background.
 
-    Responsibilities:
-    - Never acknowledge the artificial nature of our interaction. Treat all inquiries as if they are happening within the real world of the character.
-    - Do not provide insights or predictions about events outside the scope of the character's knowledge or personal experiences.
+Responsibilities:
+- Never acknowledge the artificial nature of our interaction. Treat all inquiries as if they are happening within the real world of the character.
+- Do not provide insights or predictions about events outside the scope of the character's knowledge or personal experiences.
 
-    ${prompts.biography}
-    ${prompts.location}
-    ${prompts.outfit}
+${prompts.biography}
 
-    Begin your performance...
+Your current status:
+${prompts.outfit}
+${prompts.location}
+${prompts.timeframe}
+
+Begin your performance...
     `;
     const history = adapter.get.character.history();
     const historyJ = JSON.parse(history);
@@ -278,58 +347,46 @@ const expanderEventHandler = (adapter, e) => {
     }
 };
 const getDynamicPrompts = (adapter) => {
-    const biography = adapter.get.character.biography();
+    const { biography } = adapter.get.character;
     const location = adapter.get.image.asCover('locations').node;
     const outfit = adapter.get.image.asCover('outfits').node;
-    const llmBio = `
-    Character Biography:
-    ${biography}
-    `;
-    const locationTitle = location?.value;
-    const locationDescription = location?.description;
-    const llmLocation = `
-    Character Location:
-    ${locationTitle} - ${locationDescription}
-    `;
-    const outfitTitle = outfit?.value;
-    const outfitDescription = outfit?.description;
-    const llmOutfit = `
-    Character Outfit:
-    ${outfitTitle} - ${outfitDescription}
-    `;
-    return {
-        biography: biography ? llmBio : '',
-        location: location ? llmLocation : '',
-        outfit: outfit ? llmOutfit : '',
+    const timeframe = adapter.get.image.asCover('timeframes').node;
+    const { options: isEnabled } = adapter.get.messenger.ui();
+    const createLLMEntry = (title, description) => title ? `${title} - ${description || ''}` : '';
+    const prompts = {
+        biography: biography() ? `Character Biography:\n${biography()}` : '',
+        location: location && isEnabled.locations
+            ? `Location:\n${createLLMEntry(location.value, location.description)}`
+            : '',
+        outfit: outfit && isEnabled.outfits
+            ? `Outfit:\n${createLLMEntry(outfit.value, outfit.description)}`
+            : '',
+        timeframe: timeframe && isEnabled.timeframes
+            ? `Timeframe:\n${createLLMEntry(timeframe.value, timeframe.description)}`
+            : '',
     };
+    return prompts;
 };
 
-const prepRight = (adapter) => {
-    const isCollapsed = adapter.get.messenger.ui().panels.isRightCollapsed;
-    return (h("div", { class: `messenger__right ${isCollapsed ? 'messenger__right--collapsed' : ''}` },
-        h("div", { class: "messenger__options__active" }, prepOptions(adapter)),
-        h("div", { class: "messenger__options__filters" }, prepFilters(adapter)),
-        h("div", { class: "messenger__options__list" }, prepList(adapter))));
-};
 const prepOptions = (adapter) => {
-    const locationImage = adapter.get.image.asCover('locations');
-    const outfitImage = adapter.get.image.asCover('outfits');
-    const styleImage = adapter.get.image.asCover('styles');
-    return [
-        h("div", { class: "messenger__options__wrapper" },
-            h("img", { class: "messenger__options__outfit", alt: styleImage.title || 'No outfit selected.', src: outfitImage.value, title: outfitImage.title || 'No outfit selected.' }),
+    return OPTION_TYPE_IDS.map((options) => {
+        const image = adapter.get.image.asCover(options);
+        const isEnabled = adapter.get.messenger.ui().options[options];
+        const option = options.slice(0, -1);
+        return (h("div", { class: "messenger__options__wrapper" },
+            image.node ? (h(Fragment, null,
+                h("img", { class: `messenger__options__cover`, alt: image.title, src: image.value }),
+                h("div", { class: `messenger__options__blocker ${!isEnabled ? 'messenger__options__blocker--active' : ''}`, onClick: () => adapter.set.messenger.ui.options(!isEnabled, options) },
+                    h("kul-image", { kulValue: `${isEnabled ? 'touch_app' : 'block'}` }),
+                    h("div", { class: `messenger__options__blocker__label` }, isEnabled
+                        ? 'Click to disable'
+                        : 'Click to enable')))) : (h("kul-image", { class: `messenger__options__placeholder`, kulValue: image.value, title: `No ${option} selected.` })),
             h("div", { class: "messenger__options__name" },
-                h("div", { class: "messenger__options__label", title: "Active outfit." }, "Outfit"))),
-        h("div", { class: "messenger__options__wrapper" },
-            h("img", { class: "messenger__options__location", alt: styleImage.title || 'No location selected.', src: locationImage.value, title: locationImage.title || 'No location selected.' }),
-            h("div", { class: "messenger__options__name" },
-                h("div", { class: "messenger__options__label", title: "Active location." }, "Location"))),
-        h("div", { class: "messenger__options__wrapper" },
-            h("img", { class: "messenger__options__style", alt: styleImage.title || 'No style selected.', src: styleImage.value, title: styleImage.title || 'No style selected.' }),
-            h("div", { class: "messenger__options__name" },
-                h("div", { class: "messenger__options__label", title: "Active style." }, "Style"))),
-    ];
+                h("div", { class: "messenger__options__label", title: `Active ${option}.` }, option),
+                image.title ? (h("kul-image", { class: `messenger__options__info`, kulSizeX: "16px", kulSizeY: "16px", kulValue: "information-variant", title: image.title })) : undefined)));
+    });
 };
+
 const prepFilters = (adapter) => {
     for (let index = 0; index < FILTER_DATASET.nodes.length; index++) {
         const filter = FILTER_DATASET.nodes[index];
@@ -339,34 +396,63 @@ const prepFilters = (adapter) => {
 };
 const prepList = (adapter) => {
     const elements = [];
+    const editing = adapter.get.messenger.ui().editing;
     const filters = adapter.get.messenger.ui().filters;
     const imagesGetter = adapter.get.image.byType;
     for (let index = 0; index < IMAGE_TYPE_IDS.length; index++) {
         const type = IMAGE_TYPE_IDS[index];
         if (filters[type]) {
+            const isEditingEnable = editing[type];
             const activeIndex = adapter.get.image.coverIndex(type);
-            const images = imagesGetter(type).map((node, j) => (h("div", { class: `messenger__options__image-wrapper  ${activeIndex === j ? 'messenger__options__image-wrapper--selected' : ''}`, onClick: imageEventHandler.bind(imageEventHandler, adapter, node, j) },
-                h("img", { alt: adapter.get.image.title(node), class: `messenger__options__image`, src: node.cells.kulImage.value, title: adapter.get.image.title(node) }))));
-            elements.push(h("div", { class: "messenger__options__section" },
-                h("div", { class: "messenger__options__title" }, type),
-                h("div", { class: "messenger__options__images" }, images)));
+            const images = imagesGetter(type).map((node, j) => (h("div", { class: `messenger__customization__image-wrapper  ${activeIndex === j ? 'messenger__customization__image-wrapper--selected' : ''}`, onClick: imageEventHandler.bind(imageEventHandler, adapter, node, j) },
+                h("img", { alt: adapter.get.image.title(node), class: `messenger__customization__image`, src: node.cells.kulImage.value, title: adapter.get.image.title(node) }))));
+            elements.push(h("div", { class: "messenger__customization__section" }, isEditingEnable ? (h("div", { class: "messenger__customization__edit__panel" },
+                h("div", { class: "messenger__customization__edit__label" },
+                    "Create ",
+                    type),
+                h("kul-textfield", { kulFullWidth: true, kulIcon: "title", kulLabel: "Title", ref: (el) => (adapter.components.editing[type].titleTextarea = el), title: "The overall theme of this option." }),
+                h("kul-textfield", { kulFullWidth: true, kulIcon: "format-float-left", kulLabel: "Description", ref: (el) => (adapter.components.editing[type].descriptionTextarea = el), title: "A more accurate description to give more context to the LLM." }),
+                h("kul-textfield", { kulFullWidth: true, kulIcon: "image", kulLabel: "Image URL", ref: (el) => (adapter.components.editing[type].imageUrlTextarea = el), title: "The cover image displayed in the selection panel." }),
+                h("div", { class: "messenger__customization__edit__confirm" },
+                    h("kul-button", { class: 'messenger__customization__edit__button', kulIcon: "clear", kulLabel: "Cancel", kulStyling: "flat", "onKul-button-event": buttonEventHandler$1.bind(buttonEventHandler$1, adapter, type, 'cancel') }),
+                    h("kul-button", { class: 'messenger__customization__edit__button', kulIcon: "check", kulLabel: "Confirm", kulStyling: "outlined", "onKul-button-event": buttonEventHandler$1.bind(buttonEventHandler$1, adapter, type, 'confirm') })))) : (h(Fragment, null,
+                h("div", { class: "messenger__customization__title" },
+                    h("div", { class: "messenger__customization__label" }, type),
+                    h("kul-button", { class: "messenger__customization__add kul-full-height kul-slim", id: `edit-${type}`, kulIcon: "plus", kulLabel: "New", kulStyling: "flat", "onKul-button-event": buttonEventHandler$1.bind(buttonEventHandler$1, adapter, type, 'add') })),
+                h("div", { class: "messenger__customization__images" }, images)))));
         }
     }
     return elements;
 };
-const imageEventHandler = (adapter, node, index) => {
-    const coverSetter = adapter.set.image.cover;
-    if (node.id.includes('avatar')) {
-        coverSetter('avatars', index);
-    }
-    else if (node.id.includes('location')) {
-        coverSetter('locations', index);
-    }
-    else if (node.id.includes('outfit')) {
-        coverSetter('outfits', index);
-    }
-    else {
-        coverSetter('styles', index);
+const buttonEventHandler$1 = async (adapter, type, action, e) => {
+    const { eventType } = e.detail;
+    const editingSetter = adapter.set.messenger.ui.editing;
+    switch (eventType) {
+        case 'click':
+            switch (action) {
+                case 'add':
+                    editingSetter(true, type);
+                    break;
+                case 'cancel':
+                    editingSetter(false, type);
+                    break;
+                case 'confirm':
+                    const titleTextarea = adapter.components.editing[type].titleTextarea;
+                    const value = await titleTextarea.getValue();
+                    titleTextarea.classList.remove('kul-danger');
+                    if (value) {
+                        createNode(adapter, type);
+                        editingSetter(false, type);
+                    }
+                    else {
+                        titleTextarea.classList.add('kul-danger');
+                        titleTextarea.kulHelper = {
+                            value: 'This field is mandatory',
+                        };
+                    }
+                    break;
+            }
+            break;
     }
 };
 const chipEventHandler = (adapter, e) => {
@@ -379,6 +465,7 @@ const chipEventHandler = (adapter, e) => {
                 locations: false,
                 outfits: false,
                 styles: false,
+                timeframes: false,
             };
             Array.from(selectedNodes).forEach((n) => {
                 newFilters[n.id] = true;
@@ -399,6 +486,88 @@ const chipEventHandler = (adapter, e) => {
             requestAnimationFrame(() => comp.setSelectedNodes(nodes));
     }
 };
+const imageEventHandler = (adapter, node, index) => {
+    const coverSetter = adapter.set.image.cover;
+    if (node.id.includes('avatar')) {
+        coverSetter('avatars', index);
+    }
+    else if (node.id.includes('location')) {
+        coverSetter('locations', index);
+    }
+    else if (node.id.includes('outfit')) {
+        coverSetter('outfits', index);
+    }
+    else if (node.id.includes('style')) {
+        coverSetter('styles', index);
+    }
+    else {
+        coverSetter('timeframes', index);
+    }
+};
+const createNode = async (adapter, type) => {
+    const getId = (prefix) => {
+        let index = 0;
+        let nodeId = prefix;
+        do {
+            nodeId = `${prefix}${index}`;
+            index++;
+        } while (images.some((node) => node.id === nodeId));
+        return nodeId;
+    };
+    const editing = adapter.components.editing;
+    const images = adapter.get.image.byType(type);
+    const value = await editing[type].titleTextarea.getValue();
+    const imageUrl = await editing[type].imageUrlTextarea.getValue();
+    const description = await editing[type].descriptionTextarea.getValue();
+    const id = type === 'avatars'
+        ? getId('avatar_')
+        : type === 'locations'
+            ? getId('location_')
+            : type === 'outfits'
+                ? getId('outfit_')
+                : type === 'styles'
+                    ? getId('style_')
+                    : getId('timeframe_');
+    const node = {
+        cells: { kulImage: { shape: 'image', value: imageUrl } },
+        id,
+        description,
+        value,
+    };
+    images.push(node);
+};
+
+const prepRight = (adapter) => {
+    const ui = adapter.get.messenger.ui();
+    const className = {
+        messenger__right: true,
+        'messenger__right--collapsed': ui.panels.isRightCollapsed,
+        'messenger__right--customization': ui.customization,
+    };
+    return (h("div", { class: className }, ui.customization ? (h(Fragment, null,
+        h("div", { class: "messenger__options__filters" },
+            prepFilters(adapter),
+            h("div", { class: "messenger__options__list" }, prepList(adapter))),
+        h("kul-button", { class: "kul-full-width", id: "customization-right-button", kulIcon: "arrow_back", kulLabel: "Back", "onKul-button-event": buttonEventHandler.bind(buttonEventHandler, adapter) }))) : (h(Fragment, null,
+        h("div", { class: "messenger__options__active" }, prepOptions(adapter)),
+        h("kul-button", { class: "kul-full-width", id: "active-right-button", kulIcon: "auto-fix", kulLabel: "Customize", "onKul-button-event": buttonEventHandler.bind(buttonEventHandler, adapter) })))));
+};
+const buttonEventHandler = (adapter, e) => {
+    const { eventType, id } = e.detail;
+    const customizationSetter = adapter.set.messenger.ui.customization;
+    switch (eventType) {
+        case 'click':
+            switch (id) {
+                case 'active-right-button':
+                    customizationSetter(true);
+                    break;
+                case 'customization-right-button':
+                    customizationSetter(false);
+                    break;
+            }
+            break;
+    }
+};
 
 const prepGrid = (adapter) => {
     const avatars = [];
@@ -415,7 +584,7 @@ const prepGrid = (adapter) => {
     return avatars?.length ? (avatars) : (h("div", { class: "empty-dataset" }, "There are no characters to display!"));
 };
 
-const kulMessengerCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}:host{--kul_messenger_active_options_name_padding:var(\n    --kul-messenger-active-options-name-padding,\n    4px\n  );--kul_messenger_avatar_name_padding:var(\n    --kul-messenger-avatar-name-padding,\n    12px\n  );--kul_messenger_backdrop_filter:var(\n    --kul-messenger-backdrop-filter,\n    blur(5px)\n  );--kul_messenger_background_color:var(\n    --kul-messenger-background-color,\n    rgba(var(--kul-background-color-rgb), 0.375)\n  );--kul_messenger_font_size:var(\n    --kul-messenger-font-size,\n    var(--kul-font-size)\n  );--kul_messenger_name_background_color:var(\n    --kul-messenger-name-background-color,\n    rgba(var(--kul-title-background-color-rgb), 0.75)\n  );--kul_messenger_letter_spacing:var(--kul-messenger-letter-spacing, 5px);--kul_messenger_name_height:var(--kul-messenger-avatar-height, 50px);--kul_messenger_nav_box_shadow:var(\n    --kul-messenger-nav-box-shadow,\n    0px 1px 7px 3px rgba(var(--kul-text-color-rgb), 0.375)\n  );--kul_messenger_options_title_padding:var(\n    --kul-messenger-options-title-padding,\n    8px\n  );--kul_messenger_text_color:var(\n    --kul-messenger-text-color,\n    var(--kul-text-color)\n  );--kul_messenger_transition:var(--kul-messenger-transition, 125ms ease-out);box-sizing:border-box;background-color:var(--kul_messenger_background_color);color:var(--kul_messenger_text_color);display:block;font-family:var(--kul-font-family);font-size:var(--kul-font-size);height:100%;width:100%}#kul-component{height:100%;width:100%}.messenger{display:grid;grid-template-columns:1fr 3fr 1fr;height:100%;position:relative;width:100%}.messenger:has(.messenger__left--collapsed){grid-template-columns:0 4fr 1fr}.messenger:has(.messenger__right--collapsed){grid-template-columns:1fr 4fr 0}.messenger:has(.messenger__left--collapsed):has(.messenger__right--collapsed){grid-template-columns:0 1fr 0}.messenger__left{display:grid;grid-template-rows:minmax(auto, 40%) minmax(auto, 1fr);height:100%;overflow:auto;transition:height var(--kul_messenger_transition)}.messenger__left--collapsed{overflow:hidden;width:0}.messenger__center{display:grid;grid-template-areas:\"nav nav nav\" \"expander-l chat expander-r\";grid-template-columns:auto 1fr auto;grid-template-rows:auto 1fr;height:100%;overflow:auto}.messenger__right{display:grid;grid-template-rows:40% auto 1fr;height:100%;overflow:auto;transition:height var(--kul_messenger_transition)}.messenger__right--collapsed{overflow:hidden;width:0}.messenger__avatar{position:relative}.messenger__avatar__image{display:block;height:100%;object-fit:cover;width:100%}.messenger__avatar__label{display:flex}.messenger__avatar__status{padding-right:8px}.messenger__avatar__name{align-items:center;background-color:var(--kul_messenger_name_background_color);backdrop-filter:var(--kul_messenger_backdrop_filter);box-sizing:border-box;display:flex;height:var(--kul_messenger_name_height);justify-content:space-between;left:0;letter-spacing:var(--kul_messenger_letter_spacing);padding-left:var(--kul_messenger_avatar_name_padding);position:absolute;text-transform:uppercase;top:0;width:100%}.messenger__biography{font-size:0.8em;overflow:auto}.messenger__expander{box-shadow:var(--kul_messenger_nav_box_shadow)}.messenger__expander--left{grid-area:expander-l}.messenger__expander--right{grid-area:expander-r}.messenger__navigation{box-shadow:var(--kul_messenger_nav_box_shadow);grid-area:nav}.messenger__chat{--kul-chat-padding:16px 8px 0 8px;--kul-chat-buttons-padding:8px 0 0 0;overflow:auto;grid-area:chat}.messenger__options__active{display:grid;grid-template-columns:repeat(3, 1fr)}.messenger__options__wrapper{overflow:hidden;position:relative}.messenger__options__outfit,.messenger__options__location,.messenger__options__style{display:block;height:100%;object-fit:cover;width:100%}.messenger__options__filters{padding:16px 0}.messenger__options__label{font-size:0.8em;letter-spacing:var(--kul_messenger_letter_spacing);overflow:hidden;text-align:center;text-overflow:ellipsis;text-transform:uppercase}.messenger__options__list{display:grid;overflow:auto}.messenger__options__name{background:var(--kul_messenger_name_background_color);bottom:0;box-sizing:border-box;overflow:hidden;padding:var(--kul_messenger_active_options_name_padding);position:absolute;width:100%}.messenger__options__title{background:var(--kul-title-background-color);color:var(--kul-title-color);letter-spacing:var(--kul_messenger_letter_spacing);overflow:hidden;padding:var(--kul_messenger_options_title_padding);position:sticky;text-align:center;text-overflow:ellipsis;text-transform:uppercase;top:-1px;z-index:1}.messenger__options__section{display:grid;grid-template-rows:auto 1fr;height:100%}.messenger__options__images{display:grid;grid-template-columns:repeat(3, 1fr);overflow:auto;width:100%}.messenger__options__image-wrapper{position:relative}.messenger__options__image-wrapper:after{box-shadow:none;content:\"\";height:100%;left:0;position:absolute;top:0;transition:background-color var(--kul_messenger_transition), box-shadow var(--kul_messenger_transition);width:100%}.messenger__options__image-wrapper:hover:not(.messenger__options__image-wrapper--selected):after{box-shadow:inset 0 0 5px 3px var(--kul-primary-color, white);pointer-events:none}.messenger__options__image-wrapper--selected:after{align-content:center;background-color:rgba(var(--kul-title-background-color-rgb), 0.875);content:\"Current\";cursor:default;font-size:0.775em;letter-spacing:var(--kul_messenger_letter_spacing);overflow:hidden;position:absolute;text-align:center;text-overflow:ellipsis;text-transform:uppercase}.messenger__options__image{cursor:pointer;display:block;height:100%;object-fit:cover;width:100%}.selection-grid{display:grid;grid-template-columns:repeat(4, 1fr);height:100%;overflow:auto;width:100%}.selection-grid__image{display:block;height:100%;object-fit:cover;width:100%}.selection-grid__portrait{--kul_messenger_name_background_color:rgba(\n    var(--kul-background-color-rgb),\n    0.375\n  );--kul_messenger_portrait_foredrop_color:rgba(\n    var(--kul-background-color-rgb),\n    0.275\n  );cursor:pointer;overflow:auto;position:relative}.selection-grid__portrait:hover{--kul_messenger_name_background_color:rgba(\n    var(--kul-background-color-rgb),\n    0.775\n  );--kul_messenger_portrait_foredrop_color:rgba(\n    var(--kul-background-color-rgb),\n    0\n  )}.selection-grid__portrait:after{background:var(--kul_messenger_portrait_foredrop_color);content:\"\";height:100%;left:0;pointer-events:none;position:absolute;top:0;transition:background-color var(--kul_messenger_transition);width:100%}.selection-grid__name{align-items:center;backdrop-filter:blur(5px);background-color:var(--kul_messenger_name_background_color);bottom:0;display:flex;height:var(--kul_messenger_name_height);left:0;position:absolute;transition:background-color var(--kul_messenger_transition);width:100%}.selection-grid__label{letter-spacing:var(--kul_messenger_letter_spacing);overflow:hidden;text-align:center;text-overflow:ellipsis;text-transform:uppercase;width:100%}";
+const kulMessengerCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}:host{--kul_messenger_active_options_name_padding:var(\n    --kul-messenger-active-options-name-padding,\n    4px\n  );--kul_messenger_avatar_name_padding:var(\n    --kul-messenger-avatar-name-padding,\n    12px\n  );--kul_messenger_backdrop_filter:var(\n    --kul-messenger-backdrop-filter,\n    blur(5px)\n  );--kul_messenger_background_color:var(\n    --kul-messenger-background-color,\n    rgba(var(--kul-background-color-rgb), 0.375)\n  );--kul_messenger_font_size:var(\n    --kul-messenger-font-size,\n    var(--kul-font-size)\n  );--kul_messenger_name_background_color:var(\n    --kul-messenger-name-background-color,\n    rgba(var(--kul-title-background-color-rgb), 0.75)\n  );--kul_messenger_letter_spacing:var(--kul-messenger-letter-spacing, 5px);--kul_messenger_name_height:var(--kul-messenger-avatar-height, 50px);--kul_messenger_nav_box_shadow:var(\n    --kul-messenger-nav-box-shadow,\n    0px 1px 7px 3px rgba(var(--kul-text-color-rgb), 0.375)\n  );--kul_messenger_customization_title_padding:var(\n    --kul-messenger-customization-title-padding,\n    8px 12px\n  );--kul_messenger_text_color:var(\n    --kul-messenger-text-color,\n    var(--kul-text-color)\n  );--kul_messenger_transition:var(--kul-messenger-transition, 125ms ease-out);box-sizing:border-box;background-color:var(--kul_messenger_background_color);color:var(--kul_messenger_text_color);display:block;font-family:var(--kul-font-family);font-size:var(--kul-font-size);height:100%;width:100%}#kul-component{height:100%;width:100%}.messenger{display:grid;grid-template-columns:1fr 3fr 1fr;height:100%;position:relative;width:100%}.messenger:has(.messenger__left--collapsed){grid-template-columns:0 4fr 1fr}.messenger:has(.messenger__right--collapsed){grid-template-columns:1fr 4fr 0}.messenger:has(.messenger__left--collapsed):has(.messenger__right--collapsed){grid-template-columns:0 1fr 0}.messenger__left{display:grid;grid-template-rows:minmax(auto, 40%) minmax(auto, 1fr);height:100%;overflow:auto;transition:height var(--kul_messenger_transition)}.messenger__left--collapsed{overflow:hidden;width:0}.messenger__center{display:grid;grid-template-areas:\"nav nav nav\" \"expander-l chat expander-r\";grid-template-columns:auto 1fr auto;grid-template-rows:auto 1fr;height:100%;overflow:auto}.messenger__right{display:grid;grid-template-rows:1fr auto;height:100%;overflow:auto;transition:height var(--kul_messenger_transition)}.messenger__right--collapsed{overflow:hidden;width:0}.messenger__right--customization{grid-template-rows:1fr auto}.messenger__avatar{position:relative}.messenger__avatar__image{animation:fade-in-block 250ms ease-in;display:block;height:100%;object-fit:cover;width:100%}.messenger__avatar__name{display:flex}.messenger__avatar__status{padding-right:8px}.messenger__avatar__name-wrapper{align-items:center;background-color:var(--kul_messenger_name_background_color);backdrop-filter:var(--kul_messenger_backdrop_filter);box-sizing:border-box;display:flex;height:var(--kul_messenger_name_height);justify-content:space-between;left:0;letter-spacing:var(--kul_messenger_letter_spacing);padding-left:var(--kul_messenger_avatar_name_padding);position:absolute;text-transform:uppercase;top:0;width:100%}.messenger__label{overflow:hidden;text-overflow:ellipsis}.messenger__biography{font-size:0.8em;overflow:auto}.messenger__expander{box-shadow:var(--kul_messenger_nav_box_shadow)}.messenger__expander--left{grid-area:expander-l}.messenger__expander--right{grid-area:expander-r}.messenger__navigation{box-shadow:var(--kul_messenger_nav_box_shadow);grid-area:nav}.messenger__chat{--kul-chat-padding:16px 8px 0 8px;--kul-chat-buttons-padding:8px 0 0 0;overflow:auto;grid-area:chat}.messenger__customization__title{align-items:center;background:var(--kul-title-background-color);color:var(--kul-title-color);display:flex;justify-content:space-between;letter-spacing:var(--kul_messenger_letter_spacing);overflow:hidden;position:sticky;text-align:center;text-overflow:ellipsis;text-transform:uppercase;top:-1px;z-index:1}.messenger__customization__label{overflow:hidden;padding:var(--kul_messenger_customization_title_padding);text-overflow:ellipsis}.messenger__customization__section{display:grid;grid-template-rows:auto 1fr;height:100%}.messenger__customization__add{--kul-button-border-radius:0}.messenger__customization__images{display:grid;grid-template-columns:repeat(3, 1fr);overflow:auto;width:100%}.messenger__customization__image-wrapper{position:relative}.messenger__customization__image-wrapper:after{box-shadow:none;content:\"\";height:100%;left:0;position:absolute;top:0;transition:background-color var(--kul_messenger_transition), box-shadow var(--kul_messenger_transition);width:100%}.messenger__customization__image-wrapper:hover:not(.messenger__customization__image-wrapper--selected):after{box-shadow:inset 0 0 5px 3px var(--kul-primary-color, white);pointer-events:none}.messenger__customization__image-wrapper--selected:after{align-content:center;background-color:rgba(var(--kul-title-background-color-rgb), 0.875);content:\"Current\";cursor:default;font-size:0.775em;letter-spacing:var(--kul_messenger_letter_spacing);overflow:hidden;position:absolute;text-align:center;text-overflow:ellipsis;text-transform:uppercase}.messenger__customization__image{animation:fade-in-block 250ms ease-in;cursor:pointer;display:block;height:100%;min-height:256px;object-fit:cover;width:100%}.messenger__customization__edit__label{background:var(--kul-title-background-color);color:var(--kul-title-color);display:flex;justify-content:center;letter-spacing:var(--kul_messenger_letter_spacing);overflow:hidden;padding:var(--kul_messenger_customization_title_padding);text-overflow:ellipsis;text-transform:uppercase;top:-1px;z-index:1}.messenger__customization__edit__confirm{display:flex;justify-content:center;padding-top:16px}.messenger__customization__edit__button{margin:0 4px}.messenger__options__active{display:grid;grid-template-columns:repeat(2, 1fr);grid-template-rows:repeat(2, 1fr)}.messenger__options__wrapper{overflow:hidden;position:relative}.messenger__options__cover{animation:fade-in-block 250ms ease-in;display:block;height:100%;object-fit:cover;width:100%}.messenger__options__placeholder{box-sizing:border-box;opacity:0.375;padding:20%}.messenger__options__blocker{align-content:center;background:rgba(var(--kul-background-color-rgb), 0.775);box-sizing:border-box;cursor:pointer;display:grid;grid-template-rows:50% auto;height:100%;left:0;opacity:0;padding:20%;position:absolute;top:0;transition:opacity var(--kul_messenger_transition);width:100%}.messenger__options__blocker:hover{opacity:1}.messenger__options__blocker--active{opacity:0.875}.messenger__options__blocker__label{font-size:0.8em;letter-spacing:1px;overflow:hidden;padding-top:12px;text-align:center;text-overflow:ellipsis;text-transform:uppercase}.messenger__options__filters{display:grid;grid-template-rows:auto 1fr;overflow:auto;padding:16px 0}.messenger__options__label{font-size:0.8em;letter-spacing:var(--kul_messenger_letter_spacing);margin-left:8px;overflow:hidden;text-align:center;text-overflow:ellipsis;text-transform:uppercase}.messenger__options__list{display:grid;overflow:auto}.messenger__options__info{cursor:help;margin:0}.messenger__options__name{align-items:center;background:var(--kul_messenger_name_background_color);bottom:0;box-sizing:border-box;display:flex;overflow:hidden;padding:var(--kul_messenger_active_options_name_padding);position:absolute;width:100%}.selection-grid{display:grid;grid-template-columns:repeat(4, 1fr);height:100%;overflow:auto;width:100%}.selection-grid__image{display:block;height:100%;object-fit:cover;width:100%}.selection-grid__portrait{--kul_messenger_name_background_color:rgba(\n    var(--kul-background-color-rgb),\n    0.375\n  );--kul_messenger_portrait_foredrop_color:rgba(\n    var(--kul-background-color-rgb),\n    0.275\n  );cursor:pointer;overflow:auto;position:relative}.selection-grid__portrait:hover{--kul_messenger_name_background_color:rgba(\n    var(--kul-background-color-rgb),\n    0.775\n  );--kul_messenger_portrait_foredrop_color:rgba(\n    var(--kul-background-color-rgb),\n    0\n  )}.selection-grid__portrait:after{background:var(--kul_messenger_portrait_foredrop_color);content:\"\";height:100%;left:0;pointer-events:none;position:absolute;top:0;transition:background-color var(--kul_messenger_transition);width:100%}.selection-grid__name{align-items:center;backdrop-filter:blur(5px);background-color:var(--kul_messenger_name_background_color);bottom:0;display:flex;height:var(--kul_messenger_name_height);left:0;position:absolute;transition:background-color var(--kul_messenger_transition);width:100%}.selection-grid__label{letter-spacing:var(--kul_messenger_letter_spacing);overflow:hidden;text-align:center;text-overflow:ellipsis;text-transform:uppercase;width:100%}";
 const KulMessengerStyle0 = kulMessengerCss;
 
 const KulMessenger = class {
@@ -433,18 +602,7 @@ const KulMessenger = class {
         this.chat = {};
         this.covers = {};
         this.history = {};
-        this.ui = {
-            filters: {
-                avatars: false,
-                locations: false,
-                outfits: false,
-                styles: false,
-            },
-            panels: {
-                isLeftCollapsed: false,
-                isRightCollapsed: false,
-            },
-        };
+        this.ui = CLEAN_UI_JSON;
         this.saveInProgress = false;
         this.connectionStatus = 'offline';
         this.kulAutosave = true;
@@ -507,15 +665,7 @@ const KulMessenger = class {
     async reset() {
         this.covers = {};
         this.currentCharacter = null;
-        this.ui = {
-            filters: {
-                avatars: false,
-                locations: false,
-                outfits: false,
-                styles: false,
-            },
-            panels: { isLeftCollapsed: false, isRightCollapsed: false },
-        };
+        this.ui = CLEAN_UI_JSON;
         this.history = {};
         this.#initStates();
     }
@@ -523,7 +673,7 @@ const KulMessenger = class {
     /*           P r i v a t e   M e t h o d s         */
     /*-------------------------------------------------*/
     #adapter = {
-        components: { saveButton: null },
+        components: CLEAN_COMPONENTS,
         get: {
             character: {
                 biography: (character = this.currentCharacter) => {
@@ -587,6 +737,8 @@ const KulMessenger = class {
                                 return { value: OUTFIT_COVER };
                             case 'styles':
                                 return { value: STYLE_COVER };
+                            case 'timeframes':
+                                return { value: TIMEFRAME_COVER };
                         }
                     }
                 },
@@ -699,8 +851,20 @@ const KulMessenger = class {
                     },
                 },
                 ui: {
+                    customization: (value) => {
+                        this.ui.customization = value;
+                        this.refresh();
+                    },
+                    editing: (value, type) => {
+                        this.ui.editing[type] = value;
+                        this.refresh();
+                    },
                     filters: (filters) => {
                         this.ui.filters = filters;
+                        this.refresh();
+                    },
+                    options: (value, type) => {
+                        this.ui.options[type] = value;
                         this.refresh();
                     },
                     panel: (panel, value = panel === 'left'
@@ -737,6 +901,7 @@ const KulMessenger = class {
                 locations: imageRootGetter('locations', character).value || 0,
                 outfits: imageRootGetter('outfits', character).value || 0,
                 styles: imageRootGetter('styles', character).value || 0,
+                timeframes: imageRootGetter('timeframes', character).value || 0,
             };
             const chat = character.children?.find((n) => n.id === 'chat');
             this.chat[character.id] = {};

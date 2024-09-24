@@ -177,10 +177,12 @@ web/deploy/js/ketchup-lite/*showcase*
 !web/deploy/assets/svg/account.svg
 !web/deploy/assets/svg/arrow_drop_down.svg
 !web/deploy/assets/svg/audiotrack.svg
+!web/deploy/assets/svg/auto-fix.svg
 !web/deploy/assets/svg/check.svg
 !web/deploy/assets/svg/chevron_left.svg
 !web/deploy/assets/svg/chevron_right.svg
 !web/deploy/assets/svg/clear.svg
+!web/deploy/assets/svg/clock.svg
 !web/deploy/assets/svg/content_copy.svg
 !web/deploy/assets/svg/delete.svg
 !web/deploy/assets/svg/download.svg
@@ -200,6 +202,8 @@ web/deploy/js/ketchup-lite/*showcase*
 !web/deploy/assets/svg/style.svg
 !web/deploy/assets/svg/view_comfy.svg
 !web/deploy/assets/svg/view_day.svg
+!web/deploy/assets/svg/wrench.svg
 
 # Messenger - custom characters
-web/deploy/assets/media/custom_characters
+web/deploy/assets/media/custom_characters/*
+!web/deploy/assets/media/custom_characters/.gitpreserve
