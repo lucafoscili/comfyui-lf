@@ -2,6 +2,7 @@ import { LogSeverity } from '../types/manager.js';
 import { NodeName } from '../types/nodes.js';
 import { ComfyWidgetName, CustomWidgetName } from '../types/widgets.js';
 import { areJSONEqual, getApiRoutes, getCustomWidget, getInput, getLFManager, isValidJSON, unescapeJson, } from '../utils/common.js';
+import { messengerFactory } from '../widgets/messenger.js';
 const NAME = NodeName.llmMessenger;
 export const llmMessengerFactory = {
     register: (setW) => {
@@ -21,7 +22,7 @@ export const llmMessengerFactory = {
                         }
                         const messengerW = getCustomWidget(node, CustomWidgetName.messenger);
                         const datasetW = nodeInput?.widgets?.[linkInput.origin_slot];
-                        if (!messengerW || !datasetW) {
+                        if (!messengerW?.options?.getComp || !datasetW?.options?.getValue) {
                             return;
                         }
                         const dataset = datasetW.options.getValue();
@@ -32,22 +33,29 @@ export const llmMessengerFactory = {
                                 if (!areJSONEqual(newData, messenger.kulData)) {
                                     messenger.kulData = newData;
                                     messenger.reset();
-                                    getLFManager().log('Updated chip data', { dataset }, LogSeverity.Info);
+                                    getLFManager().log('Updated messenger data', { dataset }, LogSeverity.Info);
                                 }
                             }
                             else {
                                 if (isValidJSON(newData)) {
                                     messenger.kulData = newData;
                                     messenger.reset();
-                                    getLFManager().log('Set chip data', { dataset }, LogSeverity.Info);
+                                    getLFManager().log('Set messenger data', { dataset }, LogSeverity.Info);
                                 }
                                 else {
                                     getLFManager().log('Invalid JSON data', { dataset, error: 'Invalid JSON' }, LogSeverity.Warning);
                                 }
                             }
+                            const placeholder = messenger.nextSibling || messenger.previousSibling;
+                            if (messenger.kulData?.nodes?.[0]) {
+                                placeholder.classList.add(messengerFactory.cssClasses.placeholderHidden);
+                            }
+                            else {
+                                placeholder.classList.remove(messengerFactory.cssClasses.placeholderHidden);
+                            }
                         }
                         catch (error) {
-                            getLFManager().log('Error processing chip data', { dataset, error }, LogSeverity.Error);
+                            getLFManager().log('Error processing messenger data', { dataset, error }, LogSeverity.Error);
                         }
                         return r;
                     };

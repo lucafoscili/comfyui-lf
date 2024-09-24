@@ -139,8 +139,10 @@ export class LFWidgets {
       jsonInputFactory.options(content),
     [CustomWidgetName.imagePreview]: (content: HTMLDivElement, isSelectable: boolean) =>
       imagePreviewFactory.options(content, isSelectable),
-    [CustomWidgetName.messenger]: (messenger: HTMLKulMessengerElement) =>
-      messengerFactory.options(messenger),
+    [CustomWidgetName.messenger]: (
+      messenger: HTMLKulMessengerElement,
+      placeholder: HTMLDivElement,
+    ) => messengerFactory.options(messenger, placeholder),
     [CustomWidgetName.rollViewer]: (rollViewer: HTMLKulProgressbarElement) =>
       rollViewerFactory.options(rollViewer),
     [CustomWidgetName.tree]: (tree: HTMLKulTreeElement) => treeFactory.options(tree),

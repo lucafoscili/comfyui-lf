@@ -7,8 +7,10 @@ export const messengerFactory = {
     cssClasses: {
         content: BASE_CSS_CLASS,
         messenger: `${BASE_CSS_CLASS}__widget`,
+        placeholder: `${BASE_CSS_CLASS}__placeholder`,
+        placeholderHidden: `${BASE_CSS_CLASS}__placeholder--hidden`,
     },
-    options: (messenger) => {
+    options: (messenger, placeholder) => {
         return {
             hideOnZoom: false,
             getComp() {
@@ -48,11 +50,15 @@ export const messengerFactory = {
                             messenger.dataset.config = JSON.stringify(config);
                         }
                     }
+                    if (messenger.kulData?.nodes?.[0]) {
+                        placeholder.classList.add(messengerFactory.cssClasses.placeholderHidden);
+                    }
                 }
                 catch (error) {
                     getLFManager().log('Error when setting value!', { error, messenger }, LogSeverity.Error);
                     if (value === undefined || value === '') {
                         messenger.kulData = undefined;
+                        placeholder.classList.remove(messengerFactory.cssClasses.placeholderHidden);
                     }
                 }
             },
@@ -61,10 +67,15 @@ export const messengerFactory = {
     render: (node, name) => {
         const wrapper = document.createElement('div');
         const content = document.createElement('div');
+        const placeholder = document.createElement('div');
         const messenger = document.createElement('kul-messenger');
-        const options = messengerFactory.options(messenger);
+        const options = messengerFactory.options(messenger, placeholder);
         content.classList.add(messengerFactory.cssClasses.content);
         messenger.classList.add(messengerFactory.cssClasses.messenger);
+        placeholder.classList.add(messengerFactory.cssClasses.placeholder);
+        placeholder.innerHTML = `The setup of this node must be done client-side. Use either <strong>LF_WriteJSON</strong> or <strong>LF_DisplayJSON</strong>
+to connect as input a valid JSON dataset. Check the repository's workflows to see a 
+<a target="_blank" href="https://github.com/lucafoscili/comfyui-lf/blob/3348daf27a3fafcc80648debd551838e09d622f0/workflows/LLMMessenger.png">working example here.</a>.`;
         messenger.addEventListener('kul-messenger-event', (e) => {
             const { eventType, config } = e.detail;
             switch (eventType) {
@@ -73,6 +84,7 @@ export const messengerFactory = {
                     break;
             }
         });
+        content.appendChild(placeholder);
         content.appendChild(messenger);
         wrapper.appendChild(content);
         wrapper.dataset.isInVisibleNodes = 'true';

@@ -95,7 +95,7 @@ export class LFWidgets {
             [CustomWidgetName.history]: (history) => historyFactory.options(history),
             [CustomWidgetName.jsonInput]: (content) => jsonInputFactory.options(content),
             [CustomWidgetName.imagePreview]: (content, isSelectable) => imagePreviewFactory.options(content, isSelectable),
-            [CustomWidgetName.messenger]: (messenger) => messengerFactory.options(messenger),
+            [CustomWidgetName.messenger]: (messenger, placeholder) => messengerFactory.options(messenger, placeholder),
             [CustomWidgetName.rollViewer]: (rollViewer) => rollViewerFactory.options(rollViewer),
             [CustomWidgetName.tree]: (tree) => treeFactory.options(tree),
             [CustomWidgetName.upload]: (upload) => uploadFactory.options(upload),

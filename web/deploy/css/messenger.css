@@ -6,6 +6,23 @@
   overflow: auto;
   width: 100%;
 }
+.lf-messenger__placeholder {
+  background: var(--kul-background-color);
+  color: var(--kul-text-color);
+  font-family: var(--kul-font-family);
+  font-size: var(--kul-font-size);
+  height: 100%;
+  left: 0;
+  justify-self: center;
+  position: absolute;
+  text-align: center;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+}
+.lf-messenger__placeholder--hidden {
+  display: none;
+}
 .lf-messenger__widget {
   height: 100%;
   width: 100%;

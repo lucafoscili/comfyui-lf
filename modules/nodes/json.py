@@ -21,14 +21,17 @@ class LF_DisplayJSON:
     CATEGORY = category
     FUNCTION = "on_exec"
     OUTPUT_NODE = True
-    RETURN_TYPES = ()
+    RETURN_NAMES = ("json",)
+    RETURN_TYPES = ("JSON",)
 
     def on_exec(self, json:dict, node_id):
+
         PromptServer.instance.send_sync("lf-displayjson", {
             "node": node_id, 
             "json": json
         })
-        return {}
+        
+        return (json, )
 
 class LF_GetRandomKeyFromJSON:
     @classmethod
