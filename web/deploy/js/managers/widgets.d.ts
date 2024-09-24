@@ -29,7 +29,7 @@ export declare class LFWidgets {
         KUL_HISTORY: (history: HTMLKulListElement) => import("../types/widgets.js").HistoryWidgetOptions;
         KUL_JSON_INPUT: (content: HTMLTextAreaElement) => import("../types/widgets.js").JsonInputWidgetOptions;
         KUL_IMAGE_PREVIEW_B64: (content: HTMLDivElement, isSelectable: boolean) => import("../types/widgets.js").ImagePreviewWidgetOptions;
-        KUL_MESSENGER: (messenger: HTMLKulMessengerElement) => import("../types/widgets.js").MessengerWidgetOptions;
+        KUL_MESSENGER: (messenger: HTMLKulMessengerElement, placeholder: HTMLDivElement) => import("../types/widgets.js").MessengerWidgetOptions;
         KUL_ROLL_VIEWER: (rollViewer: HTMLKulProgressbarElement) => import("../types/widgets.js").RollViewerWidgetOptions;
         KUL_TREE: (tree: HTMLKulTreeElement) => import("../types/widgets.js").TreeWidgetOptions;
         KUL_UPLOAD: (upload: HTMLKulUploadElement) => import("../types/widgets.js").UploadWidgetOptions;
@@ -130,7 +130,7 @@ export declare class LFWidgets {
             KUL_HISTORY: (history: HTMLKulListElement) => import("../types/widgets.js").HistoryWidgetOptions;
             KUL_JSON_INPUT: (content: HTMLTextAreaElement) => import("../types/widgets.js").JsonInputWidgetOptions;
             KUL_IMAGE_PREVIEW_B64: (content: HTMLDivElement, isSelectable: boolean) => import("../types/widgets.js").ImagePreviewWidgetOptions;
-            KUL_MESSENGER: (messenger: HTMLKulMessengerElement) => import("../types/widgets.js").MessengerWidgetOptions;
+            KUL_MESSENGER: (messenger: HTMLKulMessengerElement, placeholder: HTMLDivElement) => import("../types/widgets.js").MessengerWidgetOptions;
             KUL_ROLL_VIEWER: (rollViewer: HTMLKulProgressbarElement) => import("../types/widgets.js").RollViewerWidgetOptions;
             KUL_TREE: (tree: HTMLKulTreeElement) => import("../types/widgets.js").TreeWidgetOptions;
             KUL_UPLOAD: (upload: HTMLKulUploadElement) => import("../types/widgets.js").UploadWidgetOptions;

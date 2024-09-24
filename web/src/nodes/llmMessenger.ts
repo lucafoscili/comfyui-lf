@@ -11,6 +11,7 @@ import {
   isValidJSON,
   unescapeJson,
 } from '../utils/common';
+import { messengerFactory } from '../widgets/messenger';
 
 const NAME = NodeName.llmMessenger;
 
@@ -34,7 +35,7 @@ export const llmMessengerFactory = {
 
             const messengerW = getCustomWidget(node, CustomWidgetName.messenger);
             const datasetW = nodeInput?.widgets?.[linkInput.origin_slot];
-            if (!messengerW || !datasetW) {
+            if (!messengerW?.options?.getComp || !datasetW?.options?.getValue) {
               return;
             }
 
@@ -47,13 +48,13 @@ export const llmMessengerFactory = {
                 if (!areJSONEqual(newData, messenger.kulData)) {
                   messenger.kulData = newData as unknown as KulMessengerDataset;
                   messenger.reset();
-                  getLFManager().log('Updated chip data', { dataset }, LogSeverity.Info);
+                  getLFManager().log('Updated messenger data', { dataset }, LogSeverity.Info);
                 }
               } else {
                 if (isValidJSON(newData)) {
                   messenger.kulData = newData as unknown as KulMessengerDataset;
                   messenger.reset();
-                  getLFManager().log('Set chip data', { dataset }, LogSeverity.Info);
+                  getLFManager().log('Set messenger data', { dataset }, LogSeverity.Info);
                 } else {
                   getLFManager().log(
                     'Invalid JSON data',
@@ -62,9 +63,19 @@ export const llmMessengerFactory = {
                   );
                 }
               }
+              const placeholder = messenger.nextSibling || messenger.previousSibling;
+              if (messenger.kulData?.nodes?.[0]) {
+                (placeholder as HTMLDivElement).classList.add(
+                  messengerFactory.cssClasses.placeholderHidden,
+                );
+              } else {
+                (placeholder as HTMLDivElement).classList.remove(
+                  messengerFactory.cssClasses.placeholderHidden,
+                );
+              }
             } catch (error) {
               getLFManager().log(
-                'Error processing chip data',
+                'Error processing messenger data',
                 { dataset, error },
                 LogSeverity.Error,
               );
