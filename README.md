@@ -228,6 +228,11 @@ Used to select a boolean. It keeps record of old values, displaying a clickable 
 Displays the value of a boolean in a widget.
 ![DisplayBoolean](https://github.com/lucafoscili/comfyui-lf/blob/e2d71390d90b44841cf2080afcfd3869793de573/docs/images/DisplayBoolean.png "Boolean value displayed")
 
+#### DisplayFloat
+
+Displays the value of a float in a widget.
+![DisplayFloat](https://github.com/lucafoscili/comfyui-lf/blob/e2d71390d90b44841cf2080afcfd3869793de573/docs/images/DisplayFloat.png "Float value displayed")
+
 #### DisplayPrimitiveAsJSON
 
 Displays different primitive values as a JSON output or directly in-widget through a tree-like view.

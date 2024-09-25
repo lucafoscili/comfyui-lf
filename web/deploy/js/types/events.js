@@ -5,6 +5,7 @@ export var EventName;
     EventName["civitAIMetadataSetup"] = "lf-civitaimetadatasetup";
     EventName["controlPanel"] = "lf-controlpanel";
     EventName["displayBoolean"] = "lf-displayboolean";
+    EventName["displayFloat"] = "lf-displayfloat";
     EventName["displayJson"] = "lf-displayjson";
     EventName["displayPrimitiveAsJson"] = "lf-displayprimitiveasjson";
     EventName["extractor"] = "lf-extractor";

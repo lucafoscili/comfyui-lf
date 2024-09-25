@@ -38,6 +38,7 @@ import {
   ExtractorPayload,
   ResolutionSwitcherPayload,
   DisplayBooleanPayload,
+  DisplayFloatPayload,
 } from '../types/events.js';
 
 /*-------------------------------------------------*/
@@ -162,6 +163,16 @@ export class LFManager {
     );
     this.#APIS.event(EventName.displayBoolean, (e: CustomEvent<DisplayBooleanPayload>) => {
       nodes.eventHandlers.LF_DisplayBoolean(e, widgets.adders.KUL_CODE);
+    });
+    /*-------------------------------------------------------------------*/
+    /*                I n i t   D i s p l a y F l o a t                  */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_DisplayFloat(
+      widgets.setters.KUL_CODE,
+      widgets.adders.KUL_CODE,
+    );
+    this.#APIS.event(EventName.displayFloat, (e: CustomEvent<DisplayFloatPayload>) => {
+      nodes.eventHandlers.LF_DisplayFloat(e, widgets.adders.KUL_CODE);
     });
     /*-------------------------------------------------------------------*/
     /*                  I n i t   D i s p l a y J S O N                  */

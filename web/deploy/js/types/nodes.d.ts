@@ -5,6 +5,7 @@ export declare enum NodeName {
     civitaiMetadataSetup = "LF_CivitAIMetadataSetup",
     controlPanel = "LF_ControlPanel",
     displayBoolean = "LF_DisplayBoolean",
+    displayFloat = "LF_DisplayFloat",
     displayJson = "LF_DisplayJSON",
     displayPrimitiveAsJson = "LF_DisplayPrimitiveAsJSON",
     float = "LF_Float",

@@ -33,6 +33,7 @@ import { loadFileOnceFactory } from '../nodes/loadFileOnce';
 import { extractorFactory } from '../nodes/extractor';
 import { resolutionSwitcherFactory } from '../nodes/resolutionSwitcher';
 import { displayBooleanFactory } from '../nodes/displayBoolean';
+import { displayFloatFactory } from '../nodes/displayFloat';
 
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
@@ -44,6 +45,7 @@ export class LFNodes {
     [NodeName.boolean]: booleanFactory.eventHandler,
     [NodeName.civitaiMetadataSetup]: civitaiMetadataSetupFactory.eventHandler,
     [NodeName.displayBoolean]: displayBooleanFactory.eventHandler,
+    [NodeName.displayFloat]: displayFloatFactory.eventHandler,
     [NodeName.displayJson]: displayJsonFactory.eventHandler,
     [NodeName.displayPrimitiveAsJson]: displayPrimitiveAsJsonFactory.eventHandler,
     [NodeName.float]: floatFactory.eventHandler,
@@ -76,6 +78,7 @@ export class LFNodes {
     [NodeName.civitaiMetadataSetup]: civitaiMetadataSetupFactory.register,
     [NodeName.controlPanel]: controlPanelFactory.register,
     [NodeName.displayBoolean]: displayBooleanFactory.register,
+    [NodeName.displayFloat]: displayFloatFactory.register,
     [NodeName.displayJson]: displayJsonFactory.register,
     [NodeName.displayPrimitiveAsJson]: displayPrimitiveAsJsonFactory.register,
     [NodeName.float]: floatFactory.register,
