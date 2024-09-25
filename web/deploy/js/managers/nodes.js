@@ -30,6 +30,7 @@ import { displayPrimitiveAsJsonFactory } from '../nodes/displayPrimitiveAsJson.j
 import { imageListFromJsonFactory } from '../nodes/imageListFromJson.js';
 import { loadFileOnceFactory } from '../nodes/loadFileOnce.js';
 import { extractorFactory } from '../nodes/extractor.js';
+import { resolutionSwitcherFactory } from '../nodes/resolutionSwitcher.js';
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
 /*-------------------------------------------------*/
@@ -53,6 +54,7 @@ export class LFNodes {
             [NodeName.randomBoolean]: randomBooleanFactory.eventHandler,
             [NodeName.resizeImageByEdge]: resizeImageByEdgeFactory.eventHandler,
             [NodeName.resizeImageToSquare]: resizeImageToSquareFactory.eventHandler,
+            [NodeName.resolutionSwitcher]: resolutionSwitcherFactory.eventHandler,
             [NodeName.saveImageForCivitai]: saveImageForCivitaiFactory.eventHandler,
             [NodeName.string]: stringFactory.eventHandler,
             [NodeName.switchFloat]: switchFloatFactory.eventHandler,
@@ -86,6 +88,7 @@ export class LFNodes {
             [NodeName.randomBoolean]: randomBooleanFactory.register,
             [NodeName.resizeImageByEdge]: resizeImageByEdgeFactory.register,
             [NodeName.resizeImageToSquare]: resizeImageToSquareFactory.register,
+            [NodeName.resolutionSwitcher]: resolutionSwitcherFactory.register,
             [NodeName.saveImageForCivitai]: saveImageForCivitaiFactory.register,
             [NodeName.string]: stringFactory.register,
             [NodeName.switchFloat]: switchFloatFactory.register,

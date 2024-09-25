@@ -143,8 +143,8 @@ export class LFWidgets {
       messenger: HTMLKulMessengerElement,
       placeholder: HTMLDivElement,
     ) => messengerFactory.options(messenger, placeholder),
-    [CustomWidgetName.rollViewer]: (rollViewer: HTMLKulProgressbarElement) =>
-      rollViewerFactory.options(rollViewer),
+    [CustomWidgetName.rollViewer]: (rollViewer: HTMLKulProgressbarElement, nodeType: NodeType) =>
+      rollViewerFactory.options(rollViewer, nodeType),
     [CustomWidgetName.tree]: (tree: HTMLKulTreeElement) => treeFactory.options(tree),
     [CustomWidgetName.upload]: (upload: HTMLKulUploadElement) => uploadFactory.options(upload),
   };

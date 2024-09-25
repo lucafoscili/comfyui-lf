@@ -36,6 +36,7 @@ import {
   WriteJSONPayload,
   LoadFileOncePayload,
   ExtractorPayload,
+  ResolutionSwitcherPayload,
 } from '../types/events.js';
 
 /*-------------------------------------------------*/
@@ -308,6 +309,16 @@ export class LFManager {
         nodes.eventHandlers.LF_ResizeImageToSquare(e, widgets.adders.KUL_TREE);
       },
     );
+    /*-------------------------------------------------------------------*/
+    /*           I n i t   R e s o l u t i o n S w i t c h e r           */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_ResolutionSwitcher(
+      widgets.setters.KUL_ROLL_VIEWER,
+      widgets.adders.KUL_ROLL_VIEWER,
+    );
+    this.#APIS.event(EventName.resolutionSwitcher, (e: CustomEvent<ResolutionSwitcherPayload>) => {
+      nodes.eventHandlers.LF_ResolutionSwitcher(e, widgets.adders.KUL_ROLL_VIEWER);
+    });
     /*-------------------------------------------------------------------*/
     /*          I n i t   S a v e I m a g e F o r C i v i t A I          */
     /*-------------------------------------------------------------------*/

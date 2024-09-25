@@ -27,6 +27,7 @@ export enum EventName {
   randomBoolean = 'lf-randomboolean',
   resizeimageByEdge = 'lf-resizeimagebyedge',
   resizeimageToSquare = 'lf-resizeimagetosquare',
+  resolutionSwitcher = 'lf-resolutionswitcher',
   saveImageForCivitAI = 'lf-saveimageforcivitai',
   string = 'lf-string',
   switchFloat = 'lf-switchfloat',
@@ -53,6 +54,7 @@ export type EventPayload =
   | RandomBooleanPayload
   | ResizeImageByEdgePayload
   | ResizeImageToSquarePayload
+  | ResolutionSwitcherPayload
   | SaveImageForCivitAIPayload
   | StringPayload
   | SwitchImagePayload
@@ -183,6 +185,7 @@ export interface LoadImagesPayload extends BaseEventPayload {
 export interface MultipleImageResizeForWebPayload extends BaseEventPayload {
   dataset: KulDataDataset;
 }
+
 /*-------------------------------------------------------------------*/
 /*       R a n d o m   B o o l e a n   D e c l a r a t i o n s       */
 /*-------------------------------------------------------------------*/
@@ -210,6 +213,15 @@ export interface ResizeImageByEdgePayload extends BaseEventPayload {
 
 export interface ResizeImageToSquarePayload extends BaseEventPayload {
   dataset: KulDataDataset;
+}
+
+/*-------------------------------------------------------------------*/
+/*   R e s o l u t i o n S w i t c h e r   D e c l a r a t i o n s   */
+/*-------------------------------------------------------------------*/
+
+export interface ResolutionSwitcherPayload extends BaseEventPayload {
+  bool: boolean;
+  roll: number;
 }
 
 /*-------------------------------------------------------------------*/
