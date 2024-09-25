@@ -88,10 +88,10 @@ class LF_DisplayPrimitiveAsJSON:
                 "json": ("KUL_CODE", {}),
             },
             "optional": {
-                "integer": ("INT", {"default": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Integer value."}),
-                "float": ("FLOAT", {"default": 0.0, "step": 0.1, "tooltip": "Float value."}),
-                "string": ("STRING", {"default": "", "multiline": True, "tooltip": "String value."}),
-                "boolean": ("BOOLEAN", {"default": False, "tooltip": "Boolean value."}),
+                "integer": ("INT", {"default": 0, "forceInput": True, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Integer value."}),
+                "float": ("FLOAT", {"default": 0.0, "forceInput": True, "step": 0.1, "tooltip": "Float value."}),
+                "string": ("STRING", {"default": "", "forceInput": True, "multiline": True, "tooltip": "String value."}),
+                "boolean": ("BOOLEAN", {"default": False, "forceInput": True, "tooltip": "Boolean value."}),
             },
             "hidden": {"node_id": "UNIQUE_ID"}
         }
