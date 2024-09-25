@@ -189,7 +189,7 @@ Together with the biography, they define the identity of the LLM.
 #### ResolutionSwitcher
 
 Selects a random resolution between portrait and landscape orientations. The chances for landscape to occur can be set with a percentage.
-![ResolutionSwitcher](https://github.com/lucafoscili/comfyui-lf/blob/e2d71390d90b44841cf2080afcfd3869793de573/docs/images/ResolutionSwitcher.png "Resolution was set to landscape")
+![ResolutionSwitcher](https://github.com/lucafoscili/comfyui-lf/blob/5882f6809e687b4296719e376db34482dd8fd840/docs/images/ResolutionSwitcher.png "Resolution was set to landscape")
 
 #### SwitchFloat
 
