@@ -226,17 +226,17 @@ Used to select a boolean. It keeps record of old values, displaying a clickable 
 #### DisplayBoolean
 
 Displays the value of a boolean in a widget.
-![DisplayBoolean](https://github.com/lucafoscili/comfyui-lf/blob/e2d71390d90b44841cf2080afcfd3869793de573/docs/images/DisplayBoolean.png "Boolean value displayed")
+![DisplayBoolean](https://github.com/lucafoscili/comfyui-lf/blob/8f37015be9e81511fd159e59a468e12a251f54ef/docs/images/DisplayBoolean.png "Boolean value displayed")
 
 #### DisplayFloat
 
 Displays the value of a float in a widget.
-![DisplayFloat](https://github.com/lucafoscili/comfyui-lf/blob/e2d71390d90b44841cf2080afcfd3869793de573/docs/images/DisplayFloat.png "Float value displayed")
+![DisplayFloat](https://github.com/lucafoscili/comfyui-lf/blob/8f37015be9e81511fd159e59a468e12a251f54ef/docs/images/DisplayFloat.png "Float value displayed")
 
 #### DisplayInteger
 
 Displays the value of a integer in a widget.
-![DisplayInteger](https://github.com/lucafoscili/comfyui-lf/blob/e2d71390d90b44841cf2080afcfd3869793de573/docs/images/DisplayInteger.png "Integer value displayed")
+![DisplayInteger](https://github.com/lucafoscili/comfyui-lf/blob/8f37015be9e81511fd159e59a468e12a251f54ef/docs/images/DisplayInteger.png "Integer value displayed")
 
 #### DisplayPrimitiveAsJSON
 
@@ -246,7 +246,7 @@ Displays different primitive values as a JSON output or directly in-widget throu
 #### DisplayString
 
 Displays the value of a string in a widget.
-![DisplayString](https://github.com/lucafoscili/comfyui-lf/blob/e2d71390d90b44841cf2080afcfd3869793de573/docs/images/DisplayString.png "String value displayed")
+![DisplayString](https://github.com/lucafoscili/comfyui-lf/blob/8f37015be9e81511fd159e59a468e12a251f54ef/docs/images/DisplayString.png "String value displayed")
 
 #### Float
 
