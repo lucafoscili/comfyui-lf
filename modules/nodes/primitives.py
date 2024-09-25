@@ -30,6 +30,31 @@ class LF_Boolean:
 
         return (boolean,)
     
+class LF_DisplayBoolean:
+    @classmethod 
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "boolean": ("BOOLEAN", {"default": False, "forceInput": True, "tooltip": "Boolean value."}),
+            },
+            "hidden": { "node_id": "UNIQUE_ID" }
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    OUTPUT_NODE = True
+    RETURN_NAMES = ("boolean",)
+    RETURN_TYPES = ("BOOLEAN",)
+
+    def on_exec(self, node_id, boolean):
+
+        PromptServer.instance.send_sync("lf-displayboolean", {
+            "node": node_id, 
+            "value": str(boolean),
+        })
+
+        return (boolean,)
+    
 class LF_DisplayPrimitiveAsJSON:
     @classmethod
     def INPUT_TYPES(cls):
@@ -195,6 +220,7 @@ class LF_RandomBoolean:
 
 NODE_CLASS_MAPPINGS = {
     "LF_Boolean": LF_Boolean,
+    "LF_DisplayBoolean": LF_DisplayBoolean,
     "LF_DisplayPrimitiveAsJSON": LF_DisplayPrimitiveAsJSON,
     "LF_Float": LF_Float,
     "LF_Integer": LF_Integer,
@@ -203,6 +229,7 @@ NODE_CLASS_MAPPINGS = {
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_Boolean": "Boolean",
+    "LF_DisplayBoolean": "Display boolean",
     "LF_DisplayPrimitiveAsJSON": "Display primitive as JSON",
     "LF_Float": "Float",
     "LF_Integer": "Integer",

@@ -18,8 +18,6 @@ from ..utils.io import *
 
 category = "✨ LF Nodes/IO Operations"
  
-import json
-
 class LF_LoadFileOnce:
     @classmethod
     def INPUT_TYPES(cls):
@@ -370,7 +368,6 @@ class LF_SaveJSON:
         
         except Exception:
             return None
-
     
 NODE_CLASS_MAPPINGS = {
     "LF_LoadFileOnce": LF_LoadFileOnce,

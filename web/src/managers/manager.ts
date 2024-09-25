@@ -37,6 +37,7 @@ import {
   LoadFileOncePayload,
   ExtractorPayload,
   ResolutionSwitcherPayload,
+  DisplayBooleanPayload,
 } from '../types/events.js';
 
 /*-------------------------------------------------*/
@@ -152,6 +153,16 @@ export class LFManager {
       widgets.setters.KUL_CONTROL_PANEL,
       widgets.adders.KUL_CONTROL_PANEL,
     );
+    /*-------------------------------------------------------------------*/
+    /*               I n i t   D i s p l a y B o o l e a n               */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_DisplayBoolean(
+      widgets.setters.KUL_CODE,
+      widgets.adders.KUL_CODE,
+    );
+    this.#APIS.event(EventName.displayBoolean, (e: CustomEvent<DisplayBooleanPayload>) => {
+      nodes.eventHandlers.LF_DisplayBoolean(e, widgets.adders.KUL_CODE);
+    });
     /*-------------------------------------------------------------------*/
     /*                  I n i t   D i s p l a y J S O N                  */
     /*-------------------------------------------------------------------*/

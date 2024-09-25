@@ -9,6 +9,7 @@ export enum NodeName {
   boolean = 'LF_Boolean',
   civitaiMetadataSetup = 'LF_CivitAIMetadataSetup',
   controlPanel = 'LF_ControlPanel',
+  displayBoolean = 'LF_DisplayBoolean',
   displayJson = 'LF_DisplayJSON',
   displayPrimitiveAsJson = 'LF_DisplayPrimitiveAsJSON',
   float = 'LF_Float',

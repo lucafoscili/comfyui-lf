@@ -13,6 +13,7 @@ export enum EventName {
   boolean = 'lf-boolean',
   civitAIMetadataSetup = 'lf-civitaimetadatasetup',
   controlPanel = 'lf-controlpanel',
+  displayBoolean = 'lf-displayboolean',
   displayJson = 'lf-displayjson',
   displayPrimitiveAsJson = 'lf-displayprimitiveasjson',
   extractor = 'lf-extractor',
@@ -42,6 +43,7 @@ export type EventPayload =
   | BlurImagesPayload
   | BooleanPayload
   | CivitAIMetadataSetupPayload
+  | DisplayBooleanPayload
   | DisplayJSONPayload
   | ExtractorPayload
   | FloatPayload
@@ -96,6 +98,14 @@ export interface CivitAIMetadataSetupPayload extends BaseEventPayload {
 
 export interface DisplayPrimitiveAsJSONPayload extends BaseEventPayload {
   dataset: KulDataDataset;
+}
+
+/*-------------------------------------------------------------------*/
+/*       D i s p l a y B o o l e a n   D e c l a r a t i o n s       */
+/*-------------------------------------------------------------------*/
+
+export interface DisplayBooleanPayload extends BaseEventPayload {
+  value: string;
 }
 
 /*-------------------------------------------------------------------*/

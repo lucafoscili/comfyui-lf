@@ -31,6 +31,7 @@ import { imageListFromJsonFactory } from '../nodes/imageListFromJson.js';
 import { loadFileOnceFactory } from '../nodes/loadFileOnce.js';
 import { extractorFactory } from '../nodes/extractor.js';
 import { resolutionSwitcherFactory } from '../nodes/resolutionSwitcher.js';
+import { displayBooleanFactory } from '../nodes/displayBoolean.js';
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
 /*-------------------------------------------------*/
@@ -40,6 +41,7 @@ export class LFNodes {
             [NodeName.blurImages]: blurImagesFactory.eventHandler,
             [NodeName.boolean]: booleanFactory.eventHandler,
             [NodeName.civitaiMetadataSetup]: civitaiMetadataSetupFactory.eventHandler,
+            [NodeName.displayBoolean]: displayBooleanFactory.eventHandler,
             [NodeName.displayJson]: displayJsonFactory.eventHandler,
             [NodeName.displayPrimitiveAsJson]: displayPrimitiveAsJsonFactory.eventHandler,
             [NodeName.float]: floatFactory.eventHandler,
@@ -70,6 +72,7 @@ export class LFNodes {
             [NodeName.boolean]: booleanFactory.register,
             [NodeName.civitaiMetadataSetup]: civitaiMetadataSetupFactory.register,
             [NodeName.controlPanel]: controlPanelFactory.register,
+            [NodeName.displayBoolean]: displayBooleanFactory.register,
             [NodeName.displayJson]: displayJsonFactory.register,
             [NodeName.displayPrimitiveAsJson]: displayPrimitiveAsJsonFactory.register,
             [NodeName.float]: floatFactory.register,

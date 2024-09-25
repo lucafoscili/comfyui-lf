@@ -4,6 +4,7 @@ export declare class LFNodes {
         LF_BlurImages: (event: CustomEvent<import("../types/events").BlurImagesPayload>, addW: BaseWidgetCallback) => void;
         LF_Boolean: (event: CustomEvent<import("../types/events").BooleanPayload>, addW: BaseWidgetCallback) => void;
         LF_CivitAIMetadataSetup: (event: CustomEvent<import("../types/events").CivitAIMetadataSetupPayload>, addW: BaseWidgetCallback) => void;
+        LF_DisplayBoolean: (event: CustomEvent<import("../types/events").DisplayBooleanPayload>, addW: BaseWidgetCallback) => void;
         LF_DisplayJSON: (event: CustomEvent<import("../types/events").DisplayJSONPayload>, addW: BaseWidgetCallback) => void;
         LF_DisplayPrimitiveAsJSON: (event: CustomEvent<import("../types/events").DisplayPrimitiveAsJSONPayload>, addW: BaseWidgetCallback) => void;
         LF_Float: (event: CustomEvent<import("../types/events").FloatPayload>, addW: BaseWidgetCallback) => void;
@@ -34,6 +35,7 @@ export declare class LFNodes {
         LF_Boolean: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_CivitAIMetadataSetup: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_ControlPanel: (setW: import("../types/widgets").ControlPanelWidgetSetter, addW: BaseWidgetCallback) => void;
+        LF_DisplayBoolean: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_DisplayJSON: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_DisplayPrimitiveAsJSON: (setW: import("../types/widgets").CodeWidgetSetter) => void;
         LF_Float: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
@@ -68,6 +70,7 @@ export declare class LFNodes {
             LF_BlurImages: (event: CustomEvent<import("../types/events").BlurImagesPayload>, addW: BaseWidgetCallback) => void;
             LF_Boolean: (event: CustomEvent<import("../types/events").BooleanPayload>, addW: BaseWidgetCallback) => void;
             LF_CivitAIMetadataSetup: (event: CustomEvent<import("../types/events").CivitAIMetadataSetupPayload>, addW: BaseWidgetCallback) => void;
+            LF_DisplayBoolean: (event: CustomEvent<import("../types/events").DisplayBooleanPayload>, addW: BaseWidgetCallback) => void;
             LF_DisplayJSON: (event: CustomEvent<import("../types/events").DisplayJSONPayload>, addW: BaseWidgetCallback) => void;
             LF_DisplayPrimitiveAsJSON: (event: CustomEvent<import("../types/events").DisplayPrimitiveAsJSONPayload>, addW: BaseWidgetCallback) => void;
             LF_Float: (event: CustomEvent<import("../types/events").FloatPayload>, addW: BaseWidgetCallback) => void;
@@ -98,6 +101,7 @@ export declare class LFNodes {
             LF_Boolean: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_CivitAIMetadataSetup: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_ControlPanel: (setW: import("../types/widgets").ControlPanelWidgetSetter, addW: BaseWidgetCallback) => void;
+            LF_DisplayBoolean: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_DisplayJSON: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_DisplayPrimitiveAsJSON: (setW: import("../types/widgets").CodeWidgetSetter) => void;
             LF_Float: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;

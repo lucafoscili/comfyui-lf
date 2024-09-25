@@ -57,15 +57,13 @@ export const codeFactory = {
     code.classList.add(codeFactory.cssClasses.code);
 
     switch (node.comfyClass) {
-      case NodeName.civitaiMetadataSetup:
-      case NodeName.extractor:
-        code.kulLanguage = 'text';
-        break;
       case NodeName.displayJson:
       case NodeName.displayPrimitiveAsJson:
         code.kulLanguage = 'json';
         code.kulValue = EMPTY;
         break;
+      default:
+        code.kulLanguage = 'text';
     }
 
     content.appendChild(code);
