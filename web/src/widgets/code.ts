@@ -63,7 +63,7 @@ export const codeFactory = {
         code.kulValue = EMPTY;
         break;
       default:
-        code.kulLanguage = 'text';
+        code.kulLanguage = 'markdown';
     }
 
     content.appendChild(code);
