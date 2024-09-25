@@ -8,8 +8,12 @@ export declare enum EventName {
     boolean = "lf-boolean",
     civitAIMetadataSetup = "lf-civitaimetadatasetup",
     controlPanel = "lf-controlpanel",
+    displayBoolean = "lf-displayboolean",
+    displayFloat = "lf-displayfloat",
+    displayInteger = "lf-displayinteger",
     displayJson = "lf-displayjson",
     displayPrimitiveAsJson = "lf-displayprimitiveasjson",
+    displayString = "lf-displaystring",
     extractor = "lf-extractor",
     float = "lf-float",
     imageListFromJSON = "lf-imagelistfromjson",
@@ -33,7 +37,7 @@ export declare enum EventName {
     urandomSeedGenerator = "lf-urandomseedgenerator",
     writeJson = "lf-writejson"
 }
-export type EventPayload = BlurImagesPayload | BooleanPayload | CivitAIMetadataSetupPayload | DisplayJSONPayload | ExtractorPayload | FloatPayload | ImageListFromJSONPayload | ImageHistogramPayload | IntegerPayload | KeywordCounterPayload | LoadImagesPayload | MultipleImageResizeForWebPayload | RandomBooleanPayload | ResizeImageByEdgePayload | ResizeImageToSquarePayload | ResolutionSwitcherPayload | SaveImageForCivitAIPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | UrandomSeedGeneratorPayload | WriteJSONPayload;
+export type EventPayload = BlurImagesPayload | BooleanPayload | CivitAIMetadataSetupPayload | DisplayBooleanPayload | DisplayJSONPayload | ExtractorPayload | FloatPayload | ImageListFromJSONPayload | ImageHistogramPayload | IntegerPayload | KeywordCounterPayload | LoadImagesPayload | MultipleImageResizeForWebPayload | RandomBooleanPayload | ResizeImageByEdgePayload | ResizeImageToSquarePayload | ResolutionSwitcherPayload | SaveImageForCivitAIPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | UrandomSeedGeneratorPayload | WriteJSONPayload;
 export interface BlurImagesPayload extends BaseEventPayload {
     fileNames: Array<string>;
     images: Array<string>;
@@ -48,8 +52,20 @@ export interface CivitAIMetadataSetupPayload extends BaseEventPayload {
 export interface DisplayPrimitiveAsJSONPayload extends BaseEventPayload {
     dataset: KulDataDataset;
 }
+export interface DisplayBooleanPayload extends BaseEventPayload {
+    value: string;
+}
+export interface DisplayFloatPayload extends BaseEventPayload {
+    value: string;
+}
+export interface DisplayIntegerPayload extends BaseEventPayload {
+    value: string;
+}
 export interface DisplayJSONPayload extends BaseEventPayload {
     json: Record<string, unknown>;
+}
+export interface DisplayStringPayload extends BaseEventPayload {
+    value: string;
 }
 export interface ExtractorPayload extends BaseEventPayload {
     result: string;

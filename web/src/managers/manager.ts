@@ -37,6 +37,10 @@ import {
   LoadFileOncePayload,
   ExtractorPayload,
   ResolutionSwitcherPayload,
+  DisplayBooleanPayload,
+  DisplayFloatPayload,
+  DisplayIntegerPayload,
+  DisplayStringPayload,
 } from '../types/events.js';
 
 /*-------------------------------------------------*/
@@ -153,6 +157,36 @@ export class LFManager {
       widgets.adders.KUL_CONTROL_PANEL,
     );
     /*-------------------------------------------------------------------*/
+    /*               I n i t   D i s p l a y B o o l e a n               */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_DisplayBoolean(
+      widgets.setters.KUL_CODE,
+      widgets.adders.KUL_CODE,
+    );
+    this.#APIS.event(EventName.displayBoolean, (e: CustomEvent<DisplayBooleanPayload>) => {
+      nodes.eventHandlers.LF_DisplayBoolean(e, widgets.adders.KUL_CODE);
+    });
+    /*-------------------------------------------------------------------*/
+    /*                I n i t   D i s p l a y F l o a t                  */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_DisplayFloat(
+      widgets.setters.KUL_CODE,
+      widgets.adders.KUL_CODE,
+    );
+    this.#APIS.event(EventName.displayFloat, (e: CustomEvent<DisplayFloatPayload>) => {
+      nodes.eventHandlers.LF_DisplayFloat(e, widgets.adders.KUL_CODE);
+    });
+    /*-------------------------------------------------------------------*/
+    /*                I n i t   D i s p l a y I n t e g e r              */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_DisplayInteger(
+      widgets.setters.KUL_CODE,
+      widgets.adders.KUL_CODE,
+    );
+    this.#APIS.event(EventName.displayInteger, (e: CustomEvent<DisplayIntegerPayload>) => {
+      nodes.eventHandlers.LF_DisplayInteger(e, widgets.adders.KUL_CODE);
+    });
+    /*-------------------------------------------------------------------*/
     /*                  I n i t   D i s p l a y J S O N                  */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_DisplayJSON(widgets.setters.KUL_CODE, widgets.adders.KUL_CODE);
@@ -169,6 +203,16 @@ export class LFManager {
         nodes.eventHandlers.LF_DisplayPrimitiveAsJSON(e, widgets.adders.KUL_CODE);
       },
     );
+    /*-------------------------------------------------------------------*/
+    /*                I n i t   D i s p l a y S t r i n g                */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_DisplayString(
+      widgets.setters.KUL_CODE,
+      widgets.adders.KUL_CODE,
+    );
+    this.#APIS.event(EventName.displayString, (e: CustomEvent<DisplayStringPayload>) => {
+      nodes.eventHandlers.LF_DisplayString(e, widgets.adders.KUL_CODE);
+    });
     /*-------------------------------------------------------------------*/
     /*                        I n i t   F l o a t                        */
     /*-------------------------------------------------------------------*/

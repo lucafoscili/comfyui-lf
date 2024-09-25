@@ -30,6 +30,106 @@ class LF_Boolean:
 
         return (boolean,)
     
+class LF_DisplayBoolean:
+    @classmethod 
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "boolean": ("BOOLEAN", {"default": False, "forceInput": True, "tooltip": "Boolean value."}),
+            },
+            "hidden": { "node_id": "UNIQUE_ID" }
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    OUTPUT_NODE = True
+    RETURN_NAMES = ("boolean",)
+    RETURN_TYPES = ("BOOLEAN",)
+
+    def on_exec(self, node_id, boolean):
+
+        PromptServer.instance.send_sync("lf-displayboolean", {
+            "node": node_id, 
+            "value": str(boolean),
+        })
+
+        return (boolean,)
+    
+class LF_DisplayFloat:
+    @classmethod 
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "float": ("FLOAT", {"default": 0, "forceInput": True, "tooltip": "Float value."}),
+            },
+            "hidden": { "node_id": "UNIQUE_ID" }
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    OUTPUT_NODE = True
+    RETURN_NAMES = ("float",)
+    RETURN_TYPES = ("FLOAT",)
+
+    def on_exec(self, node_id, float):
+
+        PromptServer.instance.send_sync("lf-displayfloat", {
+            "node": node_id, 
+            "value": str(float),
+        })
+
+        return (float,)
+    
+class LF_DisplayInteger:
+    @classmethod 
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "integer": ("INT", {"default": 0, "forceInput": True, "tooltip": "Integer value."}),
+            },
+            "hidden": { "node_id": "UNIQUE_ID" }
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    OUTPUT_NODE = True
+    RETURN_NAMES = ("integer",)
+    RETURN_TYPES = ("INT",)
+
+    def on_exec(self, node_id, integer):
+
+        PromptServer.instance.send_sync("lf-displayinteger", {
+            "node": node_id, 
+            "value": str(integer),
+        })
+
+        return (integer,)
+    
+class LF_DisplayString:
+    @classmethod 
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "string": ("STRING", {"default": "", "forceInput": True, "tooltip": "String value."}),
+            },
+            "hidden": { "node_id": "UNIQUE_ID" }
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    OUTPUT_NODE = True
+    RETURN_NAMES = ("string",)
+    RETURN_TYPES = ("STRING",)
+
+    def on_exec(self, node_id, string):
+
+        PromptServer.instance.send_sync("lf-displaystring", {
+            "node": node_id, 
+            "value": string,
+        })
+
+        return (string,)
+    
 class LF_DisplayPrimitiveAsJSON:
     @classmethod
     def INPUT_TYPES(cls):
@@ -38,10 +138,10 @@ class LF_DisplayPrimitiveAsJSON:
                 "json": ("KUL_CODE", {}),
             },
             "optional": {
-                "integer": ("INT", {"default": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Integer value."}),
-                "float": ("FLOAT", {"default": 0.0, "step": 0.1, "tooltip": "Float value."}),
-                "string": ("STRING", {"default": "", "multiline": True, "tooltip": "String value."}),
-                "boolean": ("BOOLEAN", {"default": False, "tooltip": "Boolean value."}),
+                "integer": ("INT", {"default": 0, "forceInput": True, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Integer value."}),
+                "float": ("FLOAT", {"default": 0.0, "forceInput": True, "step": 0.1, "tooltip": "Float value."}),
+                "string": ("STRING", {"default": "", "forceInput": True, "multiline": True, "tooltip": "String value."}),
+                "boolean": ("BOOLEAN", {"default": False, "forceInput": True, "tooltip": "Boolean value."}),
             },
             "hidden": {"node_id": "UNIQUE_ID"}
         }
@@ -195,7 +295,11 @@ class LF_RandomBoolean:
 
 NODE_CLASS_MAPPINGS = {
     "LF_Boolean": LF_Boolean,
+    "LF_DisplayBoolean": LF_DisplayBoolean,
+    "LF_DisplayFloat": LF_DisplayFloat,
+    "LF_DisplayInteger": LF_DisplayInteger,
     "LF_DisplayPrimitiveAsJSON": LF_DisplayPrimitiveAsJSON,
+    "LF_DisplayString": LF_DisplayString,
     "LF_Float": LF_Float,
     "LF_Integer": LF_Integer,
     "LF_RandomBoolean": LF_RandomBoolean,
@@ -203,9 +307,13 @@ NODE_CLASS_MAPPINGS = {
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_Boolean": "Boolean",
+    "LF_DisplayBoolean": "Display boolean",
+    "LF_DisplayFloat": "Display float",
+    "LF_DisplayInteger": "Display integer",
     "LF_DisplayPrimitiveAsJSON": "Display primitive as JSON",
+    "LF_DisplayString": "Display string",
     "LF_Float": "Float",
     "LF_Integer": "Integer",
     "LF_RandomBoolean": "Random boolean",
     "LF_String": "String"
-}
+}             

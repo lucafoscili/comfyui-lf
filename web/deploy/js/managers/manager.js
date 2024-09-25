@@ -96,6 +96,27 @@ export class LFManager {
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_ControlPanel(widgets.setters.KUL_CONTROL_PANEL, widgets.adders.KUL_CONTROL_PANEL);
         /*-------------------------------------------------------------------*/
+        /*               I n i t   D i s p l a y B o o l e a n               */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_DisplayBoolean(widgets.setters.KUL_CODE, widgets.adders.KUL_CODE);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.displayBoolean, (e) => {
+            nodes.eventHandlers.LF_DisplayBoolean(e, widgets.adders.KUL_CODE);
+        });
+        /*-------------------------------------------------------------------*/
+        /*                I n i t   D i s p l a y F l o a t                  */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_DisplayFloat(widgets.setters.KUL_CODE, widgets.adders.KUL_CODE);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.displayFloat, (e) => {
+            nodes.eventHandlers.LF_DisplayFloat(e, widgets.adders.KUL_CODE);
+        });
+        /*-------------------------------------------------------------------*/
+        /*                I n i t   D i s p l a y I n t e g e r              */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_DisplayInteger(widgets.setters.KUL_CODE, widgets.adders.KUL_CODE);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.displayInteger, (e) => {
+            nodes.eventHandlers.LF_DisplayInteger(e, widgets.adders.KUL_CODE);
+        });
+        /*-------------------------------------------------------------------*/
         /*                  I n i t   D i s p l a y J S O N                  */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_DisplayJSON(widgets.setters.KUL_CODE, widgets.adders.KUL_CODE);
@@ -108,6 +129,13 @@ export class LFManager {
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_DisplayPrimitiveAsJSON(widgets.setters.KUL_CODE);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.displayPrimitiveAsJson, (e) => {
             nodes.eventHandlers.LF_DisplayPrimitiveAsJSON(e, widgets.adders.KUL_CODE);
+        });
+        /*-------------------------------------------------------------------*/
+        /*                I n i t   D i s p l a y S t r i n g                */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_DisplayString(widgets.setters.KUL_CODE, widgets.adders.KUL_CODE);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.displayString, (e) => {
+            nodes.eventHandlers.LF_DisplayString(e, widgets.adders.KUL_CODE);
         });
         /*-------------------------------------------------------------------*/
         /*                        I n i t   F l o a t                        */

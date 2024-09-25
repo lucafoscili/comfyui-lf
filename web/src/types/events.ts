@@ -13,8 +13,12 @@ export enum EventName {
   boolean = 'lf-boolean',
   civitAIMetadataSetup = 'lf-civitaimetadatasetup',
   controlPanel = 'lf-controlpanel',
+  displayBoolean = 'lf-displayboolean',
+  displayFloat = 'lf-displayfloat',
+  displayInteger = 'lf-displayinteger',
   displayJson = 'lf-displayjson',
   displayPrimitiveAsJson = 'lf-displayprimitiveasjson',
+  displayString = 'lf-displaystring',
   extractor = 'lf-extractor',
   float = 'lf-float',
   imageListFromJSON = 'lf-imagelistfromjson',
@@ -42,6 +46,7 @@ export type EventPayload =
   | BlurImagesPayload
   | BooleanPayload
   | CivitAIMetadataSetupPayload
+  | DisplayBooleanPayload
   | DisplayJSONPayload
   | ExtractorPayload
   | FloatPayload
@@ -99,11 +104,43 @@ export interface DisplayPrimitiveAsJSONPayload extends BaseEventPayload {
 }
 
 /*-------------------------------------------------------------------*/
+/*       D i s p l a y B o o l e a n   D e c l a r a t i o n s       */
+/*-------------------------------------------------------------------*/
+
+export interface DisplayBooleanPayload extends BaseEventPayload {
+  value: string;
+}
+
+/*-------------------------------------------------------------------*/
+/*         D i s p l a y F l o a t   D e c l a r a t i o n s         */
+/*-------------------------------------------------------------------*/
+
+export interface DisplayFloatPayload extends BaseEventPayload {
+  value: string;
+}
+
+/*-------------------------------------------------------------------*/
+/*       D i s p l a y I n t e g e r   D e c l a r a t i o n s       */
+/*-------------------------------------------------------------------*/
+
+export interface DisplayIntegerPayload extends BaseEventPayload {
+  value: string;
+}
+
+/*-------------------------------------------------------------------*/
 /*         D i s p l a y J S O N   D e c l a r a t i o n s           */
 /*-------------------------------------------------------------------*/
 
 export interface DisplayJSONPayload extends BaseEventPayload {
   json: Record<string, unknown>;
+}
+
+/*-------------------------------------------------------------------*/
+/*        D i s p l a y S t r i n g   D e c l a r a t i o n s        */
+/*-------------------------------------------------------------------*/
+
+export interface DisplayStringPayload extends BaseEventPayload {
+  value: string;
 }
 
 /*-------------------------------------------------------------------*/

@@ -31,6 +31,10 @@ import { imageListFromJsonFactory } from '../nodes/imageListFromJson.js';
 import { loadFileOnceFactory } from '../nodes/loadFileOnce.js';
 import { extractorFactory } from '../nodes/extractor.js';
 import { resolutionSwitcherFactory } from '../nodes/resolutionSwitcher.js';
+import { displayBooleanFactory } from '../nodes/displayBoolean.js';
+import { displayFloatFactory } from '../nodes/displayFloat.js';
+import { displayIntegerFactory } from '../nodes/displayInteger.js';
+import { displayStringFactory } from '../nodes/displayString.js';
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
 /*-------------------------------------------------*/
@@ -40,8 +44,12 @@ export class LFNodes {
             [NodeName.blurImages]: blurImagesFactory.eventHandler,
             [NodeName.boolean]: booleanFactory.eventHandler,
             [NodeName.civitaiMetadataSetup]: civitaiMetadataSetupFactory.eventHandler,
+            [NodeName.displayBoolean]: displayBooleanFactory.eventHandler,
+            [NodeName.displayFloat]: displayFloatFactory.eventHandler,
+            [NodeName.displayInteger]: displayIntegerFactory.eventHandler,
             [NodeName.displayJson]: displayJsonFactory.eventHandler,
             [NodeName.displayPrimitiveAsJson]: displayPrimitiveAsJsonFactory.eventHandler,
+            [NodeName.displayString]: displayStringFactory.eventHandler,
             [NodeName.float]: floatFactory.eventHandler,
             [NodeName.extractor]: extractorFactory.eventHandler,
             [NodeName.imageListFromJSON]: imageListFromJsonFactory.eventHandler,
@@ -70,8 +78,12 @@ export class LFNodes {
             [NodeName.boolean]: booleanFactory.register,
             [NodeName.civitaiMetadataSetup]: civitaiMetadataSetupFactory.register,
             [NodeName.controlPanel]: controlPanelFactory.register,
+            [NodeName.displayBoolean]: displayBooleanFactory.register,
+            [NodeName.displayFloat]: displayFloatFactory.register,
+            [NodeName.displayInteger]: displayIntegerFactory.register,
             [NodeName.displayJson]: displayJsonFactory.register,
             [NodeName.displayPrimitiveAsJson]: displayPrimitiveAsJsonFactory.register,
+            [NodeName.displayString]: displayStringFactory.register,
             [NodeName.float]: floatFactory.register,
             [NodeName.extractor]: extractorFactory.register,
             [NodeName.imageListFromJSON]: imageListFromJsonFactory.register,

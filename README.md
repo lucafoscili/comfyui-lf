@@ -223,10 +223,30 @@ Returns one of two string values based on a boolean condition.
 Used to select a boolean. It keeps record of old values, displaying a clickable list below the widget.
 ![Boolean](https://github.com/lucafoscili/comfyui-lf/blob/7deb085a3649ec873435cb092308c4e7a01cefe9/docs/images/Boolean.png "Boolean node with history")
 
+#### DisplayBoolean
+
+Displays the value of a boolean in a widget.
+![DisplayBoolean](https://github.com/lucafoscili/comfyui-lf/blob/8f37015be9e81511fd159e59a468e12a251f54ef/docs/images/DisplayBoolean.png "Boolean value displayed")
+
+#### DisplayFloat
+
+Displays the value of a float in a widget.
+![DisplayFloat](https://github.com/lucafoscili/comfyui-lf/blob/8f37015be9e81511fd159e59a468e12a251f54ef/docs/images/DisplayFloat.png "Float value displayed")
+
+#### DisplayInteger
+
+Displays the value of a integer in a widget.
+![DisplayInteger](https://github.com/lucafoscili/comfyui-lf/blob/8f37015be9e81511fd159e59a468e12a251f54ef/docs/images/DisplayInteger.png "Integer value displayed")
+
 #### DisplayPrimitiveAsJSON
 
 Displays different primitive values as a JSON output or directly in-widget through a tree-like view.
 ![DisplayPrimitiveAsJSON](https://github.com/lucafoscili/comfyui-lf/blob/e2d71390d90b44841cf2080afcfd3869793de573/docs/images/DisplayPrimitiveAsJSON.png "Primitive values displayed as JSON")
+
+#### DisplayString
+
+Displays the value of a string in a widget.
+![DisplayString](https://github.com/lucafoscili/comfyui-lf/blob/8f37015be9e81511fd159e59a468e12a251f54ef/docs/images/DisplayString.png "String value displayed")
 
 #### Float
 
