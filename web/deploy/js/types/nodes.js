@@ -25,6 +25,7 @@ export var NodeName;
     NodeName["randomBoolean"] = "LF_RandomBoolean";
     NodeName["resizeImageByEdge"] = "LF_ResizeImageByEdge";
     NodeName["resizeImageToSquare"] = "LF_ResizeImageToSquare";
+    NodeName["resolutionSwitcher"] = "LF_ResolutionSwitcher";
     NodeName["saveImageForCivitai"] = "LF_SaveImageForCivitAI";
     NodeName["string"] = "LF_String";
     NodeName["switchFloat"] = "LF_SwitchFloat";

@@ -3,7 +3,7 @@ export declare const rollViewerFactory: {
     cssClasses: {
         content: string;
     };
-    options: (rollViewer: HTMLKulProgressbarElement) => RollViewerWidgetOptions;
+    options: (rollViewer: HTMLKulProgressbarElement, nodeType: NodeType) => RollViewerWidgetOptions;
     render: (node: NodeType, name: CustomWidgetName) => {
         widget: Widget;
     };

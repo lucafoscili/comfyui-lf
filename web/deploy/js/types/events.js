@@ -18,6 +18,7 @@ export var EventName;
     EventName["randomBoolean"] = "lf-randomboolean";
     EventName["resizeimageByEdge"] = "lf-resizeimagebyedge";
     EventName["resizeimageToSquare"] = "lf-resizeimagetosquare";
+    EventName["resolutionSwitcher"] = "lf-resolutionswitcher";
     EventName["saveImageForCivitAI"] = "lf-saveimageforcivitai";
     EventName["string"] = "lf-string";
     EventName["switchFloat"] = "lf-switchfloat";

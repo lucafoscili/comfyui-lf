@@ -27,6 +27,7 @@ export enum NodeName {
   randomBoolean = 'LF_RandomBoolean',
   resizeImageByEdge = 'LF_ResizeImageByEdge',
   resizeImageToSquare = 'LF_ResizeImageToSquare',
+  resolutionSwitcher = 'LF_ResolutionSwitcher',
   saveImageForCivitai = 'LF_SaveImageForCivitAI',
   string = 'LF_String',
   switchFloat = 'LF_SwitchFloat',

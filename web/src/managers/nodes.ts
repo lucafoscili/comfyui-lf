@@ -31,6 +31,7 @@ import { displayPrimitiveAsJsonFactory } from '../nodes/displayPrimitiveAsJson';
 import { imageListFromJsonFactory } from '../nodes/imageListFromJson';
 import { loadFileOnceFactory } from '../nodes/loadFileOnce';
 import { extractorFactory } from '../nodes/extractor';
+import { resolutionSwitcherFactory } from '../nodes/resolutionSwitcher';
 
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
@@ -55,6 +56,7 @@ export class LFNodes {
     [NodeName.randomBoolean]: randomBooleanFactory.eventHandler,
     [NodeName.resizeImageByEdge]: resizeImageByEdgeFactory.eventHandler,
     [NodeName.resizeImageToSquare]: resizeImageToSquareFactory.eventHandler,
+    [NodeName.resolutionSwitcher]: resolutionSwitcherFactory.eventHandler,
     [NodeName.saveImageForCivitai]: saveImageForCivitaiFactory.eventHandler,
     [NodeName.string]: stringFactory.eventHandler,
     [NodeName.switchFloat]: switchFloatFactory.eventHandler,
@@ -89,6 +91,7 @@ export class LFNodes {
     [NodeName.randomBoolean]: randomBooleanFactory.register,
     [NodeName.resizeImageByEdge]: resizeImageByEdgeFactory.register,
     [NodeName.resizeImageToSquare]: resizeImageToSquareFactory.register,
+    [NodeName.resolutionSwitcher]: resolutionSwitcherFactory.register,
     [NodeName.saveImageForCivitai]: saveImageForCivitaiFactory.register,
     [NodeName.string]: stringFactory.register,
     [NodeName.switchFloat]: switchFloatFactory.register,

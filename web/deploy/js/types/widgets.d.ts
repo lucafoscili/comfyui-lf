@@ -276,7 +276,6 @@ export interface RollViewerWidgetOptions {
     hideOnZoom: boolean;
     getComp(): HTMLKulProgressbarElement;
     getValue(): RollViewerWidgetValue;
-    setProps(props: Partial<HTMLKulProgressbarElement>): void;
     setValue(value: RollViewerWidgetValue): void;
 }
 export declare type RollViewerWidgetSetter = () => {

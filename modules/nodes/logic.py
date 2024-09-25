@@ -1,6 +1,49 @@
+import random
+
 from server import PromptServer
 
 category = "✨ LF Nodes/Logic"
+
+class LF_ResolutionSwitcher:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "chance_landscape": ("FLOAT", {"default": 20.0, "step": 1, "min": 0, "max": 100, "tooltip": "Percentage chance for landscape output, 0-100."}),
+                "portrait_width": ("INT", {"default": 832, "min": 1, "step": 1}),
+                "portrait_height": ("INT", {"default": 1216, "min": 1, "step": 1}),
+                "landscape_width": ("INT", {"default": 1216, "min": 1, "step": 1}),
+                "landscape_height": ("INT", {"default": 832, "min": 1, "step": 1}),
+            },
+            "hidden": { "node_id": "UNIQUE_ID" }
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    RETURN_NAMES = ("width", "height", "is_landscape")
+    RETURN_TYPES = ("INT", "INT", "BOOLEAN")
+
+    def on_exec(self, node_id, chance_landscape: float, portrait_width: int, portrait_height: int, landscape_width: int, landscape_height: int):
+        chance_landscape = max(0, min(100, chance_landscape))
+        random_value = random.uniform(0, 100)
+
+        is_landscape = random_value <= chance_landscape
+
+        width = landscape_width if is_landscape else portrait_width
+        height = landscape_height if is_landscape else portrait_height
+
+        PromptServer.instance.send_sync("lf-resolutionswitcher", {
+            "node": node_id, 
+            "bool": is_landscape,
+            "chanceTrue": chance_landscape,
+            "roll": random_value,
+        })
+
+        return (width, height, is_landscape)
+
+    @classmethod
+    def IS_CHANGED(cls, **kwargs):
+        return float("NaN")
 
 class LF_SwitchFloat:
     @classmethod
@@ -163,6 +206,7 @@ class LF_SwitchString:
         return (on_true if boolean else on_false,)
     
 NODE_CLASS_MAPPINGS = {
+    "LF_ResolutionSwitcher": LF_ResolutionSwitcher,
     "LF_SwitchFloat": LF_SwitchFloat,
     "LF_SwitchImage": LF_SwitchImage,
     "LF_SwitchInteger": LF_SwitchInteger,
@@ -170,6 +214,7 @@ NODE_CLASS_MAPPINGS = {
     "LF_SwitchString": LF_SwitchString,
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
+    "LF_ResolutionSwitcher": "Resolution switcher",
     "LF_SwitchFloat": "Switch Float",
     "LF_SwitchImage": "Switch Image",
     "LF_SwitchInteger": "Switch Integer",

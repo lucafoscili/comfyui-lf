@@ -217,6 +217,13 @@ export class LFManager {
             nodes.eventHandlers.LF_ResizeImageToSquare(e, widgets.adders.KUL_TREE);
         });
         /*-------------------------------------------------------------------*/
+        /*           I n i t   R e s o l u t i o n S w i t c h e r           */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_ResolutionSwitcher(widgets.setters.KUL_ROLL_VIEWER, widgets.adders.KUL_ROLL_VIEWER);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.resolutionSwitcher, (e) => {
+            nodes.eventHandlers.LF_ResolutionSwitcher(e, widgets.adders.KUL_ROLL_VIEWER);
+        });
+        /*-------------------------------------------------------------------*/
         /*          I n i t   S a v e I m a g e F o r C i v i t A I          */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_SaveImageForCivitAI(widgets.setters.KUL_IMAGE_PREVIEW_B64, widgets.adders.KUL_IMAGE_PREVIEW_B64);

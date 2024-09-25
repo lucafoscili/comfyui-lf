@@ -22,6 +22,7 @@ export declare enum EventName {
     randomBoolean = "lf-randomboolean",
     resizeimageByEdge = "lf-resizeimagebyedge",
     resizeimageToSquare = "lf-resizeimagetosquare",
+    resolutionSwitcher = "lf-resolutionswitcher",
     saveImageForCivitAI = "lf-saveimageforcivitai",
     string = "lf-string",
     switchFloat = "lf-switchfloat",
@@ -32,7 +33,7 @@ export declare enum EventName {
     urandomSeedGenerator = "lf-urandomseedgenerator",
     writeJson = "lf-writejson"
 }
-export type EventPayload = BlurImagesPayload | BooleanPayload | CivitAIMetadataSetupPayload | DisplayJSONPayload | ExtractorPayload | FloatPayload | ImageListFromJSONPayload | ImageHistogramPayload | IntegerPayload | KeywordCounterPayload | LoadImagesPayload | MultipleImageResizeForWebPayload | RandomBooleanPayload | ResizeImageByEdgePayload | ResizeImageToSquarePayload | SaveImageForCivitAIPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | UrandomSeedGeneratorPayload | WriteJSONPayload;
+export type EventPayload = BlurImagesPayload | BooleanPayload | CivitAIMetadataSetupPayload | DisplayJSONPayload | ExtractorPayload | FloatPayload | ImageListFromJSONPayload | ImageHistogramPayload | IntegerPayload | KeywordCounterPayload | LoadImagesPayload | MultipleImageResizeForWebPayload | RandomBooleanPayload | ResizeImageByEdgePayload | ResizeImageToSquarePayload | ResolutionSwitcherPayload | SaveImageForCivitAIPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | UrandomSeedGeneratorPayload | WriteJSONPayload;
 export interface BlurImagesPayload extends BaseEventPayload {
     fileNames: Array<string>;
     images: Array<string>;
@@ -98,6 +99,10 @@ export interface ResizeImageByEdgePayload extends BaseEventPayload {
 }
 export interface ResizeImageToSquarePayload extends BaseEventPayload {
     dataset: KulDataDataset;
+}
+export interface ResolutionSwitcherPayload extends BaseEventPayload {
+    bool: boolean;
+    roll: number;
 }
 export interface SaveImageForCivitAIPayload extends BaseEventPayload {
     fileNames: Array<string>;

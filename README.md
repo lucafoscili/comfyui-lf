@@ -186,6 +186,11 @@ Together with the biography, they define the identity of the LLM.
 
 ### Logic nodes (`logic.py`)
 
+#### ResolutionSwitcher
+
+Selects a random resolution between portrait and landscape orientations. The chances for landscape to occur can be set with a percentage.
+![ResolutionSwitcher](https://github.com/lucafoscili/comfyui-lf/blob/5882f6809e687b4296719e376db34482dd8fd840/docs/images/ResolutionSwitcher.png "Resolution was set to landscape")
+
 #### SwitchFloat
 
 Returns one of two float values depending on a boolean condition.
