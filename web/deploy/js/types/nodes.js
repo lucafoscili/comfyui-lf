@@ -9,6 +9,7 @@ export var NodeName;
     NodeName["controlPanel"] = "LF_ControlPanel";
     NodeName["displayBoolean"] = "LF_DisplayBoolean";
     NodeName["displayFloat"] = "LF_DisplayFloat";
+    NodeName["displayInteger"] = "LF_DisplayInteger";
     NodeName["displayJson"] = "LF_DisplayJSON";
     NodeName["displayPrimitiveAsJson"] = "LF_DisplayPrimitiveAsJSON";
     NodeName["float"] = "LF_Float";

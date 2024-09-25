@@ -6,6 +6,7 @@ export var EventName;
     EventName["controlPanel"] = "lf-controlpanel";
     EventName["displayBoolean"] = "lf-displayboolean";
     EventName["displayFloat"] = "lf-displayfloat";
+    EventName["displayInteger"] = "lf-displayinteger";
     EventName["displayJson"] = "lf-displayjson";
     EventName["displayPrimitiveAsJson"] = "lf-displayprimitiveasjson";
     EventName["extractor"] = "lf-extractor";

@@ -11,6 +11,7 @@ export enum NodeName {
   controlPanel = 'LF_ControlPanel',
   displayBoolean = 'LF_DisplayBoolean',
   displayFloat = 'LF_DisplayFloat',
+  displayInteger = 'LF_DisplayInteger',
   displayJson = 'LF_DisplayJSON',
   displayPrimitiveAsJson = 'LF_DisplayPrimitiveAsJSON',
   float = 'LF_Float',

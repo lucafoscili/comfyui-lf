@@ -233,6 +233,11 @@ Displays the value of a boolean in a widget.
 Displays the value of a float in a widget.
 ![DisplayFloat](https://github.com/lucafoscili/comfyui-lf/blob/e2d71390d90b44841cf2080afcfd3869793de573/docs/images/DisplayFloat.png "Float value displayed")
 
+#### DisplayInteger
+
+Displays the value of a integer in a widget.
+![DisplayInteger](https://github.com/lucafoscili/comfyui-lf/blob/e2d71390d90b44841cf2080afcfd3869793de573/docs/images/DisplayInteger.png "Integer value displayed")
+
 #### DisplayPrimitiveAsJSON
 
 Displays different primitive values as a JSON output or directly in-widget through a tree-like view.

@@ -10,6 +10,7 @@ export declare enum EventName {
     controlPanel = "lf-controlpanel",
     displayBoolean = "lf-displayboolean",
     displayFloat = "lf-displayfloat",
+    displayInteger = "lf-displayinteger",
     displayJson = "lf-displayjson",
     displayPrimitiveAsJson = "lf-displayprimitiveasjson",
     extractor = "lf-extractor",
@@ -54,6 +55,9 @@ export interface DisplayBooleanPayload extends BaseEventPayload {
     value: string;
 }
 export interface DisplayFloatPayload extends BaseEventPayload {
+    value: string;
+}
+export interface DisplayIntegerPayload extends BaseEventPayload {
     value: string;
 }
 export interface DisplayJSONPayload extends BaseEventPayload {
