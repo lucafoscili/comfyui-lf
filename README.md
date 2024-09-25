@@ -243,6 +243,11 @@ Displays the value of a integer in a widget.
 Displays different primitive values as a JSON output or directly in-widget through a tree-like view.
 ![DisplayPrimitiveAsJSON](https://github.com/lucafoscili/comfyui-lf/blob/e2d71390d90b44841cf2080afcfd3869793de573/docs/images/DisplayPrimitiveAsJSON.png "Primitive values displayed as JSON")
 
+#### DisplayString
+
+Displays the value of a string in a widget.
+![DisplayString](https://github.com/lucafoscili/comfyui-lf/blob/e2d71390d90b44841cf2080afcfd3869793de573/docs/images/DisplayString.png "String value displayed")
+
 #### Float
 
 Used to select a float. It keeps record of old values, displaying a clickable list below the widget.

@@ -12,6 +12,7 @@ export var NodeName;
     NodeName["displayInteger"] = "LF_DisplayInteger";
     NodeName["displayJson"] = "LF_DisplayJSON";
     NodeName["displayPrimitiveAsJson"] = "LF_DisplayPrimitiveAsJSON";
+    NodeName["displayString"] = "LF_DisplayString";
     NodeName["float"] = "LF_Float";
     NodeName["extractor"] = "LF_Extractor";
     NodeName["imageListFromJSON"] = "LF_ImageListFromJSON";

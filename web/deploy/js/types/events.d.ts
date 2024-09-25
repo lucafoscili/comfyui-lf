@@ -13,6 +13,7 @@ export declare enum EventName {
     displayInteger = "lf-displayinteger",
     displayJson = "lf-displayjson",
     displayPrimitiveAsJson = "lf-displayprimitiveasjson",
+    displayString = "lf-displaystring",
     extractor = "lf-extractor",
     float = "lf-float",
     imageListFromJSON = "lf-imagelistfromjson",
@@ -62,6 +63,9 @@ export interface DisplayIntegerPayload extends BaseEventPayload {
 }
 export interface DisplayJSONPayload extends BaseEventPayload {
     json: Record<string, unknown>;
+}
+export interface DisplayStringPayload extends BaseEventPayload {
+    value: string;
 }
 export interface ExtractorPayload extends BaseEventPayload {
     result: string;

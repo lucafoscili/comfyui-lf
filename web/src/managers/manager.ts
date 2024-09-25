@@ -40,6 +40,7 @@ import {
   DisplayBooleanPayload,
   DisplayFloatPayload,
   DisplayIntegerPayload,
+  DisplayStringPayload,
 } from '../types/events.js';
 
 /*-------------------------------------------------*/
@@ -202,6 +203,16 @@ export class LFManager {
         nodes.eventHandlers.LF_DisplayPrimitiveAsJSON(e, widgets.adders.KUL_CODE);
       },
     );
+    /*-------------------------------------------------------------------*/
+    /*                I n i t   D i s p l a y S t r i n g                */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_DisplayString(
+      widgets.setters.KUL_CODE,
+      widgets.adders.KUL_CODE,
+    );
+    this.#APIS.event(EventName.displayString, (e: CustomEvent<DisplayStringPayload>) => {
+      nodes.eventHandlers.LF_DisplayString(e, widgets.adders.KUL_CODE);
+    });
     /*-------------------------------------------------------------------*/
     /*                        I n i t   F l o a t                        */
     /*-------------------------------------------------------------------*/

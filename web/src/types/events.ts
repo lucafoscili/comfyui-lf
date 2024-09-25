@@ -18,6 +18,7 @@ export enum EventName {
   displayInteger = 'lf-displayinteger',
   displayJson = 'lf-displayjson',
   displayPrimitiveAsJson = 'lf-displayprimitiveasjson',
+  displayString = 'lf-displaystring',
   extractor = 'lf-extractor',
   float = 'lf-float',
   imageListFromJSON = 'lf-imagelistfromjson',
@@ -132,6 +133,14 @@ export interface DisplayIntegerPayload extends BaseEventPayload {
 
 export interface DisplayJSONPayload extends BaseEventPayload {
   json: Record<string, unknown>;
+}
+
+/*-------------------------------------------------------------------*/
+/*        D i s p l a y S t r i n g   D e c l a r a t i o n s        */
+/*-------------------------------------------------------------------*/
+
+export interface DisplayStringPayload extends BaseEventPayload {
+  value: string;
 }
 
 /*-------------------------------------------------------------------*/

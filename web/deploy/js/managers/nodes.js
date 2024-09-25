@@ -34,6 +34,7 @@ import { resolutionSwitcherFactory } from '../nodes/resolutionSwitcher.js';
 import { displayBooleanFactory } from '../nodes/displayBoolean.js';
 import { displayFloatFactory } from '../nodes/displayFloat.js';
 import { displayIntegerFactory } from '../nodes/displayInteger.js';
+import { displayStringFactory } from '../nodes/displayString.js';
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
 /*-------------------------------------------------*/
@@ -48,6 +49,7 @@ export class LFNodes {
             [NodeName.displayInteger]: displayIntegerFactory.eventHandler,
             [NodeName.displayJson]: displayJsonFactory.eventHandler,
             [NodeName.displayPrimitiveAsJson]: displayPrimitiveAsJsonFactory.eventHandler,
+            [NodeName.displayString]: displayStringFactory.eventHandler,
             [NodeName.float]: floatFactory.eventHandler,
             [NodeName.extractor]: extractorFactory.eventHandler,
             [NodeName.imageListFromJSON]: imageListFromJsonFactory.eventHandler,
@@ -81,6 +83,7 @@ export class LFNodes {
             [NodeName.displayInteger]: displayIntegerFactory.register,
             [NodeName.displayJson]: displayJsonFactory.register,
             [NodeName.displayPrimitiveAsJson]: displayPrimitiveAsJsonFactory.register,
+            [NodeName.displayString]: displayStringFactory.register,
             [NodeName.float]: floatFactory.register,
             [NodeName.extractor]: extractorFactory.register,
             [NodeName.imageListFromJSON]: imageListFromJsonFactory.register,

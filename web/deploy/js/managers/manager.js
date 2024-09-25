@@ -131,6 +131,13 @@ export class LFManager {
             nodes.eventHandlers.LF_DisplayPrimitiveAsJSON(e, widgets.adders.KUL_CODE);
         });
         /*-------------------------------------------------------------------*/
+        /*                I n i t   D i s p l a y S t r i n g                */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_DisplayString(widgets.setters.KUL_CODE, widgets.adders.KUL_CODE);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.displayString, (e) => {
+            nodes.eventHandlers.LF_DisplayString(e, widgets.adders.KUL_CODE);
+        });
+        /*-------------------------------------------------------------------*/
         /*                        I n i t   F l o a t                        */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_Float(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);

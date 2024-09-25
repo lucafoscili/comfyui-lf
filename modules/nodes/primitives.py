@@ -105,6 +105,31 @@ class LF_DisplayInteger:
 
         return (integer,)
     
+class LF_DisplayString:
+    @classmethod 
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "string": ("STRING", {"default": "", "forceInput": True, "tooltip": "String value."}),
+            },
+            "hidden": { "node_id": "UNIQUE_ID" }
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    OUTPUT_NODE = True
+    RETURN_NAMES = ("string",)
+    RETURN_TYPES = ("STRING",)
+
+    def on_exec(self, node_id, string):
+
+        PromptServer.instance.send_sync("lf-displaystring", {
+            "node": node_id, 
+            "value": string,
+        })
+
+        return (string,)
+    
 class LF_DisplayPrimitiveAsJSON:
     @classmethod
     def INPUT_TYPES(cls):
@@ -274,6 +299,7 @@ NODE_CLASS_MAPPINGS = {
     "LF_DisplayFloat": LF_DisplayFloat,
     "LF_DisplayInteger": LF_DisplayInteger,
     "LF_DisplayPrimitiveAsJSON": LF_DisplayPrimitiveAsJSON,
+    "LF_DisplayString": LF_DisplayString,
     "LF_Float": LF_Float,
     "LF_Integer": LF_Integer,
     "LF_RandomBoolean": LF_RandomBoolean,
@@ -285,8 +311,9 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_DisplayFloat": "Display float",
     "LF_DisplayInteger": "Display integer",
     "LF_DisplayPrimitiveAsJSON": "Display primitive as JSON",
+    "LF_DisplayString": "Display string",
     "LF_Float": "Float",
     "LF_Integer": "Integer",
     "LF_RandomBoolean": "Random boolean",
     "LF_String": "String"
-}
+}             

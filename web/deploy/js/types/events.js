@@ -9,6 +9,7 @@ export var EventName;
     EventName["displayInteger"] = "lf-displayinteger";
     EventName["displayJson"] = "lf-displayjson";
     EventName["displayPrimitiveAsJson"] = "lf-displayprimitiveasjson";
+    EventName["displayString"] = "lf-displaystring";
     EventName["extractor"] = "lf-extractor";
     EventName["float"] = "lf-float";
     EventName["imageListFromJSON"] = "lf-imagelistfromjson";
