@@ -170,8 +170,10 @@ class LF_LLMMessenger:
     FUNCTION = "on_exec"
     RETURN_NAMES = ("chat_history_json", "chat_history_string", 
                     "last_message", "last_user_message", "last_llm_message", "styled_prompt", 
-                    "character_name", "outfit_name", "location_name", "style_name")
-    RETURN_TYPES = ("JSON", "STRING", "STRING", "STRING", "STRING", "STRING", "STRING", "STRING", "STRING", "STRING")
+                    "character_name", "outfit_name", "location_name", "style_name", "timeframe_name")
+    RETURN_TYPES = ("JSON", "STRING", 
+                    "STRING", "STRING", "STRING", "STRING", 
+                    "STRING", "STRING", "STRING", "STRING", "STRING")
 
     def on_exec(self, **kwargs):
         messenger = kwargs["messenger"]
@@ -226,10 +228,12 @@ class LF_LLMMessenger:
             style_root = find_node_by_id(character_data["children"], "styles")
             location_root = find_node_by_id(character_data["children"], "locations")
             outfit_root = find_node_by_id(character_data["children"], "outfits")
+            timeframe_root = find_node_by_id(character_data["children"], "timeframes")
 
             style_node = style_root['children'][style_root["value"]]
             location_node = location_root['children'][location_root["value"]]
             outfit_node = outfit_root['children'][outfit_root["value"]]
+            timeframe_node = timeframe_root['children'][timeframe_root["value"]]
 
             style_str = f"{style_node['value']}"
             style_name = style_str
@@ -237,6 +241,8 @@ class LF_LLMMessenger:
             location_name = location_str
             outfit_str = f"{outfit_node['value']}" if outfit_node else ""
             outfit_name = outfit_str
+            timeframe_str = f"{timeframe_node['value']}" if timeframe_node else ""
+            timeframe_name = timeframe_str
 
             if 'description' in style_node:
                 style_str += f", {style_node['description']}"
@@ -244,6 +250,8 @@ class LF_LLMMessenger:
                 location_str += f", {location_node['description']}"
             if 'description' in outfit_node:
                 outfit_str += f", {outfit_node['description']}"
+            if 'description' in timeframe_node:
+                timeframe_str += f", {timeframe_node['description']}"
 
             if style_node and last_llm_message:
                 styled_prompt = f"Envision the scene described below from the viewer's point of view.\n"
@@ -252,17 +260,19 @@ class LF_LLMMessenger:
                 styled_prompt += f"Style of the image: {style_str}\n"
                 styled_prompt += f"{character_name}'s outfit: \"{outfit_str}\"\n" if outfit_node else ""
                 styled_prompt += f"Location: \"{location_str}\"\n" if location_node else ""
+                styled_prompt += f"Timeframe: \"{timeframe_str}\"\n" if timeframe_node else ""
             else:
                 outfit_name = None
                 location_name = None
                 style_name = None
+                timeframe_name = None
                 styled_prompt = None
         except Exception as e:
             styled_prompt = str(e)
     
         return (chat_data, chat_history_string, 
                 last_message, last_user_message, last_llm_message, styled_prompt, 
-                character_name, outfit_name, location_name, style_name)
+                character_name, outfit_name, location_name, style_name, timeframe_name)
 
 
 NODE_CLASS_MAPPINGS = {
