@@ -187,7 +187,7 @@ const KulAccordion = class {
     }
     render() {
         this.#rippleSurface = {};
-        return (h(Host, { key: '74a42d8ad84bf282f2eed2f04a2208ff7f775271' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '0bf8d2d1ad005a4fd6ce48257b8a88f895803c79', id: KUL_WRAPPER_ID }, h("div", { key: '91629779442f28819a34b4f4d253c296962556a6', class: "accordion" }, this.#prepAccordion()))));
+        return (h(Host, { key: '1645f206dc2765124cb9fb3738f3644596df891b' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '8b39d315838d7de96589a33208c15132a0b83def', id: KUL_WRAPPER_ID }, h("div", { key: '652adbe8d8d49c1fec09364d5c7c9905e2c5a68c', class: "accordion" }, this.#prepAccordion()))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

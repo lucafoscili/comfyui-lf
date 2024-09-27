@@ -85496,7 +85496,7 @@ const KulChart = class {
             '--kul_chart_height': this.kulSizeY ? this.kulSizeY : '100%',
             '--kul_chart_width': this.kulSizeX ? this.kulSizeX : '100%',
         };
-        return (h(Host, { key: 'c17a65acd672db8f6df1b9b9796fba5c20a68e9b', style: style }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'b52b427013978f408f54b9e10703aba522e4d061', id: KUL_WRAPPER_ID, ref: (chartContainer) => (this.#chartContainer = chartContainer) })));
+        return (h(Host, { key: '2c4f75e599e89cc364ac4ccb1cfb983dbfe54559', style: style }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '7722f0707252188e59244676ea605c9d71c9f97e', id: KUL_WRAPPER_ID, ref: (chartContainer) => (this.#chartContainer = chartContainer) })));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

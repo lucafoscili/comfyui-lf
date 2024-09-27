@@ -298,7 +298,7 @@ const KulChip = class {
             'chip-set--filter': this.#isFilter(),
             'chip-set--input': this.#isInput(),
         };
-        return (h(Host, { key: 'e0c814860deb70f9b1df858853197679ce18489b' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '04998dc231ff6044010f1eb3908525093d804b9c', id: KUL_WRAPPER_ID }, h("div", { key: 'f6b9768ce4f9375ba49ed660b111a9d1937c6a7f', class: className, role: "grid" }, this.#prepChipSet()))));
+        return (h(Host, { key: '89c2fce4f843fa2894ced25c4484e592dd2a2d6e' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '326f1bf277e3c645efe9a97539abb9498f19f164', id: KUL_WRAPPER_ID }, h("div", { key: '95106c7192e3c4e392a0994a0c98559a8c087998', class: className, role: "grid" }, this.#prepChipSet()))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);
