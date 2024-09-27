@@ -1,12 +1,72 @@
 import folder_paths
 import os
 
+from PIL import Image
 from comfy.samplers import KSampler
+
 from ..utils.configuration import *
+from ..utils.conversions import pil_to_tensor, tensor_to_base64
 
 from server import PromptServer
 
 category = "✨ LF Nodes/Configuration"
+
+class LF_CheckpointSelector:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "checkpoint": (folder_paths.get_filename_list("checkpoints"), {"default": "None", "tooltip": "Checkpoint used to generate the image."}),
+            },
+            "hidden": { "node_id": "UNIQUE_ID" }
+        }
+    
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    RETURN_NAMES = ("checkpoint", "checkpoint_name", "checkpoint_image")
+    RETURN_TYPES = (folder_paths.get_filename_list("checkpoints"), "STRING", "IMAGE")
+
+    def find_checkpoint_image(self, checkpoint_path):
+        extensions = ["jpg", "jpeg", "JPEG", "png", "webp", "WEBP"]
+        
+        for ext in extensions:
+            image_path = f"{os.path.splitext(checkpoint_path)[0]}.{ext}"
+            if os.path.exists(image_path):
+                return image_path
+        return None
+
+    def on_exec(self, node_id, checkpoint):
+        checkpoint_path = folder_paths.get_full_path("checkpoints", checkpoint)
+        
+        try:
+            checkpoint_hash = get_sha256(checkpoint_path)
+        except Exception as e:
+            checkpoint_hash = "Unknown"
+            print(f"Error calculating hash for checkpoint: {e}")
+        
+        checkpoint_name = os.path.basename(checkpoint_path)
+        checkpoint_image_path = self.find_checkpoint_image(checkpoint_path)
+        
+        if checkpoint_image_path:
+            print(f"Found image for checkpoint: {checkpoint_image_path}")
+            
+            pil_image = Image.open(checkpoint_image_path)
+            checkpoint_tensor = pil_to_tensor(pil_image)
+            checkpoint_base64 = tensor_to_base64(checkpoint_tensor)
+            
+        else:
+            print("No image found for the checkpoint.")
+            checkpoint_base64 = "None"
+            checkpoint_tensor = None
+
+        PromptServer.instance.send_sync("lf-checkpointselector", {
+            "node": node_id, 
+            "hash": checkpoint_hash, 
+            "name": checkpoint_name, 
+            "image": checkpoint_base64, 
+        })
+
+        return (checkpoint, checkpoint_name, checkpoint_tensor)
 
 class LF_CivitAIMetadataSetup:
     @classmethod
@@ -162,12 +222,14 @@ class LF_WorkflowSettings:
         return (drawing_board, drawing_board_plus, drawing_board_minus, drawing_board_loras, random_seed, global_seed, batch_size, random_framing, random_pose, random_character, random_outfit, random_location, random_style, character_selector, outfit_selector, location_selector, style_selector, square_format, xtra, llm_prompt, character_lora_weight, additional_loras_weight, custom_images_urls, config_json_path)
 
 NODE_CLASS_MAPPINGS = {
+    "LF_CheckpointSelector": LF_CheckpointSelector,
     "LF_CivitAIMetadataSetup": LF_CivitAIMetadataSetup,
     "LF_ControlPanel": LF_ControlPanel,
     "LF_WorkflowSettings": LF_WorkflowSettings,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
+    "LF_CheckpointSelector": "Checkpoint selector",
     "LF_CivitAIMetadataSetup": "CivitAI metadata setup",
     "LF_ControlPanel": "Control panel",
     "LF_WorkflowSettings": "Workflow settings",
