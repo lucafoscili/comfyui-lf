@@ -1,4 +1,5 @@
 import { KulEventPayload } from '../types/ketchup-lite/components';
+import { KulCard } from '../types/ketchup-lite/components/kul-card/kul-card';
 import { LogSeverity } from '../types/manager';
 import { CardWidgetOptions, CustomWidgetName } from '../types/widgets';
 import { createDOMWidget, getLFManager, unescapeJson } from '../utils/common';
@@ -49,7 +50,7 @@ export const cardFactory = {
 
 const cardEventHandler = (e: CustomEvent<KulEventPayload>) => {
   const { comp, eventType } = e.detail;
-  const card = comp as HTMLKulCardElement;
+  const card = (comp as KulCard).rootElement as HTMLKulCardElement;
 
   switch (eventType) {
     case 'click':

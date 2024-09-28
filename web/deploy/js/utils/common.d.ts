@@ -1,9 +1,11 @@
 import type { KulDataDataset } from '../types/ketchup-lite/components';
-import { BaseWidgetCallback, ComfyWidgetMap, ComfyWidgetName, CustomWidgetMap, CustomWidgetName, CustomWidgetOptions } from '../types/widgets';
+import { BaseWidgetCallback, CardWidget, ComfyWidgetMap, ComfyWidgetName, CustomWidgetMap, CustomWidgetName, CustomWidgetOptions } from '../types/widgets';
 import { LogSeverity } from '../types/manager';
+import { CheckpointSelectorPayload } from '../types/events';
 export declare const areJSONEqual: (a: unknown, b: unknown) => boolean;
 export declare const capitalize: (input: string) => string;
 export declare const createDOMWidget: (name: string, type: CustomWidgetName, element: HTMLDivElement, node: NodeType, options?: CustomWidgetOptions) => Widget;
+export declare const fetchModelInfo: (widget: CardWidget, payload: CheckpointSelectorPayload, comp: HTMLKulCardElement) => void;
 export declare const findWidget: <T extends CustomWidgetName>(node: NodeType, type: T) => CustomWidgetMap[T];
 export declare const getApiRoutes: () => import("../types/manager").ComfyAPIs;
 export declare const getCustomWidget: <T extends CustomWidgetName>(node: NodeType, type: T, addW?: BaseWidgetCallback) => CustomWidgetMap[T];
