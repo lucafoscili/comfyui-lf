@@ -32,6 +32,7 @@ export enum ComfyWidgetName {
 }
 export type CustomWidgetMap = {
   [CustomWidgetName.booleanViewer]: BooleanViewerWidget;
+  [CustomWidgetName.card]: CardWidget;
   [CustomWidgetName.chat]: ChatWidget;
   [CustomWidgetName.chip]: ChipWidget;
   [CustomWidgetName.code]: CodeWidget;
@@ -48,6 +49,7 @@ export type CustomWidgetMap = {
 };
 export enum CustomWidgetName {
   booleanViewer = 'KUL_BOOLEAN_VIEWER',
+  card = 'KUL_CARD',
   chat = 'KUL_CHAT',
   chip = 'KUL_CHIP',
   code = 'KUL_CODE',
@@ -135,13 +137,31 @@ export interface BooleanViewerWidgetOptions {
   hideOnZoom: boolean;
   getComp(): HTMLKulTextfieldElement;
   getValue(): BooleanViewerWidgetValue;
-  setProps(props: Partial<HTMLKulTextfieldElement>): void;
   setValue(value: BooleanViewerWidgetValue): void;
 }
 export declare type BooleanViewerWidgetSetter = () => {
   [CustomWidgetName.booleanViewer]: BaseWidgetCallback;
 };
 export type BooleanViewerWidgetValue = string;
+
+/*-------------------------------------------------------------------*/
+/*                 C a r d   D e c l a r a t i o n s                 */
+/*-------------------------------------------------------------------*/
+
+export interface CardWidget extends Widget {
+  options: CardWidgetOptions;
+  type: [CustomWidgetName.card];
+}
+export interface CardWidgetOptions {
+  hideOnZoom: boolean;
+  getComp(): HTMLKulCardElement;
+  getValue(): string;
+  setValue(value: CardWidgetValue): void;
+}
+export type CardWidgetSetter = () => {
+  [CustomWidgetName.card]: BaseWidgetCallback;
+};
+export type CardWidgetValue = string | KulDataDataset;
 
 /*-------------------------------------------------------------------*/
 /*                 C h a t   D e c l a r a t i o n s                 */
@@ -155,7 +175,6 @@ export interface ChatWidgetOptions {
   hideOnZoom: boolean;
   getComp(): HTMLKulChatElement;
   getValue(): void;
-  setProps(props: Partial<HTMLKulChatElement>): void;
   setValue(history: string): void;
 }
 export type ChatWidgetSetter = () => {
@@ -233,7 +252,6 @@ export interface HistogramWidgetOptions {
   hideOnZoom: boolean;
   getComp(): HTMLKulChartElement;
   getValue(): string;
-  setProps(props: Partial<HTMLKulChartElement>): void;
   setValue(value: KulDataDataset | string): void;
 }
 export type HistogramWidgetSetter = () => {
@@ -381,7 +399,6 @@ export interface TreeWidgetOptions {
   hideOnZoom: boolean;
   getComp(): HTMLKulTreeElement;
   getValue(): TreeWidgetValue;
-  setProps(props: Partial<HTMLKulTreeElement>): void;
   setValue(value: TreeWidgetValue): void;
 }
 export declare type TreeWidgetSetter = () => {
@@ -401,7 +418,6 @@ export interface UploadWidgetOptions {
   hideOnZoom: boolean;
   getComp(): HTMLKulUploadElement;
   getValue(): UploadWidgetValue;
-  setProps(props: Partial<HTMLKulUploadElement>): void;
   setValue(value: UploadWidgetValue): void;
 }
 export declare type UploadWidgetSetter = () => {

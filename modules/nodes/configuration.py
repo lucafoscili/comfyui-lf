@@ -17,6 +17,7 @@ class LF_CheckpointSelector:
         return {
             "required": {
                 "checkpoint": (folder_paths.get_filename_list("checkpoints"), {"default": "None", "tooltip": "Checkpoint used to generate the image."}),
+                "get_civitai_info": ( "BOOLEAN", {"default": True, "tooltip": "Attempts to retrieve more info about the model from CivitAI."}),
             },
             "hidden": { "node_id": "UNIQUE_ID" }
         }
@@ -35,7 +36,7 @@ class LF_CheckpointSelector:
                 return image_path
         return None
 
-    def on_exec(self, node_id, checkpoint):
+    def on_exec(self, get_civitai_info, node_id, checkpoint):
         checkpoint_path = folder_paths.get_full_path("checkpoints", checkpoint)
         
         try:
@@ -59,11 +60,37 @@ class LF_CheckpointSelector:
             checkpoint_base64 = "None"
             checkpoint_tensor = None
 
+        dataset = {
+            "nodes": [
+                {
+                    "cells": {
+                        "icon": {
+                            "kulStyle": "img {object-fit: cover;}",
+                            "shape": "image",
+                            "value": "data:image/webp;base64," + checkpoint_base64 if checkpoint_image_path else "broken_image"
+                        },
+                        "text1": {
+                            "value": checkpoint_name
+                        },
+                        "text2": {
+                            "value": checkpoint_hash
+                        },
+                        "text3": {
+                            "value": "Selected checkpoint cover, hash and name. " +
+                              ("" if checkpoint_image_path 
+                                  else "Note: to set the cover, create an image with the same name of the checkpoint in its folder.")
+                        }
+                    },
+                    "id": checkpoint_name
+                }
+            ]
+        }
+
         PromptServer.instance.send_sync("lf-checkpointselector", {
             "node": node_id, 
-            "hash": checkpoint_hash, 
-            "name": checkpoint_name, 
-            "image": checkpoint_base64, 
+            "dataset": dataset,
+            "hash": checkpoint_hash,
+            "civitaiInfo": get_civitai_info
         })
 
         return (checkpoint, checkpoint_name, checkpoint_tensor)

@@ -18,14 +18,6 @@ export const booleanViewerFactory = {
       getValue() {
         return booleanViewer?.kulLabel;
       },
-      setProps(props: Partial<HTMLKulTextfieldElement>) {
-        for (const key in props) {
-          if (Object.prototype.hasOwnProperty.call(props, key)) {
-            const prop = props[key];
-            booleanViewer[prop] = prop;
-          }
-        }
-      },
       setValue(value: string) {
         const isFalse = value?.toLowerCase()?.includes('false');
         const isTrue = value?.toLowerCase()?.includes('true');

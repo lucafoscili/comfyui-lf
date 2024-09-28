@@ -11,6 +11,7 @@ export type EventCallback<T extends EventPayload> = (e: CustomEvent<T>) => void;
 export enum EventName {
   blurImages = 'lf-blurimages',
   boolean = 'lf-boolean',
+  checkpointSelector = 'lf-checkpointselector',
   civitAIMetadataSetup = 'lf-civitaimetadatasetup',
   controlPanel = 'lf-controlpanel',
   displayBoolean = 'lf-displayboolean',
@@ -45,6 +46,7 @@ export enum EventName {
 export type EventPayload =
   | BlurImagesPayload
   | BooleanPayload
+  | CheckpointSelectorPayload
   | CivitAIMetadataSetupPayload
   | DisplayBooleanPayload
   | DisplayJSONPayload
@@ -85,6 +87,16 @@ export interface BlurImagesPayload extends BaseEventPayload {
 export interface BooleanPayload extends BaseEventPayload {
   isHistoryEnabled: boolean;
   value: boolean;
+}
+
+/*-------------------------------------------------------------------*/
+/*   C h e c k p o i n t S e l e c t o r   D e c l a r a t i o n s   */
+/*-------------------------------------------------------------------*/
+
+export interface CheckpointSelectorPayload extends BaseEventPayload {
+  dataset: KulDataDataset;
+  hash: string;
+  civitaiInfo: boolean;
 }
 
 /*-------------------------------------------------------------------*/

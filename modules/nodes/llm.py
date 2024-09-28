@@ -230,27 +230,27 @@ class LF_LLMMessenger:
             outfit_root = find_node_by_id(character_data["children"], "outfits")
             timeframe_root = find_node_by_id(character_data["children"], "timeframes")
 
-            style_node = style_root['children'][style_root["value"]]
-            location_node = location_root['children'][location_root["value"]]
-            outfit_node = outfit_root['children'][outfit_root["value"]]
-            timeframe_node = timeframe_root['children'][timeframe_root["value"]]
+            style_node = style_root['children'][style_root["value"]] if style_root and 'children' in style_root and style_root["value"] < len(style_root['children']) else None
+            location_node = location_root['children'][location_root["value"]] if location_root and 'children' in location_root and location_root["value"] < len(location_root['children']) else None
+            outfit_node = outfit_root['children'][outfit_root["value"]] if outfit_root and 'children' in outfit_root and outfit_root["value"] < len(outfit_root['children']) else None
+            timeframe_node = timeframe_root['children'][timeframe_root["value"]] if timeframe_root and 'children' in timeframe_root and timeframe_root["value"] < len(timeframe_root['children']) else None
 
-            style_str = f"{style_node['value']}"
+            style_str = f"{style_node['value']}" if style_node else "No style"
             style_name = style_str
-            location_str = f"{location_node['value']}" if location_node else ""
+            location_str = f"{location_node['value']}" if location_node else "No location"
             location_name = location_str
-            outfit_str = f"{outfit_node['value']}" if outfit_node else ""
+            outfit_str = f"{outfit_node['value']}" if outfit_node else "No outfit"
             outfit_name = outfit_str
-            timeframe_str = f"{timeframe_node['value']}" if timeframe_node else ""
+            timeframe_str = f"{timeframe_node['value']}" if timeframe_node else "No timeframe"
             timeframe_name = timeframe_str
 
-            if 'description' in style_node:
+            if style_node and 'description' in style_node:
                 style_str += f", {style_node['description']}"
-            if 'description' in location_node:
+            if location_node and 'description' in location_node:
                 location_str += f", {location_node['description']}"
-            if 'description' in outfit_node:
+            if outfit_node and 'description' in outfit_node:
                 outfit_str += f", {outfit_node['description']}"
-            if 'description' in timeframe_node:
+            if timeframe_node and 'description' in timeframe_node:
                 timeframe_str += f", {timeframe_node['description']}"
 
             if style_node and last_llm_message:
@@ -262,18 +262,14 @@ class LF_LLMMessenger:
                 styled_prompt += f"Location: \"{location_str}\"\n" if location_node else ""
                 styled_prompt += f"Timeframe: \"{timeframe_str}\"\n" if timeframe_node else ""
             else:
-                outfit_name = None
-                location_name = None
-                style_name = None
-                timeframe_name = None
                 styled_prompt = None
         except Exception as e:
             styled_prompt = str(e)
+
     
         return (chat_data, chat_history_string, 
                 last_message, last_user_message, last_llm_message, styled_prompt, 
                 character_name, outfit_name, location_name, style_name, timeframe_name)
-
 
 NODE_CLASS_MAPPINGS = {
     "LF_CharacterImpersonator": LF_CharacterImpersonator,

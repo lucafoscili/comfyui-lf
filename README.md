@@ -22,6 +22,11 @@ Counts the number of each keyword in a prompt and displays a bar chart showing t
 
 ### Configuration nodes (`configuration.py`)
 
+#### CheckpointSelector
+
+Used to select a checkpoint. It's possible to fetch additional data by fetching them from CivitAI or by loading the related cover inside the checkpoint's folder.
+![CheckpointSelector](https://github.com/lucafoscili/comfyui-lf/blob/22813956c616ec89b97b53411a0fc77dedef747b/docs/images/CheckpointSelector.png "Checkpoints additional info")
+
 #### CivitAIMetadataSetup
 
 Allows to setup and generate [CivitAI](https://civitai.com)-compatible metadata information usable in the node SaveImageForCivitAI.

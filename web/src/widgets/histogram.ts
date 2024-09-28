@@ -22,14 +22,6 @@ export const histogramFactory = {
       getValue() {
         return histogram.kulData?.nodes ? JSON.stringify(histogram.kulData) : undefined;
       },
-      setProps(props: Partial<HTMLKulChartElement>) {
-        for (const key in props) {
-          if (Object.prototype.hasOwnProperty.call(props, key)) {
-            const prop = props[key];
-            histogram[prop] = prop;
-          }
-        }
-      },
       setValue(value: Record<string, unknown> | string) {
         histogram.kulData = value as KulDataDataset;
         try {

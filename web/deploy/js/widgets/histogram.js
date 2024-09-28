@@ -18,14 +18,6 @@ export const histogramFactory = {
             getValue() {
                 return histogram.kulData?.nodes ? JSON.stringify(histogram.kulData) : undefined;
             },
-            setProps(props) {
-                for (const key in props) {
-                    if (Object.prototype.hasOwnProperty.call(props, key)) {
-                        const prop = props[key];
-                        histogram[prop] = prop;
-                    }
-                }
-            },
             setValue(value) {
                 histogram.kulData = value;
                 try {
