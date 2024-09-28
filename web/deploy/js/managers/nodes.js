@@ -35,6 +35,7 @@ import { displayBooleanFactory } from '../nodes/displayBoolean.js';
 import { displayFloatFactory } from '../nodes/displayFloat.js';
 import { displayIntegerFactory } from '../nodes/displayInteger.js';
 import { displayStringFactory } from '../nodes/displayString.js';
+import { checkpointSelectorFactory } from '../nodes/checkpointSelector.js';
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
 /*-------------------------------------------------*/
@@ -43,6 +44,7 @@ export class LFNodes {
         this.eventHandler = {
             [NodeName.blurImages]: blurImagesFactory.eventHandler,
             [NodeName.boolean]: booleanFactory.eventHandler,
+            [NodeName.checkpointSelector]: checkpointSelectorFactory.eventHandler,
             [NodeName.civitaiMetadataSetup]: civitaiMetadataSetupFactory.eventHandler,
             [NodeName.displayBoolean]: displayBooleanFactory.eventHandler,
             [NodeName.displayFloat]: displayFloatFactory.eventHandler,
@@ -76,6 +78,7 @@ export class LFNodes {
         this.register = {
             [NodeName.blurImages]: blurImagesFactory.register,
             [NodeName.boolean]: booleanFactory.register,
+            [NodeName.checkpointSelector]: checkpointSelectorFactory.register,
             [NodeName.civitaiMetadataSetup]: civitaiMetadataSetupFactory.register,
             [NodeName.controlPanel]: controlPanelFactory.register,
             [NodeName.displayBoolean]: displayBooleanFactory.register,

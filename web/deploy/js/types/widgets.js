@@ -11,6 +11,7 @@ export var ComfyWidgetName;
 export var CustomWidgetName;
 (function (CustomWidgetName) {
     CustomWidgetName["booleanViewer"] = "KUL_BOOLEAN_VIEWER";
+    CustomWidgetName["card"] = "KUL_CARD";
     CustomWidgetName["chat"] = "KUL_CHAT";
     CustomWidgetName["chip"] = "KUL_CHIP";
     CustomWidgetName["code"] = "KUL_CODE";

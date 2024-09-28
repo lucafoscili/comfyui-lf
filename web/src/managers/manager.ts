@@ -41,6 +41,7 @@ import {
   DisplayFloatPayload,
   DisplayIntegerPayload,
   DisplayStringPayload,
+  CheckpointSelectorPayload,
 } from '../types/events.js';
 
 /*-------------------------------------------------*/
@@ -67,6 +68,20 @@ export class LFManager {
     },
     getNodeById: (id: string) => {
       return app.graph.getNodeById(+(id || app.runningNodeId));
+    },
+    modelInfoFromCivitAI: async (hash: string) => {
+      const r = await fetch(`https://civitai.com/api/v1/model-versions/by-hash/${hash}`);
+      const code = r.status;
+      switch (code) {
+        case 200:
+          return await r.json();
+        case 404:
+          this.log('Model not found on CivitAI!', { r }, LogSeverity.Info);
+          return { id: 'Model not found!' };
+        default:
+          this.log("Error when fetching model's info from CivitAI!", { r }, LogSeverity.Error);
+          break;
+      }
     },
     redraw: () => {
       app.graph.setDirtyCanvas(true, false);
@@ -135,6 +150,16 @@ export class LFManager {
     );
     this.#APIS.event(EventName.boolean, (e: CustomEvent<BooleanPayload>) => {
       nodes.eventHandlers.LF_Boolean(e, widgets.adders.KUL_HISTORY);
+    });
+    /*-------------------------------------------------------------------*/
+    /*            I n i t   C h e c k p o i n t S e l e c t o r          */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_CheckpointSelector(
+      widgets.setters.KUL_CARD,
+      widgets.adders.KUL_CARD,
+    );
+    this.#APIS.event(EventName.checkpointSelector, (e: CustomEvent<CheckpointSelectorPayload>) => {
+      nodes.eventHandlers.LF_CheckpointSelector(e, widgets.adders.KUL_CARD);
     });
     /*-------------------------------------------------------------------*/
     /*         I n i t   C i v i t A I M e t a d a t a S e t u p         */

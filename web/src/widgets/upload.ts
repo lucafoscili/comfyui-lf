@@ -22,14 +22,6 @@ export const uploadFactory = {
       getValue() {
         return upload.dataset.files;
       },
-      setProps(props: Partial<HTMLKulUploadElement>) {
-        for (const key in props) {
-          if (Object.prototype.hasOwnProperty.call(props, key)) {
-            const prop = props[key];
-            upload[key] = prop;
-          }
-        }
-      },
       setValue(value: string) {
         upload.dataset.files = value;
       },

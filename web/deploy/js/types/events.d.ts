@@ -6,6 +6,7 @@ export type EventCallback<T extends EventPayload> = (e: CustomEvent<T>) => void;
 export declare enum EventName {
     blurImages = "lf-blurimages",
     boolean = "lf-boolean",
+    checkpointSelector = "lf-checkpointselector",
     civitAIMetadataSetup = "lf-civitaimetadatasetup",
     controlPanel = "lf-controlpanel",
     displayBoolean = "lf-displayboolean",
@@ -37,7 +38,7 @@ export declare enum EventName {
     urandomSeedGenerator = "lf-urandomseedgenerator",
     writeJson = "lf-writejson"
 }
-export type EventPayload = BlurImagesPayload | BooleanPayload | CivitAIMetadataSetupPayload | DisplayBooleanPayload | DisplayJSONPayload | ExtractorPayload | FloatPayload | ImageListFromJSONPayload | ImageHistogramPayload | IntegerPayload | KeywordCounterPayload | LoadImagesPayload | MultipleImageResizeForWebPayload | RandomBooleanPayload | ResizeImageByEdgePayload | ResizeImageToSquarePayload | ResolutionSwitcherPayload | SaveImageForCivitAIPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | UrandomSeedGeneratorPayload | WriteJSONPayload;
+export type EventPayload = BlurImagesPayload | BooleanPayload | CheckpointSelectorPayload | CivitAIMetadataSetupPayload | DisplayBooleanPayload | DisplayJSONPayload | ExtractorPayload | FloatPayload | ImageListFromJSONPayload | ImageHistogramPayload | IntegerPayload | KeywordCounterPayload | LoadImagesPayload | MultipleImageResizeForWebPayload | RandomBooleanPayload | ResizeImageByEdgePayload | ResizeImageToSquarePayload | ResolutionSwitcherPayload | SaveImageForCivitAIPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | UrandomSeedGeneratorPayload | WriteJSONPayload;
 export interface BlurImagesPayload extends BaseEventPayload {
     fileNames: Array<string>;
     images: Array<string>;
@@ -45,6 +46,11 @@ export interface BlurImagesPayload extends BaseEventPayload {
 export interface BooleanPayload extends BaseEventPayload {
     isHistoryEnabled: boolean;
     value: boolean;
+}
+export interface CheckpointSelectorPayload extends BaseEventPayload {
+    dataset: KulDataDataset;
+    hash: string;
+    civitaiInfo: boolean;
 }
 export interface CivitAIMetadataSetupPayload extends BaseEventPayload {
     metadataString: string;

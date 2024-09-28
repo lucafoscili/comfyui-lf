@@ -20,14 +20,6 @@ export const treeFactory = {
       getValue() {
         return '';
       },
-      setProps(props: Partial<HTMLKulTreeElement>) {
-        for (const key in props) {
-          if (Object.prototype.hasOwnProperty.call(props, key)) {
-            const prop = props[key];
-            tree[prop] = prop;
-          }
-        }
-      },
       setValue(value: KulDataDataset | string) {
         try {
           if (typeof value === 'string') {

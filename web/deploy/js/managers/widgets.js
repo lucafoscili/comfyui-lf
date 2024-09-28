@@ -20,6 +20,7 @@ import { countBarChartFactory } from '../widgets/countBarChart.js';
 import { uploadFactory } from '../widgets/upload.js';
 import { chipFactory } from '../widgets/chip.js';
 import { messengerFactory } from '../widgets/messenger.js';
+import { cardFactory } from '../widgets/card.js';
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
 /*-------------------------------------------------*/
@@ -29,6 +30,10 @@ export class LFWidgets {
         this.add = {
             [CustomWidgetName.booleanViewer]: (nodeType) => {
                 const widget = app.widgets[CustomWidgetName.booleanViewer](nodeType, CustomWidgetName.booleanViewer).widget;
+                return widget;
+            },
+            [CustomWidgetName.card]: (nodeType) => {
+                const widget = app.widgets[CustomWidgetName.card](nodeType, CustomWidgetName.card).widget;
                 return widget;
             },
             [CustomWidgetName.chat]: (nodeType) => {
@@ -86,6 +91,7 @@ export class LFWidgets {
         };
         this.option = {
             [CustomWidgetName.booleanViewer]: (booleanViewer) => booleanViewerFactory.options(booleanViewer),
+            [CustomWidgetName.card]: (card) => cardFactory.options(card),
             [CustomWidgetName.chat]: (chat) => chatFactory.options(chat),
             [CustomWidgetName.chip]: (chip) => chipFactory.options(chip),
             [CustomWidgetName.code]: (code) => codeFactory.options(code),
@@ -105,6 +111,13 @@ export class LFWidgets {
                 return {
                     [CustomWidgetName.booleanViewer]: (nodeType, name) => {
                         return booleanViewerFactory.render(nodeType, name);
+                    },
+                };
+            },
+            [CustomWidgetName.card]: () => {
+                return {
+                    [CustomWidgetName.card]: (nodeType, name) => {
+                        return cardFactory.render(nodeType, name);
                     },
                 };
             },

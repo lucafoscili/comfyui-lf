@@ -36,6 +36,20 @@ export class LFManager {
             getNodeById: (id) => {
                 return app.graph.getNodeById(+(id || app.runningNodeId));
             },
+            modelInfoFromCivitAI: async (hash) => {
+                const r = await fetch(`https://civitai.com/api/v1/model-versions/by-hash/${hash}`);
+                const code = r.status;
+                switch (code) {
+                    case 200:
+                        return await r.json();
+                    case 404:
+                        this.log('Model not found on CivitAI!', { r }, LogSeverity.Info);
+                        return { id: 'Model not found!' };
+                    default:
+                        this.log("Error when fetching model's info from CivitAI!", { r }, LogSeverity.Error);
+                        break;
+                }
+            },
             redraw: () => {
                 app.graph.setDirtyCanvas(true, false);
             },
@@ -83,6 +97,13 @@ export class LFManager {
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_Boolean(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.boolean, (e) => {
             nodes.eventHandlers.LF_Boolean(e, widgets.adders.KUL_HISTORY);
+        });
+        /*-------------------------------------------------------------------*/
+        /*            I n i t   C h e c k p o i n t S e l e c t o r          */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_CheckpointSelector(widgets.setters.KUL_CARD, widgets.adders.KUL_CARD);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.checkpointSelector, (e) => {
+            nodes.eventHandlers.LF_CheckpointSelector(e, widgets.adders.KUL_CARD);
         });
         /*-------------------------------------------------------------------*/
         /*         I n i t   C i v i t A I M e t a d a t a S e t u p         */

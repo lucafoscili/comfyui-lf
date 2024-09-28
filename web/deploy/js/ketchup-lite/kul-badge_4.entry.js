@@ -93,9 +93,9 @@ const KulBadge = class {
             if (!this.kulImageProps.kulColor) {
                 this.kulImageProps.kulColor = `var(${KulThemeColorValues.TEXT_ON_PRIMARY})`;
             }
-            imageEl = h("kul-image", { key: 'eb2f091e2a751c57975c7aa6c7429c1130862a58', ...this.kulImageProps });
+            imageEl = h("kul-image", { key: 'f65b8916f94dc6a0dea85e57530f30c86793b7fb', ...this.kulImageProps });
         }
-        return (h(Host, { key: 'bd2a81376af8cd0f48486a72632e790556dcc047' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'e9ea48ab5100a814d00f528c53f85bc513ca30d7', id: KUL_WRAPPER_ID, onClick: (e) => this.onKulEvent(e, 'click') }, this.kulLabel, imageEl)));
+        return (h(Host, { key: 'bd45fceada49a7a608dcb7e0def329f563d563d4' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'd52516de97df4356f7d2dd4568e49e2302f5dbf3', id: KUL_WRAPPER_ID, onClick: (e) => this.onKulEvent(e, 'click') }, this.kulLabel, imageEl)));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

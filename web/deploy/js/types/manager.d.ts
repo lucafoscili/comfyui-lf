@@ -5,6 +5,7 @@ export interface ComfyAPIs {
     fetch: (body: unknown) => Promise<Response>;
     getLinkById: (id: string) => LinkInfo;
     getNodeById: (id: string) => NodeType;
+    modelInfoFromCivitAI: (hash: string) => Promise<CivitAIModelData>;
     redraw: () => void;
     register: (extension: Extension) => void;
 }

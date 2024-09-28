@@ -20,14 +20,6 @@ export const chatFactory = {
       getValue() {
         return chat?.dataset.history;
       },
-      setProps(props: Partial<HTMLKulChatElement>) {
-        for (const key in props) {
-          if (Object.prototype.hasOwnProperty.call(props, key)) {
-            const prop = props[key];
-            chat[prop] = prop;
-          }
-        }
-      },
       setValue(history: string) {
         chat.setHistory(history);
       },
@@ -60,7 +52,6 @@ export const chatFactory = {
     content.appendChild(chat);
     wrapper.appendChild(content);
 
-    wrapper.dataset.isInVisibleNodes = 'true';
     return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };
   },
 };

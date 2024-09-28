@@ -590,7 +590,7 @@ const KulChat = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: '59325b3dbe6cbf3f2b13f7cef0f7e7e5a407188c' }, this.kulStyle && (h("style", { key: '3f971f6ffe979f7e579a7c107b6f05b9b3008e0b', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: '02bb8d20465eb97ce506ed78f9f6692f5b53ab60', id: KUL_WRAPPER_ID }, h("div", { key: 'bce2260e562ab561ad3fcf5580fc7136a5eebf37', class: `${this.view} ${this.view}--${this.kulLayout} ${this.view}--${this.status}` }, this.view === 'settings'
+        return (h(Host, { key: '50a3cccb6b6eeedd6479535842eb8eddcac72a1c' }, this.kulStyle && (h("style", { key: '68adc6a493fedda4eba395f43881afdb2bfe0ca4', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: '7742c0b6b9a2847e824bda596c81a43279daa20c', id: KUL_WRAPPER_ID }, h("div", { key: '7a012f21f670cb12fe002bfdd735af31132289ef', class: `${this.view} ${this.view}--${this.kulLayout} ${this.view}--${this.status}` }, this.view === 'settings'
             ? prepSettings(this.#adapter)
             : this.status === 'ready'
                 ? prepChat(this.#adapter)

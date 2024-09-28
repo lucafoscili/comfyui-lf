@@ -14,6 +14,7 @@ import { countBarChartFactory } from '../widgets/countBarChart.js';
 import { uploadFactory } from '../widgets/upload.js';
 import { chipFactory } from '../widgets/chip.js';
 import { messengerFactory } from '../widgets/messenger.js';
+import { cardFactory } from '../widgets/card.js';
 
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
@@ -40,6 +41,10 @@ export class LFWidgets {
         nodeType,
         CustomWidgetName.booleanViewer,
       ).widget;
+      return widget;
+    },
+    [CustomWidgetName.card]: (nodeType: NodeType) => {
+      const widget = app.widgets[CustomWidgetName.card](nodeType, CustomWidgetName.card).widget;
       return widget;
     },
     [CustomWidgetName.chat]: (nodeType: NodeType) => {
@@ -123,6 +128,7 @@ export class LFWidgets {
   option = {
     [CustomWidgetName.booleanViewer]: (booleanViewer: HTMLKulTextfieldElement) =>
       booleanViewerFactory.options(booleanViewer),
+    [CustomWidgetName.card]: (card: HTMLKulCardElement) => cardFactory.options(card),
     [CustomWidgetName.chat]: (chat: HTMLKulChatElement) => chatFactory.options(chat),
     [CustomWidgetName.chip]: (chip: HTMLKulChipElement) => chipFactory.options(chip),
     [CustomWidgetName.code]: (code: HTMLKulCodeElement) => codeFactory.options(code),
@@ -154,6 +160,13 @@ export class LFWidgets {
       return {
         [CustomWidgetName.booleanViewer]: (nodeType: NodeType, name: CustomWidgetName) => {
           return booleanViewerFactory.render(nodeType, name);
+        },
+      };
+    },
+    [CustomWidgetName.card]: () => {
+      return {
+        [CustomWidgetName.card]: (nodeType: NodeType, name: CustomWidgetName) => {
+          return cardFactory.render(nodeType, name);
         },
       };
     },

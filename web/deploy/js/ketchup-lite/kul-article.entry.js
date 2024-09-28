@@ -158,7 +158,7 @@ const KulArticle = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: '4ba1fbec996dd2cb38321a50afa2d64d6f1c6349' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '46f606ec6d7fb3e3e6159513754deedad4555eab', id: KUL_WRAPPER_ID }, this.kulData?.nodes?.length ? (this.#prepArticle()) : (h("div", { class: "empty-data" }, h("div", { class: "empty-data__text" }, this.#kulManager.language.translate(KulLanguageGeneric.EMPTY_DATA)))))));
+        return (h(Host, { key: 'c177d2e2535638e2e8a2278c875873c642cca5c7' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'ebe1ebeaf234c5d9948085fbdf8dc19122bc1644', id: KUL_WRAPPER_ID }, this.kulData?.nodes?.length ? (this.#prepArticle()) : (h("div", { class: "empty-data" }, h("div", { class: "empty-data__text" }, this.#kulManager.language.translate(KulLanguageGeneric.EMPTY_DATA)))))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

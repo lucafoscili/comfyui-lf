@@ -17,14 +17,6 @@ export const treeFactory = {
             getValue() {
                 return '';
             },
-            setProps(props) {
-                for (const key in props) {
-                    if (Object.prototype.hasOwnProperty.call(props, key)) {
-                        const prop = props[key];
-                        tree[prop] = prop;
-                    }
-                }
-            },
             setValue(value) {
                 try {
                     if (typeof value === 'string') {

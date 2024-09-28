@@ -16,14 +16,6 @@ export const rollViewerFactory = {
             getValue() {
                 return { bool: rollViewer.kulLabel === 'true' ? true : false, roll: rollViewer.kulValue };
             },
-            setProps(props) {
-                for (const key in props) {
-                    if (Object.prototype.hasOwnProperty.call(props, key)) {
-                        const prop = props[key];
-                        rollViewer[prop] = prop;
-                    }
-                }
-            },
             setValue(value) {
                 const { bool, roll } = value;
                 const isFalse = !!(bool === false);

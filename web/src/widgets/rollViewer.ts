@@ -18,14 +18,6 @@ export const rollViewerFactory = {
       getValue() {
         return { bool: rollViewer.kulLabel === 'true' ? true : false, roll: rollViewer.kulValue };
       },
-      setProps(props: Partial<HTMLKulProgressbarElement>) {
-        for (const key in props) {
-          if (Object.prototype.hasOwnProperty.call(props, key)) {
-            const prop = props[key];
-            rollViewer[prop] = prop;
-          }
-        }
-      },
       setValue(value: RollViewerWidgetValue) {
         const { bool, roll } = value;
 

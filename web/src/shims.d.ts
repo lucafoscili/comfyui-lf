@@ -8,6 +8,63 @@ declare namespace LiteGraph {
   export const getNodeType: (node: string) => NodeType;
   export const NODE_TITLE_HEIGHT: number;
 }
+interface CivitAIModelData {
+  air: string;
+  baseModel: string;
+  baseModelType: string;
+  createdAt: string;
+  description?: null | string;
+  downloadUrl: string;
+  earlyAccessConfig: Record<string, unknown>;
+  earlyAccessEndsAt?: Date | null;
+  files: Array<unknown>;
+  id: number;
+  images: Array<{
+    availability: string;
+    hasMeta: boolean;
+    hash: string;
+    height: number;
+    meta: {
+      Size: string;
+      seed: number;
+      Model: string;
+      steps: number;
+      hashes: Record<string, unknown>;
+    };
+    metadata: {
+      hash: string;
+      size: number;
+      width: number;
+      height: number;
+    };
+    nsfwLevel: number;
+    onSite: boolean;
+    type: string;
+    url: string;
+    width: number;
+  }>;
+  model: {
+    name: string;
+    type: string;
+    nsfw: boolean;
+    poi: boolean;
+  };
+  modelId: number;
+  name: string;
+  publishedAt: string;
+  stats: {
+    downloadCount: number;
+    ratingCount: number;
+    rating: number;
+    thumbsUpCount: number;
+  };
+  status: string;
+  trainedWords: Array<string>;
+  trainingDetails?: unknown;
+  trainingStatus?: unknown;
+  updatedAt: string;
+  uploadType: string;
+}
 
 interface Input {
   required: Record<string, boolean>;

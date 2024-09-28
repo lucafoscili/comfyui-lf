@@ -2,6 +2,7 @@ import { CustomWidgetName } from './widgets';
 export declare enum NodeName {
     blurImages = "LF_BlurImages",
     boolean = "LF_Boolean",
+    checkpointSelector = "LF_CheckpointSelector",
     civitaiMetadataSetup = "LF_CivitAIMetadataSetup",
     controlPanel = "LF_ControlPanel",
     displayBoolean = "LF_DisplayBoolean",

@@ -2,6 +2,7 @@ export var EventName;
 (function (EventName) {
     EventName["blurImages"] = "lf-blurimages";
     EventName["boolean"] = "lf-boolean";
+    EventName["checkpointSelector"] = "lf-checkpointselector";
     EventName["civitAIMetadataSetup"] = "lf-civitaimetadatasetup";
     EventName["controlPanel"] = "lf-controlpanel";
     EventName["displayBoolean"] = "lf-displayboolean";

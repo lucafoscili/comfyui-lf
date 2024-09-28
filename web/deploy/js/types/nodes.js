@@ -5,6 +5,7 @@ export var NodeName;
 (function (NodeName) {
     NodeName["blurImages"] = "LF_BlurImages";
     NodeName["boolean"] = "LF_Boolean";
+    NodeName["checkpointSelector"] = "LF_CheckpointSelector";
     NodeName["civitaiMetadataSetup"] = "LF_CivitAIMetadataSetup";
     NodeName["controlPanel"] = "LF_ControlPanel";
     NodeName["displayBoolean"] = "LF_DisplayBoolean";

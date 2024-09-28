@@ -16,14 +16,6 @@ export const booleanViewerFactory = {
             getValue() {
                 return booleanViewer?.kulLabel;
             },
-            setProps(props) {
-                for (const key in props) {
-                    if (Object.prototype.hasOwnProperty.call(props, key)) {
-                        const prop = props[key];
-                        booleanViewer[prop] = prop;
-                    }
-                }
-            },
             setValue(value) {
                 const isFalse = value?.toLowerCase()?.includes('false');
                 const isTrue = value?.toLowerCase()?.includes('true');

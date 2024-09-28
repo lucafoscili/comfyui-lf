@@ -181,9 +181,6 @@ const KulCard = class {
     componentWillLoad() {
         this.#kulManager.language.register(this);
         this.#kulManager.theme.register(this);
-        if (this.kulData) {
-            this.shapes = this.#kulManager.data.extract.shapes(this.kulData);
-        }
         this.registerListeners();
     }
     componentDidLoad() {
@@ -191,6 +188,9 @@ const KulCard = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-load');
     }
     componentWillRender() {
+        if (this.kulData) {
+            this.shapes = this.#kulManager.data.extract.shapes(this.kulData);
+        }
         this.#kulManager.debug.updateDebugInfo(this, 'will-render');
     }
     componentDidRender() {
