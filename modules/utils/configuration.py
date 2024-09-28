@@ -38,6 +38,15 @@ SCHEDULER_MAP = {
 def clean_prompt(prompt):
     return re.sub(r'(embedding:)?(.*?)(\.pt|\.pth|\.sft|\.safetensors)?', r'\2', prompt).strip()
 
+def find_checkpoint_image(checkpoint_path):
+    extensions = ["jpg", "jpeg", "JPEG", "png", "webp", "WEBP"]
+    
+    for ext in extensions:
+        image_path = f"{os.path.splitext(checkpoint_path)[0]}.{ext}"
+        if os.path.exists(image_path):
+            return image_path
+    return None
+
 def get_embedding_hashes(embeddings):
     emb_hashes = []
     emb_entries = [emb.strip() for emb in embeddings.split(',')]

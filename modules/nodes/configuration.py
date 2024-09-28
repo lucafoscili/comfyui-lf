@@ -1,5 +1,6 @@
 import folder_paths
 import os
+import random
 
 from PIL import Image
 from comfy.samplers import KSampler
@@ -18,6 +19,9 @@ class LF_CheckpointSelector:
             "required": {
                 "checkpoint": (folder_paths.get_filename_list("checkpoints"), {"default": "None", "tooltip": "Checkpoint used to generate the image."}),
                 "get_civitai_info": ( "BOOLEAN", {"default": True, "tooltip": "Attempts to retrieve more info about the model from CivitAI."}),
+                "randomize": ("BOOLEAN", {"default": False, "tooltip": "Selects a checkpoint randomly from your checkpoints directory."}),
+                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Seed value for when randomization is active."}),
+                "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter checkpoint file names."}),
             },
             "hidden": { "node_id": "UNIQUE_ID" }
         }
@@ -27,34 +31,34 @@ class LF_CheckpointSelector:
     RETURN_NAMES = ("checkpoint", "checkpoint_name", "checkpoint_image")
     RETURN_TYPES = (folder_paths.get_filename_list("checkpoints"), "STRING", "IMAGE")
 
-    def find_checkpoint_image(self, checkpoint_path):
-        extensions = ["jpg", "jpeg", "JPEG", "png", "webp", "WEBP"]
-        
-        for ext in extensions:
-            image_path = f"{os.path.splitext(checkpoint_path)[0]}.{ext}"
-            if os.path.exists(image_path):
-                return image_path
-        return None
+    def on_exec(self, get_civitai_info, node_id, checkpoint, randomize, seed, filter):
+        checkpoints = folder_paths.get_filename_list("checkpoints")
 
-    def on_exec(self, get_civitai_info, node_id, checkpoint):
+        if filter:
+            checkpoints = [ckpt for ckpt in checkpoints if filter in ckpt]
+
+        if randomize:
+            random.seed(seed)
+            checkpoint = random.choice(checkpoints)
+
         checkpoint_path = folder_paths.get_full_path("checkpoints", checkpoint)
-        
+
         try:
             checkpoint_hash = get_sha256(checkpoint_path)
         except Exception as e:
             checkpoint_hash = "Unknown"
             print(f"Error calculating hash for checkpoint: {e}")
-        
+
         checkpoint_name = os.path.basename(checkpoint_path)
-        checkpoint_image_path = self.find_checkpoint_image(checkpoint_path)
-        
+        checkpoint_image_path = find_checkpoint_image(checkpoint_path)
+
         if checkpoint_image_path:
             print(f"Found image for checkpoint: {checkpoint_image_path}")
-            
+
             pil_image = Image.open(checkpoint_image_path)
             checkpoint_tensor = pil_to_tensor(pil_image)
             checkpoint_base64 = tensor_to_base64(checkpoint_tensor)
-            
+
         else:
             print("No image found for the checkpoint.")
             checkpoint_base64 = "None"
