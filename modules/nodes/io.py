@@ -284,14 +284,16 @@ class LF_SaveImageForCivitAI:
         if isinstance(civitai_metadata, list):
             civitai_metadata = civitai_metadata[0] 
         if isinstance(images, list):
-            if len(images) <= 1:
-                images = (images[0],)
-            else:
-                image1 = images[0]
-                for image2 in images[1:]:
-                    if image1.shape[1:] != image2.shape[1:]:
-                        image2 = comfy.utils.common_upscale(image2.movedim(-1, 1), image1.shape[2], image1.shape[1], "lanczos", "center").movedim(1, -1)
-                    images = torch.cat((image1, image2), dim=0)
+            processed_images = []
+            for image in images:
+                if len(processed_images) == 0:
+                    processed_images.append(image)
+                else:
+                    if processed_images[0].shape[1:] != image.shape[1:]:
+                        image = comfy.utils.common_upscale(image.movedim(-1, 1), processed_images[0].shape[2], processed_images[0].shape[1], "lanczos", "center").movedim(1, -1)
+                    processed_images.append(image)
+
+            images = torch.cat(processed_images, dim=0)
         
         batch_size = images.shape[0]
 
