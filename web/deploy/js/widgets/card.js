@@ -44,7 +44,7 @@ export const cardFactory = {
 };
 const cardEventHandler = (e) => {
     const { comp, eventType } = e.detail;
-    const card = comp;
+    const card = comp.rootElement;
     switch (eventType) {
         case 'click':
             if (card.dataset?.civitaiLink) {

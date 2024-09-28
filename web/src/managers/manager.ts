@@ -70,17 +70,22 @@ export class LFManager {
       return app.graph.getNodeById(+(id || app.runningNodeId));
     },
     modelInfoFromCivitAI: async (hash: string) => {
-      const r = await fetch(`https://civitai.com/api/v1/model-versions/by-hash/${hash}`);
-      const code = r.status;
-      switch (code) {
-        case 200:
-          return await r.json();
-        case 404:
-          this.log('Model not found on CivitAI!', { r }, LogSeverity.Info);
-          return { id: 'Model not found!' };
-        default:
-          this.log("Error when fetching model's info from CivitAI!", { r }, LogSeverity.Error);
-          break;
+      try {
+        const r = await fetch(`https://civitai.com/api/v1/model-versions/by-hash/${hash}`);
+        const code = r.status;
+        switch (code) {
+          case 200:
+            return await r.json();
+          case 404:
+            this.log('Model not found on CivitAI!', { r }, LogSeverity.Info);
+            return { id: 'Model not found!' };
+          default:
+            this.log("Error when fetching model's info from CivitAI!", { r }, LogSeverity.Error);
+            break;
+        }
+      } catch (error) {
+        this.log("Error when fetching model's info from CivitAI!", { error }, LogSeverity.Error);
+        return { id: 'Something went wrong!' };
       }
     },
     redraw: () => {
