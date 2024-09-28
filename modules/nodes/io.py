@@ -256,8 +256,10 @@ class LF_SaveImageForCivitAI:
     
     CATEGORY = category
     FUNCTION = "on_exec"
+    OUTPUT_IS_LIST = (True,)
     OUTPUT_NODE = True
-    RETURN_TYPES = ()
+    RETURN_NAMES = ("file_names",)
+    RETURN_TYPES = ("STRING",)
 
     def on_exec(self, extra_pnginfo, node_id, prompt, images, filepath, add_timestamp, extension, quality, civitai_metadata=None):
         
@@ -316,7 +318,7 @@ class LF_SaveImageForCivitAI:
             img_base64 = base64.b64encode(buffered.getvalue()).decode('utf-8')
             images_buffer.append(img_base64)
 
-            file_names.append(output_file)
+            file_names.append(file_name)
 
         PromptServer.instance.send_sync("lf-saveimageforcivitai", {
             "node": node_id, 
@@ -324,7 +326,7 @@ class LF_SaveImageForCivitAI:
             "images": images_buffer,
         })
 
-        return ()
+        return (file_names,)
     
 class LF_SaveJSON:
     @classmethod
