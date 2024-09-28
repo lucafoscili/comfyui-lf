@@ -8,6 +8,7 @@ import piexif
 import requests
 import torch
 
+import comfy.utils
 from comfy.cli_args import args
 from datetime import datetime
 from PIL import Image
@@ -256,6 +257,7 @@ class LF_SaveImageForCivitAI:
     
     CATEGORY = category
     FUNCTION = "on_exec"
+    INPUT_IS_LIST = (True, False, False, False, False)
     OUTPUT_IS_LIST = (True,)
     OUTPUT_NODE = True
     RETURN_NAMES = ("file_names",)
@@ -266,6 +268,31 @@ class LF_SaveImageForCivitAI:
         file_names = []
         images_buffer = []
         output_dir = folder_paths.output_directory
+
+        if isinstance(filepath, list):
+            filepath = filepath[0] 
+        if isinstance(prompt, list):
+            prompt = prompt[0] 
+        if isinstance(extra_pnginfo, list):
+            extra_pnginfo = extra_pnginfo[0] 
+        if isinstance(add_timestamp, list):
+            add_timestamp = add_timestamp[0] 
+        if isinstance(extension, list):
+            extension = extension[0] 
+        if isinstance(quality, list):
+            quality = quality[0] 
+        if isinstance(civitai_metadata, list):
+            civitai_metadata = civitai_metadata[0] 
+        if isinstance(images, list):
+            if len(images) <= 1:
+                images = (images[0],)
+            else:
+                image1 = images[0]
+                for image2 in images[1:]:
+                    if image1.shape[1:] != image2.shape[1:]:
+                        image2 = comfy.utils.common_upscale(image2.movedim(-1, 1), image1.shape[2], image1.shape[1], "lanczos", "center").movedim(1, -1)
+                    images = torch.cat((image1, image2), dim=0)
+        
         batch_size = images.shape[0]
 
         if add_timestamp:
