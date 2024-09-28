@@ -22,27 +22,43 @@ export const codeFactory = {
         return code.kulValue;
       },
       setValue(value: Record<string, unknown> | string) {
-        if (
-          value === '' ||
-          value === null ||
-          value === undefined ||
-          value === '{}' ||
-          !Object.keys(value).length
-        ) {
-          code.kulValue = code.kulLanguage === 'json' ? EMPTY : '';
-        } else {
-          try {
+        const isEmpty = () => {
+          return (
+            value === '' ||
+            value === null ||
+            value === undefined ||
+            value === '{}' ||
+            !Object.keys(value).length
+          );
+        };
+        switch (code.kulLanguage) {
+          case 'json':
+            if (isEmpty()) {
+              code.kulValue = EMPTY;
+            }
+            try {
+              if (typeof value === 'string') {
+                code.kulValue = unescapeJson(value).unescapedStr;
+              } else {
+                code.kulValue = JSON.stringify(value);
+              }
+            } catch (error) {
+              getLFManager().log('Error when setting value!', { error, code }, LogSeverity.Error);
+              if (value === undefined || value === '') {
+                code.kulValue = EMPTY;
+              }
+            }
+            break;
+          default:
+            if (isEmpty()) {
+              code.kulValue = '';
+            }
             if (typeof value === 'string') {
-              code.kulValue = unescapeJson(value).unescapedStr;
+              code.kulValue = value;
             } else {
               code.kulValue = JSON.stringify(value);
             }
-          } catch (error) {
-            getLFManager().log('Error when setting value!', { error, code }, LogSeverity.Error);
-            if (value === undefined || value === '') {
-              code.kulValue = EMPTY;
-            }
-          }
+            break;
         }
       },
     } as CodeWidgetOptions;
