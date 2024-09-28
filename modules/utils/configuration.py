@@ -1,5 +1,6 @@
 import folder_paths
 import hashlib
+import os
 import re
 
 SAMPLER_MAP = {
@@ -72,15 +73,24 @@ def get_lora_hashes(lora_tags):
             try:
                 lora_hash = get_sha256(lora_file_path)
                 lora_hashes.append(f"{lora_name_with_ext}: {lora_hash}")
-            except Exception as e:
+            except Exception:
                 lora_hashes.append(f"{lora_name}: Unknown")
     return lora_hashes
 
 def get_sha256(file_path):
+    hash_file_path = f"{file_path}.sha256"
+    
+    if os.path.exists(hash_file_path):
+        with open(hash_file_path, "r") as hash_file:
+            return hash_file.read().strip()[:10]
+    
     sha256_value = hashlib.sha256()
 
     with open(file_path, "rb") as file:
         for byte_block in iter(lambda: file.read(4096), b""):
             sha256_value.update(byte_block)
+
+    with open(hash_file_path, "w") as hash_file:
+        hash_file.write(sha256_value.hexdigest())
 
     return sha256_value.hexdigest()[:10]
