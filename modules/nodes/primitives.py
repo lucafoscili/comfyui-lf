@@ -42,15 +42,20 @@ class LF_DisplayBoolean:
 
     CATEGORY = category
     FUNCTION = "on_exec"
+    INPUT_IS_LIST = (True,)
     OUTPUT_NODE = True
     RETURN_NAMES = ("boolean",)
     RETURN_TYPES = ("BOOLEAN",)
 
     def on_exec(self, node_id, boolean):
+        if isinstance(boolean, list) and len(boolean) > 1:
+            markdown_value = "\n".join(f"{i+1}. {item}" for i, item in enumerate(boolean))
+        else:
+            markdown_value = str(boolean[0]) if isinstance(boolean, list) else str(boolean)
 
         PromptServer.instance.send_sync("lf-displayboolean", {
             "node": node_id, 
-            "value": str(boolean),
+            "value": markdown_value,
         })
 
         return (boolean,)
@@ -67,15 +72,20 @@ class LF_DisplayFloat:
 
     CATEGORY = category
     FUNCTION = "on_exec"
+    INPUT_IS_LIST = (True,)
     OUTPUT_NODE = True
     RETURN_NAMES = ("float",)
     RETURN_TYPES = ("FLOAT",)
 
     def on_exec(self, node_id, float):
+        if isinstance(float, list) and len(float) > 1:
+            markdown_value = "\n".join(f"{i+1}. {item}" for i, item in enumerate(float))
+        else:
+            markdown_value = str(float[0]) if isinstance(float, list) else str(float)
 
         PromptServer.instance.send_sync("lf-displayfloat", {
             "node": node_id, 
-            "value": str(float),
+            "value": markdown_value,
         })
 
         return (float,)
@@ -92,15 +102,20 @@ class LF_DisplayInteger:
 
     CATEGORY = category
     FUNCTION = "on_exec"
+    INPUT_IS_LIST = (True,)
     OUTPUT_NODE = True
     RETURN_NAMES = ("integer",)
     RETURN_TYPES = ("INT",)
 
     def on_exec(self, node_id, integer):
+        if isinstance(integer, list) and len(integer) > 1:
+            markdown_value = "\n".join(f"{i+1}. {item}" for i, item in enumerate(integer))
+        else:
+            markdown_value = str(integer[0]) if isinstance(integer, list) else str(integer)
 
         PromptServer.instance.send_sync("lf-displayinteger", {
             "node": node_id, 
-            "value": str(integer),
+            "value": markdown_value,
         })
 
         return (integer,)
@@ -117,15 +132,20 @@ class LF_DisplayString:
 
     CATEGORY = category
     FUNCTION = "on_exec"
+    INPUT_IS_LIST = (True,)
     OUTPUT_NODE = True
     RETURN_NAMES = ("string",)
     RETURN_TYPES = ("STRING",)
 
     def on_exec(self, node_id, string):
+        if isinstance(string, list) and len(string) > 1:
+            markdown_value = "\n".join(f"{i+1}. {item}" for i, item in enumerate(string))
+        else:
+            markdown_value = "".join(string)
 
         PromptServer.instance.send_sync("lf-displaystring", {
             "node": node_id, 
-            "value": string,
+            "value": markdown_value,
         })
 
         return (string,)
