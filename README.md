@@ -25,7 +25,7 @@ Counts the number of each keyword in a prompt and displays a bar chart showing t
 #### CheckpointSelector
 
 Used to select a checkpoint. It's possible to fetch additional data by fetching them from CivitAI or by loading the related cover inside the checkpoint's folder.
-![CheckpointSelector](https://github.com/lucafoscili/comfyui-lf/blob/22813956c616ec89b97b53411a0fc77dedef747b/docs/images/CheckpointSelector.png "Checkpoints additional info")
+![CheckpointSelector](https://github.com/lucafoscili/comfyui-lf/blob/f317945c6794d119cb3b51a0b55ee20609b1f5a4/docs/images/CheckpointSelector.png "Checkpoints additional info")
 
 #### CivitAIMetadataSetup
 
