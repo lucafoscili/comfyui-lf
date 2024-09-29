@@ -40,7 +40,7 @@ Includes a switch that enables verbose debug logs in the browser's console and a
 #### LoraSelector
 
 Used to select a LoRA. It's possible to fetch additional data from CivitAI or by loading the related cover inside the checkpoint's folder.
-![LoraSelector](https://github.com/lucafoscili/comfyui-lf/blob/f317945c6794d119cb3b51a0b55ee20609b1f5a4/docs/images/LoraSelector.png "LoRA additional info")
+![LoraSelector](https://github.com/lucafoscili/comfyui-lf/blob/865badc13204cef0af28da1f285dc4433ae495c7/docs/images/LoraSelector.png "LoRA additional info")
 
 ### Conversions nodes (`conversions.py`)
 
