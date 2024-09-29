@@ -52,6 +52,7 @@ class LF_DisplayBoolean:
             markdown_value = "\n".join(f"{i+1}. {item}" for i, item in enumerate(boolean))
         else:
             markdown_value = str(boolean[0]) if isinstance(boolean, list) else str(boolean)
+            boolean = markdown_value
 
         PromptServer.instance.send_sync("lf-displayboolean", {
             "node": node_id, 
@@ -82,6 +83,7 @@ class LF_DisplayFloat:
             markdown_value = "\n".join(f"{i+1}. {item}" for i, item in enumerate(float))
         else:
             markdown_value = str(float[0]) if isinstance(float, list) else str(float)
+            float = markdown_value
 
         PromptServer.instance.send_sync("lf-displayfloat", {
             "node": node_id, 
@@ -112,6 +114,7 @@ class LF_DisplayInteger:
             markdown_value = "\n".join(f"{i+1}. {item}" for i, item in enumerate(integer))
         else:
             markdown_value = str(integer[0]) if isinstance(integer, list) else str(integer)
+            integer = markdown_value
 
         PromptServer.instance.send_sync("lf-displayinteger", {
             "node": node_id, 
@@ -142,6 +145,7 @@ class LF_DisplayString:
             markdown_value = "\n".join(f"{i+1}. {item}" for i, item in enumerate(string))
         else:
             markdown_value = "".join(string)
+            string = markdown_value
 
         PromptServer.instance.send_sync("lf-displaystring", {
             "node": node_id, 
