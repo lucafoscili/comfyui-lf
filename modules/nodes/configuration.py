@@ -2,17 +2,13 @@ import folder_paths
 import os
 import random
 
-from PIL import Image
 from comfy.samplers import KSampler
 
 from ..utils.configuration import *
-from ..utils.conversions import pil_to_tensor, tensor_to_base64
 
 from server import PromptServer
 
 category = "✨ LF Nodes/Configuration"
-
-import json
 
 class LF_CheckpointSelector:
     @classmethod
@@ -33,7 +29,7 @@ class LF_CheckpointSelector:
     RETURN_NAMES = ("checkpoint", "checkpoint_name", "checkpoint_image", "model_path")
     RETURN_TYPES = (folder_paths.get_filename_list("checkpoints"), "STRING", "IMAGE", "STRING")
 
-    def on_exec(self, get_civitai_info, node_id, checkpoint, randomize, seed, filter):
+    def on_exec(self, node_id, checkpoint, get_civitai_info, randomize, seed, filter):
         checkpoints = folder_paths.get_filename_list("checkpoints")
 
         if filter:
@@ -43,76 +39,30 @@ class LF_CheckpointSelector:
             random.seed(seed)
             checkpoint = random.choice(checkpoints)
 
-        checkpoint_path = folder_paths.get_full_path("checkpoints", checkpoint)
-        model_info_path = os.path.splitext(checkpoint_path)[0] + ".info"
-
-        saved_info = None
-        if os.path.exists(model_info_path):
-            with open(model_info_path, 'r') as f:
-                saved_info = json.load(f)
-            print(f"Found existing model info file at {model_info_path}.")
-            get_civitai_info = False
-        else:
-            print(f"No model info file found at {model_info_path}. Using CivitAI if needed.")
-
-        try:
-            checkpoint_hash = get_sha256(checkpoint_path)
-        except Exception as e:
-            checkpoint_hash = "Unknown"
-            print(f"Error calculating hash for checkpoint: {e}")
-
-        checkpoint_name = os.path.basename(checkpoint_path)
-        checkpoint_image_path = find_checkpoint_image(checkpoint_path)
-
-        if checkpoint_image_path:
-            print(f"Found image for checkpoint: {checkpoint_image_path}")
-
-            pil_image = Image.open(checkpoint_image_path)
-            checkpoint_tensor = pil_to_tensor(pil_image)
-            checkpoint_base64 = tensor_to_base64(checkpoint_tensor)
-        else:
-            print("No image found for the checkpoint.")
-            checkpoint_base64 = "None"
-            checkpoint_tensor = None
+        checkpoint_data = process_model("checkpoint", checkpoint, "checkpoints")
+        model_name = checkpoint_data["model_name"]
+        model_hash = checkpoint_data["model_hash"]
+        model_path = checkpoint_data["model_path"]
+        model_base64 = checkpoint_data["model_base64"]
+        model_cover = checkpoint_data["model_cover"]
+        saved_info = checkpoint_data["saved_info"]
 
         if saved_info:
             dataset = saved_info
+            get_civitai_info = False
         else:
-            dataset = {
-                "nodes": [
-                    {
-                        "cells": {
-                            "icon": {
-                                "kulStyle": "img {object-fit: cover;}",
-                                "shape": "image",
-                                "value": "data:image/webp;base64," + checkpoint_base64 if checkpoint_image_path else "broken_image"
-                            },
-                            "text1": {
-                                "value": checkpoint_name
-                            },
-                            "text2": {
-                                "value": checkpoint_hash
-                            },
-                            "text3": {
-                                "value": "Selected checkpoint cover, hash and name." +
-                                         ("" if checkpoint_image_path 
-                                             else "Note: to set the cover, create an image with the same name of the checkpoint in its folder.")
-                            }
-                        },
-                        "id": checkpoint_name
-                    }
-                ]
-            }
+            dataset = prepare_model_dataset(model_name, model_hash, model_base64, model_path)
 
         PromptServer.instance.send_sync("lf-checkpointselector", {
             "node": node_id, 
             "dataset": dataset,
-            "hash": checkpoint_hash,
+            "hash": model_hash,
             "civitaiInfo": get_civitai_info,
-            "modelPath": checkpoint_path
+            "modelPath": model_path
         })
 
-        return (checkpoint, checkpoint_name, checkpoint_tensor, checkpoint_path)
+        return (checkpoint, model_name, model_cover, model_path)
+
 
 class LF_CivitAIMetadataSetup:
     @classmethod
@@ -224,7 +174,63 @@ class LF_ControlPanel:
 
     def on_exec(self):
         return ()
-    
+
+class LF_LoraSelector:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "lora": (folder_paths.get_filename_list("loras"), {"default": "None", "tooltip": "Lora model to use."}),
+                "get_civitai_info": ("BOOLEAN", {"default": True, "tooltip": "Attempts to retrieve more info about the model from CivitAI."}),
+                "weight": ("FLOAT", {"default": 1.0, "min": -3.0, "max": 3.0, "tooltip": "Lora weight."}),
+                "randomize": ("BOOLEAN", {"default": False, "tooltip": "Selects a Lora randomly from your loras directory."}),
+                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Seed value for when randomization is active."}),
+                "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter Lora file names."}),
+            },
+            "hidden": {"node_id": "UNIQUE_ID"}
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    RETURN_NAMES = ("lora", "lora_tag", "lora_name", "model_path", "model_cover")
+    RETURN_TYPES = (folder_paths.get_filename_list("loras"), "STRING", "STRING", "STRING", "IMAGE")
+
+    def on_exec(self, node_id, lora, get_civitai_info, weight, randomize, seed, filter):
+        loras = folder_paths.get_filename_list("loras")
+
+        if filter:
+            loras = [l for l in loras if filter in l]
+
+        if randomize:
+            random.seed(seed)
+            lora = random.choice(loras)
+
+        lora_data = process_model("lora", lora, "loras")
+        model_name = lora_data["model_name"]
+        model_hash = lora_data["model_hash"]
+        model_path = lora_data["model_path"]
+        model_base64 = lora_data["model_base64"]
+        model_cover = lora_data["model_cover"]
+        saved_info = lora_data["saved_info"]
+
+        lora_tag = f"<lora:{model_name}:{weight}>"
+
+        if saved_info:
+            dataset = saved_info
+            get_civitai_info = False
+        else:
+            dataset = prepare_model_dataset(model_name, model_hash, model_base64, model_path)
+
+        PromptServer.instance.send_sync("lf-loraselector", {
+            "node": node_id, 
+            "dataset": dataset,
+            "hash": model_hash,
+            "civitaiInfo": get_civitai_info,
+            "modelPath": model_path
+        })
+
+        return (lora, lora_tag, model_name, model_path, model_cover)
+        
 class LF_WorkflowSettings:
     @classmethod
     def INPUT_TYPES(cls):
@@ -263,14 +269,27 @@ class LF_WorkflowSettings:
     RETURN_NAMES = ("drawing_board", "drawing_board_pos", "drawing_board_neg", "drawing_board_loras", "random_seed", "global_seed", "batch_size", "random_framing", "random_pose", "random_character", "random_outfit", "random_location", "random_style", "character_selector", "outfit_selector", "location_selector", "style_selector", "square_format", "xtra", "LLM_prompt", "character_lora_weight", "additional_loras_weight", "custom_images_urls", "config_json_path")    
     RETURN_TYPES = ("BOOLEAN", "STRING", "STRING", "STRING", "BOOLEAN", "INT", "INT", "BOOLEAN", "BOOLEAN", "BOOLEAN", "BOOLEAN", "BOOLEAN", "BOOLEAN", "INT", "INT", "INT", "INT", "BOOLEAN", "BOOLEAN", "BOOLEAN", "FLOAT", "FLOAT", "STRING", "STRING")
     
-    def on_exec(self, seed, drawing_board, drawing_board_plus, drawing_board_minus, drawing_board_loras, random_seed, fixed_seed, batch_size, random_framing, random_pose, random_character, random_outfit, random_location, random_style, character_selector, outfit_selector, location_selector, style_selector, square_format, xtra, llm_prompt, character_lora_weight, additional_loras_weight, custom_images_urls, config_json_path):
+    def on_exec(self, seed, drawing_board, drawing_board_plus, drawing_board_minus, drawing_board_loras, 
+                random_seed, fixed_seed, batch_size, random_framing, 
+                random_pose, random_character, random_outfit, random_location, 
+                random_style, character_selector, outfit_selector, 
+                location_selector, style_selector, square_format, xtra, 
+                llm_prompt, character_lora_weight, additional_loras_weight,
+                custom_images_urls, config_json_path):
         global_seed = seed if random_seed else fixed_seed
-        return (drawing_board, drawing_board_plus, drawing_board_minus, drawing_board_loras, random_seed, global_seed, batch_size, random_framing, random_pose, random_character, random_outfit, random_location, random_style, character_selector, outfit_selector, location_selector, style_selector, square_format, xtra, llm_prompt, character_lora_weight, additional_loras_weight, custom_images_urls, config_json_path)
+        return (drawing_board, drawing_board_plus, drawing_board_minus, drawing_board_loras,
+                random_seed, global_seed, batch_size, random_framing,
+                random_pose, random_character, random_outfit, random_location,
+                random_style, character_selector, outfit_selector,
+                location_selector, style_selector, square_format, xtra,
+                llm_prompt, character_lora_weight, additional_loras_weight,
+                custom_images_urls, config_json_path)
 
 NODE_CLASS_MAPPINGS = {
     "LF_CheckpointSelector": LF_CheckpointSelector,
     "LF_CivitAIMetadataSetup": LF_CivitAIMetadataSetup,
     "LF_ControlPanel": LF_ControlPanel,
+    "LF_LoraSelector": LF_LoraSelector,
     "LF_WorkflowSettings": LF_WorkflowSettings,
 }
 
@@ -278,5 +297,6 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_CheckpointSelector": "Checkpoint selector",
     "LF_CivitAIMetadataSetup": "CivitAI metadata setup",
     "LF_ControlPanel": "Control panel",
+    "LF_LoraSelector": "LoRA selector",
     "LF_WorkflowSettings": "Workflow settings",
 }

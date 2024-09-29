@@ -42,6 +42,7 @@ import {
   DisplayIntegerPayload,
   DisplayStringPayload,
   CheckpointSelectorPayload,
+  LoraSelectorPayload,
 } from '../types/events.js';
 
 /*-------------------------------------------------*/
@@ -349,6 +350,16 @@ export class LFManager {
     /*                I n i t   L o a d M e t a d a t a                  */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_LoadMetadata(widgets.setters.KUL_UPLOAD);
+    /*-------------------------------------------------------------------*/
+    /*                I n i t   L o r a S e l e c t o r                  */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_LoraSelector(
+      widgets.setters.KUL_CARD,
+      widgets.adders.KUL_CARD,
+    );
+    this.#APIS.event(EventName.loraSelector, (e: CustomEvent<LoraSelectorPayload>) => {
+      nodes.eventHandlers.LF_LoraSelector(e, widgets.adders.KUL_CARD);
+    });
     /*-------------------------------------------------------------------*/
     /*                      I n i t   S t r i n g                        */
     /*-------------------------------------------------------------------*/

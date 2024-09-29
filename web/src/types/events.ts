@@ -28,6 +28,7 @@ export enum EventName {
   keywordCounter = 'lf-keywordcounter',
   loadFileOnce = 'lf-loadfileonce',
   loadImages = 'lf-loadimages',
+  loraSelector = 'lf-loraselector',
   multipleImageResizeForWeb = 'lf-multipleimageresizeforweb',
   randomBoolean = 'lf-randomboolean',
   resizeimageByEdge = 'lf-resizeimagebyedge',
@@ -57,6 +58,7 @@ export type EventPayload =
   | IntegerPayload
   | KeywordCounterPayload
   | LoadImagesPayload
+  | LoraSelectorPayload
   | MultipleImageResizeForWebPayload
   | RandomBooleanPayload
   | ResizeImageByEdgePayload
@@ -226,6 +228,17 @@ export interface LoadImagesPayload extends BaseEventPayload {
   images: Array<string>;
   selectedIndex: number;
   selectedName: string;
+}
+
+/*-------------------------------------------------------------------*/
+/*         L o r a S e l e c t o r   D e c l a r a t i o n s         */
+/*-------------------------------------------------------------------*/
+
+export interface LoraSelectorPayload extends BaseEventPayload {
+  dataset: KulDataDataset;
+  hash: string;
+  civitaiInfo: boolean;
+  modelPath: string;
 }
 
 /*-------------------------------------------------------------------*/

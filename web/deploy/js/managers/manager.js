@@ -261,6 +261,13 @@ export class LFManager {
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_LoadMetadata(widgets.setters.KUL_UPLOAD);
         /*-------------------------------------------------------------------*/
+        /*                I n i t   L o r a S e l e c t o r                  */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_LoraSelector(widgets.setters.KUL_CARD, widgets.adders.KUL_CARD);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.loraSelector, (e) => {
+            nodes.eventHandlers.LF_LoraSelector(e, widgets.adders.KUL_CARD);
+        });
+        /*-------------------------------------------------------------------*/
         /*                      I n i t   S t r i n g                        */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_String(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
