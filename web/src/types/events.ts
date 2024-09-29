@@ -97,6 +97,7 @@ export interface CheckpointSelectorPayload extends BaseEventPayload {
   dataset: KulDataDataset;
   hash: string;
   civitaiInfo: boolean;
+  modelPath: string;
 }
 
 /*-------------------------------------------------------------------*/

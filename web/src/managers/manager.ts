@@ -6,7 +6,7 @@ import { defineCustomElements } from '../ketchup-lite/loader.js';
 import { getKulManager } from '../utils/common.js';
 import { LFNodes } from './nodes.js';
 import { LFWidgets } from './widgets.js';
-import { ComfyAPIs, LogSeverity } from '../types/manager.js';
+import { ComfyAPIs, LogSeverity, SaveModelAPIPayload } from '../types/manager.js';
 import { Extension } from '../types/nodes.js';
 import {
   BlurImagesPayload,
@@ -93,6 +93,28 @@ export class LFManager {
     },
     register: (extension: Extension) => {
       app.registerExtension(extension);
+    },
+    saveModelMetadata: (modelPath, dataset) => {
+      const body = new FormData();
+      body.append('model_path', modelPath);
+      body.append('metadata', JSON.stringify(dataset));
+      try {
+        api
+          .fetchApi('/comfyui-lf/save-model-info', {
+            method: 'POST',
+            body,
+          })
+          .then((res: Response) => res.json())
+          .then((data: SaveModelAPIPayload) => {
+            if (data.status === 'saved') {
+              this.log('Metadata for this model saved successfully.', {}, LogSeverity.Info);
+            } else if (data.status === 'exists') {
+              this.log('Metadata for this model already exists.', {}, LogSeverity.Warning);
+            }
+          });
+      } catch (error) {
+        this.log("Error saving model's metadata.", { error }, LogSeverity.Error);
+      }
     },
   };
   #DEBUG = false;

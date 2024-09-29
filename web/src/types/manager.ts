@@ -1,4 +1,5 @@
 import { BaseEventPayload, EventName } from './events';
+import { KulDataDataset } from './ketchup-lite/components';
 import { Extension } from './nodes';
 
 /*-------------------------------------------------------------------*/
@@ -16,6 +17,7 @@ export interface ComfyAPIs {
   modelInfoFromCivitAI: (hash: string) => Promise<CivitAIModelData>;
   redraw: () => void;
   register: (extension: Extension) => void;
+  saveModelMetadata: (modelPath: string, dataset: KulDataDataset) => void;
 }
 export enum LogSeverity {
   Info = 'info',
@@ -27,3 +29,7 @@ export type IDBFileMetadata = {
   id: string;
   base64: string;
 };
+export interface SaveModelAPIPayload {
+  status: 'exists' | 'saved';
+  message: string;
+}

@@ -2,7 +2,8 @@ import { CheckpointSelectorPayload, EventName } from '../types/events';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import { CustomWidgetName, type BaseWidgetCallback, type CardWidgetSetter } from '../types/widgets';
-import { fetchModelInfo, getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
+import { fetchModelMetadata } from '../utils/api';
+import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 
 const NAME = NodeName.checkpointSelector;
 
@@ -17,7 +18,7 @@ export const checkpointSelectorFactory = {
       const widget = getCustomWidget(node, CustomWidgetName.card, addW);
       const comp = widget.options.getComp();
       if (payload.civitaiInfo) {
-        fetchModelInfo(widget, payload, comp);
+        fetchModelMetadata(widget, payload, comp);
       } else {
         widget.options.setValue(payload.dataset);
       }

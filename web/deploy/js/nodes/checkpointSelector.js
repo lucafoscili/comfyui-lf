@@ -2,7 +2,8 @@ import { EventName } from '../types/events.js';
 import { LogSeverity } from '../types/manager.js';
 import { NodeName } from '../types/nodes.js';
 import { CustomWidgetName } from '../types/widgets.js';
-import { fetchModelInfo, getApiRoutes, getCustomWidget, getLFManager } from '../utils/common.js';
+import { fetchModelMetadata } from '../utils/api.js';
+import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common.js';
 const NAME = NodeName.checkpointSelector;
 export const checkpointSelectorFactory = {
     eventHandler: (event, addW) => {
@@ -14,7 +15,7 @@ export const checkpointSelectorFactory = {
             const widget = getCustomWidget(node, CustomWidgetName.card, addW);
             const comp = widget.options.getComp();
             if (payload.civitaiInfo) {
-                fetchModelInfo(widget, payload, comp);
+                fetchModelMetadata(widget, payload, comp);
             }
             else {
                 widget.options.setValue(payload.dataset);

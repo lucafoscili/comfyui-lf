@@ -62,6 +62,30 @@ export class LFManager {
             register: (extension) => {
                 app.registerExtension(extension);
             },
+            saveModelMetadata: (modelPath, dataset) => {
+                const body = new FormData();
+                body.append('model_path', modelPath);
+                body.append('metadata', JSON.stringify(dataset));
+                try {
+                    api
+                        .fetchApi('/comfyui-lf/save-model-info', {
+                        method: 'POST',
+                        body,
+                    })
+                        .then((res) => res.json())
+                        .then((data) => {
+                        if (data.status === 'saved') {
+                            this.log('Metadata for this model saved successfully.', {}, LogSeverity.Info);
+                        }
+                        else if (data.status === 'exists') {
+                            this.log('Metadata for this model already exists.', {}, LogSeverity.Warning);
+                        }
+                    });
+                }
+                catch (error) {
+                    this.log("Error saving model's metadata.", { error }, LogSeverity.Error);
+                }
+            },
         });
         _LFManager_DEBUG.set(this, false);
         _LFManager_DOM.set(this, document.documentElement);
