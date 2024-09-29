@@ -12,24 +12,26 @@ from server import PromptServer
 
 category = "✨ LF Nodes/Configuration"
 
+import json
+
 class LF_CheckpointSelector:
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
                 "checkpoint": (folder_paths.get_filename_list("checkpoints"), {"default": "None", "tooltip": "Checkpoint used to generate the image."}),
-                "get_civitai_info": ( "BOOLEAN", {"default": True, "tooltip": "Attempts to retrieve more info about the model from CivitAI."}),
+                "get_civitai_info": ("BOOLEAN", {"default": True, "tooltip": "Attempts to retrieve more info about the model from CivitAI."}),
                 "randomize": ("BOOLEAN", {"default": False, "tooltip": "Selects a checkpoint randomly from your checkpoints directory."}),
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Seed value for when randomization is active."}),
                 "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter checkpoint file names."}),
             },
-            "hidden": { "node_id": "UNIQUE_ID" }
+            "hidden": {"node_id": "UNIQUE_ID"}
         }
-    
+
     CATEGORY = category
     FUNCTION = "on_exec"
-    RETURN_NAMES = ("checkpoint", "checkpoint_name", "checkpoint_image")
-    RETURN_TYPES = (folder_paths.get_filename_list("checkpoints"), "STRING", "IMAGE")
+    RETURN_NAMES = ("checkpoint", "checkpoint_name", "checkpoint_image", "model_path")
+    RETURN_TYPES = (folder_paths.get_filename_list("checkpoints"), "STRING", "IMAGE", "STRING")
 
     def on_exec(self, get_civitai_info, node_id, checkpoint, randomize, seed, filter):
         checkpoints = folder_paths.get_filename_list("checkpoints")
@@ -42,6 +44,16 @@ class LF_CheckpointSelector:
             checkpoint = random.choice(checkpoints)
 
         checkpoint_path = folder_paths.get_full_path("checkpoints", checkpoint)
+        model_info_path = os.path.splitext(checkpoint_path)[0] + ".info"
+
+        saved_info = None
+        if os.path.exists(model_info_path):
+            with open(model_info_path, 'r') as f:
+                saved_info = json.load(f)
+            print(f"Found existing model info file at {model_info_path}.")
+            get_civitai_info = False
+        else:
+            print(f"No model info file found at {model_info_path}. Using CivitAI if needed.")
 
         try:
             checkpoint_hash = get_sha256(checkpoint_path)
@@ -58,46 +70,49 @@ class LF_CheckpointSelector:
             pil_image = Image.open(checkpoint_image_path)
             checkpoint_tensor = pil_to_tensor(pil_image)
             checkpoint_base64 = tensor_to_base64(checkpoint_tensor)
-
         else:
             print("No image found for the checkpoint.")
             checkpoint_base64 = "None"
             checkpoint_tensor = None
 
-        dataset = {
-            "nodes": [
-                {
-                    "cells": {
-                        "icon": {
-                            "kulStyle": "img {object-fit: cover;}",
-                            "shape": "image",
-                            "value": "data:image/webp;base64," + checkpoint_base64 if checkpoint_image_path else "broken_image"
+        if saved_info:
+            dataset = saved_info
+        else:
+            dataset = {
+                "nodes": [
+                    {
+                        "cells": {
+                            "icon": {
+                                "kulStyle": "img {object-fit: cover;}",
+                                "shape": "image",
+                                "value": "data:image/webp;base64," + checkpoint_base64 if checkpoint_image_path else "broken_image"
+                            },
+                            "text1": {
+                                "value": checkpoint_name
+                            },
+                            "text2": {
+                                "value": checkpoint_hash
+                            },
+                            "text3": {
+                                "value": "Selected checkpoint cover, hash and name." +
+                                         ("" if checkpoint_image_path 
+                                             else "Note: to set the cover, create an image with the same name of the checkpoint in its folder.")
+                            }
                         },
-                        "text1": {
-                            "value": checkpoint_name
-                        },
-                        "text2": {
-                            "value": checkpoint_hash
-                        },
-                        "text3": {
-                            "value": "Selected checkpoint cover, hash and name. " +
-                              ("" if checkpoint_image_path 
-                                  else "Note: to set the cover, create an image with the same name of the checkpoint in its folder.")
-                        }
-                    },
-                    "id": checkpoint_name
-                }
-            ]
-        }
+                        "id": checkpoint_name
+                    }
+                ]
+            }
 
         PromptServer.instance.send_sync("lf-checkpointselector", {
             "node": node_id, 
             "dataset": dataset,
             "hash": checkpoint_hash,
-            "civitaiInfo": get_civitai_info
+            "civitaiInfo": get_civitai_info,
+            "modelPath": checkpoint_path
         })
 
-        return (checkpoint, checkpoint_name, checkpoint_tensor)
+        return (checkpoint, checkpoint_name, checkpoint_tensor, checkpoint_path)
 
 class LF_CivitAIMetadataSetup:
     @classmethod
