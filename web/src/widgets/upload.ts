@@ -1,6 +1,5 @@
 import { KulUploadEventPayload } from '../types/ketchup-lite/components';
-import { KulUpload } from '../types/ketchup-lite/components/kul-upload/kul-upload';
-import { IDBFileMetadata, LogSeverity } from '../types/manager';
+import { LogSeverity } from '../types/manager';
 import { CustomWidgetName, UploadWidgetOptions } from '../types/widgets';
 import { createDOMWidget, getLFManager } from '../utils/common';
 

@@ -25,10 +25,6 @@ export enum LogSeverity {
   Warning = 'warning',
   Error = 'error',
 }
-export type IDBFileMetadata = {
-  id: string;
-  base64: string;
-};
 export interface SaveModelAPIPayload {
   status: 'exists' | 'saved';
   message: string;

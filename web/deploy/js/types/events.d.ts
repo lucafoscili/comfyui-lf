@@ -23,6 +23,7 @@ export declare enum EventName {
     keywordCounter = "lf-keywordcounter",
     loadFileOnce = "lf-loadfileonce",
     loadImages = "lf-loadimages",
+    loraSelector = "lf-loraselector",
     multipleImageResizeForWeb = "lf-multipleimageresizeforweb",
     randomBoolean = "lf-randomboolean",
     resizeimageByEdge = "lf-resizeimagebyedge",
@@ -38,7 +39,7 @@ export declare enum EventName {
     urandomSeedGenerator = "lf-urandomseedgenerator",
     writeJson = "lf-writejson"
 }
-export type EventPayload = BlurImagesPayload | BooleanPayload | CheckpointSelectorPayload | CivitAIMetadataSetupPayload | DisplayBooleanPayload | DisplayJSONPayload | ExtractorPayload | FloatPayload | ImageListFromJSONPayload | ImageHistogramPayload | IntegerPayload | KeywordCounterPayload | LoadImagesPayload | MultipleImageResizeForWebPayload | RandomBooleanPayload | ResizeImageByEdgePayload | ResizeImageToSquarePayload | ResolutionSwitcherPayload | SaveImageForCivitAIPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | UrandomSeedGeneratorPayload | WriteJSONPayload;
+export type EventPayload = BlurImagesPayload | BooleanPayload | CheckpointSelectorPayload | CivitAIMetadataSetupPayload | DisplayBooleanPayload | DisplayJSONPayload | ExtractorPayload | FloatPayload | ImageListFromJSONPayload | ImageHistogramPayload | IntegerPayload | KeywordCounterPayload | LoadImagesPayload | LoraSelectorPayload | MultipleImageResizeForWebPayload | RandomBooleanPayload | ResizeImageByEdgePayload | ResizeImageToSquarePayload | ResolutionSwitcherPayload | SaveImageForCivitAIPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | UrandomSeedGeneratorPayload | WriteJSONPayload;
 export interface BlurImagesPayload extends BaseEventPayload {
     fileNames: Array<string>;
     images: Array<string>;
@@ -105,6 +106,12 @@ export interface LoadImagesPayload extends BaseEventPayload {
     images: Array<string>;
     selectedIndex: number;
     selectedName: string;
+}
+export interface LoraSelectorPayload extends BaseEventPayload {
+    dataset: KulDataDataset;
+    hash: string;
+    civitaiInfo: boolean;
+    modelPath: string;
 }
 export interface MultipleImageResizeForWebPayload extends BaseEventPayload {
     dataset: KulDataDataset;
