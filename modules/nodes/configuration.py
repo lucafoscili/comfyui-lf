@@ -180,7 +180,6 @@ class LF_EmbeddingSelector:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "embedding": (folder_paths.get_filename_list("embeddings"), {"default": "None", "tooltip": "Embedding to use."}),
                 "get_civitai_info": ("BOOLEAN", {"default": True, "tooltip": "Attempts to retrieve more info about the model from CivitAI."}),
                 "weight": ("FLOAT", {"default": 1.0, "min": -3.0, "max": 3.0, "tooltip": "Embedding's weight."}),
                 "randomize": ("BOOLEAN", {"default": False, "tooltip": "Selects an embedding randomly from your embeddings directory."}),
@@ -188,6 +187,7 @@ class LF_EmbeddingSelector:
                 "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter embedding file names."}),
             },
             "optional": {
+                "embedding": (["None"] + folder_paths.get_filename_list("embeddings"), {"default": "None", "tooltip": "Embedding to use."}),
                 "embedding_stack": ("STRING", {"default": "", "defaultInput": True, "tooltip": "Optional string usable to concatenate subsequent selector nodes."}),
             },
             "hidden": {"node_id": "UNIQUE_ID"}
@@ -198,7 +198,12 @@ class LF_EmbeddingSelector:
     RETURN_NAMES = ("embedding", "formatted_embedding", "embedding_name", "model_path", "model_cover")
     RETURN_TYPES = (folder_paths.get_filename_list("embeddings"), "STRING", "STRING", "STRING", "IMAGE")
 
-    def on_exec(self, node_id, embedding, get_civitai_info, weight, randomize, seed, filter, embedding_stack=None):
+    def on_exec(self, node_id, embedding, get_civitai_info, weight, randomize, seed, filter, embedding_stack=""):
+        embedding = None if embedding is None or str(embedding) == "None" else embedding
+
+        if not embedding and not randomize:
+            return (None, embedding_stack, "", "", None)
+        
         embeddings = folder_paths.get_filename_list("embeddings")
 
         if filter:
@@ -236,13 +241,16 @@ class LF_EmbeddingSelector:
             formatted_embedding = f"{formatted_embedding}, {embedding_stack}"
 
         return (embedding, formatted_embedding, model_name, model_path, model_cover)
+    
+    @classmethod
+    def VALIDATE_INPUTS(self, **kwargs):
+         return True
 
 class LF_LoraSelector:
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "lora": (folder_paths.get_filename_list("loras"), {"default": "None", "tooltip": "Lora model to use."}),
                 "get_civitai_info": ("BOOLEAN", {"default": True, "tooltip": "Attempts to retrieve more info about the model from CivitAI."}),
                 "weight": ("FLOAT", {"default": 1.0, "min": -3.0, "max": 3.0, "tooltip": "Lora weight."}),
                 "randomize": ("BOOLEAN", {"default": False, "tooltip": "Selects a Lora randomly from your loras directory."}),
@@ -250,6 +258,7 @@ class LF_LoraSelector:
                 "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter Lora file names."}),
             },
             "optional": {
+                "lora": (["None"] + folder_paths.get_filename_list("loras"), {"default": "None", "tooltip": "Lora model to use."}),
                 "lora_stack": ("STRING", {"default": "", "defaultInput": True, "tooltip": "Optional string usable to concatenate subsequent selector nodes."}),
             },
             "hidden": {"node_id": "UNIQUE_ID"}
@@ -260,7 +269,12 @@ class LF_LoraSelector:
     RETURN_NAMES = ("lora", "lora_tag", "lora_name", "model_path", "model_cover")
     RETURN_TYPES = (folder_paths.get_filename_list("loras"), "STRING", "STRING", "STRING", "IMAGE")
 
-    def on_exec(self, node_id, lora, get_civitai_info, weight, randomize, seed, filter, lora_stack=None):
+    def on_exec(self, node_id, lora, get_civitai_info, weight, randomize, seed, filter, lora_stack=""):
+        lora = None if lora is None or str(lora) == "None" else lora
+
+        if not lora and not randomize:
+            return (None, lora_stack, "", "", None)
+        
         loras = folder_paths.get_filename_list("loras")
 
         if filter:
@@ -298,6 +312,10 @@ class LF_LoraSelector:
             lora_tag = f"{lora_tag}, {lora_stack}"
 
         return (lora, lora_tag, model_name, model_path, model_cover)
+    
+    @classmethod
+    def VALIDATE_INPUTS(self, **kwargs):
+         return True
         
 class LF_WorkflowSettings:
     @classmethod
