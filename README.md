@@ -40,7 +40,7 @@ Includes a switch that enables verbose debug logs in the browser's console and a
 #### EmbeddingSelector
 
 Used to select an embedding. It's possible to fetch additional data from CivitAI or by loading the related cover inside the embeddings folder.
-![EmbeddingSelector](https://github.com/lucafoscili/comfyui-lf/blob/f317945c6794d119cb3b51a0b55ee20609b1f5a4/docs/images/EmbeddingSelector.png "Embedding additional info")
+![EmbeddingSelector](https://github.com/lucafoscili/comfyui-lf/blob/8393783e3cb4dcb486be37ca0c79985e9dd28447/docs/images/EmbeddingSelector.png "Embedding additional info")
 
 #### LoraSelector
 
