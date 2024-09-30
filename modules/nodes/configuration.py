@@ -175,6 +175,62 @@ class LF_ControlPanel:
     def on_exec(self):
         return ()
 
+class LF_EmbeddingSelector:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "embedding": (folder_paths.get_filename_list("embeddings"), {"default": "None", "tooltip": "Embedding to use."}),
+                "get_civitai_info": ("BOOLEAN", {"default": True, "tooltip": "Attempts to retrieve more info about the model from CivitAI."}),
+                "weight": ("FLOAT", {"default": 1.0, "min": -3.0, "max": 3.0, "tooltip": "Embedding's weight."}),
+                "randomize": ("BOOLEAN", {"default": False, "tooltip": "Selects an embedding randomly from your embeddings directory."}),
+                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Seed value for when randomization is active."}),
+                "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter embedding file names."}),
+            },
+            "hidden": {"node_id": "UNIQUE_ID"}
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    RETURN_NAMES = ("embedding", "formatted_embedding", "embedding_name", "model_path", "model_cover")
+    RETURN_TYPES = (folder_paths.get_filename_list("embeddings"), "STRING", "STRING", "STRING", "IMAGE")
+
+    def on_exec(self, node_id, embedding, get_civitai_info, weight, randomize, seed, filter):
+        embeddings = folder_paths.get_filename_list("embeddings")
+
+        if filter:
+            embeddings = [e for e in embeddings if filter in e]
+
+        if randomize:
+            random.seed(seed)
+            embedding = random.choice(embeddings)
+
+        embedding_data = process_model("embedding", embedding, "embeddings")
+        model_name = embedding_data["model_name"]
+        model_hash = embedding_data["model_hash"]
+        model_path = embedding_data["model_path"]
+        model_base64 = embedding_data["model_base64"]
+        model_cover = embedding_data["model_cover"]
+        saved_info = embedding_data["saved_info"]
+
+        formatted_embedding =  f"embedding:{model_name}" if weight == 1 else f"(embedding:{model_name}:{weight})"
+
+        if saved_info:
+            dataset = saved_info
+            get_civitai_info = False
+        else:
+            dataset = prepare_model_dataset(model_name, model_hash, model_base64, model_path)
+
+        PromptServer.instance.send_sync("lf-embeddingselector", {
+            "node": node_id, 
+            "dataset": dataset,
+            "hash": model_hash,
+            "civitaiInfo": get_civitai_info,
+            "modelPath": model_path
+        })
+
+        return (embedding, formatted_embedding, model_name, model_path, model_cover)
+
 class LF_LoraSelector:
     @classmethod
     def INPUT_TYPES(cls):
@@ -289,6 +345,7 @@ NODE_CLASS_MAPPINGS = {
     "LF_CheckpointSelector": LF_CheckpointSelector,
     "LF_CivitAIMetadataSetup": LF_CivitAIMetadataSetup,
     "LF_ControlPanel": LF_ControlPanel,
+    "LF_EmbeddingSelector": LF_EmbeddingSelector,
     "LF_LoraSelector": LF_LoraSelector,
     "LF_WorkflowSettings": LF_WorkflowSettings,
 }
@@ -297,6 +354,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_CheckpointSelector": "Checkpoint selector",
     "LF_CivitAIMetadataSetup": "CivitAI metadata setup",
     "LF_ControlPanel": "Control panel",
+    "LF_EmbeddingSelector": "Embedding selector",
     "LF_LoraSelector": "LoRA selector",
     "LF_WorkflowSettings": "Workflow settings",
 }
