@@ -38,6 +38,7 @@ import { displayIntegerFactory } from '../nodes/displayInteger';
 import { displayStringFactory } from '../nodes/displayString';
 import { checkpointSelectorFactory } from '../nodes/checkpointSelector';
 import { loraSelectorFactory } from '../nodes/loraSelector';
+import { embeddingSelectorFactory } from '../nodes/embeddingSelector';
 
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
@@ -55,10 +56,11 @@ export class LFNodes {
     [NodeName.displayJson]: displayJsonFactory.eventHandler,
     [NodeName.displayPrimitiveAsJson]: displayPrimitiveAsJsonFactory.eventHandler,
     [NodeName.displayString]: displayStringFactory.eventHandler,
-    [NodeName.float]: floatFactory.eventHandler,
+    [NodeName.embeddingSelector]: checkpointSelectorFactory.eventHandler,
     [NodeName.extractor]: extractorFactory.eventHandler,
-    [NodeName.imageListFromJSON]: imageListFromJsonFactory.eventHandler,
+    [NodeName.float]: floatFactory.eventHandler,
     [NodeName.imageHistogram]: imageHistogramFactory.eventHandler,
+    [NodeName.imageListFromJSON]: imageListFromJsonFactory.eventHandler,
     [NodeName.integer]: integerFactory.eventHandler,
     [NodeName.keywordCounter]: keywordCounterFactory.eventHandler,
     [NodeName.loadFileOnce]: loadFileOnceFactory.eventHandler,
@@ -92,10 +94,11 @@ export class LFNodes {
     [NodeName.displayJson]: displayJsonFactory.register,
     [NodeName.displayPrimitiveAsJson]: displayPrimitiveAsJsonFactory.register,
     [NodeName.displayString]: displayStringFactory.register,
-    [NodeName.float]: floatFactory.register,
+    [NodeName.embeddingSelector]: embeddingSelectorFactory.register,
     [NodeName.extractor]: extractorFactory.register,
-    [NodeName.imageListFromJSON]: imageListFromJsonFactory.register,
+    [NodeName.float]: floatFactory.register,
     [NodeName.imageHistogram]: imageHistogramFactory.register,
+    [NodeName.imageListFromJSON]: imageListFromJsonFactory.register,
     [NodeName.integer]: integerFactory.register,
     [NodeName.keywordCounter]: keywordCounterFactory.register,
     [NodeName.keywordToggleFromJson]: keywordToggleFromJsonFactory.register,

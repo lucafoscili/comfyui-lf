@@ -17,6 +17,7 @@ export enum NodeName {
   displayPrimitiveAsJson = 'LF_DisplayPrimitiveAsJSON',
   displayString = 'LF_DisplayString',
   float = 'LF_Float',
+  embeddingSelector = 'LF_EmbeddingSelector',
   extractor = 'LF_Extractor',
   imageListFromJSON = 'LF_ImageListFromJSON',
   imageHistogram = 'LF_ImageHistogram',

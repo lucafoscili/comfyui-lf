@@ -15,6 +15,7 @@ export var NodeName;
     NodeName["displayPrimitiveAsJson"] = "LF_DisplayPrimitiveAsJSON";
     NodeName["displayString"] = "LF_DisplayString";
     NodeName["float"] = "LF_Float";
+    NodeName["embeddingSelector"] = "LF_EmbeddingSelector";
     NodeName["extractor"] = "LF_Extractor";
     NodeName["imageListFromJSON"] = "LF_ImageListFromJSON";
     NodeName["imageHistogram"] = "LF_ImageHistogram";

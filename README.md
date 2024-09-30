@@ -24,7 +24,7 @@ Counts the number of each keyword in a prompt and displays a bar chart showing t
 
 #### CheckpointSelector
 
-Used to select a checkpoint. It's possible to fetch additional data from CivitAI or by loading the related cover inside the checkpoint's folder.
+Used to select a checkpoint. It's possible to fetch additional data from CivitAI or by loading the related cover inside the checkpoints folder.
 ![CheckpointSelector](https://github.com/lucafoscili/comfyui-lf/blob/f317945c6794d119cb3b51a0b55ee20609b1f5a4/docs/images/CheckpointSelector.png "Checkpoints additional info")
 
 #### CivitAIMetadataSetup
@@ -37,9 +37,14 @@ Allows to setup and generate [CivitAI](https://civitai.com)-compatible metadata 
 Includes a switch that enables verbose debug logs in the browser's console and a button that allows to change the theme of Ketchup Lite webcomponents.
 ![ControlPanel](https://github.com/lucafoscili/comfyui-lf/blob/ab8e1230892452d989a022076e26fa512277c5e2/docs/images/ControlPanel.png "List of the available themes")
 
+#### EmbeddingSelector
+
+Used to select an embedding. It's possible to fetch additional data from CivitAI or by loading the related cover inside the embeddings folder.
+![EmbeddingSelector](https://github.com/lucafoscili/comfyui-lf/blob/8393783e3cb4dcb486be37ca0c79985e9dd28447/docs/images/EmbeddingSelector.png "Embedding additional info")
+
 #### LoraSelector
 
-Used to select a LoRA. It's possible to fetch additional data from CivitAI or by loading the related cover inside the checkpoint's folder.
+Used to select a LoRA. It's possible to fetch additional data from CivitAI or by loading the related cover inside the loras folder.
 ![LoraSelector](https://github.com/lucafoscili/comfyui-lf/blob/865badc13204cef0af28da1f285dc4433ae495c7/docs/images/LoraSelector.png "LoRA additional info")
 
 ### Conversions nodes (`conversions.py`)

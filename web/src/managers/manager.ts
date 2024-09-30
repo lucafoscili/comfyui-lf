@@ -43,6 +43,7 @@ import {
   DisplayStringPayload,
   CheckpointSelectorPayload,
   LoraSelectorPayload,
+  EmbeddingSelectorPayload,
 } from '../types/events.js';
 
 /*-------------------------------------------------*/
@@ -267,11 +268,14 @@ export class LFManager {
       nodes.eventHandlers.LF_DisplayString(e, widgets.adders.KUL_CODE);
     });
     /*-------------------------------------------------------------------*/
-    /*                        I n i t   F l o a t                        */
+    /*             I n i t   E m b e d d i n g S e l e c t o r           */
     /*-------------------------------------------------------------------*/
-    this.#MANAGERS.nodes.register.LF_Float(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
-    this.#APIS.event(EventName.float, (e: CustomEvent<FloatPayload>) => {
-      nodes.eventHandlers.LF_Float(e, widgets.adders.KUL_HISTORY);
+    this.#MANAGERS.nodes.register.LF_EmbeddingSelector(
+      widgets.setters.KUL_CARD,
+      widgets.adders.KUL_CARD,
+    );
+    this.#APIS.event(EventName.embeddingSelector, (e: CustomEvent<EmbeddingSelectorPayload>) => {
+      nodes.eventHandlers.LF_EmbeddingSelector(e, widgets.adders.KUL_CARD);
     });
     /*-------------------------------------------------------------------*/
     /*                     I n i t   E x t r a c t o r                   */
@@ -279,6 +283,13 @@ export class LFManager {
     this.#MANAGERS.nodes.register.LF_Extractor(widgets.setters.KUL_CODE);
     this.#APIS.event(EventName.extractor, (e: CustomEvent<ExtractorPayload>) => {
       nodes.eventHandlers.LF_Extractor(e, widgets.adders.KUL_CODE);
+    });
+    /*-------------------------------------------------------------------*/
+    /*                        I n i t   F l o a t                        */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_Float(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
+    this.#APIS.event(EventName.float, (e: CustomEvent<FloatPayload>) => {
+      nodes.eventHandlers.LF_Float(e, widgets.adders.KUL_HISTORY);
     });
     /*-------------------------------------------------------------------*/
     /*            I n i t   I m a g e L i s t F r o m J S O N            */
