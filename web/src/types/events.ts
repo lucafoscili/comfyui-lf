@@ -20,6 +20,7 @@ export enum EventName {
   displayJson = 'lf-displayjson',
   displayPrimitiveAsJson = 'lf-displayprimitiveasjson',
   displayString = 'lf-displaystring',
+  embeddingSelector = 'lf-embeddingselector',
   extractor = 'lf-extractor',
   float = 'lf-float',
   imageListFromJSON = 'lf-imagelistfromjson',
@@ -51,6 +52,7 @@ export type EventPayload =
   | CivitAIMetadataSetupPayload
   | DisplayBooleanPayload
   | DisplayJSONPayload
+  | EmbeddingSelectorPayload
   | ExtractorPayload
   | FloatPayload
   | ImageListFromJSONPayload
@@ -156,6 +158,17 @@ export interface DisplayJSONPayload extends BaseEventPayload {
 
 export interface DisplayStringPayload extends BaseEventPayload {
   value: string;
+}
+
+/*-------------------------------------------------------------------*/
+/*    E m b e d d i n g S e l e c t o r   D e c l a r a t i o n s    */
+/*-------------------------------------------------------------------*/
+
+export interface EmbeddingSelectorPayload extends BaseEventPayload {
+  dataset: KulDataDataset;
+  hash: string;
+  civitaiInfo: boolean;
+  modelPath: string;
 }
 
 /*-------------------------------------------------------------------*/

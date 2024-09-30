@@ -11,6 +11,7 @@ export var EventName;
     EventName["displayJson"] = "lf-displayjson";
     EventName["displayPrimitiveAsJson"] = "lf-displayprimitiveasjson";
     EventName["displayString"] = "lf-displaystring";
+    EventName["embeddingSelector"] = "lf-embeddingselector";
     EventName["extractor"] = "lf-extractor";
     EventName["float"] = "lf-float";
     EventName["imageListFromJSON"] = "lf-imagelistfromjson";

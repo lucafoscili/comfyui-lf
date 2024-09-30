@@ -189,11 +189,11 @@ export class LFManager {
             nodes.eventHandlers.LF_DisplayString(e, widgets.adders.KUL_CODE);
         });
         /*-------------------------------------------------------------------*/
-        /*                        I n i t   F l o a t                        */
+        /*             I n i t   E m b e d d i n g S e l e c t o r           */
         /*-------------------------------------------------------------------*/
-        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_Float(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
-        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.float, (e) => {
-            nodes.eventHandlers.LF_Float(e, widgets.adders.KUL_HISTORY);
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_EmbeddingSelector(widgets.setters.KUL_CARD, widgets.adders.KUL_CARD);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.embeddingSelector, (e) => {
+            nodes.eventHandlers.LF_EmbeddingSelector(e, widgets.adders.KUL_CARD);
         });
         /*-------------------------------------------------------------------*/
         /*                     I n i t   E x t r a c t o r                   */
@@ -201,6 +201,13 @@ export class LFManager {
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_Extractor(widgets.setters.KUL_CODE);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.extractor, (e) => {
             nodes.eventHandlers.LF_Extractor(e, widgets.adders.KUL_CODE);
+        });
+        /*-------------------------------------------------------------------*/
+        /*                        I n i t   F l o a t                        */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_Float(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.float, (e) => {
+            nodes.eventHandlers.LF_Float(e, widgets.adders.KUL_HISTORY);
         });
         /*-------------------------------------------------------------------*/
         /*            I n i t   I m a g e L i s t F r o m J S O N            */
