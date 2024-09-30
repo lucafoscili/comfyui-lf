@@ -187,6 +187,9 @@ class LF_EmbeddingSelector:
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Seed value for when randomization is active."}),
                 "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter embedding file names."}),
             },
+            "optional": {
+                "embedding_stack": ("STRING", {"default": "", "defaultInput": True, "tooltip": "Optional string usable to concatenate subsequent selector nodes."}),
+            },
             "hidden": {"node_id": "UNIQUE_ID"}
         }
 
@@ -195,7 +198,7 @@ class LF_EmbeddingSelector:
     RETURN_NAMES = ("embedding", "formatted_embedding", "embedding_name", "model_path", "model_cover")
     RETURN_TYPES = (folder_paths.get_filename_list("embeddings"), "STRING", "STRING", "STRING", "IMAGE")
 
-    def on_exec(self, node_id, embedding, get_civitai_info, weight, randomize, seed, filter):
+    def on_exec(self, node_id, embedding, get_civitai_info, weight, randomize, seed, filter, embedding_stack=None):
         embeddings = folder_paths.get_filename_list("embeddings")
 
         if filter:
@@ -229,6 +232,9 @@ class LF_EmbeddingSelector:
             "modelPath": model_path
         })
 
+        if embedding_stack:
+            formatted_embedding = f"{formatted_embedding}, {embedding_stack}"
+
         return (embedding, formatted_embedding, model_name, model_path, model_cover)
 
 class LF_LoraSelector:
@@ -243,6 +249,9 @@ class LF_LoraSelector:
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Seed value for when randomization is active."}),
                 "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter Lora file names."}),
             },
+            "optional": {
+                "lora_stack": ("STRING", {"default": "", "defaultInput": True, "tooltip": "Optional string usable to concatenate subsequent selector nodes."}),
+            },
             "hidden": {"node_id": "UNIQUE_ID"}
         }
 
@@ -251,7 +260,7 @@ class LF_LoraSelector:
     RETURN_NAMES = ("lora", "lora_tag", "lora_name", "model_path", "model_cover")
     RETURN_TYPES = (folder_paths.get_filename_list("loras"), "STRING", "STRING", "STRING", "IMAGE")
 
-    def on_exec(self, node_id, lora, get_civitai_info, weight, randomize, seed, filter):
+    def on_exec(self, node_id, lora, get_civitai_info, weight, randomize, seed, filter, lora_stack=None):
         loras = folder_paths.get_filename_list("loras")
 
         if filter:
@@ -284,6 +293,9 @@ class LF_LoraSelector:
             "civitaiInfo": get_civitai_info,
             "modelPath": model_path
         })
+
+        if lora_stack:
+            lora_tag = f"{lora_tag}, {lora_stack}"
 
         return (lora, lora_tag, model_name, model_path, model_cover)
         
