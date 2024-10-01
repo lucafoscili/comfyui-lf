@@ -1,7 +1,12 @@
 import { EmbeddingSelectorPayload, EventName } from '../types/events';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
-import { CustomWidgetName, type BaseWidgetCallback, type CardWidgetSetter } from '../types/widgets';
+import {
+  CardWidgetDeserializedValue,
+  CustomWidgetName,
+  type BaseWidgetCallback,
+  type CardWidgetSetter,
+} from '../types/widgets';
 import { fetchModelMetadata } from '../utils/api';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 
@@ -16,11 +21,16 @@ export const embeddingSelectorFactory = {
     const node = getApiRoutes().getNodeById(payload.id);
     if (node) {
       const widget = getCustomWidget(node, CustomWidgetName.card, addW);
-      const comp = widget.options.getComp();
       if (payload.civitaiInfo) {
-        fetchModelMetadata(widget, payload, comp);
+        fetchModelMetadata(widget, [
+          { dataset: payload.dataset, hash: payload.hash, path: payload.modelPath },
+        ]);
       } else {
-        widget.options.setValue(payload.dataset);
+        const value: CardWidgetDeserializedValue = {
+          propsArray: [{ kulData: payload.dataset }],
+          template: 'repeat(1, 1fr) / repeat(1, 1fr)',
+        };
+        widget.options.setValue(JSON.stringify(value));
       }
       getApiRoutes().redraw();
     }

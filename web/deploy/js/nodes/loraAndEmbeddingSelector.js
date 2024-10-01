@@ -4,10 +4,10 @@ import { NodeName } from '../types/nodes.js';
 import { CustomWidgetName, } from '../types/widgets.js';
 import { fetchModelMetadata } from '../utils/api.js';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common.js';
-const NAME = NodeName.loraSelector;
-export const loraSelectorFactory = {
+const NAME = NodeName.loraandEmbeddingSelector;
+export const loraandEmbeddingSelectorFactory = {
     eventHandler: (event, addW) => {
-        const name = EventName.loraSelector;
+        const name = EventName.loraAndEmbeddingSelector;
         getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
         const payload = event.detail;
         const node = getApiRoutes().getNodeById(payload.id);
@@ -15,13 +15,22 @@ export const loraSelectorFactory = {
             const widget = getCustomWidget(node, CustomWidgetName.card, addW);
             if (payload.civitaiInfo) {
                 fetchModelMetadata(widget, [
-                    { dataset: payload.dataset, hash: payload.hash, path: payload.modelPath },
+                    {
+                        dataset: payload.loraDataset,
+                        hash: payload.loraHash,
+                        path: payload.loraModelPath,
+                    },
+                    {
+                        dataset: payload.embeddingDataset,
+                        hash: payload.embeddingHash,
+                        path: payload.embeddingModelPath,
+                    },
                 ]);
             }
             else {
                 const value = {
-                    propsArray: [{ kulData: payload.dataset }],
-                    template: 'repeat(1, 1fr) / repeat(1, 1fr)',
+                    propsArray: [{ kulData: payload.loraDataset }, { kulData: payload.embeddingDataset }],
+                    template: 'repeat(1, 1fr) / repeat(2, 1fr)',
                 };
                 widget.options.setValue(JSON.stringify(value));
             }

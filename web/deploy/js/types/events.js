@@ -20,6 +20,7 @@ export var EventName;
     EventName["keywordCounter"] = "lf-keywordcounter";
     EventName["loadFileOnce"] = "lf-loadfileonce";
     EventName["loadImages"] = "lf-loadimages";
+    EventName["loraAndEmbeddingSelector"] = "lf-loraandembeddingselector";
     EventName["loraSelector"] = "lf-loraselector";
     EventName["multipleImageResizeForWeb"] = "lf-multipleimageresizeforweb";
     EventName["randomBoolean"] = "lf-randomboolean";

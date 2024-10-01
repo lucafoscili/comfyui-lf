@@ -1,20 +1,20 @@
-import { LoraSelectorPayload, EventName } from '../types/events';
+import { EventName, LoraAndEmbeddingSelectorPayload } from '../types/events';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import {
   CardWidgetDeserializedValue,
+  CardWidgetSetter,
   CustomWidgetName,
   type BaseWidgetCallback,
-  type CardWidgetSetter,
 } from '../types/widgets';
 import { fetchModelMetadata } from '../utils/api';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 
-const NAME = NodeName.loraSelector;
+const NAME = NodeName.loraandEmbeddingSelector;
 
-export const loraSelectorFactory = {
-  eventHandler: (event: CustomEvent<LoraSelectorPayload>, addW: BaseWidgetCallback) => {
-    const name = EventName.loraSelector;
+export const loraandEmbeddingSelectorFactory = {
+  eventHandler: (event: CustomEvent<LoraAndEmbeddingSelectorPayload>, addW: BaseWidgetCallback) => {
+    const name = EventName.loraAndEmbeddingSelector;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
 
     const payload = event.detail;
@@ -23,15 +23,25 @@ export const loraSelectorFactory = {
       const widget = getCustomWidget(node, CustomWidgetName.card, addW);
       if (payload.civitaiInfo) {
         fetchModelMetadata(widget, [
-          { dataset: payload.dataset, hash: payload.hash, path: payload.modelPath },
+          {
+            dataset: payload.loraDataset,
+            hash: payload.loraHash,
+            path: payload.loraModelPath,
+          },
+          {
+            dataset: payload.embeddingDataset,
+            hash: payload.embeddingHash,
+            path: payload.embeddingModelPath,
+          },
         ]);
       } else {
         const value: CardWidgetDeserializedValue = {
-          propsArray: [{ kulData: payload.dataset }],
-          template: 'repeat(1, 1fr) / repeat(1, 1fr)',
+          propsArray: [{ kulData: payload.loraDataset }, { kulData: payload.embeddingDataset }],
+          template: 'repeat(1, 1fr) / repeat(2, 1fr)',
         };
         widget.options.setValue(JSON.stringify(value));
       }
+
       getApiRoutes().redraw();
     }
   },

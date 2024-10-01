@@ -38,6 +38,7 @@ import { displayStringFactory } from '../nodes/displayString.js';
 import { checkpointSelectorFactory } from '../nodes/checkpointSelector.js';
 import { loraSelectorFactory } from '../nodes/loraSelector.js';
 import { embeddingSelectorFactory } from '../nodes/embeddingSelector.js';
+import { loraandEmbeddingSelectorFactory } from '../nodes/loraAndEmbeddingSelector.js';
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
 /*-------------------------------------------------*/
@@ -63,6 +64,7 @@ export class LFNodes {
             [NodeName.keywordCounter]: keywordCounterFactory.eventHandler,
             [NodeName.loadFileOnce]: loadFileOnceFactory.eventHandler,
             [NodeName.loadImages]: loadImagesFactory.eventHandler,
+            [NodeName.loraandEmbeddingSelector]: loraandEmbeddingSelectorFactory.eventHandler,
             [NodeName.loraSelector]: loraSelectorFactory.eventHandler,
             [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.eventHandler,
             [NodeName.randomBoolean]: randomBooleanFactory.eventHandler,
@@ -103,6 +105,7 @@ export class LFNodes {
             [NodeName.llmMessenger]: llmMessengerFactory.register,
             [NodeName.loadFileOnce]: loadFileOnceFactory.register,
             [NodeName.loadImages]: loadImagesFactory.register,
+            [NodeName.loraandEmbeddingSelector]: loraandEmbeddingSelectorFactory.register,
             [NodeName.loadMetadata]: loadMetadataFactory.register,
             [NodeName.loraSelector]: loraSelectorFactory.register,
             [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.register,

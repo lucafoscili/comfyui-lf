@@ -44,6 +44,7 @@ import {
   CheckpointSelectorPayload,
   LoraSelectorPayload,
   EmbeddingSelectorPayload,
+  LoraAndEmbeddingSelectorPayload,
 } from '../types/events.js';
 
 /*-------------------------------------------------*/
@@ -371,6 +372,19 @@ export class LFManager {
     this.#APIS.event(EventName.loraSelector, (e: CustomEvent<LoraSelectorPayload>) => {
       nodes.eventHandlers.LF_LoraSelector(e, widgets.adders.KUL_CARD);
     });
+    /*-------------------------------------------------------------------*/
+    /*     I n i t   L o r a A n d E m b e d d i n g S e l e c t o r     */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_LoraAndEmbeddingSelector(
+      widgets.setters.KUL_CARD,
+      widgets.adders.KUL_CARD,
+    );
+    this.#APIS.event(
+      EventName.loraAndEmbeddingSelector,
+      (e: CustomEvent<LoraAndEmbeddingSelectorPayload>) => {
+        nodes.eventHandlers.LF_LoraAndEmbeddingSelector(e, widgets.adders.KUL_CARD);
+      },
+    );
     /*-------------------------------------------------------------------*/
     /*                      I n i t   S t r i n g                        */
     /*-------------------------------------------------------------------*/
