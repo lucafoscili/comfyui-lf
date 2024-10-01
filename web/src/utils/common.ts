@@ -164,12 +164,21 @@ export const unescapeJson = (
   let parsedJson: Record<string, unknown> | undefined = undefined;
   let unescapedStr = str;
 
+  const recursiveUnescape = (inputStr: string): string => {
+    let newStr = inputStr.replace(/\\(.)/g, '$1');
+    while (newStr !== inputStr) {
+      inputStr = newStr;
+      newStr = inputStr.replace(/\\(.)/g, '$1');
+    }
+    return newStr;
+  };
+
   try {
     parsedJson = JSON.parse(str);
     validJson = true;
     unescapedStr = JSON.stringify(parsedJson, null, 2);
   } catch (error) {
-    unescapedStr = str.replace(/\\(.)/g, '$1');
+    unescapedStr = recursiveUnescape(str);
   }
 
   return { validJson, parsedJson, unescapedStr };
