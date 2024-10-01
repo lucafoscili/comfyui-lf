@@ -246,6 +246,107 @@ class LF_EmbeddingSelector:
     def VALIDATE_INPUTS(self, **kwargs):
          return True
 
+class LF_LoraAndEmbeddingSelector:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "get_civitai_info": ("BOOLEAN", {"default": True, "tooltip": "Attempts to retrieve more info about the models from CivitAI."}),
+                "weight": ("FLOAT", {"default": 1.0, "min": -3.0, "max": 3.0, "tooltip": "Lora and embedding weights."}),
+                "randomize": ("BOOLEAN", {"default": False, "tooltip": "Selects a combination of Lora and Embedding randomly from your directories."}),
+                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Seed value for when randomization is active."}),
+                "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter file names."}),
+            },
+            "optional": {
+                "lora": (["None"] + folder_paths.get_filename_list("loras"), {"default": "None", "tooltip": "Lora model to use, it will also select the embedding with the same name."}),
+                "lora_stack": ("STRING", {"default": "", "defaultInput": True, "tooltip": "Optional string usable to concatenate subsequent Lora selector nodes."}),
+                "embedding_stack": ("STRING", {"default": "", "defaultInput": True, "tooltip": "Optional string usable to concatenate subsequent embedding selector nodes."}),
+            },
+            "hidden": {"node_id": "UNIQUE_ID"}
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    RETURN_NAMES = ("lora", "embedding", "lora_tag", "formatted_embedding", "lora_name", "embedding_name",
+                    "lora_path", "embedding_path", "lora_cover", "embedding_cover")
+    RETURN_TYPES = (folder_paths.get_filename_list("loras"), folder_paths.get_filename_list("embeddings"), "STRING", "STRING", "STRING", "STRING",
+                    "STRING", "STRING", "IMAGE", "IMAGE",)
+
+    def on_exec(self, node_id, lora, get_civitai_info, weight, randomize, seed, filter, lora_stack="", embedding_stack=""):
+        lora = None if lora is None or str(lora) == "None" else lora
+
+        if not lora and not randomize:
+            return (None, None, lora_stack, embedding_stack, "", "", "", "", None, None)
+        
+        loras = folder_paths.get_filename_list("loras")
+        embeddings = folder_paths.get_filename_list("embeddings")
+
+        if filter:
+            loras = [l for l in loras if filter in l]
+
+        if randomize:
+            random.seed(seed)
+            lora = random.choice(loras)
+
+        embedding = lora
+        if embedding not in embeddings:
+            raise ValueError(f"Not found an embedding named {lora}")
+
+        lora_data = process_model("lora", lora, "loras")
+        l_name = lora_data["model_name"]
+        l_hash = lora_data["model_hash"]
+        l_path = lora_data["model_path"]
+        l_base64 = lora_data["model_base64"]
+        l_cover = lora_data["model_cover"]
+        l_saved_info = lora_data["saved_info"]
+
+        embedding_data = process_model("embedding", embedding, "embeddings")
+        e_name = embedding_data["model_name"]
+        e_hash = embedding_data["model_hash"]
+        e_path = embedding_data["model_path"]
+        e_base64 = embedding_data["model_base64"]
+        e_cover = embedding_data["model_cover"]
+        e_saved_info = embedding_data["saved_info"]
+
+        lora_tag = f"<lora:{l_name}:{weight}>"
+        formatted_embedding = f"embedding:{e_name}" if weight == 1 else f"(embedding:{e_name}:{weight})"
+
+        if l_saved_info:
+            l_dataset = l_saved_info
+        else:
+            l_dataset = prepare_model_dataset(l_name, l_hash, l_base64, l_path)
+
+        if e_saved_info:
+            e_dataset = e_saved_info
+        else:
+            e_dataset = prepare_model_dataset(e_name, e_hash, e_base64, e_path)
+
+        if l_saved_info and e_saved_info:
+            get_civitai_info = False
+
+        if lora_stack:
+            lora_tag = f"{lora_tag}, {lora_stack}"
+
+        if embedding_stack:
+            formatted_embedding = f"{formatted_embedding}, {embedding_stack}"
+
+        PromptServer.instance.send_sync("lf-loraandembeddingselector", {
+            "node": node_id, 
+            "civitaiInfo": get_civitai_info,
+            "loraDataset": l_dataset,
+            "loraHash": l_hash,
+            "loraModelPath": l_path,
+            "embeddingDataset": e_dataset,
+            "embeddingHash": e_hash,
+            "embeddingModelPath": e_path
+        })
+
+        return (lora, embedding, lora_tag, formatted_embedding, l_name, e_name, l_path, e_path, l_cover, e_cover)
+    
+    @classmethod
+    def VALIDATE_INPUTS(self, **kwargs):
+         return True
+
 class LF_LoraSelector:
     @classmethod
     def INPUT_TYPES(cls):
@@ -376,6 +477,7 @@ NODE_CLASS_MAPPINGS = {
     "LF_CivitAIMetadataSetup": LF_CivitAIMetadataSetup,
     "LF_ControlPanel": LF_ControlPanel,
     "LF_EmbeddingSelector": LF_EmbeddingSelector,
+    "LF_LoraAndEmbeddingSelector": LF_LoraAndEmbeddingSelector,
     "LF_LoraSelector": LF_LoraSelector,
     "LF_WorkflowSettings": LF_WorkflowSettings,
 }
@@ -385,6 +487,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_CivitAIMetadataSetup": "CivitAI metadata setup",
     "LF_ControlPanel": "Control panel",
     "LF_EmbeddingSelector": "Embedding selector",
+    "LF_LoraAndEmbeddingSelector": "LoRA and embedding selector",
     "LF_LoraSelector": "LoRA selector",
     "LF_WorkflowSettings": "Workflow settings",
 }
