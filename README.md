@@ -47,6 +47,11 @@ Used to select an embedding. It's possible to fetch additional data from CivitAI
 Used to select a LoRA. It's possible to fetch additional data from CivitAI or by loading the related cover inside the loras folder.
 ![LoraSelector](https://github.com/lucafoscili/comfyui-lf/blob/865badc13204cef0af28da1f285dc4433ae495c7/docs/images/LoraSelector.png "LoRA additional info")
 
+#### LoraAndEmbeddingSelector
+
+Using a LoRA name as pilot, it also selects its related embedding (it must have the same name). Useful for models trained with pivotal tuning.
+![LoraAndEmbeddingSelector](https://github.com/lucafoscili/comfyui-lf/blob/865badc13204cef0af28da1f285dc4433ae495c7/docs/images/LoraAndEmbeddingSelector.png "LoRA and related embedding")
+
 ### Conversions nodes (`conversions.py`)
 
 #### BlurImages
