@@ -49,30 +49,32 @@ export const cardFactory = {
                 const cards = grid.querySelectorAll('kul-card');
                 for (let index = 0; propsArray && index < propsArray.length; index++) {
                     const props = propsArray[index];
-                    for (const key in props) {
-                        const card = cards?.[index] || grid.appendChild(createCard());
-                        if (Object.prototype.hasOwnProperty.call(props, key)) {
-                            const prop = props[key];
-                            if (key === 'kulData') {
-                                try {
-                                    if (typeof prop === 'string') {
-                                        card.kulData = unescapeJson(prop).parsedJson;
+                    if (props.kulData) {
+                        for (const key in props) {
+                            const card = cards?.[index] || grid.appendChild(createCard());
+                            if (Object.prototype.hasOwnProperty.call(props, key)) {
+                                const prop = props[key];
+                                if (key === 'kulData') {
+                                    try {
+                                        if (typeof prop === 'string') {
+                                            card.kulData = unescapeJson(prop).parsedJson;
+                                        }
+                                        else {
+                                            card.kulData = prop;
+                                        }
+                                        const node = card.kulData.nodes?.[0];
+                                        if (node) {
+                                            card.dataset.link = node.description;
+                                            card.title = String(node.value).valueOf();
+                                        }
                                     }
-                                    else {
-                                        card.kulData = prop;
-                                    }
-                                    const node = card.kulData.nodes?.[0];
-                                    if (node) {
-                                        card.dataset.link = node.description;
-                                        card.title = String(node.value).valueOf();
+                                    catch (error) {
+                                        getLFManager().log('Error when setting kulData prop on card!', { error }, LogSeverity.Error);
                                     }
                                 }
-                                catch (error) {
-                                    getLFManager().log('Error when setting kulData prop on card!', { error }, LogSeverity.Error);
+                                else {
+                                    card[key] = prop;
                                 }
-                            }
-                            else {
-                                card[key] = prop;
                             }
                         }
                     }

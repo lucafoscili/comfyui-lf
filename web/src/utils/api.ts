@@ -20,7 +20,7 @@ export const fetchModelMetadata = (
   widget: CardWidget,
   models: { dataset: KulDataDataset; hash: string; path: string }[],
 ) => {
-  const template = `repeat(1, 1fr) repeat(${models.length}, 1fr)`,
+  const template = `repeat(1, 1fr) / repeat(${models.length}, 1fr)`,
     dummyValue: CardWidgetDeserializedValue = {
       propsArray: [],
       template,
@@ -69,7 +69,9 @@ export const fetchModelMetadata = (
               props.kulData = dataset;
               break;
           }
-          value.propsArray.push(props);
+          if (props.kulData) {
+            value.propsArray.push(props);
+          }
         }
 
         widget.options.setValue(JSON.stringify(value));

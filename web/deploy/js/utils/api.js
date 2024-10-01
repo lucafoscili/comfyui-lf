@@ -13,7 +13,7 @@ const DUMMY_PROPS = {
     },
 };
 export const fetchModelMetadata = (widget, models) => {
-    const template = `repeat(1, 1fr) repeat(${models.length}, 1fr)`, dummyValue = {
+    const template = `repeat(1, 1fr) / repeat(${models.length}, 1fr)`, dummyValue = {
         propsArray: [],
         template,
     }, value = {
@@ -56,7 +56,9 @@ export const fetchModelMetadata = (widget, models) => {
                         props.kulData = dataset;
                         break;
                 }
-                value.propsArray.push(props);
+                if (props.kulData) {
+                    value.propsArray.push(props);
+                }
             }
             widget.options.setValue(JSON.stringify(value));
         });
