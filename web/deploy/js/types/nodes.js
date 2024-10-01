@@ -28,6 +28,7 @@ export var NodeName;
     NodeName["loadImages"] = "LF_LoadImages";
     NodeName["loadMetadata"] = "LF_LoadMetadata";
     NodeName["loraSelector"] = "LF_LoraSelector";
+    NodeName["loraandEmbeddingSelector"] = "LF_LoraAndEmbeddingSelector";
     NodeName["multipleImageResizeForWeb"] = "LF_MultipleImageResizeForWeb";
     NodeName["randomBoolean"] = "LF_RandomBoolean";
     NodeName["resizeImageByEdge"] = "LF_ResizeImageByEdge";

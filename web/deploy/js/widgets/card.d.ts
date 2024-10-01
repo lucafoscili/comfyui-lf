@@ -2,9 +2,9 @@ import { CardWidgetOptions, CustomWidgetName } from '../types/widgets';
 export declare const cardFactory: {
     cssClasses: {
         content: string;
-        card: string;
+        grid: string;
     };
-    options: (card: HTMLKulCardElement) => CardWidgetOptions;
+    options: (grid: HTMLDivElement) => CardWidgetOptions;
     render: (node: NodeType, name: CustomWidgetName) => {
         widget: Widget;
     };

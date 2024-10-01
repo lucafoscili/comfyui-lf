@@ -275,6 +275,13 @@ export class LFManager {
             nodes.eventHandlers.LF_LoraSelector(e, widgets.adders.KUL_CARD);
         });
         /*-------------------------------------------------------------------*/
+        /*     I n i t   L o r a A n d E m b e d d i n g S e l e c t o r     */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_LoraAndEmbeddingSelector(widgets.setters.KUL_CARD, widgets.adders.KUL_CARD);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.loraAndEmbeddingSelector, (e) => {
+            nodes.eventHandlers.LF_LoraAndEmbeddingSelector(e, widgets.adders.KUL_CARD);
+        });
+        /*-------------------------------------------------------------------*/
         /*                      I n i t   S t r i n g                        */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_String(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);

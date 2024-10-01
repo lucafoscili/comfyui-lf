@@ -57,48 +57,7 @@ export declare enum CustomWidgetName {
     tree = "KUL_TREE",
     upload = "KUL_UPLOAD"
 }
-export type CustomWidgetOptions = BooleanViewerWidgetOptions | ChatWidgetOptions | ChipWidgetOptions | CodeWidgetOptions | ControlPanelWidgetOptions | CountBarChartWidgetOptions | HistogramWidgetOptions | HistoryWidgetOptions | ImagePreviewWidgetOptions | JsonInputWidgetOptions | MessengerWidgetOptions | RollViewerWidgetOptions | TreeWidgetOptions | UploadWidgetOptions;
-export interface CustomWidgetSetters {
-    [CustomWidgetName.booleanViewer](node: NodeType, name: CustomWidgetName.booleanViewer): {
-        widget: BooleanViewerWidget;
-    };
-    [CustomWidgetName.chat](node: NodeType, name: CustomWidgetName.chat): {
-        widget: ChatWidget;
-    };
-    [CustomWidgetName.code](node: NodeType, name: CustomWidgetName.code): {
-        widget: CodeWidget;
-    };
-    [CustomWidgetName.controlPanel](node: NodeType, name: CustomWidgetName.controlPanel): {
-        widget: ControlPanelWidget;
-    };
-    [CustomWidgetName.countBarChart](node: NodeType, name: CustomWidgetName.countBarChart): {
-        widget: CountBarChartWidget;
-    };
-    [CustomWidgetName.histogram](node: NodeType, name: CustomWidgetName.histogram): {
-        widget: HistogramWidget;
-    };
-    [CustomWidgetName.history](node: NodeType, name: CustomWidgetName.history): {
-        widget: HistoryWidget;
-    };
-    [CustomWidgetName.imagePreview](node: NodeType, name: CustomWidgetName.imagePreview): {
-        widget: ImagePreviewWidget;
-    };
-    [CustomWidgetName.jsonInput](node: NodeType, name: CustomWidgetName.jsonInput): {
-        widget: JsonInputWidget;
-    };
-    [CustomWidgetName.messenger](node: NodeType, name: CustomWidgetName.messenger): {
-        widget: MessengerWidget;
-    };
-    [CustomWidgetName.rollViewer](node: NodeType, name: CustomWidgetName.rollViewer): {
-        widget: RollViewerWidget;
-    };
-    [CustomWidgetName.tree](node: NodeType, name: CustomWidgetName.tree): {
-        widget: TreeWidget;
-    };
-    [CustomWidgetName.upload](node: NodeType, name: CustomWidgetName.upload): {
-        widget: UploadWidget;
-    };
-}
+export type CustomWidgetOptions = BooleanViewerWidgetOptions | CardWidgetOptions | ChatWidgetOptions | ChipWidgetOptions | CodeWidgetOptions | ControlPanelWidgetOptions | CountBarChartWidgetOptions | HistogramWidgetOptions | HistoryWidgetOptions | ImagePreviewWidgetOptions | JsonInputWidgetOptions | MessengerWidgetOptions | RollViewerWidgetOptions | TreeWidgetOptions | UploadWidgetOptions;
 export interface BooleanViewerWidget extends Widget {
     options: BooleanViewerWidgetOptions;
     type: [CustomWidgetName.booleanViewer];
@@ -119,14 +78,18 @@ export interface CardWidget extends Widget {
 }
 export interface CardWidgetOptions {
     hideOnZoom: boolean;
-    getComp(): HTMLKulCardElement;
+    getComp(): HTMLKulCardElement[];
     getValue(): string;
     setValue(value: CardWidgetValue): void;
 }
 export type CardWidgetSetter = () => {
     [CustomWidgetName.card]: BaseWidgetCallback;
 };
-export type CardWidgetValue = string | KulDataDataset;
+export type CardWidgetValue = string;
+export type CardWidgetDeserializedValue = {
+    propsArray: Partial<HTMLKulCardElement>[];
+    template: string;
+};
 export interface ChatWidget extends Widget {
     options: ChatWidgetOptions;
     type: [CustomWidgetName.chat];

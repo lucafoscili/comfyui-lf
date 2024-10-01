@@ -29,6 +29,7 @@ export enum EventName {
   keywordCounter = 'lf-keywordcounter',
   loadFileOnce = 'lf-loadfileonce',
   loadImages = 'lf-loadimages',
+  loraAndEmbeddingSelector = 'lf-loraandembeddingselector',
   loraSelector = 'lf-loraselector',
   multipleImageResizeForWeb = 'lf-multipleimageresizeforweb',
   randomBoolean = 'lf-randomboolean',
@@ -60,6 +61,7 @@ export type EventPayload =
   | IntegerPayload
   | KeywordCounterPayload
   | LoadImagesPayload
+  | LoraAndEmbeddingSelectorPayload
   | LoraSelectorPayload
   | MultipleImageResizeForWebPayload
   | RandomBooleanPayload
@@ -252,6 +254,20 @@ export interface LoraSelectorPayload extends BaseEventPayload {
   hash: string;
   civitaiInfo: boolean;
   modelPath: string;
+}
+
+/*-------------------------------------------------------------------*/
+/*   L o r a A n d E m b e d d i n g S e l e c t o r   D e c l a r.  */
+/*-------------------------------------------------------------------*/
+
+export interface LoraAndEmbeddingSelectorPayload extends BaseEventPayload {
+  civitaiInfo: boolean;
+  loraDataset: KulDataDataset;
+  loraHash: string;
+  loraModelPath: string;
+  embeddingDataset: KulDataDataset;
+  embeddingHash: string;
+  embeddingModelPath: string;
 }
 
 /*-------------------------------------------------------------------*/

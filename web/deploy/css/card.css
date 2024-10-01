@@ -6,8 +6,10 @@
   overflow: auto;
   width: 100%;
 }
-.lf-card__widget {
+.lf-card__grid {
+  display: grid;
   height: 100%;
+  grid-template: var(--card-grid);
   width: 100%;
 }
 

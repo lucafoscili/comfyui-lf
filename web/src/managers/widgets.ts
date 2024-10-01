@@ -128,7 +128,7 @@ export class LFWidgets {
   option = {
     [CustomWidgetName.booleanViewer]: (booleanViewer: HTMLKulTextfieldElement) =>
       booleanViewerFactory.options(booleanViewer),
-    [CustomWidgetName.card]: (card: HTMLKulCardElement) => cardFactory.options(card),
+    [CustomWidgetName.card]: (grid: HTMLDivElement) => cardFactory.options(grid),
     [CustomWidgetName.chat]: (chat: HTMLKulChatElement) => chatFactory.options(chat),
     [CustomWidgetName.chip]: (chip: HTMLKulChipElement) => chipFactory.options(chip),
     [CustomWidgetName.code]: (code: HTMLKulCodeElement) => codeFactory.options(code),
