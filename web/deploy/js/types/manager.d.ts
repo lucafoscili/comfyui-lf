@@ -21,3 +21,8 @@ export interface SaveModelAPIPayload {
     status: 'exists' | 'saved';
     message: string;
 }
+export interface APIMetadataEntry {
+    dataset: KulDataDataset;
+    hash: string;
+    path: string;
+}

@@ -1,5 +1,5 @@
 import { EventName, LoraAndEmbeddingSelectorPayload } from '../types/events';
-import { LogSeverity } from '../types/manager';
+import { APIMetadataEntry, LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import {
   CardWidgetDeserializedValue,
@@ -10,9 +10,9 @@ import {
 import { fetchModelMetadata } from '../utils/api';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 
-const NAME = NodeName.loraandEmbeddingSelector;
+const NAME = NodeName.loraAndEmbeddingSelector;
 
-export const loraandEmbeddingSelectorFactory = {
+export const loraAndEmbeddingSelectorFactory = {
   eventHandler: (event: CustomEvent<LoraAndEmbeddingSelectorPayload>, addW: BaseWidgetCallback) => {
     const name = EventName.loraAndEmbeddingSelector;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
@@ -21,24 +21,46 @@ export const loraandEmbeddingSelectorFactory = {
     const node = getApiRoutes().getNodeById(payload.id);
     if (node) {
       const widget = getCustomWidget(node, CustomWidgetName.card, addW);
+      const value: CardWidgetDeserializedValue = {
+        propsArray: [],
+        template: 'repeat(1, 1fr) / repeat(2, 1fr)',
+      };
+      const models: APIMetadataEntry[] = [
+        {
+          dataset: payload.embeddingDataset,
+          hash: payload.embeddingHash,
+          path: payload.embeddingModelPath,
+        },
+        {
+          dataset: payload.loraDataset,
+          hash: payload.loraHash,
+          path: payload.loraModelPath,
+        },
+      ];
+      for (let index = 0; index < models?.length; index++) {
+        const dataset = models[index].dataset;
+        const hash = models[index].hash;
+        const path = models[index].path;
+        if (payload.civitaiInfo) {
+          models.push({ dataset, hash, path });
+        } else {
+          value.propsArray.push({ kulData: dataset });
+        }
+      }
       if (payload.civitaiInfo) {
-        fetchModelMetadata(widget, [
-          {
-            dataset: payload.loraDataset,
-            hash: payload.loraHash,
-            path: payload.loraModelPath,
-          },
-          {
-            dataset: payload.embeddingDataset,
-            hash: payload.embeddingHash,
-            path: payload.embeddingModelPath,
-          },
-        ]);
+        fetchModelMetadata(widget, models).then((r) => {
+          for (let index = 0; index < r.length; index++) {
+            const dataset = r[index];
+            if (dataset) {
+              value.propsArray.push({
+                kulData: dataset,
+                kulStyle: '.sub-2.description { white-space: pre-wrap; }',
+              });
+            }
+          }
+          widget.options.setValue(JSON.stringify(value));
+        });
       } else {
-        const value: CardWidgetDeserializedValue = {
-          propsArray: [{ kulData: payload.loraDataset }, { kulData: payload.embeddingDataset }],
-          template: 'repeat(1, 1fr) / repeat(2, 1fr)',
-        };
         widget.options.setValue(JSON.stringify(value));
       }
 

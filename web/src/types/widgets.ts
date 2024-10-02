@@ -33,6 +33,7 @@ export enum ComfyWidgetName {
 export type CustomWidgetMap = {
   [CustomWidgetName.booleanViewer]: BooleanViewerWidget;
   [CustomWidgetName.card]: CardWidget;
+  [CustomWidgetName.cardsWithChip]: CardsWithChipWidget;
   [CustomWidgetName.chat]: ChatWidget;
   [CustomWidgetName.chip]: ChipWidget;
   [CustomWidgetName.code]: CodeWidget;
@@ -50,6 +51,7 @@ export type CustomWidgetMap = {
 export enum CustomWidgetName {
   booleanViewer = 'KUL_BOOLEAN_VIEWER',
   card = 'KUL_CARD',
+  cardsWithChip = 'KUL_CARDS_WITH_CHIP',
   chat = 'KUL_CHAT',
   chip = 'KUL_CHIP',
   code = 'KUL_CODE',
@@ -67,6 +69,7 @@ export enum CustomWidgetName {
 export type CustomWidgetOptions =
   | BooleanViewerWidgetOptions
   | CardWidgetOptions
+  | CardsWithChipWidgetOptions
   | ChatWidgetOptions
   | ChipWidgetOptions
   | CodeWidgetOptions
@@ -121,6 +124,29 @@ export type CardWidgetValue = string;
 export type CardWidgetDeserializedValue = {
   propsArray: Partial<HTMLKulCardElement>[];
   template: string;
+};
+
+/*-------------------------------------------------------------------*/
+/*       C a r d s W i t h C h i p   D e c l a r a t i o n s         */
+/*-------------------------------------------------------------------*/
+
+export interface CardsWithChipWidget extends Widget {
+  options: CardsWithChipWidgetOptions;
+  type: [CustomWidgetName.cardsWithChip];
+}
+export interface CardsWithChipWidgetOptions {
+  hideOnZoom: boolean;
+  getComp(): { cards: HTMLKulCardElement[]; chip: HTMLKulChipElement };
+  getValue(): string;
+  setValue(value: CardsWithChipWidgetValue): void;
+}
+export type CardsWithChipWidgetSetter = () => {
+  [CustomWidgetName.cardsWithChip]: BaseWidgetCallback;
+};
+export type CardsWithChipWidgetValue = string;
+export type CardsWithChipWidgetDeserializedValue = {
+  cardPropsArray: Partial<HTMLKulCardElement>[];
+  chipDataset: KulDataDataset;
 };
 
 /*-------------------------------------------------------------------*/

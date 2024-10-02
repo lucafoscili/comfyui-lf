@@ -29,6 +29,7 @@ export enum EventName {
   keywordCounter = 'lf-keywordcounter',
   loadFileOnce = 'lf-loadfileonce',
   loadImages = 'lf-loadimages',
+  loadLoraTags = 'lf-loadloratags',
   loraAndEmbeddingSelector = 'lf-loraandembeddingselector',
   loraSelector = 'lf-loraselector',
   multipleImageResizeForWeb = 'lf-multipleimageresizeforweb',
@@ -63,6 +64,7 @@ export type EventPayload =
   | LoadImagesPayload
   | LoraAndEmbeddingSelectorPayload
   | LoraSelectorPayload
+  | LoadLoraTagsPayload
   | MultipleImageResizeForWebPayload
   | RandomBooleanPayload
   | ResizeImageByEdgePayload
@@ -243,6 +245,18 @@ export interface LoadImagesPayload extends BaseEventPayload {
   images: Array<string>;
   selectedIndex: number;
   selectedName: string;
+}
+
+/*-------------------------------------------------------------------*/
+/*                      L o a d L o r a T a g s                      */
+/*-------------------------------------------------------------------*/
+
+export interface LoadLoraTagsPayload extends BaseEventPayload {
+  cardDatasets: KulDataDataset[];
+  chipDataset: KulDataDataset;
+  hashes: string[];
+  loraPaths: string[];
+  civitaiInfo: boolean;
 }
 
 /*-------------------------------------------------------------------*/

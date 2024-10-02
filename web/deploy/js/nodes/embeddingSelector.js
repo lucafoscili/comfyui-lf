@@ -12,17 +12,28 @@ export const embeddingSelectorFactory = {
         const payload = event.detail;
         const node = getApiRoutes().getNodeById(payload.id);
         if (node) {
+            const { civitaiInfo, dataset, hash, modelPath } = payload;
             const widget = getCustomWidget(node, CustomWidgetName.card, addW);
-            if (payload.civitaiInfo) {
-                fetchModelMetadata(widget, [
-                    { dataset: payload.dataset, hash: payload.hash, path: payload.modelPath },
-                ]);
+            const value = {
+                propsArray: [],
+                template: '',
+            };
+            value.propsArray.push({ kulData: dataset });
+            if (civitaiInfo) {
+                fetchModelMetadata(widget, [{ dataset, hash, path: modelPath }]).then((r) => {
+                    for (let index = 0; index < r.length; index++) {
+                        const dataset = r[index];
+                        if (dataset) {
+                            value.propsArray.push({
+                                kulData: dataset,
+                                kulStyle: '.sub-2.description { white-space: pre-wrap; }',
+                            });
+                        }
+                    }
+                    widget.options.setValue(JSON.stringify(value));
+                });
             }
             else {
-                const value = {
-                    propsArray: [{ kulData: payload.dataset }],
-                    template: 'repeat(1, 1fr) / repeat(1, 1fr)',
-                };
                 widget.options.setValue(JSON.stringify(value));
             }
             getApiRoutes().redraw();

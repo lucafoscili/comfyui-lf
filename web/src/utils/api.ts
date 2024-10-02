@@ -1,5 +1,5 @@
 import { KulDataDataset } from '../types/ketchup-lite/components';
-import { CardWidget, CardWidgetDeserializedValue } from '../types/widgets';
+import { CardsWithChipWidget, CardWidget, CardWidgetDeserializedValue } from '../types/widgets';
 import { getApiRoutes } from './common';
 
 const DUMMY_PROPS: Partial<HTMLKulCardElement> = {
@@ -17,66 +17,59 @@ const DUMMY_PROPS: Partial<HTMLKulCardElement> = {
 };
 
 export const fetchModelMetadata = (
-  widget: CardWidget,
+  widget: CardWidget | CardsWithChipWidget,
   models: { dataset: KulDataDataset; hash: string; path: string }[],
-) => {
-  const template = `repeat(1, 1fr) / repeat(${models.length}, 1fr)`,
-    dummyValue: CardWidgetDeserializedValue = {
-      propsArray: [],
-      template,
-    },
-    value: CardWidgetDeserializedValue = {
-      propsArray: [],
-      template,
-    };
+): Promise<KulDataDataset[]> => {
+  const template = `repeat(1, 1fr) / repeat(${models.length}, 1fr)`;
+  const dummyValue: CardWidgetDeserializedValue = {
+    propsArray: [],
+    template,
+  };
 
   for (let index = 0; index < models.length; index++) {
     dummyValue.propsArray.push(JSON.stringify(DUMMY_PROPS));
   }
   widget.options.setValue(JSON.stringify(dummyValue));
 
-  for (let index = 0; index < models.length; index++) {
-    const { dataset, hash, path } = models[index];
+  const promises: Promise<KulDataDataset>[] = models.map(({ dataset, hash, path }) =>
+    getApiRoutes().modelInfoFromCivitAI(hash).then(onResponse.bind(onResponse, dataset, path)),
+  );
 
-    getApiRoutes()
-      .modelInfoFromCivitAI(hash)
-      .then(async (r) => {
-        const id = r.id;
-        const props: Partial<HTMLKulCardElement> = {};
+  return Promise.all(promises);
+};
 
-        if (id) {
-          switch (typeof id) {
-            case 'number':
-              const civitaiDataset = prepareValidDataset(r);
-              props.kulData = civitaiDataset;
-              props.kulStyle = '.sub-2.description { white-space: pre-wrap; }';
-              getApiRoutes().saveModelMetadata(path, civitaiDataset);
-              break;
-            default:
-              const node = dataset.nodes[0];
-              node.description = '';
-              node.value = '';
-              node.cells.kulButton = {
-                kulDisabled: true,
-                kulIcon: 'warning',
-                kulStyling: 'icon',
-                shape: 'button',
-                value: '',
-              };
-              node.cells.text3 = {
-                value: "Whoops! It seems like something's off. Falling back to local data.",
-              };
-              props.kulData = dataset;
-              break;
-          }
-          if (props.kulData) {
-            value.propsArray.push(props);
-          }
-        }
+const onResponse = async (dataset: KulDataDataset, path: string, r: CivitAIModelData) => {
+  const id = r.id;
+  const props: Partial<HTMLKulCardElement> = {};
 
-        widget.options.setValue(JSON.stringify(value));
-      });
+  if (id) {
+    switch (typeof id) {
+      case 'number':
+        const civitaiDataset = prepareValidDataset(r);
+        props.kulData = civitaiDataset;
+        props.kulStyle = '.sub-2.description { white-space: pre-wrap; }';
+        getApiRoutes().saveModelMetadata(path, civitaiDataset);
+        break;
+      default:
+        const node = dataset.nodes[0];
+        node.description = '';
+        node.value = '';
+        node.cells.kulButton = {
+          kulDisabled: true,
+          kulIcon: 'warning',
+          kulStyling: 'icon',
+          shape: 'button',
+          value: '',
+        };
+        node.cells.text3 = {
+          value: "Whoops! It seems like something's off. Falling back to local data.",
+        };
+        props.kulData = dataset;
+        break;
+    }
   }
+
+  return props.kulData;
 };
 
 const prepareValidDataset = (r: CivitAIModelData) => {

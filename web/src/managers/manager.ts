@@ -45,6 +45,7 @@ import {
   LoraSelectorPayload,
   EmbeddingSelectorPayload,
   LoraAndEmbeddingSelectorPayload,
+  LoadLoraTagsPayload,
 } from '../types/events.js';
 
 /*-------------------------------------------------*/
@@ -357,6 +358,16 @@ export class LFManager {
     this.#MANAGERS.nodes.register.LF_LoadFileOnce(widgets.setters.KUL_HISTORY);
     this.#APIS.event(EventName.loadFileOnce, (e: CustomEvent<LoadFileOncePayload>) => {
       nodes.eventHandlers.LF_LoadFileOnce(e, widgets.adders.KUL_HISTORY);
+    });
+    /*-------------------------------------------------------------------*/
+    /*                I n i t   L o a d L o r a T a g s                  */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_LoadLoraTags(
+      widgets.setters.KUL_CARDS_WITH_CHIP,
+      widgets.adders.KUL_CARDS_WITH_CHIP,
+    );
+    this.#APIS.event(EventName.loadLoraTags, (e: CustomEvent<LoadLoraTagsPayload>) => {
+      nodes.eventHandlers.LF_LoadLoraTags(e, widgets.adders.KUL_CARDS_WITH_CHIP);
     });
     /*-------------------------------------------------------------------*/
     /*                I n i t   L o a d M e t a d a t a                  */

@@ -4,40 +4,29 @@ import { NodeName } from '../types/nodes.js';
 import { CustomWidgetName, } from '../types/widgets.js';
 import { fetchModelMetadata } from '../utils/api.js';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common.js';
-const NAME = NodeName.loraAndEmbeddingSelector;
-export const loraAndEmbeddingSelectorFactory = {
+const NAME = NodeName.loadLoraTags;
+export const loadLoraTagsFactory = {
     eventHandler: (event, addW) => {
-        const name = EventName.loraAndEmbeddingSelector;
+        const name = EventName.loadLoraTags;
         getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
         const payload = event.detail;
         const node = getApiRoutes().getNodeById(payload.id);
         if (node) {
-            const widget = getCustomWidget(node, CustomWidgetName.card, addW);
+            const widget = getCustomWidget(node, CustomWidgetName.cardsWithChip, addW);
             const value = {
-                propsArray: [],
-                template: 'repeat(1, 1fr) / repeat(2, 1fr)',
+                cardPropsArray: [],
+                chipDataset: payload.chipDataset,
             };
-            const models = [
-                {
-                    dataset: payload.embeddingDataset,
-                    hash: payload.embeddingHash,
-                    path: payload.embeddingModelPath,
-                },
-                {
-                    dataset: payload.loraDataset,
-                    hash: payload.loraHash,
-                    path: payload.loraModelPath,
-                },
-            ];
-            for (let index = 0; index < models?.length; index++) {
-                const dataset = models[index].dataset;
-                const hash = models[index].hash;
-                const path = models[index].path;
+            const models = [];
+            for (let index = 0; index < payload.cardDatasets?.length; index++) {
+                const dataset = payload.cardDatasets[index];
+                const hash = payload.hashes[index];
+                const path = payload.loraPaths[index];
                 if (payload.civitaiInfo) {
                     models.push({ dataset, hash, path });
                 }
                 else {
-                    value.propsArray.push({ kulData: dataset });
+                    value.cardPropsArray.push({ kulData: dataset });
                 }
             }
             if (payload.civitaiInfo) {
@@ -45,7 +34,7 @@ export const loraAndEmbeddingSelectorFactory = {
                     for (let index = 0; index < r.length; index++) {
                         const dataset = r[index];
                         if (dataset) {
-                            value.propsArray.push({
+                            value.cardPropsArray.push({
                                 kulData: dataset,
                                 kulStyle: '.sub-2.description { white-space: pre-wrap; }',
                             });
@@ -69,7 +58,7 @@ export const loraAndEmbeddingSelectorFactory = {
                     nodeType.prototype.onNodeCreated = function () {
                         const r = onNodeCreated?.apply(this, arguments);
                         const node = this;
-                        addW(node, CustomWidgetName.card);
+                        addW(node, CustomWidgetName.cardsWithChip);
                         return r;
                     };
                 }

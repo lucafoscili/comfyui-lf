@@ -16,6 +16,15 @@ export const createDOMWidget = (name, type, element, node, options = undefined) 
     getLFManager().log(`Creating '${type}'`, { element });
     return node.addDOMWidget(name, type, element, options);
 };
+export const serializeValue = (value) => {
+    try {
+        return JSON.stringify(value);
+    }
+    catch (error) {
+        getLFManager().log(`Error deserializing value`, { value }, LogSeverity.Error);
+        return '';
+    }
+};
 export const findWidget = (node, type) => {
     return node?.widgets?.find((w) => w.type === type);
 };

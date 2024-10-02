@@ -1,7 +1,7 @@
 import { KulDataDataset } from '../types/ketchup-lite/components';
-import { CardWidget } from '../types/widgets';
-export declare const fetchModelMetadata: (widget: CardWidget, models: {
+import { CardsWithChipWidget, CardWidget } from '../types/widgets';
+export declare const fetchModelMetadata: (widget: CardWidget | CardsWithChipWidget, models: {
     dataset: KulDataDataset;
     hash: string;
     path: string;
-}[]) => void;
+}[]) => Promise<KulDataDataset[]>;

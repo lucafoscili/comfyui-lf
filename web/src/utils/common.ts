@@ -38,6 +38,15 @@ export const createDOMWidget = (
   return node.addDOMWidget(name, type, element, options);
 };
 
+export const serializeValue = <T extends {}>(value: T) => {
+  try {
+    return JSON.stringify(value);
+  } catch (error) {
+    getLFManager().log(`Error deserializing value`, { value }, LogSeverity.Error);
+    return '';
+  }
+};
+
 export const findWidget = <T extends CustomWidgetName>(
   node: NodeType,
   type: T,

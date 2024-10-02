@@ -24,6 +24,7 @@ export declare enum EventName {
     keywordCounter = "lf-keywordcounter",
     loadFileOnce = "lf-loadfileonce",
     loadImages = "lf-loadimages",
+    loadLoraTags = "lf-loadloratags",
     loraAndEmbeddingSelector = "lf-loraandembeddingselector",
     loraSelector = "lf-loraselector",
     multipleImageResizeForWeb = "lf-multipleimageresizeforweb",
@@ -41,7 +42,7 @@ export declare enum EventName {
     urandomSeedGenerator = "lf-urandomseedgenerator",
     writeJson = "lf-writejson"
 }
-export type EventPayload = BlurImagesPayload | BooleanPayload | CheckpointSelectorPayload | CivitAIMetadataSetupPayload | DisplayBooleanPayload | DisplayJSONPayload | EmbeddingSelectorPayload | ExtractorPayload | FloatPayload | ImageListFromJSONPayload | ImageHistogramPayload | IntegerPayload | KeywordCounterPayload | LoadImagesPayload | LoraAndEmbeddingSelectorPayload | LoraSelectorPayload | MultipleImageResizeForWebPayload | RandomBooleanPayload | ResizeImageByEdgePayload | ResizeImageToSquarePayload | ResolutionSwitcherPayload | SaveImageForCivitAIPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | UrandomSeedGeneratorPayload | WriteJSONPayload;
+export type EventPayload = BlurImagesPayload | BooleanPayload | CheckpointSelectorPayload | CivitAIMetadataSetupPayload | DisplayBooleanPayload | DisplayJSONPayload | EmbeddingSelectorPayload | ExtractorPayload | FloatPayload | ImageListFromJSONPayload | ImageHistogramPayload | IntegerPayload | KeywordCounterPayload | LoadImagesPayload | LoraAndEmbeddingSelectorPayload | LoraSelectorPayload | LoadLoraTagsPayload | MultipleImageResizeForWebPayload | RandomBooleanPayload | ResizeImageByEdgePayload | ResizeImageToSquarePayload | ResolutionSwitcherPayload | SaveImageForCivitAIPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | UrandomSeedGeneratorPayload | WriteJSONPayload;
 export interface BlurImagesPayload extends BaseEventPayload {
     fileNames: Array<string>;
     images: Array<string>;
@@ -114,6 +115,13 @@ export interface LoadImagesPayload extends BaseEventPayload {
     images: Array<string>;
     selectedIndex: number;
     selectedName: string;
+}
+export interface LoadLoraTagsPayload extends BaseEventPayload {
+    cardDatasets: KulDataDataset[];
+    chipDataset: KulDataDataset;
+    hashes: string[];
+    loraPaths: string[];
+    civitaiInfo: boolean;
 }
 export interface LoraSelectorPayload extends BaseEventPayload {
     dataset: KulDataDataset;

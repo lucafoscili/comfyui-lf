@@ -1,4 +1,4 @@
-import { KulButtonEventPayload, KulDataDataset } from '../types/ketchup-lite/components';
+import { KulButtonEventPayload } from '../types/ketchup-lite/components';
 import { KulButton } from '../types/ketchup-lite/components/kul-button/kul-button';
 import { LogSeverity } from '../types/manager';
 import {

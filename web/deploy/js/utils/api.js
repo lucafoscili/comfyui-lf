@@ -13,10 +13,8 @@ const DUMMY_PROPS = {
     },
 };
 export const fetchModelMetadata = (widget, models) => {
-    const template = `repeat(1, 1fr) / repeat(${models.length}, 1fr)`, dummyValue = {
-        propsArray: [],
-        template,
-    }, value = {
+    const template = `repeat(1, 1fr) / repeat(${models.length}, 1fr)`;
+    const dummyValue = {
         propsArray: [],
         template,
     };
@@ -24,45 +22,39 @@ export const fetchModelMetadata = (widget, models) => {
         dummyValue.propsArray.push(JSON.stringify(DUMMY_PROPS));
     }
     widget.options.setValue(JSON.stringify(dummyValue));
-    for (let index = 0; index < models.length; index++) {
-        const { dataset, hash, path } = models[index];
-        getApiRoutes()
-            .modelInfoFromCivitAI(hash)
-            .then(async (r) => {
-            const id = r.id;
-            const props = {};
-            if (id) {
-                switch (typeof id) {
-                    case 'number':
-                        const civitaiDataset = prepareValidDataset(r);
-                        props.kulData = civitaiDataset;
-                        props.kulStyle = '.sub-2.description { white-space: pre-wrap; }';
-                        getApiRoutes().saveModelMetadata(path, civitaiDataset);
-                        break;
-                    default:
-                        const node = dataset.nodes[0];
-                        node.description = '';
-                        node.value = '';
-                        node.cells.kulButton = {
-                            kulDisabled: true,
-                            kulIcon: 'warning',
-                            kulStyling: 'icon',
-                            shape: 'button',
-                            value: '',
-                        };
-                        node.cells.text3 = {
-                            value: "Whoops! It seems like something's off. Falling back to local data.",
-                        };
-                        props.kulData = dataset;
-                        break;
-                }
-                if (props.kulData) {
-                    value.propsArray.push(props);
-                }
-            }
-            widget.options.setValue(JSON.stringify(value));
-        });
+    const promises = models.map(({ dataset, hash, path }) => getApiRoutes().modelInfoFromCivitAI(hash).then(onResponse.bind(onResponse, dataset, path)));
+    return Promise.all(promises);
+};
+const onResponse = async (dataset, path, r) => {
+    const id = r.id;
+    const props = {};
+    if (id) {
+        switch (typeof id) {
+            case 'number':
+                const civitaiDataset = prepareValidDataset(r);
+                props.kulData = civitaiDataset;
+                props.kulStyle = '.sub-2.description { white-space: pre-wrap; }';
+                getApiRoutes().saveModelMetadata(path, civitaiDataset);
+                break;
+            default:
+                const node = dataset.nodes[0];
+                node.description = '';
+                node.value = '';
+                node.cells.kulButton = {
+                    kulDisabled: true,
+                    kulIcon: 'warning',
+                    kulStyling: 'icon',
+                    shape: 'button',
+                    value: '',
+                };
+                node.cells.text3 = {
+                    value: "Whoops! It seems like something's off. Falling back to local data.",
+                };
+                props.kulData = dataset;
+                break;
+        }
     }
+    return props.kulData;
 };
 const prepareValidDataset = (r) => {
     const dataset = {

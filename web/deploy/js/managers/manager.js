@@ -264,6 +264,13 @@ export class LFManager {
             nodes.eventHandlers.LF_LoadFileOnce(e, widgets.adders.KUL_HISTORY);
         });
         /*-------------------------------------------------------------------*/
+        /*                I n i t   L o a d L o r a T a g s                  */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_LoadLoraTags(widgets.setters.KUL_CARDS_WITH_CHIP, widgets.adders.KUL_CARDS_WITH_CHIP);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.loadLoraTags, (e) => {
+            nodes.eventHandlers.LF_LoadLoraTags(e, widgets.adders.KUL_CARDS_WITH_CHIP);
+        });
+        /*-------------------------------------------------------------------*/
         /*                I n i t   L o a d M e t a d a t a                  */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_LoadMetadata(widgets.setters.KUL_UPLOAD);
