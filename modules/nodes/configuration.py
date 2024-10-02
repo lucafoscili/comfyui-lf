@@ -1,7 +1,10 @@
 import folder_paths
 import os
 import random
+from pathlib import Path
 
+import comfy.sd
+import comfy.utils
 from comfy.samplers import KSampler
 
 from ..utils.configuration import *
@@ -246,6 +249,121 @@ class LF_EmbeddingSelector:
     def VALIDATE_INPUTS(self, **kwargs):
          return True
 
+class LF_LoadLoraTags:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "get_civitai_info": ("BOOLEAN", {"default": True, "tooltip": "Attempts to retrieve more info about the models from CivitAI."}),
+                "model": ("MODEL", {"tooltip": "The main model to apply the LoRA to."}),
+                "clip": ("CLIP", {"tooltip": "The CLIP model to modify."}),
+                "tags": ("STRING", {"default": "", "multiline": True, "tooltip": "Text containing LoRA tags, e.g., <lora:example:1.0>"}),
+            }
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    RETURN_NAMES = ("model_with_lora", "clip_with_lora")
+    RETURN_TYPES = ("MODEL", "CLIP")
+
+    def on_exec(self, get_civitai_info, model, clip, tags):
+        cardsDataset =  []
+        chipDataset =  {"nodes": []}
+
+        have_all_models_info = True
+        regex = r"\<[0-9a-zA-Z\:\_\-\.\s\/\(\)\\\\]+\>"
+        found_tags = re.findall(regex, tags)
+
+        lora_paths = []
+        hashes = []
+
+        if not found_tags:
+            return (model, clip)
+
+        lora_status = {}
+    
+        for tag in found_tags:
+            tag_content = tag[1:-1].split(":")
+            if tag_content[0] != 'lora' or len(tag_content) < 2:
+                chipDataset["nodes"].append(self.add_chip(tag_content))
+                continue
+
+            lora_name, m_weight, c_weight = self.get_lora_weights(tag_content)
+            if not lora_name:
+                chipDataset["nodes"].append(self.add_chip(lora_name))
+                lora_status[tag_content[1]] = False
+                continue
+
+            if lora_name in lora_status:
+                print(f"LoRA '{lora_name}' is already loaded, skipping.")
+                continue
+
+            lora_path = folder_paths.get_full_path("loras", lora_name)
+            lora = self.load_lora_file(lora_path)
+
+            
+            model, clip = comfy.sd.load_lora_for_models(model, clip, lora, m_weight, c_weight)
+
+            lora_status[lora_name] = True
+
+            lora_data = process_model("lora", lora_name, "loras")
+            name = lora_data["model_name"]
+            hash = lora_data["model_hash"]
+            path = lora_data["model_path"]
+            base64 = lora_data["model_base64"]
+            saved_info = lora_data["saved_info"]
+
+            hashes.append(hash)
+            lora_paths.append(path)
+
+            if saved_info:
+                cardsDataset.append(saved_info)
+                have_all_models_info = False
+            else:
+                cardsDataset.append(prepare_model_dataset(name, hash, base64, path))
+
+        if not len(chipDataset["nodes"]):
+            chipDataset["nodes"].append({ "icon": "check",
+                                          "Description": "Every LoRA has been loaded correctly!", 
+                                          "id": "0", 
+                                          "value": "LoRA loaded correctly!"})
+
+        PromptServer.instance.send_sync("lf-loadloratags", {
+            "cardDatasets": cardsDataset,
+            "chipDataset": chipDataset,
+            "hashes": hashes,
+            "loraPaths": lora_paths,
+            "civitaiInfo": have_all_models_info if get_civitai_info else get_civitai_info,
+        })
+
+        return (model, clip)
+
+
+    def get_lora_weights(self, tag_content):
+        name = tag_content[1]
+        try:
+            m_weight = float(tag_content[2]) if len(tag_content) > 2 else 1.0
+            c_weight = float(tag_content[3]) if len(tag_content) > 3 else m_weight
+        except ValueError:
+            return None, None, None
+    
+        lora_files = folder_paths.get_filename_list("loras")
+    
+        lora_name = None
+        for lora_file in lora_files:
+            if Path(lora_file).name.startswith(name) or lora_file.startswith(name):
+                lora_name = lora_file
+                break
+    
+        return lora_name, m_weight, c_weight
+
+    def load_lora_file(self, lora_path):
+        lora = comfy.utils.load_torch_file(lora_path, safe_load=True)
+        return lora
+
+    def add_chip(self, value):
+        return { "icon": "clear", "Description": "Failed to load this LoRA.", "id": value, "value": value}
+    
 class LF_LoraAndEmbeddingSelector:
     @classmethod
     def INPUT_TYPES(cls):
@@ -477,6 +595,7 @@ NODE_CLASS_MAPPINGS = {
     "LF_CivitAIMetadataSetup": LF_CivitAIMetadataSetup,
     "LF_ControlPanel": LF_ControlPanel,
     "LF_EmbeddingSelector": LF_EmbeddingSelector,
+    "LF_LoadLoraTags": LF_LoadLoraTags,
     "LF_LoraAndEmbeddingSelector": LF_LoraAndEmbeddingSelector,
     "LF_LoraSelector": LF_LoraSelector,
     "LF_WorkflowSettings": LF_WorkflowSettings,
@@ -487,6 +606,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_CivitAIMetadataSetup": "CivitAI metadata setup",
     "LF_ControlPanel": "Control panel",
     "LF_EmbeddingSelector": "Embedding selector",
+    "LF_LoadLoraTags": "Load LoRA tags",
     "LF_LoraAndEmbeddingSelector": "LoRA and embedding selector",
     "LF_LoraSelector": "LoRA selector",
     "LF_WorkflowSettings": "Workflow settings",
