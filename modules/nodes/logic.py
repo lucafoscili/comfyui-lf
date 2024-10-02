@@ -114,12 +114,12 @@ class LF_SwitchInteger:
     def INPUT_TYPES(cls):
         return {
             "required": {
-            "on_true": ("INT", {"lazy": True, "default": 0, "tooltip": "Value to return if the boolean condition is true."}),
-            "on_false": ("INT", {"lazy": True, "default": 0, "tooltip": "Value to return if the boolean condition is false."}),
+            "on_true": ("INT", {"lazy": True, "default": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Value to return if the boolean condition is true."}),
+            "on_false": ("INT", {"lazy": True, "default": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Value to return if the boolean condition is false."}),
             "boolean": ("BOOLEAN", {"default": False, "tooltip": "Boolean condition to switch between 'on_true' and 'on_false' values."}),
         },
             "hidden": { "node_id": "UNIQUE_ID" }
-        }
+        } 
 
     CATEGORY = category
     FUNCTION = "on_exec"
