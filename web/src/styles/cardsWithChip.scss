@@ -16,7 +16,7 @@
   }
 
   &__cards {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(var(--card-grid), 1fr);
   }
 
   &__grid {

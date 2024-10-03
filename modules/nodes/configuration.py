@@ -56,13 +56,7 @@ class LF_CheckpointSelector:
         else:
             dataset = prepare_model_dataset(model_name, model_hash, model_base64, model_path)
 
-        PromptServer.instance.send_sync("lf-checkpointselector", {
-            "node": node_id, 
-            "dataset": dataset,
-            "hash": model_hash,
-            "apiFlag": get_civitai_info,
-            "path": model_path
-        })
+        send_single_selector_message(node_id, dataset, model_hash, get_civitai_info, model_path, "lf-checkpointselector")
 
         return (checkpoint, model_name, model_cover, model_path)
 
@@ -205,6 +199,9 @@ class LF_EmbeddingSelector:
         embedding = None if embedding is None or str(embedding) == "None" else embedding
 
         if not embedding and not randomize:
+
+            send_single_selector_message(node_id, None, None, False, None, "lf-embeddingselector")
+
             return (None, embedding_stack, "", "", None)
         
         embeddings = folder_paths.get_filename_list("embeddings")
@@ -232,16 +229,10 @@ class LF_EmbeddingSelector:
         else:
             dataset = prepare_model_dataset(model_name, model_hash, model_base64, model_path)
 
-        PromptServer.instance.send_sync("lf-embeddingselector", {
-            "node": node_id, 
-            "dataset": dataset,
-            "hash": model_hash,
-            "apiFlag": get_civitai_info,
-            "path": model_path
-        })
-
         if embedding_stack:
             formatted_embedding = f"{formatted_embedding}, {embedding_stack}"
+
+        send_single_selector_message(node_id, dataset, model_hash, get_civitai_info, model_path, "lf-embeddingselector")
 
         return (embedding, formatted_embedding, model_name, model_path, model_cover)
     
@@ -258,7 +249,8 @@ class LF_LoadLoraTags:
                 "model": ("MODEL", {"tooltip": "The main model to apply the LoRA to."}),
                 "clip": ("CLIP", {"tooltip": "The CLIP model to modify."}),
                 "tags": ("STRING", {"default": "", "multiline": True, "tooltip": "Text containing LoRA tags, e.g., <lora:example:1.0>"}),
-            }
+            },
+            "hidden": {"node_id": "UNIQUE_ID"}
         }
 
     CATEGORY = category
@@ -266,7 +258,7 @@ class LF_LoadLoraTags:
     RETURN_NAMES = ("model_with_lora", "clip_with_lora")
     RETURN_TYPES = ("MODEL", "CLIP")
 
-    def on_exec(self, get_civitai_info, model, clip, tags):
+    def on_exec(self, node_id, get_civitai_info, model, clip, tags):
         datasets =  []
         chip_dataset =  {"nodes": []}
 
@@ -278,6 +270,9 @@ class LF_LoadLoraTags:
         hashes = []
 
         if not found_tags:
+
+            send_multi_selector_message(node_id, [], [], [], [], "lf-loadloratags")
+
             return (model, clip)
 
         lora_status = {}
@@ -328,14 +323,8 @@ class LF_LoadLoraTags:
                                           "Description": "Every LoRA has been loaded successfully!", 
                                           "id": "0", 
                                           "value": "LoRA loaded successfully!"})
-
-        PromptServer.instance.send_sync("lf-loadloratags", {
-            "datasets": datasets,
-            "apiFlags": api_flags,
-            "hashes": hashes,
-            "paths": lora_paths,
-            "chipDataset": chip_dataset
-        })
+            
+        send_multi_selector_message(node_id, datasets, hashes, get_civitai_info, lora_paths, "lf-loadloratags", chip_dataset)
 
         return (model, clip)
 
@@ -395,6 +384,9 @@ class LF_LoraAndEmbeddingSelector:
         lora = None if lora is None or str(lora) == "None" else lora
 
         if not lora and not randomize:
+
+            send_single_selector_message(node_id, [], [], [], [], "lf-loraandembeddingselector")
+
             return (None, None, lora_stack, embedding_stack, "", "", "", "", None, None)
         
         loras = folder_paths.get_filename_list("loras")
@@ -446,14 +438,12 @@ class LF_LoraAndEmbeddingSelector:
         if embedding_stack:
             formatted_embedding = f"{formatted_embedding}, {embedding_stack}"
 
-        PromptServer.instance.send_sync("lf-loraandembeddingselector", {
-            "node": node_id, 
-            "apiFlags": [False if l_saved_info else get_civitai_info, 
-                         False if e_saved_info else get_civitai_info],
-            "datasets": [l_dataset, e_dataset],
-            "hashes": [l_hash, e_hash],
-            "paths": [l_path, e_path]
-        })
+        api_flags = [False if l_saved_info else get_civitai_info, False if e_saved_info else get_civitai_info],
+        datasets = [l_dataset, e_dataset]
+        hashes = [l_hash, e_hash]
+        paths = [l_path, e_path]
+
+        send_multi_selector_message(node_id, datasets, hashes, api_flags, paths, "lf-loraandembeddingselector")
 
         return (lora, embedding, lora_tag, formatted_embedding, l_name, e_name, l_path, e_path, l_cover, e_cover)
     
@@ -488,6 +478,9 @@ class LF_LoraSelector:
         lora = None if lora is None or str(lora) == "None" else lora
 
         if not lora and not randomize:
+
+            send_single_selector_message(node_id, None, None, False, None, "lf-loraselector")
+
             return (None, lora_stack, "", "", None)
         
         loras = folder_paths.get_filename_list("loras")
@@ -515,13 +508,7 @@ class LF_LoraSelector:
         else:
             dataset = prepare_model_dataset(model_name, model_hash, model_base64, model_path)
 
-        PromptServer.instance.send_sync("lf-loraselector", {
-            "node": node_id, 
-            "dataset": dataset,
-            "hash": model_hash,
-            "apiFlag": get_civitai_info,
-            "modelPath": model_path
-        })
+        send_single_selector_message(node_id, dataset, model_hash, get_civitai_info, model_path, "lf-loraselector")
 
         if lora_stack:
             lora_tag = f"{lora_tag}, {lora_stack}"

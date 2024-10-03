@@ -12,7 +12,7 @@
   width: 100%;
 }
 .lf-cardswithchip__cards {
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(var(--card-grid), 1fr);
 }
 .lf-cardswithchip__grid {
   grid-template-rows: minmax(0, auto) 1fr;

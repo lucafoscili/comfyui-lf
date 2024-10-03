@@ -16,7 +16,7 @@ export const cardsWithChipFactory = {
     chip: `${BASE_CSS_CLASS}__chip`,
     grid: `${BASE_CSS_CLASS}__grid`,
   },
-  options: (grid) => {
+  options: (grid: HTMLDivElement) => {
     return {
       hideOnZoom: true,
       getComp() {
@@ -32,17 +32,20 @@ export const cardsWithChipFactory = {
         return serializeValue(value);
       },
       setValue(value) {
-        if (!value) {
-          return;
-        }
         const { cardPropsArray, chipDataset } = deserializeValue(value)
           .parsedJson as CardsWithChipWidgetDeserializedValue;
 
-        cardHandler(
+        const cardsCount = cardHandler(
           grid.querySelector(`.${cardsWithChipFactory.cssClasses.cards}`),
           cardPropsArray,
         );
 
+        if (!cardsCount || !value) {
+          return;
+        }
+
+        const columns = cardsCount > 1 ? 2 : 1;
+        grid.style.setProperty('--card-grid', String(columns).valueOf());
         const chip = grid.querySelector('kul-chip') as HTMLKulChipElement;
         if (chip) {
           chip.kulData = chipDataset;

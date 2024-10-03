@@ -6,7 +6,7 @@ export declare const cardsWithChipFactory: {
         chip: string;
         grid: string;
     };
-    options: (grid: any) => CardsWithChipWidgetOptions;
+    options: (grid: HTMLDivElement) => CardsWithChipWidgetOptions;
     render: (node: NodeType, name: CustomWidgetName) => {
         widget: Widget;
     };
