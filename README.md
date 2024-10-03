@@ -45,7 +45,7 @@ Used to select an embedding. It's possible to fetch additional data from CivitAI
 #### LoadLoraTags
 
 LoRA models are loaded in tag format, with a status widget displayed at the bottom indicating the loading progress.
-![LoadLoraTags](https://github.com/lucafoscili/comfyui-lf/blob/f317945c6794d119cb3b51a0b55ee20609b1f5a4/docs/images/LoadLoraTags.png "Loaded LoRAs")
+![LoadLoraTags](https://github.com/lucafoscili/comfyui-lf/blob/947e736fd6505b9de5b89a5a85ef86d528eae644/docs/images/LoadLoraTags.png "Loaded LoRA tags")
 
 #### LoraSelector
 
