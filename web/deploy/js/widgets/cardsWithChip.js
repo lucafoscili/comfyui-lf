@@ -26,12 +26,14 @@ export const cardsWithChipFactory = {
                 return serializeValue(value);
             },
             setValue(value) {
-                if (!value) {
-                    return;
-                }
                 const { cardPropsArray, chipDataset } = deserializeValue(value)
                     .parsedJson;
-                cardHandler(grid.querySelector(`.${cardsWithChipFactory.cssClasses.cards}`), cardPropsArray);
+                const cardsCount = cardHandler(grid.querySelector(`.${cardsWithChipFactory.cssClasses.cards}`), cardPropsArray);
+                if (!cardsCount || !value) {
+                    return;
+                }
+                const columns = cardsCount > 1 ? 2 : 1;
+                grid.style.setProperty('--card-grid', String(columns).valueOf());
                 const chip = grid.querySelector('kul-chip');
                 if (chip) {
                     chip.kulData = chipDataset;

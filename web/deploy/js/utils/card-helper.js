@@ -2,10 +2,12 @@ import { LogSeverity } from '../types/manager.js';
 import { getLFManager, deserializeValue } from './common.js';
 export const CARD_PROPS_TO_SERIALIZE = ['kulData', 'kulStyle'];
 export const cardHandler = (container, propsArray) => {
+    let count = 0;
     const cards = container.querySelectorAll('kul-card');
     cards.forEach((c) => c.remove());
     for (let index = 0; propsArray && index < propsArray.length; index++) {
         const card = container.appendChild(createCard());
+        count += 1;
         const props = propsArray[index];
         if (props.kulData) {
             for (const key in props) {
@@ -36,6 +38,7 @@ export const cardHandler = (container, propsArray) => {
             }
         }
     }
+    return count;
 };
 export const cardEventHandler = (e) => {
     const { comp, eventType } = e.detail;
@@ -43,7 +46,7 @@ export const cardEventHandler = (e) => {
     const node = card.kulData?.nodes?.[0];
     switch (eventType) {
         case 'click':
-            if (node) {
+            if (node?.value) {
                 window.open(String(node.value).valueOf(), '_blank');
             }
             break;

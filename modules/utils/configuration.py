@@ -8,6 +8,8 @@ from PIL import Image
 
 from ..utils.conversions import pil_to_tensor, tensor_to_base64
 
+from server import PromptServer
+
 SAMPLER_MAP = {
     "euler": "Euler",
     "euler_cfg_pp": "Euler a",
@@ -182,3 +184,28 @@ def process_model(model_type, model_name, folder):
         "model_base64": model_base64,
         "saved_info": saved_info
     }
+
+def send_single_selector_message(node_id, dataset, model_hash, get_civitai_info, model_path, event_name):
+
+    PromptServer.instance.send_sync(event_name, {
+        "node": node_id, 
+        "dataset": dataset,
+        "hash": model_hash,
+        "apiFlag": get_civitai_info,
+        "path": model_path
+    })
+
+    return
+
+def send_multi_selector_message(node_id, datasets, model_hashes, get_civitai_info, model_paths, event_name, chip_dataset=None):
+
+    PromptServer.instance.send_sync(event_name, {
+        "node": node_id, 
+        "datasets": datasets,
+        "hashes": model_hashes,
+        "apiFlags": get_civitai_info,
+        "paths": model_paths,
+        "chipDataset": chip_dataset
+    })
+
+    return

@@ -9,10 +9,14 @@ export const cardHandler = (
   container: HTMLDivElement,
   propsArray: Partial<HTMLKulCardElement>[],
 ) => {
+  let count = 0;
+
   const cards = container.querySelectorAll('kul-card');
   cards.forEach((c) => c.remove());
+
   for (let index = 0; propsArray && index < propsArray.length; index++) {
     const card = container.appendChild(createCard());
+    count += 1;
 
     const props = propsArray[index];
     if (props.kulData) {
@@ -45,6 +49,8 @@ export const cardHandler = (
       }
     }
   }
+
+  return count;
 };
 
 export const cardEventHandler = (e: CustomEvent<KulEventPayload>) => {
@@ -54,7 +60,7 @@ export const cardEventHandler = (e: CustomEvent<KulEventPayload>) => {
 
   switch (eventType) {
     case 'click':
-      if (node) {
+      if (node?.value) {
         window.open(String(node.value).valueOf(), '_blank');
       }
       break;
