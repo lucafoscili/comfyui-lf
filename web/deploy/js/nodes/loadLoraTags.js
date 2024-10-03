@@ -39,7 +39,7 @@ export const loadLoraTagsFactory = {
                         });
                     }
                 }
-                requestAnimationFrame(() => widget.options.setValue(JSON.stringify(value)));
+                widget.options.setValue(JSON.stringify(value));
                 getApiRoutes().redraw();
             });
         }

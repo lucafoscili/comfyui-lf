@@ -46,7 +46,7 @@ const onResponse = async (dataset, path, r) => {
             props.kulStyle = '.sub-2.description { white-space: pre-wrap; }';
             getApiRoutes().saveModelMetadata(path, civitaiDataset);
             break;
-        default:
+        case 'string':
             const node = dataset.nodes[0];
             node.description = '';
             node.value = '';
