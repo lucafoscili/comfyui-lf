@@ -8,7 +8,7 @@ import {
   getInput,
   getLFManager,
   isValidJSON,
-  unescapeJson,
+  deserializeValue,
 } from '../utils/common';
 
 const NAME = NodeName.keywordToggleFromJson;
@@ -40,7 +40,7 @@ export const keywordToggleFromJsonFactory = {
             const dataset = datasetW.options.getValue();
             const chip = chipW.options.getComp();
             try {
-              const newData = unescapeJson(dataset).parsedJson;
+              const newData = deserializeValue(dataset).parsedJson;
 
               if (isValidJSON(newData) && isValidJSON(chip.kulData)) {
                 if (!areJSONEqual(newData, chip.kulData)) {

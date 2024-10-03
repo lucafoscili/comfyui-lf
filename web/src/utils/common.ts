@@ -38,13 +38,35 @@ export const createDOMWidget = (
   return node.addDOMWidget(name, type, element, options);
 };
 
-export const serializeValue = <T extends {}>(value: T) => {
+export const deserializeValue = (
+  str: string,
+): {
+  validJson: boolean;
+  parsedJson?: {};
+  unescapedStr: string;
+} => {
+  let validJson = false;
+  let parsedJson: Record<string, unknown> | undefined = undefined;
+  let unescapedStr = str;
+
+  const recursiveUnescape = (inputStr: string): string => {
+    let newStr = inputStr.replace(/\\(.)/g, '$1');
+    while (newStr !== inputStr) {
+      inputStr = newStr;
+      newStr = inputStr.replace(/\\(.)/g, '$1');
+    }
+    return newStr;
+  };
+
   try {
-    return JSON.stringify(value);
+    parsedJson = JSON.parse(str);
+    validJson = true;
+    unescapedStr = JSON.stringify(parsedJson, null, 2);
   } catch (error) {
-    getLFManager().log(`Error deserializing value`, { value }, LogSeverity.Error);
-    return '';
+    unescapedStr = recursiveUnescape(str);
   }
+
+  return { validJson, parsedJson, unescapedStr };
 };
 
 export const findWidget = <T extends CustomWidgetName>(
@@ -152,6 +174,15 @@ export const refreshChart = (node: NodeType) => {
   }
 };
 
+export const serializeValue = <T extends {}>(value: T) => {
+  try {
+    return JSON.stringify(value);
+  } catch (error) {
+    getLFManager().log(`Error deserializing value`, { value }, LogSeverity.Error);
+    return '';
+  }
+};
+
 export const splitByLastSpaceBeforeAnyBracket = (input: string) => {
   const match = input.match(/\s+(.+)\[.*?\]/);
 
@@ -160,35 +191,4 @@ export const splitByLastSpaceBeforeAnyBracket = (input: string) => {
   }
 
   return input;
-};
-
-export const unescapeJson = (
-  str: string,
-): {
-  validJson: boolean;
-  parsedJson?: Record<string, unknown>;
-  unescapedStr: string;
-} => {
-  let validJson = false;
-  let parsedJson: Record<string, unknown> | undefined = undefined;
-  let unescapedStr = str;
-
-  const recursiveUnescape = (inputStr: string): string => {
-    let newStr = inputStr.replace(/\\(.)/g, '$1');
-    while (newStr !== inputStr) {
-      inputStr = newStr;
-      newStr = inputStr.replace(/\\(.)/g, '$1');
-    }
-    return newStr;
-  };
-
-  try {
-    parsedJson = JSON.parse(str);
-    validJson = true;
-    unescapedStr = JSON.stringify(parsedJson, null, 2);
-  } catch (error) {
-    unescapedStr = recursiveUnescape(str);
-  }
-
-  return { validJson, parsedJson, unescapedStr };
 };

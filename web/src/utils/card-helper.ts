@@ -1,7 +1,7 @@
 import { KulEventPayload } from '../types/ketchup-lite/components';
 import { KulCard } from '../types/ketchup-lite/components/kul-card/kul-card';
 import { LogSeverity } from '../types/manager';
-import { getLFManager, unescapeJson } from './common';
+import { getLFManager, deserializeValue } from './common';
 
 export const CARD_PROPS_TO_SERIALIZE = ['kulData', 'kulStyle'];
 
@@ -22,7 +22,7 @@ export const cardHandler = (
           if (key === 'kulData') {
             try {
               if (typeof prop === 'string') {
-                card.kulData = unescapeJson(prop).parsedJson;
+                card.kulData = deserializeValue(prop).parsedJson;
               } else {
                 card.kulData = prop;
               }

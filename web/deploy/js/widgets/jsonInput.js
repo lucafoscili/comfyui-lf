@@ -1,7 +1,7 @@
 import { LogSeverity } from '../types/manager.js';
 import { NodeName } from '../types/nodes.js';
 import { CustomWidgetName } from '../types/widgets.js';
-import { createDOMWidget, findWidget, getLFManager, unescapeJson } from '../utils/common.js';
+import { createDOMWidget, findWidget, getLFManager, deserializeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-jsoninput';
 const TYPE = CustomWidgetName.jsonInput;
 let VALIDATION_TIMEOUT;
@@ -22,7 +22,7 @@ export const jsonInputFactory = {
                     try {
                         let parsedValue;
                         if (typeof value === 'string') {
-                            const { unescapedStr, validJson, parsedJson } = unescapeJson(value);
+                            const { unescapedStr, validJson, parsedJson } = deserializeValue(value);
                             parsedValue = validJson ? parsedJson : JSON.parse(unescapedStr);
                         }
                         else {

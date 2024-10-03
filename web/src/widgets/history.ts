@@ -2,7 +2,7 @@ import { KulDataDataset, KulListEventPayload } from '../types/ketchup-lite/compo
 import { LogSeverity } from '../types/manager';
 import { NodeName } from '../types/nodes';
 import { ComfyWidgetName, CustomWidgetName, HistoryWidgetOptions } from '../types/widgets';
-import { createDOMWidget, getLFManager, getWidget, unescapeJson } from '../utils/common';
+import { createDOMWidget, getLFManager, getWidget, deserializeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-history';
 const TYPE = CustomWidgetName.history;
@@ -28,7 +28,7 @@ export const historyFactory = {
       setValue(value: KulDataDataset | string) {
         try {
           if (typeof value === 'string') {
-            history.kulData = unescapeJson(value).parsedJson;
+            history.kulData = deserializeValue(value).parsedJson;
           } else {
             history.kulData = value;
           }

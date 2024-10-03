@@ -221,10 +221,11 @@ export interface ControlPanelWidgetOptions {
 export type ControlPanelWidgetSetter = () => {
   [CustomWidgetName.controlPanel]: BaseWidgetCallback;
 };
-export interface ControlPanelWidgetValue {
+export type ControlPanelWidgetDeserializedValue = {
   debug: boolean;
   themes: string;
-}
+};
+export type ControlPanelWidgetValue = string;
 
 /*-------------------------------------------------------------------*/
 /*            H i s t o g r a m   D e c l a r a t i o n s            */

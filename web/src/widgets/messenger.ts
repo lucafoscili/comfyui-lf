@@ -1,7 +1,7 @@
 import { KulMessengerConfig } from '../types/ketchup-lite/components';
 import { LogSeverity } from '../types/manager';
 import { MessengerWidgetOptions, CustomWidgetName, MessengerWidgetValue } from '../types/widgets';
-import { createDOMWidget, getLFManager, isValidJSON, unescapeJson } from '../utils/common';
+import { createDOMWidget, getLFManager, isValidJSON, deserializeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-messenger';
 const TYPE = CustomWidgetName.messenger;
@@ -27,15 +27,15 @@ export const messengerFactory = {
       setValue(value) {
         try {
           if (typeof value === 'string') {
-            const parsed = unescapeJson(value).parsedJson as MessengerWidgetValue;
+            const parsed = deserializeValue(value).parsedJson as MessengerWidgetValue;
             const dataset = parsed['dataset'];
             const config = parsed['config'];
             messenger.kulData = dataset;
             if (config) {
               if (typeof config === 'string') {
-                const unescapeConfig = unescapeJson(config);
+                const unescapeConfig = deserializeValue(config);
                 messenger.dataset.config = unescapeConfig.unescapedStr;
-                messenger.kulValue = unescapeJson(config)
+                messenger.kulValue = deserializeValue(config)
                   .parsedJson as unknown as KulMessengerConfig;
               } else if (isValidJSON(config)) {
                 messenger.dataset.config = JSON.stringify(config);

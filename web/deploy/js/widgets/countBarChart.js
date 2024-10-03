@@ -1,6 +1,6 @@
 import { LogSeverity } from '../types/manager.js';
 import { CustomWidgetName, } from '../types/widgets.js';
-import { createDOMWidget, getLFManager, unescapeJson } from '../utils/common.js';
+import { createDOMWidget, getLFManager, deserializeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-countbarchart';
 const TYPE = CustomWidgetName.countBarChart;
 const DEF_ICON = 'content_copy';
@@ -29,7 +29,7 @@ export const countBarChartFactory = {
             setValue(value) {
                 try {
                     if (typeof value === 'string') {
-                        const parsed = unescapeJson(value).parsedJson;
+                        const parsed = deserializeValue(value).parsedJson;
                         chart.kulData = parsed['chartDataset'];
                         chip.kulData = parsed['chipDataset'];
                     }

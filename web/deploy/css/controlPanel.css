@@ -1,17 +1,26 @@
 .lf-controlpanel {
-  align-items: center;
   background: var(--kul-background-color);
-  display: flex;
-  flex-direction: column;
   height: 100%;
-  justify-content: center;
-  max-height: 100%;
-  max-width: 100%;
+  width: 100%;
   overflow: auto;
   width: 100%;
 }
+.lf-controlpanel__grid {
+  display: grid;
+  grid-template-areas: "theme clear-info" "debug debug";
+  height: 100%;
+  place-items: center;
+  width: 100%;
+}
+.lf-controlpanel__clear-info {
+  grid-area: clear-info;
+}
 .lf-controlpanel__debug {
+  grid-area: debug;
   padding-bottom: 24px;
+}
+.lf-controlpanel__theme {
+  grid-area: theme;
 }
 .lf-controlpanel__spinner {
   height: 100%;

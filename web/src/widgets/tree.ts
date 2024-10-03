@@ -1,7 +1,7 @@
 import { KulDataDataset } from '../types/ketchup-lite/components';
 import { LogSeverity } from '../types/manager';
 import { CustomWidgetName, TreeWidgetOptions } from '../types/widgets';
-import { createDOMWidget, getLFManager, unescapeJson } from '../utils/common';
+import { createDOMWidget, getLFManager, deserializeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-tree';
 const TYPE = CustomWidgetName.tree;
@@ -23,7 +23,7 @@ export const treeFactory = {
       setValue(value: KulDataDataset | string) {
         try {
           if (typeof value === 'string') {
-            tree.kulData = unescapeJson(value).parsedJson;
+            tree.kulData = deserializeValue(value).parsedJson;
           } else {
             tree.kulData = value;
           }

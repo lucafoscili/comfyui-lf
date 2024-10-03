@@ -166,10 +166,11 @@ export interface ControlPanelWidgetOptions {
 export type ControlPanelWidgetSetter = () => {
     [CustomWidgetName.controlPanel]: BaseWidgetCallback;
 };
-export interface ControlPanelWidgetValue {
+export type ControlPanelWidgetDeserializedValue = {
     debug: boolean;
     themes: string;
-}
+};
+export type ControlPanelWidgetValue = string;
 export interface HistogramWidget extends Widget {
     options: HistogramWidgetOptions;
     type: [CustomWidgetName.histogram];

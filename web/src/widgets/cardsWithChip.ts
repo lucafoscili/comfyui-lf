@@ -4,7 +4,7 @@ import {
   CustomWidgetName,
 } from '../types/widgets';
 import { cardHandler, getCardProps } from '../utils/card-helper';
-import { createDOMWidget, serializeValue, unescapeJson } from '../utils/common';
+import { createDOMWidget, serializeValue, deserializeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-cardswithchip';
 const TYPE = CustomWidgetName.cardsWithChip;
@@ -35,7 +35,7 @@ export const cardsWithChipFactory = {
         if (!value) {
           return;
         }
-        const { cardPropsArray, chipDataset } = unescapeJson(value)
+        const { cardPropsArray, chipDataset } = deserializeValue(value)
           .parsedJson as CardsWithChipWidgetDeserializedValue;
 
         cardHandler(

@@ -1,6 +1,6 @@
 import { CustomWidgetName } from '../types/widgets.js';
 import { cardHandler, getCardProps } from '../utils/card-helper.js';
-import { createDOMWidget, serializeValue, unescapeJson } from '../utils/common.js';
+import { createDOMWidget, serializeValue, deserializeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-card';
 const TYPE = CustomWidgetName.card;
 export const cardFactory = {
@@ -25,7 +25,7 @@ export const cardFactory = {
                 if (!value) {
                     return;
                 }
-                const { propsArray, template } = unescapeJson(value)
+                const { propsArray, template } = deserializeValue(value)
                     .parsedJson;
                 const gridTemplate = template || 'repeat(1, 1fr) / repeat(1, 1fr)';
                 grid.style.setProperty('--card-grid', gridTemplate);

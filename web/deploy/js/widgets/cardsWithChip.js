@@ -1,6 +1,6 @@
 import { CustomWidgetName, } from '../types/widgets.js';
 import { cardHandler, getCardProps } from '../utils/card-helper.js';
-import { createDOMWidget, serializeValue, unescapeJson } from '../utils/common.js';
+import { createDOMWidget, serializeValue, deserializeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-cardswithchip';
 const TYPE = CustomWidgetName.cardsWithChip;
 export const cardsWithChipFactory = {
@@ -29,7 +29,7 @@ export const cardsWithChipFactory = {
                 if (!value) {
                     return;
                 }
-                const { cardPropsArray, chipDataset } = unescapeJson(value)
+                const { cardPropsArray, chipDataset } = deserializeValue(value)
                     .parsedJson;
                 cardHandler(grid.querySelector(`.${cardsWithChipFactory.cssClasses.cards}`), cardPropsArray);
                 const chip = grid.querySelector('kul-chip');

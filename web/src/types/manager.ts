@@ -7,6 +7,7 @@ import { Extension } from './nodes';
 /*-------------------------------------------------------------------*/
 
 export interface ComfyAPIs {
+  clearModelMetadata: () => Promise<void>;
   event: <T extends BaseEventPayload>(
     name: EventName,
     callback: (event: CustomEvent<T>) => void,
@@ -25,8 +26,12 @@ export enum LogSeverity {
   Warning = 'warning',
   Error = 'error',
 }
+export interface ClearModelAPIPayload {
+  status: 'success';
+  message: string;
+}
 export interface SaveModelAPIPayload {
-  status: 'exists' | 'saved';
+  status: 'exists' | 'success';
   message: string;
 }
 export interface APIMetadataEntry {

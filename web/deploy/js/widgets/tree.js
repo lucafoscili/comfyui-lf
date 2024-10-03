@@ -1,6 +1,6 @@
 import { LogSeverity } from '../types/manager.js';
 import { CustomWidgetName } from '../types/widgets.js';
-import { createDOMWidget, getLFManager, unescapeJson } from '../utils/common.js';
+import { createDOMWidget, getLFManager, deserializeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-tree';
 const TYPE = CustomWidgetName.tree;
 export const treeFactory = {
@@ -20,7 +20,7 @@ export const treeFactory = {
             setValue(value) {
                 try {
                     if (typeof value === 'string') {
-                        tree.kulData = unescapeJson(value).parsedJson;
+                        tree.kulData = deserializeValue(value).parsedJson;
                     }
                     else {
                         tree.kulData = value;

@@ -1,38 +1,46 @@
-import { CustomWidgetName } from '../types/widgets.js';
-import { createDOMWidget, getKulManager, getKulThemes, getLFManager } from '../utils/common.js';
+import { CustomWidgetName, } from '../types/widgets.js';
+import { createDOMWidget, deserializeValue, getApiRoutes, getKulManager, getKulThemes, getLFManager, serializeValue, } from '../utils/common.js';
+const DEF_ICON = 'delete';
+const DEF_LABEL = 'Delete models info';
 const BASE_CSS_CLASS = 'lf-controlpanel';
 const TYPE = CustomWidgetName.controlPanel;
+let TIMEOUT;
 export const controlPanelFactory = {
     cssClasses: {
         content: BASE_CSS_CLASS,
+        clearInfo: `${BASE_CSS_CLASS}__clear-info`,
         debug: `${BASE_CSS_CLASS}__debug`,
+        grid: `${BASE_CSS_CLASS}__grid`,
         spinner: `${BASE_CSS_CLASS}__spinner`,
         themes: `${BASE_CSS_CLASS}__themes`,
     },
     options: () => {
         return {
             getValue() {
-                return { debug: getLFManager()?.isDebug(), themes: getKulManager()?.theme.name };
+                return serializeValue({
+                    debug: getLFManager()?.isDebug(),
+                    themes: getKulManager()?.theme.name,
+                });
             },
             setValue(value) {
-                const themeSetter = () => {
-                    const { themes } = value;
+                const { debug, themes } = deserializeValue(value)
+                    .parsedJson;
+                const set = () => {
+                    if (debug === true || debug === false) {
+                        getLFManager().toggleDebug(debug);
+                    }
                     if (themes) {
                         getKulManager().theme.set(themes);
                     }
                     return value;
                 };
-                const { debug } = value;
-                if (debug === true || debug === false) {
-                    getLFManager().toggleDebug(debug);
-                }
                 const kulManager = getKulManager();
                 if (kulManager) {
-                    themeSetter();
+                    set();
                 }
                 else {
                     const managerCb = () => {
-                        themeSetter();
+                        set();
                         document.removeEventListener('kul-manager-ready', managerCb);
                     };
                     document.addEventListener('kul-manager-ready', managerCb);
@@ -47,26 +55,10 @@ export const controlPanelFactory = {
         return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };
     },
 };
-const buttonCb = (e) => {
-    if (e.detail.eventType === 'click') {
-        getKulManager().theme.randomTheme();
-    }
-    else if (e.detail.eventType === 'kul-event') {
-        const listEvent = e.detail.originalEvent;
-        const value = listEvent.detail.node.id;
-        getKulManager().theme.set(value);
-    }
-};
 const readyCb = (domWidget) => {
     setTimeout(() => {
         contentCb(domWidget, true);
     }, 750);
-};
-const switchCb = (e) => {
-    if (e.detail.eventType === 'change') {
-        const value = e.detail.value === 'on' ? true : false;
-        getLFManager().toggleDebug(value);
-    }
 };
 const contentCb = (domWidget, isReady) => {
     const content = document.createElement('div');
@@ -77,28 +69,16 @@ const contentCb = (domWidget, isReady) => {
         spinner.kulLayout = 11;
         return spinner;
     };
-    const createDebug = () => {
-        const debug = document.createElement('kul-switch');
-        debug.classList.add(controlPanelFactory.cssClasses.debug);
-        debug.kulLabel = 'Debug';
-        debug.kulLeadingLabel = true;
-        debug.title = 'Activate verbose console logging';
-        debug.addEventListener('kul-switch-event', switchCb);
-        return debug;
-    };
-    const createTheme = () => {
-        const themes = document.createElement('kul-button');
-        themes.classList.add(controlPanelFactory.cssClasses.themes);
-        themes.kulData = getKulThemes();
-        themes.title = 'Change the LF Nodes suite theme';
-        themes.addEventListener('kul-button-event', buttonCb);
-        return themes;
-    };
     if (isReady) {
+        const grid = document.createElement('div');
         const debug = createDebug();
         const themes = createTheme();
-        content.appendChild(debug);
-        content.appendChild(themes);
+        const clearInfo = createClearInfo();
+        grid.classList.add(controlPanelFactory.cssClasses.grid);
+        grid.appendChild(clearInfo);
+        grid.appendChild(themes);
+        grid.appendChild(debug);
+        content.appendChild(grid);
         domWidget.replaceChild(content, domWidget.firstChild);
     }
     else {
@@ -108,4 +88,83 @@ const contentCb = (domWidget, isReady) => {
         domWidget.appendChild(content);
     }
     content.classList.add(controlPanelFactory.cssClasses.content);
+};
+const createClearInfo = () => {
+    const cb = (e) => {
+        const onResponse = () => {
+            clearInfo.classList.remove('kul-danger');
+            clearInfo.classList.add('kul-success');
+            clearInfo.kulShowSpinner = false;
+            clearInfo.kulLabel = 'Done!';
+            clearInfo.kulIcon = 'check';
+        };
+        const restore = () => {
+            clearInfo.classList.add('kul-danger');
+            clearInfo.classList.remove('kul-success');
+            clearInfo.kulLabel = DEF_LABEL;
+            clearInfo.kulIcon = DEF_ICON;
+            TIMEOUT = null;
+        };
+        if (e.detail.eventType === 'click') {
+            requestAnimationFrame(() => (clearInfo.kulShowSpinner = true));
+            getApiRoutes()
+                .clearModelMetadata()
+                .then(() => {
+                requestAnimationFrame(onResponse);
+                if (TIMEOUT) {
+                    clearTimeout(TIMEOUT);
+                }
+                TIMEOUT = setTimeout(() => requestAnimationFrame(restore), 1000);
+            });
+        }
+    };
+    const clearInfo = document.createElement('kul-button');
+    const spinner = document.createElement('kul-spinner');
+    clearInfo.classList.add(controlPanelFactory.cssClasses.clearInfo);
+    clearInfo.classList.add('kul-danger');
+    clearInfo.kulIcon = DEF_ICON;
+    clearInfo.kulLabel = DEF_LABEL;
+    clearInfo.kulStyling = 'outlined';
+    clearInfo.title = "Deletes all models' .info files containing CivitAI metadata";
+    clearInfo.addEventListener('kul-button-event', cb);
+    spinner.kulActive = true;
+    spinner.kulDimensions = '0.6em';
+    spinner.kulLayout = 2;
+    spinner.slot = 'spinner';
+    clearInfo.appendChild(spinner);
+    return clearInfo;
+};
+const createDebug = () => {
+    const cb = (e) => {
+        if (e.detail.eventType === 'change') {
+            const value = e.detail.value === 'on' ? true : false;
+            getLFManager().toggleDebug(value);
+        }
+    };
+    const debug = document.createElement('kul-switch');
+    debug.classList.add(controlPanelFactory.cssClasses.debug);
+    debug.kulLabel = 'Debug';
+    debug.kulLeadingLabel = true;
+    debug.kulValue = !!getLFManager().isDebug();
+    debug.title = 'Activate verbose console logging';
+    debug.addEventListener('kul-switch-event', cb);
+    return debug;
+};
+const createTheme = () => {
+    const cb = (e) => {
+        if (e.detail.eventType === 'click') {
+            getKulManager().theme.randomTheme();
+        }
+        else if (e.detail.eventType === 'kul-event') {
+            const listEvent = e.detail.originalEvent;
+            const value = listEvent.detail.node.id;
+            getKulManager().theme.set(value);
+        }
+    };
+    const themes = document.createElement('kul-button');
+    themes.classList.add(controlPanelFactory.cssClasses.themes);
+    themes.kulData = getKulThemes();
+    themes.title = 'Change the LF Nodes suite theme';
+    themes.addEventListener('kul-button-event', cb);
+    return themes;
 };

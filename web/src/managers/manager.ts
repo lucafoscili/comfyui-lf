@@ -58,6 +58,33 @@ export interface LFWindow extends Window {
 
 export class LFManager {
   #APIS: ComfyAPIs = {
+    clearModelMetadata: async () => {
+      try {
+        await api
+          .fetchApi('/comfyui-lf/clear-model-info', {
+            method: 'POST',
+          })
+          .then((res: Response) => {
+            try {
+              return res.json();
+            } catch (error) {
+              this.log(
+                'Error parsing response when deleting metadata files.',
+                { error },
+                LogSeverity.Error,
+              );
+              return res.json();
+            }
+          })
+          .then((data: SaveModelAPIPayload) => {
+            if (data.status === 'success') {
+              this.log(data.message, {}, LogSeverity.Info);
+            }
+          });
+      } catch (error) {
+        this.log("Error deleting model's metadata.", { error }, LogSeverity.Error);
+      }
+    },
     event: (name, callback) => {
       api.addEventListener(name, callback);
     },
@@ -108,9 +135,20 @@ export class LFManager {
             method: 'POST',
             body,
           })
-          .then((res: Response) => res.json())
+          .then((res: Response) => {
+            try {
+              return res.json();
+            } catch (error) {
+              this.log(
+                'Error parsing response when saving metadata.',
+                { error },
+                LogSeverity.Error,
+              );
+              return res.json();
+            }
+          })
           .then((data: SaveModelAPIPayload) => {
-            if (data.status === 'saved') {
+            if (data.status === 'success') {
               this.log('Metadata for this model saved successfully.', {}, LogSeverity.Info);
             } else if (data.status === 'exists') {
               this.log('Metadata for this model already exists.', {}, LogSeverity.Warning);

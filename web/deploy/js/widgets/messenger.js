@@ -1,6 +1,6 @@
 import { LogSeverity } from '../types/manager.js';
 import { CustomWidgetName } from '../types/widgets.js';
-import { createDOMWidget, getLFManager, isValidJSON, unescapeJson } from '../utils/common.js';
+import { createDOMWidget, getLFManager, isValidJSON, deserializeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-messenger';
 const TYPE = CustomWidgetName.messenger;
 export const messengerFactory = {
@@ -24,15 +24,15 @@ export const messengerFactory = {
             setValue(value) {
                 try {
                     if (typeof value === 'string') {
-                        const parsed = unescapeJson(value).parsedJson;
+                        const parsed = deserializeValue(value).parsedJson;
                         const dataset = parsed['dataset'];
                         const config = parsed['config'];
                         messenger.kulData = dataset;
                         if (config) {
                             if (typeof config === 'string') {
-                                const unescapeConfig = unescapeJson(config);
+                                const unescapeConfig = deserializeValue(config);
                                 messenger.dataset.config = unescapeConfig.unescapedStr;
-                                messenger.kulValue = unescapeJson(config)
+                                messenger.kulValue = deserializeValue(config)
                                     .parsedJson;
                             }
                             else if (isValidJSON(config)) {
