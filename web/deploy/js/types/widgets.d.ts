@@ -90,7 +90,7 @@ export type CardWidgetSetter = () => {
 export type CardWidgetValue = string;
 export type CardWidgetDeserializedValue = {
     propsArray: Partial<HTMLKulCardElement>[];
-    template: string;
+    template?: string;
 };
 export interface CardsWithChipWidget extends Widget {
     options: CardsWithChipWidgetOptions;

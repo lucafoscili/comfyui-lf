@@ -10,11 +10,13 @@ export const cardHandler = (
   propsArray: Partial<HTMLKulCardElement>[],
 ) => {
   const cards = container.querySelectorAll('kul-card');
+  cards.forEach((c) => c.remove());
   for (let index = 0; propsArray && index < propsArray.length; index++) {
+    const card = container.appendChild(createCard());
+
     const props = propsArray[index];
     if (props.kulData) {
       for (const key in props) {
-        const card = cards?.[index] || container.appendChild(createCard());
         if (Object.prototype.hasOwnProperty.call(props, key)) {
           const prop = props[key];
           if (key === 'kulData') {

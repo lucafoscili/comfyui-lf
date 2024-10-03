@@ -13,13 +13,11 @@ const DUMMY_PROPS = {
     },
 };
 export const fetchModelMetadata = (widget, models) => {
-    const template = `repeat(1, 1fr) / repeat(${models.length}, 1fr)`;
     const dummyValue = {
         propsArray: [],
-        template,
     };
     for (let index = 0; index < models.length; index++) {
-        dummyValue.propsArray.push(JSON.stringify(DUMMY_PROPS));
+        dummyValue.propsArray.push(DUMMY_PROPS);
     }
     widget.options.setValue(JSON.stringify(dummyValue));
     const promises = models.map(({ dataset, hash, path }) => getApiRoutes().modelInfoFromCivitAI(hash).then(onResponse.bind(onResponse, dataset, path)));

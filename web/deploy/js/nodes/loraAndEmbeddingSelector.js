@@ -29,24 +29,13 @@ export const loraAndEmbeddingSelectorFactory = {
                     path: payload.loraModelPath,
                 },
             ];
-            for (let index = 0; index < models?.length; index++) {
-                const dataset = models[index].dataset;
-                const hash = models[index].hash;
-                const path = models[index].path;
-                if (payload.civitaiInfo) {
-                    models.push({ dataset, hash, path });
-                }
-                else {
-                    value.propsArray.push({ kulData: dataset });
-                }
-            }
             if (payload.civitaiInfo) {
                 fetchModelMetadata(widget, models).then((r) => {
                     for (let index = 0; index < r.length; index++) {
-                        const dataset = r[index];
-                        if (dataset) {
+                        const d = r[index];
+                        if (d) {
                             value.propsArray.push({
-                                kulData: dataset,
+                                kulData: d,
                                 kulStyle: '.sub-2.description { white-space: pre-wrap; }',
                             });
                         }
@@ -55,6 +44,8 @@ export const loraAndEmbeddingSelectorFactory = {
                 });
             }
             else {
+                value.propsArray.push({ kulData: payload.loraDataset });
+                value.propsArray.push({ kulData: payload.embeddingDataset });
                 widget.options.setValue(JSON.stringify(value));
             }
             getApiRoutes().redraw();

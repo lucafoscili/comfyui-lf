@@ -26,7 +26,6 @@ export const loraSelectorFactory = {
         propsArray: [],
         template: '',
       };
-      value.propsArray.push({ kulData: dataset });
       if (civitaiInfo) {
         fetchModelMetadata(widget, [{ dataset, hash, path: modelPath }]).then((r) => {
           for (let index = 0; index < r.length; index++) {
@@ -41,6 +40,7 @@ export const loraSelectorFactory = {
           widget.options.setValue(JSON.stringify(value));
         });
       } else {
+        value.propsArray.push({ kulData: payload.dataset });
         widget.options.setValue(JSON.stringify(value));
       }
 
