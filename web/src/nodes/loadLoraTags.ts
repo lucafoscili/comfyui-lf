@@ -7,7 +7,7 @@ import {
   CustomWidgetName,
   type BaseWidgetCallback,
 } from '../types/widgets';
-import { fetchModelMetadata } from '../utils/api';
+import { cardPlaceholders, fetchModelMetadata } from '../utils/api';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 
 const NAME = NodeName.loadLoraTags;
@@ -21,39 +21,35 @@ export const loadLoraTagsFactory = {
     const node = getApiRoutes().getNodeById(payload.id);
     if (node) {
       const widget = getCustomWidget(node, CustomWidgetName.cardsWithChip, addW);
+      cardPlaceholders(widget, 1);
       const value: CardsWithChipWidgetDeserializedValue = {
         cardPropsArray: [],
         chipDataset: payload.chipDataset,
       };
       const models: APIMetadataEntry[] = [];
-      for (let index = 0; index < payload.cardDatasets?.length; index++) {
-        const dataset = payload.cardDatasets[index];
+      for (let index = 0; index < payload.datasets?.length; index++) {
+        const apiFlag = payload.apiFlags[index];
+        const dataset = payload.datasets[index];
         const hash = payload.hashes[index];
-        const path = payload.loraPaths[index];
-        if (payload.civitaiInfo) {
-          models.push({ dataset, hash, path });
-        } else {
-          value.cardPropsArray.push({ kulData: dataset });
-        }
+        const path = payload.paths[index];
+        models.push({ dataset, hash, path, apiFlag });
       }
-      if (payload.civitaiInfo) {
-        fetchModelMetadata(widget, models).then((r) => {
-          for (let index = 0; index < r.length; index++) {
-            const dataset = r[index];
-            if (dataset) {
-              value.cardPropsArray.push({
-                kulData: dataset,
-                kulStyle: '.sub-2.description { white-space: pre-wrap; }',
-              });
-            }
+      fetchModelMetadata(models).then((r) => {
+        for (let index = 0; index < r.length; index++) {
+          const cardProps = r[index];
+          if (cardProps.kulData) {
+            value.cardPropsArray.push(cardProps);
+          } else {
+            value.cardPropsArray.push({
+              ...cardProps,
+              kulData: models[index].dataset,
+            });
           }
-          widget.options.setValue(JSON.stringify(value));
-        });
-      } else {
+        }
         widget.options.setValue(JSON.stringify(value));
-      }
 
-      getApiRoutes().redraw();
+        getApiRoutes().redraw();
+      });
     }
   },
   register: (setW: CardsWithChipWidgetSetter, addW: BaseWidgetCallback) => {

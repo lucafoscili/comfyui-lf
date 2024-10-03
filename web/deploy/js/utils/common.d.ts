@@ -4,7 +4,7 @@ import { LogSeverity } from '../types/manager';
 export declare const areJSONEqual: (a: unknown, b: unknown) => boolean;
 export declare const capitalize: (input: string) => string;
 export declare const createDOMWidget: (name: string, type: CustomWidgetName, element: HTMLDivElement, node: NodeType, options?: CustomWidgetOptions) => Widget;
-export declare const deserializeValue: (str: string) => {
+export declare const deserializeValue: (input: any) => {
     validJson: boolean;
     parsedJson?: {};
     unescapedStr: string;

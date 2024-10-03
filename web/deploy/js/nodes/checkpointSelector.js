@@ -2,7 +2,7 @@ import { EventName } from '../types/events.js';
 import { LogSeverity } from '../types/manager.js';
 import { NodeName } from '../types/nodes.js';
 import { CustomWidgetName, } from '../types/widgets.js';
-import { fetchModelMetadata } from '../utils/api.js';
+import { cardPlaceholders, fetchModelMetadata } from '../utils/api.js';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common.js';
 const NAME = NodeName.checkpointSelector;
 export const checkpointSelectorFactory = {
@@ -12,31 +12,29 @@ export const checkpointSelectorFactory = {
         const payload = event.detail;
         const node = getApiRoutes().getNodeById(payload.id);
         if (node) {
-            const { civitaiInfo, dataset, hash, modelPath } = payload;
+            const { apiFlag, dataset, hash, path } = payload;
             const widget = getCustomWidget(node, CustomWidgetName.card, addW);
+            cardPlaceholders(widget, 1);
             const value = {
                 propsArray: [],
                 template: '',
             };
-            if (civitaiInfo) {
-                fetchModelMetadata(widget, [{ dataset, hash, path: modelPath }]).then((r) => {
-                    for (let index = 0; index < r.length; index++) {
-                        const dataset = r[index];
-                        if (dataset) {
-                            value.propsArray.push({
-                                kulData: dataset,
-                                kulStyle: '.sub-2.description { white-space: pre-wrap; }',
-                            });
-                        }
+            fetchModelMetadata([{ dataset, hash, path, apiFlag }]).then((r) => {
+                for (let index = 0; index < r.length; index++) {
+                    const cardProps = r[index];
+                    if (cardProps.kulData) {
+                        value.propsArray.push(cardProps);
                     }
-                    widget.options.setValue(JSON.stringify(value));
-                });
-            }
-            else {
-                value.propsArray.push({ kulData: payload.dataset });
+                    else {
+                        value.propsArray.push({
+                            ...cardProps,
+                            kulData: payload.dataset,
+                        });
+                    }
+                }
                 widget.options.setValue(JSON.stringify(value));
-            }
-            getApiRoutes().redraw();
+                getApiRoutes().redraw();
+            });
         }
     },
     register: (setW, addW) => {

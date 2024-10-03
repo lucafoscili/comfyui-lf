@@ -8,7 +8,7 @@ const DUMMY_PROPS: Partial<HTMLKulCardElement> = {
       {
         cells: {
           kulImage: { shape: 'image', value: 'cloud_download' },
-          kulText: { shape: 'text', value: 'Loading...' },
+          kulText: { shape: 'text', value: 'Fetching metadata from CivitAI...' },
         },
         id: '0',
       },
@@ -16,58 +16,67 @@ const DUMMY_PROPS: Partial<HTMLKulCardElement> = {
   },
 };
 
-export const fetchModelMetadata = (
-  widget: CardWidget | CardsWithChipWidget,
-  models: { dataset: KulDataDataset; hash: string; path: string }[],
-): Promise<KulDataDataset[]> => {
+export const cardPlaceholders = (widget: CardWidget | CardsWithChipWidget, count: number) => {
   const dummyValue: CardWidgetDeserializedValue = {
     propsArray: [],
   };
 
-  for (let index = 0; index < models.length; index++) {
+  for (let index = 0; index < count; index++) {
     dummyValue.propsArray.push(DUMMY_PROPS);
   }
   widget.options.setValue(JSON.stringify(dummyValue));
+};
 
-  const promises: Promise<KulDataDataset>[] = models.map(({ dataset, hash, path }) =>
-    getApiRoutes().modelInfoFromCivitAI(hash).then(onResponse.bind(onResponse, dataset, path)),
+export const fetchModelMetadata = async (
+  models: { apiFlag: boolean; dataset: KulDataDataset; hash: string; path: string }[],
+): Promise<Partial<HTMLKulCardElement>[]> => {
+  const promises: Promise<Partial<HTMLKulCardElement>>[] = models.map(
+    ({ dataset, hash, path, apiFlag }) => {
+      if (apiFlag) {
+        return getApiRoutes()
+          .modelInfoFromCivitAI(hash)
+          .then(onResponse.bind(onResponse, dataset, path));
+      } else {
+        return onResponse(dataset, path, null);
+      }
+    },
   );
 
   return Promise.all(promises);
 };
 
 const onResponse = async (dataset: KulDataDataset, path: string, r: CivitAIModelData) => {
-  const id = r.id;
-  const props: Partial<HTMLKulCardElement> = {};
+  const id = r?.id;
+  const props: Partial<HTMLKulCardElement> = {
+    kulStyle: '.sub-2.description { white-space: pre-wrap; }',
+  };
 
-  if (id) {
-    switch (typeof id) {
-      case 'number':
-        const civitaiDataset = prepareValidDataset(r);
-        props.kulData = civitaiDataset;
-        props.kulStyle = '.sub-2.description { white-space: pre-wrap; }';
-        getApiRoutes().saveModelMetadata(path, civitaiDataset);
-        break;
-      default:
-        const node = dataset.nodes[0];
-        node.description = '';
-        node.value = '';
-        node.cells.kulButton = {
-          kulDisabled: true,
-          kulIcon: 'warning',
-          kulStyling: 'icon',
-          shape: 'button',
-          value: '',
-        };
-        node.cells.text3 = {
-          value: "Whoops! It seems like something's off. Falling back to local data.",
-        };
-        props.kulData = dataset;
-        break;
-    }
+  switch (typeof id) {
+    case 'number':
+      const civitaiDataset = prepareValidDataset(r);
+      props.kulData = civitaiDataset;
+      props.kulStyle = '.sub-2.description { white-space: pre-wrap; }';
+      getApiRoutes().saveModelMetadata(path, civitaiDataset);
+      break;
+    default:
+      const node = dataset.nodes[0];
+      node.description = '';
+      node.value = '';
+      node.cells.kulButton = {
+        kulDisabled: true,
+        kulIcon: 'warning',
+        kulStyling: 'icon',
+        shape: 'button',
+        value: '',
+      };
+      node.cells.text3 = {
+        value: "Whoops! It seems like something's off. Falling back to local data.",
+      };
+      props.kulData = dataset;
+      break;
   }
 
-  return props.kulData;
+  return props;
 };
 
 const prepareValidDataset = (r: CivitAIModelData) => {

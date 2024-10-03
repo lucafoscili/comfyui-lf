@@ -2,7 +2,7 @@ import { EventName } from '../types/events.js';
 import { LogSeverity } from '../types/manager.js';
 import { NodeName } from '../types/nodes.js';
 import { CustomWidgetName, } from '../types/widgets.js';
-import { fetchModelMetadata } from '../utils/api.js';
+import { cardPlaceholders, fetchModelMetadata } from '../utils/api.js';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common.js';
 const NAME = NodeName.loadLoraTags;
 export const loadLoraTagsFactory = {
@@ -13,40 +13,35 @@ export const loadLoraTagsFactory = {
         const node = getApiRoutes().getNodeById(payload.id);
         if (node) {
             const widget = getCustomWidget(node, CustomWidgetName.cardsWithChip, addW);
+            cardPlaceholders(widget, 1);
             const value = {
                 cardPropsArray: [],
                 chipDataset: payload.chipDataset,
             };
             const models = [];
-            for (let index = 0; index < payload.cardDatasets?.length; index++) {
-                const dataset = payload.cardDatasets[index];
+            for (let index = 0; index < payload.datasets?.length; index++) {
+                const apiFlag = payload.apiFlags[index];
+                const dataset = payload.datasets[index];
                 const hash = payload.hashes[index];
-                const path = payload.loraPaths[index];
-                if (payload.civitaiInfo) {
-                    models.push({ dataset, hash, path });
-                }
-                else {
-                    value.cardPropsArray.push({ kulData: dataset });
-                }
+                const path = payload.paths[index];
+                models.push({ dataset, hash, path, apiFlag });
             }
-            if (payload.civitaiInfo) {
-                fetchModelMetadata(widget, models).then((r) => {
-                    for (let index = 0; index < r.length; index++) {
-                        const dataset = r[index];
-                        if (dataset) {
-                            value.cardPropsArray.push({
-                                kulData: dataset,
-                                kulStyle: '.sub-2.description { white-space: pre-wrap; }',
-                            });
-                        }
+            fetchModelMetadata(models).then((r) => {
+                for (let index = 0; index < r.length; index++) {
+                    const cardProps = r[index];
+                    if (cardProps.kulData) {
+                        value.cardPropsArray.push(cardProps);
                     }
-                    widget.options.setValue(JSON.stringify(value));
-                });
-            }
-            else {
-                widget.options.setValue(JSON.stringify(value));
-            }
-            getApiRoutes().redraw();
+                    else {
+                        value.cardPropsArray.push({
+                            ...cardProps,
+                            kulData: models[index].dataset,
+                        });
+                    }
+                }
+                requestAnimationFrame(() => widget.options.setValue(JSON.stringify(value)));
+                getApiRoutes().redraw();
+            });
         }
     },
     register: (setW, addW) => {

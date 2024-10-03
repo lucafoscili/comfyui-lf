@@ -60,8 +60,8 @@ class LF_CheckpointSelector:
             "node": node_id, 
             "dataset": dataset,
             "hash": model_hash,
-            "civitaiInfo": get_civitai_info,
-            "modelPath": model_path
+            "apiFlag": get_civitai_info,
+            "path": model_path
         })
 
         return (checkpoint, model_name, model_cover, model_path)
@@ -236,8 +236,8 @@ class LF_EmbeddingSelector:
             "node": node_id, 
             "dataset": dataset,
             "hash": model_hash,
-            "civitaiInfo": get_civitai_info,
-            "modelPath": model_path
+            "apiFlag": get_civitai_info,
+            "path": model_path
         })
 
         if embedding_stack:
@@ -267,13 +267,13 @@ class LF_LoadLoraTags:
     RETURN_TYPES = ("MODEL", "CLIP")
 
     def on_exec(self, get_civitai_info, model, clip, tags):
-        cardsDataset =  []
-        chipDataset =  {"nodes": []}
+        datasets =  []
+        chip_dataset =  {"nodes": []}
 
-        have_all_models_info = True
         regex = r"\<[0-9a-zA-Z\:\_\-\.\s\/\(\)\\\\]+\>"
         found_tags = re.findall(regex, tags)
 
+        api_flags = []
         lora_paths = []
         hashes = []
 
@@ -285,12 +285,12 @@ class LF_LoadLoraTags:
         for tag in found_tags:
             tag_content = tag[1:-1].split(":")
             if tag_content[0] != 'lora' or len(tag_content) < 2:
-                chipDataset["nodes"].append(self.add_chip(tag_content))
+                chip_dataset["nodes"].append(self.add_chip(tag_content))
                 continue
 
             lora_name, m_weight, c_weight = self.get_lora_weights(tag_content)
             if not lora_name:
-                chipDataset["nodes"].append(self.add_chip(lora_name))
+                chip_dataset["nodes"].append(self.add_chip(lora_name))
                 lora_status[tag_content[1]] = False
                 continue
 
@@ -317,23 +317,24 @@ class LF_LoadLoraTags:
             lora_paths.append(path)
 
             if saved_info:
-                cardsDataset.append(saved_info)
-                have_all_models_info = False
+                datasets.append(saved_info)
+                api_flags.append(False)
             else:
-                cardsDataset.append(prepare_model_dataset(name, hash, base64, path))
+                datasets.append(prepare_model_dataset(name, hash, base64, path))
+                api_flags.append(get_civitai_info)
 
-        if not len(chipDataset["nodes"]):
-            chipDataset["nodes"].append({ "icon": "check",
-                                          "Description": "Every LoRA has been loaded correctly!", 
+        if not len(chip_dataset["nodes"]):
+            chip_dataset["nodes"].append({ "icon": "check",
+                                          "Description": "Every LoRA has been loaded successfully!", 
                                           "id": "0", 
-                                          "value": "LoRA loaded correctly!"})
+                                          "value": "LoRA loaded successfully!"})
 
         PromptServer.instance.send_sync("lf-loadloratags", {
-            "cardDatasets": cardsDataset,
-            "chipDataset": chipDataset,
+            "datasets": datasets,
+            "apiFlags": api_flags,
             "hashes": hashes,
-            "loraPaths": lora_paths,
-            "civitaiInfo": have_all_models_info if get_civitai_info else get_civitai_info,
+            "paths": lora_paths,
+            "chipDataset": chip_dataset
         })
 
         return (model, clip)
@@ -439,9 +440,6 @@ class LF_LoraAndEmbeddingSelector:
         else:
             e_dataset = prepare_model_dataset(e_name, e_hash, e_base64, e_path)
 
-        if l_saved_info and e_saved_info:
-            get_civitai_info = False
-
         if lora_stack:
             lora_tag = f"{lora_tag}, {lora_stack}"
 
@@ -450,13 +448,11 @@ class LF_LoraAndEmbeddingSelector:
 
         PromptServer.instance.send_sync("lf-loraandembeddingselector", {
             "node": node_id, 
-            "civitaiInfo": get_civitai_info,
-            "loraDataset": l_dataset,
-            "loraHash": l_hash,
-            "loraModelPath": l_path,
-            "embeddingDataset": e_dataset,
-            "embeddingHash": e_hash,
-            "embeddingModelPath": e_path
+            "apiFlags": [False if l_saved_info else get_civitai_info, 
+                         False if e_saved_info else get_civitai_info],
+            "datasets": [l_dataset, e_dataset],
+            "hashes": [l_hash, e_hash],
+            "paths": [l_path, e_path]
         })
 
         return (lora, embedding, lora_tag, formatted_embedding, l_name, e_name, l_path, e_path, l_cover, e_cover)
@@ -523,7 +519,7 @@ class LF_LoraSelector:
             "node": node_id, 
             "dataset": dataset,
             "hash": model_hash,
-            "civitaiInfo": get_civitai_info,
+            "apiFlag": get_civitai_info,
             "modelPath": model_path
         })
 

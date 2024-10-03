@@ -27,6 +27,7 @@ export interface SaveModelAPIPayload {
     message: string;
 }
 export interface APIMetadataEntry {
+    apiFlag: boolean;
     dataset: KulDataDataset;
     hash: string;
     path: string;

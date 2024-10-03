@@ -16,10 +16,10 @@ export const createDOMWidget = (name, type, element, node, options = undefined) 
     getLFManager().log(`Creating '${type}'`, { element });
     return node.addDOMWidget(name, type, element, options);
 };
-export const deserializeValue = (str) => {
+export const deserializeValue = (input) => {
     let validJson = false;
     let parsedJson = undefined;
-    let unescapedStr = str;
+    let unescapedStr = input;
     const recursiveUnescape = (inputStr) => {
         let newStr = inputStr.replace(/\\(.)/g, '$1');
         while (newStr !== inputStr) {
@@ -29,12 +29,24 @@ export const deserializeValue = (str) => {
         return newStr;
     };
     try {
-        parsedJson = JSON.parse(str);
+        parsedJson = JSON.parse(input);
         validJson = true;
         unescapedStr = JSON.stringify(parsedJson, null, 2);
     }
     catch (error) {
-        unescapedStr = recursiveUnescape(str);
+        if (typeof input === 'object' && input !== null) {
+            try {
+                unescapedStr = JSON.stringify(input, null, 2);
+                validJson = true;
+                parsedJson = input;
+            }
+            catch (stringifyError) {
+                unescapedStr = recursiveUnescape(input.toString());
+            }
+        }
+        else {
+            unescapedStr = recursiveUnescape(input.toString());
+        }
     }
     return { validJson, parsedJson, unescapedStr };
 };

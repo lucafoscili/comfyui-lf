@@ -39,7 +39,7 @@ export const createDOMWidget = (
 };
 
 export const deserializeValue = (
-  str: string,
+  input: any, // Accept any type
 ): {
   validJson: boolean;
   parsedJson?: {};
@@ -47,7 +47,7 @@ export const deserializeValue = (
 } => {
   let validJson = false;
   let parsedJson: Record<string, unknown> | undefined = undefined;
-  let unescapedStr = str;
+  let unescapedStr = input;
 
   const recursiveUnescape = (inputStr: string): string => {
     let newStr = inputStr.replace(/\\(.)/g, '$1');
@@ -59,11 +59,21 @@ export const deserializeValue = (
   };
 
   try {
-    parsedJson = JSON.parse(str);
+    parsedJson = JSON.parse(input);
     validJson = true;
     unescapedStr = JSON.stringify(parsedJson, null, 2);
   } catch (error) {
-    unescapedStr = recursiveUnescape(str);
+    if (typeof input === 'object' && input !== null) {
+      try {
+        unescapedStr = JSON.stringify(input, null, 2);
+        validJson = true;
+        parsedJson = input;
+      } catch (stringifyError) {
+        unescapedStr = recursiveUnescape(input.toString());
+      }
+    } else {
+      unescapedStr = recursiveUnescape(input.toString());
+    }
   }
 
   return { validJson, parsedJson, unescapedStr };

@@ -7,7 +7,7 @@ import {
   type BaseWidgetCallback,
   type CardWidgetSetter,
 } from '../types/widgets';
-import { fetchModelMetadata } from '../utils/api';
+import { cardPlaceholders, fetchModelMetadata } from '../utils/api';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 
 const NAME = NodeName.embeddingSelector;
@@ -21,31 +21,29 @@ export const embeddingSelectorFactory = {
     const node = getApiRoutes().getNodeById(payload.id);
 
     if (node) {
-      const { civitaiInfo, dataset, hash, modelPath } = payload;
+      const { apiFlag, dataset, hash, path } = payload;
       const widget = getCustomWidget(node, CustomWidgetName.card, addW);
+      cardPlaceholders(widget, 1);
       const value: CardWidgetDeserializedValue = {
         propsArray: [],
         template: '',
       };
-      if (civitaiInfo) {
-        fetchModelMetadata(widget, [{ dataset, hash, path: modelPath }]).then((r) => {
-          for (let index = 0; index < r.length; index++) {
-            const dataset = r[index];
-            if (dataset) {
-              value.propsArray.push({
-                kulData: dataset,
-                kulStyle: '.sub-2.description { white-space: pre-wrap; }',
-              });
-            }
+      fetchModelMetadata([{ dataset, hash, path, apiFlag }]).then((r) => {
+        for (let index = 0; index < r.length; index++) {
+          const cardProps = r[index];
+          if (cardProps.kulData) {
+            value.propsArray.push(cardProps);
+          } else {
+            value.propsArray.push({
+              ...cardProps,
+              kulData: payload.dataset,
+            });
           }
-          widget.options.setValue(JSON.stringify(value));
-        });
-      } else {
-        value.propsArray.push({ kulData: payload.dataset });
+        }
         widget.options.setValue(JSON.stringify(value));
-      }
 
-      getApiRoutes().redraw();
+        getApiRoutes().redraw();
+      });
     }
   },
   register: (setW: CardWidgetSetter, addW: BaseWidgetCallback) => {

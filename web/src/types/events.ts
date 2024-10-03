@@ -103,9 +103,9 @@ export interface BooleanPayload extends BaseEventPayload {
 
 export interface CheckpointSelectorPayload extends BaseEventPayload {
   dataset: KulDataDataset;
+  apiFlag: boolean;
   hash: string;
-  civitaiInfo: boolean;
-  modelPath: string;
+  path: string;
 }
 
 /*-------------------------------------------------------------------*/
@@ -170,9 +170,9 @@ export interface DisplayStringPayload extends BaseEventPayload {
 
 export interface EmbeddingSelectorPayload extends BaseEventPayload {
   dataset: KulDataDataset;
+  apiFlag: boolean;
   hash: string;
-  civitaiInfo: boolean;
-  modelPath: string;
+  path: string;
 }
 
 /*-------------------------------------------------------------------*/
@@ -252,11 +252,11 @@ export interface LoadImagesPayload extends BaseEventPayload {
 /*-------------------------------------------------------------------*/
 
 export interface LoadLoraTagsPayload extends BaseEventPayload {
-  cardDatasets: KulDataDataset[];
-  chipDataset: KulDataDataset;
+  datasets: KulDataDataset[];
+  apiFlags: boolean[];
   hashes: string[];
-  loraPaths: string[];
-  civitaiInfo: boolean;
+  paths: string[];
+  chipDataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/
@@ -265,9 +265,9 @@ export interface LoadLoraTagsPayload extends BaseEventPayload {
 
 export interface LoraSelectorPayload extends BaseEventPayload {
   dataset: KulDataDataset;
+  apiFlag: boolean;
   hash: string;
-  civitaiInfo: boolean;
-  modelPath: string;
+  path: string;
 }
 
 /*-------------------------------------------------------------------*/
@@ -275,13 +275,10 @@ export interface LoraSelectorPayload extends BaseEventPayload {
 /*-------------------------------------------------------------------*/
 
 export interface LoraAndEmbeddingSelectorPayload extends BaseEventPayload {
-  civitaiInfo: boolean;
-  loraDataset: KulDataDataset;
-  loraHash: string;
-  loraModelPath: string;
-  embeddingDataset: KulDataDataset;
-  embeddingHash: string;
-  embeddingModelPath: string;
+  datasets: KulDataDataset[];
+  apiFlags: boolean[];
+  hashes: string[];
+  paths: string[];
 }
 
 /*-------------------------------------------------------------------*/
