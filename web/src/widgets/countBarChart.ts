@@ -1,4 +1,4 @@
-import { KulButtonEventPayload, KulDataDataset } from '../types/ketchup-lite/components';
+import { KulButtonEventPayload } from '../types/ketchup-lite/components';
 import { KulButton } from '../types/ketchup-lite/components/kul-button/kul-button';
 import { LogSeverity } from '../types/manager';
 import {
@@ -6,7 +6,7 @@ import {
   CountBarChartWidgetValue,
   CustomWidgetName,
 } from '../types/widgets';
-import { createDOMWidget, getLFManager, unescapeJson } from '../utils/common';
+import { createDOMWidget, getLFManager, deserializeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-countbarchart';
 const TYPE = CustomWidgetName.countBarChart;
@@ -37,7 +37,7 @@ export const countBarChartFactory = {
       setValue(value) {
         try {
           if (typeof value === 'string') {
-            const parsed = unescapeJson(value).parsedJson as CountBarChartWidgetValue;
+            const parsed = deserializeValue(value).parsedJson as CountBarChartWidgetValue;
             chart.kulData = parsed['chartDataset'];
             chip.kulData = parsed['chipDataset'];
           } else {

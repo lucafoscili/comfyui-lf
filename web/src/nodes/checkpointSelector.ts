@@ -7,7 +7,7 @@ import {
   type BaseWidgetCallback,
   type CardWidgetSetter,
 } from '../types/widgets';
-import { fetchModelMetadata } from '../utils/api';
+import { cardPlaceholders, fetchModelMetadata } from '../utils/api';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 
 const NAME = NodeName.checkpointSelector;
@@ -19,20 +19,31 @@ export const checkpointSelectorFactory = {
 
     const payload = event.detail;
     const node = getApiRoutes().getNodeById(payload.id);
+
     if (node) {
+      const { apiFlag, dataset, hash, path } = payload;
       const widget = getCustomWidget(node, CustomWidgetName.card, addW);
-      if (payload.civitaiInfo) {
-        fetchModelMetadata(widget, [
-          { dataset: payload.dataset, hash: payload.hash, path: payload.modelPath },
-        ]);
-      } else {
-        const value: CardWidgetDeserializedValue = {
-          propsArray: [{ kulData: payload.dataset }],
-          template: 'repeat(1, 1fr) / repeat(1, 1fr)',
-        };
+      cardPlaceholders(widget, 1);
+      const value: CardWidgetDeserializedValue = {
+        propsArray: [],
+        template: '',
+      };
+      fetchModelMetadata([{ dataset, hash, path, apiFlag }]).then((r) => {
+        for (let index = 0; index < r.length; index++) {
+          const cardProps = r[index];
+          if (cardProps.kulData) {
+            value.propsArray.push(cardProps);
+          } else {
+            value.propsArray.push({
+              ...cardProps,
+              kulData: payload.dataset,
+            });
+          }
+        }
         widget.options.setValue(JSON.stringify(value));
-      }
-      getApiRoutes().redraw();
+
+        getApiRoutes().redraw();
+      });
     }
   },
   register: (setW: CardWidgetSetter, addW: BaseWidgetCallback) => {

@@ -15,6 +15,7 @@ import { uploadFactory } from '../widgets/upload.js';
 import { chipFactory } from '../widgets/chip.js';
 import { messengerFactory } from '../widgets/messenger.js';
 import { cardFactory } from '../widgets/card.js';
+import { cardsWithChipFactory } from '../widgets/cardsWithChip.js';
 
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
@@ -45,6 +46,13 @@ export class LFWidgets {
     },
     [CustomWidgetName.card]: (nodeType: NodeType) => {
       const widget = app.widgets[CustomWidgetName.card](nodeType, CustomWidgetName.card).widget;
+      return widget;
+    },
+    [CustomWidgetName.cardsWithChip]: (nodeType: NodeType) => {
+      const widget = app.widgets[CustomWidgetName.cardsWithChip](
+        nodeType,
+        CustomWidgetName.cardsWithChip,
+      ).widget;
       return widget;
     },
     [CustomWidgetName.chat]: (nodeType: NodeType) => {
@@ -129,6 +137,7 @@ export class LFWidgets {
     [CustomWidgetName.booleanViewer]: (booleanViewer: HTMLKulTextfieldElement) =>
       booleanViewerFactory.options(booleanViewer),
     [CustomWidgetName.card]: (grid: HTMLDivElement) => cardFactory.options(grid),
+    [CustomWidgetName.cardsWithChip]: (grid: HTMLDivElement) => cardsWithChipFactory.options(grid),
     [CustomWidgetName.chat]: (chat: HTMLKulChatElement) => chatFactory.options(chat),
     [CustomWidgetName.chip]: (chip: HTMLKulChipElement) => chipFactory.options(chip),
     [CustomWidgetName.code]: (code: HTMLKulCodeElement) => codeFactory.options(code),
@@ -167,6 +176,13 @@ export class LFWidgets {
       return {
         [CustomWidgetName.card]: (nodeType: NodeType, name: CustomWidgetName) => {
           return cardFactory.render(nodeType, name);
+        },
+      };
+    },
+    [CustomWidgetName.cardsWithChip]: () => {
+      return {
+        [CustomWidgetName.cardsWithChip]: (nodeType: NodeType, name: CustomWidgetName) => {
+          return cardsWithChipFactory.render(nodeType, name);
         },
       };
     },

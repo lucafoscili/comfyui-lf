@@ -38,7 +38,8 @@ import { displayStringFactory } from '../nodes/displayString.js';
 import { checkpointSelectorFactory } from '../nodes/checkpointSelector.js';
 import { loraSelectorFactory } from '../nodes/loraSelector.js';
 import { embeddingSelectorFactory } from '../nodes/embeddingSelector.js';
-import { loraandEmbeddingSelectorFactory } from '../nodes/loraAndEmbeddingSelector.js';
+import { loraAndEmbeddingSelectorFactory } from '../nodes/loraAndEmbeddingSelector.js';
+import { loadLoraTagsFactory } from '../nodes/loadLoraTags.js';
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
 /*-------------------------------------------------*/
@@ -64,7 +65,8 @@ export class LFNodes {
             [NodeName.keywordCounter]: keywordCounterFactory.eventHandler,
             [NodeName.loadFileOnce]: loadFileOnceFactory.eventHandler,
             [NodeName.loadImages]: loadImagesFactory.eventHandler,
-            [NodeName.loraandEmbeddingSelector]: loraandEmbeddingSelectorFactory.eventHandler,
+            [NodeName.loadLoraTags]: loadLoraTagsFactory.eventHandler,
+            [NodeName.loraAndEmbeddingSelector]: loraAndEmbeddingSelectorFactory.eventHandler,
             [NodeName.loraSelector]: loraSelectorFactory.eventHandler,
             [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.eventHandler,
             [NodeName.randomBoolean]: randomBooleanFactory.eventHandler,
@@ -105,7 +107,8 @@ export class LFNodes {
             [NodeName.llmMessenger]: llmMessengerFactory.register,
             [NodeName.loadFileOnce]: loadFileOnceFactory.register,
             [NodeName.loadImages]: loadImagesFactory.register,
-            [NodeName.loraandEmbeddingSelector]: loraandEmbeddingSelectorFactory.register,
+            [NodeName.loadLoraTags]: loadLoraTagsFactory.register,
+            [NodeName.loraAndEmbeddingSelector]: loraAndEmbeddingSelectorFactory.register,
             [NodeName.loadMetadata]: loadMetadataFactory.register,
             [NodeName.loraSelector]: loraSelectorFactory.register,
             [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.register,

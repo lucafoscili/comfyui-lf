@@ -1,7 +1,7 @@
 import { LogSeverity } from '../types/manager';
 import { NodeName } from '../types/nodes';
 import { CodeWidgetOptions, CustomWidgetName } from '../types/widgets';
-import { createDOMWidget, getLFManager, unescapeJson } from '../utils/common';
+import { createDOMWidget, getLFManager, deserializeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-code';
 const EMPTY = '{ "Wow": "Such empty!" }';
@@ -38,7 +38,7 @@ export const codeFactory = {
             }
             try {
               if (typeof value === 'string') {
-                code.kulValue = unescapeJson(value).unescapedStr;
+                code.kulValue = deserializeValue(value).unescapedStr;
               } else {
                 code.kulValue = JSON.stringify(value);
               }

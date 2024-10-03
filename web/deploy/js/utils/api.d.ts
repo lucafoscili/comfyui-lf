@@ -1,7 +1,9 @@
 import { KulDataDataset } from '../types/ketchup-lite/components';
-import { CardWidget } from '../types/widgets';
-export declare const fetchModelMetadata: (widget: CardWidget, models: {
+import { CardsWithChipWidget, CardWidget } from '../types/widgets';
+export declare const cardPlaceholders: (widget: CardWidget | CardsWithChipWidget, count: number) => void;
+export declare const fetchModelMetadata: (models: {
+    apiFlag: boolean;
     dataset: KulDataDataset;
     hash: string;
     path: string;
-}[]) => void;
+}[]) => Promise<Partial<HTMLKulCardElement>[]>;

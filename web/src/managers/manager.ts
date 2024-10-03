@@ -45,6 +45,7 @@ import {
   LoraSelectorPayload,
   EmbeddingSelectorPayload,
   LoraAndEmbeddingSelectorPayload,
+  LoadLoraTagsPayload,
 } from '../types/events.js';
 
 /*-------------------------------------------------*/
@@ -57,6 +58,33 @@ export interface LFWindow extends Window {
 
 export class LFManager {
   #APIS: ComfyAPIs = {
+    clearModelMetadata: async () => {
+      try {
+        await api
+          .fetchApi('/comfyui-lf/clear-model-info', {
+            method: 'POST',
+          })
+          .then((res: Response) => {
+            try {
+              return res.json();
+            } catch (error) {
+              this.log(
+                'Error parsing response when deleting metadata files.',
+                { error },
+                LogSeverity.Error,
+              );
+              return res.json();
+            }
+          })
+          .then((data: SaveModelAPIPayload) => {
+            if (data.status === 'success') {
+              this.log(data.message, {}, LogSeverity.Info);
+            }
+          });
+      } catch (error) {
+        this.log("Error deleting model's metadata.", { error }, LogSeverity.Error);
+      }
+    },
     event: (name, callback) => {
       api.addEventListener(name, callback);
     },
@@ -107,9 +135,20 @@ export class LFManager {
             method: 'POST',
             body,
           })
-          .then((res: Response) => res.json())
+          .then((res: Response) => {
+            try {
+              return res.json();
+            } catch (error) {
+              this.log(
+                'Error parsing response when saving metadata.',
+                { error },
+                LogSeverity.Error,
+              );
+              return res.json();
+            }
+          })
           .then((data: SaveModelAPIPayload) => {
-            if (data.status === 'saved') {
+            if (data.status === 'success') {
               this.log('Metadata for this model saved successfully.', {}, LogSeverity.Info);
             } else if (data.status === 'exists') {
               this.log('Metadata for this model already exists.', {}, LogSeverity.Warning);
@@ -357,6 +396,16 @@ export class LFManager {
     this.#MANAGERS.nodes.register.LF_LoadFileOnce(widgets.setters.KUL_HISTORY);
     this.#APIS.event(EventName.loadFileOnce, (e: CustomEvent<LoadFileOncePayload>) => {
       nodes.eventHandlers.LF_LoadFileOnce(e, widgets.adders.KUL_HISTORY);
+    });
+    /*-------------------------------------------------------------------*/
+    /*                I n i t   L o a d L o r a T a g s                  */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_LoadLoraTags(
+      widgets.setters.KUL_CARDS_WITH_CHIP,
+      widgets.adders.KUL_CARDS_WITH_CHIP,
+    );
+    this.#APIS.event(EventName.loadLoraTags, (e: CustomEvent<LoadLoraTagsPayload>) => {
+      nodes.eventHandlers.LF_LoadLoraTags(e, widgets.adders.KUL_CARDS_WITH_CHIP);
     });
     /*-------------------------------------------------------------------*/
     /*                I n i t   L o a d M e t a d a t a                  */

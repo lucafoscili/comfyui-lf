@@ -4,6 +4,11 @@ import { LogSeverity } from '../types/manager';
 export declare const areJSONEqual: (a: unknown, b: unknown) => boolean;
 export declare const capitalize: (input: string) => string;
 export declare const createDOMWidget: (name: string, type: CustomWidgetName, element: HTMLDivElement, node: NodeType, options?: CustomWidgetOptions) => Widget;
+export declare const deserializeValue: (input: any) => {
+    validJson: boolean;
+    parsedJson?: {};
+    unescapedStr: string;
+};
 export declare const findWidget: <T extends CustomWidgetName>(node: NodeType, type: T) => CustomWidgetMap[T];
 export declare const getApiRoutes: () => import("../types/manager").ComfyAPIs;
 export declare const getCustomWidget: <T extends CustomWidgetName>(node: NodeType, type: T, addW?: BaseWidgetCallback) => CustomWidgetMap[T];
@@ -17,9 +22,5 @@ export declare const isValidJSON: (value: unknown) => boolean;
 export declare const kulManagerExists: () => boolean;
 export declare const log: () => (message: string, args?: Record<string, unknown>, severity?: LogSeverity) => void;
 export declare const refreshChart: (node: NodeType) => void;
+export declare const serializeValue: <T extends {}>(value: T) => string;
 export declare const splitByLastSpaceBeforeAnyBracket: (input: string) => string;
-export declare const unescapeJson: (str: string) => {
-    validJson: boolean;
-    parsedJson?: Record<string, unknown>;
-    unescapedStr: string;
-};

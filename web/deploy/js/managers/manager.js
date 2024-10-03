@@ -21,6 +21,31 @@ import { EventName, } from '../types/events.js';
 export class LFManager {
     constructor() {
         _LFManager_APIS.set(this, {
+            clearModelMetadata: async () => {
+                try {
+                    await api
+                        .fetchApi('/comfyui-lf/clear-model-info', {
+                        method: 'POST',
+                    })
+                        .then((res) => {
+                        try {
+                            return res.json();
+                        }
+                        catch (error) {
+                            this.log('Error parsing response when deleting metadata files.', { error }, LogSeverity.Error);
+                            return res.json();
+                        }
+                    })
+                        .then((data) => {
+                        if (data.status === 'success') {
+                            this.log(data.message, {}, LogSeverity.Info);
+                        }
+                    });
+                }
+                catch (error) {
+                    this.log("Error deleting model's metadata.", { error }, LogSeverity.Error);
+                }
+            },
             event: (name, callback) => {
                 api.addEventListener(name, callback);
             },
@@ -72,9 +97,17 @@ export class LFManager {
                         method: 'POST',
                         body,
                     })
-                        .then((res) => res.json())
+                        .then((res) => {
+                        try {
+                            return res.json();
+                        }
+                        catch (error) {
+                            this.log('Error parsing response when saving metadata.', { error }, LogSeverity.Error);
+                            return res.json();
+                        }
+                    })
                         .then((data) => {
-                        if (data.status === 'saved') {
+                        if (data.status === 'success') {
                             this.log('Metadata for this model saved successfully.', {}, LogSeverity.Info);
                         }
                         else if (data.status === 'exists') {
@@ -262,6 +295,13 @@ export class LFManager {
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_LoadFileOnce(widgets.setters.KUL_HISTORY);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.loadFileOnce, (e) => {
             nodes.eventHandlers.LF_LoadFileOnce(e, widgets.adders.KUL_HISTORY);
+        });
+        /*-------------------------------------------------------------------*/
+        /*                I n i t   L o a d L o r a T a g s                  */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_LoadLoraTags(widgets.setters.KUL_CARDS_WITH_CHIP, widgets.adders.KUL_CARDS_WITH_CHIP);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.loadLoraTags, (e) => {
+            nodes.eventHandlers.LF_LoadLoraTags(e, widgets.adders.KUL_CARDS_WITH_CHIP);
         });
         /*-------------------------------------------------------------------*/
         /*                I n i t   L o a d M e t a d a t a                  */

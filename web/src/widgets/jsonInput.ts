@@ -1,7 +1,7 @@
 import { LogSeverity } from '../types/manager';
 import { NodeName } from '../types/nodes';
 import { CustomWidgetName, JsonInputWidgetOptions } from '../types/widgets';
-import { createDOMWidget, findWidget, getLFManager, unescapeJson } from '../utils/common';
+import { createDOMWidget, findWidget, getLFManager, deserializeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-jsoninput';
 const TYPE = CustomWidgetName.jsonInput;
@@ -25,7 +25,7 @@ export const jsonInputFactory = {
             let parsedValue: Record<string, unknown>;
 
             if (typeof value === 'string') {
-              const { unescapedStr, validJson, parsedJson } = unescapeJson(value);
+              const { unescapedStr, validJson, parsedJson } = deserializeValue(value);
               parsedValue = validJson ? parsedJson : JSON.parse(unescapedStr);
             } else {
               parsedValue = value;

@@ -1,7 +1,7 @@
 import { LogSeverity } from '../types/manager.js';
 import { NodeName } from '../types/nodes.js';
 import { ComfyWidgetName, CustomWidgetName } from '../types/widgets.js';
-import { createDOMWidget, getLFManager, getWidget, unescapeJson } from '../utils/common.js';
+import { createDOMWidget, getLFManager, getWidget, deserializeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-history';
 const TYPE = CustomWidgetName.history;
 export const historyFactory = {
@@ -25,7 +25,7 @@ export const historyFactory = {
             setValue(value) {
                 try {
                     if (typeof value === 'string') {
-                        history.kulData = unescapeJson(value).parsedJson;
+                        history.kulData = deserializeValue(value).parsedJson;
                     }
                     else {
                         history.kulData = value;

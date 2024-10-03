@@ -1,7 +1,7 @@
 import type { KulDataDataset } from '../types/ketchup-lite/components';
 import { LogSeverity } from '../types/manager';
 import { HistogramWidgetOptions, CustomWidgetName } from '../types/widgets';
-import { createDOMWidget, getLFManager, unescapeJson } from '../utils/common';
+import { createDOMWidget, getLFManager, deserializeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-histogram';
 const TYPE = CustomWidgetName.histogram;
@@ -26,7 +26,7 @@ export const histogramFactory = {
         histogram.kulData = value as KulDataDataset;
         try {
           if (typeof value === 'string') {
-            histogram.kulData = unescapeJson(value).parsedJson;
+            histogram.kulData = deserializeValue(value).parsedJson;
           }
         } catch (error) {
           getLFManager().log('Error when setting value!', { error, histogram }, LogSeverity.Error);

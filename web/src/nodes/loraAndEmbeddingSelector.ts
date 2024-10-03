@@ -1,5 +1,5 @@
 import { EventName, LoraAndEmbeddingSelectorPayload } from '../types/events';
-import { LogSeverity } from '../types/manager';
+import { APIMetadataEntry, LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import {
   CardWidgetDeserializedValue,
@@ -7,12 +7,12 @@ import {
   CustomWidgetName,
   type BaseWidgetCallback,
 } from '../types/widgets';
-import { fetchModelMetadata } from '../utils/api';
+import { cardPlaceholders, fetchModelMetadata } from '../utils/api';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 
-const NAME = NodeName.loraandEmbeddingSelector;
+const NAME = NodeName.loraAndEmbeddingSelector;
 
-export const loraandEmbeddingSelectorFactory = {
+export const loraAndEmbeddingSelectorFactory = {
   eventHandler: (event: CustomEvent<LoraAndEmbeddingSelectorPayload>, addW: BaseWidgetCallback) => {
     const name = EventName.loraAndEmbeddingSelector;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
@@ -21,28 +21,35 @@ export const loraandEmbeddingSelectorFactory = {
     const node = getApiRoutes().getNodeById(payload.id);
     if (node) {
       const widget = getCustomWidget(node, CustomWidgetName.card, addW);
-      if (payload.civitaiInfo) {
-        fetchModelMetadata(widget, [
-          {
-            dataset: payload.loraDataset,
-            hash: payload.loraHash,
-            path: payload.loraModelPath,
-          },
-          {
-            dataset: payload.embeddingDataset,
-            hash: payload.embeddingHash,
-            path: payload.embeddingModelPath,
-          },
-        ]);
-      } else {
-        const value: CardWidgetDeserializedValue = {
-          propsArray: [{ kulData: payload.loraDataset }, { kulData: payload.embeddingDataset }],
-          template: 'repeat(1, 1fr) / repeat(2, 1fr)',
-        };
-        widget.options.setValue(JSON.stringify(value));
+      cardPlaceholders(widget, 1);
+      const value: CardWidgetDeserializedValue = {
+        propsArray: [],
+        template: 'repeat(1, 1fr) / repeat(2, 1fr)',
+      };
+      const models: APIMetadataEntry[] = [];
+      for (let index = 0; index < payload.datasets?.length; index++) {
+        const apiFlag = payload.apiFlags[index];
+        const dataset = payload.datasets[index];
+        const hash = payload.hashes[index];
+        const path = payload.paths[index];
+        models.push({ dataset, hash, path, apiFlag });
       }
+      fetchModelMetadata(models).then((r) => {
+        for (let index = 0; index < r.length; index++) {
+          const cardProps = r[index];
+          if (cardProps.kulData) {
+            value.propsArray.push(cardProps);
+          } else {
+            value.propsArray.push({
+              ...cardProps,
+              kulData: models[index].dataset,
+            });
+          }
+        }
+        widget.options.setValue(JSON.stringify(value));
 
-      getApiRoutes().redraw();
+        getApiRoutes().redraw();
+      });
     }
   },
   register: (setW: CardWidgetSetter, addW: BaseWidgetCallback) => {

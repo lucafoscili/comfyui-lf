@@ -5,64 +5,65 @@ const DUMMY_PROPS = {
             {
                 cells: {
                     kulImage: { shape: 'image', value: 'cloud_download' },
-                    kulText: { shape: 'text', value: 'Loading...' },
+                    kulText: { shape: 'text', value: 'Fetching metadata from CivitAI...' },
                 },
                 id: '0',
             },
         ],
     },
 };
-export const fetchModelMetadata = (widget, models) => {
-    const template = `repeat(1, 1fr) / repeat(${models.length}, 1fr)`, dummyValue = {
+export const cardPlaceholders = (widget, count) => {
+    const dummyValue = {
         propsArray: [],
-        template,
-    }, value = {
-        propsArray: [],
-        template,
     };
-    for (let index = 0; index < models.length; index++) {
-        dummyValue.propsArray.push(JSON.stringify(DUMMY_PROPS));
+    for (let index = 0; index < count; index++) {
+        dummyValue.propsArray.push(DUMMY_PROPS);
     }
     widget.options.setValue(JSON.stringify(dummyValue));
-    for (let index = 0; index < models.length; index++) {
-        const { dataset, hash, path } = models[index];
-        getApiRoutes()
-            .modelInfoFromCivitAI(hash)
-            .then(async (r) => {
-            const id = r.id;
-            const props = {};
-            if (id) {
-                switch (typeof id) {
-                    case 'number':
-                        const civitaiDataset = prepareValidDataset(r);
-                        props.kulData = civitaiDataset;
-                        props.kulStyle = '.sub-2.description { white-space: pre-wrap; }';
-                        getApiRoutes().saveModelMetadata(path, civitaiDataset);
-                        break;
-                    default:
-                        const node = dataset.nodes[0];
-                        node.description = '';
-                        node.value = '';
-                        node.cells.kulButton = {
-                            kulDisabled: true,
-                            kulIcon: 'warning',
-                            kulStyling: 'icon',
-                            shape: 'button',
-                            value: '',
-                        };
-                        node.cells.text3 = {
-                            value: "Whoops! It seems like something's off. Falling back to local data.",
-                        };
-                        props.kulData = dataset;
-                        break;
-                }
-                if (props.kulData) {
-                    value.propsArray.push(props);
-                }
-            }
-            widget.options.setValue(JSON.stringify(value));
-        });
+};
+export const fetchModelMetadata = async (models) => {
+    const promises = models.map(({ dataset, hash, path, apiFlag }) => {
+        if (apiFlag) {
+            return getApiRoutes()
+                .modelInfoFromCivitAI(hash)
+                .then(onResponse.bind(onResponse, dataset, path));
+        }
+        else {
+            return onResponse(dataset, path, null);
+        }
+    });
+    return Promise.all(promises);
+};
+const onResponse = async (dataset, path, r) => {
+    const id = r?.id;
+    const props = {
+        kulStyle: '.sub-2.description { white-space: pre-wrap; }',
+    };
+    switch (typeof id) {
+        case 'number':
+            const civitaiDataset = prepareValidDataset(r);
+            props.kulData = civitaiDataset;
+            props.kulStyle = '.sub-2.description { white-space: pre-wrap; }';
+            getApiRoutes().saveModelMetadata(path, civitaiDataset);
+            break;
+        case 'string':
+            const node = dataset.nodes[0];
+            node.description = '';
+            node.value = '';
+            node.cells.kulButton = {
+                kulDisabled: true,
+                kulIcon: 'warning',
+                kulStyling: 'icon',
+                shape: 'button',
+                value: '',
+            };
+            node.cells.text3 = {
+                value: "Whoops! It seems like something's off. Falling back to local data.",
+            };
+            props.kulData = dataset;
+            break;
     }
+    return props;
 };
 const prepareValidDataset = (r) => {
     const dataset = {

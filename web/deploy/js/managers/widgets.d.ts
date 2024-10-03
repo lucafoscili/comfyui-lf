@@ -5,6 +5,7 @@ export declare class LFWidgets {
     add: {
         KUL_BOOLEAN_VIEWER: (nodeType: NodeType) => any;
         KUL_CARD: (nodeType: NodeType) => any;
+        KUL_CARDS_WITH_CHIP: (nodeType: NodeType) => any;
         KUL_CHAT: (nodeType: NodeType) => any;
         KUL_CHIP: (nodeType: NodeType) => any;
         KUL_CODE: (nodeType: NodeType) => any;
@@ -22,6 +23,7 @@ export declare class LFWidgets {
     option: {
         KUL_BOOLEAN_VIEWER: (booleanViewer: HTMLKulTextfieldElement) => import("../types/widgets.js").BooleanViewerWidgetOptions;
         KUL_CARD: (grid: HTMLDivElement) => import("../types/widgets.js").CardWidgetOptions;
+        KUL_CARDS_WITH_CHIP: (grid: HTMLDivElement) => import("../types/widgets.js").CardsWithChipWidgetOptions;
         KUL_CHAT: (chat: HTMLKulChatElement) => import("../types/widgets.js").ChatWidgetOptions;
         KUL_CHIP: (chip: HTMLKulChipElement) => import("../types/widgets.js").ChipWidgetOptions;
         KUL_CODE: (code: HTMLKulCodeElement) => import("../types/widgets.js").CodeWidgetOptions;
@@ -44,6 +46,11 @@ export declare class LFWidgets {
         };
         KUL_CARD: () => {
             KUL_CARD: (nodeType: NodeType, name: CustomWidgetName) => {
+                widget: Widget;
+            };
+        };
+        KUL_CARDS_WITH_CHIP: () => {
+            KUL_CARDS_WITH_CHIP: (nodeType: NodeType, name: CustomWidgetName) => {
                 widget: Widget;
             };
         };
@@ -113,6 +120,7 @@ export declare class LFWidgets {
         adders: {
             KUL_BOOLEAN_VIEWER: (nodeType: NodeType) => any;
             KUL_CARD: (nodeType: NodeType) => any;
+            KUL_CARDS_WITH_CHIP: (nodeType: NodeType) => any;
             KUL_CHAT: (nodeType: NodeType) => any;
             KUL_CHIP: (nodeType: NodeType) => any;
             KUL_CODE: (nodeType: NodeType) => any;
@@ -130,6 +138,7 @@ export declare class LFWidgets {
         options: {
             KUL_BOOLEAN_VIEWER: (booleanViewer: HTMLKulTextfieldElement) => import("../types/widgets.js").BooleanViewerWidgetOptions;
             KUL_CARD: (grid: HTMLDivElement) => import("../types/widgets.js").CardWidgetOptions;
+            KUL_CARDS_WITH_CHIP: (grid: HTMLDivElement) => import("../types/widgets.js").CardsWithChipWidgetOptions;
             KUL_CHAT: (chat: HTMLKulChatElement) => import("../types/widgets.js").ChatWidgetOptions;
             KUL_CHIP: (chip: HTMLKulChipElement) => import("../types/widgets.js").ChipWidgetOptions;
             KUL_CODE: (code: HTMLKulCodeElement) => import("../types/widgets.js").CodeWidgetOptions;
@@ -152,6 +161,11 @@ export declare class LFWidgets {
             };
             KUL_CARD: () => {
                 KUL_CARD: (nodeType: NodeType, name: CustomWidgetName) => {
+                    widget: Widget;
+                };
+            };
+            KUL_CARDS_WITH_CHIP: () => {
+                KUL_CARDS_WITH_CHIP: (nodeType: NodeType, name: CustomWidgetName) => {
                     widget: Widget;
                 };
             };

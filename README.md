@@ -42,6 +42,11 @@ Includes a switch that enables verbose debug logs in the browser's console and a
 Used to select an embedding. It's possible to fetch additional data from CivitAI or by loading the related cover inside the embeddings folder.
 ![EmbeddingSelector](https://github.com/lucafoscili/comfyui-lf/blob/8393783e3cb4dcb486be37ca0c79985e9dd28447/docs/images/EmbeddingSelector.png "Embedding additional info")
 
+#### LoadLoraTags
+
+LoRA models are loaded in tag format, with a status widget displayed at the bottom indicating the loading progress.
+![LoadLoraTags](https://github.com/lucafoscili/comfyui-lf/blob/947e736fd6505b9de5b89a5a85ef86d528eae644/docs/images/LoadLoraTags.png "Loaded LoRA tags")
+
 #### LoraSelector
 
 Used to select a LoRA. It's possible to fetch additional data from CivitAI or by loading the related cover inside the loras folder.

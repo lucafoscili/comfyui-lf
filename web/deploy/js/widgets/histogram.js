@@ -1,6 +1,6 @@
 import { LogSeverity } from '../types/manager.js';
 import { CustomWidgetName } from '../types/widgets.js';
-import { createDOMWidget, getLFManager, unescapeJson } from '../utils/common.js';
+import { createDOMWidget, getLFManager, deserializeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-histogram';
 const TYPE = CustomWidgetName.histogram;
 let TIMEOUT;
@@ -22,7 +22,7 @@ export const histogramFactory = {
                 histogram.kulData = value;
                 try {
                     if (typeof value === 'string') {
-                        histogram.kulData = unescapeJson(value).parsedJson;
+                        histogram.kulData = deserializeValue(value).parsedJson;
                     }
                 }
                 catch (error) {

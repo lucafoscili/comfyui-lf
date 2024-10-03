@@ -29,6 +29,7 @@ export enum EventName {
   keywordCounter = 'lf-keywordcounter',
   loadFileOnce = 'lf-loadfileonce',
   loadImages = 'lf-loadimages',
+  loadLoraTags = 'lf-loadloratags',
   loraAndEmbeddingSelector = 'lf-loraandembeddingselector',
   loraSelector = 'lf-loraselector',
   multipleImageResizeForWeb = 'lf-multipleimageresizeforweb',
@@ -63,6 +64,7 @@ export type EventPayload =
   | LoadImagesPayload
   | LoraAndEmbeddingSelectorPayload
   | LoraSelectorPayload
+  | LoadLoraTagsPayload
   | MultipleImageResizeForWebPayload
   | RandomBooleanPayload
   | ResizeImageByEdgePayload
@@ -101,9 +103,9 @@ export interface BooleanPayload extends BaseEventPayload {
 
 export interface CheckpointSelectorPayload extends BaseEventPayload {
   dataset: KulDataDataset;
+  apiFlag: boolean;
   hash: string;
-  civitaiInfo: boolean;
-  modelPath: string;
+  path: string;
 }
 
 /*-------------------------------------------------------------------*/
@@ -168,9 +170,9 @@ export interface DisplayStringPayload extends BaseEventPayload {
 
 export interface EmbeddingSelectorPayload extends BaseEventPayload {
   dataset: KulDataDataset;
+  apiFlag: boolean;
   hash: string;
-  civitaiInfo: boolean;
-  modelPath: string;
+  path: string;
 }
 
 /*-------------------------------------------------------------------*/
@@ -246,14 +248,26 @@ export interface LoadImagesPayload extends BaseEventPayload {
 }
 
 /*-------------------------------------------------------------------*/
+/*                      L o a d L o r a T a g s                      */
+/*-------------------------------------------------------------------*/
+
+export interface LoadLoraTagsPayload extends BaseEventPayload {
+  datasets: KulDataDataset[];
+  apiFlags: boolean[];
+  hashes: string[];
+  paths: string[];
+  chipDataset: KulDataDataset;
+}
+
+/*-------------------------------------------------------------------*/
 /*         L o r a S e l e c t o r   D e c l a r a t i o n s         */
 /*-------------------------------------------------------------------*/
 
 export interface LoraSelectorPayload extends BaseEventPayload {
   dataset: KulDataDataset;
+  apiFlag: boolean;
   hash: string;
-  civitaiInfo: boolean;
-  modelPath: string;
+  path: string;
 }
 
 /*-------------------------------------------------------------------*/
@@ -261,13 +275,10 @@ export interface LoraSelectorPayload extends BaseEventPayload {
 /*-------------------------------------------------------------------*/
 
 export interface LoraAndEmbeddingSelectorPayload extends BaseEventPayload {
-  civitaiInfo: boolean;
-  loraDataset: KulDataDataset;
-  loraHash: string;
-  loraModelPath: string;
-  embeddingDataset: KulDataDataset;
-  embeddingHash: string;
-  embeddingModelPath: string;
+  datasets: KulDataDataset[];
+  apiFlags: boolean[];
+  hashes: string[];
+  paths: string[];
 }
 
 /*-------------------------------------------------------------------*/

@@ -20,6 +20,7 @@ export declare class LFNodes {
         LF_KeywordCounter: (event: CustomEvent<import("../types/events").KeywordCounterPayload>, addW: BaseWidgetCallback) => void;
         LF_LoadFileOnce: (event: CustomEvent<import("../types/events").LoadFileOncePayload>, addW: BaseWidgetCallback) => void;
         LF_LoadImages: (event: CustomEvent<import("../types/events").LoadImagesPayload>, addW: BaseWidgetCallback) => void;
+        LF_LoadLoraTags: (event: CustomEvent<import("../types/events").LoadLoraTagsPayload>, addW: BaseWidgetCallback) => void;
         LF_LoraAndEmbeddingSelector: (event: CustomEvent<import("../types/events").LoraAndEmbeddingSelectorPayload>, addW: BaseWidgetCallback) => void;
         LF_LoraSelector: (event: CustomEvent<import("../types/events").LoraSelectorPayload>, addW: BaseWidgetCallback) => void;
         LF_MultipleImageResizeForWeb: (event: CustomEvent<import("../types/events").MultipleImageResizeForWebPayload>, addW: BaseWidgetCallback) => void;
@@ -61,6 +62,7 @@ export declare class LFNodes {
         LF_LLMMessenger: (setW: import("../types/widgets").MessengerWidgetSetter) => void;
         LF_LoadFileOnce: (setW: import("../types/widgets").HistoryWidgetSetter) => void;
         LF_LoadImages: (setW: import("../types/widgets").ImagePreviewWidgetSetter, addW: BaseWidgetCallback) => void;
+        LF_LoadLoraTags: (setW: import("../types/widgets").CardsWithChipWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_LoraAndEmbeddingSelector: (setW: import("../types/widgets").CardWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_LoadMetadata: (setW: import("../types/widgets").UploadWidgetSetter) => void;
         LF_LoraSelector: (setW: import("../types/widgets").CardWidgetSetter, addW: BaseWidgetCallback) => void;
@@ -100,6 +102,7 @@ export declare class LFNodes {
             LF_KeywordCounter: (event: CustomEvent<import("../types/events").KeywordCounterPayload>, addW: BaseWidgetCallback) => void;
             LF_LoadFileOnce: (event: CustomEvent<import("../types/events").LoadFileOncePayload>, addW: BaseWidgetCallback) => void;
             LF_LoadImages: (event: CustomEvent<import("../types/events").LoadImagesPayload>, addW: BaseWidgetCallback) => void;
+            LF_LoadLoraTags: (event: CustomEvent<import("../types/events").LoadLoraTagsPayload>, addW: BaseWidgetCallback) => void;
             LF_LoraAndEmbeddingSelector: (event: CustomEvent<import("../types/events").LoraAndEmbeddingSelectorPayload>, addW: BaseWidgetCallback) => void;
             LF_LoraSelector: (event: CustomEvent<import("../types/events").LoraSelectorPayload>, addW: BaseWidgetCallback) => void;
             LF_MultipleImageResizeForWeb: (event: CustomEvent<import("../types/events").MultipleImageResizeForWebPayload>, addW: BaseWidgetCallback) => void;
@@ -141,6 +144,7 @@ export declare class LFNodes {
             LF_LLMMessenger: (setW: import("../types/widgets").MessengerWidgetSetter) => void;
             LF_LoadFileOnce: (setW: import("../types/widgets").HistoryWidgetSetter) => void;
             LF_LoadImages: (setW: import("../types/widgets").ImagePreviewWidgetSetter, addW: BaseWidgetCallback) => void;
+            LF_LoadLoraTags: (setW: import("../types/widgets").CardsWithChipWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_LoraAndEmbeddingSelector: (setW: import("../types/widgets").CardWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_LoadMetadata: (setW: import("../types/widgets").UploadWidgetSetter) => void;
             LF_LoraSelector: (setW: import("../types/widgets").CardWidgetSetter, addW: BaseWidgetCallback) => void;

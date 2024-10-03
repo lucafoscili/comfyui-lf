@@ -26,6 +26,7 @@ export declare enum ComfyWidgetName {
 export type CustomWidgetMap = {
     [CustomWidgetName.booleanViewer]: BooleanViewerWidget;
     [CustomWidgetName.card]: CardWidget;
+    [CustomWidgetName.cardsWithChip]: CardsWithChipWidget;
     [CustomWidgetName.chat]: ChatWidget;
     [CustomWidgetName.chip]: ChipWidget;
     [CustomWidgetName.code]: CodeWidget;
@@ -43,6 +44,7 @@ export type CustomWidgetMap = {
 export declare enum CustomWidgetName {
     booleanViewer = "KUL_BOOLEAN_VIEWER",
     card = "KUL_CARD",
+    cardsWithChip = "KUL_CARDS_WITH_CHIP",
     chat = "KUL_CHAT",
     chip = "KUL_CHIP",
     code = "KUL_CODE",
@@ -57,7 +59,7 @@ export declare enum CustomWidgetName {
     tree = "KUL_TREE",
     upload = "KUL_UPLOAD"
 }
-export type CustomWidgetOptions = BooleanViewerWidgetOptions | CardWidgetOptions | ChatWidgetOptions | ChipWidgetOptions | CodeWidgetOptions | ControlPanelWidgetOptions | CountBarChartWidgetOptions | HistogramWidgetOptions | HistoryWidgetOptions | ImagePreviewWidgetOptions | JsonInputWidgetOptions | MessengerWidgetOptions | RollViewerWidgetOptions | TreeWidgetOptions | UploadWidgetOptions;
+export type CustomWidgetOptions = BooleanViewerWidgetOptions | CardWidgetOptions | CardsWithChipWidgetOptions | ChatWidgetOptions | ChipWidgetOptions | CodeWidgetOptions | ControlPanelWidgetOptions | CountBarChartWidgetOptions | HistogramWidgetOptions | HistoryWidgetOptions | ImagePreviewWidgetOptions | JsonInputWidgetOptions | MessengerWidgetOptions | RollViewerWidgetOptions | TreeWidgetOptions | UploadWidgetOptions;
 export interface BooleanViewerWidget extends Widget {
     options: BooleanViewerWidgetOptions;
     type: [CustomWidgetName.booleanViewer];
@@ -88,7 +90,28 @@ export type CardWidgetSetter = () => {
 export type CardWidgetValue = string;
 export type CardWidgetDeserializedValue = {
     propsArray: Partial<HTMLKulCardElement>[];
-    template: string;
+    template?: string;
+};
+export interface CardsWithChipWidget extends Widget {
+    options: CardsWithChipWidgetOptions;
+    type: [CustomWidgetName.cardsWithChip];
+}
+export interface CardsWithChipWidgetOptions {
+    hideOnZoom: boolean;
+    getComp(): {
+        cards: HTMLKulCardElement[];
+        chip: HTMLKulChipElement;
+    };
+    getValue(): string;
+    setValue(value: CardsWithChipWidgetValue): void;
+}
+export type CardsWithChipWidgetSetter = () => {
+    [CustomWidgetName.cardsWithChip]: BaseWidgetCallback;
+};
+export type CardsWithChipWidgetValue = string;
+export type CardsWithChipWidgetDeserializedValue = {
+    cardPropsArray: Partial<HTMLKulCardElement>[];
+    chipDataset: KulDataDataset;
 };
 export interface ChatWidget extends Widget {
     options: ChatWidgetOptions;
@@ -143,10 +166,11 @@ export interface ControlPanelWidgetOptions {
 export type ControlPanelWidgetSetter = () => {
     [CustomWidgetName.controlPanel]: BaseWidgetCallback;
 };
-export interface ControlPanelWidgetValue {
+export type ControlPanelWidgetDeserializedValue = {
     debug: boolean;
     themes: string;
-}
+};
+export type ControlPanelWidgetValue = string;
 export interface HistogramWidget extends Widget {
     options: HistogramWidgetOptions;
     type: [CustomWidgetName.histogram];
