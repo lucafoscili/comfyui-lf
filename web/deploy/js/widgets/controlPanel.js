@@ -1,6 +1,6 @@
 import { CustomWidgetName, } from '../types/widgets.js';
 import { createDOMWidget, deserializeValue, getKulManager, getLFManager, serializeValue, } from '../utils/common.js';
-import { handleArticleEvent, sectionsFactory } from '../utils/control-panel-helper.js';
+import { handleKulEvent, sectionsFactory } from '../utils/control-panel-helper.js';
 const BASE_CSS_CLASS = 'lf-controlpanel';
 const TYPE = CustomWidgetName.controlPanel;
 export const controlPanelFactory = {
@@ -102,7 +102,7 @@ const createArticle = () => {
         const { eventType, originalEvent } = e.detail;
         switch (eventType) {
             case 'kul-event':
-                handleArticleEvent(originalEvent);
+                handleKulEvent(originalEvent);
                 break;
         }
     };

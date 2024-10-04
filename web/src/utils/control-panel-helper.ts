@@ -20,17 +20,17 @@ import {
 
 let TIMEOUT: NodeJS.Timeout;
 
-export const handleArticleEvent = (e: Event) => {
-  const { comp, originalEvent } = (
+export const handleKulEvent = (e: Event) => {
+  const { comp } = (
     e as CustomEvent<KulButtonEventPayload | KulListEventPayload | KulSwitchEventPayload>
   ).detail;
 
   if (isButton(comp)) {
-    handleButtonEvent(originalEvent as CustomEvent<KulButtonEventPayload>);
+    handleButtonEvent(e as CustomEvent<KulButtonEventPayload>);
   }
 
   if (isSwitch(comp)) {
-    handleSwitchEvent(originalEvent as CustomEvent<KulSwitchEventPayload>);
+    handleSwitchEvent(e as CustomEvent<KulSwitchEventPayload>);
   }
 };
 

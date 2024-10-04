@@ -15,7 +15,7 @@ import {
   getLFManager,
   serializeValue,
 } from '../utils/common';
-import { handleArticleEvent, sectionsFactory } from '../utils/control-panel-helper';
+import { handleKulEvent, sectionsFactory } from '../utils/control-panel-helper';
 
 const BASE_CSS_CLASS = 'lf-controlpanel';
 const TYPE = CustomWidgetName.controlPanel;
@@ -131,7 +131,7 @@ const createArticle = () => {
 
     switch (eventType) {
       case 'kul-event':
-        handleArticleEvent(originalEvent);
+        handleKulEvent(originalEvent);
         break;
     }
   };

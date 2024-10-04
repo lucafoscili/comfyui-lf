@@ -1,12 +1,12 @@
 import { getApiRoutes, getKulManager, getKulThemes, getLFManager, isButton, isSwitch, } from './common.js';
 let TIMEOUT;
-export const handleArticleEvent = (e) => {
-    const { comp, originalEvent } = e.detail;
+export const handleKulEvent = (e) => {
+    const { comp } = e.detail;
     if (isButton(comp)) {
-        handleButtonEvent(originalEvent);
+        handleButtonEvent(e);
     }
     if (isSwitch(comp)) {
-        handleSwitchEvent(originalEvent);
+        handleSwitchEvent(e);
     }
 };
 const handleButtonEvent = (e) => {
