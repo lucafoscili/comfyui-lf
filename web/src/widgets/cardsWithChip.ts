@@ -18,7 +18,7 @@ export const cardsWithChipFactory = {
   },
   options: (grid: HTMLDivElement) => {
     return {
-      hideOnZoom: true,
+      hideOnZoom: false,
       getComp() {
         const cards = Array.from(grid.querySelectorAll('kul-card')) as HTMLKulCardElement[];
         const chip = grid.querySelector('kul-chip');
