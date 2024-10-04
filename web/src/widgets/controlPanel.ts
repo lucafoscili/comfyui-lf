@@ -1,16 +1,8 @@
-import type {
-  KulArticleDataset,
-  KulButtonEventPayload,
-  KulListEventPayload,
-  KulSwitchEventPayload,
-} from '../types/ketchup-lite/components';
+import type { KulArticleDataset } from '../types/ketchup-lite/components';
 import {
   KulArticleEventPayload,
   KulArticleNode,
 } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
-import { KulButtonEvent } from '../types/ketchup-lite/components/kul-button/kul-button-declarations';
-import { KulList } from '../types/ketchup-lite/components/kul-list/kul-list';
-import { KulSwitchEvent } from '../types/ketchup-lite/components/kul-switch/kul-switch-declarations';
 import {
   ControlPanelWidgetDeserializedValue,
   ControlPanelWidgetOptions,
@@ -19,18 +11,14 @@ import {
 import {
   createDOMWidget,
   deserializeValue,
-  getApiRoutes,
   getKulManager,
-  getKulThemes,
   getLFManager,
-  isButton,
-  isSwitch,
   serializeValue,
 } from '../utils/common';
+import { handleArticleEvent, sectionsFactory } from '../utils/control-panel-helper';
 
 const BASE_CSS_CLASS = 'lf-controlpanel';
 const TYPE = CustomWidgetName.controlPanel;
-let TIMEOUT: NodeJS.Timeout;
 
 export const controlPanelFactory = {
   cssClasses: {
@@ -123,7 +111,11 @@ const createArticle = () => {
       {
         children: [
           {
-            children: [theme(), debug(logsData), metadata()],
+            children: [
+              sectionsFactory.theme(),
+              sectionsFactory.debug(logsData),
+              sectionsFactory.metadata(),
+            ],
             id: 'section',
             value: 'Control panel',
           },
@@ -132,97 +124,6 @@ const createArticle = () => {
         value: '',
       },
     ],
-  };
-
-  const handleSubcomponentEvent = (e: CustomEvent<KulListEventPayload>) => {
-    const { comp, eventType, node } = e.detail;
-    const component = comp as KulList;
-
-    switch (eventType) {
-      case 'ready':
-        component.rootElement.title = 'Change the LF Nodes suite theme';
-        const value = node.id;
-        getKulManager().theme.set(value);
-        break;
-    }
-  };
-
-  const handleArticleEvent = (e: Event) => {
-    const { comp, eventType, originalEvent } = (
-      e as CustomEvent<KulButtonEventPayload | KulListEventPayload | KulSwitchEventPayload>
-    ).detail;
-
-    if (isSwitch(comp)) {
-      const event = e as CustomEvent<KulSwitchEventPayload>;
-
-      switch (eventType as KulSwitchEvent) {
-        case 'change':
-          const value = event.detail.value === 'on' ? true : false;
-          getLFManager().toggleDebug(value);
-          break;
-        case 'ready':
-          comp.rootElement.title = 'Activate verbose console logging';
-      }
-    }
-
-    if (isButton(comp)) {
-      switch (eventType as KulButtonEvent) {
-        case 'click':
-          if (comp.kulIcon === 'style') {
-            getKulManager().theme.randomTheme();
-          }
-          if (comp.kulIcon === 'refresh' && logsData?.length > 0) {
-            logsData.splice(0, logsData.length);
-            article.refresh();
-          }
-          if (comp.kulIcon === 'delete') {
-            const onResponse = () => {
-              comp.rootElement.classList.remove('kul-danger');
-              comp.rootElement.classList.add('kul-success');
-              comp.rootElement.kulShowSpinner = false;
-              comp.rootElement.kulLabel = 'Done!';
-              comp.rootElement.kulIcon = 'check';
-            };
-            const restore = () => {
-              comp.rootElement.classList.add('kul-danger');
-              comp.rootElement.classList.remove('kul-success');
-              comp.rootElement.kulLabel = 'Delete models info';
-              comp.rootElement.kulIcon = 'delete';
-              TIMEOUT = null;
-            };
-            requestAnimationFrame(() => (comp.kulShowSpinner = true));
-            getApiRoutes()
-              .clearModelMetadata()
-              .then(() => {
-                requestAnimationFrame(onResponse);
-
-                if (TIMEOUT) {
-                  clearTimeout(TIMEOUT);
-                }
-
-                TIMEOUT = setTimeout(() => requestAnimationFrame(restore), 1000);
-              });
-          }
-          break;
-
-        case 'kul-event':
-          handleSubcomponentEvent(originalEvent as CustomEvent<KulListEventPayload>);
-          break;
-
-        case 'ready':
-          if (comp.kulIcon === 'delete') {
-            comp.rootElement.classList.add('kul-danger');
-
-            const spinner = document.createElement('kul-spinner');
-            spinner.kulActive = true;
-            spinner.kulDimensions = '0.6em';
-            spinner.kulLayout = 2;
-            spinner.slot = 'spinner';
-            comp.rootElement.appendChild(spinner);
-            break;
-          }
-      }
-    }
   };
 
   const cb = (e: Event | KulArticleEventPayload) => {
@@ -242,153 +143,4 @@ const createArticle = () => {
   getLFManager().setDebugDataset(article, logsData);
 
   return article;
-};
-
-const metadata = () => {
-  const node: KulArticleNode = {
-    id: 'section',
-    value: 'Metadata',
-    children: [
-      {
-        id: 'paragraph',
-        value: 'Purge metadata files',
-        children: [
-          {
-            id: 'content',
-            value:
-              'Metadata pulled from CivitAI are stored in .info files saved in the same folders of the models to avoid unnecessary fetches from the API.',
-          },
-          {
-            id: 'content',
-            value:
-              "By pressing this button it's possible to delete every .info file created by fetching the metadata.",
-          },
-          {
-            id: 'content',
-            value: '',
-            cells: {
-              kulButton: {
-                kulIcon: 'delete',
-                kulLabel: 'Delete models info',
-                kulStyle: ':host { margin: auto; padding:16px 0 }',
-                kulStyling: 'outlined',
-                shape: 'button',
-                value: '',
-              },
-            },
-          },
-        ],
-      },
-    ],
-  };
-
-  return node;
-};
-
-const theme = () => {
-  const node: KulArticleNode = {
-    id: 'section',
-    value: 'Customization',
-    children: [
-      {
-        id: 'paragraph',
-        value: 'Theme selector',
-        children: [
-          {
-            id: 'content',
-            value:
-              "Through the button below it's possible to set a random theme for the Ketchup Lite components, or select one from the dropdown menu.",
-          },
-          {
-            id: 'content',
-            value: '',
-            cssStyle: { margin: 'auto', padding: '16px 0' },
-            cells: { kulButton: { kulData: getKulThemes(), shape: 'button', value: '' } },
-          },
-        ],
-      },
-    ],
-  };
-
-  return node;
-};
-
-const debug = (logsData: KulArticleNode[]) => {
-  const node: KulArticleNode = {
-    id: 'section',
-    value: 'Debug',
-    children: [
-      {
-        id: 'paragraph',
-        value: 'Toggle on/off',
-        children: [
-          {
-            id: 'content',
-            value: 'Activating the debug will enable the display of verbose logging.',
-          },
-          {
-            id: 'content',
-            value: '',
-            cssStyle: { textAlign: 'center', padding: '16px 0' },
-            cells: {
-              kulSwitch: {
-                kulLabel: 'Debug',
-                kulLeadingLabel: true,
-                shape: 'switch',
-                value: !!getLFManager().isDebug(),
-              } as any,
-            },
-          },
-        ],
-      },
-      {
-        id: 'paragraph',
-        value: 'Logs',
-        children: [
-          {
-            id: 'content',
-            value: 'Every time the node manager receives a messages, it will be printed below.',
-          },
-          {
-            id: 'content',
-            tagName: 'br',
-            value: '',
-          },
-          {
-            id: 'content',
-            value: 'In the browser console there should be more informations.',
-          },
-          {
-            id: 'content',
-            value: '',
-            cells: {
-              kulButton: {
-                shape: 'button',
-                kulIcon: 'refresh',
-                kulLabel: 'Clear logs',
-                kulStyle:
-                  ':host { margin: auto; padding-bottom: 4px; padding-top: 16px; text-align: center }',
-                kulStyling: 'flat',
-                value: '',
-              },
-            },
-          },
-        ],
-      },
-      {
-        id: 'paragraph',
-        value: '',
-        cssStyle: {
-          backgroundColor: 'rgba(var(--kul-text-color-rgb), 0.075)',
-          borderRadius: '8px',
-          height: '250px',
-          marginBottom: '16px',
-          overflow: 'auto',
-        },
-        children: logsData,
-      },
-    ],
-  };
-
-  return node;
 };

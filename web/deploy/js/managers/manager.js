@@ -32,7 +32,7 @@ export class LFManager {
             clearModelMetadata: async () => {
                 try {
                     await api
-                        .fetchApi('/comfyui-lf/clear-modelf-info', {
+                        .fetchApi('/comfyui-lf/clear-model-info', {
                         method: 'POST',
                     })
                         .then((res) => {
@@ -149,6 +149,9 @@ export class LFManager {
     }
     getApiRoutes() {
         return __classPrivateFieldGet(this, _LFManager_APIS, "f");
+    }
+    getDebugDataset() {
+        return { article: __classPrivateFieldGet(this, _LFManager_DEBUG_ARTICLE, "f"), dataset: __classPrivateFieldGet(this, _LFManager_DEBUG_DATASET, "f") };
     }
     initialize() {
         if (__classPrivateFieldGet(this, _LFManager_INITIALIZED, "f")) {

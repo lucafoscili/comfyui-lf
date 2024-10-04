@@ -7,6 +7,10 @@ export declare class LFManager {
     #private;
     constructor();
     getApiRoutes(): ComfyAPIs;
+    getDebugDataset(): {
+        article: HTMLKulArticleElement;
+        dataset: KulArticleNode[];
+    };
     initialize(): void;
     isDebug(): boolean;
     log(message: string, args?: Record<string, unknown>, severity?: LogSeverity): void;

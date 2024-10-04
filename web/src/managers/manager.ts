@@ -200,6 +200,10 @@ export class LFManager {
     return this.#APIS;
   }
 
+  getDebugDataset() {
+    return { article: this.#DEBUG_ARTICLE, dataset: this.#DEBUG_DATASET };
+  }
+
   initialize() {
     if (this.#INITIALIZED) {
       this.log(
