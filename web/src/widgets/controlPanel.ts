@@ -105,17 +105,14 @@ const contentCb = (domWidget: HTMLDivElement, isReady: boolean) => {
 };
 
 const createArticle = () => {
+  const { bug, debug, metadata, theme } = sectionsFactory;
   const logsData: KulArticleNode[] = [];
   const articleData: KulArticleDataset = {
     nodes: [
       {
         children: [
           {
-            children: [
-              sectionsFactory.theme(),
-              sectionsFactory.debug(logsData),
-              sectionsFactory.metadata(),
-            ],
+            children: [theme(), metadata(), debug(logsData), bug()],
             id: 'section',
             value: 'Control panel',
           },

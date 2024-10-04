@@ -14,16 +14,6 @@ const handleButtonEvent = (e) => {
     const c = comp.rootElement;
     switch (eventType) {
         case 'click':
-            if (c.kulIcon === 'style') {
-                getKulManager().theme.randomTheme();
-            }
-            if (c.kulIcon === 'refresh') {
-                const { article, dataset } = getLFManager().getDebugDataset();
-                if (dataset?.length > 0) {
-                    dataset.splice(0, dataset.length);
-                    article.refresh();
-                }
-            }
             if (c.kulIcon === 'delete') {
                 const onResponse = () => {
                     c.classList.remove('kul-danger');
@@ -49,6 +39,19 @@ const handleButtonEvent = (e) => {
                     }
                     TIMEOUT = setTimeout(() => requestAnimationFrame(restore), 1000);
                 });
+            }
+            if (c.kulIcon === 'github') {
+                window.open('https://github.com/lucafoscili/comfyui-lf/issues/new', '_blank');
+            }
+            if (c.kulIcon === 'refresh') {
+                const { article, dataset } = getLFManager().getDebugDataset();
+                if (dataset?.length > 0) {
+                    dataset.splice(0, dataset.length);
+                    article.refresh();
+                }
+            }
+            if (c.kulIcon === 'style') {
+                getKulManager().theme.randomTheme();
             }
             break;
         case 'kul-event':
@@ -90,6 +93,47 @@ const handleSwitchEvent = (e) => {
     }
 };
 export const sectionsFactory = {
+    bug: () => {
+        return {
+            id: 'section',
+            value: 'Bug report',
+            children: [
+                {
+                    id: 'paragraph',
+                    value: 'Did you run into a bug?',
+                    children: [
+                        {
+                            id: 'content',
+                            value: 'If you find bugs or odd behaviors feel free to open an issue on GitHub, just follow the link below!',
+                        },
+                        {
+                            id: 'content',
+                            tagName: 'br',
+                            value: '',
+                        },
+                        {
+                            id: 'content',
+                            value: "Be sure to include as much information as you can, without sufficient data it's difficult to troubleshoot problems.",
+                        },
+                        {
+                            id: 'content',
+                            value: '',
+                            cells: {
+                                kulButton: {
+                                    kulIcon: 'github',
+                                    kulLabel: 'Open an issue',
+                                    kulStyle: ':host { margin: auto; padding:16px 0 }',
+                                    kulStyling: 'raised',
+                                    shape: 'button',
+                                    value: '',
+                                },
+                            },
+                        },
+                    ],
+                },
+            ],
+        };
+    },
     debug: (logsData) => {
         return {
             id: 'section',
