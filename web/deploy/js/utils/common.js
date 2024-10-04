@@ -88,6 +88,15 @@ export const getOutput = (node, type) => {
 export const getWidget = (node, type) => {
     return node?.widgets?.find((w) => w.type.toLowerCase() === type.toLowerCase());
 };
+export const isButton = (comp) => {
+    return comp.rootElement.tagName.toLowerCase() === 'kul-button';
+};
+export const isList = (comp) => {
+    return comp.rootElement.tagName.toLowerCase() === 'kul-list';
+};
+export const isSwitch = (comp) => {
+    return comp.rootElement.tagName.toLowerCase() === 'kul-switch';
+};
 export const isValidJSON = (value) => {
     try {
         JSON.stringify(value);

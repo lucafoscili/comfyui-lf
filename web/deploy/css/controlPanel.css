@@ -1,26 +1,10 @@
 .lf-controlpanel {
+  --kul-article-padding: 12px 24px;
   background: var(--kul-background-color);
   height: 100%;
   width: 100%;
   overflow: auto;
   width: 100%;
-}
-.lf-controlpanel__grid {
-  display: grid;
-  grid-template-areas: "theme clear-info" "debug debug";
-  height: 100%;
-  place-items: center;
-  width: 100%;
-}
-.lf-controlpanel__clear-info {
-  grid-area: clear-info;
-}
-.lf-controlpanel__debug {
-  grid-area: debug;
-  padding-bottom: 24px;
-}
-.lf-controlpanel__theme {
-  grid-area: theme;
 }
 .lf-controlpanel__spinner {
   height: 100%;
