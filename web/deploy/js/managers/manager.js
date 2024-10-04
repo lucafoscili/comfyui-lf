@@ -9,7 +9,7 @@ var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
     return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
 };
-var _LFManager_APIS, _LFManager_DEBUG, _LFManager_DOM, _LFManager_INITIALIZED, _LFManager_MANAGERS;
+var _LFManager_APIS, _LFManager_DEBUG, _LFManager_DEBUG_ARTICLE, _LFManager_DEBUG_DATASET, _LFManager_DOM, _LFManager_INITIALIZED, _LFManager_MANAGERS;
 import { api } from '/scripts/api.js';
 import { app } from '/scripts/app.js';
 import { defineCustomElements } from '../ketchup-lite/loader.js';
@@ -18,6 +18,14 @@ import { LFNodes } from './nodes.js';
 import { LFWidgets } from './widgets.js';
 import { LogSeverity } from '../types/manager.js';
 import { EventName, } from '../types/events.js';
+const LOG_STYLE = {
+    fontFamily: 'var(--kul-font-family-monospace)',
+    margin: '0',
+    maxWidth: '100%',
+    overflow: 'hidden',
+    padding: '4px 8px',
+    textOverflow: 'ellipsis',
+};
 export class LFManager {
     constructor() {
         _LFManager_APIS.set(this, {
@@ -121,6 +129,8 @@ export class LFManager {
             },
         });
         _LFManager_DEBUG.set(this, false);
+        _LFManager_DEBUG_ARTICLE.set(this, void 0);
+        _LFManager_DEBUG_DATASET.set(this, void 0);
         _LFManager_DOM.set(this, document.documentElement);
         _LFManager_INITIALIZED.set(this, false);
         _LFManager_MANAGERS.set(this, {});
@@ -139,6 +149,9 @@ export class LFManager {
     }
     getApiRoutes() {
         return __classPrivateFieldGet(this, _LFManager_APIS, "f");
+    }
+    getDebugDataset() {
+        return { article: __classPrivateFieldGet(this, _LFManager_DEBUG_ARTICLE, "f"), dataset: __classPrivateFieldGet(this, _LFManager_DEBUG_DATASET, "f") };
     }
     initialize() {
         if (__classPrivateFieldGet(this, _LFManager_INITIALIZED, "f")) {
@@ -445,7 +458,28 @@ export class LFManager {
         }
         const resetColorCode = '\x1b[0m';
         const dot = '• LF Nodes •';
+        if (__classPrivateFieldGet(this, _LFManager_DEBUG_DATASET, "f") && __classPrivateFieldGet(this, _LFManager_DEBUG_ARTICLE, "f")?.isConnected) {
+            const id = String(performance.now()).valueOf();
+            const icon = severity === LogSeverity.Error
+                ? '🔴 '
+                : severity === LogSeverity.Success
+                    ? '🟢 '
+                    : severity === LogSeverity.Warning
+                        ? '🟠 '
+                        : '🔵 ';
+            __classPrivateFieldGet(this, _LFManager_DEBUG_DATASET, "f").unshift({
+                cssStyle: LOG_STYLE,
+                id,
+                tagName: 'pre',
+                value: icon + message,
+            });
+            __classPrivateFieldGet(this, _LFManager_DEBUG_ARTICLE, "f").refresh();
+        }
         console.log(`${colorCode}${dot} ${message} ${resetColorCode}`, args);
+    }
+    setDebugDataset(article, dataset) {
+        __classPrivateFieldSet(this, _LFManager_DEBUG_ARTICLE, article, "f");
+        __classPrivateFieldSet(this, _LFManager_DEBUG_DATASET, dataset, "f");
     }
     toggleDebug(value) {
         if (value === false || value === true) {
@@ -458,7 +492,7 @@ export class LFManager {
         return __classPrivateFieldGet(this, _LFManager_DEBUG, "f");
     }
 }
-_LFManager_APIS = new WeakMap(), _LFManager_DEBUG = new WeakMap(), _LFManager_DOM = new WeakMap(), _LFManager_INITIALIZED = new WeakMap(), _LFManager_MANAGERS = new WeakMap();
+_LFManager_APIS = new WeakMap(), _LFManager_DEBUG = new WeakMap(), _LFManager_DEBUG_ARTICLE = new WeakMap(), _LFManager_DEBUG_DATASET = new WeakMap(), _LFManager_DOM = new WeakMap(), _LFManager_INITIALIZED = new WeakMap(), _LFManager_MANAGERS = new WeakMap();
 const WINDOW = window;
 if (!WINDOW.lfManager) {
     WINDOW.lfManager = new LFManager();

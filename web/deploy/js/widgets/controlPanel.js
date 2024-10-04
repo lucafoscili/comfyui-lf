@@ -1,18 +1,13 @@
 import { CustomWidgetName, } from '../types/widgets.js';
-import { createDOMWidget, deserializeValue, getApiRoutes, getKulManager, getKulThemes, getLFManager, serializeValue, } from '../utils/common.js';
-const DEF_ICON = 'delete';
-const DEF_LABEL = 'Delete models info';
+import { createDOMWidget, deserializeValue, getKulManager, getLFManager, serializeValue, } from '../utils/common.js';
+import { handleKulEvent, sectionsFactory } from '../utils/control-panel-helper.js';
 const BASE_CSS_CLASS = 'lf-controlpanel';
 const TYPE = CustomWidgetName.controlPanel;
-let TIMEOUT;
 export const controlPanelFactory = {
     cssClasses: {
         content: BASE_CSS_CLASS,
-        clearInfo: `${BASE_CSS_CLASS}__clear-info`,
-        debug: `${BASE_CSS_CLASS}__debug`,
-        grid: `${BASE_CSS_CLASS}__grid`,
+        article: `${BASE_CSS_CLASS}__article`,
         spinner: `${BASE_CSS_CLASS}__spinner`,
-        themes: `${BASE_CSS_CLASS}__themes`,
     },
     options: () => {
         return {
@@ -70,15 +65,8 @@ const contentCb = (domWidget, isReady) => {
         return spinner;
     };
     if (isReady) {
-        const grid = document.createElement('div');
-        const debug = createDebug();
-        const themes = createTheme();
-        const clearInfo = createClearInfo();
-        grid.classList.add(controlPanelFactory.cssClasses.grid);
-        grid.appendChild(clearInfo);
-        grid.appendChild(themes);
-        grid.appendChild(debug);
-        content.appendChild(grid);
+        const article = createArticle();
+        content.appendChild(article);
         domWidget.replaceChild(content, domWidget.firstChild);
     }
     else {
@@ -89,82 +77,35 @@ const contentCb = (domWidget, isReady) => {
     }
     content.classList.add(controlPanelFactory.cssClasses.content);
 };
-const createClearInfo = () => {
+const createArticle = () => {
+    const { bug, debug, metadata, theme } = sectionsFactory;
+    const logsData = [];
+    const articleData = {
+        nodes: [
+            {
+                children: [
+                    {
+                        children: [theme(), metadata(), debug(logsData), bug()],
+                        id: 'section',
+                        value: 'Control panel',
+                    },
+                ],
+                id: 'root',
+                value: '',
+            },
+        ],
+    };
     const cb = (e) => {
-        const onResponse = () => {
-            clearInfo.classList.remove('kul-danger');
-            clearInfo.classList.add('kul-success');
-            clearInfo.kulShowSpinner = false;
-            clearInfo.kulLabel = 'Done!';
-            clearInfo.kulIcon = 'check';
-        };
-        const restore = () => {
-            clearInfo.classList.add('kul-danger');
-            clearInfo.classList.remove('kul-success');
-            clearInfo.kulLabel = DEF_LABEL;
-            clearInfo.kulIcon = DEF_ICON;
-            TIMEOUT = null;
-        };
-        if (e.detail.eventType === 'click') {
-            requestAnimationFrame(() => (clearInfo.kulShowSpinner = true));
-            getApiRoutes()
-                .clearModelMetadata()
-                .then(() => {
-                requestAnimationFrame(onResponse);
-                if (TIMEOUT) {
-                    clearTimeout(TIMEOUT);
-                }
-                TIMEOUT = setTimeout(() => requestAnimationFrame(restore), 1000);
-            });
+        const { eventType, originalEvent } = e.detail;
+        switch (eventType) {
+            case 'kul-event':
+                handleKulEvent(originalEvent);
+                break;
         }
     };
-    const clearInfo = document.createElement('kul-button');
-    const spinner = document.createElement('kul-spinner');
-    clearInfo.classList.add(controlPanelFactory.cssClasses.clearInfo);
-    clearInfo.classList.add('kul-danger');
-    clearInfo.kulIcon = DEF_ICON;
-    clearInfo.kulLabel = DEF_LABEL;
-    clearInfo.kulStyling = 'outlined';
-    clearInfo.title = "Deletes all models' .info files containing CivitAI metadata";
-    clearInfo.addEventListener('kul-button-event', cb);
-    spinner.kulActive = true;
-    spinner.kulDimensions = '0.6em';
-    spinner.kulLayout = 2;
-    spinner.slot = 'spinner';
-    clearInfo.appendChild(spinner);
-    return clearInfo;
-};
-const createDebug = () => {
-    const cb = (e) => {
-        if (e.detail.eventType === 'change') {
-            const value = e.detail.value === 'on' ? true : false;
-            getLFManager().toggleDebug(value);
-        }
-    };
-    const debug = document.createElement('kul-switch');
-    debug.classList.add(controlPanelFactory.cssClasses.debug);
-    debug.kulLabel = 'Debug';
-    debug.kulLeadingLabel = true;
-    debug.kulValue = !!getLFManager().isDebug();
-    debug.title = 'Activate verbose console logging';
-    debug.addEventListener('kul-switch-event', cb);
-    return debug;
-};
-const createTheme = () => {
-    const cb = (e) => {
-        if (e.detail.eventType === 'click') {
-            getKulManager().theme.randomTheme();
-        }
-        else if (e.detail.eventType === 'kul-event') {
-            const listEvent = e.detail.originalEvent;
-            const value = listEvent.detail.node.id;
-            getKulManager().theme.set(value);
-        }
-    };
-    const themes = document.createElement('kul-button');
-    themes.classList.add(controlPanelFactory.cssClasses.themes);
-    themes.kulData = getKulThemes();
-    themes.title = 'Change the LF Nodes suite theme';
-    themes.addEventListener('kul-button-event', cb);
-    return themes;
+    const article = document.createElement('kul-article');
+    article.kulData = articleData;
+    article.addEventListener('kul-article-event', cb);
+    getLFManager().setDebugDataset(article, logsData);
+    return article;
 };

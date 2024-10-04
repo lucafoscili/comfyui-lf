@@ -12,7 +12,7 @@ export const cardsWithChipFactory = {
     },
     options: (grid) => {
         return {
-            hideOnZoom: true,
+            hideOnZoom: false,
             getComp() {
                 const cards = Array.from(grid.querySelectorAll('kul-card'));
                 const chip = grid.querySelector('kul-chip');

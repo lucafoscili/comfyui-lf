@@ -34,8 +34,8 @@ Allows to setup and generate [CivitAI](https://civitai.com)-compatible metadata 
 
 #### ControlPanel
 
-Includes a switch that enables verbose debug logs in the browser's console and a button that allows to change the theme of Ketchup Lite webcomponents.
-![ControlPanel](https://github.com/lucafoscili/comfyui-lf/blob/ab8e1230892452d989a022076e26fa512277c5e2/docs/images/ControlPanel.png "List of the available themes")
+Utilities to debug nodes and to change the theme of Ketchup Lite webcomponents.
+![ControlPanel](https://github.com/lucafoscili/comfyui-lf/blob/6d4cf455b031a8ffae96ba322689dd3853004495/docs/images/ControlPanel.png "Utilities included in the control panel")
 
 #### EmbeddingSelector
 

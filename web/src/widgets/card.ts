@@ -12,7 +12,7 @@ export const cardFactory = {
   },
   options: (grid: HTMLDivElement) => {
     return {
-      hideOnZoom: true,
+      hideOnZoom: false,
       getComp() {
         return Array.from(grid.querySelectorAll('kul-card')) as HTMLKulCardElement[];
       },

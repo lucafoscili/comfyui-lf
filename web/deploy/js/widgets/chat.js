@@ -35,9 +35,21 @@ export const chatFactory = {
         content.classList.add(chatFactory.cssClasses.content);
         chat.classList.add(chatFactory.cssClasses.chat);
         chat.addEventListener('kul-chat-event', (e) => {
-            getLFManager().log('Setting new history on chat widget', { chat: e.detail }, LogSeverity.Error);
-            const { history } = e.detail;
-            chat.dataset.history = history;
+            const { eventType, history, status } = e.detail;
+            switch (eventType) {
+                case 'polling':
+                    const severity = status === 'ready'
+                        ? LogSeverity.Success
+                        : status === 'offline'
+                            ? LogSeverity.Error
+                            : LogSeverity.Info;
+                    getLFManager().log('Chat widget, polling status: ' + status, { chat: e.detail }, severity);
+                    break;
+                case 'update':
+                    getLFManager().log('Chat widget: updating...', { chat: e.detail }, LogSeverity.Success);
+                    chat.dataset.history = history;
+                    break;
+            }
         });
         content.appendChild(chat);
         wrapper.appendChild(content);

@@ -47,6 +47,7 @@ import {
   LoraAndEmbeddingSelectorPayload,
   LoadLoraTagsPayload,
 } from '../types/events.js';
+import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
 
 /*-------------------------------------------------*/
 /*                 L F   C l a s s                 */
@@ -55,6 +56,15 @@ import {
 export interface LFWindow extends Window {
   lfManager: LFManager;
 }
+
+const LOG_STYLE = {
+  fontFamily: 'var(--kul-font-family-monospace)',
+  margin: '0',
+  maxWidth: '100%',
+  overflow: 'hidden',
+  padding: '4px 8px',
+  textOverflow: 'ellipsis',
+};
 
 export class LFManager {
   #APIS: ComfyAPIs = {
@@ -160,6 +170,8 @@ export class LFManager {
     },
   };
   #DEBUG = false;
+  #DEBUG_ARTICLE: HTMLKulArticleElement;
+  #DEBUG_DATASET: KulArticleNode[];
   #DOM = document.documentElement as KulDom;
   #INITIALIZED = false;
   #MANAGERS: {
@@ -186,6 +198,10 @@ export class LFManager {
 
   getApiRoutes(): ComfyAPIs {
     return this.#APIS;
+  }
+
+  getDebugDataset() {
+    return { article: this.#DEBUG_ARTICLE, dataset: this.#DEBUG_DATASET };
   }
 
   initialize() {
@@ -615,7 +631,31 @@ export class LFManager {
     const resetColorCode = '\x1b[0m';
     const dot = '• LF Nodes •';
 
+    if (this.#DEBUG_DATASET && this.#DEBUG_ARTICLE?.isConnected) {
+      const id = String(performance.now()).valueOf();
+      const icon =
+        severity === LogSeverity.Error
+          ? '🔴 '
+          : severity === LogSeverity.Success
+          ? '🟢 '
+          : severity === LogSeverity.Warning
+          ? '🟠 '
+          : '🔵 ';
+      this.#DEBUG_DATASET.unshift({
+        cssStyle: LOG_STYLE,
+        id,
+        tagName: 'pre',
+        value: icon + message,
+      });
+      this.#DEBUG_ARTICLE.refresh();
+    }
+
     console.log(`${colorCode}${dot} ${message} ${resetColorCode}`, args);
+  }
+
+  setDebugDataset(article: HTMLKulArticleElement, dataset: KulArticleNode[]) {
+    this.#DEBUG_ARTICLE = article;
+    this.#DEBUG_DATASET = dataset;
   }
 
   toggleDebug(value?: boolean) {

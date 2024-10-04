@@ -10,6 +10,9 @@ import {
   CustomWidgetOptions,
 } from '../types/widgets';
 import { LogSeverity } from '../types/manager';
+import { KulButton } from '../types/ketchup-lite/components/kul-button/kul-button';
+import { KulList } from '../types/ketchup-lite/components/kul-list/kul-list';
+import { KulSwitch } from '../types/ketchup-lite/components/kul-switch/kul-switch';
 
 const DOM = document.documentElement as KulDom;
 const WINDOW = window as unknown as LFWindow;
@@ -142,6 +145,16 @@ export const getWidget = <T extends ComfyWidgetName>(
   return node?.widgets?.find(
     (w) => w.type.toLowerCase() === type.toLowerCase(),
   ) as ComfyWidgetMap[T];
+};
+
+export const isButton = (comp: any): comp is KulButton => {
+  return comp.rootElement.tagName.toLowerCase() === 'kul-button';
+};
+export const isList = (comp: any): comp is KulList => {
+  return comp.rootElement.tagName.toLowerCase() === 'kul-list';
+};
+export const isSwitch = (comp: any): comp is KulSwitch => {
+  return comp.rootElement.tagName.toLowerCase() === 'kul-switch';
 };
 
 export const isValidJSON = (value: unknown) => {
