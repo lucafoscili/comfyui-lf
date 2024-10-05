@@ -1,15 +1,15 @@
-import { EventName, FloatPayload } from '../types/events';
+import { EventName, SamplerSelectorPayload } from '../types/events';
 import { KulDataNode } from '../types/ketchup-lite/components';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import { CustomWidgetName, HistoryWidgetSetter, type BaseWidgetCallback } from '../types/widgets';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 
-const NAME = NodeName.float;
+const NAME = NodeName.samplerSelector;
 
-export const floatFactory = {
-  eventHandler: (event: CustomEvent<FloatPayload>, addW: BaseWidgetCallback) => {
-    const name = EventName.string;
+export const samplerSelectorFactory = {
+  eventHandler: (event: CustomEvent<SamplerSelectorPayload>, addW: BaseWidgetCallback) => {
+    const name = EventName.samplerSelector;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
     const payload = event.detail;
@@ -18,19 +18,18 @@ export const floatFactory = {
     if (isHistoryEnabled && node) {
       const list = getCustomWidget(node, CustomWidgetName.history, addW);
       if (list) {
-        const value = payload.value.toFixed(3);
-        const strValue = String(value).valueOf();
+        const value = payload.value;
         const comp = list.options.getComp();
         const dataset = comp.kulData;
-        if (strValue) {
+        if (value) {
           const newNode: KulDataNode = {
             icon: 'history',
-            id: strValue,
+            id: value,
             description: 'Execution date: ' + new Date().toLocaleString() + '.',
             value,
           };
           if (dataset) {
-            const existingNode = dataset?.nodes?.find((n) => n.id === strValue);
+            const existingNode = dataset?.nodes?.find((n) => n.id === value);
             if (existingNode) {
               existingNode.description = newNode.description;
               comp.refresh();

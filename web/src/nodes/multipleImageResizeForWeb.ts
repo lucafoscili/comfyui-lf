@@ -12,7 +12,7 @@ export const multipleImageResizeForWebFactory = {
     addW: BaseWidgetCallback,
   ) => {
     const name = EventName.multipleImageResizeForWeb;
-    getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
+    getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
     const payload = event.detail;
     const node = getApiRoutes().getNodeById(payload.id);

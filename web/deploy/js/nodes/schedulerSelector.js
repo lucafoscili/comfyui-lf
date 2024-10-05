@@ -3,10 +3,10 @@ import { LogSeverity } from '../types/manager.js';
 import { NodeName } from '../types/nodes.js';
 import { CustomWidgetName } from '../types/widgets.js';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common.js';
-const NAME = NodeName.integer;
-export const integerFactory = {
+const NAME = NodeName.schedulerSelector;
+export const schedulerSelectorFactory = {
     eventHandler: (event, addW) => {
-        const name = EventName.string;
+        const name = EventName.schedulerSelector;
         getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
         const payload = event.detail;
         const isHistoryEnabled = payload.isHistoryEnabled;
@@ -15,18 +15,17 @@ export const integerFactory = {
             const list = getCustomWidget(node, CustomWidgetName.history, addW);
             if (list) {
                 const value = payload.value;
-                const strValue = String(value).valueOf();
                 const comp = list.options.getComp();
                 const dataset = comp.kulData;
-                if (strValue) {
+                if (value) {
                     const newNode = {
                         icon: 'history',
-                        id: strValue,
+                        id: value,
                         description: 'Execution date: ' + new Date().toLocaleString() + '.',
                         value,
                     };
                     if (dataset) {
-                        const existingNode = dataset?.nodes?.find((n) => n.id === strValue);
+                        const existingNode = dataset?.nodes?.find((n) => n.id === value);
                         if (existingNode) {
                             existingNode.description = newNode.description;
                             comp.refresh();

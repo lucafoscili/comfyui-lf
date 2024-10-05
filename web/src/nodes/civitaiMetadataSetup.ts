@@ -9,7 +9,7 @@ const NAME = NodeName.civitaiMetadataSetup;
 export const civitaiMetadataSetupFactory = {
   eventHandler: (event: CustomEvent<CivitAIMetadataSetupPayload>, addW: BaseWidgetCallback) => {
     const name = EventName.civitAIMetadataSetup;
-    getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
+    getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
     const payload = event.detail;
     const node = getApiRoutes().getNodeById(payload.id);

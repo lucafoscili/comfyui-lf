@@ -32,7 +32,9 @@ export declare enum EventName {
     resizeimageByEdge = "lf-resizeimagebyedge",
     resizeimageToSquare = "lf-resizeimagetosquare",
     resolutionSwitcher = "lf-resolutionswitcher",
+    samplerSelector = "lf-samplerselector",
     saveImageForCivitAI = "lf-saveimageforcivitai",
+    schedulerSelector = "lf-schedulerselector",
     string = "lf-string",
     switchFloat = "lf-switchfloat",
     switchImage = "lf-switchimage",
@@ -42,7 +44,7 @@ export declare enum EventName {
     urandomSeedGenerator = "lf-urandomseedgenerator",
     writeJson = "lf-writejson"
 }
-export type EventPayload = BlurImagesPayload | BooleanPayload | CheckpointSelectorPayload | CivitAIMetadataSetupPayload | DisplayBooleanPayload | DisplayJSONPayload | EmbeddingSelectorPayload | ExtractorPayload | FloatPayload | ImageListFromJSONPayload | ImageHistogramPayload | IntegerPayload | KeywordCounterPayload | LoadImagesPayload | LoraAndEmbeddingSelectorPayload | LoraSelectorPayload | LoadLoraTagsPayload | MultipleImageResizeForWebPayload | RandomBooleanPayload | ResizeImageByEdgePayload | ResizeImageToSquarePayload | ResolutionSwitcherPayload | SaveImageForCivitAIPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | UrandomSeedGeneratorPayload | WriteJSONPayload;
+export type EventPayload = BlurImagesPayload | BooleanPayload | CheckpointSelectorPayload | CivitAIMetadataSetupPayload | DisplayBooleanPayload | DisplayJSONPayload | EmbeddingSelectorPayload | ExtractorPayload | FloatPayload | ImageListFromJSONPayload | ImageHistogramPayload | IntegerPayload | KeywordCounterPayload | LoadImagesPayload | LoraAndEmbeddingSelectorPayload | LoraSelectorPayload | LoadLoraTagsPayload | MultipleImageResizeForWebPayload | RandomBooleanPayload | ResizeImageByEdgePayload | ResizeImageToSquarePayload | ResolutionSwitcherPayload | SamplerSelectorPayload | SaveImageForCivitAIPayload | SchedulerSelectorPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | UrandomSeedGeneratorPayload | WriteJSONPayload;
 export interface BlurImagesPayload extends BaseEventPayload {
     fileNames: Array<string>;
     images: Array<string>;
@@ -156,9 +158,17 @@ export interface ResolutionSwitcherPayload extends BaseEventPayload {
     bool: boolean;
     roll: number;
 }
+export interface SamplerSelectorPayload extends BaseEventPayload {
+    isHistoryEnabled: boolean;
+    value: string;
+}
 export interface SaveImageForCivitAIPayload extends BaseEventPayload {
     fileNames: Array<string>;
     images: Array<string>;
+}
+export interface SchedulerSelectorPayload extends BaseEventPayload {
+    isHistoryEnabled: boolean;
+    value: string;
 }
 export interface StringPayload extends BaseEventPayload {
     isHistoryEnabled: boolean;

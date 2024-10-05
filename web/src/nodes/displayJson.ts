@@ -9,7 +9,7 @@ const NAME = NodeName.displayJson;
 export const displayJsonFactory = {
   eventHandler: (event: CustomEvent<DisplayJSONPayload>, addW: BaseWidgetCallback) => {
     const name = EventName.displayJson;
-    getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
+    getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
     const payload = event.detail;
     const node = getApiRoutes().getNodeById(payload.id);

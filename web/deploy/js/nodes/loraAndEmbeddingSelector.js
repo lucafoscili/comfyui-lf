@@ -8,7 +8,7 @@ const NAME = NodeName.loraAndEmbeddingSelector;
 export const loraAndEmbeddingSelectorFactory = {
     eventHandler: (event, addW) => {
         const name = EventName.loraAndEmbeddingSelector;
-        getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
+        getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
         const payload = event.detail;
         const node = getApiRoutes().getNodeById(payload.id);
         if (node) {

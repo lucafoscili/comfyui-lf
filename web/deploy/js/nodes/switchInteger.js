@@ -7,7 +7,7 @@ const NAME = NodeName.switchInteger;
 export const switchIntegerFactory = {
     eventHandler: (event, addW) => {
         const name = EventName.switchInteger;
-        getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
+        getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
         const payload = event.detail;
         const node = getApiRoutes().getNodeById(payload.id);
         if (node) {

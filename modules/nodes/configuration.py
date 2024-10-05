@@ -60,7 +60,6 @@ class LF_CheckpointSelector:
 
         return (checkpoint, model_name, model_cover, model_path)
 
-
 class LF_CivitAIMetadataSetup:
     @classmethod
     def INPUT_TYPES(cls):
@@ -518,6 +517,80 @@ class LF_LoraSelector:
     @classmethod
     def VALIDATE_INPUTS(self, **kwargs):
          return True
+
+class LF_SamplerSelector:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "sampler": (KSampler.SAMPLERS, {"default": "None", "tooltip": "Sampler used to generate the image."}),
+                "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
+                "randomize": ("BOOLEAN", {"default": False, "tooltip": "Selects a sampler randomly."}),
+                "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter sampler names."}),
+                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Seed value for when randomization is active."}),
+            },
+            "hidden": {"node_id": "UNIQUE_ID"}
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    RETURN_NAMES = ("sampler",)
+    RETURN_TYPES = (KSampler.SAMPLERS,)
+
+    def on_exec(self, node_id, sampler, enable_history, randomize, seed, filter):
+        samplers = KSampler.SAMPLERS
+
+        if filter:
+            samplers = [s for s in samplers if filter in s]
+
+        if randomize:
+            random.seed(seed)
+            sampler = random.choice(samplers)
+
+        PromptServer.instance.send_sync("lf-samplerselector", {
+            "node": node_id, 
+            "isHistoryEnabled": enable_history,
+            "value": sampler,
+        })
+
+        return (sampler,)
+
+class LF_SchedulerSelector:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "scheduler": (KSampler.SCHEDULERS, {"default": "None", "tooltip": "Scheduler used to generate the image."}),
+                "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
+                "randomize": ("BOOLEAN", {"default": False, "tooltip": "Selects a scheduler randomly."}),
+                "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter scheduler names."}),
+                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Seed value for when randomization is active."}),
+            },
+            "hidden": {"node_id": "UNIQUE_ID"}
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    RETURN_NAMES = ("scheduler",)
+    RETURN_TYPES = (KSampler.SCHEDULERS,)
+
+    def on_exec(self, node_id, scheduler, enable_history, randomize, seed, filter):
+        schedulers = KSampler.SCHEDULERS
+
+        if filter:
+            schedulers = [s for s in schedulers if filter in s]
+
+        if randomize:
+            random.seed(seed)
+            scheduler = random.choice(schedulers)
+
+        PromptServer.instance.send_sync("lf-schedulerselector", {
+            "node": node_id, 
+            "isHistoryEnabled": enable_history,
+            "value": scheduler,
+        })
+
+        return (scheduler,)
         
 class LF_WorkflowSettings:
     @classmethod
@@ -581,6 +654,8 @@ NODE_CLASS_MAPPINGS = {
     "LF_LoadLoraTags": LF_LoadLoraTags,
     "LF_LoraAndEmbeddingSelector": LF_LoraAndEmbeddingSelector,
     "LF_LoraSelector": LF_LoraSelector,
+    "LF_SamplerSelector": LF_SamplerSelector,
+    "LF_SchedulerSelector": LF_SchedulerSelector,
     "LF_WorkflowSettings": LF_WorkflowSettings,
 }
 
@@ -592,5 +667,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_LoadLoraTags": "Load LoRA tags",
     "LF_LoraAndEmbeddingSelector": "LoRA and embedding selector",
     "LF_LoraSelector": "LoRA selector",
+    "LF_SamplerSelector": "Sampler selector",
+    "LF_SchedulerSelector": "Scheduler selector",
     "LF_WorkflowSettings": "Workflow settings",
 }

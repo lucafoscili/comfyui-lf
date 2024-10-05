@@ -37,7 +37,9 @@ export enum EventName {
   resizeimageByEdge = 'lf-resizeimagebyedge',
   resizeimageToSquare = 'lf-resizeimagetosquare',
   resolutionSwitcher = 'lf-resolutionswitcher',
+  samplerSelector = 'lf-samplerselector',
   saveImageForCivitAI = 'lf-saveimageforcivitai',
+  schedulerSelector = 'lf-schedulerselector',
   string = 'lf-string',
   switchFloat = 'lf-switchfloat',
   switchImage = 'lf-switchimage',
@@ -70,7 +72,9 @@ export type EventPayload =
   | ResizeImageByEdgePayload
   | ResizeImageToSquarePayload
   | ResolutionSwitcherPayload
+  | SamplerSelectorPayload
   | SaveImageForCivitAIPayload
+  | SchedulerSelectorPayload
   | StringPayload
   | SwitchImagePayload
   | SwitchIntegerPayload
@@ -328,12 +332,30 @@ export interface ResolutionSwitcherPayload extends BaseEventPayload {
 }
 
 /*-------------------------------------------------------------------*/
+/*     S a m p l e r S e l e c t o r   D e c l a r a t i o n s       */
+/*-------------------------------------------------------------------*/
+
+export interface SamplerSelectorPayload extends BaseEventPayload {
+  isHistoryEnabled: boolean;
+  value: string;
+}
+
+/*-------------------------------------------------------------------*/
 /*  S a v e I m a g e F o r C i v i t A I   D e c l a r a t i o n s  */
 /*-------------------------------------------------------------------*/
 
 export interface SaveImageForCivitAIPayload extends BaseEventPayload {
   fileNames: Array<string>;
   images: Array<string>;
+}
+
+/*-------------------------------------------------------------------*/
+/*    S c h e d u l e r S e l e c t o r   D e c l a r a t i o n s    */
+/*-------------------------------------------------------------------*/
+
+export interface SchedulerSelectorPayload extends BaseEventPayload {
+  isHistoryEnabled: boolean;
+  value: string;
 }
 
 /*-------------------------------------------------------------------*/

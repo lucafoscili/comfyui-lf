@@ -73,10 +73,13 @@ const handleButtonEvent = (e) => {
 const handleListEvent = (e) => {
     const { comp, eventType, node } = e.detail;
     const c = comp.rootElement;
+    const value = node.id;
     switch (eventType) {
+        case 'click':
+            getKulManager().theme.set(value);
+            break;
         case 'ready':
             c.title = 'Change the LF Nodes suite theme';
-            const value = node.id;
             getKulManager().theme.set(value);
             break;
     }
@@ -225,7 +228,21 @@ export const sectionsFactory = {
                         },
                         {
                             id: 'content',
+                            tagName: 'br',
+                            value: '',
+                        },
+                        {
+                            id: 'content',
                             value: "By pressing this button it's possible to delete every .info file created by fetching the metadata.",
+                        },
+                        {
+                            id: 'content',
+                            tagName: 'br',
+                            value: '',
+                        },
+                        {
+                            id: 'content',
+                            value: 'This action is IRREVERSIBLE so use it with caution.',
                         },
                         {
                             id: 'content',

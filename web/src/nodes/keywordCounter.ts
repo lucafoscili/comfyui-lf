@@ -13,7 +13,7 @@ const NAME = NodeName.keywordCounter;
 export const keywordCounterFactory = {
   eventHandler: (event: CustomEvent<KeywordCounterPayload>, addW: BaseWidgetCallback) => {
     const name = EventName.keywordCounter;
-    getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
+    getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
     const payload = event.detail;
     const node = getApiRoutes().getNodeById(payload.id);

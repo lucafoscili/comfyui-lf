@@ -377,11 +377,25 @@ export class LFManager {
             nodes.eventHandlers.LF_ResolutionSwitcher(e, widgets.adders.KUL_ROLL_VIEWER);
         });
         /*-------------------------------------------------------------------*/
+        /*               I n i t   S a m p l e r S e l e c t o r             */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_SamplerSelector(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.samplerSelector, (e) => {
+            nodes.eventHandlers.LF_SamplerSelector(e, widgets.adders.KUL_HISTORY);
+        });
+        /*-------------------------------------------------------------------*/
         /*          I n i t   S a v e I m a g e F o r C i v i t A I          */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_SaveImageForCivitAI(widgets.setters.KUL_IMAGE_PREVIEW_B64, widgets.adders.KUL_IMAGE_PREVIEW_B64);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.saveImageForCivitAI, (e) => {
             nodes.eventHandlers.LF_SaveImageForCivitAI(e, widgets.adders.KUL_IMAGE_PREVIEW_B64);
+        });
+        /*-------------------------------------------------------------------*/
+        /*           I n i t   S c h e d u l e r S e l e c t o r             */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_SchedulerSelector(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.schedulerSelector, (e) => {
+            nodes.eventHandlers.LF_SchedulerSelector(e, widgets.adders.KUL_HISTORY);
         });
         /*-------------------------------------------------------------------*/
         /*                 I n i t   S w i t c h   F l o a t                 */

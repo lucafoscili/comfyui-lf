@@ -9,7 +9,7 @@ const NAME = NodeName.resizeImageByEdge;
 export const resizeImageByEdgeFactory = {
   eventHandler: (event: CustomEvent<ResizeImageByEdgePayload>, addW: BaseWidgetCallback) => {
     const name = EventName.resizeimageByEdge;
-    getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
+    getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
     const payload = event.detail;
     const node = getApiRoutes().getNodeById(payload.id);

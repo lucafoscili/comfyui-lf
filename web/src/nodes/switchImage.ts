@@ -13,7 +13,7 @@ const NAME = NodeName.switchImage;
 export const switchImageFactory = {
   eventHandler: (event: CustomEvent<SwitchImagePayload>, addW: BaseWidgetCallback) => {
     const name = EventName.switchImage;
-    getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
+    getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
     const payload = event.detail;
     const node = getApiRoutes().getNodeById(payload.id);

@@ -71,24 +71,40 @@ const handleEvent = (e, comfyNode) => {
         const floatW = getWidget(comfyNode, ComfyWidgetName.float);
         const intW = getWidget(comfyNode, ComfyWidgetName.integer);
         const numberW = getWidget(comfyNode, ComfyWidgetName.number);
+        const comboW = getWidget(comfyNode, ComfyWidgetName.combo);
         const stringW = getWidget(comfyNode, ComfyWidgetName.string);
-        if (boolW) {
-            boolW.value = Boolean(node.value).valueOf();
-        }
-        else if (floatW) {
-            floatW.value = Number(node.value).valueOf();
-        }
-        else if (intW) {
-            intW.value = Number(node.value).valueOf();
-        }
-        else if (stringW) {
-            stringW.options.setValue(node.value);
-        }
-        else if (customtextW) {
-            customtextW.options.setValue(node.value);
-        }
-        else if (numberW) {
-            numberW.value = Number(node.value).valueOf();
+        switch (comfyNode.comfyClass) {
+            case NodeName.boolean:
+                boolW.value = Boolean(node.value).valueOf();
+                break;
+            case NodeName.float:
+                if (numberW) {
+                    stringW.options.setValue(node.value);
+                }
+                else if (intW) {
+                    floatW.value = Number(node.value).valueOf();
+                }
+                break;
+            case NodeName.integer:
+                if (numberW) {
+                    stringW.options.setValue(node.value);
+                }
+                else if (intW) {
+                    intW.value = Number(node.value).valueOf();
+                }
+                break;
+            case NodeName.samplerSelector:
+            case NodeName.schedulerSelector:
+                comboW.value = node.value;
+                break;
+            case NodeName.string:
+                if (stringW) {
+                    stringW.options.setValue(node.value);
+                }
+                else if (customtextW) {
+                    customtextW.options.setValue(node.value);
+                }
+                break;
         }
     }
 };

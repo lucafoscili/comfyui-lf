@@ -9,7 +9,7 @@ const NAME = NodeName.urandomSeedGenerator;
 export const uRandomSeedGeneratorFactory = {
   eventHandler: (event: CustomEvent<UrandomSeedGeneratorPayload>, addW: BaseWidgetCallback) => {
     const name = EventName.urandomSeedGenerator;
-    getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
+    getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
     const payload = event.detail;
     const isHistoryEnabled = payload.isHistoryEnabled;

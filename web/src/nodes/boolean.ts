@@ -10,7 +10,7 @@ const NAME = NodeName.boolean;
 export const booleanFactory = {
   eventHandler: (event: CustomEvent<BooleanPayload>, addW: BaseWidgetCallback) => {
     const name = EventName.boolean;
-    getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
+    getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
     const payload = event.detail;
     const isHistoryEnabled = payload.isHistoryEnabled;

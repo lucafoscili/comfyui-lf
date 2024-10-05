@@ -13,7 +13,7 @@ const NAME = NodeName.loadImages;
 export const loadImagesFactory = {
   eventHandler: (event: CustomEvent<LoadImagesPayload>, addW: BaseWidgetCallback) => {
     const name = EventName.loadImages;
-    getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
+    getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
     const payload = event.detail;
     const node = getApiRoutes().getNodeById(payload.id);

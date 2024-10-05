@@ -13,7 +13,7 @@ const NAME = NodeName.randomBoolean;
 export const randomBooleanFactory = {
   eventHandler: (event: CustomEvent<RandomBooleanPayload>, addW: BaseWidgetCallback) => {
     const name = EventName.randomBoolean;
-    getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
+    getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
     const payload = event.detail;
     const node = getApiRoutes().getNodeById(payload.id);

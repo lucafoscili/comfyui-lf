@@ -7,7 +7,7 @@ const NAME = NodeName.imageHistogram;
 export const imageHistogramFactory = {
     eventHandler: (event, addW) => {
         const name = EventName.imageHistogram;
-        getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
+        getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
         const payload = event.detail;
         const node = getApiRoutes().getNodeById(payload.id);
         if (node) {

@@ -7,7 +7,7 @@ const NAME = NodeName.urandomSeedGenerator;
 export const uRandomSeedGeneratorFactory = {
     eventHandler: (event, addW) => {
         const name = EventName.urandomSeedGenerator;
-        getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
+        getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
         const payload = event.detail;
         const isHistoryEnabled = payload.isHistoryEnabled;
         const node = getApiRoutes().getNodeById(payload.id);
