@@ -60,12 +60,12 @@ Using a LoRA name as pilot, it also selects its related embedding (it must have 
 #### SamplerSelector
 
 Used to select a sampler, the history widget allows for a quick swap between the most used samplers.
-![SamplerSelector](https://github.com/lucafoscili/comfyui-lf/blob/865badc13204cef0af28da1f285dc4433ae495c7/docs/images/SamplerSelector.png "Sampler selector")
+![SamplerSelector](https://github.com/lucafoscili/comfyui-lf/blob/e704d1c6602217387498472ebacf284e8204080b/docs/images/SamplerSelector.png "Sampler selector")
 
 #### SchedulerSelector
 
 Used to select a scheduler, the history widget allows for a quick swap between the most used schedulers.
-![SchedulerSelector](https://github.com/lucafoscili/comfyui-lf/blob/865badc13204cef0af28da1f285dc4433ae495c7/docs/images/SchedulerSelector.png "Scheduler selector")
+![SchedulerSelector](https://github.com/lucafoscili/comfyui-lf/blob/e704d1c6602217387498472ebacf284e8204080b/docs/images/SchedulerSelector.png "Scheduler selector")
 
 ### Conversions nodes (`conversions.py`)
 
