@@ -60,7 +60,6 @@ class LF_CheckpointSelector:
 
         return (checkpoint, model_name, model_cover, model_path)
 
-
 class LF_CivitAIMetadataSetup:
     @classmethod
     def INPUT_TYPES(cls):
@@ -518,6 +517,35 @@ class LF_LoraSelector:
     @classmethod
     def VALIDATE_INPUTS(self, **kwargs):
          return True
+
+class LF_SamplerSelector:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "sampler": (KSampler.SAMPLERS, {"default": "None", "tooltip": "Sampler used to generate the image."}),
+                "randomize": ("BOOLEAN", {"default": False, "tooltip": "Selects a sampler randomly."}),
+                "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter sampler names."}),
+                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Seed value for when randomization is active."}),
+            },
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    RETURN_NAMES = ("sampler",)
+    RETURN_TYPES = (KSampler.SAMPLERS,)
+
+    def on_exec(self, sampler, randomize, seed, filter):
+        samplers = KSampler.SAMPLERS
+
+        if filter:
+            samplers = [s for s in samplers if filter in s]
+
+        if randomize:
+            random.seed(seed)
+            sampler = random.choice(samplers)
+
+        return (sampler,)
         
 class LF_WorkflowSettings:
     @classmethod
@@ -581,6 +609,7 @@ NODE_CLASS_MAPPINGS = {
     "LF_LoadLoraTags": LF_LoadLoraTags,
     "LF_LoraAndEmbeddingSelector": LF_LoraAndEmbeddingSelector,
     "LF_LoraSelector": LF_LoraSelector,
+    "LF_SamplerSelector": LF_SamplerSelector,
     "LF_WorkflowSettings": LF_WorkflowSettings,
 }
 
@@ -592,5 +621,6 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_LoadLoraTags": "Load LoRA tags",
     "LF_LoraAndEmbeddingSelector": "LoRA and embedding selector",
     "LF_LoraSelector": "LoRA selector",
+    "LF_SamplerSelector": "Sampler selector",
     "LF_WorkflowSettings": "Workflow settings",
 }
