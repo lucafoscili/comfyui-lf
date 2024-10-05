@@ -28,6 +28,7 @@ export declare enum NodeName {
     loraAndEmbeddingSelector = "LF_LoraAndEmbeddingSelector",
     loraSelector = "LF_LoraSelector",
     multipleImageResizeForWeb = "LF_MultipleImageResizeForWeb",
+    notify = "LF_Notify",
     randomBoolean = "LF_RandomBoolean",
     resizeImageByEdge = "LF_ResizeImageByEdge",
     resizeImageToSquare = "LF_ResizeImageToSquare",

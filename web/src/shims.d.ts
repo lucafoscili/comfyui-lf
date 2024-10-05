@@ -3,7 +3,22 @@
 /*   coding more quick.                            */
 /*   Mostly A.I. generated, not reliable           */
 /*-------------------------------------------------*/
+declare interface NotificationOptions {
+  // Existing properties
+  badge?: string;
+  body?: string;
+  data?: any;
+  dir?: NotificationDirection;
+  icon?: string;
+  lang?: string;
+  requireInteraction?: boolean;
+  silent?: boolean;
+  tag?: string;
 
+  // Experimental properties
+  actions?: NotificationAction[]; // For the button actions
+  image?: string; // To display the result image
+}
 declare namespace LiteGraph {
   export const getNodeType: (node: string) => NodeType;
   export const NODE_TITLE_HEIGHT: number;

@@ -89,6 +89,9 @@ export class LFManager {
                     return { id: 'Something went wrong!' };
                 }
             },
+            queuePrompt: async () => {
+                app.queuePrompt(0);
+            },
             redraw: () => {
                 app.graph.setDirtyCanvas(true, false);
             },
@@ -333,6 +336,13 @@ export class LFManager {
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_LoraAndEmbeddingSelector(widgets.setters.KUL_CARD, widgets.adders.KUL_CARD);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.loraAndEmbeddingSelector, (e) => {
             nodes.eventHandlers.LF_LoraAndEmbeddingSelector(e, widgets.adders.KUL_CARD);
+        });
+        /*-------------------------------------------------------------------*/
+        /*                       I n i t   N o t i f y                       */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_Notify();
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.notify, (e) => {
+            nodes.eventHandlers.LF_Notify(e);
         });
         /*-------------------------------------------------------------------*/
         /*                      I n i t   S t r i n g                        */

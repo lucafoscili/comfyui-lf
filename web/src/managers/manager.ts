@@ -48,6 +48,7 @@ import {
   LoadLoraTagsPayload,
   SamplerSelectorPayload,
   SchedulerSelectorPayload,
+  NotifyPayload,
 } from '../types/events.js';
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
 
@@ -130,6 +131,9 @@ export class LFManager {
         this.log("Error when fetching model's info from CivitAI!", { error }, LogSeverity.Error);
         return { id: 'Something went wrong!' };
       }
+    },
+    queuePrompt: async () => {
+      app.queuePrompt(0);
     },
     redraw: () => {
       app.graph.setDirtyCanvas(true, false);
@@ -452,6 +456,13 @@ export class LFManager {
         nodes.eventHandlers.LF_LoraAndEmbeddingSelector(e, widgets.adders.KUL_CARD);
       },
     );
+    /*-------------------------------------------------------------------*/
+    /*                       I n i t   N o t i f y                       */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_Notify();
+    this.#APIS.event(EventName.notify, (e: CustomEvent<NotifyPayload>) => {
+      nodes.eventHandlers.LF_Notify(e);
+    });
     /*-------------------------------------------------------------------*/
     /*                      I n i t   S t r i n g                        */
     /*-------------------------------------------------------------------*/

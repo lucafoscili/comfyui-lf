@@ -33,6 +33,7 @@ export enum EventName {
   loraAndEmbeddingSelector = 'lf-loraandembeddingselector',
   loraSelector = 'lf-loraselector',
   multipleImageResizeForWeb = 'lf-multipleimageresizeforweb',
+  notify = 'lf-notify',
   randomBoolean = 'lf-randomboolean',
   resizeimageByEdge = 'lf-resizeimagebyedge',
   resizeimageToSquare = 'lf-resizeimagetosquare',
@@ -68,6 +69,7 @@ export type EventPayload =
   | LoraSelectorPayload
   | LoadLoraTagsPayload
   | MultipleImageResizeForWebPayload
+  | NotifyPayload
   | RandomBooleanPayload
   | ResizeImageByEdgePayload
   | ResizeImageToSquarePayload
@@ -291,6 +293,18 @@ export interface LoraAndEmbeddingSelectorPayload extends BaseEventPayload {
 
 export interface MultipleImageResizeForWebPayload extends BaseEventPayload {
   dataset: KulDataDataset;
+}
+
+/*-------------------------------------------------------------------*/
+/*              N o t i f y   D e c l a r a t i o n s                */
+/*-------------------------------------------------------------------*/
+
+export interface NotifyPayload extends BaseEventPayload {
+  action: 'none' | 'focus tab' | 'queue prompt';
+  image: string;
+  message: string;
+  silent: boolean;
+  title: string;
 }
 
 /*-------------------------------------------------------------------*/
