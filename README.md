@@ -57,6 +57,16 @@ Used to select a LoRA. It's possible to fetch additional data from CivitAI or by
 Using a LoRA name as pilot, it also selects its related embedding (it must have the same name). Useful for models trained with pivotal tuning.
 ![LoraAndEmbeddingSelector](https://github.com/lucafoscili/comfyui-lf/blob/84c0e46686c39fb521dc6d4ae46396ae002d390d/docs/images/LoraAndEmbeddingSelector.png "LoRA and related embedding")
 
+#### SamplerSelector
+
+Used to select a sampler, the history widget allows for a quick swap between the most used samplers.
+![SamplerSelector](https://github.com/lucafoscili/comfyui-lf/blob/865badc13204cef0af28da1f285dc4433ae495c7/docs/images/SamplerSelector.png "Sampler selector")
+
+#### SchedulerSelector
+
+Used to select a scheduler, the history widget allows for a quick swap between the most used schedulers.
+![SchedulerSelector](https://github.com/lucafoscili/comfyui-lf/blob/865badc13204cef0af28da1f285dc4433ae495c7/docs/images/SchedulerSelector.png "Scheduler selector")
+
 ### Conversions nodes (`conversions.py`)
 
 #### BlurImages
