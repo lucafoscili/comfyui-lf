@@ -30,6 +30,7 @@ export declare class LFNodes {
         LF_ResolutionSwitcher: (event: CustomEvent<import("../types/events").ResolutionSwitcherPayload>, addW: BaseWidgetCallback) => void;
         LF_SamplerSelector: (event: CustomEvent<import("../types/events").SamplerSelectorPayload>, addW: BaseWidgetCallback) => void;
         LF_SaveImageForCivitAI: (event: CustomEvent<import("../types/events").SaveImageForCivitAIPayload>, addW: BaseWidgetCallback) => void;
+        LF_SchedulerSelector: (event: CustomEvent<import("../types/events").SchedulerSelectorPayload>, addW: BaseWidgetCallback) => void;
         LF_String: (event: CustomEvent<import("../types/events").StringPayload>, addW: BaseWidgetCallback) => void;
         LF_SwitchFloat: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
         LF_SwitchImage: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
@@ -74,6 +75,7 @@ export declare class LFNodes {
         LF_ResolutionSwitcher: (setW: import("../types/widgets").RollViewerWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_SamplerSelector: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_SaveImageForCivitAI: (setW: import("../types/widgets").ImagePreviewWidgetSetter, addW: BaseWidgetCallback) => void;
+        LF_SchedulerSelector: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_String: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_SwitchFloat: (setW: import("../types/widgets").BooleanViewerWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_SwitchImage: (setW: import("../types/widgets").BooleanViewerWidgetSetter, addW: BaseWidgetCallback) => void;
@@ -114,6 +116,7 @@ export declare class LFNodes {
             LF_ResolutionSwitcher: (event: CustomEvent<import("../types/events").ResolutionSwitcherPayload>, addW: BaseWidgetCallback) => void;
             LF_SamplerSelector: (event: CustomEvent<import("../types/events").SamplerSelectorPayload>, addW: BaseWidgetCallback) => void;
             LF_SaveImageForCivitAI: (event: CustomEvent<import("../types/events").SaveImageForCivitAIPayload>, addW: BaseWidgetCallback) => void;
+            LF_SchedulerSelector: (event: CustomEvent<import("../types/events").SchedulerSelectorPayload>, addW: BaseWidgetCallback) => void;
             LF_String: (event: CustomEvent<import("../types/events").StringPayload>, addW: BaseWidgetCallback) => void;
             LF_SwitchFloat: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
             LF_SwitchImage: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
@@ -158,6 +161,7 @@ export declare class LFNodes {
             LF_ResolutionSwitcher: (setW: import("../types/widgets").RollViewerWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_SamplerSelector: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_SaveImageForCivitAI: (setW: import("../types/widgets").ImagePreviewWidgetSetter, addW: BaseWidgetCallback) => void;
+            LF_SchedulerSelector: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_String: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_SwitchFloat: (setW: import("../types/widgets").BooleanViewerWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_SwitchImage: (setW: import("../types/widgets").BooleanViewerWidgetSetter, addW: BaseWidgetCallback) => void;

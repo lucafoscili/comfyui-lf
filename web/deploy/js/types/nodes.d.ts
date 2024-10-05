@@ -34,6 +34,7 @@ export declare enum NodeName {
     resolutionSwitcher = "LF_ResolutionSwitcher",
     samplerSelector = "LF_SamplerSelector",
     saveImageForCivitai = "LF_SaveImageForCivitAI",
+    schedulerSelector = "LF_SchedulerSelector",
     string = "LF_String",
     switchFloat = "LF_SwitchFloat",
     switchImage = "LF_SwitchImage",

@@ -42,6 +42,7 @@ import { embeddingSelectorFactory } from '../nodes/embeddingSelector';
 import { loraAndEmbeddingSelectorFactory } from '../nodes/loraAndEmbeddingSelector';
 import { loadLoraTagsFactory } from '../nodes/loadLoraTags';
 import { samplerSelectorFactory } from '../nodes/samplerSelector';
+import { schedulerSelectorFactory } from '../nodes/schedulerSelector';
 
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
@@ -78,6 +79,7 @@ export class LFNodes {
     [NodeName.resolutionSwitcher]: resolutionSwitcherFactory.eventHandler,
     [NodeName.samplerSelector]: samplerSelectorFactory.eventHandler,
     [NodeName.saveImageForCivitai]: saveImageForCivitaiFactory.eventHandler,
+    [NodeName.schedulerSelector]: schedulerSelectorFactory.eventHandler,
     [NodeName.string]: stringFactory.eventHandler,
     [NodeName.switchFloat]: switchFloatFactory.eventHandler,
     [NodeName.switchImage]: switchImageFactory.eventHandler,
@@ -123,6 +125,7 @@ export class LFNodes {
     [NodeName.resolutionSwitcher]: resolutionSwitcherFactory.register,
     [NodeName.samplerSelector]: samplerSelectorFactory.register,
     [NodeName.saveImageForCivitai]: saveImageForCivitaiFactory.register,
+    [NodeName.schedulerSelector]: schedulerSelectorFactory.register,
     [NodeName.string]: stringFactory.register,
     [NodeName.switchFloat]: switchFloatFactory.register,
     [NodeName.switchImage]: switchImageFactory.register,

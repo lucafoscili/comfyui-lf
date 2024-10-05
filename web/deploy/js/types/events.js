@@ -30,6 +30,7 @@ export var EventName;
     EventName["resolutionSwitcher"] = "lf-resolutionswitcher";
     EventName["samplerSelector"] = "lf-samplerselector";
     EventName["saveImageForCivitAI"] = "lf-saveimageforcivitai";
+    EventName["schedulerSelector"] = "lf-schedulerselector";
     EventName["string"] = "lf-string";
     EventName["switchFloat"] = "lf-switchfloat";
     EventName["switchImage"] = "lf-switchimage";

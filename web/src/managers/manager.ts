@@ -47,6 +47,7 @@ import {
   LoraAndEmbeddingSelectorPayload,
   LoadLoraTagsPayload,
   SamplerSelectorPayload,
+  SchedulerSelectorPayload,
 } from '../types/events.js';
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
 
@@ -540,6 +541,16 @@ export class LFManager {
         nodes.eventHandlers.LF_SaveImageForCivitAI(e, widgets.adders.KUL_IMAGE_PREVIEW_B64);
       },
     );
+    /*-------------------------------------------------------------------*/
+    /*           I n i t   S c h e d u l e r S e l e c t o r             */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_SchedulerSelector(
+      widgets.setters.KUL_HISTORY,
+      widgets.adders.KUL_HISTORY,
+    );
+    this.#APIS.event(EventName.schedulerSelector, (e: CustomEvent<SchedulerSelectorPayload>) => {
+      nodes.eventHandlers.LF_SchedulerSelector(e, widgets.adders.KUL_HISTORY);
+    });
     /*-------------------------------------------------------------------*/
     /*                 I n i t   S w i t c h   F l o a t                 */
     /*-------------------------------------------------------------------*/

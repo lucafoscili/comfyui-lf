@@ -100,6 +100,7 @@ const handleEvent = (e: CustomEvent<KulListEventPayload>, comfyNode: NodeType) =
         }
         break;
       case NodeName.samplerSelector:
+      case NodeName.schedulerSelector:
         comboW.value = node.value;
         break;
       case NodeName.string:
