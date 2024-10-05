@@ -105,11 +105,14 @@ const handleButtonEvent = (e: CustomEvent<KulButtonEventPayload>) => {
 const handleListEvent = (e: CustomEvent<KulListEventPayload>) => {
   const { comp, eventType, node } = e.detail;
   const c = (comp as KulList).rootElement;
+  const value = node.id;
 
   switch (eventType) {
+    case 'click':
+      getKulManager().theme.set(value);
+      break;
     case 'ready':
       c.title = 'Change the LF Nodes suite theme';
-      const value = node.id;
       getKulManager().theme.set(value);
       break;
   }
