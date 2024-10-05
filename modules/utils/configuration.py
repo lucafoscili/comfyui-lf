@@ -1,3 +1,4 @@
+import fnmatch
 import folder_paths
 import hashlib
 import json
@@ -44,6 +45,11 @@ SCHEDULER_MAP = {
 
 def clean_prompt(prompt):
     return re.sub(r'(embedding:)?(.*?)(\.pt|\.pth|\.sft|\.safetensors)?', r'\2', prompt).strip()
+
+def filter_list(filter, list):
+    normalized_filter = filter.replace('\\', '/')
+    return [model for model in list if fnmatch.fnmatch(model.replace('\\', '/'), normalized_filter)]
+
 
 def find_checkpoint_image(checkpoint_path):
     extensions = ["jpg", "jpeg", "JPEG", "png", "webp", "WEBP"]

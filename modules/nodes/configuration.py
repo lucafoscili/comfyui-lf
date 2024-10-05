@@ -29,7 +29,7 @@ class LF_CheckpointSelector:
                 "checkpoint": (folder_paths.get_filename_list("checkpoints"), {"default": "None", "tooltip": "Checkpoint used to generate the image."}),
                 "get_civitai_info": ("BOOLEAN", {"default": True, "tooltip": "Attempts to retrieve more info about the model from CivitAI."}),
                 "randomize": ("BOOLEAN", {"default": False, "tooltip": "Selects a checkpoint randomly from your checkpoints directory."}),
-                "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter checkpoint file names."}),
+                "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter checkpoint file names. Supports wildcards (*)"}),
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Seed value for when randomization is active."}),
             },
             "hidden": {"node_id": "UNIQUE_ID"}
@@ -44,7 +44,9 @@ class LF_CheckpointSelector:
         checkpoints = folder_paths.get_filename_list("checkpoints")
 
         if filter:
-            checkpoints = [ckpt for ckpt in checkpoints if filter in ckpt]
+            checkpoints = filter_list(filter, checkpoints)
+            if not checkpoints:
+                raise ValueError(f"Not found a model with the specified filter: {filter}")
 
         if randomize:
             random.seed(seed)
@@ -188,7 +190,7 @@ class LF_EmbeddingSelector:
                 "weight": ("FLOAT", {"default": 1.0, "min": -3.0, "max": 3.0, "tooltip": "Embedding's weight."}),
                 "randomize": ("BOOLEAN", {"default": False, "tooltip": "Selects an embedding randomly from your embeddings directory."}),
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Seed value for when randomization is active."}),
-                "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter embedding file names."}),
+                "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter embedding file names. Supports wildcards (*)."}),
             },
             "optional": {
                 "embedding": (["None"] + folder_paths.get_filename_list("embeddings"), {"default": "None", "tooltip": "Embedding to use."}),
@@ -214,7 +216,9 @@ class LF_EmbeddingSelector:
         embeddings = folder_paths.get_filename_list("embeddings")
 
         if filter:
-            embeddings = [e for e in embeddings if filter in e]
+            embeddings = filter_list(filter, embeddings)
+            if not embeddings:
+                raise ValueError(f"Not found a model with the specified filter: {filter}")
 
         if randomize:
             random.seed(seed)
@@ -369,7 +373,7 @@ class LF_LoraAndEmbeddingSelector:
                 "get_civitai_info": ("BOOLEAN", {"default": True, "tooltip": "Attempts to retrieve more info about the models from CivitAI."}),
                 "weight": ("FLOAT", {"default": 1.0, "min": -3.0, "max": 3.0, "tooltip": "Lora and embedding weights."}),
                 "randomize": ("BOOLEAN", {"default": False, "tooltip": "Selects a combination of Lora and Embedding randomly from your directories."}),
-                "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter file names."}),
+                "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter file names. Supports wildcards (*)."}),
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Seed value for when randomization is active."}),
             },
             "optional": {
@@ -400,7 +404,9 @@ class LF_LoraAndEmbeddingSelector:
         embeddings = folder_paths.get_filename_list("embeddings")
 
         if filter:
-            loras = [l for l in loras if filter in l]
+            loras = filter_list(filter, loras)
+            if not loras:
+                raise ValueError(f"Not found a model with the specified filter: {filter}")
 
         if randomize:
             random.seed(seed)
@@ -466,7 +472,7 @@ class LF_LoraSelector:
                 "get_civitai_info": ("BOOLEAN", {"default": True, "tooltip": "Attempts to retrieve more info about the model from CivitAI."}),
                 "weight": ("FLOAT", {"default": 1.0, "min": -3.0, "max": 3.0, "tooltip": "Lora weight."}),
                 "randomize": ("BOOLEAN", {"default": False, "tooltip": "Selects a Lora randomly from your loras directory."}),
-                "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter Lora file names."}),
+                "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter Lora file names. Supports wildcards (*)."}),
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Seed value for when randomization is active."}),
             },
             "optional": {
@@ -493,7 +499,9 @@ class LF_LoraSelector:
         loras = folder_paths.get_filename_list("loras")
 
         if filter:
-            loras = [l for l in loras if filter in l]
+            loras = filter_list(filter, loras)
+            if not loras:
+                raise ValueError(f"Not found a model with the specified filter: {filter}")
 
         if randomize:
             random.seed(seed)
@@ -560,6 +568,8 @@ class LF_Notify:
         if image:
             image = image[0] if isinstance(image, list) else image
             image_to_send = "data:image/webp;base64," + tensor_to_base64(image)
+        else:
+            image_to_send = None
 
         PromptServer.instance.send_sync("lf-notify", {
             "node": node_id, 
@@ -580,7 +590,7 @@ class LF_SamplerSelector:
                 "sampler": (KSampler.SAMPLERS, {"default": "None", "tooltip": "Sampler used to generate the image."}),
                 "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
                 "randomize": ("BOOLEAN", {"default": False, "tooltip": "Selects a sampler randomly."}),
-                "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter sampler names."}),
+                "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter sampler names. Supports wildcards (*)."}),
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Seed value for when randomization is active."}),
             },
             "hidden": {"node_id": "UNIQUE_ID"}
@@ -595,7 +605,9 @@ class LF_SamplerSelector:
         samplers = KSampler.SAMPLERS
 
         if filter:
-            samplers = [s for s in samplers if filter in s]
+            samplers = filter_list(filter, samplers)
+            if not samplers:
+                raise ValueError(f"Not found a model with the specified filter: {filter}")
 
         if randomize:
             random.seed(seed)
@@ -617,7 +629,7 @@ class LF_SchedulerSelector:
                 "scheduler": (KSampler.SCHEDULERS, {"default": "None", "tooltip": "Scheduler used to generate the image."}),
                 "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
                 "randomize": ("BOOLEAN", {"default": False, "tooltip": "Selects a scheduler randomly."}),
-                "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter scheduler names."}),
+                "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter scheduler names. Supports wildcards (*)."}),
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Seed value for when randomization is active."}),
             },
             "hidden": {"node_id": "UNIQUE_ID"}
@@ -632,7 +644,9 @@ class LF_SchedulerSelector:
         schedulers = KSampler.SCHEDULERS
 
         if filter:
-            schedulers = [s for s in schedulers if filter in s]
+            schedulers = filter_list(filter, schedulers)
+            if not schedulers:
+                raise ValueError(f"Not found a model with the specified filter: {filter}")
 
         if randomize:
             random.seed(seed)
