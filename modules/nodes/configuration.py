@@ -444,7 +444,7 @@ class LF_LoraAndEmbeddingSelector:
         if embedding_stack:
             formatted_embedding = f"{formatted_embedding}, {embedding_stack}"
 
-        api_flags = [False if l_saved_info else get_civitai_info, False if e_saved_info else get_civitai_info],
+        api_flags = [False if l_saved_info else get_civitai_info, False if e_saved_info else get_civitai_info]
         datasets = [l_dataset, e_dataset]
         hashes = [l_hash, e_hash]
         paths = [l_path, e_path]
