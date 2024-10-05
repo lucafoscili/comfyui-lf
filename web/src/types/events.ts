@@ -37,6 +37,7 @@ export enum EventName {
   resizeimageByEdge = 'lf-resizeimagebyedge',
   resizeimageToSquare = 'lf-resizeimagetosquare',
   resolutionSwitcher = 'lf-resolutionswitcher',
+  samplerSelector = 'lf-samplerselector',
   saveImageForCivitAI = 'lf-saveimageforcivitai',
   string = 'lf-string',
   switchFloat = 'lf-switchfloat',
@@ -70,6 +71,7 @@ export type EventPayload =
   | ResizeImageByEdgePayload
   | ResizeImageToSquarePayload
   | ResolutionSwitcherPayload
+  | SamplerSelectorPayload
   | SaveImageForCivitAIPayload
   | StringPayload
   | SwitchImagePayload
@@ -325,6 +327,15 @@ export interface ResizeImageToSquarePayload extends BaseEventPayload {
 export interface ResolutionSwitcherPayload extends BaseEventPayload {
   bool: boolean;
   roll: number;
+}
+
+/*-------------------------------------------------------------------*/
+/*     S a m p l e r S e l e c t o r   D e c l a r a t i o n s       */
+/*-------------------------------------------------------------------*/
+
+export interface SamplerSelectorPayload extends BaseEventPayload {
+  isHistoryEnabled: boolean;
+  value: string;
 }
 
 /*-------------------------------------------------------------------*/

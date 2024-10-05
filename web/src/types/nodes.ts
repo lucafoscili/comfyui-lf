@@ -37,6 +37,7 @@ export enum NodeName {
   resizeImageByEdge = 'LF_ResizeImageByEdge',
   resizeImageToSquare = 'LF_ResizeImageToSquare',
   resolutionSwitcher = 'LF_ResolutionSwitcher',
+  samplerSelector = 'LF_SamplerSelector',
   saveImageForCivitai = 'LF_SaveImageForCivitAI',
   string = 'LF_String',
   switchFloat = 'LF_SwitchFloat',

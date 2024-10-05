@@ -35,6 +35,7 @@ export var NodeName;
     NodeName["resizeImageByEdge"] = "LF_ResizeImageByEdge";
     NodeName["resizeImageToSquare"] = "LF_ResizeImageToSquare";
     NodeName["resolutionSwitcher"] = "LF_ResolutionSwitcher";
+    NodeName["samplerSelector"] = "LF_SamplerSelector";
     NodeName["saveImageForCivitai"] = "LF_SaveImageForCivitAI";
     NodeName["string"] = "LF_String";
     NodeName["switchFloat"] = "LF_SwitchFloat";

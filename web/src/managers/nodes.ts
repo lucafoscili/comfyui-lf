@@ -41,6 +41,7 @@ import { loraSelectorFactory } from '../nodes/loraSelector';
 import { embeddingSelectorFactory } from '../nodes/embeddingSelector';
 import { loraAndEmbeddingSelectorFactory } from '../nodes/loraAndEmbeddingSelector';
 import { loadLoraTagsFactory } from '../nodes/loadLoraTags';
+import { samplerSelectorFactory } from '../nodes/samplerSelector';
 
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
@@ -75,6 +76,7 @@ export class LFNodes {
     [NodeName.resizeImageByEdge]: resizeImageByEdgeFactory.eventHandler,
     [NodeName.resizeImageToSquare]: resizeImageToSquareFactory.eventHandler,
     [NodeName.resolutionSwitcher]: resolutionSwitcherFactory.eventHandler,
+    [NodeName.samplerSelector]: samplerSelectorFactory.eventHandler,
     [NodeName.saveImageForCivitai]: saveImageForCivitaiFactory.eventHandler,
     [NodeName.string]: stringFactory.eventHandler,
     [NodeName.switchFloat]: switchFloatFactory.eventHandler,
@@ -119,6 +121,7 @@ export class LFNodes {
     [NodeName.resizeImageByEdge]: resizeImageByEdgeFactory.register,
     [NodeName.resizeImageToSquare]: resizeImageToSquareFactory.register,
     [NodeName.resolutionSwitcher]: resolutionSwitcherFactory.register,
+    [NodeName.samplerSelector]: samplerSelectorFactory.register,
     [NodeName.saveImageForCivitai]: saveImageForCivitaiFactory.register,
     [NodeName.string]: stringFactory.register,
     [NodeName.switchFloat]: switchFloatFactory.register,

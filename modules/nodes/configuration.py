@@ -524,10 +524,12 @@ class LF_SamplerSelector:
         return {
             "required": {
                 "sampler": (KSampler.SAMPLERS, {"default": "None", "tooltip": "Sampler used to generate the image."}),
+                "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
                 "randomize": ("BOOLEAN", {"default": False, "tooltip": "Selects a sampler randomly."}),
                 "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter sampler names."}),
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Seed value for when randomization is active."}),
             },
+            "hidden": {"node_id": "UNIQUE_ID"}
         }
 
     CATEGORY = category
@@ -535,7 +537,7 @@ class LF_SamplerSelector:
     RETURN_NAMES = ("sampler",)
     RETURN_TYPES = (KSampler.SAMPLERS,)
 
-    def on_exec(self, sampler, randomize, seed, filter):
+    def on_exec(self, node_id, sampler, enable_history, randomize, seed, filter):
         samplers = KSampler.SAMPLERS
 
         if filter:
@@ -544,6 +546,12 @@ class LF_SamplerSelector:
         if randomize:
             random.seed(seed)
             sampler = random.choice(samplers)
+
+        PromptServer.instance.send_sync("lf-samplerselector", {
+            "node": node_id, 
+            "isHistoryEnabled": enable_history,
+            "value": sampler,
+        })
 
         return (sampler,)
         

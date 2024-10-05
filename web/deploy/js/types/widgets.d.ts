@@ -7,6 +7,7 @@ export type ComfyWidgetCallback = <T extends ComfyWidgetName>(node: NodeType, na
 };
 export type ComfyWidgetMap = {
     [ComfyWidgetName.boolean]: Widget;
+    [ComfyWidgetName.combo]: Widget;
     [ComfyWidgetName.customtext]: Widget;
     [ComfyWidgetName.float]: Widget;
     [ComfyWidgetName.integer]: Widget;
@@ -16,6 +17,7 @@ export type ComfyWidgetMap = {
 };
 export declare enum ComfyWidgetName {
     boolean = "BOOLEAN",
+    combo = "COMBO",
     customtext = "CUSTOMTEXT",
     float = "FLOAT",
     integer = "INTEGER",

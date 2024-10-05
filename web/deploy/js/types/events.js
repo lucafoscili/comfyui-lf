@@ -28,6 +28,7 @@ export var EventName;
     EventName["resizeimageByEdge"] = "lf-resizeimagebyedge";
     EventName["resizeimageToSquare"] = "lf-resizeimagetosquare";
     EventName["resolutionSwitcher"] = "lf-resolutionswitcher";
+    EventName["samplerSelector"] = "lf-samplerselector";
     EventName["saveImageForCivitAI"] = "lf-saveimageforcivitai";
     EventName["string"] = "lf-string";
     EventName["switchFloat"] = "lf-switchfloat";

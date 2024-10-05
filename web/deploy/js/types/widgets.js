@@ -1,6 +1,7 @@
 export var ComfyWidgetName;
 (function (ComfyWidgetName) {
     ComfyWidgetName["boolean"] = "BOOLEAN";
+    ComfyWidgetName["combo"] = "COMBO";
     ComfyWidgetName["customtext"] = "CUSTOMTEXT";
     ComfyWidgetName["float"] = "FLOAT";
     ComfyWidgetName["integer"] = "INTEGER";
