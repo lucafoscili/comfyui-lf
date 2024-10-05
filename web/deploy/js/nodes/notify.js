@@ -45,15 +45,22 @@ function showNotification(payload) {
     if (Notification.permission === 'granted') {
         const notification = new Notification(title, options);
         notification.addEventListener('click', function () {
+            const routes = getLFManager().getApiRoutes();
             switch (action) {
                 case 'focus tab':
                     window.focus();
                     break;
-                case 'queue prompt':
-                    getLFManager().getApiRoutes().queuePrompt();
-                    getLFManager().log('New prompt queued from notification.', {}, LogSeverity.Success);
+                case 'interrupt':
+                    routes.interrupt();
                     break;
-                default:
+                case 'interrupt and queue':
+                    routes.interrupt();
+                    routes.queuePrompt();
+                    getLFManager().log('New prompt queued from notification after interrupting.', {}, LogSeverity.Success);
+                    break;
+                case 'queue prompt':
+                    routes.queuePrompt();
+                    getLFManager().log('New prompt queued from notification.', {}, LogSeverity.Success);
                     break;
             }
         });

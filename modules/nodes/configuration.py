@@ -534,7 +534,7 @@ class LF_Notify:
                 "any": (any, {"tooltip": "Pass-through data."}),
                 "title": ("STRING", {"default": "ComfyUI - LF Nodes", "tooltip": "The title displayed by the notification."}),
                 "message": ("STRING", {"default": "Your ComfyUI workflow sent you a notification!", "multiline": True, "tooltip": "The message displayed by the notification."}),
-                "on_click_action": (["None", "Focus tab", "Queue prompt"], {"tooltip": "Action triggered when clicking on the notification."}),
+                "on_click_action": (["None", "Focus tab", "Interrupt", "Interrupt and queue", "Queue prompt"], {"tooltip": "Action triggered when clicking on the notification."}),
                 "silent": ("BOOLEAN", {"default": True, "tooltip": "The notifications will be displayed without triggering a sound effect."}),
             },
             "optional": {

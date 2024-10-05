@@ -113,6 +113,9 @@ export class LFManager {
     getNodeById: (id: string) => {
       return app.graph.getNodeById(+(id || app.runningNodeId));
     },
+    interrupt: () => {
+      return api.interrupt();
+    },
     modelInfoFromCivitAI: async (hash: string) => {
       try {
         const r = await fetch(`https://civitai.com/api/v1/model-versions/by-hash/${hash}`);
