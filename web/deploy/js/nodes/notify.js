@@ -7,15 +7,13 @@ export const notifyFactory = {
     eventHandler: (event) => {
         const name = EventName.notify;
         getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
-        const payload = event.detail; // The message to display in the notification is payload.message
+        const payload = event.detail;
         const node = getApiRoutes().getNodeById(payload.id);
         if (node) {
-            // Request notification permission if not granted yet
             if (Notification.permission !== 'granted') {
                 Notification.requestPermission().then(function (permission) {
                     if (permission === 'granted') {
-                        // Once permission is granted, show the notification
-                        showNotification(payload.message || 'Workflow complete!');
+                        showNotification(payload);
                     }
                     else {
                         getLFManager().log('Notification permission denied.', {}, LogSeverity.Warning);
@@ -23,8 +21,7 @@ export const notifyFactory = {
                 });
             }
             else {
-                // Show notification directly if permission was already granted
-                showNotification(payload.message || 'Workflow complete!');
+                showNotification(payload);
             }
         }
     },
@@ -35,11 +32,30 @@ export const notifyFactory = {
         getApiRoutes().register(extension);
     },
 };
-// Function to show the browser notification
-function showNotification(message) {
+function showNotification(payload) {
+    const { action, image, message, silent, title } = payload;
+    const options = {
+        body: message,
+        requireInteraction: action === 'none' ? false : true,
+        silent,
+    };
+    if ('image' in Notification.prototype && image) {
+        options.image = image;
+    }
     if (Notification.permission === 'granted') {
-        new Notification('ComfyUI - LF Nodes', {
-            body: message,
+        const notification = new Notification(title, options);
+        notification.addEventListener('click', function () {
+            switch (action) {
+                case 'focus tab':
+                    window.focus();
+                    break;
+                case 'queue prompt':
+                    getLFManager().getApiRoutes().queuePrompt();
+                    getLFManager().log('New prompt queued from notification.', {}, LogSeverity.Success);
+                    break;
+                default:
+                    break;
+            }
         });
     }
 }

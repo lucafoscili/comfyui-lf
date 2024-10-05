@@ -89,6 +89,9 @@ export class LFManager {
                     return { id: 'Something went wrong!' };
                 }
             },
+            queuePrompt: async () => {
+                app.queuePrompt(0);
+            },
             redraw: () => {
                 app.graph.setDirtyCanvas(true, false);
             },

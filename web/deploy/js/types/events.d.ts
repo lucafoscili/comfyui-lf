@@ -138,11 +138,15 @@ export interface LoraAndEmbeddingSelectorPayload extends BaseEventPayload {
     hashes: string[];
     paths: string[];
 }
-export interface NotifyPayload extends BaseEventPayload {
-    message: string;
-}
 export interface MultipleImageResizeForWebPayload extends BaseEventPayload {
     dataset: KulDataDataset;
+}
+export interface NotifyPayload extends BaseEventPayload {
+    action: 'none' | 'focus tab' | 'queue prompt';
+    image: string;
+    message: string;
+    silent: boolean;
+    title: string;
 }
 export interface RandomBooleanPayload extends BaseEventPayload {
     bool: boolean;

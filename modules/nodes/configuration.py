@@ -8,6 +8,7 @@ import comfy.utils
 from comfy.samplers import KSampler
 
 from ..utils.configuration import *
+from ..utils.conversions import tensor_to_base64
 
 from server import PromptServer
 
@@ -531,24 +532,42 @@ class LF_Notify:
         return {
             "required": {
                 "any": (any, {"tooltip": "Pass-through data."}),
+                "title": ("STRING", {"default": "ComfyUI - LF Nodes", "tooltip": "The title displayed by the notification."}),
                 "message": ("STRING", {"default": "Your ComfyUI workflow sent you a notification!", "multiline": True, "tooltip": "The message displayed by the notification."}),
+                "on_click_action": (["None", "Focus tab", "Queue prompt"], {"tooltip": "Action triggered when clicking on the notification."}),
+                "silent": ("BOOLEAN", {"default": True, "tooltip": "The notifications will be displayed without triggering a sound effect."}),
+            },
+            "optional": {
+                "image": ("IMAGE", {"tooltip": "Image displayed in the notification."}),
             },
             "hidden": {"node_id": "UNIQUE_ID"}
         }
 
     CATEGORY = category
     FUNCTION = "on_exec"
-    INPUT_IS_LIST = True
+    INPUT_IS_LIST = (True, False, False, False)
     OUTPUT_IS_LIST = (True,)
     OUTPUT_NODE = True
     RETURN_NAMES = ("any",)
     RETURN_TYPES = (any,)
 
-    def on_exec(self, node_id, any, message):
+    def on_exec(self, node_id, any, on_click_action:str, title, message, silent, image=None):
+
+        action_to_send = on_click_action[0] if isinstance(on_click_action, list) else on_click_action
+        silent_to_send = silent[0] if isinstance(silent, list) else silent
+        message_to_send = message[0] if isinstance(message, list) else message
+        title_to_send = title[0] if isinstance(title, list) else title
+        if image:
+            image = image[0] if isinstance(image, list) else image
+            image_to_send = "data:image/webp;base64," + tensor_to_base64(image)
 
         PromptServer.instance.send_sync("lf-notify", {
             "node": node_id, 
-            "message": message
+            "title": title_to_send,
+            "message": message_to_send,
+            "action": action_to_send.lower(),
+            "image": image_to_send,
+            "silent": silent_to_send
         })
 
         return (any,)
