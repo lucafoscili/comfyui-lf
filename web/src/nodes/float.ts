@@ -10,7 +10,7 @@ const NAME = NodeName.float;
 export const floatFactory = {
   eventHandler: (event: CustomEvent<FloatPayload>, addW: BaseWidgetCallback) => {
     const name = EventName.string;
-    getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
+    getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
     const payload = event.detail;
     const isHistoryEnabled = payload.isHistoryEnabled;

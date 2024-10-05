@@ -8,7 +8,7 @@ const NAME = NodeName.checkpointSelector;
 export const checkpointSelectorFactory = {
     eventHandler: (event, addW) => {
         const name = EventName.checkpointSelector;
-        getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
+        getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
         const payload = event.detail;
         const node = getApiRoutes().getNodeById(payload.id);
         if (node) {

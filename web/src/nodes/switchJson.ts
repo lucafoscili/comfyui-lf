@@ -13,7 +13,7 @@ const NAME = NodeName.switchJson;
 export const switchJsonFactory = {
   eventHandler: (event: CustomEvent<SwitchImagePayload>, addW: BaseWidgetCallback) => {
     const name = EventName.switchJson;
-    getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
+    getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
     const payload = event.detail;
     const node = getApiRoutes().getNodeById(payload.id);

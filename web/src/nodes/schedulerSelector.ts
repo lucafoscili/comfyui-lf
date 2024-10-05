@@ -10,7 +10,7 @@ const NAME = NodeName.schedulerSelector;
 export const schedulerSelectorFactory = {
   eventHandler: (event: CustomEvent<SchedulerSelectorPayload>, addW: BaseWidgetCallback) => {
     const name = EventName.schedulerSelector;
-    getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
+    getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
     const payload = event.detail;
     const isHistoryEnabled = payload.isHistoryEnabled;

@@ -8,7 +8,7 @@ const NAME = NodeName.loraSelector;
 export const loraSelectorFactory = {
     eventHandler: (event, addW) => {
         const name = EventName.loraSelector;
-        getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
+        getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
         const payload = event.detail;
         const node = getApiRoutes().getNodeById(payload.id);
         if (node) {

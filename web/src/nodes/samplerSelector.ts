@@ -10,7 +10,7 @@ const NAME = NodeName.samplerSelector;
 export const samplerSelectorFactory = {
   eventHandler: (event: CustomEvent<SamplerSelectorPayload>, addW: BaseWidgetCallback) => {
     const name = EventName.samplerSelector;
-    getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
+    getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
     const payload = event.detail;
     const isHistoryEnabled = payload.isHistoryEnabled;

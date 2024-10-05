@@ -7,7 +7,7 @@ const NAME = NodeName.schedulerSelector;
 export const schedulerSelectorFactory = {
     eventHandler: (event, addW) => {
         const name = EventName.schedulerSelector;
-        getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
+        getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
         const payload = event.detail;
         const isHistoryEnabled = payload.isHistoryEnabled;
         const node = getApiRoutes().getNodeById(payload.id);

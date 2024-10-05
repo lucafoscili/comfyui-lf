@@ -7,7 +7,7 @@ const NAME = NodeName.extractor;
 export const extractorFactory = {
     eventHandler: (event, addW) => {
         const name = EventName.extractor;
-        getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
+        getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
         const payload = event.detail;
         const node = getApiRoutes().getNodeById(payload.id);
         if (node) {

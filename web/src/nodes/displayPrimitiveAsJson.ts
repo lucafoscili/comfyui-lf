@@ -9,7 +9,7 @@ const NAME = NodeName.displayPrimitiveAsJson;
 export const displayPrimitiveAsJsonFactory = {
   eventHandler: (event: CustomEvent<DisplayPrimitiveAsJSONPayload>, addW: BaseWidgetCallback) => {
     const name = EventName.displayPrimitiveAsJson;
-    getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Success);
+    getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
     const payload = event.detail;
     const node = getApiRoutes().getNodeById(payload.id);
