@@ -60,7 +60,7 @@ Using a LoRA name as pilot, it also selects its related embedding (it must have 
 #### Notify
 
 Triggers a browser notification when executed. Optionally, when clicked, it can queue a new prompt or focus the workflow's tab.
-![Notify](https://github.com/lucafoscili/comfyui-lf/blob/865badc13204cef0af28da1f285dc4433ae495c7/docs/images/Notify.png "Simple notification example")
+![Notify](https://github.com/lucafoscili/comfyui-lf/blob/8f648bf3e9380bb410125d3e04a71baaf7d99ccf/docs/images/Notify.png "Simple notification example")
 
 #### SamplerSelector
 
