@@ -43,6 +43,7 @@ import { loraAndEmbeddingSelectorFactory } from '../nodes/loraAndEmbeddingSelect
 import { loadLoraTagsFactory } from '../nodes/loadLoraTags';
 import { samplerSelectorFactory } from '../nodes/samplerSelector';
 import { schedulerSelectorFactory } from '../nodes/schedulerSelector';
+import { notifyFactory } from '../nodes/notify';
 
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
@@ -73,6 +74,7 @@ export class LFNodes {
     [NodeName.loraAndEmbeddingSelector]: loraAndEmbeddingSelectorFactory.eventHandler,
     [NodeName.loraSelector]: loraSelectorFactory.eventHandler,
     [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.eventHandler,
+    [NodeName.notify]: notifyFactory.eventHandler,
     [NodeName.randomBoolean]: randomBooleanFactory.eventHandler,
     [NodeName.resizeImageByEdge]: resizeImageByEdgeFactory.eventHandler,
     [NodeName.resizeImageToSquare]: resizeImageToSquareFactory.eventHandler,
@@ -119,6 +121,7 @@ export class LFNodes {
     [NodeName.loadMetadata]: loadMetadataFactory.register,
     [NodeName.loraSelector]: loraSelectorFactory.register,
     [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.register,
+    [NodeName.notify]: notifyFactory.register,
     [NodeName.randomBoolean]: randomBooleanFactory.register,
     [NodeName.resizeImageByEdge]: resizeImageByEdgeFactory.register,
     [NodeName.resizeImageToSquare]: resizeImageToSquareFactory.register,

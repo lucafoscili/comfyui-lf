@@ -31,6 +31,7 @@ export var NodeName;
     NodeName["loraAndEmbeddingSelector"] = "LF_LoraAndEmbeddingSelector";
     NodeName["loraSelector"] = "LF_LoraSelector";
     NodeName["multipleImageResizeForWeb"] = "LF_MultipleImageResizeForWeb";
+    NodeName["notify"] = "LF_Notify";
     NodeName["randomBoolean"] = "LF_RandomBoolean";
     NodeName["resizeImageByEdge"] = "LF_ResizeImageByEdge";
     NodeName["resizeImageToSquare"] = "LF_ResizeImageToSquare";

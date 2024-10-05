@@ -24,6 +24,7 @@ export var EventName;
     EventName["loraAndEmbeddingSelector"] = "lf-loraandembeddingselector";
     EventName["loraSelector"] = "lf-loraselector";
     EventName["multipleImageResizeForWeb"] = "lf-multipleimageresizeforweb";
+    EventName["notify"] = "lf-notify";
     EventName["randomBoolean"] = "lf-randomboolean";
     EventName["resizeimageByEdge"] = "lf-resizeimagebyedge";
     EventName["resizeimageToSquare"] = "lf-resizeimagetosquare";

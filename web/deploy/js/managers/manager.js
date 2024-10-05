@@ -335,6 +335,13 @@ export class LFManager {
             nodes.eventHandlers.LF_LoraAndEmbeddingSelector(e, widgets.adders.KUL_CARD);
         });
         /*-------------------------------------------------------------------*/
+        /*                       I n i t   N o t i f y                       */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_Notify();
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.notify, (e) => {
+            nodes.eventHandlers.LF_Notify(e);
+        });
+        /*-------------------------------------------------------------------*/
         /*                      I n i t   S t r i n g                        */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_String(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);

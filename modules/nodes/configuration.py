@@ -13,6 +13,13 @@ from server import PromptServer
 
 category = "✨ LF Nodes/Configuration"
 
+class AnyType(str):
+    def __ne__(self, __value: object) -> bool:
+        return False
+
+
+any = AnyType("*")
+
 class LF_CheckpointSelector:
     @classmethod
     def INPUT_TYPES(cls):
@@ -518,6 +525,34 @@ class LF_LoraSelector:
     def VALIDATE_INPUTS(self, **kwargs):
          return True
 
+class LF_Notify:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "any": (any, {"tooltip": "Pass-through data."}),
+                "message": ("STRING", {"default": "Your ComfyUI workflow sent you a notification!", "multiline": True, "tooltip": "The message displayed by the notification."}),
+            },
+            "hidden": {"node_id": "UNIQUE_ID"}
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    INPUT_IS_LIST = True
+    OUTPUT_IS_LIST = (True,)
+    OUTPUT_NODE = True
+    RETURN_NAMES = ("any",)
+    RETURN_TYPES = (any,)
+
+    def on_exec(self, node_id, any, message):
+
+        PromptServer.instance.send_sync("lf-notify", {
+            "node": node_id, 
+            "message": message
+        })
+
+        return (any,)
+
 class LF_SamplerSelector:
     @classmethod
     def INPUT_TYPES(cls):
@@ -654,6 +689,7 @@ NODE_CLASS_MAPPINGS = {
     "LF_LoadLoraTags": LF_LoadLoraTags,
     "LF_LoraAndEmbeddingSelector": LF_LoraAndEmbeddingSelector,
     "LF_LoraSelector": LF_LoraSelector,
+    "LF_Notify": LF_Notify,
     "LF_SamplerSelector": LF_SamplerSelector,
     "LF_SchedulerSelector": LF_SchedulerSelector,
     "LF_WorkflowSettings": LF_WorkflowSettings,
@@ -667,6 +703,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_LoadLoraTags": "Load LoRA tags",
     "LF_LoraAndEmbeddingSelector": "LoRA and embedding selector",
     "LF_LoraSelector": "LoRA selector",
+    "LF_Notify": "Notifify",
     "LF_SamplerSelector": "Sampler selector",
     "LF_SchedulerSelector": "Scheduler selector",
     "LF_WorkflowSettings": "Workflow settings",
