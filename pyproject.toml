@@ -1,7 +1,7 @@
 [project]
 name = "comfyui-lf"
 description = "Custom nodes with a touch of extra UX, including: history for primitives, JSON manipulation, logic switches with visual feedback, LLM chat... and more!"
-version = "3.6.5"
+version = "3.7.0"
 license = {file = "LICENSE"}
 dependencies = ["numpy", "openai==1.12.0", "piexif", "Pillow", "torch", "requests"]
 
