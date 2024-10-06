@@ -412,6 +412,45 @@ class LF_UpscaleModelSelector:
         })
 
         return (upscale_model,)
+
+class LF_VAESelector:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "vae": (folder_paths.get_filename_list("vae"), {"default": "None", "tooltip": "VAE used to generate the image."}),
+                "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
+                "randomize": ("BOOLEAN", {"default": False, "tooltip": "Selects a VAE randomly."}),
+                "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter VAE names. Supports wildcards (*)."}),
+                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Seed value for when randomization is active."}),
+            },
+            "hidden": {"node_id": "UNIQUE_ID"}
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    RETURN_NAMES = ("vae",)
+    RETURN_TYPES = (folder_paths.get_filename_list("vae"),)
+
+    def on_exec(self, node_id, vae, enable_history, randomize, seed, filter):
+        vaes = folder_paths.get_filename_list("vae")
+
+        if filter:
+            vaes = filter_list(filter, vaes)
+            if not vaes:
+                raise ValueError(f"Not found a model with the specified filter: {filter}")
+
+        if randomize:
+            random.seed(seed)
+            vae = random.choice(vaes)
+
+        PromptServer.instance.send_sync("lf-upscalemodelselector", {
+            "node": node_id, 
+            "isHistoryEnabled": enable_history,
+            "value": vae,
+        })
+
+        return (vae,)
     
 NODE_CLASS_MAPPINGS = {
     "LF_CheckpointSelector": LF_CheckpointSelector,
@@ -421,6 +460,7 @@ NODE_CLASS_MAPPINGS = {
     "LF_SamplerSelector": LF_SamplerSelector,
     "LF_SchedulerSelector": LF_SchedulerSelector,
     "LF_UpscaleModelSelector": LF_UpscaleModelSelector,
+    "LF_VAESelector": LF_VAESelector,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
@@ -431,4 +471,5 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_SamplerSelector": "Sampler selector",
     "LF_SchedulerSelector": "Scheduler selector",
     "LF_UpscaleModelSelector": "Upscale model selector",
+    "LF_VAESelector": "VAE selector",
 }
