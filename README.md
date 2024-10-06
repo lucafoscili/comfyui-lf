@@ -22,11 +22,6 @@ Counts the number of each keyword in a prompt and displays a bar chart showing t
 
 ### Configuration nodes (`configuration.py`)
 
-#### CheckpointSelector
-
-Used to select a checkpoint. It's possible to fetch additional data from CivitAI or by loading the related cover inside the checkpoints folder.
-![CheckpointSelector](https://github.com/lucafoscili/comfyui-lf/blob/f317945c6794d119cb3b51a0b55ee20609b1f5a4/docs/images/CheckpointSelector.png "Checkpoints additional info")
-
 #### CivitAIMetadataSetup
 
 Allows to setup and generate [CivitAI](https://civitai.com)-compatible metadata information usable in the node SaveImageForCivitAI.
@@ -37,40 +32,15 @@ Allows to setup and generate [CivitAI](https://civitai.com)-compatible metadata 
 Utilities to debug nodes and to change the theme of Ketchup Lite webcomponents.
 ![ControlPanel](https://github.com/lucafoscili/comfyui-lf/blob/6d4cf455b031a8ffae96ba322689dd3853004495/docs/images/ControlPanel.png "Utilities included in the control panel")
 
-#### EmbeddingSelector
-
-Used to select an embedding. It's possible to fetch additional data from CivitAI or by loading the related cover inside the embeddings folder.
-![EmbeddingSelector](https://github.com/lucafoscili/comfyui-lf/blob/8393783e3cb4dcb486be37ca0c79985e9dd28447/docs/images/EmbeddingSelector.png "Embedding additional info")
-
 #### LoadLoraTags
 
 LoRA models are loaded in tag format, with a status widget displayed at the bottom indicating the loading progress.
 ![LoadLoraTags](https://github.com/lucafoscili/comfyui-lf/blob/947e736fd6505b9de5b89a5a85ef86d528eae644/docs/images/LoadLoraTags.png "Loaded LoRA tags")
 
-#### LoraSelector
-
-Used to select a LoRA. It's possible to fetch additional data from CivitAI or by loading the related cover inside the loras folder.
-![LoraSelector](https://github.com/lucafoscili/comfyui-lf/blob/865badc13204cef0af28da1f285dc4433ae495c7/docs/images/LoraSelector.png "LoRA additional info")
-
-#### LoraAndEmbeddingSelector
-
-Using a LoRA name as pilot, it also selects its related embedding (it must have the same name). Useful for models trained with pivotal tuning.
-![LoraAndEmbeddingSelector](https://github.com/lucafoscili/comfyui-lf/blob/84c0e46686c39fb521dc6d4ae46396ae002d390d/docs/images/LoraAndEmbeddingSelector.png "LoRA and related embedding")
-
 #### Notify
 
 Triggers a browser notification when executed. Optionally, when clicked, it can queue a new prompt or focus the workflow's tab.
 ![Notify](https://github.com/lucafoscili/comfyui-lf/blob/8f648bf3e9380bb410125d3e04a71baaf7d99ccf/docs/images/Notify.png "Simple notification example")
-
-#### SamplerSelector
-
-Used to select a sampler, the history widget allows for a quick swap between the most used samplers.
-![SamplerSelector](https://github.com/lucafoscili/comfyui-lf/blob/e704d1c6602217387498472ebacf284e8204080b/docs/images/SamplerSelector.png "Sampler selector")
-
-#### SchedulerSelector
-
-Used to select a scheduler, the history widget allows for a quick swap between the most used schedulers.
-![SchedulerSelector](https://github.com/lucafoscili/comfyui-lf/blob/e704d1c6602217387498472ebacf284e8204080b/docs/images/SchedulerSelector.png "Scheduler selector")
 
 ### Conversions nodes (`conversions.py`)
 
@@ -319,6 +289,43 @@ Generates a series of unique seeds based on a global seed value. This node is us
 
 Generates up to 20 different seeds through the use of the Python urandom function which leverages CPU generated entropy for increased randomness.
 ![UrandomSeedGenerator](https://github.com/lucafoscili/comfyui-lf/blob/7deb085a3649ec873435cb092308c4e7a01cefe9/docs/images/UrandomSeedGenerator.png "Random seeds with history enabled")
+
+### Selectors (`selectors.py`)
+
+#### CheckpointSelector
+
+Used to select a checkpoint. It's possible to fetch additional data from CivitAI or by loading the related cover inside the checkpoints folder.
+![CheckpointSelector](https://github.com/lucafoscili/comfyui-lf/blob/f317945c6794d119cb3b51a0b55ee20609b1f5a4/docs/images/CheckpointSelector.png "Checkpoints additional info")
+
+#### EmbeddingSelector
+
+Used to select an embedding. It's possible to fetch additional data from CivitAI or by loading the related cover inside the embeddings folder.
+![EmbeddingSelector](https://github.com/lucafoscili/comfyui-lf/blob/8393783e3cb4dcb486be37ca0c79985e9dd28447/docs/images/EmbeddingSelector.png "Embedding additional info")
+
+#### LoraSelector
+
+Used to select a LoRA. It's possible to fetch additional data from CivitAI or by loading the related cover inside the loras folder.
+![LoraSelector](https://github.com/lucafoscili/comfyui-lf/blob/865badc13204cef0af28da1f285dc4433ae495c7/docs/images/LoraSelector.png "LoRA additional info")
+
+#### LoraAndEmbeddingSelector
+
+Using a LoRA name as pilot, it also selects its related embedding (it must have the same name). Useful for models trained with pivotal tuning.
+![LoraAndEmbeddingSelector](https://github.com/lucafoscili/comfyui-lf/blob/84c0e46686c39fb521dc6d4ae46396ae002d390d/docs/images/LoraAndEmbeddingSelector.png "LoRA and related embedding")
+
+#### SamplerSelector
+
+Used to select a sampler, the history widget allows for a quick swap between the most used samplers.
+![SamplerSelector](https://github.com/lucafoscili/comfyui-lf/blob/e704d1c6602217387498472ebacf284e8204080b/docs/images/SamplerSelector.png "Sampler selector")
+
+#### SchedulerSelector
+
+Used to select a scheduler, the history widget allows for a quick swap between the most used schedulers.
+![SchedulerSelector](https://github.com/lucafoscili/comfyui-lf/blob/e704d1c6602217387498472ebacf284e8204080b/docs/images/SchedulerSelector.png "Scheduler selector")
+
+#### UpscaleModelSelector
+
+Used to select an upscale model, the history widget allows for a quick swap between the most used schedulers.
+![UpscaleModelSelector](https://github.com/lucafoscili/comfyui-lf/blob/e704d1c6602217387498472ebacf284e8204080b/docs/images/UpscaleModelSelector.png "Upscale model selector")
 
 ## Installation
 
