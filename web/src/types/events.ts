@@ -49,6 +49,7 @@ export enum EventName {
   switchString = 'lf-switchstring',
   upscaleModelSelector = 'lf-upscalemodelselector',
   urandomSeedGenerator = 'lf-urandomseedgenerator',
+  vaeSelector = 'lf-vaeselector',
   writeJson = 'lf-writejson',
 }
 export type EventPayload =
@@ -85,6 +86,7 @@ export type EventPayload =
   | SwitchStringPayload
   | UpscaleModelSelectorPayload
   | UrandomSeedGeneratorPayload
+  | VAESelectorPayload
   | WriteJSONPayload;
 
 /*-------------------------------------------------------------------*/
@@ -440,6 +442,15 @@ export interface UpscaleModelSelectorPayload extends BaseEventPayload {
 export interface UrandomSeedGeneratorPayload extends BaseEventPayload {
   dataset: KulDataDataset;
   isHistoryEnabled: boolean;
+}
+
+/*-------------------------------------------------------------------*/
+/*          V A E S e l e c t o r   D e c l a r a t i o n s          */
+/*-------------------------------------------------------------------*/
+
+export interface VAESelectorPayload extends BaseEventPayload {
+  isHistoryEnabled: boolean;
+  value: string;
 }
 
 /*-------------------------------------------------------------------*/

@@ -40,5 +40,6 @@ export var EventName;
     EventName["switchString"] = "lf-switchstring";
     EventName["upscaleModelSelector"] = "lf-upscalemodelselector";
     EventName["urandomSeedGenerator"] = "lf-urandomseedgenerator";
+    EventName["vaeSelector"] = "lf-vaeselector";
     EventName["writeJson"] = "lf-writejson";
 })(EventName || (EventName = {}));

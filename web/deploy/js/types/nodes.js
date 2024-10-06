@@ -47,5 +47,6 @@ export var NodeName;
     NodeName["switchString"] = "LF_SwitchString";
     NodeName["upscaleModelSelector"] = "LF_UpscaleModelSelector";
     NodeName["urandomSeedGenerator"] = "LF_UrandomSeedGenerator";
+    NodeName["vaeSelector"] = "LF_VAESelector";
     NodeName["writeJson"] = "LF_WriteJSON";
 })(NodeName || (NodeName = {}));

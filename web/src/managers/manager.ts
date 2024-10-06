@@ -50,6 +50,7 @@ import {
   SchedulerSelectorPayload,
   NotifyPayload,
   UpscaleModelSelectorPayload,
+  VAESelectorPayload,
 } from '../types/events.js';
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
 
@@ -642,6 +643,16 @@ export class LFManager {
         nodes.eventHandlers.LF_UrandomSeedGenerator(e, widgets.adders.KUL_TREE);
       },
     );
+    /*-------------------------------------------------------------------*/
+    /*                  I n i t   V A E S e l e c t o r                  */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_VAESelector(
+      widgets.setters.KUL_HISTORY,
+      widgets.adders.KUL_HISTORY,
+    );
+    this.#APIS.event(EventName.vaeSelector, (e: CustomEvent<VAESelectorPayload>) => {
+      nodes.eventHandlers.LF_VAESelector(e, widgets.adders.KUL_HISTORY);
+    });
     /*-------------------------------------------------------------------*/
     /*                    I n i t   W r i t e   J S O N                  */
     /*-------------------------------------------------------------------*/

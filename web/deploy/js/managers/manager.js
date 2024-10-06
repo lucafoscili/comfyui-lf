@@ -460,6 +460,13 @@ export class LFManager {
             nodes.eventHandlers.LF_UrandomSeedGenerator(e, widgets.adders.KUL_TREE);
         });
         /*-------------------------------------------------------------------*/
+        /*                  I n i t   V A E S e l e c t o r                  */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_VAESelector(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.vaeSelector, (e) => {
+            nodes.eventHandlers.LF_VAESelector(e, widgets.adders.KUL_HISTORY);
+        });
+        /*-------------------------------------------------------------------*/
         /*                    I n i t   W r i t e   J S O N                  */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_WriteJSON(widgets.setters.KUL_JSON_INPUT);

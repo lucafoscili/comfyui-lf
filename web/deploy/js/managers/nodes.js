@@ -44,6 +44,7 @@ import { samplerSelectorFactory } from '../nodes/samplerSelector.js';
 import { schedulerSelectorFactory } from '../nodes/schedulerSelector.js';
 import { notifyFactory } from '../nodes/notify.js';
 import { upscaleModelSelectorFactory } from '../nodes/upscaleModelSelector.js';
+import { vaeSelectorFactory } from '../nodes/vaeSelector.js';
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
 /*-------------------------------------------------*/
@@ -89,6 +90,7 @@ export class LFNodes {
             [NodeName.switchString]: switchStringFactory.eventHandler,
             [NodeName.upscaleModelSelector]: upscaleModelSelectorFactory.eventHandler,
             [NodeName.urandomSeedGenerator]: uRandomSeedGeneratorFactory.eventHandler,
+            [NodeName.vaeSelector]: vaeSelectorFactory.eventHandler,
             [NodeName.writeJson]: writeJsonFactory.eventHandler,
         };
         this.register = {
@@ -136,6 +138,7 @@ export class LFNodes {
             [NodeName.switchString]: switchStringFactory.register,
             [NodeName.upscaleModelSelector]: upscaleModelSelectorFactory.register,
             [NodeName.urandomSeedGenerator]: uRandomSeedGeneratorFactory.register,
+            [NodeName.vaeSelector]: vaeSelectorFactory.register,
             [NodeName.writeJson]: writeJsonFactory.register,
         };
         this.get = {

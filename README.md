@@ -309,7 +309,7 @@ Used to select a LoRA. It's possible to fetch additional data from CivitAI or by
 
 #### LoraAndEmbeddingSelector
 
-Using a LoRA name as pilot, it also selects its related embedding (it must have the same name). Useful for models trained with pivotal tuning.
+Using a LoRA name as pilot, it also selects its related embedding (it must have the same name). Useful for models trained with pivotal training.
 ![LoraAndEmbeddingSelector](https://github.com/lucafoscili/comfyui-lf/blob/84c0e46686c39fb521dc6d4ae46396ae002d390d/docs/images/LoraAndEmbeddingSelector.png "LoRA and related embedding")
 
 #### SamplerSelector
@@ -324,8 +324,13 @@ Used to select a scheduler, the history widget allows for a quick swap between t
 
 #### UpscaleModelSelector
 
-Used to select an upscale model, the history widget allows for a quick swap between the most used schedulers.
+Used to select an upscale model, the history widget allows for a quick swap between the most used upscale models.
 ![UpscaleModelSelector](https://github.com/lucafoscili/comfyui-lf/blob/e704d1c6602217387498472ebacf284e8204080b/docs/images/UpscaleModelSelector.png "Upscale model selector")
+
+#### VAESelector
+
+Used to select a VAE, the history widget allows for a quick swap between the most used VAEs.
+![VAESelector](https://github.com/lucafoscili/comfyui-lf/blob/e704d1c6602217387498472ebacf284e8204080b/docs/images/VAESelector.png "VAE selector")
 
 ## Installation
 
