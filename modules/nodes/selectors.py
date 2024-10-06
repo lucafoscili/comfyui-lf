@@ -312,8 +312,8 @@ class LF_SamplerSelector:
 
     CATEGORY = category
     FUNCTION = "on_exec"
-    RETURN_NAMES = ("sampler",)
-    RETURN_TYPES = (KSampler.SAMPLERS,)
+    RETURN_NAMES = ("sampler", "sampler_name")
+    RETURN_TYPES = (KSampler.SAMPLERS, "STRING")
 
     def on_exec(self, node_id, sampler, enable_history, randomize, seed, filter):
         samplers = KSampler.SAMPLERS
@@ -333,7 +333,7 @@ class LF_SamplerSelector:
             "value": sampler,
         })
 
-        return (sampler,)
+        return (sampler, sampler)
 
 class LF_SchedulerSelector:
     @classmethod
@@ -351,8 +351,8 @@ class LF_SchedulerSelector:
 
     CATEGORY = category
     FUNCTION = "on_exec"
-    RETURN_NAMES = ("scheduler",)
-    RETURN_TYPES = (KSampler.SCHEDULERS,)
+    RETURN_NAMES = ("scheduler", "scheduler_name")
+    RETURN_TYPES = (KSampler.SCHEDULERS, "STRING")
 
     def on_exec(self, node_id, scheduler, enable_history, randomize, seed, filter):
         schedulers = KSampler.SCHEDULERS
@@ -372,7 +372,7 @@ class LF_SchedulerSelector:
             "value": scheduler,
         })
 
-        return (scheduler,)
+        return (scheduler, scheduler)
 
 class LF_UpscaleModelSelector:
     @classmethod
@@ -390,8 +390,8 @@ class LF_UpscaleModelSelector:
 
     CATEGORY = category
     FUNCTION = "on_exec"
-    RETURN_NAMES = ("upscale_model",)
-    RETURN_TYPES = (folder_paths.get_filename_list("upscale_models"),)
+    RETURN_NAMES = ("upscale_model", "upscale_model_name")
+    RETURN_TYPES = (folder_paths.get_filename_list("upscale_models"), "STRING")
 
     def on_exec(self, node_id, upscale_model, enable_history, randomize, seed, filter):
         upscalers = folder_paths.get_filename_list("upscale_models")
@@ -411,7 +411,7 @@ class LF_UpscaleModelSelector:
             "value": upscale_model,
         })
 
-        return (upscale_model,)
+        return (upscale_model, upscale_model)
 
 class LF_VAESelector:
     @classmethod
@@ -429,8 +429,8 @@ class LF_VAESelector:
 
     CATEGORY = category
     FUNCTION = "on_exec"
-    RETURN_NAMES = ("vae",)
-    RETURN_TYPES = (folder_paths.get_filename_list("vae"),)
+    RETURN_NAMES = ("vae", "vae_name")
+    RETURN_TYPES = (folder_paths.get_filename_list("vae"), "STRING")
 
     def on_exec(self, node_id, vae, enable_history, randomize, seed, filter):
         vaes = folder_paths.get_filename_list("vae")
@@ -450,7 +450,7 @@ class LF_VAESelector:
             "value": vae,
         })
 
-        return (vae,)
+        return (vae, vae)
     
 NODE_CLASS_MAPPINGS = {
     "LF_CheckpointSelector": LF_CheckpointSelector,
