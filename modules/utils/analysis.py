@@ -132,7 +132,7 @@ def update_usage_json(resource_file:str, resource_name:str, resource_value:str):
             except json.JSONDecodeError:
                 json_data = {"columns": [{"id": "name", "value": resource_name}, {"id": "counter", "name": "Nr. of times used", "shape": "number"}], "nodes": []}
     else:
-        json_data = {"columns": [{"id": "name", "value": resource_name}, {"id": "counter", "name": "Nr. of times used", "shape": "number"}], "nodes": []}
+        json_data = {"columns": [{"id": "name", "title": resource_name}, {"id": "counter", "title": "Nr. of times used", "shape": "number"}], "nodes": []}
 
     for node in json_data["nodes"]:
         if node["cells"]["name"]["value"] == resource_value:

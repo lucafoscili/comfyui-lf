@@ -20,6 +20,11 @@ Displays a widget that plots the RGB channels of a photo in tensor format on a l
 Counts the number of each keyword in a prompt and displays a bar chart showing their distribution, a chip-shaped widget will also allow to copy one or more keywords in the clipboard.
 ![KeywordCounter](https://github.com/lucafoscili/comfyui-lf/blob/20764344d55b6e361af11d14298fc826b37eae2d/docs/images/KeywordCounter.png "Keywords displayed with a widget for copying them")
 
+#### UpdateUsageStatistics (experimental)
+
+Keep tracks of the resources used by saving datasets in the input folder of ComfyUI. As of now only the checkpoint chart is available to be seen (inside the control panel).
+![UpdateUsageStatistics](https://github.com/lucafoscili/comfyui-lf/blob/e704d1c6602217387498472ebacf284e8204080b/docs/images/UpdateUsageStatistics.png "Keeps track of resources' usage")
+
 ### Configuration nodes (`configuration.py`)
 
 #### CivitAIMetadataSetup
