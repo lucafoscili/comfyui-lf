@@ -11,7 +11,7 @@ export declare class LFNodes {
         LF_DisplayJSON: (event: CustomEvent<import("../types/events").DisplayJSONPayload>, addW: BaseWidgetCallback) => void;
         LF_DisplayPrimitiveAsJSON: (event: CustomEvent<import("../types/events").DisplayPrimitiveAsJSONPayload>, addW: BaseWidgetCallback) => void;
         LF_DisplayString: (event: CustomEvent<import("../types/events").DisplayStringPayload>, addW: BaseWidgetCallback) => void;
-        LF_EmbeddingSelector: (event: CustomEvent<import("../types/events").CheckpointSelectorPayload>, addW: BaseWidgetCallback) => void;
+        LF_EmbeddingSelector: (event: CustomEvent<import("../types/events").EmbeddingSelectorPayload>, addW: BaseWidgetCallback) => void;
         LF_Extractor: (event: CustomEvent<import("../types/events").ExtractorPayload>, addW: BaseWidgetCallback) => void;
         LF_Float: (event: CustomEvent<import("../types/events").FloatPayload>, addW: BaseWidgetCallback) => void;
         LF_ImageHistogram: (event: CustomEvent<import("../types/events").ImageHistogramPayload>, addW: BaseWidgetCallback) => void;
@@ -38,6 +38,7 @@ export declare class LFNodes {
         LF_SwitchInteger: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
         LF_SwitchJSON: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
         LF_SwitchString: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
+        LF_UpscaleModelSelector: (event: CustomEvent<import("../types/events").UpscaleModelSelectorPayload>, addW: BaseWidgetCallback) => void;
         LF_UrandomSeedGenerator: (event: CustomEvent<import("../types/events").UrandomSeedGeneratorPayload>, addW: BaseWidgetCallback) => void;
         LF_WriteJSON: (event: CustomEvent<import("../types/events").WriteJSONPayload>, addW: BaseWidgetCallback) => void;
     };
@@ -84,6 +85,7 @@ export declare class LFNodes {
         LF_SwitchInteger: (setW: import("../types/widgets").BooleanViewerWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_SwitchJSON: (setW: import("../types/widgets").BooleanViewerWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_SwitchString: (setW: import("../types/widgets").BooleanViewerWidgetSetter, addW: BaseWidgetCallback) => void;
+        LF_UpscaleModelSelector: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_UrandomSeedGenerator: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_WriteJSON: (setW: import("../types/widgets").JsonInputWidgetSetter) => void;
     };
@@ -99,7 +101,7 @@ export declare class LFNodes {
             LF_DisplayJSON: (event: CustomEvent<import("../types/events").DisplayJSONPayload>, addW: BaseWidgetCallback) => void;
             LF_DisplayPrimitiveAsJSON: (event: CustomEvent<import("../types/events").DisplayPrimitiveAsJSONPayload>, addW: BaseWidgetCallback) => void;
             LF_DisplayString: (event: CustomEvent<import("../types/events").DisplayStringPayload>, addW: BaseWidgetCallback) => void;
-            LF_EmbeddingSelector: (event: CustomEvent<import("../types/events").CheckpointSelectorPayload>, addW: BaseWidgetCallback) => void;
+            LF_EmbeddingSelector: (event: CustomEvent<import("../types/events").EmbeddingSelectorPayload>, addW: BaseWidgetCallback) => void;
             LF_Extractor: (event: CustomEvent<import("../types/events").ExtractorPayload>, addW: BaseWidgetCallback) => void;
             LF_Float: (event: CustomEvent<import("../types/events").FloatPayload>, addW: BaseWidgetCallback) => void;
             LF_ImageHistogram: (event: CustomEvent<import("../types/events").ImageHistogramPayload>, addW: BaseWidgetCallback) => void;
@@ -126,6 +128,7 @@ export declare class LFNodes {
             LF_SwitchInteger: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
             LF_SwitchJSON: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
             LF_SwitchString: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
+            LF_UpscaleModelSelector: (event: CustomEvent<import("../types/events").UpscaleModelSelectorPayload>, addW: BaseWidgetCallback) => void;
             LF_UrandomSeedGenerator: (event: CustomEvent<import("../types/events").UrandomSeedGeneratorPayload>, addW: BaseWidgetCallback) => void;
             LF_WriteJSON: (event: CustomEvent<import("../types/events").WriteJSONPayload>, addW: BaseWidgetCallback) => void;
         };
@@ -172,6 +175,7 @@ export declare class LFNodes {
             LF_SwitchInteger: (setW: import("../types/widgets").BooleanViewerWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_SwitchJSON: (setW: import("../types/widgets").BooleanViewerWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_SwitchString: (setW: import("../types/widgets").BooleanViewerWidgetSetter, addW: BaseWidgetCallback) => void;
+            LF_UpscaleModelSelector: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_UrandomSeedGenerator: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_WriteJSON: (setW: import("../types/widgets").JsonInputWidgetSetter) => void;
         };

@@ -43,6 +43,7 @@ import { loadLoraTagsFactory } from '../nodes/loadLoraTags.js';
 import { samplerSelectorFactory } from '../nodes/samplerSelector.js';
 import { schedulerSelectorFactory } from '../nodes/schedulerSelector.js';
 import { notifyFactory } from '../nodes/notify.js';
+import { upscaleModelSelectorFactory } from '../nodes/upscaleModelSelector.js';
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
 /*-------------------------------------------------*/
@@ -59,7 +60,7 @@ export class LFNodes {
             [NodeName.displayJson]: displayJsonFactory.eventHandler,
             [NodeName.displayPrimitiveAsJson]: displayPrimitiveAsJsonFactory.eventHandler,
             [NodeName.displayString]: displayStringFactory.eventHandler,
-            [NodeName.embeddingSelector]: checkpointSelectorFactory.eventHandler,
+            [NodeName.embeddingSelector]: embeddingSelectorFactory.eventHandler,
             [NodeName.extractor]: extractorFactory.eventHandler,
             [NodeName.float]: floatFactory.eventHandler,
             [NodeName.imageHistogram]: imageHistogramFactory.eventHandler,
@@ -86,6 +87,7 @@ export class LFNodes {
             [NodeName.switchInteger]: switchIntegerFactory.eventHandler,
             [NodeName.switchJson]: switchJsonFactory.eventHandler,
             [NodeName.switchString]: switchStringFactory.eventHandler,
+            [NodeName.upscaleModelSelector]: upscaleModelSelectorFactory.eventHandler,
             [NodeName.urandomSeedGenerator]: uRandomSeedGeneratorFactory.eventHandler,
             [NodeName.writeJson]: writeJsonFactory.eventHandler,
         };
@@ -132,6 +134,7 @@ export class LFNodes {
             [NodeName.switchInteger]: switchIntegerFactory.register,
             [NodeName.switchJson]: switchJsonFactory.register,
             [NodeName.switchString]: switchStringFactory.register,
+            [NodeName.upscaleModelSelector]: upscaleModelSelectorFactory.register,
             [NodeName.urandomSeedGenerator]: uRandomSeedGeneratorFactory.register,
             [NodeName.writeJson]: writeJsonFactory.register,
         };

@@ -47,6 +47,7 @@ export enum NodeName {
   switchInteger = 'LF_SwitchInteger',
   switchJson = 'LF_SwitchJSON',
   switchString = 'LF_SwitchString',
+  upscaleModelSelector = 'LF_UpscaleModelSelector',
   urandomSeedGenerator = 'LF_UrandomSeedGenerator',
   writeJson = 'LF_WriteJSON',
 }

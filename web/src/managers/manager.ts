@@ -49,6 +49,7 @@ import {
   SamplerSelectorPayload,
   SchedulerSelectorPayload,
   NotifyPayload,
+  UpscaleModelSelectorPayload,
 } from '../types/events.js';
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
 
@@ -615,6 +616,19 @@ export class LFManager {
     this.#APIS.event(EventName.switchString, (e: CustomEvent<SwitchStringPayload>) => {
       nodes.eventHandlers.LF_SwitchString(e, widgets.adders.KUL_BOOLEAN_VIEWER);
     });
+    /*-------------------------------------------------------------------*/
+    /*         I n i t   U p s c a l e M o d e l S e l e c t o r         */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_UpscaleModelSelector(
+      widgets.setters.KUL_HISTORY,
+      widgets.adders.KUL_HISTORY,
+    );
+    this.#APIS.event(
+      EventName.upscaleModelSelector,
+      (e: CustomEvent<UpscaleModelSelectorPayload>) => {
+        nodes.eventHandlers.LF_UpscaleModelSelector(e, widgets.adders.KUL_HISTORY);
+      },
+    );
     /*-------------------------------------------------------------------*/
     /*      I n i t   U r a n d o m   S e e d   G e n e r a t o r        */
     /*-------------------------------------------------------------------*/

@@ -47,6 +47,7 @@ export enum EventName {
   switchInteger = 'lf-switchinteger',
   switchJson = 'lf-switchjson',
   switchString = 'lf-switchstring',
+  upscaleModelSelector = 'lf-upscalemodelselector',
   urandomSeedGenerator = 'lf-urandomseedgenerator',
   writeJson = 'lf-writejson',
 }
@@ -82,6 +83,7 @@ export type EventPayload =
   | SwitchIntegerPayload
   | SwitchJSONPayload
   | SwitchStringPayload
+  | UpscaleModelSelectorPayload
   | UrandomSeedGeneratorPayload
   | WriteJSONPayload;
 
@@ -420,6 +422,15 @@ export interface SwitchJSONPayload extends BaseEventPayload {
 
 export interface SwitchStringPayload extends BaseEventPayload {
   bool: boolean;
+}
+
+/*-------------------------------------------------------------------*/
+/* U p s c a l e M o d e l S e l e c t o r   D e c l a r a t i o n s */
+/*-------------------------------------------------------------------*/
+
+export interface UpscaleModelSelectorPayload extends BaseEventPayload {
+  isHistoryEnabled: boolean;
+  value: string;
 }
 
 /*-------------------------------------------------------------------*/

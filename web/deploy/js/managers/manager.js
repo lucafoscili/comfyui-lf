@@ -446,6 +446,13 @@ export class LFManager {
             nodes.eventHandlers.LF_SwitchString(e, widgets.adders.KUL_BOOLEAN_VIEWER);
         });
         /*-------------------------------------------------------------------*/
+        /*         I n i t   U p s c a l e M o d e l S e l e c t o r         */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_UpscaleModelSelector(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.upscaleModelSelector, (e) => {
+            nodes.eventHandlers.LF_UpscaleModelSelector(e, widgets.adders.KUL_HISTORY);
+        });
+        /*-------------------------------------------------------------------*/
         /*      I n i t   U r a n d o m   S e e d   G e n e r a t o r        */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_UrandomSeedGenerator(widgets.setters.KUL_TREE, widgets.adders.KUL_TREE);
