@@ -37,12 +37,25 @@ export const notifyFactory = {
 };
 
 function showNotification(payload: NotifyPayload) {
-  const { action, image, message, silent, title } = payload;
+  const { action, image, message, silent, tag, title } = payload;
+
+  const icon =
+    action === 'focus tab'
+      ? 'visibility'
+      : action === 'interrupt'
+      ? 'not_interested'
+      : action === 'interrupt and queue'
+      ? 'refresh'
+      : action === 'queue prompt'
+      ? 'queue'
+      : '';
 
   const options: NotificationOptions = {
     body: message,
+    icon: icon ? window.location.href + `extensions/comfyui-lf/assets/svg/${icon}.svg` : undefined,
     requireInteraction: action === 'none' ? false : true,
     silent,
+    tag,
   };
 
   if ('image' in Notification.prototype && image) {

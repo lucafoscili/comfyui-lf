@@ -50,7 +50,6 @@ def filter_list(filter, list):
     normalized_filter = filter.replace('\\', '/')
     return [model for model in list if fnmatch.fnmatch(model.replace('\\', '/'), normalized_filter)]
 
-
 def find_checkpoint_image(checkpoint_path):
     extensions = ["jpg", "jpeg", "JPEG", "png", "webp", "WEBP"]
     

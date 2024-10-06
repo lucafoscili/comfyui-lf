@@ -146,6 +146,7 @@ export interface NotifyPayload extends BaseEventPayload {
     image: string;
     message: string;
     silent: boolean;
+    tag: string;
     title: string;
 }
 export interface RandomBooleanPayload extends BaseEventPayload {

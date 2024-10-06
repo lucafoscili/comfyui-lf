@@ -547,19 +547,20 @@ class LF_Notify:
             },
             "optional": {
                 "image": ("IMAGE", {"tooltip": "Image displayed in the notification."}),
+                "tag": ("STRING", {"default": "", "tooltip": "Used to group notifications (old ones with the same tag will be replaced)."}),
             },
             "hidden": {"node_id": "UNIQUE_ID"}
         }
 
     CATEGORY = category
     FUNCTION = "on_exec"
-    INPUT_IS_LIST = (True, False, False, False)
+    INPUT_IS_LIST = (True, False, False, False, False, False, False)
     OUTPUT_IS_LIST = (True,)
     OUTPUT_NODE = True
     RETURN_NAMES = ("any",)
     RETURN_TYPES = (any,)
 
-    def on_exec(self, node_id, any, on_click_action:str, title, message, silent, image=None):
+    def on_exec(self, node_id, any, on_click_action:str, title, message, silent, tag=None, image=None):
 
         action_to_send = on_click_action[0] if isinstance(on_click_action, list) else on_click_action
         silent_to_send = silent[0] if isinstance(silent, list) else silent
@@ -570,6 +571,10 @@ class LF_Notify:
             image_to_send = "data:image/webp;base64," + tensor_to_base64(image)
         else:
             image_to_send = None
+        if tag:
+            tag_to_send = tag[0] if isinstance(tag, list) else tag
+        else:
+            tag_to_send = None
 
         PromptServer.instance.send_sync("lf-notify", {
             "node": node_id, 
@@ -577,7 +582,8 @@ class LF_Notify:
             "message": message_to_send,
             "action": action_to_send.lower(),
             "image": image_to_send,
-            "silent": silent_to_send
+            "silent": silent_to_send,
+            "tag": tag_to_send
         })
 
         return (any,)
