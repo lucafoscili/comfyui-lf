@@ -1,4 +1,5 @@
-import { getApiRoutes, getKulManager, getKulThemes, getLFManager, isButton, isSwitch, } from '../utils/common.js';
+import { LogSeverity } from '../types/manager.js';
+import { getApiRoutes, getKulManager, getKulThemes, getLFManager, isButton, isChart, isSwitch, } from '../utils/common.js';
 const STYLES = {
     logsArea: () => {
         return {
@@ -25,6 +26,9 @@ export const handleKulEvent = (e) => {
     const { comp } = e.detail;
     if (isButton(comp)) {
         handleButtonEvent(e);
+    }
+    if (isChart(comp)) {
+        handleChartEvent(e);
     }
     if (isSwitch(comp)) {
         handleSwitchEvent(e);
@@ -91,6 +95,27 @@ const handleButtonEvent = (e) => {
             }
     }
 };
+const handleChartEvent = (e) => {
+    const { comp, eventType } = e.detail;
+    const c = comp;
+    switch (eventType) {
+        case 'ready':
+            getLFManager()
+                .getApiRoutes()
+                .fetchAnalyticsData()
+                .then((r) => {
+                if (r.status === 'success') {
+                    if (r.data['checkpoints_usage.json']) {
+                        c.kulData = r.data['checkpoints_usage.json'];
+                    }
+                    else {
+                        getLFManager().log('Not found checkpoints analytics.', { r }, LogSeverity.Info);
+                    }
+                }
+            });
+            break;
+    }
+};
 const handleListEvent = (e) => {
     const { comp, eventType, node } = e.detail;
     const c = comp.rootElement;
@@ -117,6 +142,53 @@ const handleSwitchEvent = (e) => {
     }
 };
 export const sectionsFactory = {
+    analytics: () => {
+        return {
+            id: 'section',
+            value: 'Analytics (experimental)',
+            children: [
+                {
+                    id: 'paragraph',
+                    value: 'Usage',
+                    children: [
+                        {
+                            id: 'content',
+                            value: 'Below you can find charts showing the most used resources in your workflows.',
+                        },
+                        {
+                            id: 'content',
+                            tagName: 'br',
+                            value: '',
+                        },
+                        {
+                            id: 'content',
+                            value: 'Use the node UpdateUsageStatistics to create/update these datasets.',
+                        },
+                        {
+                            id: 'content',
+                            value: '',
+                            cells: {
+                                kulChart: {
+                                    kulAxis: 'name',
+                                    kulData: {},
+                                    kulSeries: ['counter'],
+                                    kulSizeY: '300px',
+                                    kulTypes: ['area'],
+                                    shape: 'chart',
+                                    value: '',
+                                },
+                            },
+                        },
+                        {
+                            cssStyle: STYLES.separator(),
+                            id: 'content_separator',
+                            value: '',
+                        },
+                    ],
+                },
+            ],
+        };
+    },
     bug: () => {
         return {
             id: 'section',

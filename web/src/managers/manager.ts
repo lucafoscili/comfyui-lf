@@ -6,7 +6,12 @@ import { defineCustomElements } from '../ketchup-lite/loader.js';
 import { getKulManager } from '../utils/common.js';
 import { LFNodes } from './nodes.js';
 import { LFWidgets } from './widgets.js';
-import { ComfyAPIs, LogSeverity, SaveModelAPIPayload } from '../types/manager.js';
+import {
+  ComfyAPIs,
+  FetchAnalyticsAPIPayload,
+  LogSeverity,
+  SaveModelAPIPayload,
+} from '../types/manager.js';
 import { Extension } from '../types/nodes.js';
 import {
   BlurImagesPayload,
@@ -49,6 +54,9 @@ import {
   SamplerSelectorPayload,
   SchedulerSelectorPayload,
   NotifyPayload,
+  UpscaleModelSelectorPayload,
+  VAESelectorPayload,
+  UpdateUsageStatisticsPayload,
 } from '../types/events.js';
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
 
@@ -106,6 +114,32 @@ export class LFManager {
         method: 'POST',
         body,
       });
+    },
+    fetchAnalyticsData: (): Promise<FetchAnalyticsAPIPayload> => {
+      return api
+        .fetchApi('/comfyui-lf/get-analytics', {
+          method: 'GET',
+        })
+        .then((res: Response) => {
+          return res.json() as Promise<FetchAnalyticsAPIPayload>;
+        })
+        .then((data: FetchAnalyticsAPIPayload) => {
+          if (data.status === 'success') {
+            this.log('Analytics data fetched successfully.', { data }, LogSeverity.Success);
+            return data;
+          } else {
+            this.log(
+              'Unexpected response status while fetching analytics data.',
+              { data },
+              LogSeverity.Warning,
+            );
+            throw new Error('Unexpected response status');
+          }
+        })
+        .catch((error: Error) => {
+          this.log('Error fetching analytics data.', { error }, LogSeverity.Error);
+          throw error;
+        });
     },
     getLinkById: (id: string) => {
       return app.graph.links[String(id).valueOf()];
@@ -616,6 +650,32 @@ export class LFManager {
       nodes.eventHandlers.LF_SwitchString(e, widgets.adders.KUL_BOOLEAN_VIEWER);
     });
     /*-------------------------------------------------------------------*/
+    /*       I n i t   U p d a t e U s a g e S t a t i s t i c s         */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_UpdateUsageStatistics(
+      widgets.setters.KUL_CODE,
+      widgets.adders.KUL_CODE,
+    );
+    this.#APIS.event(
+      EventName.updateUsageStatistics,
+      (e: CustomEvent<UpdateUsageStatisticsPayload>) => {
+        nodes.eventHandlers.LF_UpdateUsageStatistics(e, widgets.adders.KUL_CODE);
+      },
+    );
+    /*-------------------------------------------------------------------*/
+    /*         I n i t   U p s c a l e M o d e l S e l e c t o r         */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_UpscaleModelSelector(
+      widgets.setters.KUL_HISTORY,
+      widgets.adders.KUL_HISTORY,
+    );
+    this.#APIS.event(
+      EventName.upscaleModelSelector,
+      (e: CustomEvent<UpscaleModelSelectorPayload>) => {
+        nodes.eventHandlers.LF_UpscaleModelSelector(e, widgets.adders.KUL_HISTORY);
+      },
+    );
+    /*-------------------------------------------------------------------*/
     /*      I n i t   U r a n d o m   S e e d   G e n e r a t o r        */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_UrandomSeedGenerator(
@@ -628,6 +688,16 @@ export class LFManager {
         nodes.eventHandlers.LF_UrandomSeedGenerator(e, widgets.adders.KUL_TREE);
       },
     );
+    /*-------------------------------------------------------------------*/
+    /*                  I n i t   V A E S e l e c t o r                  */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_VAESelector(
+      widgets.setters.KUL_HISTORY,
+      widgets.adders.KUL_HISTORY,
+    );
+    this.#APIS.event(EventName.vaeSelector, (e: CustomEvent<VAESelectorPayload>) => {
+      nodes.eventHandlers.LF_VAESelector(e, widgets.adders.KUL_HISTORY);
+    });
     /*-------------------------------------------------------------------*/
     /*                    I n i t   W r i t e   J S O N                  */
     /*-------------------------------------------------------------------*/

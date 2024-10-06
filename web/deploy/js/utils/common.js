@@ -91,6 +91,9 @@ export const getWidget = (node, type) => {
 export const isButton = (comp) => {
     return comp.rootElement.tagName.toLowerCase() === 'kul-button';
 };
+export const isChart = (comp) => {
+    return comp.rootElement.tagName.toLowerCase() === 'kul-chart';
+};
 export const isList = (comp) => {
     return comp.rootElement.tagName.toLowerCase() === 'kul-list';
 };

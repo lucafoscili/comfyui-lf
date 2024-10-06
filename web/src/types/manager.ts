@@ -13,6 +13,7 @@ export interface ComfyAPIs {
     callback: (event: CustomEvent<T>) => void,
   ) => void;
   fetch: (body: unknown) => Promise<Response>;
+  fetchAnalyticsData: () => Promise<FetchAnalyticsAPIPayload>;
   getLinkById: (id: string) => LinkInfo;
   getNodeById: (id: string) => NodeType;
   interrupt: () => Promise<void>;
@@ -28,17 +29,21 @@ export enum LogSeverity {
   Warning = 'warning',
   Error = 'error',
 }
-export interface ClearModelAPIPayload {
-  status: 'success';
-  message: string;
-}
-export interface SaveModelAPIPayload {
-  status: 'exists' | 'success';
-  message: string;
-}
 export interface APIMetadataEntry {
   apiFlag: boolean;
   dataset: KulDataDataset;
   hash: string;
   path: string;
+}
+export interface ClearModelAPIPayload {
+  status: 'success';
+  message: string;
+}
+export interface FetchAnalyticsAPIPayload {
+  status: 'success';
+  data: Record<string, KulDataDataset>;
+}
+export interface SaveModelAPIPayload {
+  status: 'exists' | 'success';
+  message: string;
 }

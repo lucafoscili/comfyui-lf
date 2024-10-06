@@ -47,7 +47,10 @@ export enum EventName {
   switchInteger = 'lf-switchinteger',
   switchJson = 'lf-switchjson',
   switchString = 'lf-switchstring',
+  updateUsageStatistics = 'lf-updateusagestatistics',
+  upscaleModelSelector = 'lf-upscalemodelselector',
   urandomSeedGenerator = 'lf-urandomseedgenerator',
+  vaeSelector = 'lf-vaeselector',
   writeJson = 'lf-writejson',
 }
 export type EventPayload =
@@ -82,7 +85,10 @@ export type EventPayload =
   | SwitchIntegerPayload
   | SwitchJSONPayload
   | SwitchStringPayload
+  | UpdateUsageStatisticsPayload
+  | UpscaleModelSelectorPayload
   | UrandomSeedGeneratorPayload
+  | VAESelectorPayload
   | WriteJSONPayload;
 
 /*-------------------------------------------------------------------*/
@@ -423,12 +429,38 @@ export interface SwitchStringPayload extends BaseEventPayload {
 }
 
 /*-------------------------------------------------------------------*/
+/*      U p d a t e U s a g e S t a t i s t i c s   D e c l .        */
+/*-------------------------------------------------------------------*/
+
+export interface UpdateUsageStatisticsPayload extends BaseEventPayload {
+  log: string;
+}
+
+/*-------------------------------------------------------------------*/
+/* U p s c a l e M o d e l S e l e c t o r   D e c l a r a t i o n s */
+/*-------------------------------------------------------------------*/
+
+export interface UpscaleModelSelectorPayload extends BaseEventPayload {
+  isHistoryEnabled: boolean;
+  value: string;
+}
+
+/*-------------------------------------------------------------------*/
 /*           U r a n d o m   S e e d   G e n e r a t o r             */
 /*-------------------------------------------------------------------*/
 
 export interface UrandomSeedGeneratorPayload extends BaseEventPayload {
   dataset: KulDataDataset;
   isHistoryEnabled: boolean;
+}
+
+/*-------------------------------------------------------------------*/
+/*          V A E S e l e c t o r   D e c l a r a t i o n s          */
+/*-------------------------------------------------------------------*/
+
+export interface VAESelectorPayload extends BaseEventPayload {
+  isHistoryEnabled: boolean;
+  value: string;
 }
 
 /*-------------------------------------------------------------------*/

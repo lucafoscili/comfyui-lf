@@ -4,7 +4,7 @@ import os
 import requests
 
 from aiohttp import web
-from folder_paths import get_filename_list, get_full_path
+from folder_paths import get_filename_list, get_full_path, input_directory
 
 from server import PromptServer
 
@@ -76,6 +76,34 @@ async def clear_model_info(request):
             "status": "success", 
             "message": f"Deleted {len(deleted_files)} .info files.",
             "deleted_files": deleted_files
+        }, status=200)
+
+    except Exception as e:
+        return web.Response(status=500, text=f"Error: {str(e)}")
+
+@PromptServer.instance.routes.get("/comfyui-lf/get-analytics")
+async def get_analytics(response):
+    try:
+        analytics_dir = os.path.join(input_directory, "LF_Nodes")
+        
+        if not os.path.exists(analytics_dir):
+            return web.Response(status=404, text="Directory not found.")
+
+        analytics_data = {}
+
+        for filename in os.listdir(analytics_dir):
+            if filename.endswith(".json"):
+                file_path = os.path.join(analytics_dir, filename)
+                try:
+                    with open(file_path, 'r') as file:
+                        data = json.load(file)
+                        analytics_data[filename] = data
+                except Exception as e:
+                    return web.Response(status=500, text=f"Failed to read {filename}: {str(e)}")
+
+        return web.json_response({
+            "status": "success",
+            "data": analytics_data
         }, status=200)
 
     except Exception as e:

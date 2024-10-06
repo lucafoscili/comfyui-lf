@@ -48,8 +48,7 @@ class LF_UrandomSeedGenerator:
     RETURN_TYPES = tuple(["JSON"] + ["INT"] * 20)
     
     def on_exec(self, node_id, enable_history: bool, regen_each_run, fixed_seeds=None):
-        # If fixed_seeds are provided, attempt to load them
-        existing_seeds = [None] * 20  # Placeholder for 20 seeds
+        existing_seeds = [None] * 20
         if fixed_seeds:
             try:
                 json_string = json.dumps(fixed_seeds)
@@ -66,13 +65,14 @@ class LF_UrandomSeedGenerator:
             except json.JSONDecodeError:
                 print("Invalid JSON input. Generating all random seeds.")
 
-        # Fill in missing seeds using urandom
+        current_timestamp = int(datetime.now().timestamp())
+
         for i in range(20):
-            if existing_seeds[i] is None:  # If no seed exists at this index, generate one
-                existing_seeds[i] = int.from_bytes(os.urandom(4), 'big')
+            if existing_seeds[i] is None:
+                urandom_seed = int.from_bytes(os.urandom(4), 'big')
+                existing_seeds[i] = urandom_seed ^ current_timestamp
                 time.sleep(0.1)  # Add a tiny delay to let system entropy pool refresh
 
-        # Generate JSON output
         execution_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         json_dataset = {
             "nodes": [

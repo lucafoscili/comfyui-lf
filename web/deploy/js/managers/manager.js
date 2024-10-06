@@ -16,7 +16,7 @@ import { defineCustomElements } from '../ketchup-lite/loader.js';
 import { getKulManager } from '../utils/common.js';
 import { LFNodes } from './nodes.js';
 import { LFWidgets } from './widgets.js';
-import { LogSeverity } from '../types/manager.js';
+import { LogSeverity, } from '../types/manager.js';
 import { EventName, } from '../types/events.js';
 const LOG_STYLE = {
     fontFamily: 'var(--kul-font-family-monospace)',
@@ -61,6 +61,29 @@ export class LFManager {
                 return await api.fetchApi('/upload/image', {
                     method: 'POST',
                     body,
+                });
+            },
+            fetchAnalyticsData: () => {
+                return api
+                    .fetchApi('/comfyui-lf/get-analytics', {
+                    method: 'GET',
+                })
+                    .then((res) => {
+                    return res.json();
+                })
+                    .then((data) => {
+                    if (data.status === 'success') {
+                        this.log('Analytics data fetched successfully.', { data }, LogSeverity.Success);
+                        return data;
+                    }
+                    else {
+                        this.log('Unexpected response status while fetching analytics data.', { data }, LogSeverity.Warning);
+                        throw new Error('Unexpected response status');
+                    }
+                })
+                    .catch((error) => {
+                    this.log('Error fetching analytics data.', { error }, LogSeverity.Error);
+                    throw error;
                 });
             },
             getLinkById: (id) => {
@@ -446,11 +469,32 @@ export class LFManager {
             nodes.eventHandlers.LF_SwitchString(e, widgets.adders.KUL_BOOLEAN_VIEWER);
         });
         /*-------------------------------------------------------------------*/
+        /*       I n i t   U p d a t e U s a g e S t a t i s t i c s         */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_UpdateUsageStatistics(widgets.setters.KUL_CODE, widgets.adders.KUL_CODE);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.updateUsageStatistics, (e) => {
+            nodes.eventHandlers.LF_UpdateUsageStatistics(e, widgets.adders.KUL_CODE);
+        });
+        /*-------------------------------------------------------------------*/
+        /*         I n i t   U p s c a l e M o d e l S e l e c t o r         */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_UpscaleModelSelector(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.upscaleModelSelector, (e) => {
+            nodes.eventHandlers.LF_UpscaleModelSelector(e, widgets.adders.KUL_HISTORY);
+        });
+        /*-------------------------------------------------------------------*/
         /*      I n i t   U r a n d o m   S e e d   G e n e r a t o r        */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_UrandomSeedGenerator(widgets.setters.KUL_TREE, widgets.adders.KUL_TREE);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.urandomSeedGenerator, (e) => {
             nodes.eventHandlers.LF_UrandomSeedGenerator(e, widgets.adders.KUL_TREE);
+        });
+        /*-------------------------------------------------------------------*/
+        /*                  I n i t   V A E S e l e c t o r                  */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_VAESelector(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.vaeSelector, (e) => {
+            nodes.eventHandlers.LF_VAESelector(e, widgets.adders.KUL_HISTORY);
         });
         /*-------------------------------------------------------------------*/
         /*                    I n i t   W r i t e   J S O N                  */

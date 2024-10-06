@@ -44,6 +44,9 @@ import { loadLoraTagsFactory } from '../nodes/loadLoraTags';
 import { samplerSelectorFactory } from '../nodes/samplerSelector';
 import { schedulerSelectorFactory } from '../nodes/schedulerSelector';
 import { notifyFactory } from '../nodes/notify';
+import { upscaleModelSelectorFactory } from '../nodes/upscaleModelSelector';
+import { vaeSelectorFactory } from '../nodes/vaeSelector';
+import { updateUsageStatisticsFactory } from '../nodes/updateUsageStatistics';
 
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
@@ -61,7 +64,7 @@ export class LFNodes {
     [NodeName.displayJson]: displayJsonFactory.eventHandler,
     [NodeName.displayPrimitiveAsJson]: displayPrimitiveAsJsonFactory.eventHandler,
     [NodeName.displayString]: displayStringFactory.eventHandler,
-    [NodeName.embeddingSelector]: checkpointSelectorFactory.eventHandler,
+    [NodeName.embeddingSelector]: embeddingSelectorFactory.eventHandler,
     [NodeName.extractor]: extractorFactory.eventHandler,
     [NodeName.float]: floatFactory.eventHandler,
     [NodeName.imageHistogram]: imageHistogramFactory.eventHandler,
@@ -88,7 +91,10 @@ export class LFNodes {
     [NodeName.switchInteger]: switchIntegerFactory.eventHandler,
     [NodeName.switchJson]: switchJsonFactory.eventHandler,
     [NodeName.switchString]: switchStringFactory.eventHandler,
+    [NodeName.updateUsageStatistics]: updateUsageStatisticsFactory.eventHandler,
+    [NodeName.upscaleModelSelector]: upscaleModelSelectorFactory.eventHandler,
     [NodeName.urandomSeedGenerator]: uRandomSeedGeneratorFactory.eventHandler,
+    [NodeName.vaeSelector]: vaeSelectorFactory.eventHandler,
     [NodeName.writeJson]: writeJsonFactory.eventHandler,
   };
 
@@ -135,7 +141,10 @@ export class LFNodes {
     [NodeName.switchInteger]: switchIntegerFactory.register,
     [NodeName.switchJson]: switchJsonFactory.register,
     [NodeName.switchString]: switchStringFactory.register,
+    [NodeName.updateUsageStatistics]: updateUsageStatisticsFactory.register,
+    [NodeName.upscaleModelSelector]: upscaleModelSelectorFactory.register,
     [NodeName.urandomSeedGenerator]: uRandomSeedGeneratorFactory.register,
+    [NodeName.vaeSelector]: vaeSelectorFactory.register,
     [NodeName.writeJson]: writeJsonFactory.register,
   };
 
