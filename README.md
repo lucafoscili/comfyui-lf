@@ -23,7 +23,7 @@ Counts the number of each keyword in a prompt and displays a bar chart showing t
 #### UpdateUsageStatistics (experimental)
 
 Keep tracks of the resources used by saving datasets in the input folder of ComfyUI. As of now only the checkpoint chart is available to be seen (inside the control panel).
-![UpdateUsageStatistics](https://github.com/lucafoscili/comfyui-lf/blob/e704d1c6602217387498472ebacf284e8204080b/docs/images/UpdateUsageStatistics.png "Keeps track of resources' usage")
+![UpdateUsageStatistics](https://github.com/lucafoscili/comfyui-lf/blob/de49b4964ecc55c32438cc829928d90b9b5a8346/docs/images/UpdateUsageStatistics.png "Keeps track of resources' usage")
 
 ### Configuration nodes (`configuration.py`)
 
@@ -330,12 +330,12 @@ Used to select a scheduler, the history widget allows for a quick swap between t
 #### UpscaleModelSelector
 
 Used to select an upscale model, the history widget allows for a quick swap between the most used upscale models.
-![UpscaleModelSelector](https://github.com/lucafoscili/comfyui-lf/blob/e704d1c6602217387498472ebacf284e8204080b/docs/images/UpscaleModelSelector.png "Upscale model selector")
+![UpscaleModelSelector](https://github.com/lucafoscili/comfyui-lf/blob/de49b4964ecc55c32438cc829928d90b9b5a8346/docs/images/UpscaleModelSelector.png "Upscale model selector")
 
 #### VAESelector
 
 Used to select a VAE, the history widget allows for a quick swap between the most used VAEs.
-![VAESelector](https://github.com/lucafoscili/comfyui-lf/blob/e704d1c6602217387498472ebacf284e8204080b/docs/images/VAESelector.png "VAE selector")
+![VAESelector](https://github.com/lucafoscili/comfyui-lf/blob/de49b4964ecc55c32438cc829928d90b9b5a8346/docs/images/VAESelector.png "VAE selector")
 
 ## Installation
 
