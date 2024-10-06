@@ -45,6 +45,7 @@ export var NodeName;
     NodeName["switchInteger"] = "LF_SwitchInteger";
     NodeName["switchJson"] = "LF_SwitchJSON";
     NodeName["switchString"] = "LF_SwitchString";
+    NodeName["updateUsageStatistics"] = "LF_UpdateUsageStatistics";
     NodeName["upscaleModelSelector"] = "LF_UpscaleModelSelector";
     NodeName["urandomSeedGenerator"] = "LF_UrandomSeedGenerator";
     NodeName["vaeSelector"] = "LF_VAESelector";

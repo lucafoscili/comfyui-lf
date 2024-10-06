@@ -47,6 +47,7 @@ export enum EventName {
   switchInteger = 'lf-switchinteger',
   switchJson = 'lf-switchjson',
   switchString = 'lf-switchstring',
+  updateUsageStatistics = 'lf-updateusagestatistics',
   upscaleModelSelector = 'lf-upscalemodelselector',
   urandomSeedGenerator = 'lf-urandomseedgenerator',
   vaeSelector = 'lf-vaeselector',
@@ -84,6 +85,7 @@ export type EventPayload =
   | SwitchIntegerPayload
   | SwitchJSONPayload
   | SwitchStringPayload
+  | UpdateUsageStatisticsPayload
   | UpscaleModelSelectorPayload
   | UrandomSeedGeneratorPayload
   | VAESelectorPayload
@@ -424,6 +426,14 @@ export interface SwitchJSONPayload extends BaseEventPayload {
 
 export interface SwitchStringPayload extends BaseEventPayload {
   bool: boolean;
+}
+
+/*-------------------------------------------------------------------*/
+/*      U p d a t e U s a g e S t a t i s t i c s   D e c l .        */
+/*-------------------------------------------------------------------*/
+
+export interface UpdateUsageStatisticsPayload extends BaseEventPayload {
+  log: string;
 }
 
 /*-------------------------------------------------------------------*/

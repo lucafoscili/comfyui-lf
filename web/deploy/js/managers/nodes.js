@@ -45,6 +45,7 @@ import { schedulerSelectorFactory } from '../nodes/schedulerSelector.js';
 import { notifyFactory } from '../nodes/notify.js';
 import { upscaleModelSelectorFactory } from '../nodes/upscaleModelSelector.js';
 import { vaeSelectorFactory } from '../nodes/vaeSelector.js';
+import { updateUsageStatisticsFactory } from '../nodes/updateUsageStatistics.js';
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
 /*-------------------------------------------------*/
@@ -88,6 +89,7 @@ export class LFNodes {
             [NodeName.switchInteger]: switchIntegerFactory.eventHandler,
             [NodeName.switchJson]: switchJsonFactory.eventHandler,
             [NodeName.switchString]: switchStringFactory.eventHandler,
+            [NodeName.updateUsageStatistics]: updateUsageStatisticsFactory.eventHandler,
             [NodeName.upscaleModelSelector]: upscaleModelSelectorFactory.eventHandler,
             [NodeName.urandomSeedGenerator]: uRandomSeedGeneratorFactory.eventHandler,
             [NodeName.vaeSelector]: vaeSelectorFactory.eventHandler,
@@ -136,6 +138,7 @@ export class LFNodes {
             [NodeName.switchInteger]: switchIntegerFactory.register,
             [NodeName.switchJson]: switchJsonFactory.register,
             [NodeName.switchString]: switchStringFactory.register,
+            [NodeName.updateUsageStatistics]: updateUsageStatisticsFactory.register,
             [NodeName.upscaleModelSelector]: upscaleModelSelectorFactory.register,
             [NodeName.urandomSeedGenerator]: uRandomSeedGeneratorFactory.register,
             [NodeName.vaeSelector]: vaeSelectorFactory.register,

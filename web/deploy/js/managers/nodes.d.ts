@@ -38,6 +38,7 @@ export declare class LFNodes {
         LF_SwitchInteger: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
         LF_SwitchJSON: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
         LF_SwitchString: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
+        LF_UpdateUsageStatistics: (event: CustomEvent<import("../types/events").UpdateUsageStatisticsPayload>, addW: BaseWidgetCallback) => void;
         LF_UpscaleModelSelector: (event: CustomEvent<import("../types/events").UpscaleModelSelectorPayload>, addW: BaseWidgetCallback) => void;
         LF_UrandomSeedGenerator: (event: CustomEvent<import("../types/events").UrandomSeedGeneratorPayload>, addW: BaseWidgetCallback) => void;
         LF_VAESelector: (event: CustomEvent<import("../types/events").VAESelectorPayload>, addW: BaseWidgetCallback) => void;
@@ -86,6 +87,7 @@ export declare class LFNodes {
         LF_SwitchInteger: (setW: import("../types/widgets").BooleanViewerWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_SwitchJSON: (setW: import("../types/widgets").BooleanViewerWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_SwitchString: (setW: import("../types/widgets").BooleanViewerWidgetSetter, addW: BaseWidgetCallback) => void;
+        LF_UpdateUsageStatistics: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_UpscaleModelSelector: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_UrandomSeedGenerator: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_VAESelector: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
@@ -130,6 +132,7 @@ export declare class LFNodes {
             LF_SwitchInteger: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
             LF_SwitchJSON: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
             LF_SwitchString: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback) => void;
+            LF_UpdateUsageStatistics: (event: CustomEvent<import("../types/events").UpdateUsageStatisticsPayload>, addW: BaseWidgetCallback) => void;
             LF_UpscaleModelSelector: (event: CustomEvent<import("../types/events").UpscaleModelSelectorPayload>, addW: BaseWidgetCallback) => void;
             LF_UrandomSeedGenerator: (event: CustomEvent<import("../types/events").UrandomSeedGeneratorPayload>, addW: BaseWidgetCallback) => void;
             LF_VAESelector: (event: CustomEvent<import("../types/events").VAESelectorPayload>, addW: BaseWidgetCallback) => void;
@@ -178,6 +181,7 @@ export declare class LFNodes {
             LF_SwitchInteger: (setW: import("../types/widgets").BooleanViewerWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_SwitchJSON: (setW: import("../types/widgets").BooleanViewerWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_SwitchString: (setW: import("../types/widgets").BooleanViewerWidgetSetter, addW: BaseWidgetCallback) => void;
+            LF_UpdateUsageStatistics: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_UpscaleModelSelector: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_UrandomSeedGenerator: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_VAESelector: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;

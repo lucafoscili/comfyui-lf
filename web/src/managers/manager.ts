@@ -51,6 +51,7 @@ import {
   NotifyPayload,
   UpscaleModelSelectorPayload,
   VAESelectorPayload,
+  UpdateUsageStatisticsPayload,
 } from '../types/events.js';
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
 
@@ -617,6 +618,19 @@ export class LFManager {
     this.#APIS.event(EventName.switchString, (e: CustomEvent<SwitchStringPayload>) => {
       nodes.eventHandlers.LF_SwitchString(e, widgets.adders.KUL_BOOLEAN_VIEWER);
     });
+    /*-------------------------------------------------------------------*/
+    /*       I n i t   U p d a t e U s a g e S t a t i s t i c s         */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_UpdateUsageStatistics(
+      widgets.setters.KUL_CODE,
+      widgets.adders.KUL_CODE,
+    );
+    this.#APIS.event(
+      EventName.updateUsageStatistics,
+      (e: CustomEvent<UpdateUsageStatisticsPayload>) => {
+        nodes.eventHandlers.LF_UpdateUsageStatistics(e, widgets.adders.KUL_CODE);
+      },
+    );
     /*-------------------------------------------------------------------*/
     /*         I n i t   U p s c a l e M o d e l S e l e c t o r         */
     /*-------------------------------------------------------------------*/

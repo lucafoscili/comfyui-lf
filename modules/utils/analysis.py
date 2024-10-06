@@ -123,7 +123,8 @@ def calculate_histograms(image_tensor):
         "sum_hist": sum_hist.tolist(),
     }
 
-def update_resource_json(resource_file, resource_name, resource_value):
+def update_usage_json(resource_file:str, resource_name:str, resource_value:str):
+    resource_value = os.path.splitext(resource_value)[0]
     if os.path.exists(resource_file):
         with open(resource_file, 'r') as file:
             try:
@@ -135,9 +136,13 @@ def update_resource_json(resource_file, resource_name, resource_value):
 
     for node in json_data["nodes"]:
         if node["cells"]["name"]["value"] == resource_value:
+            oldValue = int(node["cells"]["counter"]["value"])
             node["cells"]["counter"]["value"] += 1
+            newValue = int(node["cells"]["counter"]["value"])
             break
     else:
+        oldValue = 0
+        newValue = 1
         new_id = len(json_data["nodes"])
         json_data["nodes"].append({
             "cells": {
@@ -150,5 +155,6 @@ def update_resource_json(resource_file, resource_name, resource_value):
     os.makedirs(os.path.dirname(resource_file), exist_ok=True)
     with open(resource_file, 'w') as file:
         json.dump(json_data, file, indent=4)
-
-    return json_data
+    
+    base_name = os.path.splitext(os.path.basename(resource_value))[0]
+    return f"\n**{resource_value}** count: {oldValue} => {newValue}\n"
