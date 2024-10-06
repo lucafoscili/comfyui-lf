@@ -65,7 +65,8 @@ const onResponse = async (dataset: KulDataDataset, path: string, r: CivitAIModel
       node.cells.kulButton = {
         kulDisabled: true,
         kulIcon: 'warning',
-        kulStyling: 'icon',
+        kulLabel: 'Not found on CivitAI!',
+        kulStyling: 'flat',
         shape: 'button',
         value: '',
       };

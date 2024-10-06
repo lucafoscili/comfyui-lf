@@ -16,7 +16,29 @@ import {
   getLFManager,
   isButton,
   isSwitch,
-} from './common';
+} from '../utils/common';
+
+const STYLES = {
+  logsArea: () => {
+    return {
+      backgroundColor: 'rgba(var(--kul-text-color-rgb), 0.075)',
+      borderRadius: '8px',
+      display: 'block',
+      height: '250px',
+      marginBottom: '16px',
+      overflow: 'auto',
+    };
+  },
+  separator: () => {
+    return {
+      border: '1px solid var(--kul-border-color)',
+      display: 'block',
+      margin: '12px auto 24px',
+      opacity: '0.25',
+      width: '50%',
+    };
+  },
+};
 
 let TIMEOUT: NodeJS.Timeout;
 
@@ -170,6 +192,11 @@ export const sectionsFactory = {
                 },
               },
             },
+            {
+              cssStyle: STYLES.separator(),
+              id: 'content_separator',
+              value: '',
+            },
           ],
         },
       ],
@@ -240,14 +267,13 @@ export const sectionsFactory = {
         {
           id: 'paragraph',
           value: '',
-          cssStyle: {
-            backgroundColor: 'rgba(var(--kul-text-color-rgb), 0.075)',
-            borderRadius: '8px',
-            height: '250px',
-            marginBottom: '16px',
-            overflow: 'auto',
-          },
+          cssStyle: STYLES.logsArea(),
           children: logsData,
+        },
+        {
+          cssStyle: STYLES.separator(),
+          id: 'content_separator',
+          value: '',
         },
       ],
     };
@@ -301,6 +327,11 @@ export const sectionsFactory = {
             },
           ],
         },
+        {
+          cssStyle: STYLES.separator(),
+          id: 'content_separator',
+          value: '',
+        },
       ],
     };
   },
@@ -331,6 +362,11 @@ export const sectionsFactory = {
               },
             },
           ],
+        },
+        {
+          cssStyle: STYLES.separator(),
+          id: 'content_separator',
+          value: '',
         },
       ],
     };

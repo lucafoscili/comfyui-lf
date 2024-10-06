@@ -3,7 +3,7 @@ import {
   CardsWithChipWidgetOptions,
   CustomWidgetName,
 } from '../types/widgets';
-import { cardHandler, getCardProps } from '../utils/card-helper';
+import { cardHandler, getCardProps } from '../helpers/card';
 import { createDOMWidget, serializeValue, deserializeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-cardswithchip';

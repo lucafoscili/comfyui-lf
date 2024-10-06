@@ -15,7 +15,7 @@ import {
   getLFManager,
   serializeValue,
 } from '../utils/common';
-import { handleKulEvent, sectionsFactory } from '../utils/control-panel-helper';
+import { handleKulEvent, sectionsFactory } from '../helpers/control-panel';
 
 const BASE_CSS_CLASS = 'lf-controlpanel';
 const TYPE = CustomWidgetName.controlPanel;
