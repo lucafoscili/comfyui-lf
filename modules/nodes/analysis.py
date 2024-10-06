@@ -1,3 +1,7 @@
+import folder_paths
+import os
+
+from comfy.samplers import KSampler
 from server import PromptServer
 
 from ..utils.analysis import *
@@ -78,13 +82,58 @@ class LF_KeywordCounter:
         })
 
         return (chart_dataset, chip_dataset)
+class LF_UpdateUsageStatistics:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "checkpoint": (folder_paths.get_filename_list("checkpoints"), {"default": "", "tooltip": "The checkpoint resource used."}),
+                "datasets_dir": ("STRING", {"default": os.path.join(folder_paths.input_directory, "LF_Nodes"), "tooltip": "The directory containing the JSON datasets."}),
+            },
+            "optional": {
+                "lora": (["None"] + folder_paths.get_filename_list("loras"), {"default": "", "tooltip": "The LoRA resource used."}),
+                "sampler": (["None"] + KSampler.SAMPLERS, {"default": "", "tooltip": "The sampler used."}),
+            },
+            "hidden": { "node_id": "UNIQUE_ID" }
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    OUTPUT_NODE = True
+    RETURN_TYPES = ()
+
+    def on_exec(self, node_id, datasets_dir, checkpoint=None, lora=None, sampler=None):
+        dataset = None
+
+        lora = None if lora is None or str(lora) == "None" else lora
+        sampler = None if sampler is None or str(sampler) == "None" else sampler
+
+        if lora:
+            lora_file = os.path.join(datasets_dir, "lora_usage.json")
+            dataset = update_resource_json(lora_file, "LoRA name", lora)
+        if checkpoint:
+            checkpoint_file = os.path.join(datasets_dir, "checkpoint_usage.json")
+            dataset = update_resource_json(checkpoint_file, "Checkpoint name", checkpoint)
+        if sampler:
+            sampler_file = os.path.join(datasets_dir, "sampler_usage.json")
+            dataset = update_resource_json(sampler_file, "Sampler name", sampler)
+
+
+        PromptServer.instance.send_sync("lf-tracker", {
+            "node": node_id, 
+            "dataset": dataset,
+        })
+
+        return ()
 
 NODE_CLASS_MAPPINGS = {
     "LF_ImageHistogram": LF_ImageHistogram,
     "LF_KeywordCounter": LF_KeywordCounter,
+    "LF_UpdateUsageStatistics": LF_UpdateUsageStatistics,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_ImageHistogram":  "Image Histogram",
     "LF_KeywordCounter": "Keyword counter",
+    "LF_UpdateUsageStatistics": "Update usage statistics",
 }

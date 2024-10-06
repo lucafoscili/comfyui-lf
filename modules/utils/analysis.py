@@ -1,40 +1,6 @@
+import json
 import numpy as np
-
-def calculate_histograms(image_tensor):
-    """
-    Calculate the histograms for the RGB channels and their sum from a given image tensor
-    formatted in the shape [1, H, W, 3].
-
-    Args:
-        image_tensor (torch.Tensor): A tensor representing the image, assumed to be in the shape [1, H, W, 3].
-    
-    Returns:
-        dict: A dictionary containing the histograms for the R, G, B channels and their sum.
-    """
-    # Convert tensor to numpy array, expected shape [1, H, W, 3]
-    image_np = image_tensor.squeeze(0).cpu().numpy() * 255.0
-    image_np = image_np.astype(np.uint8)
-
-    # Extract individual RGB channels
-    red_channel = image_np[:, :, 0]
-    green_channel = image_np[:, :, 1]
-    blue_channel = image_np[:, :, 2]
-
-    # Calculate histograms for each channel
-    red_hist = np.histogram(red_channel, bins=256, range=(0, 255))[0]
-    green_hist = np.histogram(green_channel, bins=256, range=(0, 255))[0]
-    blue_hist = np.histogram(blue_channel, bins=256, range=(0, 255))[0]
-
-    # Calculate the sum of the RGB channels
-    sum_channel = red_channel.astype(np.int32) + green_channel.astype(np.int32) + blue_channel.astype(np.int32)
-    sum_hist = np.histogram(sum_channel, bins=256, range=(0, 765))[0]
-
-    return {
-        "red_hist": red_hist.tolist(),
-        "green_hist": green_hist.tolist(),
-        "blue_hist": blue_hist.tolist(),
-        "sum_hist": sum_hist.tolist(),
-    }
+import os
 
 def adapt_histograms_for_kuldata(histograms):
     """
@@ -120,3 +86,69 @@ def adapt_keyword_count_for_chip(keyword_count):
         kuldata["nodes"].append(node)
 
     return kuldata
+
+def calculate_histograms(image_tensor):
+    """
+    Calculate the histograms for the RGB channels and their sum from a given image tensor
+    formatted in the shape [1, H, W, 3].
+
+    Args:
+        image_tensor (torch.Tensor): A tensor representing the image, assumed to be in the shape [1, H, W, 3].
+    
+    Returns:
+        dict: A dictionary containing the histograms for the R, G, B channels and their sum.
+    """
+    # Convert tensor to numpy array, expected shape [1, H, W, 3]
+    image_np = image_tensor.squeeze(0).cpu().numpy() * 255.0
+    image_np = image_np.astype(np.uint8)
+
+    # Extract individual RGB channels
+    red_channel = image_np[:, :, 0]
+    green_channel = image_np[:, :, 1]
+    blue_channel = image_np[:, :, 2]
+
+    # Calculate histograms for each channel
+    red_hist = np.histogram(red_channel, bins=256, range=(0, 255))[0]
+    green_hist = np.histogram(green_channel, bins=256, range=(0, 255))[0]
+    blue_hist = np.histogram(blue_channel, bins=256, range=(0, 255))[0]
+
+    # Calculate the sum of the RGB channels
+    sum_channel = red_channel.astype(np.int32) + green_channel.astype(np.int32) + blue_channel.astype(np.int32)
+    sum_hist = np.histogram(sum_channel, bins=256, range=(0, 765))[0]
+
+    return {
+        "red_hist": red_hist.tolist(),
+        "green_hist": green_hist.tolist(),
+        "blue_hist": blue_hist.tolist(),
+        "sum_hist": sum_hist.tolist(),
+    }
+
+def update_resource_json(resource_file, resource_name, resource_value):
+    if os.path.exists(resource_file):
+        with open(resource_file, 'r') as file:
+            try:
+                json_data = json.load(file)
+            except json.JSONDecodeError:
+                json_data = {"columns": [{"id": "name", "value": resource_name}, {"id": "counter", "name": "Nr. of times used", "shape": "number"}], "nodes": []}
+    else:
+        json_data = {"columns": [{"id": "name", "value": resource_name}, {"id": "counter", "name": "Nr. of times used", "shape": "number"}], "nodes": []}
+
+    for node in json_data["nodes"]:
+        if node["cells"]["name"]["value"] == resource_value:
+            node["cells"]["counter"]["value"] += 1
+            break
+    else:
+        new_id = len(json_data["nodes"])
+        json_data["nodes"].append({
+            "cells": {
+                "name": {"value": resource_value},
+                "counter": {"value": 1}
+            },
+            "id": str(new_id)
+        })
+    
+    os.makedirs(os.path.dirname(resource_file), exist_ok=True)
+    with open(resource_file, 'w') as file:
+        json.dump(json_data, file, indent=4)
+
+    return json_data
