@@ -1,5 +1,5 @@
 import { CustomWidgetName, } from '../types/widgets.js';
-import { cardHandler, getCardProps } from '../utils/card-helper.js';
+import { cardHandler, getCardProps } from '../helpers/card.js';
 import { createDOMWidget, serializeValue, deserializeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-cardswithchip';
 const TYPE = CustomWidgetName.cardsWithChip;

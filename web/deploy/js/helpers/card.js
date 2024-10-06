@@ -1,5 +1,5 @@
 import { LogSeverity } from '../types/manager.js';
-import { getLFManager, deserializeValue } from './common.js';
+import { getLFManager, deserializeValue } from '../utils/common.js';
 export const CARD_PROPS_TO_SERIALIZE = ['kulData', 'kulStyle'];
 export const cardHandler = (container, propsArray) => {
     let count = 0;

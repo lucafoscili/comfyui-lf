@@ -37,12 +37,25 @@ export const notifyFactory = {
 };
 
 function showNotification(payload: NotifyPayload) {
-  const { action, image, message, silent, title } = payload;
+  const { action, image, message, silent, tag, title } = payload;
+
+  const icon =
+    action === 'focus tab'
+      ? 'visibility'
+      : action === 'interrupt'
+      ? 'not_interested'
+      : action === 'interrupt and queue'
+      ? 'refresh'
+      : action === 'queue prompt'
+      ? 'queue'
+      : '';
 
   const options: NotificationOptions = {
     body: message,
+    icon: icon ? window.location.href + `extensions/comfyui-lf/assets/svg/${icon}.svg` : undefined,
     requireInteraction: action === 'none' ? false : true,
     silent,
+    tag,
   };
 
   if ('image' in Notification.prototype && image) {
@@ -53,15 +66,26 @@ function showNotification(payload: NotifyPayload) {
     const notification = new Notification(title, options);
 
     notification.addEventListener('click', function () {
+      const routes = getLFManager().getApiRoutes();
       switch (action) {
         case 'focus tab':
           window.focus();
           break;
-        case 'queue prompt':
-          getLFManager().getApiRoutes().queuePrompt();
-          getLFManager().log('New prompt queued from notification.', {}, LogSeverity.Success);
+        case 'interrupt':
+          routes.interrupt();
           break;
-        default:
+        case 'interrupt and queue':
+          routes.interrupt();
+          routes.queuePrompt();
+          getLFManager().log(
+            'New prompt queued from notification after interrupting.',
+            {},
+            LogSeverity.Success,
+          );
+          break;
+        case 'queue prompt':
+          routes.queuePrompt();
+          getLFManager().log('New prompt queued from notification.', {}, LogSeverity.Success);
           break;
       }
     });

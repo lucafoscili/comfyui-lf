@@ -69,6 +69,9 @@ export class LFManager {
             getNodeById: (id) => {
                 return app.graph.getNodeById(+(id || app.runningNodeId));
             },
+            interrupt: () => {
+                return api.interrupt();
+            },
             modelInfoFromCivitAI: async (hash) => {
                 try {
                     const r = await fetch(`https://civitai.com/api/v1/model-versions/by-hash/${hash}`);
@@ -482,7 +485,7 @@ export class LFManager {
         }
         const resetColorCode = '\x1b[0m';
         const dot = '• LF Nodes •';
-        if (__classPrivateFieldGet(this, _LFManager_DEBUG_DATASET, "f") && __classPrivateFieldGet(this, _LFManager_DEBUG_ARTICLE, "f")?.isConnected) {
+        if (__classPrivateFieldGet(this, _LFManager_DEBUG_DATASET, "f") && __classPrivateFieldGet(this, _LFManager_DEBUG_ARTICLE, "f")?.isConnected && severity !== LogSeverity.Info) {
             const id = String(performance.now()).valueOf();
             const icon = severity === LogSeverity.Error
                 ? '🔴 '

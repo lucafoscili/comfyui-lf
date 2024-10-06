@@ -142,10 +142,11 @@ export interface MultipleImageResizeForWebPayload extends BaseEventPayload {
     dataset: KulDataDataset;
 }
 export interface NotifyPayload extends BaseEventPayload {
-    action: 'none' | 'focus tab' | 'queue prompt';
+    action: 'none' | 'focus tab' | 'interrupt' | 'interrupt and queue' | 'queue prompt';
     image: string;
     message: string;
     silent: boolean;
+    tag: string;
     title: string;
 }
 export interface RandomBooleanPayload extends BaseEventPayload {

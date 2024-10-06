@@ -1,4 +1,25 @@
-import { getApiRoutes, getKulManager, getKulThemes, getLFManager, isButton, isSwitch, } from './common.js';
+import { getApiRoutes, getKulManager, getKulThemes, getLFManager, isButton, isSwitch, } from '../utils/common.js';
+const STYLES = {
+    logsArea: () => {
+        return {
+            backgroundColor: 'rgba(var(--kul-text-color-rgb), 0.075)',
+            borderRadius: '8px',
+            display: 'block',
+            height: '250px',
+            marginBottom: '16px',
+            overflow: 'auto',
+        };
+    },
+    separator: () => {
+        return {
+            border: '1px solid var(--kul-border-color)',
+            display: 'block',
+            margin: '12px auto 24px',
+            opacity: '0.25',
+            width: '50%',
+        };
+    },
+};
 let TIMEOUT;
 export const handleKulEvent = (e) => {
     const { comp } = e.detail;
@@ -132,6 +153,11 @@ export const sectionsFactory = {
                                 },
                             },
                         },
+                        {
+                            cssStyle: STYLES.separator(),
+                            id: 'content_separator',
+                            value: '',
+                        },
                     ],
                 },
             ],
@@ -201,14 +227,13 @@ export const sectionsFactory = {
                 {
                     id: 'paragraph',
                     value: '',
-                    cssStyle: {
-                        backgroundColor: 'rgba(var(--kul-text-color-rgb), 0.075)',
-                        borderRadius: '8px',
-                        height: '250px',
-                        marginBottom: '16px',
-                        overflow: 'auto',
-                    },
+                    cssStyle: STYLES.logsArea(),
                     children: logsData,
+                },
+                {
+                    cssStyle: STYLES.separator(),
+                    id: 'content_separator',
+                    value: '',
                 },
             ],
         };
@@ -260,6 +285,11 @@ export const sectionsFactory = {
                         },
                     ],
                 },
+                {
+                    cssStyle: STYLES.separator(),
+                    id: 'content_separator',
+                    value: '',
+                },
             ],
         };
     },
@@ -289,6 +319,11 @@ export const sectionsFactory = {
                             },
                         },
                     ],
+                },
+                {
+                    cssStyle: STYLES.separator(),
+                    id: 'content_separator',
+                    value: '',
                 },
             ],
         };

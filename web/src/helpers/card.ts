@@ -1,7 +1,7 @@
 import { KulEventPayload } from '../types/ketchup-lite/components';
 import { KulCard } from '../types/ketchup-lite/components/kul-card/kul-card';
 import { LogSeverity } from '../types/manager';
-import { getLFManager, deserializeValue } from './common';
+import { getLFManager, deserializeValue } from '../utils/common';
 
 export const CARD_PROPS_TO_SERIALIZE = ['kulData', 'kulStyle'];
 

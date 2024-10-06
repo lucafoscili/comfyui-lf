@@ -53,7 +53,8 @@ const onResponse = async (dataset, path, r) => {
             node.cells.kulButton = {
                 kulDisabled: true,
                 kulIcon: 'warning',
-                kulStyling: 'icon',
+                kulLabel: 'Not found on CivitAI!',
+                kulStyling: 'flat',
                 shape: 'button',
                 value: '',
             };
