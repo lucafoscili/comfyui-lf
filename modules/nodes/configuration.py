@@ -665,6 +665,45 @@ class LF_SchedulerSelector:
         })
 
         return (scheduler,)
+
+class LF_UpscaleModelSelector:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "upscale_model": (folder_paths.get_filename_list("upscale_models"), {"default": "None", "tooltip": "Upscale model used to upscale the image."}),
+                "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
+                "randomize": ("BOOLEAN", {"default": False, "tooltip": "Selects a scheduler randomly."}),
+                "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter upscale models names. Supports wildcards (*)."}),
+                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Seed value for when randomization is active."}),
+            },
+            "hidden": {"node_id": "UNIQUE_ID"}
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    RETURN_NAMES = ("upscale_model",)
+    RETURN_TYPES = (folder_paths.get_filename_list("upscale_models"),)
+
+    def on_exec(self, node_id, upscale_model, enable_history, randomize, seed, filter):
+        upscalers = folder_paths.get_filename_list("upscale_models")
+
+        if filter:
+            upscalers = filter_list(filter, upscalers)
+            if not upscalers:
+                raise ValueError(f"Not found a model with the specified filter: {filter}")
+
+        if randomize:
+            random.seed(seed)
+            upscale_model = random.choice(upscalers)
+
+        PromptServer.instance.send_sync("lf-upscalemodelselector", {
+            "node": node_id, 
+            "isHistoryEnabled": enable_history,
+            "value": upscale_model,
+        })
+
+        return (upscale_model,)
         
 class LF_WorkflowSettings:
     @classmethod
@@ -731,6 +770,7 @@ NODE_CLASS_MAPPINGS = {
     "LF_Notify": LF_Notify,
     "LF_SamplerSelector": LF_SamplerSelector,
     "LF_SchedulerSelector": LF_SchedulerSelector,
+    "LF_UpscaleModelSelector": LF_UpscaleModelSelector,
     "LF_WorkflowSettings": LF_WorkflowSettings,
 }
 
@@ -745,5 +785,6 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_Notify": "Notifify",
     "LF_SamplerSelector": "Sampler selector",
     "LF_SchedulerSelector": "Scheduler selector",
+    "LF_UpscaleModelSelector": "Upscale model selector",
     "LF_WorkflowSettings": "Workflow settings",
 }
