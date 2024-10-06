@@ -4,6 +4,7 @@ import { LogSeverity } from '../types/manager';
 import { KulButton } from '../types/ketchup-lite/components/kul-button/kul-button';
 import { KulList } from '../types/ketchup-lite/components/kul-list/kul-list';
 import { KulSwitch } from '../types/ketchup-lite/components/kul-switch/kul-switch';
+import { KulChart } from '../types/ketchup-lite/components/kul-chart/kul-chart';
 export declare const areJSONEqual: (a: unknown, b: unknown) => boolean;
 export declare const capitalize: (input: string) => string;
 export declare const createDOMWidget: (name: string, type: CustomWidgetName, element: HTMLDivElement, node: NodeType, options?: CustomWidgetOptions) => Widget;
@@ -22,6 +23,7 @@ export declare const getLFManager: () => import("../managers/manager").LFManager
 export declare const getOutput: (node: NodeType, type: ComfyWidgetName | CustomWidgetName) => SlotInfo;
 export declare const getWidget: <T extends ComfyWidgetName>(node: NodeType, type: T) => ComfyWidgetMap[T];
 export declare const isButton: (comp: any) => comp is KulButton;
+export declare const isChart: (comp: any) => comp is KulChart;
 export declare const isList: (comp: any) => comp is KulList;
 export declare const isSwitch: (comp: any) => comp is KulSwitch;
 export declare const isValidJSON: (value: unknown) => boolean;

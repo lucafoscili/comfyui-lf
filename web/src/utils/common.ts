@@ -13,6 +13,7 @@ import { LogSeverity } from '../types/manager';
 import { KulButton } from '../types/ketchup-lite/components/kul-button/kul-button';
 import { KulList } from '../types/ketchup-lite/components/kul-list/kul-list';
 import { KulSwitch } from '../types/ketchup-lite/components/kul-switch/kul-switch';
+import { KulChart } from '../types/ketchup-lite/components/kul-chart/kul-chart';
 
 const DOM = document.documentElement as KulDom;
 const WINDOW = window as unknown as LFWindow;
@@ -149,6 +150,9 @@ export const getWidget = <T extends ComfyWidgetName>(
 
 export const isButton = (comp: any): comp is KulButton => {
   return comp.rootElement.tagName.toLowerCase() === 'kul-button';
+};
+export const isChart = (comp: any): comp is KulChart => {
+  return comp.rootElement.tagName.toLowerCase() === 'kul-chart';
 };
 export const isList = (comp: any): comp is KulList => {
   return comp.rootElement.tagName.toLowerCase() === 'kul-list';

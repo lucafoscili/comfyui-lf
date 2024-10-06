@@ -6,7 +6,12 @@ import { defineCustomElements } from '../ketchup-lite/loader.js';
 import { getKulManager } from '../utils/common.js';
 import { LFNodes } from './nodes.js';
 import { LFWidgets } from './widgets.js';
-import { ComfyAPIs, LogSeverity, SaveModelAPIPayload } from '../types/manager.js';
+import {
+  ComfyAPIs,
+  FetchAnalyticsAPIPayload,
+  LogSeverity,
+  SaveModelAPIPayload,
+} from '../types/manager.js';
 import { Extension } from '../types/nodes.js';
 import {
   BlurImagesPayload,
@@ -109,6 +114,32 @@ export class LFManager {
         method: 'POST',
         body,
       });
+    },
+    fetchAnalyticsData: (): Promise<FetchAnalyticsAPIPayload> => {
+      return api
+        .fetchApi('/comfyui-lf/get-analytics', {
+          method: 'GET',
+        })
+        .then((res: Response) => {
+          return res.json() as Promise<FetchAnalyticsAPIPayload>;
+        })
+        .then((data: FetchAnalyticsAPIPayload) => {
+          if (data.status === 'success') {
+            this.log('Analytics data fetched successfully.', { data }, LogSeverity.Success);
+            return data;
+          } else {
+            this.log(
+              'Unexpected response status while fetching analytics data.',
+              { data },
+              LogSeverity.Warning,
+            );
+            throw new Error('Unexpected response status');
+          }
+        })
+        .catch((error: Error) => {
+          this.log('Error fetching analytics data.', { error }, LogSeverity.Error);
+          throw error;
+        });
     },
     getLinkById: (id: string) => {
       return app.graph.links[String(id).valueOf()];

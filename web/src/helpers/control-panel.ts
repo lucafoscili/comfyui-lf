@@ -1,20 +1,24 @@
 import {
   KulButtonEventPayload,
+  KulChartEventPayload,
   KulListEventPayload,
   KulSwitchEventPayload,
 } from '../types/ketchup-lite/components';
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
 import { KulButton } from '../types/ketchup-lite/components/kul-button/kul-button';
 import { KulButtonEvent } from '../types/ketchup-lite/components/kul-button/kul-button-declarations';
+import { KulChart } from '../types/ketchup-lite/components/kul-chart/kul-chart';
 import { KulList } from '../types/ketchup-lite/components/kul-list/kul-list';
 import { KulSwitch } from '../types/ketchup-lite/components/kul-switch/kul-switch';
 import { KulSwitchEvent } from '../types/ketchup-lite/components/kul-switch/kul-switch-declarations';
+import { LogSeverity } from '../types/manager';
 import {
   getApiRoutes,
   getKulManager,
   getKulThemes,
   getLFManager,
   isButton,
+  isChart,
   isSwitch,
 } from '../utils/common';
 
@@ -49,6 +53,10 @@ export const handleKulEvent = (e: Event) => {
 
   if (isButton(comp)) {
     handleButtonEvent(e as CustomEvent<KulButtonEventPayload>);
+  }
+
+  if (isChart(comp)) {
+    handleChartEvent(e as CustomEvent<KulChartEventPayload>);
   }
 
   if (isSwitch(comp)) {
@@ -124,6 +132,28 @@ const handleButtonEvent = (e: CustomEvent<KulButtonEventPayload>) => {
   }
 };
 
+const handleChartEvent = (e: CustomEvent<KulChartEventPayload>) => {
+  const { comp, eventType } = e.detail;
+  const c = comp as KulChart;
+
+  switch (eventType) {
+    case 'ready':
+      getLFManager()
+        .getApiRoutes()
+        .fetchAnalyticsData()
+        .then((r) => {
+          if (r.status === 'success') {
+            if (r.data['checkpoints_usage.json']) {
+              c.kulData = r.data['checkpoints_usage.json'];
+            } else {
+              getLFManager().log('Not found checkpoints analytics.', { r }, LogSeverity.Info);
+            }
+          }
+        });
+      break;
+  }
+};
+
 const handleListEvent = (e: CustomEvent<KulListEventPayload>) => {
   const { comp, eventType, node } = e.detail;
   const c = (comp as KulList).rootElement;
@@ -154,6 +184,53 @@ const handleSwitchEvent = (e: CustomEvent<KulSwitchEventPayload>) => {
 };
 
 export const sectionsFactory = {
+  analytics: (): KulArticleNode => {
+    return {
+      id: 'section',
+      value: 'Analytics (experimental)',
+      children: [
+        {
+          id: 'paragraph',
+          value: 'Usage',
+          children: [
+            {
+              id: 'content',
+              value: 'Below you can find charts showing the most used resources in your workflows.',
+            },
+            {
+              id: 'content',
+              tagName: 'br',
+              value: '',
+            },
+            {
+              id: 'content',
+              value: 'Use the node UpdateUsageStatistics to create/update these datasets.',
+            },
+            {
+              id: 'content',
+              value: '',
+              cells: {
+                kulChart: {
+                  kulAxis: 'name',
+                  kulData: {},
+                  kulSeries: ['counter'],
+                  kulSizeY: '300px',
+                  kulTypes: ['area'],
+                  shape: 'chart',
+                  value: '',
+                } as any,
+              },
+            },
+            {
+              cssStyle: STYLES.separator(),
+              id: 'content_separator',
+              value: '',
+            },
+          ],
+        },
+      ],
+    };
+  },
   bug: (): KulArticleNode => {
     return {
       id: 'section',

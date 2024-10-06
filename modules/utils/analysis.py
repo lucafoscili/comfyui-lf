@@ -156,5 +156,4 @@ def update_usage_json(resource_file:str, resource_name:str, resource_value:str):
     with open(resource_file, 'w') as file:
         json.dump(json_data, file, indent=4)
     
-    base_name = os.path.splitext(os.path.basename(resource_value))[0]
     return f"\n**{resource_value}** count: {oldValue} => {newValue}\n"

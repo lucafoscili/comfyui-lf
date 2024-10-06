@@ -16,7 +16,7 @@ import { defineCustomElements } from '../ketchup-lite/loader.js';
 import { getKulManager } from '../utils/common.js';
 import { LFNodes } from './nodes.js';
 import { LFWidgets } from './widgets.js';
-import { LogSeverity } from '../types/manager.js';
+import { LogSeverity, } from '../types/manager.js';
 import { EventName, } from '../types/events.js';
 const LOG_STYLE = {
     fontFamily: 'var(--kul-font-family-monospace)',
@@ -61,6 +61,29 @@ export class LFManager {
                 return await api.fetchApi('/upload/image', {
                     method: 'POST',
                     body,
+                });
+            },
+            fetchAnalyticsData: () => {
+                return api
+                    .fetchApi('/comfyui-lf/get-analytics', {
+                    method: 'GET',
+                })
+                    .then((res) => {
+                    return res.json();
+                })
+                    .then((data) => {
+                    if (data.status === 'success') {
+                        this.log('Analytics data fetched successfully.', { data }, LogSeverity.Success);
+                        return data;
+                    }
+                    else {
+                        this.log('Unexpected response status while fetching analytics data.', { data }, LogSeverity.Warning);
+                        throw new Error('Unexpected response status');
+                    }
+                })
+                    .catch((error) => {
+                    this.log('Error fetching analytics data.', { error }, LogSeverity.Error);
+                    throw error;
                 });
             },
             getLinkById: (id) => {

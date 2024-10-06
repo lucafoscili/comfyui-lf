@@ -78,14 +78,14 @@ const contentCb = (domWidget, isReady) => {
     content.classList.add(controlPanelFactory.cssClasses.content);
 };
 const createArticle = () => {
-    const { bug, debug, metadata, theme } = sectionsFactory;
+    const { analytics, bug, debug, metadata, theme } = sectionsFactory;
     const logsData = [];
     const articleData = {
         nodes: [
             {
                 children: [
                     {
-                        children: [theme(), metadata(), debug(logsData), bug()],
+                        children: [theme(), analytics(), metadata(), debug(logsData), bug()],
                         id: 'section',
                         value: 'Control panel',
                     },
