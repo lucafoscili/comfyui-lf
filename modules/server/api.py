@@ -81,8 +81,8 @@ async def clear_model_info(request):
     except Exception as e:
         return web.Response(status=500, text=f"Error: {str(e)}")
 
-@PromptServer.instance.routes.get("/comfyui-lf/get-analytics")
-async def get_analytics(response):
+@PromptServer.instance.routes.get("/comfyui-lf/get-usage-analytics")
+async def get_usage_analytics(response):
     try:
         analytics_dir = os.path.join(input_directory, "LF_Nodes")
         
@@ -106,5 +106,32 @@ async def get_analytics(response):
             "data": analytics_data
         }, status=200)
 
+    except Exception as e:
+        return web.Response(status=500, text=f"Error: {str(e)}")
+
+@PromptServer.instance.routes.post("/comfyui-lf/clear-usage-analytics")
+async def clear_usage_analytics(request):
+    try:
+        analytics_dir = os.path.join(input_directory, "LF_Nodes")
+        
+        deleted_files = []
+        
+        for file_name in os.listdir(analytics_dir):
+            if "usage.json" in file_name:
+                full_path = os.path.join(analytics_dir, file_name)
+                
+                if os.path.exists(full_path):
+                    try:
+                        os.remove(full_path)
+                        deleted_files.append(full_path)
+                    except Exception as e:
+                        print(f"Failed to delete {full_path}: {str(e)}")
+        
+        return web.json_response({
+            "status": "success",
+            "message": f"Deleted {len(deleted_files)} usage.json files.",
+            "deleted_files": deleted_files
+        }, status=200)
+    
     except Exception as e:
         return web.Response(status=500, text=f"Error: {str(e)}")

@@ -20,10 +20,15 @@ Displays a widget that plots the RGB channels of a photo in tensor format on a l
 Counts the number of each keyword in a prompt and displays a bar chart showing their distribution, a chip-shaped widget will also allow to copy one or more keywords in the clipboard.
 ![KeywordCounter](https://github.com/lucafoscili/comfyui-lf/blob/20764344d55b6e361af11d14298fc826b37eae2d/docs/images/KeywordCounter.png "Keywords displayed with a widget for copying them")
 
-#### UpdateUsageStatistics (experimental)
+#### UpdateUsageStatistics
 
-Keep tracks of the resources used by saving datasets in the input folder of ComfyUI. As of now only the checkpoint chart is available to be seen (inside the control panel).
+Keep tracks of the resources used by saving datasets in the input folder of ComfyUI. The datasets will be plotted on area/scatter charts inside the twin node UsageStatistics.
 ![UpdateUsageStatistics](https://github.com/lucafoscili/comfyui-lf/blob/de49b4964ecc55c32438cc829928d90b9b5a8346/docs/images/UpdateUsageStatistics.png "Keeps track of resources' usage")
+
+#### UsageStatistics
+
+Displays datasets tracking the usage of resources saved with the UpdateUsageStatistics node.
+![UsageStatistics](https://github.com/lucafoscili/comfyui-lf/blob/72d54488d179be2f345b84f526956c730f191663/docs/images/UsageStatistics.png "Plots the usage of resources")
 
 ### Configuration nodes (`configuration.py`)
 

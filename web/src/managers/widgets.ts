@@ -16,6 +16,7 @@ import { chipFactory } from '../widgets/chip.js';
 import { messengerFactory } from '../widgets/messenger.js';
 import { cardFactory } from '../widgets/card.js';
 import { cardsWithChipFactory } from '../widgets/cardsWithChip.js';
+import { tabBarChartFactory } from '../widgets/tabBarChart.js';
 
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
@@ -123,6 +124,13 @@ export class LFWidgets {
       ).widget;
       return widget;
     },
+    [CustomWidgetName.tabBarChart]: (nodeType: NodeType) => {
+      const widget = app.widgets[CustomWidgetName.tabBarChart](
+        nodeType,
+        CustomWidgetName.tabBarChart,
+      ).widget;
+      return widget;
+    },
     [CustomWidgetName.tree]: (nodeType: NodeType) => {
       const widget = app.widgets[CustomWidgetName.tree](nodeType, CustomWidgetName.tree).widget;
       return widget;
@@ -160,6 +168,8 @@ export class LFWidgets {
     ) => messengerFactory.options(messenger, placeholder),
     [CustomWidgetName.rollViewer]: (rollViewer: HTMLKulProgressbarElement, nodeType: NodeType) =>
       rollViewerFactory.options(rollViewer, nodeType),
+    [CustomWidgetName.tabBarChart]: (wrapper: HTMLDivElement) =>
+      tabBarChartFactory.options(wrapper),
     [CustomWidgetName.tree]: (tree: HTMLKulTreeElement) => treeFactory.options(tree),
     [CustomWidgetName.upload]: (upload: HTMLKulUploadElement) => uploadFactory.options(upload),
   };
@@ -260,6 +270,13 @@ export class LFWidgets {
       return {
         [CustomWidgetName.rollViewer]: (nodeType: NodeType, name: CustomWidgetName) => {
           return rollViewerFactory.render(nodeType, name);
+        },
+      };
+    },
+    [CustomWidgetName.tabBarChart]: () => {
+      return {
+        [CustomWidgetName.tabBarChart]: (nodeType: NodeType, name: CustomWidgetName) => {
+          return tabBarChartFactory.render(nodeType, name);
         },
       };
     },

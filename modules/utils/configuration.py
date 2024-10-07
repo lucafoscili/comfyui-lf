@@ -38,9 +38,12 @@ SCHEDULER_MAP = {
 def clean_prompt(prompt):
     return re.sub(r'(embedding:)?(.*?)(\.pt|\.pth|\.sft|\.safetensors)?', r'\2', prompt).strip()
 
-def get_embedding_hashes(embeddings):
+def get_embedding_hashes(embeddings, analytics_dataset:dict):
+    children = []
     emb_hashes = []
     emb_entries = [emb.strip() for emb in embeddings.split(',')]
+    analytics_dataset["nodes"].append({ "children": children, "id": "embeddings"})
+
     for emb_entry in emb_entries:
         match = re.match(r'(?:embedding:)?(.*)', emb_entry)
         if match:
@@ -50,18 +53,22 @@ def get_embedding_hashes(embeddings):
                     emb_name_with_ext = f"{emb_name}.safetensors"
                 else:
                     emb_name_with_ext = emb_name
-                emb_file_path = folder_paths.get_full_path("embeddings", emb_name_with_ext)
+                    emb_file_path = folder_paths.get_full_path("embeddings", emb_name_with_ext)
                 try:
                     emb_hash = get_sha256(emb_file_path)
                     emb_hashes.append(f"{emb_name_with_ext}: {emb_hash}")
+                    children.append({ "id": emb_name, "value": emb_name })
                 except Exception as e:
                     emb_hashes.append(f"{emb_name}: Unknown")
     return emb_hashes
 
-def get_lora_hashes(lora_tags):
+def get_lora_hashes(lora_tags, analytics_dataset):
+    children = []
     lora_hashes = []
     lora_tags = lora_tags.replace("><", ">,<")
     lora_entries = [tag.strip('<>').split(':') for tag in lora_tags.split(',')]
+    analytics_dataset["nodes"].append({ "children": children, "id": "loras"})
+
     for lora_entry in lora_entries:
         if len(lora_entry) >= 2:
             lora_name = lora_entry[1].strip()
@@ -73,6 +80,7 @@ def get_lora_hashes(lora_tags):
             try:
                 lora_hash = get_sha256(lora_file_path)
                 lora_hashes.append(f"{lora_name_with_ext}: {lora_hash}")
+                children.append({ "id": lora_name, "value": lora_name })
             except Exception:
                 lora_hashes.append(f"{lora_name}: Unknown")
     return lora_hashes

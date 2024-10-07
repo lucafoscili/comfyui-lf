@@ -1,4 +1,5 @@
 import { KulDataDataset, KulMessengerDataset, KulMessengerConfig } from './ketchup-lite/components';
+import { AnalyticsType } from './manager';
 export type BaseWidgetCallback = <T extends CustomWidgetName>(node: NodeType, name: T) => {
     widget: Widget;
 };
@@ -40,6 +41,7 @@ export type CustomWidgetMap = {
     [CustomWidgetName.jsonInput]: JsonInputWidget;
     [CustomWidgetName.messenger]: MessengerWidget;
     [CustomWidgetName.rollViewer]: RollViewerWidget;
+    [CustomWidgetName.tabBarChart]: TabBarChartWidget;
     [CustomWidgetName.tree]: TreeWidget;
     [CustomWidgetName.upload]: UploadWidget;
 };
@@ -58,10 +60,11 @@ export declare enum CustomWidgetName {
     jsonInput = "KUL_JSON_INPUT",
     messenger = "KUL_MESSENGER",
     rollViewer = "KUL_ROLL_VIEWER",
+    tabBarChart = "KUL_TAB_BAR_CHART",
     tree = "KUL_TREE",
     upload = "KUL_UPLOAD"
 }
-export type CustomWidgetOptions = BooleanViewerWidgetOptions | CardWidgetOptions | CardsWithChipWidgetOptions | ChatWidgetOptions | ChipWidgetOptions | CodeWidgetOptions | ControlPanelWidgetOptions | CountBarChartWidgetOptions | HistogramWidgetOptions | HistoryWidgetOptions | ImagePreviewWidgetOptions | JsonInputWidgetOptions | MessengerWidgetOptions | RollViewerWidgetOptions | TreeWidgetOptions | UploadWidgetOptions;
+export type CustomWidgetOptions = BooleanViewerWidgetOptions | CardWidgetOptions | CardsWithChipWidgetOptions | ChatWidgetOptions | ChipWidgetOptions | CodeWidgetOptions | ControlPanelWidgetOptions | CountBarChartWidgetOptions | HistogramWidgetOptions | HistoryWidgetOptions | ImagePreviewWidgetOptions | JsonInputWidgetOptions | MessengerWidgetOptions | RollViewerWidgetOptions | TabBarChartWidgetOptions | TreeWidgetOptions | UploadWidgetOptions;
 export interface BooleanViewerWidget extends Widget {
     options: BooleanViewerWidgetOptions;
     type: [CustomWidgetName.booleanViewer];
@@ -104,7 +107,7 @@ export interface CardsWithChipWidgetOptions {
         cards: HTMLKulCardElement[];
         chip: HTMLKulChipElement;
     };
-    getValue(): string;
+    getValue(): CardsWithChipWidgetValue;
     setValue(value: CardsWithChipWidgetValue): void;
 }
 export type CardsWithChipWidgetSetter = () => {
@@ -157,6 +160,21 @@ export type CodeWidgetSetter = () => {
     [CustomWidgetName.code]: BaseWidgetCallback;
 };
 export type CodeWidgetValue = string;
+export interface TabBarChartWidget extends Widget {
+    options: TabBarChartWidgetOptions;
+    type: [CustomWidgetName.tabBarChart];
+}
+export interface TabBarChartWidgetOptions {
+    hideOnZoom: boolean;
+    getComp(): {
+        chart: HTMLKulChartElement;
+        tabbar: HTMLKulTabbarElement;
+    };
+    refresh(type: AnalyticsType): void;
+}
+export type TabBarChartWidgetSetter = () => {
+    [CustomWidgetName.tabBarChart]: BaseWidgetCallback;
+};
 export interface ControlPanelWidget extends Widget {
     options: ControlPanelWidgetOptions;
     type: [CustomWidgetName.controlPanel];

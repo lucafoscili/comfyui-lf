@@ -122,23 +122,26 @@ def calculate_histograms(image_tensor):
         "blue_hist": blue_hist.tolist(),
         "sum_hist": sum_hist.tolist(),
     }
-
+    
 def update_usage_json(resource_file:str, resource_name:str, resource_value:str):
     resource_value = os.path.splitext(resource_value)[0]
+    template = {"columns": [{"id": "name", "title": resource_name}, {"id": "counter", "title": "Nr. of times used", "shape": "number"}], "nodes": []}
     if os.path.exists(resource_file):
         with open(resource_file, 'r') as file:
             try:
                 json_data = json.load(file)
             except json.JSONDecodeError:
-                json_data = {"columns": [{"id": "name", "value": resource_name}, {"id": "counter", "name": "Nr. of times used", "shape": "number"}], "nodes": []}
+                json_data = template
     else:
-        json_data = {"columns": [{"id": "name", "title": resource_name}, {"id": "counter", "title": "Nr. of times used", "shape": "number"}], "nodes": []}
+        json_data = template
 
     for node in json_data["nodes"]:
-        if node["cells"]["name"]["value"] == resource_value:
-            oldValue = int(node["cells"]["counter"]["value"])
-            node["cells"]["counter"]["value"] += 1
-            newValue = int(node["cells"]["counter"]["value"])
+        resource = node["cells"]["name"]["value"]
+        if resource == resource_value:
+            counter = node["cells"]["counter"]
+            oldValue = int(counter["value"])
+            counter["value"] += 1
+            newValue = int(counter["value"])
             break
     else:
         oldValue = 0

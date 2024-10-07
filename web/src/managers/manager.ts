@@ -7,6 +7,7 @@ import { getKulManager } from '../utils/common.js';
 import { LFNodes } from './nodes.js';
 import { LFWidgets } from './widgets.js';
 import {
+  AnalyticsType,
   ComfyAPIs,
   FetchAnalyticsAPIPayload,
   LogSeverity,
@@ -59,6 +60,7 @@ import {
   UpdateUsageStatisticsPayload,
 } from '../types/events.js';
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
+import { KulDataDataset } from '../types/ketchup-lite/components';
 
 /*-------------------------------------------------*/
 /*                 L F   C l a s s                 */
@@ -96,14 +98,31 @@ export class LFManager {
               );
               return res.json();
             }
-          })
-          .then((data: SaveModelAPIPayload) => {
-            if (data.status === 'success') {
-              this.log(data.message, {}, LogSeverity.Info);
-            }
           });
       } catch (error) {
         this.log("Error deleting model's metadata.", { error }, LogSeverity.Error);
+      }
+    },
+    clearAnalyticsData: async (type: AnalyticsType) => {
+      try {
+        await api
+          .fetchApi(`/comfyui-lf/clear-${type}-analytics`, {
+            method: 'POST',
+          })
+          .then((res: Response) => {
+            try {
+              return res.json();
+            } catch (error) {
+              this.log(
+                'Error parsing response when deleting analytics files.',
+                { error },
+                LogSeverity.Error,
+              );
+              return res.json();
+            }
+          });
+      } catch (error) {
+        this.log('Error deleting analytics data.', { error }, LogSeverity.Error);
       }
     },
     event: (name, callback) => {
@@ -115,31 +134,32 @@ export class LFManager {
         body,
       });
     },
-    fetchAnalyticsData: (): Promise<FetchAnalyticsAPIPayload> => {
-      return api
-        .fetchApi('/comfyui-lf/get-analytics', {
+    fetchAnalyticsData: async (type): Promise<FetchAnalyticsAPIPayload> => {
+      try {
+        const response = await api.fetchApi(`/comfyui-lf/get-${type}-analytics`, {
           method: 'GET',
-        })
-        .then((res: Response) => {
-          return res.json() as Promise<FetchAnalyticsAPIPayload>;
-        })
-        .then((data: FetchAnalyticsAPIPayload) => {
+        });
+
+        const code = response.status;
+
+        if (code === 200) {
+          const data: FetchAnalyticsAPIPayload = await response.json();
           if (data.status === 'success') {
             this.log('Analytics data fetched successfully.', { data }, LogSeverity.Success);
-            return data;
-          } else {
-            this.log(
-              'Unexpected response status while fetching analytics data.',
-              { data },
-              LogSeverity.Warning,
-            );
-            throw new Error('Unexpected response status');
           }
-        })
-        .catch((error: Error) => {
-          this.log('Error fetching analytics data.', { error }, LogSeverity.Error);
-          throw error;
-        });
+          this.#CACHED_DATASETS.usage = data.data;
+          return data;
+        }
+        if (code === 404) {
+          this.log(`${type} analytics file not found.`, {}, LogSeverity.Info);
+          return { data: {}, status: 'not found' };
+        }
+        this.log('Unexpected response from the API!', { status: code }, LogSeverity.Error);
+        return { data: {}, status: 'error' };
+      } catch (error) {
+        this.log('Error fetching analytics data.', { error }, LogSeverity.Error);
+        return { data: {}, status: 'error' };
+      }
     },
     getLinkById: (id: string) => {
       return app.graph.links[String(id).valueOf()];
@@ -212,6 +232,9 @@ export class LFManager {
       }
     },
   };
+  #CACHED_DATASETS: { usage: KulDataDataset } = {
+    usage: null,
+  };
   #DEBUG = false;
   #DEBUG_ARTICLE: HTMLKulArticleElement;
   #DEBUG_DATASET: KulArticleNode[];
@@ -241,6 +264,10 @@ export class LFManager {
 
   getApiRoutes(): ComfyAPIs {
     return this.#APIS;
+  }
+
+  getCachedDatasets() {
+    return this.#CACHED_DATASETS;
   }
 
   getDebugDataset() {
@@ -686,6 +713,19 @@ export class LFManager {
       EventName.urandomSeedGenerator,
       (e: CustomEvent<UrandomSeedGeneratorPayload>) => {
         nodes.eventHandlers.LF_UrandomSeedGenerator(e, widgets.adders.KUL_TREE);
+      },
+    );
+    /*-------------------------------------------------------------------*/
+    /*             I n i t   U s a g e S t a t i s t i c s               */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_UsageStatistics(
+      widgets.setters.KUL_TAB_BAR_CHART,
+      widgets.adders.KUL_TAB_BAR_CHART,
+    );
+    this.#APIS.event(
+      EventName.updateUsageStatistics,
+      (e: CustomEvent<UpdateUsageStatisticsPayload>) => {
+        nodes.eventHandlers.LF_UsageStatistics(e, widgets.adders.KUL_TAB_BAR_CHART);
       },
     );
     /*-------------------------------------------------------------------*/

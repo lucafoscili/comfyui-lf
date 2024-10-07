@@ -25,6 +25,7 @@ export var CustomWidgetName;
     CustomWidgetName["jsonInput"] = "KUL_JSON_INPUT";
     CustomWidgetName["messenger"] = "KUL_MESSENGER";
     CustomWidgetName["rollViewer"] = "KUL_ROLL_VIEWER";
+    CustomWidgetName["tabBarChart"] = "KUL_TAB_BAR_CHART";
     CustomWidgetName["tree"] = "KUL_TREE";
     CustomWidgetName["upload"] = "KUL_UPLOAD";
 })(CustomWidgetName || (CustomWidgetName = {}));

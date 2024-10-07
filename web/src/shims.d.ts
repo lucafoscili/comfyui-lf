@@ -116,6 +116,7 @@ interface NodeType {
   resizable?: boolean;
   horizontal?: boolean;
   inputs?: SlotInfo[];
+  graph: { _nodes: NodeType[] };
   outputs?: SlotInfo[];
   addDOMWidget?: <T extends WidgetOptions>(
     name?: string,

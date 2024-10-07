@@ -45,6 +45,7 @@ export declare enum NodeName {
     updateUsageStatistics = "LF_UpdateUsageStatistics",
     upscaleModelSelector = "LF_UpscaleModelSelector",
     urandomSeedGenerator = "LF_UrandomSeedGenerator",
+    usageStatistics = "LF_UsageStatistics",
     vaeSelector = "LF_VAESelector",
     writeJson = "LF_WriteJSON"
 }

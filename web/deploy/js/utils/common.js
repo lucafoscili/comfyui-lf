@@ -68,7 +68,7 @@ export const getKulManager = () => {
 export const getKulThemes = () => {
     const themes = getKulManager().theme.getThemes();
     const kulData = {
-        nodes: [{ children: [], icon: 'style', id: 'root', value: 'Theme' }],
+        nodes: [{ children: [], icon: 'style', id: 'root', value: 'Random theme' }],
     };
     for (let index = 0; index < themes.length; index++) {
         const currentTheme = themes[index];

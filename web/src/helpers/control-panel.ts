@@ -1,26 +1,31 @@
 import {
   KulButtonEventPayload,
-  KulChartEventPayload,
   KulListEventPayload,
   KulSwitchEventPayload,
 } from '../types/ketchup-lite/components';
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
 import { KulButton } from '../types/ketchup-lite/components/kul-button/kul-button';
 import { KulButtonEvent } from '../types/ketchup-lite/components/kul-button/kul-button-declarations';
-import { KulChart } from '../types/ketchup-lite/components/kul-chart/kul-chart';
 import { KulList } from '../types/ketchup-lite/components/kul-list/kul-list';
 import { KulSwitch } from '../types/ketchup-lite/components/kul-switch/kul-switch';
 import { KulSwitchEvent } from '../types/ketchup-lite/components/kul-switch/kul-switch-declarations';
-import { LogSeverity } from '../types/manager';
 import {
   getApiRoutes,
   getKulManager,
   getKulThemes,
   getLFManager,
   isButton,
-  isChart,
   isSwitch,
 } from '../utils/common';
+
+enum Labels {
+  CLEAR_LOGS = 'Clear logs',
+  DELETE_USAGE = 'Delete usage analytics info',
+  DELETE_METADATA = 'Delete models info',
+  DONE = 'Done!',
+  OPEN_ISSUE = 'Open an issue',
+  THEME = 'Random theme',
+}
 
 const STYLES = {
   logsArea: () => {
@@ -55,10 +60,6 @@ export const handleKulEvent = (e: Event) => {
     handleButtonEvent(e as CustomEvent<KulButtonEventPayload>);
   }
 
-  if (isChart(comp)) {
-    handleChartEvent(e as CustomEvent<KulChartEventPayload>);
-  }
-
   if (isSwitch(comp)) {
     handleSwitchEvent(e as CustomEvent<KulSwitchEventPayload>);
   }
@@ -68,48 +69,73 @@ const handleButtonEvent = (e: CustomEvent<KulButtonEventPayload>) => {
   const { comp, eventType, originalEvent } = e.detail;
   const c = (comp as KulButton).rootElement;
 
+  const onResponse = () => {
+    c.classList.remove('kul-danger');
+    c.classList.add('kul-success');
+    c.kulShowSpinner = false;
+    c.kulLabel = Labels.DONE;
+    c.kulIcon = 'check';
+  };
+  const restore = (label: Labels) => {
+    c.classList.add('kul-danger');
+    c.classList.remove('kul-success');
+    c.kulLabel = label;
+    c.kulIcon = 'delete';
+    TIMEOUT = null;
+  };
+
   switch (eventType as KulButtonEvent) {
     case 'click':
-      if (c.kulIcon === 'delete') {
-        const onResponse = () => {
-          c.classList.remove('kul-danger');
-          c.classList.add('kul-success');
-          c.kulShowSpinner = false;
-          c.kulLabel = 'Done!';
-          c.kulIcon = 'check';
-        };
-        const restore = () => {
-          c.classList.add('kul-danger');
-          c.classList.remove('kul-success');
-          c.kulLabel = 'Delete models info';
-          c.kulIcon = 'delete';
-          TIMEOUT = null;
-        };
-        requestAnimationFrame(() => (c.kulShowSpinner = true));
-        getApiRoutes()
-          .clearModelMetadata()
-          .then(() => {
-            requestAnimationFrame(onResponse);
+      switch (c.kulLabel) {
+        case Labels.CLEAR_LOGS:
+          const { article, dataset } = getLFManager().getDebugDataset();
+          if (dataset?.length > 0) {
+            dataset.splice(0, dataset.length);
+            article.refresh();
+          }
+          break;
+        case Labels.DELETE_METADATA:
+          requestAnimationFrame(() => (c.kulShowSpinner = true));
+          getApiRoutes()
+            .clearModelMetadata()
+            .then(() => {
+              requestAnimationFrame(onResponse);
 
-            if (TIMEOUT) {
-              clearTimeout(TIMEOUT);
-            }
+              if (TIMEOUT) {
+                clearTimeout(TIMEOUT);
+              }
 
-            TIMEOUT = setTimeout(() => requestAnimationFrame(restore), 1000);
-          });
-      }
-      if (c.kulIcon === 'github') {
-        window.open('https://github.com/lucafoscili/comfyui-lf/issues/new', '_blank');
-      }
-      if (c.kulIcon === 'refresh') {
-        const { article, dataset } = getLFManager().getDebugDataset();
-        if (dataset?.length > 0) {
-          dataset.splice(0, dataset.length);
-          article.refresh();
-        }
-      }
-      if (c.kulIcon === 'style') {
-        getKulManager().theme.randomTheme();
+              TIMEOUT = setTimeout(
+                () => requestAnimationFrame(() => restore(Labels.DELETE_METADATA)),
+                1000,
+              );
+            });
+          break;
+        case Labels.DELETE_USAGE:
+          requestAnimationFrame(() => (c.kulShowSpinner = true));
+          getApiRoutes()
+            .clearAnalyticsData('usage')
+            .then(() => {
+              requestAnimationFrame(onResponse);
+
+              if (TIMEOUT) {
+                clearTimeout(TIMEOUT);
+              }
+
+              TIMEOUT = setTimeout(
+                () => requestAnimationFrame(() => restore(Labels.DELETE_USAGE)),
+                1000,
+              );
+            });
+          break;
+        case Labels.OPEN_ISSUE:
+          window.open('https://github.com/lucafoscili/comfyui-lf/issues/new', '_blank');
+          break;
+        case Labels.THEME:
+          getKulManager().theme.randomTheme();
+          break;
+        default:
+          break;
       }
       break;
 
@@ -118,7 +144,7 @@ const handleButtonEvent = (e: CustomEvent<KulButtonEventPayload>) => {
       break;
 
     case 'ready':
-      if (c.kulIcon === 'delete') {
+      if (c.kulLabel === Labels.DELETE_METADATA || c.kulLabel === Labels.DELETE_USAGE) {
         c.classList.add('kul-danger');
 
         const spinner = document.createElement('kul-spinner');
@@ -129,28 +155,6 @@ const handleButtonEvent = (e: CustomEvent<KulButtonEventPayload>) => {
         c.appendChild(spinner);
         break;
       }
-  }
-};
-
-const handleChartEvent = (e: CustomEvent<KulChartEventPayload>) => {
-  const { comp, eventType } = e.detail;
-  const c = comp as KulChart;
-
-  switch (eventType) {
-    case 'ready':
-      getLFManager()
-        .getApiRoutes()
-        .fetchAnalyticsData()
-        .then((r) => {
-          if (r.status === 'success') {
-            if (r.data['checkpoints_usage.json']) {
-              c.kulData = r.data['checkpoints_usage.json'];
-            } else {
-              getLFManager().log('Not found checkpoints analytics.', { r }, LogSeverity.Info);
-            }
-          }
-        });
-      break;
   }
 };
 
@@ -187,7 +191,7 @@ export const sectionsFactory = {
   analytics: (): KulArticleNode => {
     return {
       id: 'section',
-      value: 'Analytics (experimental)',
+      value: 'Analytics',
       children: [
         {
           id: 'paragraph',
@@ -195,7 +199,8 @@ export const sectionsFactory = {
           children: [
             {
               id: 'content',
-              value: 'Below you can find charts showing the most used resources in your workflows.',
+              value:
+                'Usage analytics can be enabled by saving datasets through the UpdateUsageStatistics node and displayed with the UsageStatistics node.',
             },
             {
               id: 'content',
@@ -204,21 +209,39 @@ export const sectionsFactory = {
             },
             {
               id: 'content',
-              value: 'Use the node UpdateUsageStatistics to create/update these datasets.',
+              value:
+                'Once datasets are created (input folder of ComfyUI), the count for each resource used will increase everytime that particular resource is updated.',
+            },
+            {
+              id: 'content',
+              tagName: 'br',
+              value: '',
+            },
+            {
+              id: 'content',
+              value: 'This button will clear all usage analytics data from your input folder.',
+            },
+            {
+              id: 'content',
+              tagName: 'br',
+              value: '',
+            },
+            {
+              id: 'content',
+              value: 'This action is IRREVERSIBLE so use it with caution.',
             },
             {
               id: 'content',
               value: '',
               cells: {
-                kulChart: {
-                  kulAxis: 'name',
-                  kulData: {},
-                  kulSeries: ['counter'],
-                  kulSizeY: '300px',
-                  kulTypes: ['area'],
-                  shape: 'chart',
+                kulButton: {
+                  kulIcon: 'delete',
+                  kulLabel: Labels.DELETE_USAGE,
+                  kulStyle: ':host { margin: auto; padding:16px 0 }',
+                  kulStyling: 'outlined',
+                  shape: 'button',
                   value: '',
-                } as any,
+                },
               },
             },
             {
@@ -261,7 +284,7 @@ export const sectionsFactory = {
               cells: {
                 kulButton: {
                   kulIcon: 'github',
-                  kulLabel: 'Open an issue',
+                  kulLabel: Labels.OPEN_ISSUE,
                   kulStyle: ':host { margin: auto; padding:16px 0 }',
                   kulStyling: 'raised',
                   shape: 'button',
@@ -331,7 +354,7 @@ export const sectionsFactory = {
                 kulButton: {
                   shape: 'button',
                   kulIcon: 'refresh',
-                  kulLabel: 'Clear logs',
+                  kulLabel: Labels.CLEAR_LOGS,
                   kulStyle:
                     ':host { margin: auto; padding-bottom: 4px; padding-top: 16px; text-align: center }',
                   kulStyling: 'flat',
@@ -394,7 +417,7 @@ export const sectionsFactory = {
               cells: {
                 kulButton: {
                   kulIcon: 'delete',
-                  kulLabel: 'Delete models info',
+                  kulLabel: Labels.DELETE_METADATA,
                   kulStyle: ':host { margin: auto; padding:16px 0 }',
                   kulStyling: 'outlined',
                   shape: 'button',

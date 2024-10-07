@@ -1,9 +1,9 @@
 import folder_paths
 import os
 
-from comfy.samplers import KSampler
 from server import PromptServer
 
+from ..constants.analysis import *
 from ..utils.analysis import *
 
 category = "✨ LF Nodes/Analysis"
@@ -88,9 +88,10 @@ class LF_UpdateUsageStatistics:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "datasets_dir": ("STRING", {"default": os.path.join(folder_paths.input_directory, "LF_Nodes"), "tooltip": "The directory where the JSON datasets are stored."}),
+                "datasets_dir": ("STRING", {"default": os.path.join(folder_paths.input_directory, "LF_Nodes"), "tooltip": "The directory where the JSON datasets are stored. Note: changing this directory will prevent you from displaying the datasets inside the UsageStatistics node, it should be done for testing purposes only."}),
             },
             "optional": {
+                "dataset": ("JSON", {"defaultInput": True, "tooltip": "Dataset including the resources (produced by CivitAIMetadataSetup)."}),
                 "checkpoints": ("STRING", {"default": "", "defaultInput": True, "tooltip": "Checkpoint names' count to update."}),
                 "embeddings": ("STRING", {"default": "", "defaultInput": True, "tooltip": "Embedding names' count to update."}),
                 "loras": ("STRING", {"default": "", "defaultInput": True, "tooltip": "LoRA names' count to update."}),
@@ -106,90 +107,104 @@ class LF_UpdateUsageStatistics:
 
     CATEGORY = category
     FUNCTION = "on_exec"
-    INPUT_IS_LIST = (False, True, True, True)
+    INPUT_IS_LIST = (False, False, True, True, True, True, True, True, True)
     OUTPUT_NODE = True
     RETURN_TYPES = ()
 
-    def on_exec(self, node_id, datasets_dir, checkpoints=None, embeddings=None, 
+    def on_exec(self, node_id, datasets_dir, dataset=None, checkpoints=None, embeddings=None, 
                 loras=None, samplers=None, schedulers=None, upscale_models=None, vaes=None):
-        def normalize_input (input): 
+        def normalize_list(input): 
             if input and (input != (str(input) == "None")) and len(input) > 0:
                 if not isinstance(input, list):
                     input = [input]
             else:
                 input = None
-
             return input
+        def process_list(input, type): 
+            filename = get_usage_filename(type)
+            file = os.path.join(datasets_dir, filename)
+            log = get_usage_title(filename, "markdown")
+            for i in input:
+                log += update_usage_json(file, get_usage_title(filename), i)
+            return log
 
         datasets_dir = datasets_dir[0] if isinstance(datasets_dir, list) else datasets_dir
-        checkpoints = normalize_input(checkpoints)
-        embeddings = normalize_input(embeddings)
-        loras = normalize_input(loras)
-        samplers = normalize_input(samplers)
-        schedulers = normalize_input(schedulers)
-        upscale_models = normalize_input(upscale_models)
-        vaes = normalize_input(vaes)
-        
-        log = "# Update summary\n"
+        dataset = dataset[0] if isinstance(dataset, list) else dataset
+
+        checkpoints = normalize_list(checkpoints)
+        embeddings = normalize_list(embeddings)
+        loras = normalize_list(loras)
+        samplers = normalize_list(samplers)
+        schedulers = normalize_list(schedulers)
+        upscale_models = normalize_list(upscale_models)
+        vaes = normalize_list(vaes)
+
+        log_title = "# Update summary\n"
+        log = ""
+
+        if dataset and isinstance(dataset, dict):
+            if "nodes" in dataset and isinstance(dataset["nodes"], list):
+                for node in dataset["nodes"]:
+                    resource = node["id"]
+                    resource_list = []
+                    if isinstance(node, dict):
+                        for child in node.get("children", []):
+                            if isinstance(child, dict) and "id" in child:
+                                resource_list.append(child["id"])
+                    if len(resource_list) > 0:
+                        log += process_list(resource_list, resource)
+            else:
+                print(f"Unexpected dataset structure, 'nodes' not found or not a list: {dataset}")
+        else:
+            print(f"Unexpected dataset format: {dataset}")
 
         if checkpoints:
-            checkpoints_file = os.path.join(datasets_dir, "checkpoints_usage.json")
-            log += "\n## Checkpoints:\n"
-            for c in checkpoints:
-                log += update_usage_json(checkpoints_file, "Checkpoint name", c)
-
+            log += process_list(checkpoints, "checkpoints")
         if embeddings:
-            embeddings_file = os.path.join(datasets_dir, "embeddings_usage.json")
-            log += "\n## Embeddings:\n"
-            for e in embeddings:
-                log += update_usage_json(embeddings_file, "Embedding name", e)
-
+            log += process_list(embeddings, "embeddings")
         if loras:
-            loras_file = os.path.join(datasets_dir, "loras_usage.json")
-            log += "\n## LoRAs:\n"
-            for l in loras:
-                log += update_usage_json(loras_file, "LoRA name", l)
-
+            log += process_list(loras, "loras")
         if samplers:
-            samplers_file = os.path.join(datasets_dir, "samplers_usage.json")
-            log += "\n## Samplers:\n"
-            for s in samplers:
-                log += update_usage_json(samplers_file, "Sampler name", s)
-
+            log += process_list(samplers, "samplers")
         if schedulers:
-            schedulers_file = os.path.join(datasets_dir, "schedulers_usage.json")
-            log += "\n## Schedulers:\n"
-            for s in schedulers:
-                log += update_usage_json(schedulers_file, "Scheduler name", s)
-
+            log += process_list(schedulers, "schedulers")
         if upscale_models:
-            upscale_models_file = os.path.join(datasets_dir, "upscale_models_usage.json")
-            log += "\n## Upscale models:\n"
-            for u in upscale_models:
-                log += update_usage_json(upscale_models_file, "Upscale model name", u)
-
+            log += process_list(upscale_models, "upscale_models")
         if vaes:
-            vaes_file = os.path.join(datasets_dir, "vaes_usage.json")
-            log += "\n## VAEs:\n"
-            for v in vaes:
-                log += update_usage_json(vaes_file, "VAE name", v)
-
+            log += process_list(vaes, "vaes")
 
         PromptServer.instance.send_sync("lf-updateusagestatistics", {
             "node": node_id, 
-            "log": log,
+            "log": log_title + log if log else log_title + "\nThere were no updates this run!"
         })
 
+        return ()
+
+class LF_UsageStatistics:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {},
+            "hidden": { "node_id": "UNIQUE_ID" }
+        }
+    
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    RETURN_TYPES = ()
+
+    def on_exec(self):
         return ()
 
 NODE_CLASS_MAPPINGS = {
     "LF_ImageHistogram": LF_ImageHistogram,
     "LF_KeywordCounter": LF_KeywordCounter,
     "LF_UpdateUsageStatistics": LF_UpdateUsageStatistics,
+    "LF_UsageStatistics": LF_UsageStatistics,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_ImageHistogram":  "Image Histogram",
     "LF_KeywordCounter": "Keyword counter",
     "LF_UpdateUsageStatistics": "Update usage statistics",
+    "LF_UsageStatistics": "Usage statistics",
 }

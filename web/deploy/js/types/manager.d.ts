@@ -3,9 +3,10 @@ import { KulDataDataset } from './ketchup-lite/components';
 import { Extension } from './nodes';
 export interface ComfyAPIs {
     clearModelMetadata: () => Promise<void>;
+    clearAnalyticsData: (type: AnalyticsType) => Promise<void>;
     event: <T extends BaseEventPayload>(name: EventName, callback: (event: CustomEvent<T>) => void) => void;
     fetch: (body: unknown) => Promise<Response>;
-    fetchAnalyticsData: () => Promise<FetchAnalyticsAPIPayload>;
+    fetchAnalyticsData: (type: AnalyticsType) => Promise<FetchAnalyticsAPIPayload>;
     getLinkById: (id: string) => LinkInfo;
     getNodeById: (id: string) => NodeType;
     interrupt: () => Promise<void>;
@@ -15,6 +16,7 @@ export interface ComfyAPIs {
     register: (extension: Extension) => void;
     saveModelMetadata: (modelPath: string, dataset: KulDataDataset) => void;
 }
+export type AnalyticsType = 'usage';
 export declare enum LogSeverity {
     Info = "info",
     Success = "success",
@@ -32,7 +34,7 @@ export interface ClearModelAPIPayload {
     message: string;
 }
 export interface FetchAnalyticsAPIPayload {
-    status: 'success';
+    status: 'success' | 'not found' | 'error';
     data: Record<string, KulDataDataset>;
 }
 export interface SaveModelAPIPayload {
