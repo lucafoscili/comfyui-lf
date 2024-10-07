@@ -24,7 +24,8 @@ class LF_CivitAIMetadataSetup:
     @classmethod
     def INPUT_TYPES(cls):
         return {
-            "required": {
+            "required": {},
+            "optional": {
                 "checkpoint": (folder_paths.get_filename_list("checkpoints"), {"default": "None", "tooltip": "Checkpoint used to generate the image."}),
                 "vae": (folder_paths.get_filename_list("vae"), {"tooltip": "VAE used to generate the image."}),
                 "sampler": (KSampler.SAMPLERS, {"default": "None", "tooltip": "Sampler used to generate the image."}),
@@ -51,57 +52,94 @@ class LF_CivitAIMetadataSetup:
     RETURN_NAMES = ("metadata_string", "checkpoint", "vae", 
                     "sampler", "scheduler", "embeddings", "lora_tags",
                     "full_pos_prompt", "neg_prompt", "steps", "denoising", "clip_skip", "cfg", "seed", 
-                    "width", "height", "hires_upscaler", "hires_upscale")
+                    "width", "height", "hires_upscaler", "hires_upscale", "analytics_dataset")
     RETURN_TYPES = ("STRING", folder_paths.get_filename_list("checkpoints"), folder_paths.get_filename_list("vae"),
                     KSampler.SAMPLERS, KSampler.SCHEDULERS, "STRING", "STRING",
                     "STRING", "STRING", "INT", "FLOAT", "INT", "FLOAT", "INT",
-                    "INT", "INT", folder_paths.get_filename_list("upscale_models"), "FLOAT")
+                    "INT", "INT", folder_paths.get_filename_list("upscale_models"), "FLOAT", "JSON")
 
-    def on_exec(self, node_id, checkpoint, vae, sampler, scheduler, positive_prompt, negative_prompt,
-                steps, denoising, clip_skip, cfg, seed, width, height, hires_upscale, hires_upscaler, embeddings:str, lora_tags):
+    def on_exec(self, **kwargs):
+        analytics_dataset = { "nodes": [] }
+
+        cfg = kwargs.get("cfg")
+        checkpoint = kwargs.get("checkpoint")
+        clip_skip = kwargs.get("clip_skip")
+        denoising = kwargs.get("denoising")
+        embeddings = kwargs.get("embeddings")
+        height = kwargs.get("height")
+        hires_upscale = kwargs.get("hires_upscale")
+        hires_upscaler = kwargs.get("hires_upscaler")
+        lora_tags = kwargs.get("lora_tags")
+        negative_prompt = kwargs.get("negative_prompt")
+        node_id = kwargs.get("node_id")
+        positive_prompt = kwargs.get("positive_prompt")
+        sampler = kwargs.get("sampler")
+        seed = kwargs.get("seed")
+        steps = kwargs.get("steps")
+        scheduler = kwargs.get("scheduler")
+        vae = kwargs.get("vae")
+        width = kwargs.get("width")
         
-        checkpoint_path = folder_paths.get_full_path("checkpoints", checkpoint)
-        try:
-            checkpoint_hash = get_sha256(checkpoint_path)
-        except Exception as e:
-            checkpoint_hash = "Unknown"
-            print(f"Error calculating hash for checkpoint: {e}")
-        checkpoint_name = os.path.basename(checkpoint_path)
+        if checkpoint:
+            checkpoint_path = folder_paths.get_full_path("checkpoints", checkpoint)
+            checkpoint_name = os.path.basename(checkpoint_path)
+            try:
+                checkpoint_hash = get_sha256(checkpoint_path)
+                analytics_dataset["nodes"].append({ "children": [{ "id": checkpoint_name, "value": checkpoint_name }], "id": "checkpoints"})
+            except Exception as e:
+                checkpoint_hash = "Unknown"
+                print(f"Error calculating hash for checkpoint: {e}")
+
+        if embeddings:
+            emb_hashes = get_embedding_hashes(embeddings, analytics_dataset) if embeddings else []
+            emb_hashes_str = ", ".join(emb_hashes) if emb_hashes else "None"
+        else:
+            emb_hashes = []
+            emb_hashes_str = ""
 
         if hires_upscaler:
             upscaler_path = folder_paths.get_full_path("upscale_models", hires_upscaler)
             upscaler_name = os.path.basename(upscaler_path)
+            analytics_dataset["nodes"].append({ "children": [{ "id": upscaler_name, "value": upscaler_name }], "id": "upscale_models"})
         else:
             upscaler_name = "Latent"
 
-        vae_path = folder_paths.get_full_path("vae", vae)
-        try:
-            vae_hash = get_sha256(vae_path)
-        except Exception as e:
-            vae_hash = "Unknown"
-            print(f"Error calculating hash for VAE: {e}")
-        vae_name = os.path.basename(vae_path)
+        if lora_tags:
+            lora_hashes = get_lora_hashes(lora_tags, analytics_dataset) if lora_tags else []
+            lora_hashes_str = ", ".join(lora_hashes) if lora_hashes else "None"
+        else:
+            lora_hashes = []
+            lora_hashes_str = ""
 
+        if sampler:
+            analytics_dataset["nodes"].append({ "children": [{ "id": sampler, "value": sampler }], "id": "samplers"})
+            sampler_a1111 = SAMPLER_MAP.get(sampler, sampler)
 
-        emb_hashes = get_embedding_hashes(embeddings) if embeddings else []
-        emb_hashes_str = ", ".join(emb_hashes) if emb_hashes else "None"
+        if scheduler:
+            analytics_dataset["nodes"].append({ "children": [{ "id": scheduler, "value": scheduler }], "id": "schedulers"})
+            scheduler_a1111 = SCHEDULER_MAP.get(scheduler, scheduler)
+
+        if vae:
+            vae_path = folder_paths.get_full_path("vae", vae)
+            vae_name = os.path.basename(vae_path)
+            try:
+                vae_hash = get_sha256(vae_path)
+                analytics_dataset["nodes"].append({ "children": [{ "id": vae_name, "value": vae_name }], "id": "vaes"})
+            except Exception as e:
+                vae_hash = "Unknown"
+                print(f"Error calculating hash for VAE: {e}")
                    
-        lora_hashes = get_lora_hashes(lora_tags) if lora_tags else []
-        lora_hashes_str = ", ".join(lora_hashes) if lora_hashes else "None"
-
-        sampler_a1111 = SAMPLER_MAP.get(sampler, sampler)
-        scheduler_a1111 = SCHEDULER_MAP.get(scheduler, scheduler)
-
         metadata_string = (
-            f"{positive_prompt}, {embeddings.replace('embedding:','')}, {lora_tags}\n"
-            f"Negative prompt: {negative_prompt}\n"
-            f"Steps: {steps}, Sampler: {sampler_a1111}, Schedule type: {scheduler_a1111}, CFG scale: {cfg}, Seed: {seed}, Size: {width}x{height}, "
-            f"Denoising strength: {denoising}, Clip skip: {abs(clip_skip)},  "
-            f"VAE hash: {vae_hash}, VAE: {vae_name}, "
-            f"Model hash: {checkpoint_hash}, Model: {checkpoint_name}, "
-            f"Hires upscale: {hires_upscale}, Hires upscaler: {upscaler_name}, "
-            f"Lora hashes: \"{lora_hashes_str}\", "
-            f"TI hashes: \"{emb_hashes_str}\", Version: ComfyUI.LF Nodes"
+            f"{positive_prompt if positive_prompt else ''}, {embeddings.replace('embedding:','') if embeddings else ''}, {lora_tags if lora_tags else ''}\n"
+            f"Negative prompt: {negative_prompt if negative_prompt else ''}\n"
+            f"Steps: {steps if steps else ''}, Sampler: {sampler_a1111 if sampler else ''}, Schedule type: {scheduler_a1111 if scheduler else ''}, CFG scale: {cfg if cfg else ''}, "
+            f"Seed: {seed if seed else ''}, Size: {width if width else ''}x{height if height else ''}, "
+            f"Denoising strength: {denoising if denoising else ''}, Clip skip: {abs(clip_skip) if clip_skip else ''},  "
+            f"VAE hash: {vae_hash if vae_hash else ''}, VAE: {vae_name if vae_name else ''}, "
+            f"Model hash: {checkpoint_hash if checkpoint_hash else ''}, Model: {checkpoint_name if checkpoint_name else ''}, "
+            f"Hires upscale: {hires_upscale if hires_upscale else ''}, Hires upscaler: {upscaler_name if upscaler_name else ''}, "
+            f"Lora hashes: \"{lora_hashes_str if lora_hashes_str else ''}\", "
+            f"TI hashes: \"{emb_hashes_str if emb_hashes_str else ''}\", Version: ComfyUI.LF Nodes"
         )
         
         PromptServer.instance.send_sync("lf-civitaimetadatasetup", {
@@ -109,12 +147,15 @@ class LF_CivitAIMetadataSetup:
             "metadataString": metadata_string, 
         })
 
-        output_prompt = positive_prompt + ", " + embeddings if embeddings else positive_prompt
+        if positive_prompt:
+            output_prompt = positive_prompt + ", " + embeddings if embeddings else positive_prompt
+        else:
+            output_prompt = ''
 
         return (metadata_string, checkpoint, vae, 
                 sampler, scheduler, embeddings, lora_tags, 
                 output_prompt, negative_prompt, steps, denoising, clip_skip, cfg, seed,
-                width, height, hires_upscaler, hires_upscale)
+                width, height, hires_upscaler, hires_upscale, analytics_dataset)
     
 class LF_ControlPanel:
     @classmethod
@@ -139,7 +180,7 @@ class LF_LoadLoraTags:
                 "get_civitai_info": ("BOOLEAN", {"default": True, "tooltip": "Attempts to retrieve more info about the models from CivitAI."}),
                 "model": ("MODEL", {"tooltip": "The main model to apply the LoRA to."}),
                 "clip": ("CLIP", {"tooltip": "The CLIP model to modify."}),
-                "tags": ("STRING", {"default": "", "multiline": True, "tooltip": "Text containing LoRA tags, e.g., <lora:example:1.0>"}),
+                "tags": ("STRING", {"default": '', "multiline": True, "tooltip": "Text containing LoRA tags, e.g., <lora:example:1.0>"}),
             },
             "hidden": {"node_id": "UNIQUE_ID"}
         }
@@ -257,7 +298,7 @@ class LF_Notify:
             },
             "optional": {
                 "image": ("IMAGE", {"tooltip": "Image displayed in the notification."}),
-                "tag": ("STRING", {"default": "", "tooltip": "Used to group notifications (old ones with the same tag will be replaced)."}),
+                "tag": ("STRING", {"default": '', "tooltip": "Used to group notifications (old ones with the same tag will be replaced)."}),
             },
             "hidden": {"node_id": "UNIQUE_ID"}
         }
@@ -304,9 +345,9 @@ class LF_WorkflowSettings:
         return {
            "required": {
                "drawing_board": ("BOOLEAN", {"default": False, "label": "Drawing board?", "tooltip": "Enables or disables the drawing board mode (alternative prompt)."}),
-               "drawing_board_plus": ("STRING", {"default": "", "multiline": True, "label": "Drawing board +", "tooltip": "Positive prompt of the drawing board."}),
-               "drawing_board_minus": ("STRING", {"default": "", "multiline": True, "label": "Drawing board -", "tooltip": "Negative prompt of the drawing board."}),
-               "drawing_board_loras": ("STRING", {"default": "", "multiline": True, "label": "Drawing board LoRAs", "tooltip": "LoRA tags specific to the drawing board functionality."}),
+               "drawing_board_plus": ("STRING", {"default": '', "multiline": True, "label": "Drawing board +", "tooltip": "Positive prompt of the drawing board."}),
+               "drawing_board_minus": ("STRING", {"default": '', "multiline": True, "label": "Drawing board -", "tooltip": "Negative prompt of the drawing board."}),
+               "drawing_board_loras": ("STRING", {"default": '', "multiline": True, "label": "Drawing board LoRAs", "tooltip": "LoRA tags specific to the drawing board functionality."}),
                "random_seed": ("BOOLEAN", {"default": False, "label": "Random seed?", "tooltip": "Whether to use the random seed or the fixed seed."}),
                "fixed_seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "label": "Fixed seed", "tooltip": "Set a fixed seed value for deterministic operations."}),
                "batch_size": ("INT", {"default": 4, "label": "Batch size", "tooltip": "Number of items to process in a batch."}),
@@ -325,8 +366,8 @@ class LF_WorkflowSettings:
                "llm_prompt": ("BOOLEAN", {"default": False, "label": "LLM Prompt?", "tooltip": "Use Language Model prompts."}),
                "character_lora_weight": ("FLOAT", {"default": 1.0, "label": "Character LoRA weight", "min": -10.0, "max": 10.0, "step": 0.1, "tooltip": "Weighting for character-related LoRAs."}),
                "additional_loras_weight": ("FLOAT", {"default": 0.5, "label": "Additional LoRAs weight", "min": -10.0, "max": 10.0, "step": 0.1, "tooltip": "Weighting for additional LoRAs."}),
-               "custom_images_urls": ("STRING", {"default": "", "multiline": True, "label": "Custom images URLs", "tooltip": "IMG2IMG: URL for using a custom image as a base."}),
-               "config_json_path": ("STRING", {"default": "", "multiline": True, "label": "Config JSON path", "tooltip": "Path to configuration JSON file."}),
+               "custom_images_urls": ("STRING", {"default": '', "multiline": True, "label": "Custom images URLs", "tooltip": "IMG2IMG: URL for using a custom image as a base."}),
+               "config_json_path": ("STRING", {"default": '', "multiline": True, "label": "Config JSON path", "tooltip": "Path to configuration JSON file."}),
                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "label": "Seed", "tooltip": "Seed value for randomization."}),
             }
         }
