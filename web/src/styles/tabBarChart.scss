@@ -1,0 +1,16 @@
+.lf-tabbarchart {
+  & {
+    background: var(--kul-background-color);
+    height: 100%;
+    overflow: auto;
+    position: relative;
+    width: 100%;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    height: 100%;
+    width: 100%;
+  }
+}

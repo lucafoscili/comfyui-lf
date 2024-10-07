@@ -81,7 +81,7 @@ async def clear_model_info(request):
     except Exception as e:
         return web.Response(status=500, text=f"Error: {str(e)}")
 
-@PromptServer.instance.routes.get("/comfyui-lf/get-analytics")
+@PromptServer.instance.routes.get("/comfyui-lf/get-usage-analytics")
 async def get_analytics(response):
     try:
         analytics_dir = os.path.join(input_directory, "LF_Nodes")

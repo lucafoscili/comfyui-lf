@@ -1,24 +1,20 @@
 import {
   KulButtonEventPayload,
-  KulChartEventPayload,
   KulListEventPayload,
   KulSwitchEventPayload,
 } from '../types/ketchup-lite/components';
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
 import { KulButton } from '../types/ketchup-lite/components/kul-button/kul-button';
 import { KulButtonEvent } from '../types/ketchup-lite/components/kul-button/kul-button-declarations';
-import { KulChart } from '../types/ketchup-lite/components/kul-chart/kul-chart';
 import { KulList } from '../types/ketchup-lite/components/kul-list/kul-list';
 import { KulSwitch } from '../types/ketchup-lite/components/kul-switch/kul-switch';
 import { KulSwitchEvent } from '../types/ketchup-lite/components/kul-switch/kul-switch-declarations';
-import { LogSeverity } from '../types/manager';
 import {
   getApiRoutes,
   getKulManager,
   getKulThemes,
   getLFManager,
   isButton,
-  isChart,
   isSwitch,
 } from '../utils/common';
 
@@ -53,10 +49,6 @@ export const handleKulEvent = (e: Event) => {
 
   if (isButton(comp)) {
     handleButtonEvent(e as CustomEvent<KulButtonEventPayload>);
-  }
-
-  if (isChart(comp)) {
-    handleChartEvent(e as CustomEvent<KulChartEventPayload>);
   }
 
   if (isSwitch(comp)) {
@@ -129,28 +121,6 @@ const handleButtonEvent = (e: CustomEvent<KulButtonEventPayload>) => {
         c.appendChild(spinner);
         break;
       }
-  }
-};
-
-const handleChartEvent = (e: CustomEvent<KulChartEventPayload>) => {
-  const { comp, eventType } = e.detail;
-  const c = comp as KulChart;
-
-  switch (eventType) {
-    case 'ready':
-      getLFManager()
-        .getApiRoutes()
-        .fetchAnalyticsData()
-        .then((r) => {
-          if (r.status === 'success') {
-            if (r.data['checkpoints_usage.json']) {
-              c.kulData = r.data['checkpoints_usage.json'];
-            } else {
-              getLFManager().log('Not found checkpoints analytics.', { r }, LogSeverity.Info);
-            }
-          }
-        });
-      break;
   }
 };
 

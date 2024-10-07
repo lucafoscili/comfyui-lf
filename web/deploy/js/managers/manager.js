@@ -63,28 +63,30 @@ export class LFManager {
                     body,
                 });
             },
-            fetchAnalyticsData: () => {
-                return api
-                    .fetchApi('/comfyui-lf/get-analytics', {
-                    method: 'GET',
-                })
-                    .then((res) => {
-                    return res.json();
-                })
-                    .then((data) => {
-                    if (data.status === 'success') {
-                        this.log('Analytics data fetched successfully.', { data }, LogSeverity.Success);
+            fetchAnalyticsData: async (type) => {
+                try {
+                    const response = await api.fetchApi(`/comfyui-lf/get-${type}-analytics`, {
+                        method: 'GET',
+                    });
+                    const code = response.status;
+                    if (code === 200) {
+                        const data = await response.json();
+                        if (data.status === 'success') {
+                            this.log('Analytics data fetched successfully.', { data }, LogSeverity.Success);
+                        }
                         return data;
                     }
-                    else {
-                        this.log('Unexpected response status while fetching analytics data.', { data }, LogSeverity.Warning);
-                        throw new Error('Unexpected response status');
+                    if (code === 404) {
+                        this.log(`${type} analytics file not found.`, {}, LogSeverity.Info);
+                        return { data: {}, status: 'not found' };
                     }
-                })
-                    .catch((error) => {
+                    this.log('Unexpected response from the API!', { status: code }, LogSeverity.Error);
+                    return { data: {}, status: 'error' };
+                }
+                catch (error) {
                     this.log('Error fetching analytics data.', { error }, LogSeverity.Error);
-                    throw error;
-                });
+                    return { data: {}, status: 'error' };
+                }
             },
             getLinkById: (id) => {
                 return app.graph.links[String(id).valueOf()];
@@ -488,6 +490,13 @@ export class LFManager {
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_UrandomSeedGenerator(widgets.setters.KUL_TREE, widgets.adders.KUL_TREE);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.urandomSeedGenerator, (e) => {
             nodes.eventHandlers.LF_UrandomSeedGenerator(e, widgets.adders.KUL_TREE);
+        });
+        /*-------------------------------------------------------------------*/
+        /*             I n i t   U s a g e S t a t i s t i c s               */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_UsageStatistics(widgets.setters.KUL_TAB_BAR_CHART, widgets.adders.KUL_TAB_BAR_CHART);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.updateUsageStatistics, (e) => {
+            nodes.eventHandlers.LF_UsageStatistics(e, widgets.adders.KUL_TAB_BAR_CHART);
         });
         /*-------------------------------------------------------------------*/
         /*                  I n i t   V A E S e l e c t o r                  */

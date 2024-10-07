@@ -1,4 +1,5 @@
 import { KulDataDataset, KulMessengerDataset, KulMessengerConfig } from './ketchup-lite/components';
+import { AnalyticsType } from './manager';
 
 /*-------------------------------------------------------------------*/
 /*                C o m m o n   D e c l a r a t i o n s              */
@@ -47,6 +48,7 @@ export type CustomWidgetMap = {
   [CustomWidgetName.jsonInput]: JsonInputWidget;
   [CustomWidgetName.messenger]: MessengerWidget;
   [CustomWidgetName.rollViewer]: RollViewerWidget;
+  [CustomWidgetName.tabBarChart]: TabBarChartWidget;
   [CustomWidgetName.tree]: TreeWidget;
   [CustomWidgetName.upload]: UploadWidget;
 };
@@ -65,6 +67,7 @@ export enum CustomWidgetName {
   jsonInput = 'KUL_JSON_INPUT',
   messenger = 'KUL_MESSENGER',
   rollViewer = 'KUL_ROLL_VIEWER',
+  tabBarChart = 'KUL_TAB_BAR_CHART',
   tree = 'KUL_TREE',
   upload = 'KUL_UPLOAD',
 }
@@ -83,6 +86,7 @@ export type CustomWidgetOptions =
   | JsonInputWidgetOptions
   | MessengerWidgetOptions
   | RollViewerWidgetOptions
+  | TabBarChartWidgetOptions
   | TreeWidgetOptions
   | UploadWidgetOptions;
 
@@ -139,7 +143,7 @@ export interface CardsWithChipWidget extends Widget {
 export interface CardsWithChipWidgetOptions {
   hideOnZoom: boolean;
   getComp(): { cards: HTMLKulCardElement[]; chip: HTMLKulChipElement };
-  getValue(): string;
+  getValue(): CardsWithChipWidgetValue;
   setValue(value: CardsWithChipWidgetValue): void;
 }
 export type CardsWithChipWidgetSetter = () => {
@@ -207,6 +211,23 @@ export type CodeWidgetSetter = () => {
   [CustomWidgetName.code]: BaseWidgetCallback;
 };
 export type CodeWidgetValue = string;
+
+/*-------------------------------------------------------------------*/
+/*         T a b B a r C h a r t   D e c l a r a t i o n s           */
+/*-------------------------------------------------------------------*/
+
+export interface TabBarChartWidget extends Widget {
+  options: TabBarChartWidgetOptions;
+  type: [CustomWidgetName.tabBarChart];
+}
+export interface TabBarChartWidgetOptions {
+  hideOnZoom: boolean;
+  getComp(): { chart: HTMLKulChartElement; tabbar: HTMLKulTabbarElement };
+  refresh(type: AnalyticsType): void;
+}
+export type TabBarChartWidgetSetter = () => {
+  [CustomWidgetName.tabBarChart]: BaseWidgetCallback;
+};
 
 /*-------------------------------------------------------------------*/
 /*       C o n t r o l   P a n e l   D e c l a r a t i o n s         */

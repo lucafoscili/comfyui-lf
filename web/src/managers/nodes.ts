@@ -47,6 +47,7 @@ import { notifyFactory } from '../nodes/notify';
 import { upscaleModelSelectorFactory } from '../nodes/upscaleModelSelector';
 import { vaeSelectorFactory } from '../nodes/vaeSelector';
 import { updateUsageStatisticsFactory } from '../nodes/updateUsageStatistics';
+import { usageStatisticsFactory } from '../nodes/usageStatistics';
 
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
@@ -94,6 +95,7 @@ export class LFNodes {
     [NodeName.updateUsageStatistics]: updateUsageStatisticsFactory.eventHandler,
     [NodeName.upscaleModelSelector]: upscaleModelSelectorFactory.eventHandler,
     [NodeName.urandomSeedGenerator]: uRandomSeedGeneratorFactory.eventHandler,
+    [NodeName.usageStatistics]: usageStatisticsFactory.eventHandler,
     [NodeName.vaeSelector]: vaeSelectorFactory.eventHandler,
     [NodeName.writeJson]: writeJsonFactory.eventHandler,
   };
@@ -144,6 +146,7 @@ export class LFNodes {
     [NodeName.updateUsageStatistics]: updateUsageStatisticsFactory.register,
     [NodeName.upscaleModelSelector]: upscaleModelSelectorFactory.register,
     [NodeName.urandomSeedGenerator]: uRandomSeedGeneratorFactory.register,
+    [NodeName.usageStatistics]: usageStatisticsFactory.register,
     [NodeName.vaeSelector]: vaeSelectorFactory.register,
     [NodeName.writeJson]: writeJsonFactory.register,
   };

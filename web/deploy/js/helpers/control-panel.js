@@ -1,5 +1,4 @@
-import { LogSeverity } from '../types/manager.js';
-import { getApiRoutes, getKulManager, getKulThemes, getLFManager, isButton, isChart, isSwitch, } from '../utils/common.js';
+import { getApiRoutes, getKulManager, getKulThemes, getLFManager, isButton, isSwitch, } from '../utils/common.js';
 const STYLES = {
     logsArea: () => {
         return {
@@ -26,9 +25,6 @@ export const handleKulEvent = (e) => {
     const { comp } = e.detail;
     if (isButton(comp)) {
         handleButtonEvent(e);
-    }
-    if (isChart(comp)) {
-        handleChartEvent(e);
     }
     if (isSwitch(comp)) {
         handleSwitchEvent(e);
@@ -93,27 +89,6 @@ const handleButtonEvent = (e) => {
                 c.appendChild(spinner);
                 break;
             }
-    }
-};
-const handleChartEvent = (e) => {
-    const { comp, eventType } = e.detail;
-    const c = comp;
-    switch (eventType) {
-        case 'ready':
-            getLFManager()
-                .getApiRoutes()
-                .fetchAnalyticsData()
-                .then((r) => {
-                if (r.status === 'success') {
-                    if (r.data['checkpoints_usage.json']) {
-                        c.kulData = r.data['checkpoints_usage.json'];
-                    }
-                    else {
-                        getLFManager().log('Not found checkpoints analytics.', { r }, LogSeverity.Info);
-                    }
-                }
-            });
-            break;
     }
 };
 const handleListEvent = (e) => {
