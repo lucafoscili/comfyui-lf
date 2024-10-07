@@ -88,10 +88,10 @@ class LF_UpdateUsageStatistics:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "datasets_dir": ("STRING", {"default": os.path.join(folder_paths.input_directory, "LF_Nodes"), "tooltip": "The directory where the JSON datasets are stored."}),
+                "datasets_dir": ("STRING", {"default": os.path.join(folder_paths.input_directory, "LF_Nodes"), "tooltip": "The directory where the JSON datasets are stored. Note: changing this directory will prevent you from displaying the datasets inside the UsageStatistics node, it should be done for testing purposes only."}),
             },
             "optional": {
-                "dataset": ("JSON", {"default": "", "defaultInput": True, "tooltip": "Dataset including the resources (produced by CivitAIMetadataSetup)."}),
+                "dataset": ("JSON", {"defaultInput": True, "tooltip": "Dataset including the resources (produced by CivitAIMetadataSetup)."}),
                 "checkpoints": ("STRING", {"default": "", "defaultInput": True, "tooltip": "Checkpoint names' count to update."}),
                 "embeddings": ("STRING", {"default": "", "defaultInput": True, "tooltip": "Embedding names' count to update."}),
                 "loras": ("STRING", {"default": "", "defaultInput": True, "tooltip": "LoRA names' count to update."}),
@@ -111,7 +111,7 @@ class LF_UpdateUsageStatistics:
     OUTPUT_NODE = True
     RETURN_TYPES = ()
 
-    def on_exec(self, node_id, datasets_dir, dataset: dict, checkpoints=None, embeddings=None, 
+    def on_exec(self, node_id, datasets_dir, dataset=None, checkpoints=None, embeddings=None, 
                 loras=None, samplers=None, schedulers=None, upscale_models=None, vaes=None):
         def normalize_list(input): 
             if input and (input != (str(input) == "None")) and len(input) > 0:

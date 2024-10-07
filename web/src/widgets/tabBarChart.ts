@@ -111,7 +111,7 @@ const createGrid = async (node: NodeType) => {
               tabbar.kulData = prepareTabbarDataset(r.data);
               tabbar.addEventListener(
                 'kul-tabbar-event',
-                tabbarEventHandler.bind(tabbarEventHandler, chart, r.data),
+                tabbarEventHandler.bind(tabbarEventHandler, chart),
               );
             } else {
               getLFManager().log('Analytics not found.', { r }, LogSeverity.Info);
@@ -131,16 +131,12 @@ const createGrid = async (node: NodeType) => {
   return grid;
 };
 
-const tabbarEventHandler = (
-  chart: HTMLKulChartElement,
-  data: Record<string, KulDataDataset>,
-  e: CustomEvent<KulTabbarEventPayload>,
-) => {
+const tabbarEventHandler = (chart: HTMLKulChartElement, e: CustomEvent<KulTabbarEventPayload>) => {
   const { eventType, node } = e.detail;
 
   switch (eventType) {
     case 'click':
-      chart.kulData = data[node.id];
+      chart.kulData = getLFManager().getCachedDatasets().usage[node.id];
       break;
   }
 };

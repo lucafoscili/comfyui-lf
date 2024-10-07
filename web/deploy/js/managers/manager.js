@@ -9,7 +9,7 @@ var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
     return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
 };
-var _LFManager_APIS, _LFManager_DEBUG, _LFManager_DEBUG_ARTICLE, _LFManager_DEBUG_DATASET, _LFManager_DOM, _LFManager_INITIALIZED, _LFManager_MANAGERS;
+var _LFManager_APIS, _LFManager_CACHED_DATASETS, _LFManager_DEBUG, _LFManager_DEBUG_ARTICLE, _LFManager_DEBUG_DATASET, _LFManager_DOM, _LFManager_INITIALIZED, _LFManager_MANAGERS;
 import { api } from '/scripts/api.js';
 import { app } from '/scripts/app.js';
 import { defineCustomElements } from '../ketchup-lite/loader.js';
@@ -43,15 +43,30 @@ export class LFManager {
                             this.log('Error parsing response when deleting metadata files.', { error }, LogSeverity.Error);
                             return res.json();
                         }
-                    })
-                        .then((data) => {
-                        if (data.status === 'success') {
-                            this.log(data.message, {}, LogSeverity.Info);
-                        }
                     });
                 }
                 catch (error) {
                     this.log("Error deleting model's metadata.", { error }, LogSeverity.Error);
+                }
+            },
+            clearAnalyticsData: async (type) => {
+                try {
+                    await api
+                        .fetchApi(`/comfyui-lf/clear-${type}-analytics`, {
+                        method: 'POST',
+                    })
+                        .then((res) => {
+                        try {
+                            return res.json();
+                        }
+                        catch (error) {
+                            this.log('Error parsing response when deleting analytics files.', { error }, LogSeverity.Error);
+                            return res.json();
+                        }
+                    });
+                }
+                catch (error) {
+                    this.log('Error deleting analytics data.', { error }, LogSeverity.Error);
                 }
             },
             event: (name, callback) => {
@@ -74,6 +89,7 @@ export class LFManager {
                         if (data.status === 'success') {
                             this.log('Analytics data fetched successfully.', { data }, LogSeverity.Success);
                         }
+                        __classPrivateFieldGet(this, _LFManager_CACHED_DATASETS, "f").usage = data.data;
                         return data;
                     }
                     if (code === 404) {
@@ -159,6 +175,9 @@ export class LFManager {
                 }
             },
         });
+        _LFManager_CACHED_DATASETS.set(this, {
+            usage: null,
+        });
         _LFManager_DEBUG.set(this, false);
         _LFManager_DEBUG_ARTICLE.set(this, void 0);
         _LFManager_DEBUG_DATASET.set(this, void 0);
@@ -180,6 +199,9 @@ export class LFManager {
     }
     getApiRoutes() {
         return __classPrivateFieldGet(this, _LFManager_APIS, "f");
+    }
+    getCachedDatasets() {
+        return __classPrivateFieldGet(this, _LFManager_CACHED_DATASETS, "f");
     }
     getDebugDataset() {
         return { article: __classPrivateFieldGet(this, _LFManager_DEBUG_ARTICLE, "f"), dataset: __classPrivateFieldGet(this, _LFManager_DEBUG_DATASET, "f") };
@@ -572,7 +594,7 @@ export class LFManager {
         return __classPrivateFieldGet(this, _LFManager_DEBUG, "f");
     }
 }
-_LFManager_APIS = new WeakMap(), _LFManager_DEBUG = new WeakMap(), _LFManager_DEBUG_ARTICLE = new WeakMap(), _LFManager_DEBUG_DATASET = new WeakMap(), _LFManager_DOM = new WeakMap(), _LFManager_INITIALIZED = new WeakMap(), _LFManager_MANAGERS = new WeakMap();
+_LFManager_APIS = new WeakMap(), _LFManager_CACHED_DATASETS = new WeakMap(), _LFManager_DEBUG = new WeakMap(), _LFManager_DEBUG_ARTICLE = new WeakMap(), _LFManager_DEBUG_DATASET = new WeakMap(), _LFManager_DOM = new WeakMap(), _LFManager_INITIALIZED = new WeakMap(), _LFManager_MANAGERS = new WeakMap();
 const WINDOW = window;
 if (!WINDOW.lfManager) {
     WINDOW.lfManager = new LFManager();

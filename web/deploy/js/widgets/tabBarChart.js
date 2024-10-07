@@ -92,7 +92,7 @@ const createGrid = async (node) => {
                         const firstKey = Object.keys(r.data)[0];
                         chart.kulData = r.data[firstKey];
                         tabbar.kulData = prepareTabbarDataset(r.data);
-                        tabbar.addEventListener('kul-tabbar-event', tabbarEventHandler.bind(tabbarEventHandler, chart, r.data));
+                        tabbar.addEventListener('kul-tabbar-event', tabbarEventHandler.bind(tabbarEventHandler, chart));
                     }
                     else {
                         getLFManager().log('Analytics not found.', { r }, LogSeverity.Info);
@@ -108,11 +108,11 @@ const createGrid = async (node) => {
     grid.appendChild(chart);
     return grid;
 };
-const tabbarEventHandler = (chart, data, e) => {
+const tabbarEventHandler = (chart, e) => {
     const { eventType, node } = e.detail;
     switch (eventType) {
         case 'click':
-            chart.kulData = data[node.id];
+            chart.kulData = getLFManager().getCachedDatasets().usage[node.id];
             break;
     }
 };

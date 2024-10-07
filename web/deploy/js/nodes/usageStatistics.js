@@ -15,7 +15,7 @@ export const usageStatisticsFactory = {
             const node = nodes[index];
             if (node?.comfyClass === NAME) {
                 const widget = getCustomWidget(node, CustomWidgetName.tabBarChart, addW);
-                widget.options.refresh(widget.element);
+                widget.options.refresh('usage');
                 getApiRoutes().redraw();
             }
         }

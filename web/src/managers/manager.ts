@@ -7,6 +7,7 @@ import { getKulManager } from '../utils/common.js';
 import { LFNodes } from './nodes.js';
 import { LFWidgets } from './widgets.js';
 import {
+  AnalyticsType,
   ComfyAPIs,
   FetchAnalyticsAPIPayload,
   LogSeverity,
@@ -59,6 +60,7 @@ import {
   UpdateUsageStatisticsPayload,
 } from '../types/events.js';
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
+import { KulDataDataset } from '../types/ketchup-lite/components';
 
 /*-------------------------------------------------*/
 /*                 L F   C l a s s                 */
@@ -96,14 +98,31 @@ export class LFManager {
               );
               return res.json();
             }
-          })
-          .then((data: SaveModelAPIPayload) => {
-            if (data.status === 'success') {
-              this.log(data.message, {}, LogSeverity.Info);
-            }
           });
       } catch (error) {
         this.log("Error deleting model's metadata.", { error }, LogSeverity.Error);
+      }
+    },
+    clearAnalyticsData: async (type: AnalyticsType) => {
+      try {
+        await api
+          .fetchApi(`/comfyui-lf/clear-${type}-analytics`, {
+            method: 'POST',
+          })
+          .then((res: Response) => {
+            try {
+              return res.json();
+            } catch (error) {
+              this.log(
+                'Error parsing response when deleting analytics files.',
+                { error },
+                LogSeverity.Error,
+              );
+              return res.json();
+            }
+          });
+      } catch (error) {
+        this.log('Error deleting analytics data.', { error }, LogSeverity.Error);
       }
     },
     event: (name, callback) => {
@@ -128,6 +147,7 @@ export class LFManager {
           if (data.status === 'success') {
             this.log('Analytics data fetched successfully.', { data }, LogSeverity.Success);
           }
+          this.#CACHED_DATASETS.usage = data.data;
           return data;
         }
         if (code === 404) {
@@ -212,6 +232,9 @@ export class LFManager {
       }
     },
   };
+  #CACHED_DATASETS: { usage: KulDataDataset } = {
+    usage: null,
+  };
   #DEBUG = false;
   #DEBUG_ARTICLE: HTMLKulArticleElement;
   #DEBUG_DATASET: KulArticleNode[];
@@ -241,6 +264,10 @@ export class LFManager {
 
   getApiRoutes(): ComfyAPIs {
     return this.#APIS;
+  }
+
+  getCachedDatasets() {
+    return this.#CACHED_DATASETS;
   }
 
   getDebugDataset() {

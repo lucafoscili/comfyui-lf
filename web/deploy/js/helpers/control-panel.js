@@ -1,4 +1,13 @@
 import { getApiRoutes, getKulManager, getKulThemes, getLFManager, isButton, isSwitch, } from '../utils/common.js';
+var Labels;
+(function (Labels) {
+    Labels["CLEAR_LOGS"] = "Clear logs";
+    Labels["DELETE_USAGE"] = "Delete usage analytics info";
+    Labels["DELETE_METADATA"] = "Delete models info";
+    Labels["DONE"] = "Done!";
+    Labels["OPEN_ISSUE"] = "Open an issue";
+    Labels["THEME"] = "Random theme";
+})(Labels || (Labels = {}));
 const STYLES = {
     logsArea: () => {
         return {
@@ -33,53 +42,69 @@ export const handleKulEvent = (e) => {
 const handleButtonEvent = (e) => {
     const { comp, eventType, originalEvent } = e.detail;
     const c = comp.rootElement;
+    const onResponse = () => {
+        c.classList.remove('kul-danger');
+        c.classList.add('kul-success');
+        c.kulShowSpinner = false;
+        c.kulLabel = Labels.DONE;
+        c.kulIcon = 'check';
+    };
+    const restore = (label) => {
+        c.classList.add('kul-danger');
+        c.classList.remove('kul-success');
+        c.kulLabel = label;
+        c.kulIcon = 'delete';
+        TIMEOUT = null;
+    };
     switch (eventType) {
         case 'click':
-            if (c.kulIcon === 'delete') {
-                const onResponse = () => {
-                    c.classList.remove('kul-danger');
-                    c.classList.add('kul-success');
-                    c.kulShowSpinner = false;
-                    c.kulLabel = 'Done!';
-                    c.kulIcon = 'check';
-                };
-                const restore = () => {
-                    c.classList.add('kul-danger');
-                    c.classList.remove('kul-success');
-                    c.kulLabel = 'Delete models info';
-                    c.kulIcon = 'delete';
-                    TIMEOUT = null;
-                };
-                requestAnimationFrame(() => (c.kulShowSpinner = true));
-                getApiRoutes()
-                    .clearModelMetadata()
-                    .then(() => {
-                    requestAnimationFrame(onResponse);
-                    if (TIMEOUT) {
-                        clearTimeout(TIMEOUT);
+            switch (c.kulLabel) {
+                case Labels.CLEAR_LOGS:
+                    const { article, dataset } = getLFManager().getDebugDataset();
+                    if (dataset?.length > 0) {
+                        dataset.splice(0, dataset.length);
+                        article.refresh();
                     }
-                    TIMEOUT = setTimeout(() => requestAnimationFrame(restore), 1000);
-                });
-            }
-            if (c.kulIcon === 'github') {
-                window.open('https://github.com/lucafoscili/comfyui-lf/issues/new', '_blank');
-            }
-            if (c.kulIcon === 'refresh') {
-                const { article, dataset } = getLFManager().getDebugDataset();
-                if (dataset?.length > 0) {
-                    dataset.splice(0, dataset.length);
-                    article.refresh();
-                }
-            }
-            if (c.kulIcon === 'style') {
-                getKulManager().theme.randomTheme();
+                    break;
+                case Labels.DELETE_METADATA:
+                    requestAnimationFrame(() => (c.kulShowSpinner = true));
+                    getApiRoutes()
+                        .clearModelMetadata()
+                        .then(() => {
+                        requestAnimationFrame(onResponse);
+                        if (TIMEOUT) {
+                            clearTimeout(TIMEOUT);
+                        }
+                        TIMEOUT = setTimeout(() => requestAnimationFrame(() => restore(Labels.DELETE_METADATA)), 1000);
+                    });
+                    break;
+                case Labels.DELETE_USAGE:
+                    requestAnimationFrame(() => (c.kulShowSpinner = true));
+                    getApiRoutes()
+                        .clearAnalyticsData('usage')
+                        .then(() => {
+                        requestAnimationFrame(onResponse);
+                        if (TIMEOUT) {
+                            clearTimeout(TIMEOUT);
+                        }
+                        TIMEOUT = setTimeout(() => requestAnimationFrame(() => restore(Labels.DELETE_USAGE)), 1000);
+                    });
+                    break;
+                case Labels.OPEN_ISSUE:
+                    window.open('https://github.com/lucafoscili/comfyui-lf/issues/new', '_blank');
+                    break;
+                case Labels.THEME:
+                    getKulManager().theme.randomTheme();
+                    break;
+                default:
+                    break;
             }
             break;
         case 'kul-event':
             handleListEvent(originalEvent);
             break;
         case 'ready':
-            if (c.kulIcon === 'delete') {
+            if (c.kulLabel === Labels.DELETE_METADATA || c.kulLabel === Labels.DELETE_USAGE) {
                 c.classList.add('kul-danger');
                 const spinner = document.createElement('kul-spinner');
                 spinner.kulActive = true;
@@ -120,7 +145,7 @@ export const sectionsFactory = {
     analytics: () => {
         return {
             id: 'section',
-            value: 'Analytics (experimental)',
+            value: 'Analytics',
             children: [
                 {
                     id: 'paragraph',
@@ -128,7 +153,7 @@ export const sectionsFactory = {
                     children: [
                         {
                             id: 'content',
-                            value: 'Below you can find charts showing the most used resources in your workflows.',
+                            value: 'Usage analytics can be enabled by saving datasets through the UpdateUsageStatistics node and displayed with the UsageStatistics node.',
                         },
                         {
                             id: 'content',
@@ -137,19 +162,36 @@ export const sectionsFactory = {
                         },
                         {
                             id: 'content',
-                            value: 'Use the node UpdateUsageStatistics to create/update these datasets.',
+                            value: 'Once datasets are created (input folder of ComfyUI), the count for each resource used will increase everytime that particular resource is updated.',
+                        },
+                        {
+                            id: 'content',
+                            tagName: 'br',
+                            value: '',
+                        },
+                        {
+                            id: 'content',
+                            value: 'This button will clear all usage analytics data from your input folder.',
+                        },
+                        {
+                            id: 'content',
+                            tagName: 'br',
+                            value: '',
+                        },
+                        {
+                            id: 'content',
+                            value: 'This action is IRREVERSIBLE so use it with caution.',
                         },
                         {
                             id: 'content',
                             value: '',
                             cells: {
-                                kulChart: {
-                                    kulAxis: 'name',
-                                    kulData: {},
-                                    kulSeries: ['counter'],
-                                    kulSizeY: '300px',
-                                    kulTypes: ['area'],
-                                    shape: 'chart',
+                                kulButton: {
+                                    kulIcon: 'delete',
+                                    kulLabel: Labels.DELETE_USAGE,
+                                    kulStyle: ':host { margin: auto; padding:16px 0 }',
+                                    kulStyling: 'outlined',
+                                    shape: 'button',
                                     value: '',
                                 },
                             },
@@ -192,7 +234,7 @@ export const sectionsFactory = {
                             cells: {
                                 kulButton: {
                                     kulIcon: 'github',
-                                    kulLabel: 'Open an issue',
+                                    kulLabel: Labels.OPEN_ISSUE,
                                     kulStyle: ':host { margin: auto; padding:16px 0 }',
                                     kulStyling: 'raised',
                                     shape: 'button',
@@ -262,7 +304,7 @@ export const sectionsFactory = {
                                 kulButton: {
                                     shape: 'button',
                                     kulIcon: 'refresh',
-                                    kulLabel: 'Clear logs',
+                                    kulLabel: Labels.CLEAR_LOGS,
                                     kulStyle: ':host { margin: auto; padding-bottom: 4px; padding-top: 16px; text-align: center }',
                                     kulStyling: 'flat',
                                     value: '',
@@ -322,7 +364,7 @@ export const sectionsFactory = {
                             cells: {
                                 kulButton: {
                                     kulIcon: 'delete',
-                                    kulLabel: 'Delete models info',
+                                    kulLabel: Labels.DELETE_METADATA,
                                     kulStyle: ':host { margin: auto; padding:16px 0 }',
                                     kulStyling: 'outlined',
                                     shape: 'button',

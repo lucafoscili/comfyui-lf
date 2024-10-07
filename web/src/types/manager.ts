@@ -8,6 +8,7 @@ import { Extension } from './nodes';
 
 export interface ComfyAPIs {
   clearModelMetadata: () => Promise<void>;
+  clearAnalyticsData: (type: AnalyticsType) => Promise<void>;
   event: <T extends BaseEventPayload>(
     name: EventName,
     callback: (event: CustomEvent<T>) => void,

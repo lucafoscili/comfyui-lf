@@ -136,10 +136,12 @@ def update_usage_json(resource_file:str, resource_name:str, resource_value:str):
         json_data = template
 
     for node in json_data["nodes"]:
-        if node["cells"]["name"]["value"] == resource_value:
-            oldValue = int(node["cells"]["counter"]["value"])
-            node["cells"]["counter"]["value"] += 1
-            newValue = int(node["cells"]["counter"]["value"])
+        resource = node["cells"]["name"]["value"]
+        if resource == resource_value:
+            counter = node["cells"]["counter"]
+            oldValue = int(counter["value"])
+            counter["value"] += 1
+            newValue = int(counter["value"])
             break
     else:
         oldValue = 0
