@@ -87,20 +87,22 @@ const handleEvent = (e: CustomEvent<KulListEventPayload>, comfyNode: NodeType) =
         break;
       case NodeName.float:
         if (numberW) {
-          stringW.options.setValue(node.value);
+          numberW.value = Number(node.value).valueOf();
         } else if (intW) {
           floatW.value = Number(node.value).valueOf();
         }
         break;
       case NodeName.integer:
         if (numberW) {
-          stringW.options.setValue(node.value);
+          numberW.value = Number(node.value).valueOf();
         } else if (intW) {
           intW.value = Number(node.value).valueOf();
         }
         break;
       case NodeName.samplerSelector:
       case NodeName.schedulerSelector:
+      case NodeName.upscaleModelSelector:
+      case NodeName.vaeSelector:
         comboW.value = node.value;
         break;
       case NodeName.string:
