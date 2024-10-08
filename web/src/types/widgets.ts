@@ -213,23 +213,6 @@ export type CodeWidgetSetter = () => {
 export type CodeWidgetValue = string;
 
 /*-------------------------------------------------------------------*/
-/*         T a b B a r C h a r t   D e c l a r a t i o n s           */
-/*-------------------------------------------------------------------*/
-
-export interface TabBarChartWidget extends Widget {
-  options: TabBarChartWidgetOptions;
-  type: [CustomWidgetName.tabBarChart];
-}
-export interface TabBarChartWidgetOptions {
-  hideOnZoom: boolean;
-  getComp(): { chart: HTMLKulChartElement; tabbar: HTMLKulTabbarElement };
-  refresh(type: AnalyticsType): void;
-}
-export type TabBarChartWidgetSetter = () => {
-  [CustomWidgetName.tabBarChart]: BaseWidgetCallback;
-};
-
-/*-------------------------------------------------------------------*/
 /*       C o n t r o l   P a n e l   D e c l a r a t i o n s         */
 /*-------------------------------------------------------------------*/
 
@@ -396,6 +379,23 @@ export declare type RollViewerWidgetSetter = () => {
   [CustomWidgetName.rollViewer]: BaseWidgetCallback;
 };
 export type RollViewerWidgetValue = { bool: boolean; roll: number };
+
+/*-------------------------------------------------------------------*/
+/*         T a b B a r C h a r t   D e c l a r a t i o n s           */
+/*-------------------------------------------------------------------*/
+
+export interface TabBarChartWidget extends Widget {
+  options: TabBarChartWidgetOptions;
+  type: [CustomWidgetName.tabBarChart];
+}
+export interface TabBarChartWidgetOptions {
+  hideOnZoom: boolean;
+  getComp(): { chart: HTMLKulChartElement; tabbar: HTMLKulTabbarElement };
+  refresh(type: AnalyticsType): void;
+}
+export type TabBarChartWidgetSetter = () => {
+  [CustomWidgetName.tabBarChart]: BaseWidgetCallback;
+};
 
 /*-------------------------------------------------------------------*/
 /*                  T r e e   D e c l a r a t i o n s                */

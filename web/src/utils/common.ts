@@ -182,7 +182,8 @@ export const refreshChart = (node: NodeType) => {
   try {
     const domWidget =
       findWidget(node, CustomWidgetName.countBarChart)?.element ||
-      findWidget(node, CustomWidgetName.histogram)?.element;
+      findWidget(node, CustomWidgetName.histogram)?.element ||
+      findWidget(node, CustomWidgetName.tabBarChart)?.element;
     if (domWidget) {
       const chart = domWidget.querySelector('kul-chart') as HTMLKulChartElement;
       if (chart) {
