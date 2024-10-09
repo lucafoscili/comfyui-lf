@@ -196,8 +196,8 @@ class LF_MultipleImageResizeForWeb:
 
         for index, image_data in enumerate(images):
             file_name = file_names[index]
-            base_name = file_name.split('.')[0]  # Strip extension for prefixing
-            original_extension = file_name.split('.')[-1].lower()  # Get the original file extension and make it lowercase
+            base_name = file_name.split('.')[0]
+            original_extension = file_name.split('.')[-1].lower()
 
             image = tensor_to_pil(image_data)
 
@@ -254,6 +254,75 @@ class LF_MultipleImageResizeForWeb:
         })
 
         return (output_images, output_file_names, output_file_names_with_dir, dataset)
+    
+class LF_ResizeImageToDimension:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "image": ("IMAGE", {"tooltip": "Input image tensor or a list of image tensors."}),
+                "height": ("INT", {"default": 1216, "tooltip": "The target height for the output image."}),
+                "width": ("INT", {"default": 832, "tooltip": "The target width for the output image."}),
+                "resize_method": (["bicubic", "bilinear", "nearest", "nearest exact"], {"default": "bicubic", "tooltip": "Method to resize the image."}),
+                "resize_mode": (["crop", "pad"], {"default": "crop", "tooltip": "Choose whether to crop or pad when resizing."}),
+                "pad_color": ("STRING", {"default": "000000", "tooltip": "Color to use for padding if 'pad' mode is selected (hexadecimal)."})
+            },
+            "hidden": {"node_id": "UNIQUE_ID"}
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    RETURN_NAMES = ("resized_image",)
+    RETURN_TYPES = ("IMAGE",)
+
+    def on_exec(self, node_id, image, height: int, width: int, resize_method: str, resize_mode:str, pad_color:str):
+        dataset = { "nodes": [{ "children": [], "icon":"help", "id": "", "value": "" }] }
+        original_heights = []
+        original_widths = []
+        heights = []
+        widths = []
+
+        if isinstance(image, list):
+            for idx, img in enumerate(image):
+                original_height, original_width = img.shape[1], img.shape[2]
+                original_heights.append(original_height)
+                original_widths.append(original_width)
+
+            resized_images = [resize_and_crop_image(img, resize_method, height, width, resize_mode, pad_color) for img in image]
+            
+            for idx, img in enumerate(resized_images):
+                height, width = img.shape[1], img.shape[2]
+                heights.append(height)
+                widths.append(width)
+                log_str = f"[{idx}] From {original_height}x{original_width} to {height}x{width}"
+                node = {
+                    "id": log_str,
+                    "value": log_str
+                }
+                dataset["nodes"][0]["children"].append(node)
+        else:
+            original_height, original_width = image.shape[1], image.shape[2]
+
+            resized_images = resize_and_crop_image(image, resize_method, height, width, resize_mode, pad_color)
+
+            log_str = f"From {original_height}x{original_width} to {height}x{width}"
+            node = {
+                "id": log_str,
+                "value": log_str
+            }
+            dataset["nodes"][0]["children"].append(node)
+
+        num_resized = len(resized_images)
+        summary_message = f"Resized {num_resized} {'image' if num_resized == 1 else 'images'}"
+        dataset["nodes"][0]["id"] = summary_message
+        dataset["nodes"][0]["value"] = summary_message
+
+        PromptServer.instance.send_sync("lf-resizeimagebydimension", {
+            "node": node_id,
+            "dataset": dataset,
+        })
+
+        return (resized_images,)
 
 class LF_ResizeImageByEdge:
     @classmethod
@@ -588,6 +657,7 @@ NODE_CLASS_MAPPINGS = {
     "LF_Lora2Prompt": LF_Lora2Prompt,
     "LF_LoraTag2Prompt": LF_LoraTag2Prompt,
     "LF_MultipleImageResizeForWeb": LF_MultipleImageResizeForWeb,
+    "LF_ResizeImageToDimension": LF_ResizeImageToDimension,
     "LF_ResizeImageToSquare": LF_ResizeImageToSquare,
     "LF_ResizeImageByEdge": LF_ResizeImageByEdge,
     "LF_Something2Number": LF_Something2Number,
@@ -600,6 +670,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_Lora2Prompt": "Convert prompt and LoRAs",
     "LF_LoraTag2Prompt": "Convert LoRA tag to prompt",
     "LF_MultipleImageResizeForWeb": "Multiple image resize for Web",
+    "LF_ResizeImageToDimension": "Resize image to dimension",
     "LF_ResizeImageToSquare": "Resize image to square",
     "LF_ResizeImageByEdge": "Resize image by edge",
     "LF_Something2Number": "Convert something to INT or FLOAT",
