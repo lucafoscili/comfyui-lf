@@ -6,6 +6,10 @@
   overflow: auto;
   width: 100%;
 }
+.lf-card--has-button {
+  display: grid;
+  grid-template-rows: 1fr auto;
+}
 .lf-card__grid {
   display: grid;
   height: 100%;

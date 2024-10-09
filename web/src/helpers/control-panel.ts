@@ -70,15 +70,13 @@ const handleButtonEvent = (e: CustomEvent<KulButtonEventPayload>) => {
   const c = (comp as KulButton).rootElement;
 
   const onResponse = () => {
-    c.classList.remove('kul-danger');
-    c.classList.add('kul-success');
-    c.kulShowSpinner = false;
-    c.kulLabel = Labels.DONE;
+    c.kulDisabled = true;
     c.kulIcon = 'check';
+    c.kulLabel = Labels.DONE;
+    c.kulShowSpinner = false;
   };
   const restore = (label: Labels) => {
-    c.classList.add('kul-danger');
-    c.classList.remove('kul-success');
+    c.kulDisabled = false;
     c.kulLabel = label;
     c.kulIcon = 'delete';
     TIMEOUT = null;
