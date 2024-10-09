@@ -84,6 +84,11 @@ The node takes a list of images as input and generates eight additional images, 
 Resizes one or more images in tensor format's longest or shortest edge to the specified size.
 ![ResizeImageByEdge](https://github.com/lucafoscili/comfyui-lf/blob/9ff43a168d56a4ba7174f0a69365d6226686e26e/docs/images/ResizeImageByEdge.png "Interface of image resizing node showing edge selection")
 
+#### ResizeImageToDimension
+
+Resizes an image to the longest dimension and then crops it/pads it to fit the canvas.
+![ResizeImageToDimension](https://github.com/lucafoscili/comfyui-lf/blob/84e5b7c3fe90ec17ef4902738102dc45e963d1b2/docs/images/ResizeImageToDimension.png "Image resized and cropped/padded")
+
 #### ResizeImageToSquare
 
 Resizes one or more images in tensor format to fit a square (by cropping when the image is rectangular).
