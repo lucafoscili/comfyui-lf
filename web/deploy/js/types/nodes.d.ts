@@ -31,6 +31,7 @@ export declare enum NodeName {
     notify = "LF_Notify",
     randomBoolean = "LF_RandomBoolean",
     resizeImageByEdge = "LF_ResizeImageByEdge",
+    resizeImageToDimension = "LF_ResizeImageToDimension",
     resizeImageToSquare = "LF_ResizeImageToSquare",
     resolutionSwitcher = "LF_ResolutionSwitcher",
     samplerSelector = "LF_SamplerSelector",

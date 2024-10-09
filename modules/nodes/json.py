@@ -60,7 +60,8 @@ class LF_GetValueFromJSON:
         return {
             "required": {
                 "json": ("JSON", {"tooltip": "JSON Object."}),
-                "key": ("STRING", {"tooltip": "Key to select."})
+                "key": ("STRING", {"default": "", "tooltip": "Key to select."}),
+                "index": ("INT", {"default": 0, "tooltip": "When the input is a list of JSON objects, it sets the index of the occurrence from which the value is extracted."})
             }
         }
 
@@ -69,11 +70,13 @@ class LF_GetValueFromJSON:
     RETURN_NAMES = ("json_output", "string_output", "number_output", "int_output", "float_output", "boolean_output")
     RETURN_TYPES = ("JSON", "STRING", "NUMBER", "INT", "FLOAT", "BOOLEAN")
 
-    def on_exec(self, json: dict, key: str):
-        # Extract the value associated with the specified key
+    def on_exec(self, json: dict, key: str, index: int):
+        if isinstance(json, list):
+            length = len(json)
+            json = json[index] if index < length else json[length - 1]
+
         value = json.get(key, None)
 
-        # Initialize outputs with coherent values based on the type of 'value'
         json_output = None
         string_output = None
         number_output = None
@@ -82,36 +85,29 @@ class LF_GetValueFromJSON:
         boolean_output = None
 
         if value is not None:
-            # If the value is a dictionary, pass it as-is for JSON output
             if isinstance(value, dict):
                 json_output = value
             else:
-                # For non-dictionary types, create a new JSON object with "value" as key and the actual value as value
                 json_output = {"value": value}
             
-            # Convert the value to a string
             string_output = str(value)
             
-            # Attempt to convert string representations of numbers to actual numbers
             if isinstance(value, str):
                 try:
-                    # Try to convert the string to a float first
                     numeric_value = float(value)
                     number_output = numeric_value
                     float_output = numeric_value
                     int_output = round(numeric_value) if numeric_value.is_integer() else None
                     boolean_output = numeric_value > 0
                 except ValueError:
-                    # If it's not a number, leave number_output, int_output, and float_output as None
                     pass
             elif isinstance(value, (int, float)):
                 number_output = value
                 float_output = float(value)
                 int_output = round(value) if isinstance(value, float) else value
-                boolean_output = value > 0  # True if positive, False if zero or negative
+                boolean_output = value > 0
             elif isinstance(value, bool):
                 boolean_output = value
-            # For non-numeric types, ensure numeric outputs are set to None
             else:
                 number_output = None
                 int_output = None
@@ -239,42 +235,27 @@ class LF_StringToJSON:
         return {
             "required": {
                 "string": ("STRING", {"default": "{}", "multiline": True, "tooltip": "Stringified JSON"}),
-            },
-            "hidden": { "node_id": "UNIQUE_ID" }
+            }
         }
 
     CATEGORY = category
     FUNCTION = "on_exec"
-    INPUT_IS_LIST = True
+    INPUT_IS_LIST = (True, )
     OUTPUT_NODE = True
     RETURN_TYPES = ("JSON",)
 
-    def on_exec(self, string: str, node_id: str):
-        try:
-            if isinstance(string, str):
-                json_data = json.loads(string)
-            elif isinstance(string, list):
+    def on_exec(self, string: str):
+        if isinstance(string, str):
+            json_data = json.loads(string)
+        elif isinstance(string, list):
+            if len(string) > 1:
                 json_data = [json.loads(s) for s in string]
             else:
-                raise TypeError(f"Unsupported input type: {type(string)}")
-
-            return (json_data,)
-
-        except json.JSONDecodeError as e:
-            error_message = f"Invalid JSON: {str(e)}"
-            PromptServer.instance.send_sync("lf-stringtojson-error", {
-                "node": node_id,
-                "error": error_message
-            })
-            return None
-
-        except Exception as e:
-            error_message = f"Unexpected error: {str(e)}"
-            PromptServer.instance.send_sync("lf-stringtojson-error", {
-                "node": node_id,
-                "error": error_message
-            })
-            return None
+                json_data = json.loads(string[0])
+        else:
+            raise TypeError(f"Unsupported input type: {type(string)}")
+        
+        return (json_data,)
 
 class LF_WriteJSON:
     @classmethod
@@ -292,29 +273,14 @@ class LF_WriteJSON:
     RETURN_TYPES = ("JSON",)
 
     def on_exec(self, KUL_JSON_INPUT: str, node_id: str):
-        try:
-            json_data = json.loads(KUL_JSON_INPUT)
-            PromptServer.instance.send_sync("lf-writejson", {
-                "node": node_id,
-                "json": json_data
-            })
-            return (json_data,)
-        
-        except json.JSONDecodeError as e:
-            error_message = f"Invalid JSON: {str(e)}"
-            PromptServer.instance.send_sync("lf-writejson-error", {
-                "node": node_id,
-                "error": error_message
-            })
-            return None
-        
-        except Exception as e:
-            error_message = f"Unexpected error: {str(e)}"
-            PromptServer.instance.send_sync("lf-writejson-error", {
-                "node": node_id,
-                "error": error_message
-            })
-            return None
+        json_data = json.loads(KUL_JSON_INPUT)
+
+        PromptServer.instance.send_sync("lf-writejson", {
+            "node": node_id,
+            "json": json_data
+        })
+
+        return (json_data,)
 
 NODE_CLASS_MAPPINGS = {
     "LF_DisplayJSON": LF_DisplayJSON,

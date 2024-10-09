@@ -27,6 +27,7 @@ export var EventName;
     EventName["notify"] = "lf-notify";
     EventName["randomBoolean"] = "lf-randomboolean";
     EventName["resizeimageByEdge"] = "lf-resizeimagebyedge";
+    EventName["resizeimageToDimension"] = "lf-resizeimagetodimension";
     EventName["resizeimageToSquare"] = "lf-resizeimagetosquare";
     EventName["resolutionSwitcher"] = "lf-resolutionswitcher";
     EventName["samplerSelector"] = "lf-samplerselector";

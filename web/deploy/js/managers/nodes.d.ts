@@ -27,6 +27,7 @@ export declare class LFNodes {
         LF_Notify: (event: CustomEvent<import("../types/events").NotifyPayload>) => void;
         LF_RandomBoolean: (event: CustomEvent<import("../types/events").RandomBooleanPayload>, addW: BaseWidgetCallback) => void;
         LF_ResizeImageByEdge: (event: CustomEvent<import("../types/events").ResizeImageByEdgePayload>, addW: BaseWidgetCallback) => void;
+        LF_ResizeImageToDimension: (event: CustomEvent<import("../types/events").ResizeImageToDimensionPayload>, addW: BaseWidgetCallback) => void;
         LF_ResizeImageToSquare: (event: CustomEvent<import("../types/events").ResizeImageToSquarePayload>, addW: BaseWidgetCallback) => void;
         LF_ResolutionSwitcher: (event: CustomEvent<import("../types/events").ResolutionSwitcherPayload>, addW: BaseWidgetCallback) => void;
         LF_SamplerSelector: (event: CustomEvent<import("../types/events").SamplerSelectorPayload>, addW: BaseWidgetCallback) => void;
@@ -77,6 +78,7 @@ export declare class LFNodes {
         LF_Notify: () => void;
         LF_RandomBoolean: (setW: import("../types/widgets").RollViewerWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_ResizeImageByEdge: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback) => void;
+        LF_ResizeImageToDimension: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_ResizeImageToSquare: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_ResolutionSwitcher: (setW: import("../types/widgets").RollViewerWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_SamplerSelector: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
@@ -123,6 +125,7 @@ export declare class LFNodes {
             LF_Notify: (event: CustomEvent<import("../types/events").NotifyPayload>) => void;
             LF_RandomBoolean: (event: CustomEvent<import("../types/events").RandomBooleanPayload>, addW: BaseWidgetCallback) => void;
             LF_ResizeImageByEdge: (event: CustomEvent<import("../types/events").ResizeImageByEdgePayload>, addW: BaseWidgetCallback) => void;
+            LF_ResizeImageToDimension: (event: CustomEvent<import("../types/events").ResizeImageToDimensionPayload>, addW: BaseWidgetCallback) => void;
             LF_ResizeImageToSquare: (event: CustomEvent<import("../types/events").ResizeImageToSquarePayload>, addW: BaseWidgetCallback) => void;
             LF_ResolutionSwitcher: (event: CustomEvent<import("../types/events").ResolutionSwitcherPayload>, addW: BaseWidgetCallback) => void;
             LF_SamplerSelector: (event: CustomEvent<import("../types/events").SamplerSelectorPayload>, addW: BaseWidgetCallback) => void;
@@ -173,6 +176,7 @@ export declare class LFNodes {
             LF_Notify: () => void;
             LF_RandomBoolean: (setW: import("../types/widgets").RollViewerWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_ResizeImageByEdge: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback) => void;
+            LF_ResizeImageToDimension: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_ResizeImageToSquare: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_ResolutionSwitcher: (setW: import("../types/widgets").RollViewerWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_SamplerSelector: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
