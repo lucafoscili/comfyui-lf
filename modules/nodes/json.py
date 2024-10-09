@@ -239,42 +239,27 @@ class LF_StringToJSON:
         return {
             "required": {
                 "string": ("STRING", {"default": "{}", "multiline": True, "tooltip": "Stringified JSON"}),
-            },
-            "hidden": { "node_id": "UNIQUE_ID" }
+            }
         }
 
     CATEGORY = category
     FUNCTION = "on_exec"
-    INPUT_IS_LIST = True
+    INPUT_IS_LIST = (True, )
     OUTPUT_NODE = True
     RETURN_TYPES = ("JSON",)
 
-    def on_exec(self, string: str, node_id: str):
-        try:
-            if isinstance(string, str):
-                json_data = json.loads(string)
-            elif isinstance(string, list):
+    def on_exec(self, string: str):
+        if isinstance(string, str):
+            json_data = json.loads(string)
+        elif isinstance(string, list):
+            if len(string) > 1:
                 json_data = [json.loads(s) for s in string]
             else:
-                raise TypeError(f"Unsupported input type: {type(string)}")
-
-            return (json_data,)
-
-        except json.JSONDecodeError as e:
-            error_message = f"Invalid JSON: {str(e)}"
-            PromptServer.instance.send_sync("lf-stringtojson-error", {
-                "node": node_id,
-                "error": error_message
-            })
-            return None
-
-        except Exception as e:
-            error_message = f"Unexpected error: {str(e)}"
-            PromptServer.instance.send_sync("lf-stringtojson-error", {
-                "node": node_id,
-                "error": error_message
-            })
-            return None
+                json_data = json.loads(string[0])
+        else:
+            raise TypeError(f"Unsupported input type: {type(string)}")
+        
+        return (json_data,)
 
 class LF_WriteJSON:
     @classmethod
@@ -292,29 +277,14 @@ class LF_WriteJSON:
     RETURN_TYPES = ("JSON",)
 
     def on_exec(self, KUL_JSON_INPUT: str, node_id: str):
-        try:
-            json_data = json.loads(KUL_JSON_INPUT)
-            PromptServer.instance.send_sync("lf-writejson", {
-                "node": node_id,
-                "json": json_data
-            })
-            return (json_data,)
-        
-        except json.JSONDecodeError as e:
-            error_message = f"Invalid JSON: {str(e)}"
-            PromptServer.instance.send_sync("lf-writejson-error", {
-                "node": node_id,
-                "error": error_message
-            })
-            return None
-        
-        except Exception as e:
-            error_message = f"Unexpected error: {str(e)}"
-            PromptServer.instance.send_sync("lf-writejson-error", {
-                "node": node_id,
-                "error": error_message
-            })
-            return None
+        json_data = json.loads(KUL_JSON_INPUT)
+
+        PromptServer.instance.send_sync("lf-writejson", {
+            "node": node_id,
+            "json": json_data
+        })
+
+        return (json_data,)
 
 NODE_CLASS_MAPPINGS = {
     "LF_DisplayJSON": LF_DisplayJSON,
