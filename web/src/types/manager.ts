@@ -18,7 +18,7 @@ export interface ComfyAPIs {
   getLinkById: (id: string) => LinkInfo;
   getNodeById: (id: string) => NodeType;
   interrupt: () => Promise<void>;
-  modelInfoFromCivitAI: (hash: string) => Promise<CivitAIModelData>;
+  modelInfoFromCivitAI: (hash: string, forcedSave?: boolean) => Promise<CivitAIModelData>;
   queuePrompt: () => Promise<void>;
   redraw: () => void;
   register: (extension: Extension) => void;

@@ -160,21 +160,6 @@ export type CodeWidgetSetter = () => {
     [CustomWidgetName.code]: BaseWidgetCallback;
 };
 export type CodeWidgetValue = string;
-export interface TabBarChartWidget extends Widget {
-    options: TabBarChartWidgetOptions;
-    type: [CustomWidgetName.tabBarChart];
-}
-export interface TabBarChartWidgetOptions {
-    hideOnZoom: boolean;
-    getComp(): {
-        chart: HTMLKulChartElement;
-        tabbar: HTMLKulTabbarElement;
-    };
-    refresh(type: AnalyticsType): void;
-}
-export type TabBarChartWidgetSetter = () => {
-    [CustomWidgetName.tabBarChart]: BaseWidgetCallback;
-};
 export interface ControlPanelWidget extends Widget {
     options: ControlPanelWidgetOptions;
     type: [CustomWidgetName.controlPanel];
@@ -304,6 +289,21 @@ export declare type RollViewerWidgetSetter = () => {
 export type RollViewerWidgetValue = {
     bool: boolean;
     roll: number;
+};
+export interface TabBarChartWidget extends Widget {
+    options: TabBarChartWidgetOptions;
+    type: [CustomWidgetName.tabBarChart];
+}
+export interface TabBarChartWidgetOptions {
+    hideOnZoom: boolean;
+    getComp(): {
+        chart: HTMLKulChartElement;
+        tabbar: HTMLKulTabbarElement;
+    };
+    refresh(type: AnalyticsType): void;
+}
+export type TabBarChartWidgetSetter = () => {
+    [CustomWidgetName.tabBarChart]: BaseWidgetCallback;
 };
 export interface TreeWidget extends Widget {
     options: TreeWidgetOptions;

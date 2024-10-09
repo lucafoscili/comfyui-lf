@@ -15,6 +15,7 @@ async def save_model_info(request):
         
         metadata = r.get("metadata")
         model_path = r.get("model_path")
+        forced_save = r.get("forced_save")
 
         if not model_path or not metadata:
             return web.Response(status=400, text="Missing 'model_path' or 'metadata'.")
@@ -26,7 +27,10 @@ async def save_model_info(request):
         info_file_path = file_no_ext + ".info"
 
         if os.path.exists(info_file_path):
-            return web.json_response({"status": "exists", "message": f"Metadata already saved at {info_file_path}."}, status=200)
+            if bool(forced_save):
+                os.remove(info_file_path)
+            else:
+                return web.json_response({"status": "exists", "message": f"Metadata already saved at {info_file_path}."}, status=200)
 
         if image_url:
             try:

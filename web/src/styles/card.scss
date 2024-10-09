@@ -8,6 +8,11 @@
     width: 100%;
   }
 
+  &--has-button {
+    display: grid;
+    grid-template-rows: 1fr auto;
+  }
+
   &__grid {
     display: grid;
     height: 100%;

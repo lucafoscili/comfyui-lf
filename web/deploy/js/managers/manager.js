@@ -142,10 +142,11 @@ export class LFManager {
             register: (extension) => {
                 app.registerExtension(extension);
             },
-            saveModelMetadata: (modelPath, dataset) => {
+            saveModelMetadata: (modelPath, dataset, forcedSave = false) => {
                 const body = new FormData();
                 body.append('model_path', modelPath);
                 body.append('metadata', JSON.stringify(dataset));
+                body.append('forced_save', String(forcedSave).valueOf());
                 try {
                     api
                         .fetchApi('/comfyui-lf/save-model-info', {

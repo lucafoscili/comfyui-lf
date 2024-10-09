@@ -21,20 +21,20 @@ export const cardPlaceholders = (widget, count) => {
     }
     widget.options.setValue(JSON.stringify(dummyValue));
 };
-export const fetchModelMetadata = async (models) => {
+export const fetchModelMetadata = async (models, forcedSave = false) => {
     const promises = models.map(({ dataset, hash, path, apiFlag }) => {
         if (apiFlag) {
             return getApiRoutes()
-                .modelInfoFromCivitAI(hash)
-                .then(onResponse.bind(onResponse, dataset, path));
+                .modelInfoFromCivitAI(hash, forcedSave)
+                .then(onResponse.bind(onResponse, dataset, path, hash));
         }
         else {
-            return onResponse(dataset, path, null);
+            return onResponse(dataset, path, hash, null);
         }
     });
     return Promise.all(promises);
 };
-const onResponse = async (dataset, path, r) => {
+const onResponse = async (dataset, path, hash, r) => {
     const id = r?.id;
     const props = {
         kulStyle: '.sub-2.description { white-space: pre-wrap; }',
@@ -63,6 +63,9 @@ const onResponse = async (dataset, path, r) => {
             };
             props.kulData = dataset;
             break;
+    }
+    if (props.kulData && hash && path) {
+        props.kulData.nodes[0].cells.kulCode = hashCell(hash, path);
     }
     return props;
 };
@@ -105,4 +108,10 @@ Thumbs up: ${r.stats?.thumbsUpCount ? r.stats.thumbsUpCount : 'N/A'}
 `,
     };
     return dataset;
+};
+const hashCell = (hash, path) => {
+    return {
+        shape: 'code',
+        value: JSON.stringify({ hash: hash.valueOf(), path }),
+    };
 };

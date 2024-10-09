@@ -1,4 +1,6 @@
 import { KulDataDataset } from '../types/ketchup-lite/components';
+import { KulDataCodeCell } from '../types/ketchup-lite/managers/kul-data/kul-data-declarations';
+import { APIMetadataEntry } from '../types/manager';
 import { CardsWithChipWidget, CardWidget, CardWidgetDeserializedValue } from '../types/widgets';
 import { getApiRoutes } from './common';
 
@@ -28,16 +30,17 @@ export const cardPlaceholders = (widget: CardWidget | CardsWithChipWidget, count
 };
 
 export const fetchModelMetadata = async (
-  models: { apiFlag: boolean; dataset: KulDataDataset; hash: string; path: string }[],
+  models: APIMetadataEntry[],
+  forcedSave = false,
 ): Promise<Partial<HTMLKulCardElement>[]> => {
   const promises: Promise<Partial<HTMLKulCardElement>>[] = models.map(
     ({ dataset, hash, path, apiFlag }) => {
       if (apiFlag) {
         return getApiRoutes()
-          .modelInfoFromCivitAI(hash)
-          .then(onResponse.bind(onResponse, dataset, path));
+          .modelInfoFromCivitAI(hash, forcedSave)
+          .then(onResponse.bind(onResponse, dataset, path, hash));
       } else {
-        return onResponse(dataset, path, null);
+        return onResponse(dataset, path, hash, null);
       }
     },
   );
@@ -45,7 +48,12 @@ export const fetchModelMetadata = async (
   return Promise.all(promises);
 };
 
-const onResponse = async (dataset: KulDataDataset, path: string, r: CivitAIModelData) => {
+const onResponse = async (
+  dataset: KulDataDataset,
+  path: string,
+  hash: string,
+  r: CivitAIModelData,
+) => {
   const id = r?.id;
   const props: Partial<HTMLKulCardElement> = {
     kulStyle: '.sub-2.description { white-space: pre-wrap; }',
@@ -75,6 +83,10 @@ const onResponse = async (dataset: KulDataDataset, path: string, r: CivitAIModel
       };
       props.kulData = dataset;
       break;
+  }
+
+  if (props.kulData && hash && path) {
+    props.kulData.nodes[0].cells.kulCode = hashCell(hash, path);
   }
 
   return props;
@@ -119,4 +131,11 @@ Thumbs up: ${r.stats?.thumbsUpCount ? r.stats.thumbsUpCount : 'N/A'}
 `,
   };
   return dataset;
+};
+
+const hashCell = (hash: string, path: string) => {
+  return {
+    shape: 'code',
+    value: JSON.stringify({ hash: hash.valueOf(), path }),
+  } as KulDataCodeCell;
 };
