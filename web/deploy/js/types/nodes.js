@@ -34,6 +34,7 @@ export var NodeName;
     NodeName["notify"] = "LF_Notify";
     NodeName["randomBoolean"] = "LF_RandomBoolean";
     NodeName["resizeImageByEdge"] = "LF_ResizeImageByEdge";
+    NodeName["resizeImageToDimension"] = "LF_ResizeImageToDimension";
     NodeName["resizeImageToSquare"] = "LF_ResizeImageToSquare";
     NodeName["resolutionSwitcher"] = "LF_ResolutionSwitcher";
     NodeName["samplerSelector"] = "LF_SamplerSelector";

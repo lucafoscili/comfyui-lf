@@ -47,6 +47,7 @@ import { upscaleModelSelectorFactory } from '../nodes/upscaleModelSelector.js';
 import { vaeSelectorFactory } from '../nodes/vaeSelector.js';
 import { updateUsageStatisticsFactory } from '../nodes/updateUsageStatistics.js';
 import { usageStatisticsFactory } from '../nodes/usageStatistics.js';
+import { resizeImageToDimensionFactory } from '../nodes/resizeImageToDimension.js';
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
 /*-------------------------------------------------*/
@@ -79,6 +80,7 @@ export class LFNodes {
             [NodeName.notify]: notifyFactory.eventHandler,
             [NodeName.randomBoolean]: randomBooleanFactory.eventHandler,
             [NodeName.resizeImageByEdge]: resizeImageByEdgeFactory.eventHandler,
+            [NodeName.resizeImageToDimension]: resizeImageToDimensionFactory.eventHandler,
             [NodeName.resizeImageToSquare]: resizeImageToSquareFactory.eventHandler,
             [NodeName.resolutionSwitcher]: resolutionSwitcherFactory.eventHandler,
             [NodeName.samplerSelector]: samplerSelectorFactory.eventHandler,
@@ -129,6 +131,7 @@ export class LFNodes {
             [NodeName.notify]: notifyFactory.register,
             [NodeName.randomBoolean]: randomBooleanFactory.register,
             [NodeName.resizeImageByEdge]: resizeImageByEdgeFactory.register,
+            [NodeName.resizeImageToDimension]: resizeImageToDimensionFactory.register,
             [NodeName.resizeImageToSquare]: resizeImageToSquareFactory.register,
             [NodeName.resolutionSwitcher]: resolutionSwitcherFactory.register,
             [NodeName.samplerSelector]: samplerSelectorFactory.register,

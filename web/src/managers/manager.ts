@@ -58,6 +58,7 @@ import {
   UpscaleModelSelectorPayload,
   VAESelectorPayload,
   UpdateUsageStatisticsPayload,
+  ResizeImageToDimensionPayload,
 } from '../types/events.js';
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
 import { KulDataDataset } from '../types/ketchup-lite/components';
@@ -571,6 +572,19 @@ export class LFManager {
     this.#APIS.event(EventName.resizeimageByEdge, (e: CustomEvent<ResizeImageByEdgePayload>) => {
       nodes.eventHandlers.LF_ResizeImageByEdge(e, widgets.adders.KUL_TREE);
     });
+    /*-------------------------------------------------------------------*/
+    /*       I n i t   R e s i z e I m a g e T o D i m e n s i o n       */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_ResizeImageToDimension(
+      widgets.setters.KUL_TREE,
+      widgets.adders.KUL_TREE,
+    );
+    this.#APIS.event(
+      EventName.resizeimageToDimension,
+      (e: CustomEvent<ResizeImageToDimensionPayload>) => {
+        nodes.eventHandlers.LF_ResizeImageToDimension(e, widgets.adders.KUL_TREE);
+      },
+    );
     /*-------------------------------------------------------------------*/
     /*          I n i t   R e s i z e I m a g e T o S q u a r e          */
     /*-------------------------------------------------------------------*/

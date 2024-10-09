@@ -424,6 +424,13 @@ export class LFManager {
             nodes.eventHandlers.LF_ResizeImageByEdge(e, widgets.adders.KUL_TREE);
         });
         /*-------------------------------------------------------------------*/
+        /*       I n i t   R e s i z e I m a g e T o D i m e n s i o n       */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_ResizeImageToDimension(widgets.setters.KUL_TREE, widgets.adders.KUL_TREE);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.resizeimageToDimension, (e) => {
+            nodes.eventHandlers.LF_ResizeImageToDimension(e, widgets.adders.KUL_TREE);
+        });
+        /*-------------------------------------------------------------------*/
         /*          I n i t   R e s i z e I m a g e T o S q u a r e          */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_ResizeImageToSquare(widgets.setters.KUL_TREE, widgets.adders.KUL_TREE);

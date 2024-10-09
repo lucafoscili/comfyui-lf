@@ -36,6 +36,7 @@ export enum EventName {
   notify = 'lf-notify',
   randomBoolean = 'lf-randomboolean',
   resizeimageByEdge = 'lf-resizeimagebyedge',
+  resizeimageToDimension = 'lf-resizeimagetodimension',
   resizeimageToSquare = 'lf-resizeimagetosquare',
   resolutionSwitcher = 'lf-resolutionswitcher',
   samplerSelector = 'lf-samplerselector',
@@ -75,6 +76,7 @@ export type EventPayload =
   | NotifyPayload
   | RandomBooleanPayload
   | ResizeImageByEdgePayload
+  | ResizeImageToDimensionPayload
   | ResizeImageToSquarePayload
   | ResolutionSwitcherPayload
   | SamplerSelectorPayload
@@ -333,6 +335,14 @@ export interface ResizeImageByEdgePayload extends BaseEventPayload {
   original_heights: number[];
   original_widths: number[];
   widths: number[];
+}
+
+/*-------------------------------------------------------------------*/
+/*    R e s i z e I m a g e T o D i m e n s i o n   D e c l a r .    */
+/*-------------------------------------------------------------------*/
+
+export interface ResizeImageToDimensionPayload extends BaseEventPayload {
+  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/

@@ -317,7 +317,7 @@ class LF_ResizeImageToDimension:
         dataset["nodes"][0]["id"] = summary_message
         dataset["nodes"][0]["value"] = summary_message
 
-        PromptServer.instance.send_sync("lf-resizeimagebydimension", {
+        PromptServer.instance.send_sync("lf-resizeimagetodimension", {
             "node": node_id,
             "dataset": dataset,
         })
