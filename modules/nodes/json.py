@@ -72,7 +72,8 @@ class LF_GetValueFromJSON:
 
     def on_exec(self, json: dict, key: str, index: int):
         if isinstance(json, list):
-            json = json[index]
+            length = len(json)
+            json = json[index] if index < length else json[length - 1]
 
         value = json.get(key, None)
 
