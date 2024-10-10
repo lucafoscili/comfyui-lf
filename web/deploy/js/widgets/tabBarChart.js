@@ -78,7 +78,7 @@ export const tabBarChartFactory = {
                 break;
         }
         grid.classList.add(tabBarChartFactory.cssClasses.grid);
-        textfield.kulFullWidth = true;
+        textfield.kulIcon = 'folder';
         textfield.kulLabel = 'Directory';
         textfield.kulStyling = 'flat';
         tabbar.addEventListener('kul-tabbar-event', tabbarEventHandler.bind(tabbarEventHandler, chart));
