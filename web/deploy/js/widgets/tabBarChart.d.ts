@@ -5,7 +5,7 @@ export declare const tabBarChartFactory: {
         grid: string;
         spinner: string;
     };
-    options: (domWidget: HTMLDivElement) => TabBarChartWidgetOptions;
+    options: (chart: HTMLKulChartElement, tabbar: HTMLKulTabbarElement, textfield: HTMLKulTextfieldElement) => TabBarChartWidgetOptions;
     render: (node: NodeType, name: CustomWidgetName) => {
         widget: Widget;
     };

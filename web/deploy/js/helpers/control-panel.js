@@ -79,7 +79,7 @@ const handleButtonEvent = (e) => {
                 case Labels.DELETE_USAGE:
                     requestAnimationFrame(() => (c.kulShowSpinner = true));
                     getApiRoutes()
-                        .clearAnalyticsData('usage')
+                        .analytics.clear('usage')
                         .then(() => {
                         requestAnimationFrame(onResponse);
                         if (TIMEOUT) {

@@ -112,7 +112,7 @@ const handleButtonEvent = (e: CustomEvent<KulButtonEventPayload>) => {
         case Labels.DELETE_USAGE:
           requestAnimationFrame(() => (c.kulShowSpinner = true));
           getApiRoutes()
-            .clearAnalyticsData('usage')
+            .analytics.clear('usage')
             .then(() => {
               requestAnimationFrame(onResponse);
 

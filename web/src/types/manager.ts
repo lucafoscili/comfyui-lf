@@ -7,14 +7,13 @@ import { Extension } from './nodes';
 /*-------------------------------------------------------------------*/
 
 export interface ComfyAPIs {
+  analytics: AnalyticsAPIs;
   clearModelMetadata: () => Promise<void>;
-  clearAnalyticsData: (type: AnalyticsType) => Promise<void>;
   event: <T extends BaseEventPayload>(
     name: EventName,
     callback: (event: CustomEvent<T>) => void,
   ) => void;
   fetch: (body: unknown) => Promise<Response>;
-  fetchAnalyticsData: (type: AnalyticsType) => Promise<FetchAnalyticsAPIPayload>;
   getLinkById: (id: string) => LinkInfo;
   getNodeById: (id: string) => NodeType;
   interrupt: () => Promise<void>;
@@ -23,6 +22,10 @@ export interface ComfyAPIs {
   redraw: () => void;
   register: (extension: Extension) => void;
   saveModelMetadata: (modelPath: string, dataset: KulDataDataset) => void;
+}
+export interface AnalyticsAPIs {
+  clear: (type: AnalyticsType) => Promise<ClearAnalyiticsAPIPayload>;
+  get: (dir: string, type: AnalyticsType) => Promise<GetAnalyticsAPIPayload>;
 }
 export type AnalyticsType = 'usage';
 export enum LogSeverity {
@@ -38,10 +41,14 @@ export interface APIMetadataEntry {
   path: string;
 }
 export interface ClearModelAPIPayload {
-  status: 'success';
+  status: 'success' | 'not found' | 'error';
   message: string;
 }
-export interface FetchAnalyticsAPIPayload {
+export interface ClearAnalyiticsAPIPayload {
+  status: 'success' | 'not found' | 'error';
+  message: string;
+}
+export interface GetAnalyticsAPIPayload {
   status: 'success' | 'not found' | 'error';
   data: Record<string, KulDataDataset>;
 }

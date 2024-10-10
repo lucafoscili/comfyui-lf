@@ -36,7 +36,7 @@ export declare class LFWidgets {
         KUL_IMAGE_PREVIEW_B64: (content: HTMLDivElement, isSelectable: boolean) => import("../types/widgets.js").ImagePreviewWidgetOptions;
         KUL_MESSENGER: (messenger: HTMLKulMessengerElement, placeholder: HTMLDivElement) => import("../types/widgets.js").MessengerWidgetOptions;
         KUL_ROLL_VIEWER: (rollViewer: HTMLKulProgressbarElement, nodeType: NodeType) => import("../types/widgets.js").RollViewerWidgetOptions;
-        KUL_TAB_BAR_CHART: (wrapper: HTMLDivElement) => import("../types/widgets.js").TabBarChartWidgetOptions;
+        KUL_TAB_BAR_CHART: (chart: HTMLKulChartElement, tabbar: HTMLKulTabbarElement, textfield: HTMLKulTextfieldElement) => import("../types/widgets.js").TabBarChartWidgetOptions;
         KUL_TREE: (tree: HTMLKulTreeElement) => import("../types/widgets.js").TreeWidgetOptions;
         KUL_UPLOAD: (upload: HTMLKulUploadElement) => import("../types/widgets.js").UploadWidgetOptions;
     };
@@ -158,7 +158,7 @@ export declare class LFWidgets {
             KUL_IMAGE_PREVIEW_B64: (content: HTMLDivElement, isSelectable: boolean) => import("../types/widgets.js").ImagePreviewWidgetOptions;
             KUL_MESSENGER: (messenger: HTMLKulMessengerElement, placeholder: HTMLDivElement) => import("../types/widgets.js").MessengerWidgetOptions;
             KUL_ROLL_VIEWER: (rollViewer: HTMLKulProgressbarElement, nodeType: NodeType) => import("../types/widgets.js").RollViewerWidgetOptions;
-            KUL_TAB_BAR_CHART: (wrapper: HTMLDivElement) => import("../types/widgets.js").TabBarChartWidgetOptions;
+            KUL_TAB_BAR_CHART: (chart: HTMLKulChartElement, tabbar: HTMLKulTabbarElement, textfield: HTMLKulTextfieldElement) => import("../types/widgets.js").TabBarChartWidgetOptions;
             KUL_TREE: (tree: HTMLKulTreeElement) => import("../types/widgets.js").TreeWidgetOptions;
             KUL_UPLOAD: (upload: HTMLKulUploadElement) => import("../types/widgets.js").UploadWidgetOptions;
         };

@@ -10,21 +10,43 @@ export const tabBarChartFactory = {
         grid: `${BASE_CSS_CLASS}__grid`,
         spinner: `${BASE_CSS_CLASS}__spinner`,
     },
-    options: (domWidget) => {
+    options: (chart, tabbar, textfield) => {
         return {
             hideOnZoom: true,
             getComp() {
-                const chart = domWidget.querySelector('kul-chart');
-                const tabbar = domWidget.querySelector('kul-tabbar');
                 return { chart, tabbar };
             },
-            refresh: async (type) => {
-                const chart = domWidget.querySelector('kul-chart');
-                const tabbar = domWidget.querySelector('kul-tabbar');
+            getValue: () => {
+                return chart.dataset.directory;
+            },
+            setValue: (value) => {
+                if (value) {
+                    getLFManager()
+                        .getApiRoutes()
+                        .analytics.get(value, 'usage')
+                        .then((r) => {
+                        if (r.status === 'success') {
+                            if (r?.data && Object.entries(r.data).length > 0) {
+                                const firstKey = Object.keys(r.data)[0];
+                                chart.dataset.directory = value;
+                                chart.kulData = r.data[firstKey];
+                                tabbar.kulData = prepareTabbarDataset(r.data);
+                                textfield.setValue(value);
+                            }
+                            else {
+                                getLFManager().log('Analytics not found.', { r }, LogSeverity.Info);
+                            }
+                        }
+                    });
+                }
+            },
+            refresh: async () => {
                 const currentTab = (await tabbar?.getValue())?.node?.id;
+                const directory = chart?.dataset.directory;
+                const type = chart?.dataset.type;
                 getLFManager()
                     .getApiRoutes()
-                    .fetchAnalyticsData(type)
+                    .analytics.get(directory, type)
                     .then((r) => {
                     if (r.status === 'success') {
                         if (r?.data && Object.entries(r.data).length > 0) {
@@ -42,77 +64,46 @@ export const tabBarChartFactory = {
     },
     render: (node, name) => {
         const wrapper = document.createElement('div');
-        const options = tabBarChartFactory.options(wrapper);
-        contentCb(wrapper, false, node);
+        const grid = document.createElement('div');
+        const textfield = document.createElement('kul-textfield');
+        const chart = document.createElement('kul-chart');
+        const tabbar = document.createElement('kul-tabbar');
+        const options = tabBarChartFactory.options(chart, tabbar, textfield);
+        switch (node.comfyClass) {
+            case NodeName.usageStatistics:
+                chart.kulAxis = 'name';
+                chart.dataset.type = 'usage';
+                chart.kulSeries = ['counter'];
+                chart.kulTypes = ['area', 'scatter'];
+                break;
+        }
+        grid.classList.add(tabBarChartFactory.cssClasses.grid);
+        textfield.kulFullWidth = true;
+        textfield.kulLabel = 'Directory';
+        textfield.kulStyling = 'flat';
+        tabbar.addEventListener('kul-tabbar-event', tabbarEventHandler.bind(tabbarEventHandler, chart));
+        textfield.addEventListener('kul-textfield-event', textfieldEventHandler.bind(textfieldEventHandler, chart, options.refresh));
+        grid.appendChild(textfield);
+        grid.appendChild(tabbar);
+        grid.appendChild(chart);
+        wrapper.appendChild(grid);
         return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };
     },
-};
-const readyCb = (domWidget, node) => {
-    setTimeout(() => {
-        contentCb(domWidget, true, node);
-    }, 750);
-};
-const contentCb = async (domWidget, isReady, node) => {
-    const content = document.createElement('div');
-    const createSpinner = () => {
-        const spinner = document.createElement('kul-spinner');
-        spinner.classList.add(tabBarChartFactory.cssClasses.spinner);
-        spinner.kulActive = true;
-        spinner.kulLayout = 8;
-        return spinner;
-    };
-    if (isReady) {
-        const grid = await createGrid(node);
-        content.appendChild(grid);
-        domWidget.replaceChild(content, domWidget.firstChild);
-    }
-    else {
-        const spinner = createSpinner();
-        spinner.addEventListener('kul-spinner-event', readyCb.bind(null, domWidget, node));
-        content.appendChild(spinner);
-        domWidget.appendChild(content);
-    }
-    content.classList.add(tabBarChartFactory.cssClasses.content);
-};
-const createGrid = async (node) => {
-    const grid = document.createElement('div');
-    const chart = document.createElement('kul-chart');
-    const tabbar = document.createElement('kul-tabbar');
-    switch (node.comfyClass) {
-        case NodeName.usageStatistics:
-            chart.kulAxis = 'name';
-            chart.kulSeries = ['counter'];
-            chart.kulTypes = ['area', 'scatter'];
-            await getLFManager()
-                .getApiRoutes()
-                .fetchAnalyticsData('usage')
-                .then((r) => {
-                if (r.status === 'success') {
-                    if (r?.data && Object.entries(r.data).length > 0) {
-                        const firstKey = Object.keys(r.data)[0];
-                        chart.kulData = r.data[firstKey];
-                        tabbar.kulData = prepareTabbarDataset(r.data);
-                        tabbar.addEventListener('kul-tabbar-event', tabbarEventHandler.bind(tabbarEventHandler, chart));
-                    }
-                    else {
-                        getLFManager().log('Analytics not found.', { r }, LogSeverity.Info);
-                    }
-                }
-            });
-            break;
-        default:
-            break;
-    }
-    grid.classList.add(tabBarChartFactory.cssClasses.grid);
-    grid.appendChild(tabbar);
-    grid.appendChild(chart);
-    return grid;
 };
 const tabbarEventHandler = (chart, e) => {
     const { eventType, node } = e.detail;
     switch (eventType) {
         case 'click':
             chart.kulData = getLFManager().getCachedDatasets().usage[node.id];
+            break;
+    }
+};
+const textfieldEventHandler = (chart, refreshCb, e) => {
+    const { eventType, value } = e.detail;
+    switch (eventType) {
+        case 'change':
+            chart.dataset.directory = value;
+            refreshCb();
             break;
     }
 };

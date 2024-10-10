@@ -114,7 +114,7 @@ export class LFWidgets {
             [CustomWidgetName.imagePreview]: (content, isSelectable) => imagePreviewFactory.options(content, isSelectable),
             [CustomWidgetName.messenger]: (messenger, placeholder) => messengerFactory.options(messenger, placeholder),
             [CustomWidgetName.rollViewer]: (rollViewer, nodeType) => rollViewerFactory.options(rollViewer, nodeType),
-            [CustomWidgetName.tabBarChart]: (wrapper) => tabBarChartFactory.options(wrapper),
+            [CustomWidgetName.tabBarChart]: (chart, tabbar, textfield) => tabBarChartFactory.options(chart, tabbar, textfield),
             [CustomWidgetName.tree]: (tree) => treeFactory.options(tree),
             [CustomWidgetName.upload]: (upload) => uploadFactory.options(upload),
         };

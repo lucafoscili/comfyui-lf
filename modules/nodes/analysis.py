@@ -88,7 +88,7 @@ class LF_UpdateUsageStatistics:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "datasets_dir": ("STRING", {"default": os.path.join(folder_paths.input_directory, "LF_Nodes"), "tooltip": "The directory where the JSON datasets are stored. Note: changing this directory will prevent you from displaying the datasets inside the UsageStatistics node, it should be done for testing purposes only."}),
+                "datasets_dir": ("STRING", {"default": "Workflow_name", "tooltip": "The files are saved in the user directory of ComfyUI under LF_Nodes. This field can be used to add additional folders."}),
             },
             "optional": {
                 "dataset": ("JSON", {"defaultInput": True, "tooltip": "Dataset including the resources (produced by CivitAIMetadataSetup)."}),
@@ -122,12 +122,12 @@ class LF_UpdateUsageStatistics:
             return input
         def process_list(input, type): 
             filename = get_usage_filename(type)
-            file = os.path.join(datasets_dir, filename)
+            file = os.path.join(actual_path, filename)
             log = get_usage_title(filename, "markdown")
             for i in input:
                 log += update_usage_json(file, get_usage_title(filename), i)
             return log
-
+        
         datasets_dir = datasets_dir[0] if isinstance(datasets_dir, list) else datasets_dir
         dataset = dataset[0] if isinstance(dataset, list) else dataset
 
@@ -138,6 +138,9 @@ class LF_UpdateUsageStatistics:
         schedulers = normalize_list(schedulers)
         upscale_models = normalize_list(upscale_models)
         vaes = normalize_list(vaes)
+        
+        base_path = os.path.join(folder_paths.user_directory, "LF_Nodes")
+        actual_path = os.path.join(base_path, datasets_dir)
 
         log_title = "# Update summary\n"
         log = ""
@@ -185,7 +188,6 @@ class LF_UsageStatistics:
     def INPUT_TYPES(cls):
         return {
             "required": {},
-            "hidden": { "node_id": "UNIQUE_ID" }
         }
     
     CATEGORY = category

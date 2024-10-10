@@ -7,9 +7,9 @@ import { getKulManager } from '../utils/common.js';
 import { LFNodes } from './nodes.js';
 import { LFWidgets } from './widgets.js';
 import {
-  AnalyticsType,
+  ClearModelAPIPayload,
   ComfyAPIs,
-  FetchAnalyticsAPIPayload,
+  GetAnalyticsAPIPayload,
   LogSeverity,
   SaveModelAPIPayload,
 } from '../types/manager.js';
@@ -82,6 +82,88 @@ const LOG_STYLE = {
 
 export class LFManager {
   #APIS: ComfyAPIs = {
+    analytics: {
+      clear: async (type) => {
+        let message = '';
+
+        try {
+          const body = new FormData();
+          body.append('type', type);
+
+          const response: Response = await api.fetchApi(`/comfyui-lf/clear-analytics`, {
+            body,
+            method: 'POST',
+          });
+
+          const code = response.status;
+
+          switch (code) {
+            case 200:
+              const data: ClearModelAPIPayload = await response.json();
+              if (data.status === 'success') {
+                this.log(data.message, { data }, LogSeverity.Success);
+              }
+              this.#CACHED_DATASETS.usage = {};
+              return data;
+            case 404:
+              message = `Analytics not found: ${type}. Skipping deletion.`;
+              this.log(message, {}, LogSeverity.Info);
+              return { message, status: 'not found' };
+            default:
+              message = `Unexpected response from the clear-analytics ${type} API!`;
+              this.log(message, { status: code }, LogSeverity.Error);
+              return { message, status: 'error' };
+          }
+        } catch (error) {
+          this.log(message, { error }, LogSeverity.Error);
+          return { message, status: 'error' };
+        }
+      },
+      get: async (directory, type) => {
+        let message = '';
+
+        if (!directory || !type) {
+          message = `Missing directory (received ${directory}) or  (received ${type}).`;
+          this.log(message, {}, LogSeverity.Error);
+          return { data: {}, status: 'error' };
+        }
+
+        try {
+          const body = new FormData();
+          body.append('directory', directory);
+          body.append('type', type);
+
+          const response = await api.fetchApi(`/comfyui-lf/get-analytics`, {
+            body,
+            method: 'POST',
+          });
+
+          const code = response.status;
+
+          switch (code) {
+            case 200:
+              const payload: GetAnalyticsAPIPayload = await response.json();
+              if (payload.status === 'success') {
+                this.log('Analytics data fetched successfully.', { payload }, LogSeverity.Success);
+              }
+              this.#CACHED_DATASETS.usage = payload.data;
+              return payload;
+            case 404:
+              message = `${type} analytics file not found.`;
+              this.log(message, {}, LogSeverity.Info);
+              return { data: {}, status: 'not found' };
+            default:
+              message = 'Unexpected response from the API!';
+              this.log(message, { status: code }, LogSeverity.Error);
+              return { data: {}, status: 'error' };
+          }
+        } catch (error) {
+          message = 'Error fetching analytics data.';
+          this.log(message, { error }, LogSeverity.Error);
+          return { data: {}, status: 'error' };
+        }
+      },
+    },
     clearModelMetadata: async () => {
       try {
         await api
@@ -104,28 +186,6 @@ export class LFManager {
         this.log("Error deleting model's metadata.", { error }, LogSeverity.Error);
       }
     },
-    clearAnalyticsData: async (type: AnalyticsType) => {
-      try {
-        await api
-          .fetchApi(`/comfyui-lf/clear-${type}-analytics`, {
-            method: 'POST',
-          })
-          .then((res: Response) => {
-            try {
-              return res.json();
-            } catch (error) {
-              this.log(
-                'Error parsing response when deleting analytics files.',
-                { error },
-                LogSeverity.Error,
-              );
-              return res.json();
-            }
-          });
-      } catch (error) {
-        this.log('Error deleting analytics data.', { error }, LogSeverity.Error);
-      }
-    },
     event: (name, callback) => {
       api.addEventListener(name, callback);
     },
@@ -134,33 +194,6 @@ export class LFManager {
         method: 'POST',
         body,
       });
-    },
-    fetchAnalyticsData: async (type): Promise<FetchAnalyticsAPIPayload> => {
-      try {
-        const response = await api.fetchApi(`/comfyui-lf/get-${type}-analytics`, {
-          method: 'GET',
-        });
-
-        const code = response.status;
-
-        if (code === 200) {
-          const data: FetchAnalyticsAPIPayload = await response.json();
-          if (data.status === 'success') {
-            this.log('Analytics data fetched successfully.', { data }, LogSeverity.Success);
-          }
-          this.#CACHED_DATASETS.usage = data.data;
-          return data;
-        }
-        if (code === 404) {
-          this.log(`${type} analytics file not found.`, {}, LogSeverity.Info);
-          return { data: {}, status: 'not found' };
-        }
-        this.log('Unexpected response from the API!', { status: code }, LogSeverity.Error);
-        return { data: {}, status: 'error' };
-      } catch (error) {
-        this.log('Error fetching analytics data.', { error }, LogSeverity.Error);
-        return { data: {}, status: 'error' };
-      }
     },
     getLinkById: (id: string) => {
       return app.graph.links[String(id).valueOf()];

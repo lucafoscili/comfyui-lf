@@ -4,47 +4,42 @@ import os
 import requests
 
 from aiohttp import web
-from folder_paths import get_filename_list, get_full_path, input_directory
+from folder_paths import get_filename_list, get_full_path, user_directory
 
 from server import PromptServer
 
-@PromptServer.instance.routes.post("/comfyui-lf/save-model-info")
-async def save_model_info(request):
+@PromptServer.instance.routes.post("/comfyui-lf/clear-analytics")
+async def clear_usage_analytics(request):
     try:
         r = await request.post()
+
+        base_path = os.path.join(user_directory, "LF_Nodes")
         
-        metadata = r.get("metadata")
-        model_path = r.get("model_path")
-        forced_save = r.get("forced_save")
+        analytics_type = r.get("type")
 
-        if not model_path or not metadata:
-            return web.Response(status=400, text="Missing 'model_path' or 'metadata'.")
-
-        metadata_json = json.loads(metadata)
-        image_url = metadata_json.get("nodes", [])[0].get("cells", {}).get("kulImage", {}).get("value")
-
-        file_no_ext = os.path.splitext(model_path)[0]
-        info_file_path = file_no_ext + ".info"
-
-        if os.path.exists(info_file_path):
-            if bool(forced_save):
-                os.remove(info_file_path)
-            else:
-                return web.json_response({"status": "exists", "message": f"Metadata already saved at {info_file_path}."}, status=200)
-
-        if image_url:
-            try:
-                image_data = requests.get(image_url).content
-                image_base64 =  base64.b64encode(image_data).decode('utf-8')
-                metadata_json["nodes"][0]["cells"]["kulImage"]["value"] = f"data:image/png;charset=utf-8;base64,{image_base64}"
-            except Exception as e:
-                return web.Response(status=500, text=f"Error fetching image: {str(e)}")
-
-        with open(info_file_path, "w") as info_file:
-            json.dump(metadata_json, info_file, indent=4)
-
-        return web.json_response({"status": "success", "message": f"Metadata saved at {info_file_path}."}, status=200)
-
+        if not analytics_type:
+            return web.Response(status=404, text=f"Missing type (received {analytics_type}).")
+        
+        deleted_files = []
+        
+        for root, _, files in os.walk(base_path):
+            for file_name in files:
+                if f"{analytics_type}.json" in file_name:
+                    full_path = os.path.join(root, file_name)
+                    
+                    if os.path.exists(full_path):
+                        try:
+                            os.remove(full_path)
+                            deleted_files.append(full_path)
+                        except Exception as e:
+                            print(f"Failed to delete {full_path}: {str(e)}")
+        
+        return web.json_response({
+            "status": "success",
+            "message": f"Deleted {len(deleted_files)} usage.json files.",
+            "deleted_files": deleted_files
+        }, status=200)
+    
     except Exception as e:
         return web.Response(status=500, text=f"Error: {str(e)}")
 
@@ -85,10 +80,19 @@ async def clear_model_info(request):
     except Exception as e:
         return web.Response(status=500, text=f"Error: {str(e)}")
 
-@PromptServer.instance.routes.get("/comfyui-lf/get-usage-analytics")
-async def get_usage_analytics(response):
+@PromptServer.instance.routes.post("/comfyui-lf/get-analytics")
+async def get_usage_analytics(request):
     try:
-        analytics_dir = os.path.join(input_directory, "LF_Nodes")
+        r = await request.post()
+        
+        directory = r.get("directory")
+        analytics_type = r.get("type")
+
+        if not directory or not analytics_type:
+            return web.Response(status=404, text=f"Missing directory (received {directory}) or type (received {analytics_type}).")
+
+        base_path = os.path.join(user_directory, "LF_Nodes")
+        analytics_dir = os.path.join(base_path, directory)
         
         if not os.path.exists(analytics_dir):
             return web.Response(status=404, text="Directory not found.")
@@ -96,7 +100,7 @@ async def get_usage_analytics(response):
         analytics_data = {}
 
         for filename in os.listdir(analytics_dir):
-            if filename.endswith(".json"):
+            if filename.endswith(f"{analytics_type}.json"):
                 file_path = os.path.join(analytics_dir, filename)
                 try:
                     with open(file_path, 'r') as file:
@@ -113,29 +117,42 @@ async def get_usage_analytics(response):
     except Exception as e:
         return web.Response(status=500, text=f"Error: {str(e)}")
 
-@PromptServer.instance.routes.post("/comfyui-lf/clear-usage-analytics")
-async def clear_usage_analytics(request):
+@PromptServer.instance.routes.post("/comfyui-lf/save-model-info")
+async def save_model_info(request):
     try:
-        analytics_dir = os.path.join(input_directory, "LF_Nodes")
+        r = await request.post()
         
-        deleted_files = []
-        
-        for file_name in os.listdir(analytics_dir):
-            if "usage.json" in file_name:
-                full_path = os.path.join(analytics_dir, file_name)
-                
-                if os.path.exists(full_path):
-                    try:
-                        os.remove(full_path)
-                        deleted_files.append(full_path)
-                    except Exception as e:
-                        print(f"Failed to delete {full_path}: {str(e)}")
-        
-        return web.json_response({
-            "status": "success",
-            "message": f"Deleted {len(deleted_files)} usage.json files.",
-            "deleted_files": deleted_files
-        }, status=200)
-    
+        metadata = r.get("metadata")
+        model_path = r.get("model_path")
+        forced_save = r.get("forced_save")
+
+        if not model_path or not metadata:
+            return web.Response(status=400, text="Missing 'model_path' or 'metadata'.")
+
+        metadata_json = json.loads(metadata)
+        image_url = metadata_json.get("nodes", [])[0].get("cells", {}).get("kulImage", {}).get("value")
+
+        file_no_ext = os.path.splitext(model_path)[0]
+        info_file_path = file_no_ext + ".info"
+
+        if os.path.exists(info_file_path):
+            if bool(forced_save):
+                os.remove(info_file_path)
+            else:
+                return web.json_response({"status": "exists", "message": f"Metadata already saved at {info_file_path}."}, status=200)
+
+        if image_url:
+            try:
+                image_data = requests.get(image_url).content
+                image_base64 =  base64.b64encode(image_data).decode('utf-8')
+                metadata_json["nodes"][0]["cells"]["kulImage"]["value"] = f"data:image/png;charset=utf-8;base64,{image_base64}"
+            except Exception as e:
+                return web.Response(status=500, text=f"Error fetching image: {str(e)}")
+
+        with open(info_file_path, "w") as info_file:
+            json.dump(metadata_json, info_file, indent=4)
+
+        return web.json_response({"status": "success", "message": f"Metadata saved at {info_file_path}."}, status=200)
+
     except Exception as e:
         return web.Response(status=500, text=f"Error: {str(e)}")
