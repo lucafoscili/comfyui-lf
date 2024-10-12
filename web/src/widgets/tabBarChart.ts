@@ -44,6 +44,7 @@ export const tabBarChartFactory = {
                   chart.kulData = r.data[firstKey];
                   tabbar.kulData = prepareTabbarDataset(r.data);
                   textfield.setValue(value);
+                  requestAnimationFrame(() => tabbar.setValue(0));
                 } else {
                   getLFManager().log('Analytics not found.', { r }, LogSeverity.Info);
                 }
@@ -90,12 +91,12 @@ export const tabBarChartFactory = {
     }
 
     grid.classList.add(tabBarChartFactory.cssClasses.grid);
+    tabbar.addEventListener('kul-tabbar-event', tabbarEventHandler.bind(tabbarEventHandler, chart));
+    tabbar.kulValue = null;
 
     textfield.kulIcon = 'folder';
     textfield.kulLabel = 'Directory';
     textfield.kulStyling = 'flat';
-
-    tabbar.addEventListener('kul-tabbar-event', tabbarEventHandler.bind(tabbarEventHandler, chart));
     textfield.addEventListener(
       'kul-textfield-event',
       textfieldEventHandler.bind(textfieldEventHandler, chart, options.refresh),

@@ -1,12 +1,18 @@
 import { h, r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, H as Host } from './index-21ee70d9.js';
-import { R as RIPPLE_SURFACE_CLASS, k as kulManagerInstance, g as getProps, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './kul-manager-8205ca5d.js';
+import { R as RIPPLE_SURFACE_CLASS, k as kulManagerInstance, g as getProps, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './kul-manager-caaff688.js';
 import { K as KulDataCyAttributes } from './GenericTypes-8038330a.js';
 
+/*-------------------------------------------------*/
+/*                 I n t e r n a l                 */
+/*-------------------------------------------------*/
 var KulCardCSSClasses;
 (function (KulCardCSSClasses) {
     KulCardCSSClasses["HAS_ACTIONS"] = "has-actions";
     KulCardCSSClasses["HAS_CONTENT"] = "has-content";
 })(KulCardCSSClasses || (KulCardCSSClasses = {}));
+/*-------------------------------------------------*/
+/*                    P r o p s                    */
+/*-------------------------------------------------*/
 var KulCardProps;
 (function (KulCardProps) {
     KulCardProps["kulData"] = "The actual data of the card.";
@@ -36,7 +42,7 @@ const getShapes = {
     text: (text) => {
         const r = [];
         for (let index = 0; text && index < text.length; index++) {
-            const t = text[index];
+            const t = text[index].value;
             r.push(h("div", { id: `text${index}` }, t));
         }
         return text;
@@ -55,12 +61,12 @@ function getLayoutA(component, shapes = {}) {
     const coverIndex = 0;
     const cover = images.length ? images[coverIndex] : null;
     const titleIndex = 0;
-    const title = text.length ? shapes.text[titleIndex] : null;
+    const title = text.length ? shapes.text[titleIndex].value : null;
     const subtitleIndex = 1;
-    const subtitle = text.length > subtitleIndex ? shapes.text[subtitleIndex] : null;
+    const subtitle = text.length > subtitleIndex ? shapes.text[subtitleIndex].value : null;
     const descriptionIndex = 2;
     const description = text.length > descriptionIndex
-        ? shapes.text[descriptionIndex]
+        ? shapes.text[descriptionIndex].value
         : undefined;
     return (h("div", { class: `layout-${component.kulLayout} ${buttons.length ? KulCardCSSClasses.HAS_ACTIONS : ''}` },
         h("div", { class: RIPPLE_SURFACE_CLASS, "data-cy": KulDataCyAttributes.RIPPLE, onPointerDown: (e) => {

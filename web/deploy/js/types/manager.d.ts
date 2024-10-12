@@ -3,23 +3,43 @@ import { KulDataDataset } from './ketchup-lite/components';
 import { Extension } from './nodes';
 export interface ComfyAPIs {
     analytics: AnalyticsAPIs;
-    clearModelMetadata: () => Promise<void>;
+    backup: BackupAPIs;
+    metadata: MetadataAPIs;
     event: <T extends BaseEventPayload>(name: EventName, callback: (event: CustomEvent<T>) => void) => void;
     fetch: (body: unknown) => Promise<Response>;
     getLinkById: (id: string) => LinkInfo;
     getNodeById: (id: string) => NodeType;
     interrupt: () => Promise<void>;
-    modelInfoFromCivitAI: (hash: string, forcedSave?: boolean) => Promise<CivitAIModelData>;
     queuePrompt: () => Promise<void>;
     redraw: () => void;
     register: (extension: Extension) => void;
-    saveModelMetadata: (modelPath: string, dataset: KulDataDataset) => void;
 }
 export interface AnalyticsAPIs {
-    clear: (type: AnalyticsType) => Promise<ClearAnalyiticsAPIPayload>;
+    clear: (type: AnalyticsType) => Promise<BaseAPIPayload>;
     get: (dir: string, type: AnalyticsType) => Promise<GetAnalyticsAPIPayload>;
 }
+export interface BackupAPIs {
+    new: (backupType?: BackupType) => Promise<BaseAPIPayload>;
+}
+export interface MetadataAPIs {
+    clear: () => Promise<BaseAPIPayload>;
+    get: (hash: string) => Promise<GetMetadataAPIPayload>;
+    save: (modelPath: string, dataset: KulDataDataset, forcedSave?: boolean) => Promise<BaseAPIPayload>;
+}
+export interface BaseAPIPayload {
+    message: string;
+    status: LogSeverity;
+}
 export type AnalyticsType = 'usage';
+export type BackupType = 'automatic' | 'manual';
+export declare enum LFEndpoints {
+    ClearAnalytics = "/comfyui-lf/clear-analytics",
+    ClearMetadata = "/comfyui-lf/clear-metadata",
+    GetAnalytics = "/comfyui-lf/get-analytics",
+    GetMetadata = "/comfyui-lf/get-metadata",
+    NewBackup = "/comfyui-lf/new-backup",
+    SaveMetadata = "/comfyui-lf/save-metadata"
+}
 export declare enum LogSeverity {
     Info = "info",
     Success = "success",
@@ -32,19 +52,9 @@ export interface APIMetadataEntry {
     hash: string;
     path: string;
 }
-export interface ClearModelAPIPayload {
-    status: 'success' | 'not found' | 'error';
-    message: string;
-}
-export interface ClearAnalyiticsAPIPayload {
-    status: 'success' | 'not found' | 'error';
-    message: string;
-}
-export interface GetAnalyticsAPIPayload {
-    status: 'success' | 'not found' | 'error';
+export interface GetAnalyticsAPIPayload extends BaseAPIPayload {
     data: Record<string, KulDataDataset>;
 }
-export interface SaveModelAPIPayload {
-    status: 'exists' | 'success';
-    message: string;
+export interface GetMetadataAPIPayload extends BaseAPIPayload {
+    data: CivitAIModelData;
 }

@@ -16,8 +16,10 @@ export declare class LFManager {
         dataset: KulArticleNode[];
     };
     initialize(): void;
+    isBackupEnabled(): boolean;
     isDebug(): boolean;
     log(message: string, args?: Record<string, unknown>, severity?: LogSeverity): void;
     setDebugDataset(article: HTMLKulArticleElement, dataset: KulArticleNode[]): void;
+    toggleBackup(value?: boolean): boolean;
     toggleDebug(value?: boolean): boolean;
 }

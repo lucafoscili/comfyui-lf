@@ -1,6 +1,9 @@
 import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-21ee70d9.js';
-import { k as kulManagerInstance, g as getProps, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './kul-manager-8205ca5d.js';
+import { k as kulManagerInstance, g as getProps, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './kul-manager-caaff688.js';
 
+/*-------------------------------------------------*/
+/*                    P r o p s                    */
+/*-------------------------------------------------*/
 var KulDrawerProps;
 (function (KulDrawerProps) {
     KulDrawerProps["kulStyle"] = "Custom style of the component.";
@@ -116,7 +119,7 @@ const KulDrawer = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: '9b94df6958ace5e65d783d4e015a07629cd96f7b', "kul-opened": this.opened }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '484009f08078f068f09394a444b160d9b8a94758', class: "backdrop", onClick: (e) => {
+        return (h(Host, { key: '8dd7c1bf9cf5b06d0a07c388ac580253b9a6e6f3', "kul-opened": this.opened }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '24efde2d54622c04d68abb88640fb5c485ffb470', class: "backdrop", onClick: (e) => {
                 e.preventDefault();
                 e.stopPropagation();
             }, onPointerDown: (e) => {
@@ -126,7 +129,7 @@ const KulDrawer = class {
             }, onTouchStart: (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-            } }), h("div", { key: '6871a0d538a75b9dbc82d1e11cb07fc12aabd49f', id: KUL_WRAPPER_ID }, h("div", { key: '30d1b26e909b0482cc5accaa6d09e99f21c6b014', class: 'drawer' }, h("div", { key: '0b566a6ec50773012e24723b0acc97a044669db9', class: `drawer__content` }, h("slot", { key: '885dc023dbc68c218ebc33c916774731161e5ccf' }))))));
+            } }), h("div", { key: 'cb5d7db7355c2a1ddf5eadd58f8701d56107edf4', id: KUL_WRAPPER_ID }, h("div", { key: '66ab25f4e075662d75e8b188b549eb8dc5988c44', class: 'drawer' }, h("div", { key: 'b5126f567ba246d6aceb38649063eaac8ec070aa', class: `drawer__content` }, h("slot", { key: '3f35126f9ecc7460b50efce864894f0129ba9653' }))))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

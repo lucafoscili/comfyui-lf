@@ -254,10 +254,10 @@ jsonfile@^6.0.1:
   optionalDependencies:
     graceful-fs "^4.1.6"
 
-ketchup-lite@1.3.4:
-  version "1.3.4"
-  resolved "https://registry.yarnpkg.com/ketchup-lite/-/ketchup-lite-1.3.4.tgz#7bceea1f3ec17447cf7bd66f4dde3e34fa7ac04a"
-  integrity sha512-B1Zt8nZDkURT1VOtUytgCgERPG7zNQBLLSUTcsmkH/4rRop5EyQROyzWIIpHTSuI++gh9BqrjPoyUNoLoY1r3Q==
+ketchup-lite@1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/ketchup-lite/-/ketchup-lite-1.4.0.tgz#84b495a7b54e28a2b4be62189e245679e65592be"
+  integrity sha512-ypbaz303ty33yPL6Yp0YloP2UBM2UxEP07g+a43vmbE5VrtKW/LXfu+b/Xb+YUaMhqGaMhgcSsHLGkN31nwoeQ==
   dependencies:
     dayjs "^1.11.11"
     echarts "5.5.1"

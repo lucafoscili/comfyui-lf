@@ -1,5 +1,5 @@
 import { h, F as Fragment, r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, H as Host } from './index-21ee70d9.js';
-import { k as kulManagerInstance, g as getProps, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './kul-manager-8205ca5d.js';
+import { k as kulManagerInstance, g as getProps, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './kul-manager-caaff688.js';
 
 /*-------------------------------------------------*/
 /*                    P r o p s                    */
@@ -273,7 +273,7 @@ const prepExpanderButtons = (adapter) => {
     };
 };
 const prepNavigation = (adapter) => {
-    return (h("kul-tabbar", { kulData: NAV_DATASET, "onKul-tabbar-event": tabbarEventHandler.bind(tabbarEventHandler, adapter) }));
+    return (h("kul-tabbar", { kulData: NAV_DATASET, kulValue: 1, "onKul-tabbar-event": tabbarEventHandler.bind(tabbarEventHandler, adapter) }));
 };
 const prepChat = (adapter) => {
     const prompts = getDynamicPrompts(adapter);
@@ -1049,14 +1049,13 @@ const KulMessenger = class {
                             },
                         };
                     }
-                    chatNode.cells.kulChat.kulEndpointUrl =
-                        chatComp.kulEndpointUrl;
-                    chatNode.cells.kulChat.kulMaxTokens = chatComp.kulMaxTokens;
-                    chatNode.cells.kulChat.kulPollingInterval =
-                        chatComp.kulPollingInterval;
-                    chatNode.cells.kulChat.kulSystem = chatComp.kulSystem;
-                    chatNode.cells.kulChat.kulTemperature =
-                        chatComp.kulTemperature;
+                    const chatCell = chatNode.cells
+                        .kulChat;
+                    chatCell.kulEndpointUrl = chatComp.kulEndpointUrl;
+                    chatCell.kulMaxTokens = chatComp.kulMaxTokens;
+                    chatCell.kulPollingInterval = chatComp.kulPollingInterval;
+                    chatCell.kulSystem = chatComp.kulSystem;
+                    chatCell.kulTemperature = chatComp.kulTemperature;
                 }
             };
             const saveCovers = () => {

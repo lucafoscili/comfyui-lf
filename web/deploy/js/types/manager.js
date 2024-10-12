@@ -1,3 +1,12 @@
+export var LFEndpoints;
+(function (LFEndpoints) {
+    LFEndpoints["ClearAnalytics"] = "/comfyui-lf/clear-analytics";
+    LFEndpoints["ClearMetadata"] = "/comfyui-lf/clear-metadata";
+    LFEndpoints["GetAnalytics"] = "/comfyui-lf/get-analytics";
+    LFEndpoints["GetMetadata"] = "/comfyui-lf/get-metadata";
+    LFEndpoints["NewBackup"] = "/comfyui-lf/new-backup";
+    LFEndpoints["SaveMetadata"] = "/comfyui-lf/save-metadata";
+})(LFEndpoints || (LFEndpoints = {}));
 export var LogSeverity;
 (function (LogSeverity) {
     LogSeverity["Info"] = "info";

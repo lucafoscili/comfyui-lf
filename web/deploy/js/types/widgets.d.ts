@@ -172,6 +172,7 @@ export type ControlPanelWidgetSetter = () => {
     [CustomWidgetName.controlPanel]: BaseWidgetCallback;
 };
 export type ControlPanelWidgetDeserializedValue = {
+    backup: boolean;
     debug: boolean;
     themes: string;
 };
