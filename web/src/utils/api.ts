@@ -1,6 +1,6 @@
 import { KulDataDataset } from '../types/ketchup-lite/components';
-import { KulDataCodeCell } from '../types/ketchup-lite/managers/kul-data/kul-data-declarations';
-import { APIMetadataEntry } from '../types/manager';
+import { KulDataCell } from '../types/ketchup-lite/managers/kul-data/kul-data-declarations';
+import { APIMetadataEntry, GetMetadataAPIPayload } from '../types/manager';
 import { CardsWithChipWidget, CardWidget, CardWidgetDeserializedValue } from '../types/widgets';
 import { getApiRoutes } from './common';
 
@@ -34,13 +34,12 @@ export const fetchModelMetadata = async (
   forcedSave = false,
 ): Promise<Partial<HTMLKulCardElement>[]> => {
   const promises: Promise<Partial<HTMLKulCardElement>>[] = models.map(
-    ({ dataset, hash, path, apiFlag }) => {
+    async ({ dataset, hash, path, apiFlag }) => {
       if (apiFlag) {
-        return getApiRoutes()
-          .modelInfoFromCivitAI(hash, forcedSave)
-          .then(onResponse.bind(onResponse, dataset, path, hash));
+        const payload = await getApiRoutes().metadata.get(hash);
+        return onResponse(dataset, path, hash, forcedSave, payload);
       } else {
-        return onResponse(dataset, path, hash, null);
+        return onResponse(dataset, path, hash, forcedSave, null);
       }
     },
   );
@@ -52,8 +51,10 @@ const onResponse = async (
   dataset: KulDataDataset,
   path: string,
   hash: string,
-  r: CivitAIModelData,
+  forcedSave: boolean,
+  payload: GetMetadataAPIPayload,
 ) => {
+  const r = payload?.data;
   const id = r?.id;
   const props: Partial<HTMLKulCardElement> = {
     kulStyle: '.sub-2.description { white-space: pre-wrap; }',
@@ -64,7 +65,7 @@ const onResponse = async (
       const civitaiDataset = prepareValidDataset(r);
       props.kulData = civitaiDataset;
       props.kulStyle = '.sub-2.description { white-space: pre-wrap; }';
-      getApiRoutes().saveModelMetadata(path, civitaiDataset);
+      getApiRoutes().metadata.save(path, civitaiDataset, forcedSave);
       break;
     case 'string':
       const node = dataset.nodes[0];
@@ -137,5 +138,5 @@ const hashCell = (hash: string, path: string) => {
   return {
     shape: 'code',
     value: JSON.stringify({ hash: hash.valueOf(), path }),
-  } as KulDataCodeCell;
+  } as KulDataCell<'code'>;
 };

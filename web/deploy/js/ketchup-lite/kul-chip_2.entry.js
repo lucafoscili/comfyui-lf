@@ -1,7 +1,10 @@
 import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, a as getAssetPath, H as Host } from './index-21ee70d9.js';
-import { k as kulManagerInstance, g as getProps, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID, b as KulThemeColorValues } from './kul-manager-8205ca5d.js';
+import { k as kulManagerInstance, g as getProps, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID, b as KulThemeColorValues } from './kul-manager-caaff688.js';
 import { K as KulDataCyAttributes } from './GenericTypes-8038330a.js';
 
+/*-------------------------------------------------*/
+/*                    P r o p s                    */
+/*-------------------------------------------------*/
 var KulChipProps;
 (function (KulChipProps) {
     KulChipProps["kulData"] = "The data of the chip chip.";
@@ -111,7 +114,7 @@ const KulChip = class {
     }
     /**
      * Returns the selected nodes.
-     * @returns {Promise<KulChipNode[]>} Selected nodes.
+     * @returns {Promise<KulDataNode[]>} Selected nodes.
      */
     async getSelectedNodes() {
         return this.selectedNodes;
@@ -298,7 +301,7 @@ const KulChip = class {
             'chip-set--filter': this.#isFilter(),
             'chip-set--input': this.#isInput(),
         };
-        return (h(Host, { key: '89c2fce4f843fa2894ced25c4484e592dd2a2d6e' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '326f1bf277e3c645efe9a97539abb9498f19f164', id: KUL_WRAPPER_ID }, h("div", { key: '95106c7192e3c4e392a0994a0c98559a8c087998', class: className, role: "grid" }, this.#prepChipSet()))));
+        return (h(Host, { key: 'b62fc66ed0334cfe7c67261bcb72afd98d268743' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'c848e72fefda1c2f15c5cec863c53131efbadc38', id: KUL_WRAPPER_ID }, h("div", { key: '95416b2cffed95ed5f35f061c7898f135c97185b', class: className, role: "grid" }, this.#prepChipSet()))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);
@@ -306,6 +309,9 @@ const KulChip = class {
 };
 KulChip.style = KulChipStyle0;
 
+/*-------------------------------------------------*/
+/*                    P r o p s                    */
+/*-------------------------------------------------*/
 var KulTabbarProps;
 (function (KulTabbarProps) {
     KulTabbarProps["kulData"] = "Actual data of the component.";
@@ -332,7 +338,7 @@ const KulTabbar = class {
         this.kulData = null;
         this.kulRipple = true;
         this.kulStyle = '';
-        this.kulValue = null;
+        this.kulValue = 0;
     }
     get rootElement() { return getElement(this); }
     /*-------------------------------------------------*/
@@ -425,17 +431,29 @@ const KulTabbar = class {
     /*          L i f e c y c l e   H o o k s          */
     /*-------------------------------------------------*/
     componentWillLoad() {
-        if (this.kulValue !== null) {
-            this.value = this.kulData[this.kulValue];
+        try {
+            if (this.kulValue !== null) {
+                if (typeof this.kulValue === 'number') {
+                    this.value = {
+                        index: this.kulValue,
+                        node: this.kulData.nodes[this.kulValue],
+                    };
+                }
+                if (typeof this.kulValue === 'string') {
+                    const node = this.kulData.nodes.find((node) => node.id === this.kulValue);
+                    this.value = {
+                        index: this.kulData.nodes.indexOf(node),
+                        node,
+                    };
+                }
+            }
+        }
+        catch (error) {
+            this.#kulManager.debug.logMessage(this, 'Something went wrong while setting the initial selected value.', 'warning');
         }
         this.#kulManager.theme.register(this);
     }
     componentDidLoad() {
-        if (this.#rippleSurface?.length) {
-            this.#rippleSurface.forEach((el) => {
-                this.#kulManager.theme.ripple.setup(el);
-            });
-        }
         if (this.#scrollArea) {
             this.#kulManager.scrollOnHover.register(this.#scrollArea);
         }
@@ -443,6 +461,11 @@ const KulTabbar = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-load');
     }
     componentWillRender() {
+        if (this.#rippleSurface?.length) {
+            this.#rippleSurface.forEach((el) => {
+                this.#kulManager.theme.ripple.setup(el);
+            });
+        }
         this.#kulManager.debug.updateDebugInfo(this, 'will-render');
     }
     componentDidRender() {

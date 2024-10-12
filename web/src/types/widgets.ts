@@ -228,6 +228,7 @@ export type ControlPanelWidgetSetter = () => {
   [CustomWidgetName.controlPanel]: BaseWidgetCallback;
 };
 export type ControlPanelWidgetDeserializedValue = {
+  backup: boolean;
   debug: boolean;
   themes: string;
 };
@@ -391,11 +392,14 @@ export interface TabBarChartWidget extends Widget {
 export interface TabBarChartWidgetOptions {
   hideOnZoom: boolean;
   getComp(): { chart: HTMLKulChartElement; tabbar: HTMLKulTabbarElement };
+  getValue(): TabBarChartWidgetValue;
   refresh(type: AnalyticsType): void;
+  setValue(value: TabBarChartWidgetValue): void;
 }
 export type TabBarChartWidgetSetter = () => {
   [CustomWidgetName.tabBarChart]: BaseWidgetCallback;
 };
+export type TabBarChartWidgetValue = string;
 
 /*-------------------------------------------------------------------*/
 /*                  T r e e   D e c l a r a t i o n s                */

@@ -1,5 +1,5 @@
 import { CustomWidgetName, } from '../types/widgets.js';
-import { createDOMWidget, deserializeValue, getKulManager, getLFManager, serializeValue, } from '../utils/common.js';
+import { createDOMWidget, deserializeValue, getApiRoutes, getKulManager, getLFManager, serializeValue, } from '../utils/common.js';
 import { handleKulEvent, sectionsFactory } from '../helpers/control-panel.js';
 const BASE_CSS_CLASS = 'lf-controlpanel';
 const TYPE = CustomWidgetName.controlPanel;
@@ -13,14 +13,18 @@ export const controlPanelFactory = {
         return {
             getValue() {
                 return serializeValue({
+                    backup: getLFManager()?.isBackupEnabled(),
                     debug: getLFManager()?.isDebug(),
                     themes: getKulManager()?.theme.name,
                 });
             },
             setValue(value) {
-                const { debug, themes } = deserializeValue(value)
+                const { backup, debug, themes } = deserializeValue(value)
                     .parsedJson;
                 const set = () => {
+                    if (backup === true || backup === false) {
+                        getLFManager().toggleBackup(backup);
+                    }
                     if (debug === true || debug === false) {
                         getLFManager().toggleDebug(debug);
                     }
@@ -52,6 +56,7 @@ export const controlPanelFactory = {
 };
 const readyCb = (domWidget) => {
     setTimeout(() => {
+        getApiRoutes().backup.new();
         contentCb(domWidget, true);
     }, 750);
 };
@@ -78,14 +83,14 @@ const contentCb = (domWidget, isReady) => {
     content.classList.add(controlPanelFactory.cssClasses.content);
 };
 const createArticle = () => {
-    const { analytics, bug, debug, metadata, theme } = sectionsFactory;
+    const { analytics, backup, bug, debug, metadata, theme } = sectionsFactory;
     const logsData = [];
     const articleData = {
         nodes: [
             {
                 children: [
                     {
-                        children: [theme(), analytics(), metadata(), debug(logsData), bug()],
+                        children: [theme(), analytics(), metadata(), backup(), debug(logsData), bug()],
                         id: 'section',
                         value: 'Control panel',
                     },

@@ -172,6 +172,7 @@ export type ControlPanelWidgetSetter = () => {
     [CustomWidgetName.controlPanel]: BaseWidgetCallback;
 };
 export type ControlPanelWidgetDeserializedValue = {
+    backup: boolean;
     debug: boolean;
     themes: string;
 };
@@ -300,11 +301,14 @@ export interface TabBarChartWidgetOptions {
         chart: HTMLKulChartElement;
         tabbar: HTMLKulTabbarElement;
     };
+    getValue(): TabBarChartWidgetValue;
     refresh(type: AnalyticsType): void;
+    setValue(value: TabBarChartWidgetValue): void;
 }
 export type TabBarChartWidgetSetter = () => {
     [CustomWidgetName.tabBarChart]: BaseWidgetCallback;
 };
+export type TabBarChartWidgetValue = string;
 export interface TreeWidget extends Widget {
     options: TreeWidgetOptions;
     type: [CustomWidgetName.tree];

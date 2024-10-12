@@ -1,6 +1,9 @@
 import { h, F as Fragment, r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, H as Host, a as getAssetPath } from './index-21ee70d9.js';
-import { k as kulManagerInstance, g as getProps, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID, e as commonjsGlobal } from './kul-manager-8205ca5d.js';
+import { k as kulManagerInstance, g as getProps, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID, e as commonjsGlobal } from './kul-manager-caaff688.js';
 
+/*-------------------------------------------------*/
+/*                    P r o p s                    */
+/*-------------------------------------------------*/
 var KulChatProps;
 (function (KulChatProps) {
     KulChatProps["kulContextWindow"] = "How many tokens the context window can handle, used to calculate the occupied space.";
@@ -590,7 +593,7 @@ const KulChat = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: '50a3cccb6b6eeedd6479535842eb8eddcac72a1c' }, this.kulStyle && (h("style", { key: '68adc6a493fedda4eba395f43881afdb2bfe0ca4', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: '7742c0b6b9a2847e824bda596c81a43279daa20c', id: KUL_WRAPPER_ID }, h("div", { key: '7a012f21f670cb12fe002bfdd735af31132289ef', class: `${this.view} ${this.view}--${this.kulLayout} ${this.view}--${this.status}` }, this.view === 'settings'
+        return (h(Host, { key: '7f25f4217fcb5829f526948b56f8695398f470bb' }, this.kulStyle && (h("style", { key: '4a4c4defd1ece21160fb267cbaf80c148de5e179', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: '3a54cf5519dd5bc193a46ff6744135ccc86f2e87', id: KUL_WRAPPER_ID }, h("div", { key: '4bebb8a0d019dcdbe9c68eeeb9f571ca3af434fa', class: `${this.view} ${this.view}--${this.kulLayout} ${this.view}--${this.status}` }, this.view === 'settings'
             ? prepSettings(this.#adapter)
             : this.status === 'ready'
                 ? prepChat(this.#adapter)
@@ -608,6 +611,9 @@ const KulChat = class {
 };
 KulChat.style = KulChatStyle0;
 
+/*-------------------------------------------------*/
+/*                    P r o p s                    */
+/*-------------------------------------------------*/
 var KulCodeProps;
 (function (KulCodeProps) {
     KulCodeProps["kulFormat"] = "Automatically formats the value.";
@@ -3659,7 +3665,7 @@ const KulCode = class {
             this.kulLanguage.toLowerCase() === '';
         const shouldPreserveSpace = this.kulPreserveSpaces ||
             (isPreserveSpaceMissing && !isLikelyTextual);
-        return (h(Host, { key: 'e114c1327295d7293a0a8c50870fcd2cb3fe4459' }, this.kulStyle && (h("style", { key: 'd8f7815a3d1654cc51b67278484890385e48be70', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: '1552a59b5fb702237f6877216b8c3ac7614d9f7f', id: KUL_WRAPPER_ID }, h("div", { key: '7e9b15bf23a76b0a5bc61fa775b95af33aafa3e3', class: "container" }, h("div", { key: '95e180dc84a606b2a084da25890adc42d2cf9ddd', class: "header" }, h("span", { key: '13ebfd6a95b085990d5097679aebc3109ea5111e', class: "title" }, this.kulLanguage), h("kul-button", { key: 'a932d69b973967c52d2c407cb263320bcfe19845', class: 'kul-slim kul-full-height', kulIcon: "content_copy", kulLabel: "Copy", kulStyling: "flat", "onKul-button-event": (e) => this.#copy(e) })), shouldPreserveSpace ? (h("pre", { class: 'language-' + this.kulLanguage, key: this.value, ref: (el) => {
+        return (h(Host, { key: '8ce1b29f6f811d6cfaa6f44a2b77bb11393d6303' }, this.kulStyle && (h("style", { key: 'b9669a7c27d9f2b6075769974d16d4d6e991d067', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: 'b6e85d94ecc65946c34130cb58d64bf3d85d54b0', id: KUL_WRAPPER_ID }, h("div", { key: 'e3b15b04ed348257e83c827b24148c134ad91a7d', class: "container" }, h("div", { key: '94114a1401917bf10682fb2d2d2b95b53bf2db08', class: "header" }, h("span", { key: '3e7af98326f1bbb6fbff593a791a7fcc43795e42', class: "title" }, this.kulLanguage), h("kul-button", { key: 'f3ff87ed8584f0a02715b23fb422335b02fc07b0', class: 'kul-slim kul-full-height', kulIcon: "content_copy", kulLabel: "Copy", kulStyling: "flat", "onKul-button-event": (e) => this.#copy(e) })), shouldPreserveSpace ? (h("pre", { class: 'language-' + this.kulLanguage, key: this.value, ref: (el) => {
                 if (el) {
                     this.#el = el;
                 }

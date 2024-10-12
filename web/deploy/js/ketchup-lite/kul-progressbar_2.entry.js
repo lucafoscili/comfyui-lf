@@ -1,7 +1,10 @@
 import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, a as getAssetPath, h, H as Host } from './index-21ee70d9.js';
-import { k as kulManagerInstance, g as getProps, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './kul-manager-8205ca5d.js';
+import { k as kulManagerInstance, g as getProps, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './kul-manager-caaff688.js';
 import { K as KulDataCyAttributes } from './GenericTypes-8038330a.js';
 
+/*-------------------------------------------------*/
+/*                    P r o p s                    */
+/*-------------------------------------------------*/
 var KulProgressbarProps;
 (function (KulProgressbarProps) {
     KulProgressbarProps["kulCenteredLabel"] = "Displays the label in the middle of the progress bar. It's the default for the radial variant and can't be changed.";
@@ -125,7 +128,7 @@ const KulProgressbar = class {
             ['--kul_progressbar_percentage_width']: `${this.kulValue}%`,
             ['--kul_progressbar_transform']: `rotate(${this.kulValue * 3.6}deg)`,
         };
-        return (h(Host, { key: 'f25c35323db123e01745ccf33089d0bd6a225921' }, this.kulStyle && (h("style", { key: '79301f9305224ee9293e3c7317c7e4347889e0e8', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: '21b8aa3718a0b2c64f8c29a5fd1aa72bc99a2924', id: KUL_WRAPPER_ID, style: style }, this.kulIsRadial
+        return (h(Host, { key: 'e3da6d6e7cee60d3fc8f6fd47b5500850d05835d' }, this.kulStyle && (h("style", { key: 'c01b7042f8cbb9912ddee16a0531631e6d42df7b', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: 'd7fc51caf730e1fe642a1c11db9c5554fbc02573', id: KUL_WRAPPER_ID, style: style }, this.kulIsRadial
             ? this.#prepRadialBar()
             : this.#prepProgressBar())));
     }
@@ -135,6 +138,9 @@ const KulProgressbar = class {
 };
 KulProgressbar.style = KulProgressbarStyle0;
 
+/*-------------------------------------------------*/
+/*                    P r o p s                    */
+/*-------------------------------------------------*/
 var KulTextfieldProps;
 (function (KulTextfieldProps) {
     KulTextfieldProps["kulDisabled"] = "Enables or disables the text field to prevent user interaction.";
@@ -399,7 +405,7 @@ const KulTextfield = class {
         this.status.forEach((status) => {
             classList.push(`textfield--${status}`);
         });
-        return (h(Host, { key: 'dfbe0c31d1d4a5f495e77629b60d39cd8e9d8c10' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '193a9fb3fe5b1c03f9fb5058a5ac530d76f15c61', id: KUL_WRAPPER_ID }, h("div", { key: '02cbb1613c6cd8a4874658d68c51ec121fc313ae', class: classList.join(' ') }, this.kulStyling === 'textarea'
+        return (h(Host, { key: '471474f3e057f40832f8d9342b988afa480cfc89' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '0eeaa32f5313800d5fbf9e1ca20a77c5dc9d096d', id: KUL_WRAPPER_ID }, h("div", { key: '69b1bf3fc35deede97c867b1145802cc79bd1e7e', class: classList.join(' ') }, this.kulStyling === 'textarea'
             ? [
                 this.#prepCounter(),
                 this.#prepIcon(),

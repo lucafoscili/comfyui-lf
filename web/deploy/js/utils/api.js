@@ -22,19 +22,19 @@ export const cardPlaceholders = (widget, count) => {
     widget.options.setValue(JSON.stringify(dummyValue));
 };
 export const fetchModelMetadata = async (models, forcedSave = false) => {
-    const promises = models.map(({ dataset, hash, path, apiFlag }) => {
+    const promises = models.map(async ({ dataset, hash, path, apiFlag }) => {
         if (apiFlag) {
-            return getApiRoutes()
-                .modelInfoFromCivitAI(hash, forcedSave)
-                .then(onResponse.bind(onResponse, dataset, path, hash));
+            const payload = await getApiRoutes().metadata.get(hash);
+            return onResponse(dataset, path, hash, forcedSave, payload);
         }
         else {
-            return onResponse(dataset, path, hash, null);
+            return onResponse(dataset, path, hash, forcedSave, null);
         }
     });
     return Promise.all(promises);
 };
-const onResponse = async (dataset, path, hash, r) => {
+const onResponse = async (dataset, path, hash, forcedSave, payload) => {
+    const r = payload?.data;
     const id = r?.id;
     const props = {
         kulStyle: '.sub-2.description { white-space: pre-wrap; }',
@@ -44,7 +44,7 @@ const onResponse = async (dataset, path, hash, r) => {
             const civitaiDataset = prepareValidDataset(r);
             props.kulData = civitaiDataset;
             props.kulStyle = '.sub-2.description { white-space: pre-wrap; }';
-            getApiRoutes().saveModelMetadata(path, civitaiDataset);
+            getApiRoutes().metadata.save(path, civitaiDataset, forcedSave);
             break;
         case 'string':
             const node = dataset.nodes[0];

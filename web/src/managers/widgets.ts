@@ -168,8 +168,11 @@ export class LFWidgets {
     ) => messengerFactory.options(messenger, placeholder),
     [CustomWidgetName.rollViewer]: (rollViewer: HTMLKulProgressbarElement, nodeType: NodeType) =>
       rollViewerFactory.options(rollViewer, nodeType),
-    [CustomWidgetName.tabBarChart]: (wrapper: HTMLDivElement) =>
-      tabBarChartFactory.options(wrapper),
+    [CustomWidgetName.tabBarChart]: (
+      chart: HTMLKulChartElement,
+      tabbar: HTMLKulTabbarElement,
+      textfield: HTMLKulTextfieldElement,
+    ) => tabBarChartFactory.options(chart, tabbar, textfield),
     [CustomWidgetName.tree]: (tree: HTMLKulTreeElement) => treeFactory.options(tree),
     [CustomWidgetName.upload]: (upload: HTMLKulUploadElement) => uploadFactory.options(upload),
   };

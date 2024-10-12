@@ -11,6 +11,7 @@ import {
 import {
   createDOMWidget,
   deserializeValue,
+  getApiRoutes,
   getKulManager,
   getLFManager,
   serializeValue,
@@ -30,15 +31,19 @@ export const controlPanelFactory = {
     return {
       getValue() {
         return serializeValue({
+          backup: getLFManager()?.isBackupEnabled(),
           debug: getLFManager()?.isDebug(),
           themes: getKulManager()?.theme.name,
         });
       },
       setValue(value) {
-        const { debug, themes } = deserializeValue(value)
+        const { backup, debug, themes } = deserializeValue(value)
           .parsedJson as ControlPanelWidgetDeserializedValue;
 
         const set = () => {
+          if (backup === true || backup === false) {
+            getLFManager().toggleBackup(backup);
+          }
           if (debug === true || debug === false) {
             getLFManager().toggleDebug(debug);
           }
@@ -73,6 +78,7 @@ export const controlPanelFactory = {
 
 const readyCb = (domWidget: HTMLDivElement) => {
   setTimeout(() => {
+    getApiRoutes().backup.new();
     contentCb(domWidget, true);
   }, 750);
 };
@@ -105,14 +111,14 @@ const contentCb = (domWidget: HTMLDivElement, isReady: boolean) => {
 };
 
 const createArticle = () => {
-  const { analytics, bug, debug, metadata, theme } = sectionsFactory;
+  const { analytics, backup, bug, debug, metadata, theme } = sectionsFactory;
   const logsData: KulArticleNode[] = [];
   const articleData: KulArticleDataset = {
     nodes: [
       {
         children: [
           {
-            children: [theme(), analytics(), metadata(), debug(logsData), bug()],
+            children: [theme(), analytics(), metadata(), backup(), debug(logsData), bug()],
             id: 'section',
             value: 'Control panel',
           },

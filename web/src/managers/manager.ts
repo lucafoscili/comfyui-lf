@@ -7,11 +7,12 @@ import { getKulManager } from '../utils/common.js';
 import { LFNodes } from './nodes.js';
 import { LFWidgets } from './widgets.js';
 import {
-  AnalyticsType,
+  BaseAPIPayload,
   ComfyAPIs,
-  FetchAnalyticsAPIPayload,
+  GetAnalyticsAPIPayload,
+  GetMetadataAPIPayload,
+  LFEndpoints,
   LogSeverity,
-  SaveModelAPIPayload,
 } from '../types/manager.js';
 import { Extension } from '../types/nodes.js';
 import {
@@ -82,49 +83,253 @@ const LOG_STYLE = {
 
 export class LFManager {
   #APIS: ComfyAPIs = {
-    clearModelMetadata: async () => {
-      try {
-        await api
-          .fetchApi('/comfyui-lf/clear-model-info', {
+    analytics: {
+      clear: async (type) => {
+        const payload: BaseAPIPayload = {
+          message: '',
+          status: LogSeverity.Info,
+        };
+
+        try {
+          const body = new FormData();
+          body.append('type', type);
+
+          const response: Response = await api.fetchApi(LFEndpoints.ClearAnalytics, {
+            body,
             method: 'POST',
-          })
-          .then((res: Response) => {
-            try {
-              return res.json();
-            } catch (error) {
-              this.log(
-                'Error parsing response when deleting metadata files.',
-                { error },
-                LogSeverity.Error,
-              );
-              return res.json();
-            }
           });
-      } catch (error) {
-        this.log("Error deleting model's metadata.", { error }, LogSeverity.Error);
-      }
+
+          const code = response.status;
+
+          switch (code) {
+            case 200:
+              const p: BaseAPIPayload = await response.json();
+              if (p.status === 'success') {
+                payload.message = p.message;
+                payload.status = LogSeverity.Error;
+                this.#CACHED_DATASETS.usage = {};
+              }
+              break;
+            case 404:
+              payload.message = `Analytics not found: ${type}. Skipping deletion.`;
+              payload.status = LogSeverity.Info;
+              break;
+            default:
+              payload.message = `Unexpected response from the clear-analytics ${type} API: ${p.message}`;
+              payload.status = LogSeverity.Error;
+              break;
+          }
+        } catch (error) {
+          payload.message = error;
+          payload.status = LogSeverity.Error;
+        }
+
+        this.log(payload.message, { payload }, payload.status);
+        return payload;
+      },
+      get: async (directory, type) => {
+        const payload: GetAnalyticsAPIPayload = {
+          data: {},
+          message: '',
+          status: LogSeverity.Info,
+        };
+
+        if (!directory || !type) {
+          payload.message = `Missing directory (received ${directory}) or  (received ${type}).`;
+          payload.status = LogSeverity.Error;
+          this.log(payload.message, { payload }, LogSeverity.Error);
+          return payload;
+        }
+
+        try {
+          const body = new FormData();
+          body.append('directory', directory);
+          body.append('type', type);
+
+          const response = await api.fetchApi(LFEndpoints.GetAnalytics, {
+            body,
+            method: 'POST',
+          });
+
+          const code = response.status;
+
+          switch (code) {
+            case 200:
+              const p: GetAnalyticsAPIPayload = await response.json();
+              if (p.status === 'success') {
+                payload.data = p.data;
+                payload.message = 'Analytics data fetched successfully.';
+                payload.status = LogSeverity.Success;
+                this.log(payload.message, { payload }, payload.status);
+                this.#CACHED_DATASETS.usage = payload.data;
+              }
+              break;
+            case 404:
+              payload.status = LogSeverity.Info;
+              this.log(`${type} analytics file not found.`, { payload }, payload.status);
+              break;
+            default:
+              payload.message = `Unexpected response from the get-analytics ${type} API: ${p.message}`;
+              payload.status = LogSeverity.Error;
+              break;
+          }
+        } catch (error) {
+          payload.message = error;
+          payload.status = LogSeverity.Error;
+        }
+
+        this.log(payload.message, { payload }, payload.status);
+        return payload;
+      },
     },
-    clearAnalyticsData: async (type: AnalyticsType) => {
-      try {
-        await api
-          .fetchApi(`/comfyui-lf/clear-${type}-analytics`, {
+    backup: {
+      new: async (backupType = 'automatic') => {
+        const payload: BaseAPIPayload = {
+          message: '',
+          status: LogSeverity.Info,
+        };
+
+        try {
+          const body = new FormData();
+          body.append('backup_type', backupType);
+          const response = await api.fetchApi(LFEndpoints.NewBackup, { body, method: 'POST' });
+
+          const code = response.status;
+
+          switch (code) {
+            case 200:
+              const p: BaseAPIPayload = await response.json();
+              if (p.status === 'success') {
+                payload.message = p.message;
+                payload.status = LogSeverity.Success;
+              }
+              break;
+            default:
+              payload.message = 'Unexpected response from the API!';
+              payload.status = LogSeverity.Error;
+              break;
+          }
+        } catch (error) {
+          payload.message = error;
+          payload.status = LogSeverity.Error;
+        }
+
+        this.log(payload.message, { payload }, payload.status);
+        return payload;
+      },
+    },
+    metadata: {
+      clear: async () => {
+        const payload: BaseAPIPayload = {
+          message: '',
+          status: LogSeverity.Info,
+        };
+
+        try {
+          const response = await api.fetchApi(LFEndpoints.ClearMetadata, {
             method: 'POST',
-          })
-          .then((res: Response) => {
-            try {
-              return res.json();
-            } catch (error) {
-              this.log(
-                'Error parsing response when deleting analytics files.',
-                { error },
-                LogSeverity.Error,
-              );
-              return res.json();
-            }
           });
-      } catch (error) {
-        this.log('Error deleting analytics data.', { error }, LogSeverity.Error);
-      }
+
+          const code = response.status;
+
+          switch (code) {
+            case 200:
+              const p: BaseAPIPayload = await response.json();
+              if (p.status === 'success') {
+                payload.message = p.message;
+                payload.status = LogSeverity.Success;
+              }
+              break;
+            default:
+              payload.message = 'Unexpected response from the API!';
+              payload.status = LogSeverity.Error;
+              break;
+          }
+        } catch (error) {
+          payload.message = error;
+          payload.status = LogSeverity.Error;
+        }
+
+        this.log(payload.message, { payload }, payload.status);
+        return payload;
+      },
+      get: async (hash) => {
+        const payload: GetMetadataAPIPayload = {
+          data: null,
+          message: '',
+          status: LogSeverity.Info,
+        };
+
+        try {
+          const response = await fetch(`https://civitai.com/api/v1/model-versions/by-hash/${hash}`);
+
+          const code = response.status;
+
+          switch (code) {
+            case 200:
+              const p: GetMetadataAPIPayload['data'] = await response.json();
+              payload.data = p;
+              payload.message = 'Metadata succesfully fetched from CivitAI.';
+              payload.status = LogSeverity.Success;
+              break;
+            case 404:
+              payload.message = 'Model not found on CivitAI!';
+              payload.status = LogSeverity.Info;
+              break;
+            default:
+              payload.message = 'Unexpected response from the API!';
+              payload.status = LogSeverity.Error;
+              break;
+          }
+        } catch (error) {
+          payload.message = error;
+          payload.status = LogSeverity.Error;
+        }
+
+        this.log(payload.message, { payload }, payload.status);
+        return payload;
+      },
+      save: async (modelPath, dataset, forcedSave = false) => {
+        const payload: GetMetadataAPIPayload = {
+          data: null,
+          message: '',
+          status: LogSeverity.Info,
+        };
+
+        try {
+          const body = new FormData();
+          body.append('model_path', modelPath);
+          body.append('metadata', JSON.stringify(dataset));
+          body.append('forced_save', String(forcedSave).valueOf());
+
+          const response = await api.fetchApi(LFEndpoints.SaveMetadata, {
+            method: 'POST',
+            body,
+          });
+
+          const code = response.status;
+
+          switch (code) {
+            case 200:
+              const p: BaseAPIPayload = await response.json();
+              if (p.status === 'success') {
+                payload.message = p.message;
+                payload.status = LogSeverity.Success;
+              }
+              break;
+            default:
+              payload.message = 'Unexpected response from the API!';
+              payload.status = LogSeverity.Error;
+              break;
+          }
+        } catch (error) {
+          payload.message = error;
+          payload.status = LogSeverity.Error;
+        }
+
+        this.log(payload.message, { payload }, payload.status);
+        return payload;
+      },
     },
     event: (name, callback) => {
       api.addEventListener(name, callback);
@@ -135,33 +340,6 @@ export class LFManager {
         body,
       });
     },
-    fetchAnalyticsData: async (type): Promise<FetchAnalyticsAPIPayload> => {
-      try {
-        const response = await api.fetchApi(`/comfyui-lf/get-${type}-analytics`, {
-          method: 'GET',
-        });
-
-        const code = response.status;
-
-        if (code === 200) {
-          const data: FetchAnalyticsAPIPayload = await response.json();
-          if (data.status === 'success') {
-            this.log('Analytics data fetched successfully.', { data }, LogSeverity.Success);
-          }
-          this.#CACHED_DATASETS.usage = data.data;
-          return data;
-        }
-        if (code === 404) {
-          this.log(`${type} analytics file not found.`, {}, LogSeverity.Info);
-          return { data: {}, status: 'not found' };
-        }
-        this.log('Unexpected response from the API!', { status: code }, LogSeverity.Error);
-        return { data: {}, status: 'error' };
-      } catch (error) {
-        this.log('Error fetching analytics data.', { error }, LogSeverity.Error);
-        return { data: {}, status: 'error' };
-      }
-    },
     getLinkById: (id: string) => {
       return app.graph.links[String(id).valueOf()];
     },
@@ -170,25 +348,6 @@ export class LFManager {
     },
     interrupt: () => {
       return api.interrupt();
-    },
-    modelInfoFromCivitAI: async (hash: string) => {
-      try {
-        const r = await fetch(`https://civitai.com/api/v1/model-versions/by-hash/${hash}`);
-        const code = r.status;
-        switch (code) {
-          case 200:
-            return await r.json();
-          case 404:
-            this.log('Model not found on CivitAI!', { r }, LogSeverity.Info);
-            return { id: 'Model not found!' };
-          default:
-            this.log("Error when fetching model's info from CivitAI!", { r }, LogSeverity.Error);
-            break;
-        }
-      } catch (error) {
-        this.log("Error when fetching model's info from CivitAI!", { error }, LogSeverity.Error);
-        return { id: 'Something went wrong!' };
-      }
     },
     queuePrompt: async () => {
       app.queuePrompt(0);
@@ -199,41 +358,8 @@ export class LFManager {
     register: (extension: Extension) => {
       app.registerExtension(extension);
     },
-    saveModelMetadata: (modelPath, dataset, forcedSave = false) => {
-      const body = new FormData();
-      body.append('model_path', modelPath);
-      body.append('metadata', JSON.stringify(dataset));
-      body.append('forced_save', String(forcedSave).valueOf());
-      try {
-        api
-          .fetchApi('/comfyui-lf/save-model-info', {
-            method: 'POST',
-            body,
-          })
-          .then((res: Response) => {
-            try {
-              return res.json();
-            } catch (error) {
-              this.log(
-                'Error parsing response when saving metadata.',
-                { error },
-                LogSeverity.Error,
-              );
-              return res.json();
-            }
-          })
-          .then((data: SaveModelAPIPayload) => {
-            if (data.status === 'success') {
-              this.log('Metadata for this model saved successfully.', {}, LogSeverity.Info);
-            } else if (data.status === 'exists') {
-              this.log('Metadata for this model already exists.', {}, LogSeverity.Warning);
-            }
-          });
-      } catch (error) {
-        this.log("Error saving model's metadata.", { error }, LogSeverity.Error);
-      }
-    },
   };
+  #AUTOMATIC_BACKUP = true;
   #CACHED_DATASETS: { usage: KulDataDataset } = {
     usage: null,
   };
@@ -764,6 +890,10 @@ export class LFManager {
     this.#INITIALIZED = true;
   }
 
+  isBackupEnabled() {
+    return this.#AUTOMATIC_BACKUP;
+  }
+
   isDebug() {
     return this.#DEBUG;
   }
@@ -817,6 +947,17 @@ export class LFManager {
   setDebugDataset(article: HTMLKulArticleElement, dataset: KulArticleNode[]) {
     this.#DEBUG_ARTICLE = article;
     this.#DEBUG_DATASET = dataset;
+  }
+
+  toggleBackup(value?: boolean) {
+    if (value === false || value === true) {
+      this.#AUTOMATIC_BACKUP = value;
+    } else {
+      this.#AUTOMATIC_BACKUP = !this.#AUTOMATIC_BACKUP;
+    }
+    this.log(`Automatic backup active: '${this.#DEBUG}'`, { value }, LogSeverity.Warning);
+
+    return this.#DEBUG;
   }
 
   toggleDebug(value?: boolean) {

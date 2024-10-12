@@ -1,6 +1,9 @@
 import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-21ee70d9.js';
-import { k as kulManagerInstance, g as getProps, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './kul-manager-8205ca5d.js';
+import { k as kulManagerInstance, g as getProps, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './kul-manager-caaff688.js';
 
+/*-------------------------------------------------*/
+/*                    P r o p s                    */
+/*-------------------------------------------------*/
 var KulHeaderProps;
 (function (KulHeaderProps) {
     KulHeaderProps["kulStyle"] = "Custom style of the component.";
@@ -83,7 +86,7 @@ const KulHeader = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: '1c49948efa6a665b4e62d34b7fa83410f0cd0365', class: "header" }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'ba7c4cb52e7b4d248e4cc40baa29460e3adc3091', id: KUL_WRAPPER_ID }, h("header", { key: '01eb57a59a943358312d2b3ce03351fa373170ef', class: "header" }, h("section", { key: '656e84372d748d24465dd48ad0eef2744e3c9c33', class: "header__section" }, h("slot", { key: 'f297f8d0dc1278f1891018c94f0d301006d14c7c', name: "content" }))))));
+        return (h(Host, { key: '28c52b77b473033f00c6518bd43064f7d652cb0e', class: "header" }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '5b0a2985d28b4ee99f6b15fcfdf568e4c6c43880', id: KUL_WRAPPER_ID }, h("header", { key: '3f11f631797bff0bb1a4b6c1d8e9af2502a699f3', class: "header" }, h("section", { key: '7f81478e92b07877ddbe2fb317e65eb7b19af4ed', class: "header__section" }, h("slot", { key: '3c05f27690212861401e5bf282c696b78d234119', name: "content" }))))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

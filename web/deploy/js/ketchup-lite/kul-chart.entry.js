@@ -1,6 +1,9 @@
 import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-21ee70d9.js';
-import { k as kulManagerInstance, g as getProps, b as KulThemeColorValues, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './kul-manager-8205ca5d.js';
+import { k as kulManagerInstance, g as getProps, b as KulThemeColorValues, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './kul-manager-caaff688.js';
 
+/*-------------------------------------------------*/
+/*                    P r o p s                    */
+/*-------------------------------------------------*/
 var KulChartProps;
 (function (KulChartProps) {
     KulChartProps["kulAxis"] = "Sets the axis of the chart.";
@@ -85496,7 +85499,7 @@ const KulChart = class {
             '--kul_chart_height': this.kulSizeY ? this.kulSizeY : '100%',
             '--kul_chart_width': this.kulSizeX ? this.kulSizeX : '100%',
         };
-        return (h(Host, { key: '2c4f75e599e89cc364ac4ccb1cfb983dbfe54559', style: style }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '7722f0707252188e59244676ea605c9d71c9f97e', id: KUL_WRAPPER_ID, ref: (chartContainer) => (this.#chartContainer = chartContainer) })));
+        return (h(Host, { key: '4ce6375997027a3bef51ea364c0c820777985e3d', style: style }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '7834270ec9ded9d39be9cf07e5f2fa1de32f261b', id: KUL_WRAPPER_ID, ref: (chartContainer) => (this.#chartContainer = chartContainer) })));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

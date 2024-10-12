@@ -1,6 +1,9 @@
 import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, a as getAssetPath, h, H as Host } from './index-21ee70d9.js';
-import { k as kulManagerInstance, g as getProps, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './kul-manager-8205ca5d.js';
+import { k as kulManagerInstance, g as getProps, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './kul-manager-caaff688.js';
 
+/*-------------------------------------------------*/
+/*                    P r o p s                    */
+/*-------------------------------------------------*/
 var KulAccordionProps;
 (function (KulAccordionProps) {
     KulAccordionProps["kulData"] = "Actual data of the accordion.";
@@ -74,6 +77,13 @@ const KulAccordion = class {
      */
     async getProps(descriptions) {
         return getProps(this, KulAccordionProps, descriptions);
+    }
+    /**
+     * Returns the selected nodes.
+     * @returns {Promise<KulDataNode[]>} Selected nodes.
+     */
+    async getSelectedNodes() {
+        return this.selectedNodes;
     }
     /**
      * This method is used to trigger a new render of the component.
@@ -187,7 +197,7 @@ const KulAccordion = class {
     }
     render() {
         this.#rippleSurface = {};
-        return (h(Host, { key: '1645f206dc2765124cb9fb3738f3644596df891b' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '8b39d315838d7de96589a33208c15132a0b83def', id: KUL_WRAPPER_ID }, h("div", { key: '652adbe8d8d49c1fec09364d5c7c9905e2c5a68c', class: "accordion" }, this.#prepAccordion()))));
+        return (h(Host, { key: 'd16d6da3f45552cfc43e18f2e3c213108cbe20c6' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '40ba8792a17978a22f7bb4b21104eb1a536bf694', id: KUL_WRAPPER_ID }, h("div", { key: 'a8362575b746b358d546deadee15d8d1c9069866', class: "accordion" }, this.#prepAccordion()))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

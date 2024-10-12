@@ -190,9 +190,9 @@ class LF_LoadLocalJSON:
             url = "file://" + url
         
         file_path = requests.utils.unquote(url[7:])
-        with open(file_path, 'r') as file:
+        with open(file_path, 'r', encoding='utf-8') as file:
             data = json.load(file)
-
+            
         return (data,)
     
 class LF_LoadMetadata:

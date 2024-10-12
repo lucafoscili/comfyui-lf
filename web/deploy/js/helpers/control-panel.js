@@ -1,7 +1,10 @@
 import { getApiRoutes, getKulManager, getKulThemes, getLFManager, isButton, isSwitch, } from '../utils/common.js';
 var Labels;
 (function (Labels) {
+    Labels["AUTO_BACKUP"] = "Automatic Backup";
+    Labels["BACKUP"] = "Backup now";
     Labels["CLEAR_LOGS"] = "Clear logs";
+    Labels["DEBUG"] = "Debug";
     Labels["DELETE_USAGE"] = "Delete usage analytics info";
     Labels["DELETE_METADATA"] = "Delete models info";
     Labels["DONE"] = "Done!";
@@ -42,21 +45,42 @@ export const handleKulEvent = (e) => {
 const handleButtonEvent = (e) => {
     const { comp, eventType, originalEvent } = e.detail;
     const c = comp.rootElement;
-    const onResponse = () => {
-        c.kulDisabled = true;
-        c.kulIcon = 'check';
-        c.kulLabel = Labels.DONE;
-        c.kulShowSpinner = false;
+    const createSpinner = () => {
+        const spinner = document.createElement('kul-spinner');
+        spinner.kulActive = true;
+        spinner.kulDimensions = '0.6em';
+        spinner.kulLayout = 2;
+        spinner.slot = 'spinner';
+        return spinner;
     };
-    const restore = (label) => {
-        c.kulDisabled = false;
-        c.kulLabel = label;
-        c.kulIcon = 'delete';
-        TIMEOUT = null;
+    const invokeAPI = (promise, label) => {
+        const onResponse = () => {
+            c.kulDisabled = true;
+            c.kulIcon = 'check';
+            c.kulLabel = Labels.DONE;
+            c.kulShowSpinner = false;
+        };
+        const restore = (label) => {
+            c.kulDisabled = false;
+            c.kulLabel = label;
+            c.kulIcon = 'delete';
+            TIMEOUT = null;
+        };
+        requestAnimationFrame(() => (c.kulShowSpinner = true));
+        promise.then(() => {
+            requestAnimationFrame(onResponse);
+            if (TIMEOUT) {
+                clearTimeout(TIMEOUT);
+            }
+            TIMEOUT = setTimeout(() => requestAnimationFrame(() => restore(label)), 1000);
+        });
     };
     switch (eventType) {
         case 'click':
             switch (c.kulLabel) {
+                case Labels.BACKUP:
+                    invokeAPI(getApiRoutes().backup.new('manual'), Labels.BACKUP);
+                    break;
                 case Labels.CLEAR_LOGS:
                     const { article, dataset } = getLFManager().getDebugDataset();
                     if (dataset?.length > 0) {
@@ -65,28 +89,10 @@ const handleButtonEvent = (e) => {
                     }
                     break;
                 case Labels.DELETE_METADATA:
-                    requestAnimationFrame(() => (c.kulShowSpinner = true));
-                    getApiRoutes()
-                        .clearModelMetadata()
-                        .then(() => {
-                        requestAnimationFrame(onResponse);
-                        if (TIMEOUT) {
-                            clearTimeout(TIMEOUT);
-                        }
-                        TIMEOUT = setTimeout(() => requestAnimationFrame(() => restore(Labels.DELETE_METADATA)), 1000);
-                    });
+                    invokeAPI(getApiRoutes().metadata.clear(), Labels.DELETE_METADATA);
                     break;
                 case Labels.DELETE_USAGE:
-                    requestAnimationFrame(() => (c.kulShowSpinner = true));
-                    getApiRoutes()
-                        .clearAnalyticsData('usage')
-                        .then(() => {
-                        requestAnimationFrame(onResponse);
-                        if (TIMEOUT) {
-                            clearTimeout(TIMEOUT);
-                        }
-                        TIMEOUT = setTimeout(() => requestAnimationFrame(() => restore(Labels.DELETE_USAGE)), 1000);
-                    });
+                    invokeAPI(getApiRoutes().analytics.clear('usage'), Labels.DELETE_USAGE);
                     break;
                 case Labels.OPEN_ISSUE:
                     window.open('https://github.com/lucafoscili/comfyui-lf/issues/new', '_blank');
@@ -102,15 +108,15 @@ const handleButtonEvent = (e) => {
             handleListEvent(originalEvent);
             break;
         case 'ready':
-            if (c.kulLabel === Labels.DELETE_METADATA || c.kulLabel === Labels.DELETE_USAGE) {
-                c.classList.add('kul-danger');
-                const spinner = document.createElement('kul-spinner');
-                spinner.kulActive = true;
-                spinner.kulDimensions = '0.6em';
-                spinner.kulLayout = 2;
-                spinner.slot = 'spinner';
-                c.appendChild(spinner);
-                break;
+            switch (c.kulLabel) {
+                case Labels.BACKUP:
+                    c.appendChild(createSpinner());
+                    break;
+                case Labels.DELETE_METADATA:
+                case Labels.DELETE_USAGE:
+                    c.classList.add('kul-danger');
+                    c.appendChild(createSpinner());
+                    break;
             }
     }
 };
@@ -204,6 +210,80 @@ export const sectionsFactory = {
             ],
         };
     },
+    backup: () => {
+        return {
+            id: 'section',
+            value: 'Backup',
+            children: [
+                {
+                    id: 'paragraph',
+                    value: 'Toggle on/off',
+                    children: [
+                        {
+                            id: 'content',
+                            value: 'Toggle this switch to automatically back up the folder <path/to/your/comfyui/user/LF_Nodes> once a day (the first time you open this workflow).',
+                        },
+                        {
+                            id: 'content',
+                            tagName: 'br',
+                            value: '',
+                        },
+                        {
+                            id: 'content',
+                            value: '',
+                            cells: {
+                                kulSwitch: {
+                                    kulLabel: Labels.AUTO_BACKUP,
+                                    kulLeadingLabel: true,
+                                    kulStyle: ':host { text-align: center; padding: 16px 0; }',
+                                    shape: 'switch',
+                                    value: !!getLFManager().isBackupEnabled(),
+                                },
+                            },
+                        },
+                    ],
+                },
+                {
+                    id: 'paragraph',
+                    value: 'Backup files',
+                    children: [
+                        {
+                            id: 'content',
+                            value: 'This button will create a manual backup of the content in <path/to/your/comfyui/user/LF_Nodes>',
+                        },
+                        {
+                            id: 'content',
+                            tagName: 'br',
+                            value: '',
+                        },
+                        {
+                            id: 'content',
+                            value: "Be sure to include as much information as you can, without sufficient data it's difficult to troubleshoot problems.",
+                        },
+                        {
+                            id: 'content',
+                            value: '',
+                            cells: {
+                                kulButton: {
+                                    kulIcon: 'backup',
+                                    kulLabel: Labels.BACKUP,
+                                    kulStyle: ':host { margin: auto; padding:16px 0 }',
+                                    kulStyling: 'raised',
+                                    shape: 'button',
+                                    value: '',
+                                },
+                            },
+                        },
+                        {
+                            cssStyle: STYLES.separator(),
+                            id: 'content_separator',
+                            value: '',
+                        },
+                    ],
+                },
+            ],
+        };
+    },
     bug: () => {
         return {
             id: 'section',
@@ -240,11 +320,6 @@ export const sectionsFactory = {
                                 },
                             },
                         },
-                        {
-                            cssStyle: STYLES.separator(),
-                            id: 'content_separator',
-                            value: '',
-                        },
                     ],
                 },
             ],
@@ -268,7 +343,7 @@ export const sectionsFactory = {
                             value: '',
                             cells: {
                                 kulSwitch: {
-                                    kulLabel: 'Debug',
+                                    kulLabel: Labels.DEBUG,
                                     kulLeadingLabel: true,
                                     kulStyle: ':host { text-align: center; padding: 16px 0; }',
                                     shape: 'switch',

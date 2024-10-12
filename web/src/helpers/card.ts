@@ -1,4 +1,4 @@
-import { KulEventPayload } from '../types/ketchup-lite/components';
+import { KulCardEventPayload } from '../types/ketchup-lite/components';
 import { KulCard } from '../types/ketchup-lite/components/kul-card/kul-card';
 import { LogSeverity } from '../types/manager';
 import { getLFManager, deserializeValue } from '../utils/common';
@@ -53,7 +53,7 @@ export const cardHandler = (
   return count;
 };
 
-export const cardEventHandler = (e: CustomEvent<KulEventPayload>) => {
+export const cardEventHandler = (e: CustomEvent<KulCardEventPayload>) => {
   const { comp, eventType } = e.detail;
   const card = comp as KulCard;
   const node = card.kulData?.nodes?.[0];

@@ -1,7 +1,10 @@
 import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, H as Host, F as Fragment, a as getAssetPath } from './index-21ee70d9.js';
-import { k as kulManagerInstance, g as getProps, b as KulThemeColorValues, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID, f as KUL_DROPDOWN_CLASS_VISIBLE, h as KulDynamicPositionPlacement, i as KUL_DROPDOWN_CLASS, C as CSS_VAR_PREFIX, d as KulLanguageGeneric } from './kul-manager-8205ca5d.js';
+import { k as kulManagerInstance, g as getProps, b as KulThemeColorValues, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID, f as KUL_DROPDOWN_CLASS_VISIBLE, h as KulDynamicPositionPlacement, i as KUL_DROPDOWN_CLASS, C as CSS_VAR_PREFIX, d as KulLanguageGeneric } from './kul-manager-caaff688.js';
 import { K as KulDataCyAttributes } from './GenericTypes-8038330a.js';
 
+/*-------------------------------------------------*/
+/*                    P r o p s                    */
+/*-------------------------------------------------*/
 var KulBadgeProps;
 (function (KulBadgeProps) {
     KulBadgeProps["kulImageProps"] = "The props of the image displayed inside the badge.";
@@ -93,9 +96,9 @@ const KulBadge = class {
             if (!this.kulImageProps.kulColor) {
                 this.kulImageProps.kulColor = `var(${KulThemeColorValues.TEXT_ON_PRIMARY})`;
             }
-            imageEl = h("kul-image", { key: 'f65b8916f94dc6a0dea85e57530f30c86793b7fb', ...this.kulImageProps });
+            imageEl = h("kul-image", { key: '5b4695412198cdf0cd226a4978962aaa4f5c236e', ...this.kulImageProps });
         }
-        return (h(Host, { key: 'bd45fceada49a7a608dcb7e0def329f563d563d4' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'd52516de97df4356f7d2dd4568e49e2302f5dbf3', id: KUL_WRAPPER_ID, onClick: (e) => this.onKulEvent(e, 'click') }, this.kulLabel, imageEl)));
+        return (h(Host, { key: 'b87c8e7521b0b33d3db0070b1590d59599242f97' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '18d7dc0d0388ddb4c026c10798c3b0e1fd9a98a0', id: KUL_WRAPPER_ID, onClick: (e) => this.onKulEvent(e, 'click') }, this.kulLabel, imageEl)));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);
@@ -103,6 +106,9 @@ const KulBadge = class {
 };
 KulBadge.style = KulBadgeStyle0;
 
+/*-------------------------------------------------*/
+/*                    P r o p s                    */
+/*-------------------------------------------------*/
 var KulButtonProps;
 (function (KulButtonProps) {
     KulButtonProps["kulData"] = "Actual data of the button, used to render dropdown buttons.";
@@ -456,6 +462,9 @@ const KulButton = class {
 };
 KulButton.style = KulButtonStyle0;
 
+/*-------------------------------------------------*/
+/*                    P r o p s                    */
+/*-------------------------------------------------*/
 var KulImageProps;
 (function (KulImageProps) {
     KulImageProps["kulBadgeProps"] = "Sets the props to show a badge.";
@@ -627,6 +636,9 @@ const KulImage = class {
 };
 KulImage.style = KulImageStyle0;
 
+/*-------------------------------------------------*/
+/*                    P r o p s                    */
+/*-------------------------------------------------*/
 var KulListProps;
 (function (KulListProps) {
     KulListProps["kulData"] = "The actual data of the list.";
@@ -893,7 +905,7 @@ const KulList = class {
             'list--empty': isEmpty,
             'list--selectable': this.kulSelectable,
         };
-        return (h(Host, { key: '645eae73281ae9488d687e0a14f14e1f5f68e375' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '81c0875acd34854e028af4d2cd2ce96f963d092f', id: KUL_WRAPPER_ID }, isEmpty ? (h("div", { class: "empty-data" }, h("div", { class: "empty-data__text" }, this.kulEmptyLabel ||
+        return (h(Host, { key: 'fa44b43fb711717cb83b9ef2391d379787b56195' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'd2f46605d0da6e5bb49860ee879f57a343d1c857', id: KUL_WRAPPER_ID }, isEmpty ? (h("div", { class: "empty-data" }, h("div", { class: "empty-data__text" }, this.kulEmptyLabel ||
             this.#kulManager.language.translate(KulLanguageGeneric.EMPTY_DATA)))) : (h("ul", { "aria-multiselectable": 'false', class: className, role: 'listbox' }, this.kulData.nodes.map((item, index) => this.#prepNode(item, index)))))));
     }
     disconnectedCallback() {
