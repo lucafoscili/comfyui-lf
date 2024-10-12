@@ -147,6 +147,11 @@ async def backup_usage_analytics(request):
         backup_folder = os.path.join(backups_path, f"{backup_type}_{timestamp}")
         os.makedirs(backup_folder, exist_ok=True)
         
+        models_backup_folder = os.path.join(backup_folder, "models")
+        analytics_backup_folder = os.path.join(backup_folder, "analytics")
+        os.makedirs(models_backup_folder, exist_ok=True)
+        os.makedirs(analytics_backup_folder, exist_ok=True)
+        
         backed_up_files = []
 
         directories = [
@@ -156,8 +161,8 @@ async def backup_usage_analytics(request):
         ]
         
         for folder_name, directory in directories:
-            backup_subfolder = os.path.join(backup_folder, folder_name)
-            os.makedirs(backup_subfolder, exist_ok=True)
+            model_subfolder = os.path.join(models_backup_folder, folder_name)
+            os.makedirs(model_subfolder, exist_ok=True)
 
             for model_file in directory:
                 model_full_path = get_full_path(folder_name, model_file)
@@ -169,11 +174,11 @@ async def backup_usage_analytics(request):
                 info_file_path = file_no_ext + ".info"
                 
                 if os.path.exists(info_file_path):
-                    backup_path = os.path.join(backup_subfolder, os.path.basename(info_file_path))
+                    backup_path = os.path.join(model_subfolder, os.path.basename(info_file_path))
                     
                     shutil.copy2(info_file_path, backup_path)
-                    backed_up_files.append(backup_path)      
-        
+                    backed_up_files.append(backup_path)
+
         for root, _, files in os.walk(base_path):
             if backup_folder_name in root:
                 continue
@@ -181,9 +186,9 @@ async def backup_usage_analytics(request):
             for file_name in files:
                 full_path = os.path.join(root, file_name)
                 
-                if os.path.exists(full_path):
+                if os.path.exists(full_path) and file_name.endswith(".json"):
                     relative_path = os.path.relpath(full_path, base_path)
-                    backup_path = os.path.join(backup_folder, relative_path)
+                    backup_path = os.path.join(analytics_backup_folder, relative_path)
                     backup_dir = os.path.dirname(backup_path)
                     
                     os.makedirs(backup_dir, exist_ok=True)
