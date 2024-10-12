@@ -4,7 +4,6 @@ import {
   createDOMWidget,
   serializeValue,
   deserializeValue,
-  findWidget,
   getCustomWidget,
 } from '../utils/common';
 import { NodeName } from '../types/nodes';

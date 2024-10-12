@@ -86,7 +86,7 @@ const KulHeader = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: 'a2d93deb62d9644df7278a0bccd212c23150ae9a', class: "header" }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'faef65392b729ccaddfb724e6f5eb7e594035c40', id: KUL_WRAPPER_ID }, h("header", { key: 'cc97f0313d220b9d6bd48790814f25d6bc713867', class: "header" }, h("section", { key: 'b3c5625cf81fb2f6d5cad535cec291773be9af2c', class: "header__section" }, h("slot", { key: '3291d4539021ca93904114d513f1c3d2a0c410c3', name: "content" }))))));
+        return (h(Host, { key: '28c52b77b473033f00c6518bd43064f7d652cb0e', class: "header" }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '5b0a2985d28b4ee99f6b15fcfdf568e4c6c43880', id: KUL_WRAPPER_ID }, h("header", { key: '3f11f631797bff0bb1a4b6c1d8e9af2502a699f3', class: "header" }, h("section", { key: '7f81478e92b07877ddbe2fb317e65eb7b19af4ed', class: "header__section" }, h("slot", { key: '3c05f27690212861401e5bf282c696b78d234119', name: "content" }))))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

@@ -140,27 +140,27 @@ const KulLazy = class {
         switch (this.kulComponentName) {
             case 'kul-button':
                 //call_to_action.svg
-                resource = (h("svg", { key: 'a3a069d47880d50edaea353c7c7c25ecbacde99d', xmlns: "http://www.w3.org/2000/svg", width: "100%", height: "100%", viewBox: "0 0 48 48" }, h("path", { key: 'ea18a72051c64537a41f86a9e7d1e21c5538a5fc', d: "M42 6H6c-2.2 0-4 1.8-4 4v28c0 2.2 1.8 4 4 4h36c2.2 0 4-1.8 4-4V10c0-2.2-1.8-4-4-4zm0 32H6v-6h36v6z" })));
+                resource = (h("svg", { key: 'c9b19daed8dbbf9d2f40a68755af851e292d983d', xmlns: "http://www.w3.org/2000/svg", width: "100%", height: "100%", viewBox: "0 0 48 48" }, h("path", { key: '9716557e28ec116520fa45a1adc34d6207f18060', d: "M42 6H6c-2.2 0-4 1.8-4 4v28c0 2.2 1.8 4 4 4h36c2.2 0 4-1.8 4-4V10c0-2.2-1.8-4-4-4zm0 32H6v-6h36v6z" })));
                 break;
             case 'kul-card':
                 //art_track.svg
-                resource = (h("svg", { key: 'a9c5d391692569fce7d3fa41871b2710eba395b0', xmlns: "http://www.w3.org/2000/svg", width: "100%", height: "100%", viewBox: "0 0 48 48" }, h("path", { key: '81e6dceba423445f776a9f3f391ddc3f5b7572d7', d: "M44 26H28v-4h16v4zm0-12H28v4h16v-4zM28 34h16v-4H28v4zm-4-16v12c0 2.2-1.8 4-4 4H8c-2.2 0-4-1.8-4-4V18c0-2.2 1.8-4 4-4h12c2.2 0 4 1.8 4 4zm-3 12l-4.5-6-3.5 4.51-2.5-3.01L7 30h14z" })));
+                resource = (h("svg", { key: '717fe4fe5a37a5852797f7c1b20c87186f165eb0', xmlns: "http://www.w3.org/2000/svg", width: "100%", height: "100%", viewBox: "0 0 48 48" }, h("path", { key: '77798a08c6ceecee9d78229f544273aaeb2142b0', d: "M44 26H28v-4h16v4zm0-12H28v4h16v-4zM28 34h16v-4H28v4zm-4-16v12c0 2.2-1.8 4-4 4H8c-2.2 0-4-1.8-4-4V18c0-2.2 1.8-4 4-4h12c2.2 0 4 1.8 4 4zm-3 12l-4.5-6-3.5 4.51-2.5-3.01L7 30h14z" })));
                 break;
             case 'kul-checkbox':
                 //check_box_outline_blank.svg
-                resource = (h("svg", { key: '4c819c5c87bdfecd1c34db01f7064f7d55e069d3', xmlns: "http://www.w3.org/2000/svg", width: "100%", height: "100%", viewBox: "0 0 48 48" }, h("path", { key: 'a14403c74598f8639994257bf6b9e0964eac87ff', d: "M38 10v28H10V10h28m0-4H10c-2.21 0-4 1.79-4 4v28c0 2.21 1.79 4 4 4h28c2.21 0 4-1.79 4-4V10c0-2.21-1.79-4-4-4z" })));
+                resource = (h("svg", { key: '25101194edf8d70b4dcec38bb05be79e22938ec8', xmlns: "http://www.w3.org/2000/svg", width: "100%", height: "100%", viewBox: "0 0 48 48" }, h("path", { key: 'bac417050d41cecd4480b63f8fd22b522e1d2e49', d: "M38 10v28H10V10h28m0-4H10c-2.21 0-4 1.79-4 4v28c0 2.21 1.79 4 4 4h28c2.21 0 4-1.79 4-4V10c0-2.21-1.79-4-4-4z" })));
                 break;
             case 'kul-chart':
                 //chart-bar.svg
-                resource = (h("svg", { key: 'fa9bb18d8a34f2803622e3c7c5a2bd0f0a18774a', xmlns: "http://www.w3.org/2000/svg", version: "1.1", width: "100%", height: "100%", viewBox: "0 0 24 24" }, h("path", { key: '419a2e5f9ab4d3b7680afa9198d58551212683bf', d: "M22,21H2V3H4V19H6V10H10V19H12V6H16V19H18V14H22V21Z" })));
+                resource = (h("svg", { key: 'f3f3606b10281ff876fbbe3fa4693e23c6b4d798', xmlns: "http://www.w3.org/2000/svg", version: "1.1", width: "100%", height: "100%", viewBox: "0 0 24 24" }, h("path", { key: '3a74b01b24bc695514e843ab443f8ae8e671be08', d: "M22,21H2V3H4V19H6V10H10V19H12V6H16V19H18V14H22V21Z" })));
                 break;
             case 'kul-image':
                 //photo.svg
-                resource = (h("svg", { key: 'bcee5b29a4917d3c434b83118468c1d5a1df60b7', xmlns: "http://www.w3.org/2000/svg", width: "100%", height: "100%", viewBox: "0 0 48 48" }, h("path", { key: '8af93dd379ed45dc7a4acb50d839c9134f3ae17a', d: "M42 38V10c0-2.21-1.79-4-4-4H10c-2.21 0-4 1.79-4 4v28c0 2.21 1.79 4 4 4h28c2.21 0 4-1.79 4-4zM17 27l5 6.01L29 24l9 12H10l7-9z" })));
+                resource = (h("svg", { key: '34a8a7642e036533a19c12c1c1f53e9d0318b032', xmlns: "http://www.w3.org/2000/svg", width: "100%", height: "100%", viewBox: "0 0 48 48" }, h("path", { key: 'abee79ea33aca4f786f35007bf4021834eca4cb8', d: "M42 38V10c0-2.21-1.79-4-4-4H10c-2.21 0-4 1.79-4 4v28c0 2.21 1.79 4 4 4h28c2.21 0 4-1.79 4-4zM17 27l5 6.01L29 24l9 12H10l7-9z" })));
                 break;
             default:
                 //art_track.svg
-                resource = (h("svg", { key: 'd0e28aa37d2bb4b1d0ffccbda11a8e603d4f207e', xmlns: "http://www.w3.org/2000/svg", width: "100%", height: "100%", viewBox: "0 0 48 48" }, h("path", { key: '9205239823baa0f9d41d3bc794db0317f389ff12', d: "M44 26H28v-4h16v4zm0-12H28v4h16v-4zM28 34h16v-4H28v4zm-4-16v12c0 2.2-1.8 4-4 4H8c-2.2 0-4-1.8-4-4V18c0-2.2 1.8-4 4-4h12c2.2 0 4 1.8 4 4zm-3 12l-4.5-6-3.5 4.51-2.5-3.01L7 30h14z" })));
+                resource = (h("svg", { key: '4da92592e2a788aab969e78c2bb7d679336d2886', xmlns: "http://www.w3.org/2000/svg", width: "100%", height: "100%", viewBox: "0 0 48 48" }, h("path", { key: '81891df6cc3b72fad26a0a0cbe16fc9b75dbda3f', d: "M44 26H28v-4h16v4zm0-12H28v4h16v-4zM28 34h16v-4H28v4zm-4-16v12c0 2.2-1.8 4-4 4H8c-2.2 0-4-1.8-4-4V18c0-2.2 1.8-4 4-4h12c2.2 0 4 1.8 4 4zm-3 12l-4.5-6-3.5 4.51-2.5-3.01L7 30h14z" })));
                 break;
         }
         if ((this.kulRenderMode === 'viewport' && this.isInViewport) ||
@@ -169,14 +169,14 @@ const KulLazy = class {
                 this.kulComponentProps &&
                 this.isInViewport)) {
             const Tag = this.kulComponentName;
-            content = (h(Tag, { key: '6ce1de21e9255c8a8e19fe6ea49743d9c2df0f66', ...this.kulComponentProps, ref: (el) => (this.#lazyComponent = el) }));
+            content = (h(Tag, { key: '7e9ae67e432a92158552d11eb39e10c6e046cded', ...this.kulComponentProps, ref: (el) => (this.#lazyComponent = el) }));
             className += ' kul-loaded';
         }
         else if (this.kulShowPlaceholder) {
             content = resource;
             className += ' kul-to-be-loaded';
         }
-        return (h(Host, { key: '84214a09dd42e602080cabe50ed9ce617fe51b11', class: className }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '8c477855a9e074d3d53478054f0b1b2a5cb10167', id: KUL_WRAPPER_ID }, content)));
+        return (h(Host, { key: '3af441c06ff38c27957021c843b07e45c81e6a3e', class: className }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '084ad57c3dad4130cf187f12ec9e63e2b12bd7c1', id: KUL_WRAPPER_ID }, content)));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

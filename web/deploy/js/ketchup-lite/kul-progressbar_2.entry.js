@@ -128,7 +128,7 @@ const KulProgressbar = class {
             ['--kul_progressbar_percentage_width']: `${this.kulValue}%`,
             ['--kul_progressbar_transform']: `rotate(${this.kulValue * 3.6}deg)`,
         };
-        return (h(Host, { key: '1b9bc067b77b0107559b4599b176d39205d1df36' }, this.kulStyle && (h("style", { key: 'f9d02bb20a414e791069d83adc40e529570678ca', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: '5d02cbac8071b2b17d0a8ff9bb921423a40e0806', id: KUL_WRAPPER_ID, style: style }, this.kulIsRadial
+        return (h(Host, { key: 'e3da6d6e7cee60d3fc8f6fd47b5500850d05835d' }, this.kulStyle && (h("style", { key: 'c01b7042f8cbb9912ddee16a0531631e6d42df7b', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: 'd7fc51caf730e1fe642a1c11db9c5554fbc02573', id: KUL_WRAPPER_ID, style: style }, this.kulIsRadial
             ? this.#prepRadialBar()
             : this.#prepProgressBar())));
     }
@@ -405,7 +405,7 @@ const KulTextfield = class {
         this.status.forEach((status) => {
             classList.push(`textfield--${status}`);
         });
-        return (h(Host, { key: 'd8ab9f83889409602dd2a54a45e4b9b15b6d9d28' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'f1185be4c050d45ac10ab87cf757a871244fa6d4', id: KUL_WRAPPER_ID }, h("div", { key: '3e4bf0462e4cbb70f8f4c5a279b6bea7cc33c018', class: classList.join(' ') }, this.kulStyling === 'textarea'
+        return (h(Host, { key: '471474f3e057f40832f8d9342b988afa480cfc89' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '0eeaa32f5313800d5fbf9e1ca20a77c5dc9d096d', id: KUL_WRAPPER_ID }, h("div", { key: '69b1bf3fc35deede97c867b1145802cc79bd1e7e', class: classList.join(' ') }, this.kulStyling === 'textarea'
             ? [
                 this.#prepCounter(),
                 this.#prepIcon(),

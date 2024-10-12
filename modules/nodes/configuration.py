@@ -255,7 +255,7 @@ class LF_LoadLoraTags:
                                           "id": "0", 
                                           "value": "LoRA loaded successfully!"})
             
-        send_multi_selector_message(node_id, datasets, hashes, get_civitai_info, lora_paths, "lf-loadloratags", chip_dataset)
+        send_multi_selector_message(node_id, datasets, hashes, api_flags, lora_paths, "lf-loadloratags", chip_dataset)
 
         return (model, clip)
 

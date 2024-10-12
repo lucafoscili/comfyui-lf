@@ -22,11 +22,10 @@ export const cardPlaceholders = (widget, count) => {
     widget.options.setValue(JSON.stringify(dummyValue));
 };
 export const fetchModelMetadata = async (models, forcedSave = false) => {
-    const promises = models.map(({ dataset, hash, path, apiFlag }) => {
+    const promises = models.map(async ({ dataset, hash, path, apiFlag }) => {
         if (apiFlag) {
-            return getApiRoutes()
-                .metadata.get(hash)
-                .then(onResponse.bind(onResponse, dataset, path, hash, forcedSave));
+            const payload = await getApiRoutes().metadata.get(hash);
+            return onResponse(dataset, path, hash, forcedSave, payload);
         }
         else {
             return onResponse(dataset, path, hash, forcedSave, null);
@@ -34,7 +33,8 @@ export const fetchModelMetadata = async (models, forcedSave = false) => {
     });
     return Promise.all(promises);
 };
-const onResponse = async (dataset, path, hash, forcedSave, r) => {
+const onResponse = async (dataset, path, hash, forcedSave, payload) => {
+    const r = payload?.data;
     const id = r?.id;
     const props = {
         kulStyle: '.sub-2.description { white-space: pre-wrap; }',

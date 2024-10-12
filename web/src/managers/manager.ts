@@ -190,7 +190,7 @@ export class LFManager {
         };
 
         try {
-          const body = new FormData(); 
+          const body = new FormData();
           body.append('backup_type', backupType);
           const response = await api.fetchApi(LFEndpoints.NewBackup, { body, method: 'POST' });
 
@@ -267,11 +267,10 @@ export class LFManager {
 
           switch (code) {
             case 200:
-              const p: BaseAPIPayload = await response.json();
-              if (p.status === 'success') {
-                payload.message = p.message;
-                payload.status = LogSeverity.Success;
-              }
+              const p: GetMetadataAPIPayload['data'] = await response.json();
+              payload.data = p;
+              payload.message = 'Metadata succesfully fetched from CivitAI.';
+              payload.status = LogSeverity.Success;
               break;
             case 404:
               payload.message = 'Model not found on CivitAI!';
@@ -302,7 +301,8 @@ export class LFManager {
           body.append('model_path', modelPath);
           body.append('metadata', JSON.stringify(dataset));
           body.append('forced_save', String(forcedSave).valueOf());
-          const response = api.fetchApi(LFEndpoints.SaveMetadata, {
+
+          const response = await api.fetchApi(LFEndpoints.SaveMetadata, {
             method: 'POST',
             body,
           });

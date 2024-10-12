@@ -126,59 +126,59 @@ const KulSpinner = class {
             spinnerClass = 'spinner-v' + this.kulLayout;
             if (this.kulLayout === 7) {
                 spinnerEl = [
-                    h("div", { key: '677fdc703a6ac76f7b58bb1948382f0473455bc0', class: "sk-spinner-v7-dot" }),
-                    h("div", { key: '47cebc9c8c25b8d2b2b142cc4ea1139968cee985', class: "sk-spinner-v7-dot" }),
-                    h("div", { key: 'e6f5954493a36f64c981437fea0b57161b7f519b', class: "sk-spinner-v7-dot" }),
-                    h("div", { key: 'a56aa2596a8f6ff21aacc804ed7ff4730a0c9ffc', class: "sk-spinner-v7-dot" }),
-                    h("div", { key: '5dca94cba18b94c49a38f7edcefa099b75a38f03', class: "sk-spinner-v7-dot" }),
-                    h("div", { key: '5fbebb21d73b3133eff3401c6a976694b9747c4f', class: "sk-spinner-v7-dot" }),
+                    h("div", { key: '304e7221bd3583e18d812bd4121bd736221e7963', class: "sk-spinner-v7-dot" }),
+                    h("div", { key: 'aa76c4e28241e8fcb7c369b5398643d5487f7b4e', class: "sk-spinner-v7-dot" }),
+                    h("div", { key: 'f55ef1895f13976007c4cfaf4dc9fedb9f4fcc21', class: "sk-spinner-v7-dot" }),
+                    h("div", { key: '275f3c5ee097f9b9af9282e0ecaa293361c7e784', class: "sk-spinner-v7-dot" }),
+                    h("div", { key: '330c98f4b06e4c5f0ad1f390ff07a61798c46843', class: "sk-spinner-v7-dot" }),
+                    h("div", { key: '7c913a9d8bda71a5fc502074b7dbd397efbaf44a', class: "sk-spinner-v7-dot" }),
                 ];
             }
             if (this.kulLayout === 9) {
                 spinnerEl = [
-                    h("div", { key: 'feb2033865b8b216142d3baf819bdc1fedd17c92', class: "sk-spinner-v9-bounce1" }),
-                    h("div", { key: 'c351163c2115c93f14c6bec3a254b95e6fbe01f7', class: "sk-spinner-v9-bounce2" }),
+                    h("div", { key: '4b8450640e334bcb02af712ed0e068ef49ad9b7c', class: "sk-spinner-v9-bounce1" }),
+                    h("div", { key: '5622abaa56fc65ea9529d2480d87d0fb830ab61b', class: "sk-spinner-v9-bounce2" }),
                 ];
             }
             if (this.kulLayout === 10) {
                 spinnerEl = [
-                    h("div", { key: 'f9eb3ae502e38b70daace2b6f5e3327ffc6dc3fe', class: "sk-spinner-v10-cube1" }),
-                    h("div", { key: 'bf74415fe4d14cf3b44d252b4df6cde794d0441e', class: "sk-spinner-v10-cube2" }),
+                    h("div", { key: 'cda2fbe4a8cda05dfedb810ed2e8dfb73a1122ac', class: "sk-spinner-v10-cube1" }),
+                    h("div", { key: '1044fa542f6d066f183da12bae1e3bf0f20c5398', class: "sk-spinner-v10-cube2" }),
                 ];
             }
             if (this.kulLayout === 12) {
                 spinnerEl = [
-                    h("div", { key: '09b0ce717f5f46223b90b0e383e9e1def818ad03', class: "sk-spinner-v12-dot1" }),
-                    h("div", { key: '8dfe340b21d4ffcdbc26e417344c09f592ac02a0', class: "sk-spinner-v12-dot2" }),
+                    h("div", { key: '24bfc61dcc59ba976db01f62d2e07266354ebfff', class: "sk-spinner-v12-dot1" }),
+                    h("div", { key: '61356db2164228a96f22e4ade913d7dc59f11e1a', class: "sk-spinner-v12-dot2" }),
                 ];
             }
             if (this.kulLayout === 13) {
                 spinnerEl = [
-                    h("div", { key: '834c9f23bc0c5ab493e21ec69c0501ac91fcfcef', class: "sk-spinner-v13-cube sk-spinner-v13-cube1" }),
-                    h("div", { key: 'd0e3f473f43fe48089931a715cf208c5247e8b11', class: "sk-spinner-v13-cube sk-spinner-v13-cube2" }),
-                    h("div", { key: 'cbca654183ca609b5bbe3920b47ada236d0c59fb', class: "sk-spinner-v13-cube sk-spinner-v13-cube3" }),
-                    h("div", { key: 'dad01dc3b16e19e19bd7f02aa29effdc23c9e96d', class: "sk-spinner-v13-cube sk-spinner-v13-cube4" }),
-                    h("div", { key: '50cf0e620c36b0545dd55d0be551e9a318aeb561', class: "sk-spinner-v13-cube sk-spinner-v13-cube5" }),
-                    h("div", { key: '54713b2ed8fd1ba77da8f68dc84bc6a9cbdd724f', class: "sk-spinner-v13-cube sk-spinner-v13-cube6" }),
-                    h("div", { key: '4fc394903596b302b70b114dc23c74a4754a80c7', class: "sk-spinner-v13-cube sk-spinner-v13-cube7" }),
-                    h("div", { key: 'bee3bcfdc4a2c05cde4a1e973a61ba8dd494c683', class: "sk-spinner-v13-cube sk-spinner-v13-cube8" }),
-                    h("div", { key: '41bb9c508115ec0db24e2a8486532e4357a11254', class: "sk-spinner-v13-cube sk-spinner-v13-cube9" }),
+                    h("div", { key: 'bb933c1e67141b920c3b11cf1b81590a226449a9', class: "sk-spinner-v13-cube sk-spinner-v13-cube1" }),
+                    h("div", { key: '08bcf16b09a2c1207a7866f4e4acd95336f346f1', class: "sk-spinner-v13-cube sk-spinner-v13-cube2" }),
+                    h("div", { key: '9ce4cd758695e73b19747d20ec23037e9f43f9c0', class: "sk-spinner-v13-cube sk-spinner-v13-cube3" }),
+                    h("div", { key: 'baed32b51628d818919a60fa810162f53e4b4515', class: "sk-spinner-v13-cube sk-spinner-v13-cube4" }),
+                    h("div", { key: '0abd09c4aecff8479f6d6cc4d924abdfb9cc1360', class: "sk-spinner-v13-cube sk-spinner-v13-cube5" }),
+                    h("div", { key: 'c857b5ee00e8bc72f25ca68ad31311093f3364ba', class: "sk-spinner-v13-cube sk-spinner-v13-cube6" }),
+                    h("div", { key: '9cdc9c62d56926b7c9b179202fe052d654be4123', class: "sk-spinner-v13-cube sk-spinner-v13-cube7" }),
+                    h("div", { key: '1ac08a53f84a17bc000733e9de1f848b5847e4af', class: "sk-spinner-v13-cube sk-spinner-v13-cube8" }),
+                    h("div", { key: '315bd8753f9909a7555f687891baf17a6b371361', class: "sk-spinner-v13-cube sk-spinner-v13-cube9" }),
                 ];
             }
             if (this.kulLayout === 14) {
                 spinnerEl = [
-                    h("div", { key: 'da6a7c467cd467d2c29575ce6160de7e15fdce51', class: "sk-spinner-v14-circle1 sk-spinner-v14-circle" }),
-                    h("div", { key: '217d360370ee27822f36ef891a7c5c30b0d07ae6', class: "sk-spinner-v14-circle2 sk-spinner-v14-circle" }),
-                    h("div", { key: 'c25d1a81b99e0104a4e02c53c6014235a158df69', class: "sk-spinner-v14-circle3 sk-spinner-v14-circle" }),
-                    h("div", { key: '3f25155134d30de336990e90067b75537a155091', class: "sk-spinner-v14-circle4 sk-spinner-v14-circle" }),
-                    h("div", { key: '8720c732d018ee3ab7eb0921b24f6fba43d29daf', class: "sk-spinner-v14-circle5 sk-spinner-v14-circle" }),
-                    h("div", { key: '2c329028aebdd882f9ccbe57d3f90996560ab602', class: "sk-spinner-v14-circle6 sk-spinner-v14-circle" }),
-                    h("div", { key: 'fd29caad5085b5280f214f2e2535269df28effc5', class: "sk-spinner-v14-circle7 sk-spinner-v14-circle" }),
-                    h("div", { key: '0d0a4e679b27dbfac56b30b69676b5b959716b6f', class: "sk-spinner-v14-circle8 sk-spinner-v14-circle" }),
-                    h("div", { key: '01c36935e3d72ad49156bd9880cfef288a672c9e', class: "sk-spinner-v14-circle9 sk-spinner-v14-circle" }),
-                    h("div", { key: 'bbdd1edb0e0a9152b64a8acb2d297cc069a61635', class: "sk-spinner-v14-circle10 sk-spinner-v14-circle" }),
-                    h("div", { key: '46585a8c9ba795d5e69868e9df4dafc006df389c', class: "sk-spinner-v14-circle11 sk-spinner-v14-circle" }),
-                    h("div", { key: '7bc366fabbea605e7fc22be90191fd5179e37be1', class: "sk-spinner-v14-circle12 sk-spinner-v14-circle" }),
+                    h("div", { key: 'ab068ac8ba27b1abb7f6bcc996a0b158e8cf2dcf', class: "sk-spinner-v14-circle1 sk-spinner-v14-circle" }),
+                    h("div", { key: 'c3849417f1dcd2ef1a94e510464b52bb1d9870f6', class: "sk-spinner-v14-circle2 sk-spinner-v14-circle" }),
+                    h("div", { key: 'c9d547dadd4c3196bda7a79821faf0698b4f9b7d', class: "sk-spinner-v14-circle3 sk-spinner-v14-circle" }),
+                    h("div", { key: 'f69df95430ed22d44743808604cfd82b6f2d811a', class: "sk-spinner-v14-circle4 sk-spinner-v14-circle" }),
+                    h("div", { key: 'a52696bb4edd5935d9eb02cb353d750630a60af4', class: "sk-spinner-v14-circle5 sk-spinner-v14-circle" }),
+                    h("div", { key: 'd2bca8edc5f1c2174f80d8ee7cfddacf6be00a62', class: "sk-spinner-v14-circle6 sk-spinner-v14-circle" }),
+                    h("div", { key: 'b9b161bf70f8b20dc298b6fe2e22d4bba76dc630', class: "sk-spinner-v14-circle7 sk-spinner-v14-circle" }),
+                    h("div", { key: '6503c945444acda07dbe53866d3b62415928a18e', class: "sk-spinner-v14-circle8 sk-spinner-v14-circle" }),
+                    h("div", { key: '23e7afa7ab501092af63a6ca549d215c3d708182', class: "sk-spinner-v14-circle9 sk-spinner-v14-circle" }),
+                    h("div", { key: 'e269f3d28b29be2d55b7c1451863f6afb87ae11f', class: "sk-spinner-v14-circle10 sk-spinner-v14-circle" }),
+                    h("div", { key: 'b1091dc316a9224f55d25430837b22814db776c5', class: "sk-spinner-v14-circle11 sk-spinner-v14-circle" }),
+                    h("div", { key: 'e494c4e4c628a3acb489f25ca90eb163214e252a', class: "sk-spinner-v14-circle12 sk-spinner-v14-circle" }),
                 ];
             }
         }
@@ -206,7 +206,7 @@ const KulSpinner = class {
                 fontSize: '3px',
             };
         }
-        return (h(Host, { key: '8f02b431f70e578347a13d14ded2903d9015dc2e', style: elStyle }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '8923d41904664b5a324f152ed68dac1fe3deaaa8', id: KUL_WRAPPER_ID, style: elStyle }, h("div", { key: '6c1c613f006a120fee498d9f93e1b10b6cc665aa', id: "loading-wrapper-master", class: masterClass, style: elStyle }, h("div", { key: '96a85b1c0801783168b8dcac81c3f98305b76d74', id: wrapperClass, style: elStyle }, h("div", { key: '0623330fb7e75aaa37881fd3799fbf9d066970db', class: spinnerClass }, spinnerEl))))));
+        return (h(Host, { key: 'e364e1b6f1cc61f4119b686cb5d3cdfea4db42dc', style: elStyle }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '41f07b703b6bc474da27bfa5b39825625ec1bb53', id: KUL_WRAPPER_ID, style: elStyle }, h("div", { key: '8e4418ced2df1cc936753bf974b2e0a7d5cc1542', id: "loading-wrapper-master", class: masterClass, style: elStyle }, h("div", { key: '6314d2d33480197a98cddacfda2dd57b9a4d66b4', id: wrapperClass, style: elStyle }, h("div", { key: '0cff3a26e60e5fe15e1b4b4c183e32f790a2bdab', class: spinnerClass }, spinnerEl))))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

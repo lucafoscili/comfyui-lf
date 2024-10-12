@@ -119,7 +119,7 @@ const KulDrawer = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: '8dd7c1bf9cf5b06d0a07c388ac580253b9a6e6f3', "kul-opened": this.opened }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '24efde2d54622c04d68abb88640fb5c485ffb470', class: "backdrop", onClick: (e) => {
+        return (h(Host, { key: '7c2437f61648afa5fe6f2b2e048eb17f61780d1c', "kul-opened": this.opened }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '4780c12e8236b9dd93407fe35716194059d9fc7d', class: "backdrop", onClick: (e) => {
                 e.preventDefault();
                 e.stopPropagation();
             }, onPointerDown: (e) => {
@@ -129,7 +129,7 @@ const KulDrawer = class {
             }, onTouchStart: (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-            } }), h("div", { key: 'cb5d7db7355c2a1ddf5eadd58f8701d56107edf4', id: KUL_WRAPPER_ID }, h("div", { key: '66ab25f4e075662d75e8b188b549eb8dc5988c44', class: 'drawer' }, h("div", { key: 'b5126f567ba246d6aceb38649063eaac8ec070aa', class: `drawer__content` }, h("slot", { key: '3f35126f9ecc7460b50efce864894f0129ba9653' }))))));
+            } }), h("div", { key: '781bf5b4449141daad28cdaa8eae289c392c4fad', id: KUL_WRAPPER_ID }, h("div", { key: 'd0f4994e4dc2caa38f001b52983fb2f0a8f2edfc', class: 'drawer' }, h("div", { key: '32c50dc93c4448d6f33dd93ce8bd7ba8d58a5e69', class: `drawer__content` }, h("slot", { key: '7f539f8d7bc9a5cc24f73b69c5cac7c49f1f8d98' }))))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

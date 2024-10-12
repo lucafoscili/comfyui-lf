@@ -593,7 +593,7 @@ const KulChat = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: 'aca5e937f3199ca10ed410d996426aa5e0905120' }, this.kulStyle && (h("style", { key: '0109631e88e2233b974e7dc28dccbca99930de44', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: 'd0838c7c587d3edf970ee8124f5802e4bebe6a5b', id: KUL_WRAPPER_ID }, h("div", { key: '1706b27aa2d586c7187536a43d2ca694e663d367', class: `${this.view} ${this.view}--${this.kulLayout} ${this.view}--${this.status}` }, this.view === 'settings'
+        return (h(Host, { key: '7f25f4217fcb5829f526948b56f8695398f470bb' }, this.kulStyle && (h("style", { key: '4a4c4defd1ece21160fb267cbaf80c148de5e179', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: '3a54cf5519dd5bc193a46ff6744135ccc86f2e87', id: KUL_WRAPPER_ID }, h("div", { key: '4bebb8a0d019dcdbe9c68eeeb9f571ca3af434fa', class: `${this.view} ${this.view}--${this.kulLayout} ${this.view}--${this.status}` }, this.view === 'settings'
             ? prepSettings(this.#adapter)
             : this.status === 'ready'
                 ? prepChat(this.#adapter)
@@ -3665,7 +3665,7 @@ const KulCode = class {
             this.kulLanguage.toLowerCase() === '';
         const shouldPreserveSpace = this.kulPreserveSpaces ||
             (isPreserveSpaceMissing && !isLikelyTextual);
-        return (h(Host, { key: '6bf2206bf8363735096c991d1b9c778966a5e813' }, this.kulStyle && (h("style", { key: 'fbbe296b8d02d75c49ae6467fea610ddb8df638f', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: '52c9da4e57849d2971be778b412c55e54e25e077', id: KUL_WRAPPER_ID }, h("div", { key: 'ba9129f290a6330244f4c71461133b64b1f0f799', class: "container" }, h("div", { key: '5f1517c31a7751288b681c369ae0a2ed989904b4', class: "header" }, h("span", { key: '81b354b88be9ee9b4e36a446a7d5f2d4cc353ca1', class: "title" }, this.kulLanguage), h("kul-button", { key: '598394b25a16d952599654afe03d8944116736d4', class: 'kul-slim kul-full-height', kulIcon: "content_copy", kulLabel: "Copy", kulStyling: "flat", "onKul-button-event": (e) => this.#copy(e) })), shouldPreserveSpace ? (h("pre", { class: 'language-' + this.kulLanguage, key: this.value, ref: (el) => {
+        return (h(Host, { key: '8ce1b29f6f811d6cfaa6f44a2b77bb11393d6303' }, this.kulStyle && (h("style", { key: 'b9669a7c27d9f2b6075769974d16d4d6e991d067', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: 'b6e85d94ecc65946c34130cb58d64bf3d85d54b0', id: KUL_WRAPPER_ID }, h("div", { key: 'e3b15b04ed348257e83c827b24148c134ad91a7d', class: "container" }, h("div", { key: '94114a1401917bf10682fb2d2d2b95b53bf2db08', class: "header" }, h("span", { key: '3e7af98326f1bbb6fbff593a791a7fcc43795e42', class: "title" }, this.kulLanguage), h("kul-button", { key: 'f3ff87ed8584f0a02715b23fb422335b02fc07b0', class: 'kul-slim kul-full-height', kulIcon: "content_copy", kulLabel: "Copy", kulStyling: "flat", "onKul-button-event": (e) => this.#copy(e) })), shouldPreserveSpace ? (h("pre", { class: 'language-' + this.kulLanguage, key: this.value, ref: (el) => {
                 if (el) {
                     this.#el = el;
                 }

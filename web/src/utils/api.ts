@@ -1,6 +1,6 @@
 import { KulDataDataset } from '../types/ketchup-lite/components';
 import { KulDataCell } from '../types/ketchup-lite/managers/kul-data/kul-data-declarations';
-import { APIMetadataEntry } from '../types/manager';
+import { APIMetadataEntry, GetMetadataAPIPayload } from '../types/manager';
 import { CardsWithChipWidget, CardWidget, CardWidgetDeserializedValue } from '../types/widgets';
 import { getApiRoutes } from './common';
 
@@ -34,11 +34,10 @@ export const fetchModelMetadata = async (
   forcedSave = false,
 ): Promise<Partial<HTMLKulCardElement>[]> => {
   const promises: Promise<Partial<HTMLKulCardElement>>[] = models.map(
-    ({ dataset, hash, path, apiFlag }) => {
+    async ({ dataset, hash, path, apiFlag }) => {
       if (apiFlag) {
-        return getApiRoutes()
-          .metadata.get(hash)
-          .then(onResponse.bind(onResponse, dataset, path, hash, forcedSave));
+        const payload = await getApiRoutes().metadata.get(hash);
+        return onResponse(dataset, path, hash, forcedSave, payload);
       } else {
         return onResponse(dataset, path, hash, forcedSave, null);
       }
@@ -53,8 +52,9 @@ const onResponse = async (
   path: string,
   hash: string,
   forcedSave: boolean,
-  r: CivitAIModelData,
+  payload: GetMetadataAPIPayload,
 ) => {
+  const r = payload?.data;
   const id = r?.id;
   const props: Partial<HTMLKulCardElement> = {
     kulStyle: '.sub-2.description { white-space: pre-wrap; }',
