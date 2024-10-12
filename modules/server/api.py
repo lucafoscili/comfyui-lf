@@ -148,6 +148,31 @@ async def backup_usage_analytics(request):
         os.makedirs(backup_folder, exist_ok=True)
         
         backed_up_files = []
+
+        directories = [
+            ("checkpoints", get_filename_list("checkpoints")),
+            ("embeddings", get_filename_list("embeddings")),
+            ("loras", get_filename_list("loras"))
+        ]
+        
+        for folder_name, directory in directories:
+            backup_subfolder = os.path.join(backup_folder, folder_name)
+            os.makedirs(backup_subfolder, exist_ok=True)
+
+            for model_file in directory:
+                model_full_path = get_full_path(folder_name, model_file)
+                
+                if model_full_path is None:
+                    continue
+                
+                file_no_ext = os.path.splitext(model_full_path)[0]
+                info_file_path = file_no_ext + ".info"
+                
+                if os.path.exists(info_file_path):
+                    backup_path = os.path.join(backup_subfolder, os.path.basename(info_file_path))
+                    
+                    shutil.copy2(info_file_path, backup_path)
+                    backed_up_files.append(backup_path)      
         
         for root, _, files in os.walk(base_path):
             if backup_folder_name in root:
