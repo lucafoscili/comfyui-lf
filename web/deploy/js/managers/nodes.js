@@ -48,6 +48,7 @@ import { vaeSelectorFactory } from '../nodes/vaeSelector.js';
 import { updateUsageStatisticsFactory } from '../nodes/updateUsageStatistics.js';
 import { usageStatisticsFactory } from '../nodes/usageStatistics.js';
 import { resizeImageToDimensionFactory } from '../nodes/resizeImageToDimension.js';
+import { mathOperationFactory } from '../nodes/mathOperation.js';
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
 /*-------------------------------------------------*/
@@ -76,6 +77,7 @@ export class LFNodes {
             [NodeName.loadLoraTags]: loadLoraTagsFactory.eventHandler,
             [NodeName.loraAndEmbeddingSelector]: loraAndEmbeddingSelectorFactory.eventHandler,
             [NodeName.loraSelector]: loraSelectorFactory.eventHandler,
+            [NodeName.mathOperation]: mathOperationFactory.eventHandler,
             [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.eventHandler,
             [NodeName.notify]: notifyFactory.eventHandler,
             [NodeName.randomBoolean]: randomBooleanFactory.eventHandler,
@@ -127,6 +129,7 @@ export class LFNodes {
             [NodeName.loraAndEmbeddingSelector]: loraAndEmbeddingSelectorFactory.register,
             [NodeName.loadMetadata]: loadMetadataFactory.register,
             [NodeName.loraSelector]: loraSelectorFactory.register,
+            [NodeName.mathOperation]: mathOperationFactory.register,
             [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.register,
             [NodeName.notify]: notifyFactory.register,
             [NodeName.randomBoolean]: randomBooleanFactory.register,

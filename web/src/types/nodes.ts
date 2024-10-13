@@ -32,6 +32,7 @@ export enum NodeName {
   loadMetadata = 'LF_LoadMetadata',
   loraAndEmbeddingSelector = 'LF_LoraAndEmbeddingSelector',
   loraSelector = 'LF_LoraSelector',
+  mathOperation = 'LF_MathOperation',
   multipleImageResizeForWeb = 'LF_MultipleImageResizeForWeb',
   notify = 'LF_Notify',
   randomBoolean = 'LF_RandomBoolean',

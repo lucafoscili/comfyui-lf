@@ -23,6 +23,7 @@ export declare class LFNodes {
         LF_LoadLoraTags: (event: CustomEvent<import("../types/events").LoadLoraTagsPayload>, addW: BaseWidgetCallback) => void;
         LF_LoraAndEmbeddingSelector: (event: CustomEvent<import("../types/events").LoraAndEmbeddingSelectorPayload>, addW: BaseWidgetCallback) => void;
         LF_LoraSelector: (event: CustomEvent<import("../types/events").LoraSelectorPayload>, addW: BaseWidgetCallback) => void;
+        LF_MathOperation: (event: CustomEvent<import("../types/events").MathOperationPayload>, addW: BaseWidgetCallback) => void;
         LF_MultipleImageResizeForWeb: (event: CustomEvent<import("../types/events").MultipleImageResizeForWebPayload>, addW: BaseWidgetCallback) => void;
         LF_Notify: (event: CustomEvent<import("../types/events").NotifyPayload>) => void;
         LF_RandomBoolean: (event: CustomEvent<import("../types/events").RandomBooleanPayload>, addW: BaseWidgetCallback) => void;
@@ -74,6 +75,7 @@ export declare class LFNodes {
         LF_LoraAndEmbeddingSelector: (setW: import("../types/widgets").CardWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_LoadMetadata: (setW: import("../types/widgets").UploadWidgetSetter) => void;
         LF_LoraSelector: (setW: import("../types/widgets").CardWidgetSetter, addW: BaseWidgetCallback) => void;
+        LF_MathOperation: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_MultipleImageResizeForWeb: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_Notify: () => void;
         LF_RandomBoolean: (setW: import("../types/widgets").RollViewerWidgetSetter, addW: BaseWidgetCallback) => void;
@@ -121,6 +123,7 @@ export declare class LFNodes {
             LF_LoadLoraTags: (event: CustomEvent<import("../types/events").LoadLoraTagsPayload>, addW: BaseWidgetCallback) => void;
             LF_LoraAndEmbeddingSelector: (event: CustomEvent<import("../types/events").LoraAndEmbeddingSelectorPayload>, addW: BaseWidgetCallback) => void;
             LF_LoraSelector: (event: CustomEvent<import("../types/events").LoraSelectorPayload>, addW: BaseWidgetCallback) => void;
+            LF_MathOperation: (event: CustomEvent<import("../types/events").MathOperationPayload>, addW: BaseWidgetCallback) => void;
             LF_MultipleImageResizeForWeb: (event: CustomEvent<import("../types/events").MultipleImageResizeForWebPayload>, addW: BaseWidgetCallback) => void;
             LF_Notify: (event: CustomEvent<import("../types/events").NotifyPayload>) => void;
             LF_RandomBoolean: (event: CustomEvent<import("../types/events").RandomBooleanPayload>, addW: BaseWidgetCallback) => void;
@@ -172,6 +175,7 @@ export declare class LFNodes {
             LF_LoraAndEmbeddingSelector: (setW: import("../types/widgets").CardWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_LoadMetadata: (setW: import("../types/widgets").UploadWidgetSetter) => void;
             LF_LoraSelector: (setW: import("../types/widgets").CardWidgetSetter, addW: BaseWidgetCallback) => void;
+            LF_MathOperation: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_MultipleImageResizeForWeb: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_Notify: () => void;
             LF_RandomBoolean: (setW: import("../types/widgets").RollViewerWidgetSetter, addW: BaseWidgetCallback) => void;

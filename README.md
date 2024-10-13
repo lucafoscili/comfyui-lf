@@ -211,6 +211,11 @@ Together with the biography, they define the identity of the LLM.
 
 ### Logic nodes (`logic.py`)
 
+#### MathOperation
+
+Performs mathematical operations involving up to four variables.
+![MathOperation](https://github.com/lucafoscili/comfyui-lf/blob/0dd555212e2a7bdd9f38cf1ef96ab4bf474594d8/docs/images/MathOperation.png "Result logged as a markdown-formatted text")
+
 #### ResolutionSwitcher
 
 Selects a random resolution between portrait and landscape orientations. The chances for landscape to occur can be set with a percentage.
