@@ -32,7 +32,7 @@ class LF_MathOperation:
     RETURN_NAMES = ("int_result", "float_result")
     RETURN_TYPES = ("INT", "FLOAT")
 
-    def on_exec(self, node_id, operation: str, a, b, c, d):
+    def on_exec(self, node_id, operation: str, a=None, b=None, c=None, d=None):
         def normalize_input(variable):
             variable = variable[0] if isinstance(variable, list) else variable
 
