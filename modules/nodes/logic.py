@@ -1,8 +1,101 @@
+import math
 import random
 
 from server import PromptServer
 
+class AnyType(str):
+    def __ne__(self, __value: object) -> bool:
+        return False
+
+any = AnyType("*")
+
 category = "✨ LF Nodes/Logic"
+
+class LF_MathOperation:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "operation": ("STRING", {"default": "a * b / c + d", "tooltip": "Math operation to execute. Use variables like 'a', 'b', 'c', 'd'."}),
+            },
+            "optional": {
+                "a": (any, {"tooltip": "Value for 'a'."}),
+                "b": (any, {"tooltip": "Value for 'b'."}),
+                "c": (any, {"tooltip": "Value for 'c'."}),
+                "d": (any, {"tooltip": "Value for 'd'."}),
+            },
+            "hidden": { "node_id": "UNIQUE_ID" }
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    RETURN_NAMES = ("int_result", "float_result")
+    RETURN_TYPES = ("INT", "FLOAT")
+
+    def on_exec(self, node_id, operation: str, a, b, c, d):
+        def normalize_input(variable):
+            variable = variable[0] if isinstance(variable, list) else variable
+
+            if isinstance(variable, str):
+                return float(variable)
+            if isinstance(variable, bool):
+                return 1 if variable else 0
+            
+            return variable
+        
+        na_placeholder = "N/A"
+        str_operation = operation
+
+        if a:
+            str_a = type(a)
+            a = normalize_input(a)
+            str_operation = str_operation.replace("a", str(a))
+            str_a = f"**{str(a)}** {str_a}"
+        if b:
+            str_b = type(b)
+            b = normalize_input(b)
+            str_operation = str_operation.replace("b", str(b))
+            str_b = f"**{str(b)}** {str_b}"
+        if c:
+            str_c = type(c)
+            c = normalize_input(c)
+            str_operation = str_operation.replace("c", str(c))
+            str_c = f"**{str(c)}** {str_c}"
+        if d:
+            str_d = type(d)
+            d = normalize_input(d)
+            str_operation = str_operation.replace("d", str(d))
+            str_d = f"**{str(d)}** {str_d}"
+
+        try:
+            result = eval(operation, {"a": a, "b": b, "c": c, "d": d, "math": math})
+        except Exception:
+            result = float("NaN")
+
+        log = f"""
+## Result:
+  **{str(result)}**
+
+## Variables:
+  a: {str_a if a else na_placeholder}
+  b: {str_b if b else na_placeholder}
+  c: {str_c if c else na_placeholder}
+  d: {str_d if d else na_placeholder}
+
+## Full operation:
+  {str_operation}
+    """    
+
+        PromptServer.instance.send_sync("lf-mathoperation", {
+            "node": node_id, 
+            "log": log
+        })
+        
+        return (int(result), result)
+    
+    @classmethod
+    def VALIDATE_INPUTS(self, **kwargs):
+         return True
 
 class LF_ResolutionSwitcher:
     @classmethod
@@ -40,10 +133,10 @@ class LF_ResolutionSwitcher:
         })
 
         return (width, height, is_landscape)
-
+    
     @classmethod
-    def IS_CHANGED(cls, **kwargs):
-        return float("NaN")
+    def VALIDATE_INPUTS(self, **kwargs):
+         return True
 
 class LF_SwitchFloat:
     @classmethod
@@ -206,6 +299,7 @@ class LF_SwitchString:
         return (on_true if boolean else on_false,)
     
 NODE_CLASS_MAPPINGS = {
+    "LF_MathOperation": LF_MathOperation,
     "LF_ResolutionSwitcher": LF_ResolutionSwitcher,
     "LF_SwitchFloat": LF_SwitchFloat,
     "LF_SwitchImage": LF_SwitchImage,
@@ -214,6 +308,7 @@ NODE_CLASS_MAPPINGS = {
     "LF_SwitchString": LF_SwitchString,
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
+    "LF_MathOperation": "Math operation",
     "LF_ResolutionSwitcher": "Resolution switcher",
     "LF_SwitchFloat": "Switch Float",
     "LF_SwitchImage": "Switch Image",
