@@ -1,5 +1,5 @@
 import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, H as Host, F as Fragment, a as getAssetPath } from './index-21ee70d9.js';
-import { k as kulManagerInstance, g as getProps, b as KulThemeColorValues, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID, f as KUL_DROPDOWN_CLASS_VISIBLE, h as KulDynamicPositionPlacement, i as KUL_DROPDOWN_CLASS, C as CSS_VAR_PREFIX, d as KulLanguageGeneric } from './kul-manager-caaff688.js';
+import { k as kulManagerInstance, g as getProps, b as KulThemeColorValues, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID, f as KUL_DROPDOWN_CLASS_VISIBLE, h as KulDynamicPositionPlacement, i as KUL_DROPDOWN_CLASS, C as CSS_VAR_PREFIX, d as KulLanguageGeneric } from './kul-manager-6e71b245.js';
 import { K as KulDataCyAttributes } from './GenericTypes-8038330a.js';
 
 /*-------------------------------------------------*/
