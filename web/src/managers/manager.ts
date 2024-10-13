@@ -60,6 +60,7 @@ import {
   VAESelectorPayload,
   UpdateUsageStatisticsPayload,
   ResizeImageToDimensionPayload,
+  MathOperationPayload,
 } from '../types/events.js';
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
 import { KulDataDataset } from '../types/ketchup-lite/components';
@@ -649,21 +650,21 @@ export class LFManager {
       },
     );
     /*-------------------------------------------------------------------*/
+    /*               I n i t   M a t h O p e r a t i o n                 */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_MathOperation(
+      widgets.setters.KUL_CODE,
+      widgets.adders.KUL_CODE,
+    );
+    this.#APIS.event(EventName.mathOperation, (e: CustomEvent<MathOperationPayload>) => {
+      nodes.eventHandlers.LF_MathOperation(e, widgets.adders.KUL_CODE);
+    });
+    /*-------------------------------------------------------------------*/
     /*                       I n i t   N o t i f y                       */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_Notify();
     this.#APIS.event(EventName.notify, (e: CustomEvent<NotifyPayload>) => {
       nodes.eventHandlers.LF_Notify(e);
-    });
-    /*-------------------------------------------------------------------*/
-    /*                      I n i t   S t r i n g                        */
-    /*-------------------------------------------------------------------*/
-    this.#MANAGERS.nodes.register.LF_String(
-      widgets.setters.KUL_HISTORY,
-      widgets.adders.KUL_HISTORY,
-    );
-    this.#APIS.event(EventName.string, (e: CustomEvent<StringPayload>) => {
-      nodes.eventHandlers.LF_String(e, widgets.adders.KUL_HISTORY);
     });
     /*-------------------------------------------------------------------*/
     /*     I n i t   M u l t i p l e   R e s i z e   F o r   W e b       */
@@ -766,6 +767,16 @@ export class LFManager {
     );
     this.#APIS.event(EventName.schedulerSelector, (e: CustomEvent<SchedulerSelectorPayload>) => {
       nodes.eventHandlers.LF_SchedulerSelector(e, widgets.adders.KUL_HISTORY);
+    });
+    /*-------------------------------------------------------------------*/
+    /*                      I n i t   S t r i n g                        */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_String(
+      widgets.setters.KUL_HISTORY,
+      widgets.adders.KUL_HISTORY,
+    );
+    this.#APIS.event(EventName.string, (e: CustomEvent<StringPayload>) => {
+      nodes.eventHandlers.LF_String(e, widgets.adders.KUL_HISTORY);
     });
     /*-------------------------------------------------------------------*/
     /*                 I n i t   S w i t c h   F l o a t                 */

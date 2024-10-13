@@ -32,6 +32,7 @@ export enum EventName {
   loadLoraTags = 'lf-loadloratags',
   loraAndEmbeddingSelector = 'lf-loraandembeddingselector',
   loraSelector = 'lf-loraselector',
+  mathOperation = 'lf-mathoperation',
   multipleImageResizeForWeb = 'lf-multipleimageresizeforweb',
   notify = 'lf-notify',
   randomBoolean = 'lf-randomboolean',
@@ -72,6 +73,7 @@ export type EventPayload =
   | LoraAndEmbeddingSelectorPayload
   | LoraSelectorPayload
   | LoadLoraTagsPayload
+  | MathOperationPayload
   | MultipleImageResizeForWebPayload
   | NotifyPayload
   | RandomBooleanPayload
@@ -293,6 +295,14 @@ export interface LoraAndEmbeddingSelectorPayload extends BaseEventPayload {
   apiFlags: boolean[];
   hashes: string[];
   paths: string[];
+}
+
+/*-------------------------------------------------------------------*/
+/*       M a t h O p e r a t i o n   D e c l a r a t i o n s         */
+/*-------------------------------------------------------------------*/
+
+export interface MathOperationPayload extends BaseEventPayload {
+  log: string;
 }
 
 /*-------------------------------------------------------------------*/

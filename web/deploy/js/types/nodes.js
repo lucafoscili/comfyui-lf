@@ -30,6 +30,7 @@ export var NodeName;
     NodeName["loadMetadata"] = "LF_LoadMetadata";
     NodeName["loraAndEmbeddingSelector"] = "LF_LoraAndEmbeddingSelector";
     NodeName["loraSelector"] = "LF_LoraSelector";
+    NodeName["mathOperation"] = "LF_MathOperation";
     NodeName["multipleImageResizeForWeb"] = "LF_MultipleImageResizeForWeb";
     NodeName["notify"] = "LF_Notify";
     NodeName["randomBoolean"] = "LF_RandomBoolean";

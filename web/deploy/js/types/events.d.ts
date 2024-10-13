@@ -27,6 +27,7 @@ export declare enum EventName {
     loadLoraTags = "lf-loadloratags",
     loraAndEmbeddingSelector = "lf-loraandembeddingselector",
     loraSelector = "lf-loraselector",
+    mathOperation = "lf-mathoperation",
     multipleImageResizeForWeb = "lf-multipleimageresizeforweb",
     notify = "lf-notify",
     randomBoolean = "lf-randomboolean",
@@ -49,7 +50,7 @@ export declare enum EventName {
     vaeSelector = "lf-vaeselector",
     writeJson = "lf-writejson"
 }
-export type EventPayload = BlurImagesPayload | BooleanPayload | CheckpointSelectorPayload | CivitAIMetadataSetupPayload | DisplayBooleanPayload | DisplayJSONPayload | EmbeddingSelectorPayload | ExtractorPayload | FloatPayload | ImageListFromJSONPayload | ImageHistogramPayload | IntegerPayload | KeywordCounterPayload | LoadImagesPayload | LoraAndEmbeddingSelectorPayload | LoraSelectorPayload | LoadLoraTagsPayload | MultipleImageResizeForWebPayload | NotifyPayload | RandomBooleanPayload | ResizeImageByEdgePayload | ResizeImageToDimensionPayload | ResizeImageToSquarePayload | ResolutionSwitcherPayload | SamplerSelectorPayload | SaveImageForCivitAIPayload | SchedulerSelectorPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | UpdateUsageStatisticsPayload | UpscaleModelSelectorPayload | UrandomSeedGeneratorPayload | VAESelectorPayload | WriteJSONPayload;
+export type EventPayload = BlurImagesPayload | BooleanPayload | CheckpointSelectorPayload | CivitAIMetadataSetupPayload | DisplayBooleanPayload | DisplayJSONPayload | EmbeddingSelectorPayload | ExtractorPayload | FloatPayload | ImageListFromJSONPayload | ImageHistogramPayload | IntegerPayload | KeywordCounterPayload | LoadImagesPayload | LoraAndEmbeddingSelectorPayload | LoraSelectorPayload | LoadLoraTagsPayload | MathOperationPayload | MultipleImageResizeForWebPayload | NotifyPayload | RandomBooleanPayload | ResizeImageByEdgePayload | ResizeImageToDimensionPayload | ResizeImageToSquarePayload | ResolutionSwitcherPayload | SamplerSelectorPayload | SaveImageForCivitAIPayload | SchedulerSelectorPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | UpdateUsageStatisticsPayload | UpscaleModelSelectorPayload | UrandomSeedGeneratorPayload | VAESelectorPayload | WriteJSONPayload;
 export interface BlurImagesPayload extends BaseEventPayload {
     fileNames: Array<string>;
     images: Array<string>;
@@ -141,6 +142,9 @@ export interface LoraAndEmbeddingSelectorPayload extends BaseEventPayload {
     apiFlags: boolean[];
     hashes: string[];
     paths: string[];
+}
+export interface MathOperationPayload extends BaseEventPayload {
+    log: string;
 }
 export interface MultipleImageResizeForWebPayload extends BaseEventPayload {
     dataset: KulDataDataset;

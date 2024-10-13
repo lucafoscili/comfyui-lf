@@ -497,18 +497,18 @@ export class LFManager {
             nodes.eventHandlers.LF_LoraAndEmbeddingSelector(e, widgets.adders.KUL_CARD);
         });
         /*-------------------------------------------------------------------*/
+        /*               I n i t   M a t h O p e r a t i o n                 */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_MathOperation(widgets.setters.KUL_CODE, widgets.adders.KUL_CODE);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.mathOperation, (e) => {
+            nodes.eventHandlers.LF_MathOperation(e, widgets.adders.KUL_CODE);
+        });
+        /*-------------------------------------------------------------------*/
         /*                       I n i t   N o t i f y                       */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_Notify();
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.notify, (e) => {
             nodes.eventHandlers.LF_Notify(e);
-        });
-        /*-------------------------------------------------------------------*/
-        /*                      I n i t   S t r i n g                        */
-        /*-------------------------------------------------------------------*/
-        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_String(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
-        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.string, (e) => {
-            nodes.eventHandlers.LF_String(e, widgets.adders.KUL_HISTORY);
         });
         /*-------------------------------------------------------------------*/
         /*     I n i t   M u l t i p l e   R e s i z e   F o r   W e b       */
@@ -572,6 +572,13 @@ export class LFManager {
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_SchedulerSelector(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.schedulerSelector, (e) => {
             nodes.eventHandlers.LF_SchedulerSelector(e, widgets.adders.KUL_HISTORY);
+        });
+        /*-------------------------------------------------------------------*/
+        /*                      I n i t   S t r i n g                        */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_String(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.string, (e) => {
+            nodes.eventHandlers.LF_String(e, widgets.adders.KUL_HISTORY);
         });
         /*-------------------------------------------------------------------*/
         /*                 I n i t   S w i t c h   F l o a t                 */
