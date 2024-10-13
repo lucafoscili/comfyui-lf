@@ -214,7 +214,7 @@ Together with the biography, they define the identity of the LLM.
 #### MathOperation
 
 Performs mathematical operations involving up to four variables.
-![MathOperation](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/MathOperation.png "Result logged as a markdown-formatted text")
+![MathOperation](https://github.com/lucafoscili/comfyui-lf/blob/0dd555212e2a7bdd9f38cf1ef96ab4bf474594d8/docs/images/MathOperation.png "Result logged as a markdown-formatted text")
 
 #### ResolutionSwitcher
 
