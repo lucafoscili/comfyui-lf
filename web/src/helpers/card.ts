@@ -116,6 +116,12 @@ export const contextMenuHandler = (card: HTMLKulCardElement, e: MouseEvent) => {
             LogSeverity.Info,
           );
           getApiRoutes().metadata.updateCover(path, b64image);
+          const image = node?.cells?.kulImage;
+          if (image) {
+            image.value = `data:image/png;charset=utf-8;base64,${b64image}`;
+            card.refresh();
+            tip.destroy();
+          }
         } catch (error) {
           lfManager.log(
             "Failed to fetch the model's path from .info file",

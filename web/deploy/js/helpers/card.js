@@ -89,6 +89,12 @@ export const contextMenuHandler = (card, e) => {
                     const path = JSON.parse(code.value).path;
                     lfManager.log(`Updating cover for model with path: ${path}`, { b64image }, LogSeverity.Info);
                     getApiRoutes().metadata.updateCover(path, b64image);
+                    const image = node?.cells?.kulImage;
+                    if (image) {
+                        image.value = `data:image/png;charset=utf-8;base64,${b64image}`;
+                        card.refresh();
+                        tip.destroy();
+                    }
                 }
                 catch (error) {
                     lfManager.log("Failed to fetch the model's path from .info file", { b64image }, LogSeverity.Error);
