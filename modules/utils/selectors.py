@@ -28,11 +28,6 @@ def prepare_model_dataset (model_name, model_hash, model_base64, model_path):
                 "nodes": [
                     {
                         "cells": {
-                            "icon": {
-                                "kulStyle": "img {object-fit: cover;}",
-                                "shape": "image",
-                                "value": "data:image/webp;base64," + model_base64 if model_path else "broken_image"
-                            },
                             "text1": {
                                 "value": model_name
                             },
@@ -43,6 +38,15 @@ def prepare_model_dataset (model_name, model_hash, model_base64, model_path):
                                 "value": "Selected checkpoint cover, hash and name." +
                                          ("" if model_path 
                                              else "Note: to set the cover, create an image with the same name of the checkpoint in its folder.")
+                            },
+                            "kulCode": { 
+                                'shape': 'code', 
+                                'value': json.dumps({'hash': model_hash, 'path': model_path})
+                            },
+                            "kulImage": {
+                                "kulStyle": "img {object-fit: cover;}",
+                                "shape": "image",
+                                "value": "data:image/webp;base64," + model_base64 if model_path else "broken_image"
                             }
                         },
                         "id": model_name

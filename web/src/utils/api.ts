@@ -37,9 +37,9 @@ export const fetchModelMetadata = async (
     async ({ dataset, hash, path, apiFlag }) => {
       if (apiFlag) {
         const payload = await getApiRoutes().metadata.get(hash);
-        return onResponse(dataset, path, hash, forcedSave, payload);
+        return onResponse(dataset, path, forcedSave, payload);
       } else {
-        return onResponse(dataset, path, hash, forcedSave, null);
+        return onResponse(dataset, path, forcedSave, null);
       }
     },
   );
@@ -50,7 +50,6 @@ export const fetchModelMetadata = async (
 const onResponse = async (
   dataset: KulDataDataset,
   path: string,
-  hash: string,
   forcedSave: boolean,
   payload: GetMetadataAPIPayload,
 ) => {
@@ -62,9 +61,9 @@ const onResponse = async (
 
   switch (typeof id) {
     case 'number':
-      const civitaiDataset = prepareValidDataset(r);
+      const code = dataset?.nodes?.[0]?.cells?.kulCode;
+      const civitaiDataset = prepareValidDataset(r, code);
       props.kulData = civitaiDataset;
-      props.kulStyle = '.sub-2.description { white-space: pre-wrap; }';
       getApiRoutes().metadata.save(path, civitaiDataset, forcedSave);
       break;
     case 'string':
@@ -86,18 +85,14 @@ const onResponse = async (
       break;
   }
 
-  if (props.kulData && hash && path) {
-    props.kulData.nodes[0].cells.kulCode = hashCell(hash, path);
-  }
-
   return props;
 };
 
-const prepareValidDataset = (r: CivitAIModelData) => {
+const prepareValidDataset = (r: CivitAIModelData, code: KulDataCell<'code'>) => {
   const dataset: KulDataDataset = {
     nodes: [
       {
-        cells: { kulImage: null, text1: null, text2: null, text3: null },
+        cells: { kulCode: code ?? null, kulImage: null, text1: null, text2: null, text3: null },
         id: r.id.toString(),
         description: "Click to open the model's page on CivitAI",
         value: `https://civitai.com/models/${r.modelId}`,
@@ -132,11 +127,4 @@ Thumbs up: ${r.stats?.thumbsUpCount ? r.stats.thumbsUpCount : 'N/A'}
 `,
   };
   return dataset;
-};
-
-const hashCell = (hash: string, path: string) => {
-  return {
-    shape: 'code',
-    value: JSON.stringify({ hash: hash.valueOf(), path }),
-  } as KulDataCell<'code'>;
 };

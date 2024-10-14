@@ -6,6 +6,7 @@ export var LFEndpoints;
     LFEndpoints["GetMetadata"] = "/comfyui-lf/get-metadata";
     LFEndpoints["NewBackup"] = "/comfyui-lf/new-backup";
     LFEndpoints["SaveMetadata"] = "/comfyui-lf/save-metadata";
+    LFEndpoints["UpdateMetadataCover"] = "/comfyui-lf/update-metadata-cover";
 })(LFEndpoints || (LFEndpoints = {}));
 export var LogSeverity;
 (function (LogSeverity) {

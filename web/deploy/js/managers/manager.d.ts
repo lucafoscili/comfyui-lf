@@ -1,6 +1,10 @@
+import type { KulManager } from '../types/ketchup-lite/managers/kul-manager/kul-manager';
+import { LFNodes } from './nodes.js';
+import { LFWidgets } from './widgets.js';
 import { ComfyAPIs, LogSeverity } from '../types/manager.js';
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
 import { KulDataDataset } from '../types/ketchup-lite/components';
+import { LFTooltip } from './tooltip';
 export interface LFWindow extends Window {
     lfManager: LFManager;
 }
@@ -14,6 +18,12 @@ export declare class LFManager {
     getDebugDataset(): {
         article: HTMLKulArticleElement;
         dataset: KulArticleNode[];
+    };
+    getManagers(): {
+        ketchupLite?: KulManager;
+        nodes?: LFNodes;
+        tooltip?: LFTooltip;
+        widgets?: LFWidgets;
     };
     initialize(): void;
     isBackupEnabled(): boolean;

@@ -90,7 +90,7 @@ def get_sha256(file_path):
     
     if os.path.exists(hash_file_path):
         with open(hash_file_path, "r") as hash_file:
-            return hash_file.read().strip()[:10]
+            return hash_file.read().strip()
     
     sha256_value = hashlib.sha256()
 
@@ -101,4 +101,4 @@ def get_sha256(file_path):
     with open(hash_file_path, "w") as hash_file:
         hash_file.write(sha256_value.hexdigest())
 
-    return sha256_value.hexdigest()[:10]
+    return sha256_value.hexdigest()

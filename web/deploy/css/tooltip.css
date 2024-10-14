@@ -1,0 +1,14 @@
+.lf-tooltip {
+  border: 1px solid var(--kul-border-color);
+  height: max-content;
+  max-width: 320px;
+  min-height: 172px;
+  min-width: 256px;
+  width: max-content;
+}
+.lf-tooltip__content {
+  display: grid;
+  grid-template-rows: minmax(120px, 180px) auto;
+}
+
+/*# sourceMappingURL=tooltip.css.map */

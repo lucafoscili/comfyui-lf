@@ -64,6 +64,7 @@ import {
 } from '../types/events.js';
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
 import { KulDataDataset } from '../types/ketchup-lite/components';
+import { LFTooltip } from './tooltip';
 
 /*-------------------------------------------------*/
 /*                 L F   C l a s s                 */
@@ -331,6 +332,45 @@ export class LFManager {
         this.log(payload.message, { payload }, payload.status);
         return payload;
       },
+      updateCover: async (modelPath, b64image) => {
+        const payload: BaseAPIPayload = {
+          message: '',
+          status: LogSeverity.Info,
+        };
+
+        try {
+          const body = new FormData();
+          body.append('model_path', modelPath);
+          body.append('base64_image', b64image);
+
+          const response = await api.fetchApi(LFEndpoints.UpdateMetadataCover, {
+            method: 'POST',
+            body,
+          });
+
+          const code = response.status;
+
+          switch (code) {
+            case 200:
+              const p: BaseAPIPayload = await response.json();
+              if (p.status === 'success') {
+                payload.message = p.message;
+                payload.status = LogSeverity.Success;
+              }
+              break;
+            default:
+              payload.message = 'Unexpected response from the API!';
+              payload.status = LogSeverity.Error;
+              break;
+          }
+        } catch (error) {
+          payload.message = error;
+          payload.status = LogSeverity.Error;
+        }
+
+        this.log(payload.message, { payload }, payload.status);
+        return payload;
+      },
     },
     event: (name, callback) => {
       api.addEventListener(name, callback);
@@ -372,6 +412,7 @@ export class LFManager {
   #MANAGERS: {
     ketchupLite?: KulManager;
     nodes?: LFNodes;
+    tooltip?: LFTooltip;
     widgets?: LFWidgets;
   } = {};
 
@@ -388,6 +429,7 @@ export class LFManager {
     defineCustomElements(window);
 
     this.#MANAGERS.nodes = new LFNodes();
+    this.#MANAGERS.tooltip = new LFTooltip();
     this.#MANAGERS.widgets = new LFWidgets();
   }
 
@@ -401,6 +443,10 @@ export class LFManager {
 
   getDebugDataset() {
     return { article: this.#DEBUG_ARTICLE, dataset: this.#DEBUG_DATASET };
+  }
+
+  getManagers() {
+    return this.#MANAGERS;
   }
 
   initialize() {
