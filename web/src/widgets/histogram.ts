@@ -6,8 +6,6 @@ import { createDOMWidget, getLFManager, deserializeValue } from '../utils/common
 const BASE_CSS_CLASS = 'lf-histogram';
 const TYPE = CustomWidgetName.histogram;
 
-let TIMEOUT: NodeJS.Timeout;
-
 export const histogramFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
@@ -48,7 +46,7 @@ export const histogramFactory = {
     histogram.kulAxis = 'Axis_0';
     histogram.kulColors = ['red', 'green', 'blue'];
     histogram.kulSeries = ['Series_0', 'Series_1', 'Series_2'];
-    histogram.kulTypes = ['area'];
+    histogram.kulTypes = ['area', 'area', 'area'];
 
     content.appendChild(histogram);
     wrapper.appendChild(content);
