@@ -18,6 +18,7 @@ import { LFNodes } from './nodes.js';
 import { LFWidgets } from './widgets.js';
 import { LFEndpoints, LogSeverity, } from '../types/manager.js';
 import { EventName, } from '../types/events.js';
+import { LFTooltip } from './tooltip.js';
 const LOG_STYLE = {
     fontFamily: 'var(--kul-font-family-monospace)',
     margin: '0',
@@ -254,6 +255,41 @@ export class LFManager {
                     this.log(payload.message, { payload }, payload.status);
                     return payload;
                 },
+                updateCover: async (modelPath, b64image) => {
+                    const payload = {
+                        message: '',
+                        status: LogSeverity.Info,
+                    };
+                    try {
+                        const body = new FormData();
+                        body.append('model_path', modelPath);
+                        body.append('base64_image', b64image);
+                        const response = await api.fetchApi(LFEndpoints.UpdateMetadataCover, {
+                            method: 'POST',
+                            body,
+                        });
+                        const code = response.status;
+                        switch (code) {
+                            case 200:
+                                const p = await response.json();
+                                if (p.status === 'success') {
+                                    payload.message = p.message;
+                                    payload.status = LogSeverity.Success;
+                                }
+                                break;
+                            default:
+                                payload.message = 'Unexpected response from the API!';
+                                payload.status = LogSeverity.Error;
+                                break;
+                        }
+                    }
+                    catch (error) {
+                        payload.message = error;
+                        payload.status = LogSeverity.Error;
+                    }
+                    this.log(payload.message, { payload }, payload.status);
+                    return payload;
+                },
             },
             event: (name, callback) => {
                 api.addEventListener(name, callback);
@@ -304,6 +340,7 @@ export class LFManager {
         document.addEventListener('kul-manager-ready', managerCb);
         defineCustomElements(window);
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes = new LFNodes();
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").tooltip = new LFTooltip();
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").widgets = new LFWidgets();
     }
     getApiRoutes() {
@@ -314,6 +351,9 @@ export class LFManager {
     }
     getDebugDataset() {
         return { article: __classPrivateFieldGet(this, _LFManager_DEBUG_ARTICLE, "f"), dataset: __classPrivateFieldGet(this, _LFManager_DEBUG_DATASET, "f") };
+    }
+    getManagers() {
+        return __classPrivateFieldGet(this, _LFManager_MANAGERS, "f");
     }
     initialize() {
         if (__classPrivateFieldGet(this, _LFManager_INITIALIZED, "f")) {

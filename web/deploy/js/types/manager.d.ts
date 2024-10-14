@@ -25,6 +25,7 @@ export interface MetadataAPIs {
     clear: () => Promise<BaseAPIPayload>;
     get: (hash: string) => Promise<GetMetadataAPIPayload>;
     save: (modelPath: string, dataset: KulDataDataset, forcedSave?: boolean) => Promise<BaseAPIPayload>;
+    updateCover: (modelPath: string, b64image: string) => Promise<BaseAPIPayload>;
 }
 export interface BaseAPIPayload {
     message: string;
@@ -38,7 +39,8 @@ export declare enum LFEndpoints {
     GetAnalytics = "/comfyui-lf/get-analytics",
     GetMetadata = "/comfyui-lf/get-metadata",
     NewBackup = "/comfyui-lf/new-backup",
-    SaveMetadata = "/comfyui-lf/save-metadata"
+    SaveMetadata = "/comfyui-lf/save-metadata",
+    UpdateMetadataCover = "/comfyui-lf/update-metadata-cover"
 }
 export declare enum LogSeverity {
     Info = "info",
@@ -58,3 +60,6 @@ export interface GetAnalyticsAPIPayload extends BaseAPIPayload {
 export interface GetMetadataAPIPayload extends BaseAPIPayload {
     data: CivitAIModelData;
 }
+export type TooltipUploadCallback = (b64image: string) => void;
+export type TooltipCallbacks = TooltipUploadCallback;
+export type TooltipLayouts = 'upload';
