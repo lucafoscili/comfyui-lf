@@ -41,7 +41,7 @@ def prepare_model_dataset (model_name, model_hash, model_base64, model_path):
                             },
                             "kulCode": { 
                                 'shape': 'code', 
-                                'value': '{' +  f"'hash': '{model_hash}', 'path': '{model_path}'" + '}'
+                                'value': json.dumps({'hash': model_hash, 'path': model_path})
                             },
                             "kulImage": {
                                 "kulStyle": "img {object-fit: cover;}",
