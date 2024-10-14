@@ -25,15 +25,15 @@ export const fetchModelMetadata = async (models, forcedSave = false) => {
     const promises = models.map(async ({ dataset, hash, path, apiFlag }) => {
         if (apiFlag) {
             const payload = await getApiRoutes().metadata.get(hash);
-            return onResponse(dataset, path, hash, forcedSave, payload);
+            return onResponse(dataset, path, forcedSave, payload);
         }
         else {
-            return onResponse(dataset, path, hash, forcedSave, null);
+            return onResponse(dataset, path, forcedSave, null);
         }
     });
     return Promise.all(promises);
 };
-const onResponse = async (dataset, path, hash, forcedSave, payload) => {
+const onResponse = async (dataset, path, forcedSave, payload) => {
     const r = payload?.data;
     const id = r?.id;
     const props = {
@@ -41,9 +41,9 @@ const onResponse = async (dataset, path, hash, forcedSave, payload) => {
     };
     switch (typeof id) {
         case 'number':
-            const civitaiDataset = prepareValidDataset(r);
+            const code = dataset?.nodes?.[0]?.cells?.kulCode;
+            const civitaiDataset = prepareValidDataset(r, code);
             props.kulData = civitaiDataset;
-            props.kulStyle = '.sub-2.description { white-space: pre-wrap; }';
             getApiRoutes().metadata.save(path, civitaiDataset, forcedSave);
             break;
         case 'string':
@@ -64,16 +64,13 @@ const onResponse = async (dataset, path, hash, forcedSave, payload) => {
             props.kulData = dataset;
             break;
     }
-    if (props.kulData && hash && path) {
-        props.kulData.nodes[0].cells.kulCode = hashCell(hash, path);
-    }
     return props;
 };
-const prepareValidDataset = (r) => {
+const prepareValidDataset = (r, code) => {
     const dataset = {
         nodes: [
             {
-                cells: { kulImage: null, text1: null, text2: null, text3: null },
+                cells: { kulCode: code ?? null, kulImage: null, text1: null, text2: null, text3: null },
                 id: r.id.toString(),
                 description: "Click to open the model's page on CivitAI",
                 value: `https://civitai.com/models/${r.modelId}`,
@@ -108,10 +105,4 @@ Thumbs up: ${r.stats?.thumbsUpCount ? r.stats.thumbsUpCount : 'N/A'}
 `,
     };
     return dataset;
-};
-const hashCell = (hash, path) => {
-    return {
-        shape: 'code',
-        value: JSON.stringify({ hash: hash.valueOf(), path }),
-    };
 };
