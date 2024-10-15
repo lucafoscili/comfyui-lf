@@ -1,3 +1,4 @@
+import ast
 import json
 import random
 
@@ -206,24 +207,37 @@ class LF_SetValueInJSON:
             "required": {
                 "json": ("JSON", {"tooltip": "JSON Object."}),
                 "key": ("STRING", {"tooltip": "Key to update or insert."}),
-                "value": ("STRING", {"tooltip": "Value to set."}),
+                "value": ("STRING", {"tooltip": "Value to set. Can be a list in string form."}),
             }
         }
 
     CATEGORY = category
     FUNCTION = "on_exec"
+    INPUT_IS_LIST = (True, False, True)
     RETURN_NAMES = ("json_output",)
     RETURN_TYPES = ("JSON",)
 
     def on_exec(self, json: dict, key: str, value: str):
+        key = key[0] if isinstance(key, list) else key
+        json = json[0] if isinstance(json, list) and len(json) == 1 else json
+        value = value[0] if isinstance(value, list) and len(value) == 1 else value
+        try:
+            parsed_value = ast.literal_eval(value)
+            if not isinstance(parsed_value, (list, dict)):
+                parsed_value = value
+        except (ValueError, SyntaxError):
+            parsed_value = value
+
         if isinstance(json, dict):
-            json[key] = value
+            json[key] = parsed_value
+
         elif isinstance(json, list):
             for json_obj in json:
                 if isinstance(json_obj, dict):
-                    json_obj[key] = value
+                    json_obj[key] = parsed_value
                 else:
                     raise TypeError(f"Expected a dictionary inside the list, but got {type(json_obj)}")
+
         else:
             raise TypeError(f"Unsupported input type for 'json': {type(json)}")
 
