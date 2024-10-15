@@ -3,7 +3,6 @@ import base64
 
 from PIL import Image
 
-
 def tensor_to_b64 (image):
     """
     Converts a PyTorch tensor representing an image into a base64 encoded string.
