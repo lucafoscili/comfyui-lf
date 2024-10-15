@@ -1,5 +1,6 @@
 import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, F as Fragment, H as Host } from './index-21ee70d9.js';
-import { k as kulManagerInstance, g as getProps, K as KUL_WRAPPER_ID, d as KulLanguageGeneric, a as KUL_STYLE_ID } from './kul-manager-6e71b245.js';
+import { k as kulManagerInstance, g as getProps, b as KulLanguageGeneric } from './kul-manager-57799b8b.js';
+import { K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './GenericVariables-0efba181.js';
 import { K as KulDataCyAttributes } from './GenericTypes-8038330a.js';
 
 /*-------------------------------------------------*/
