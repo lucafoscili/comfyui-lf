@@ -7,9 +7,9 @@ from itertools import combinations
 from PIL import Image, ImageFilter
 from server import PromptServer
 
-from ..utils.conversions import *
+from ..utils.conversion import *
 
-category = "✨ LF Nodes/Conversions"
+category = "✨ LF Nodes/Conversion"
 
 class LF_BlurImages:
     @classmethod

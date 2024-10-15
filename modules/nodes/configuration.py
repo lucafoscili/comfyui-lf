@@ -7,8 +7,8 @@ import comfy.utils
 from comfy.samplers import KSampler
 
 from ..utils.configuration import *
-from ..utils.conversions import tensor_to_base64
-from ..utils.selectors import prepare_model_dataset, process_model, send_multi_selector_message
+from ..utils.conversion import tensor_to_base64
+from ..utils.selector import prepare_model_dataset, process_model, send_multi_selector_message
 
 from server import PromptServer
 

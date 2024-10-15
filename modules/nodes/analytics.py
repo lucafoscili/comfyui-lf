@@ -3,10 +3,10 @@ import os
 
 from server import PromptServer
 
-from ..constants.analysis import *
-from ..utils.analysis import *
+from ..constants.analytics import *
+from ..utils.analytics import *
 
-category = "✨ LF Nodes/Analysis"
+category = "✨ LF Nodes/Analytics"
 
 class LF_ImageHistogram:
     @classmethod

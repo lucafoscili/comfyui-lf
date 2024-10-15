@@ -5,16 +5,32 @@
 
 ## Overview
 
-A suite of custom nodes for ComfyUI that aims to improve the user experience by adding more interactive and visually-compelling widgets.
+A suite of custom nodes for ComfyUI aimed at enhancing user experience with more interactive and visually engaging widgets.
 
-Whether you’re looking for quality-of-life improvements or more specific functionalities, this collection has you covered.
+Whether you're after quality-of-life improvements or specific functionalities, this collection has something for everyone.
 
-Most UI elements utilized by widgets are part of the [Ketchup Lite web components library](https://github.com/lucafoscili/ketchup-lite).
+Most UI elements used by the widgets come from the  [Ketchup Lite web components library](https://github.com/lucafoscili/ketchup-lite).
 
+## What kind of nodes does it offer?
+
+That's a tough one—the nodes span quite a few categories. Here's a quick breakdown:
+
+- **Analytics nodes**: Visualize and track data, like checkpoint/LoRA usage or image histograms.
+- **Configuration nodes**: Manage CivitAI metadata, and control the suite via the Control Panel.
+- **Conversion nodes**: Handle input data manipulation, such as resizing images or concatenating strings.
+- **IO Operations nodes**: Load and save files to/from the file system.
+- **JSON nodes**: Tools to manipulate and display JSON data.
+- **LLM nodes**: Interface with locally running LLMs, like the Messenger node, which also manages characters.
+- **Logic nodes**: Control flow using simple switches.
+- **Primitive nodes**: Work with primitive data types, offering features like history.
+- **Seed generation nodes**: Generate seeds for complex workflows.
+- **Selector nodes**: Resource selection widgets with metadata display for models.
+  
 ## Table of Contents
 
 - [LF Nodes for ComfyUI](#lf-nodes-for-comfyui)
   - [Overview](#overview)
+  - [What kind of nodes does it offer?](#what-kind-of-nodes-does-it-offer)
   - [Table of Contents](#table-of-contents)
   - [Analytics nodes (`analytics.py`)](#analytics-nodes-analyticspy)
     - [ImageHistogram](#imagehistogram)
@@ -26,7 +42,7 @@ Most UI elements utilized by widgets are part of the [Ketchup Lite web component
     - [ControlPanel](#controlpanel)
     - [LoadLoraTags](#loadloratags)
     - [Notify](#notify)
-  - [Conversions nodes (`conversions.py`)](#conversions-nodes-conversionspy)
+  - [Conversion nodes (`conversion.py`)](#conversion-nodes-conversionpy)
     - [BlurImages](#blurimages)
     - [Extractor](#extractor)
     - [Lora2Prompt](#lora2prompt)
@@ -81,7 +97,7 @@ Most UI elements utilized by widgets are part of the [Ketchup Lite web component
   - [Seed generation nodes (`seeds.py`)](#seed-generation-nodes-seedspy)
     - [SequentialSeedsGenerator](#sequentialseedsgenerator)
     - [UrandomSeedGenerator](#urandomseedgenerator)
-  - [Selectors (`selectors.py`)](#selectors-selectorspy)
+  - [Selector nodes (`selectors.py`)](#selector-nodes-selectorspy)
     - [CheckpointSelector](#checkpointselector)
     - [EmbeddingSelector](#embeddingselector)
     - [LoraSelector](#loraselector)
@@ -141,7 +157,7 @@ LoRA models are loaded in tag format, with a status widget displayed at the bott
 Triggers a browser notification when executed. Optionally, when clicked, it can queue a new prompt or focus the workflow's tab.
 ![Notify](https://github.com/lucafoscili/comfyui-lf/blob/8f648bf3e9380bb410125d3e04a71baaf7d99ccf/docs/images/Notify.png "Simple notification example")
 
-## Conversions nodes (`conversions.py`)
+## Conversion nodes (`conversion.py`)
 
 ### BlurImages
 
@@ -399,7 +415,7 @@ Generates a series of unique seeds based on a global seed value. This node is us
 Generates up to 20 different seeds through the use of the Python urandom function which leverages CPU generated entropy for increased randomness.
 ![UrandomSeedGenerator](https://github.com/lucafoscili/comfyui-lf/blob/7deb085a3649ec873435cb092308c4e7a01cefe9/docs/images/UrandomSeedGenerator.png "Random seeds with history enabled")
 
-## Selectors (`selectors.py`)
+## Selector nodes (`selectors.py`)
 
 ### CheckpointSelector
 

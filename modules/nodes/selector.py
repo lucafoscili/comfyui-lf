@@ -4,7 +4,7 @@ import random
 from comfy.samplers import KSampler
 from server import PromptServer
 
-from ..utils.selectors import *
+from ..utils.selector import *
 
 category = "✨ LF Nodes/Selectors"
 
