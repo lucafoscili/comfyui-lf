@@ -1,5 +1,6 @@
 import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-21ee70d9.js';
-import { k as kulManagerInstance, g as getProps, b as KulThemeColorValues, K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './kul-manager-6e71b245.js';
+import { k as kulManagerInstance, g as getProps, K as KulThemeColorValues } from './kul-manager-57799b8b.js';
+import { K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './GenericVariables-0efba181.js';
 
 /*-------------------------------------------------*/
 /*                    P r o p s                    */
