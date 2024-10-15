@@ -5,7 +5,7 @@
 
 ## Overview
 
-A suite of custom nodes for ComfyUI aimed at enhancing user experience with more interactive and visually engaging widgets.
+A suite of custom nodes for [ComfyUI](https://github.com/comfyanonymous/ComfyUI) aimed at enhancing user experience with more interactive and visually engaging widgets.
 
 Whether you're after quality-of-life improvements or specific functionalities, this collection has something for everyone.
 
