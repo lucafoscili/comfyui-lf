@@ -183,6 +183,7 @@ web/deploy/js/ketchup-lite/*showcase*
 !web/deploy/assets/svg/chevron_right.svg
 !web/deploy/assets/svg/clear.svg
 !web/deploy/assets/svg/clock.svg
+!web/deploy/assets/svg/cloud_download.svg
 !web/deploy/assets/svg/content_copy.svg
 !web/deploy/assets/svg/delete.svg
 !web/deploy/assets/svg/download.svg

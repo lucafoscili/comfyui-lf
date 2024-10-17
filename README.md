@@ -283,12 +283,12 @@ Sets a new key or updates an existing one with a new value.
 ### ShuffleJSONKeys
 
 Sorts the keys at root level of a JSON, returning the sorted object. Optionally it can also sort the input JSON in place without making a copy of it.
-![ShuffleJSONKeys](https://github.com/lucafoscili/comfyui-lf/blob/460888f68f9568b05d390add9733dc480ee0950f/docs/images/ShuffleJSONKeys.png "JSON keys shuffled")
+![ShuffleJSONKeys](https://github.com/lucafoscili/comfyui-lf/blob/87801285fbe09db887633a6c984983b78a9146ff/docs/images/ShuffleJSONKeys.png "JSON keys shuffled")
 
 ### SortJSONKeys
 
 Sorts the keys at root level of a JSON, returning the sorted object. Optionally it can also sort the input JSON in place without making a copy of it.
-![SortJSONKeys](https://github.com/lucafoscili/comfyui-lf/blob/460888f68f9568b05d390add9733dc480ee0950f/docs/images/SortJSONKeys.png "JSON sorted")
+![SortJSONKeys](https://github.com/lucafoscili/comfyui-lf/blob/87801285fbe09db887633a6c984983b78a9146ff/docs/images/SortJSONKeys.png "JSON sorted")
 
 ### StringToJSON
 
