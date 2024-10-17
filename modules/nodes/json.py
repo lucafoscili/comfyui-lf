@@ -296,7 +296,7 @@ class LF_SortJSONKeys:
             "hidden": { "node_id": "UNIQUE_ID" }
         }
 
-    CATEGORY = "JSON Operations"
+    CATEGORY = category
     FUNCTION = "on_exec"
     OUTPUT_NODE = True
     RETURN_NAMES = ("sorted_json",)
