@@ -200,6 +200,7 @@ web/deploy/js/ketchup-lite/*showcase*
 !web/deploy/assets/svg/save.svg
 !web/deploy/assets/svg/settings.svg
 !web/deploy/assets/svg/style.svg
+!web/deploy/assets/svg/upload.svg
 !web/deploy/assets/svg/view_comfy.svg
 !web/deploy/assets/svg/view_day.svg
 !web/deploy/assets/svg/wrench.svg
