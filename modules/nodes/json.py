@@ -242,7 +242,42 @@ class LF_SetValueInJSON:
             raise TypeError(f"Unsupported input type for 'json': {type(json)}")
 
         return (json,)
+    
+class LF_SortJSONKeys:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "json": ("JSON", {"tooltip": "Input JSON object."}),
+                "ascending": ("BOOLEAN", {"default": True, "tooltip": "Sort ascending (True) or descending (False)."}),
+                "mutate_source": ("BOOLEAN", {"default": False, "tooltip": "Sorts the input JSON in place without creating a new dictionary as a copy."})
+            },
+            "hidden": { "node_id": "UNIQUE_ID" }
+        }
 
+    CATEGORY = "JSON Operations"
+    FUNCTION = "on_exec"
+    OUTPUT_NODE = True
+    RETURN_NAMES = ("sorted_json",)
+    RETURN_TYPES = ("JSON",)
+
+    def on_exec(self, node_id, json: dict, ascending: bool, mutate_source: bool):
+        if mutate_source:
+            items = {key: json[key] for key in json}
+            json.clear()
+            for key in sorted(items.keys(), reverse=not ascending):
+                json[key] = items[key]
+            sorted_json = json
+        else:
+            sorted_json = {k: json[k] for k in sorted(json.keys(), reverse=not ascending)}
+
+        PromptServer.instance.send_sync("lf-sortjsonkeys", {
+            "node": node_id,
+            "json": sorted_json
+        })
+
+        return (sorted_json,)
+    
 class LF_StringToJSON:
     @classmethod
     def INPUT_TYPES(cls):
@@ -303,6 +338,7 @@ NODE_CLASS_MAPPINGS = {
     "LF_ImageListFromJSON": LF_ImageListFromJSON,
     "LF_KeywordToggleFromJSON": LF_KeywordToggleFromJSON,
     "LF_SetValueInJSON": LF_SetValueInJSON,
+    "LF_SortJSONKeys": LF_SortJSONKeys,
     "LF_StringToJSON": LF_StringToJSON,
     "LF_WriteJSON": LF_WriteJSON
 }
@@ -313,6 +349,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_ImageListFromJSON": "Image list from JSON",
     "LF_KeywordToggleFromJSON": "Keyword toggle from JSON",
     "LF_SetValueInJSON" : "Set/Create a Value in a JSON Object",
+    "LF_SortJSONKeys": "Sorts JSON keys",
     "LF_StringToJSON": "Convert string to JSON",
     "LF_WriteJSON": "Write JSON"
 }
