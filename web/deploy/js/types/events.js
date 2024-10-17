@@ -34,6 +34,8 @@ export var EventName;
     EventName["samplerSelector"] = "lf-samplerselector";
     EventName["saveImageForCivitAI"] = "lf-saveimageforcivitai";
     EventName["schedulerSelector"] = "lf-schedulerselector";
+    EventName["shuffleJsonKeys"] = "lf-shufflejsonkeys";
+    EventName["sortJsonKeys"] = "lf-sortjsonkeys";
     EventName["string"] = "lf-string";
     EventName["switchFloat"] = "lf-switchfloat";
     EventName["switchImage"] = "lf-switchimage";

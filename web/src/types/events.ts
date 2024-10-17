@@ -43,6 +43,8 @@ export enum EventName {
   samplerSelector = 'lf-samplerselector',
   saveImageForCivitAI = 'lf-saveimageforcivitai',
   schedulerSelector = 'lf-schedulerselector',
+  shuffleJsonKeys = 'lf-shufflejsonkeys',
+  sortJsonKeys = 'lf-sortjsonkeys',
   string = 'lf-string',
   switchFloat = 'lf-switchfloat',
   switchImage = 'lf-switchimage',
@@ -84,6 +86,8 @@ export type EventPayload =
   | SamplerSelectorPayload
   | SaveImageForCivitAIPayload
   | SchedulerSelectorPayload
+  | ShuffleJSONKeysPayload
+  | SortJSONKeysPayload
   | StringPayload
   | SwitchImagePayload
   | SwitchIntegerPayload
@@ -397,6 +401,22 @@ export interface SaveImageForCivitAIPayload extends BaseEventPayload {
 export interface SchedulerSelectorPayload extends BaseEventPayload {
   isHistoryEnabled: boolean;
   value: string;
+}
+
+/*-------------------------------------------------------------------*/
+/*     S h u f f l e J S O N K e y s   D e c l a r a t i o n s       */
+/*-------------------------------------------------------------------*/
+
+export interface ShuffleJSONKeysPayload extends BaseEventPayload {
+  json: Record<string, unknown>;
+}
+
+/*-------------------------------------------------------------------*/
+/*         S o r t J S O N K e y s   D e c l a r a t i o n s         */
+/*-------------------------------------------------------------------*/
+
+export interface SortJSONKeysPayload extends BaseEventPayload {
+  json: Record<string, unknown>;
 }
 
 /*-------------------------------------------------------------------*/

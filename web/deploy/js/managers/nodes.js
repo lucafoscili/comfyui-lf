@@ -49,6 +49,8 @@ import { updateUsageStatisticsFactory } from '../nodes/updateUsageStatistics.js'
 import { usageStatisticsFactory } from '../nodes/usageStatistics.js';
 import { resizeImageToDimensionFactory } from '../nodes/resizeImageToDimension.js';
 import { mathOperationFactory } from '../nodes/mathOperation.js';
+import { sortJsonKeysFactory } from '../nodes/sortJsonKeys.js';
+import { shuffleJsonKeysFactory } from '../nodes/shuffleJsonKeys.js';
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
 /*-------------------------------------------------*/
@@ -88,6 +90,8 @@ export class LFNodes {
             [NodeName.samplerSelector]: samplerSelectorFactory.eventHandler,
             [NodeName.saveImageForCivitai]: saveImageForCivitaiFactory.eventHandler,
             [NodeName.schedulerSelector]: schedulerSelectorFactory.eventHandler,
+            [NodeName.shuffleJsonKeys]: shuffleJsonKeysFactory.eventHandler,
+            [NodeName.sortJsonKeys]: sortJsonKeysFactory.eventHandler,
             [NodeName.string]: stringFactory.eventHandler,
             [NodeName.switchFloat]: switchFloatFactory.eventHandler,
             [NodeName.switchImage]: switchImageFactory.eventHandler,
@@ -140,6 +144,8 @@ export class LFNodes {
             [NodeName.samplerSelector]: samplerSelectorFactory.register,
             [NodeName.saveImageForCivitai]: saveImageForCivitaiFactory.register,
             [NodeName.schedulerSelector]: schedulerSelectorFactory.register,
+            [NodeName.shuffleJsonKeys]: shuffleJsonKeysFactory.register,
+            [NodeName.sortJsonKeys]: sortJsonKeysFactory.register,
             [NodeName.string]: stringFactory.register,
             [NodeName.switchFloat]: switchFloatFactory.register,
             [NodeName.switchImage]: switchImageFactory.register,
