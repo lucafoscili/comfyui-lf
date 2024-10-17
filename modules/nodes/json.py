@@ -242,7 +242,48 @@ class LF_SetValueInJSON:
             raise TypeError(f"Unsupported input type for 'json': {type(json)}")
 
         return (json,)
-    
+
+class LF_ShuffleJSONKeys:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "json": ("JSON", {"tooltip": "Input JSON object."}),
+                "mutate_source": ("BOOLEAN", {"default": False, "tooltip": "Shuffles the input JSON in place without creating a new dictionary as a copy."}),
+                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Seed for the random shuffle."})
+            },
+            "hidden": { "node_id": "UNIQUE_ID" }
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    OUTPUT_NODE = True
+    RETURN_NAMES = ("shuffled_json",)
+    RETURN_TYPES = ("JSON",)
+
+    def on_exec(self, node_id, json: dict, mutate_source: bool, seed: int):
+        random.seed(seed)
+
+        if mutate_source:
+            items = {key: json[key] for key in json}
+            json.clear()
+            keys = list(items.keys())
+            random.shuffle(keys)
+            for key in keys:
+                json[key] = items[key]
+            shuffled_json = json
+        else:
+            keys = list(json.keys())
+            random.shuffle(keys)
+            shuffled_json = {key: json[key] for key in keys}
+
+        PromptServer.instance.send_sync("lf-shufflejsonkeys", {
+            "node": node_id,
+            "json": shuffled_json
+        })
+
+        return (shuffled_json,)
+
 class LF_SortJSONKeys:
     @classmethod
     def INPUT_TYPES(cls):
@@ -338,6 +379,7 @@ NODE_CLASS_MAPPINGS = {
     "LF_ImageListFromJSON": LF_ImageListFromJSON,
     "LF_KeywordToggleFromJSON": LF_KeywordToggleFromJSON,
     "LF_SetValueInJSON": LF_SetValueInJSON,
+    "LF_ShuffleJSONKeys": LF_ShuffleJSONKeys,
     "LF_SortJSONKeys": LF_SortJSONKeys,
     "LF_StringToJSON": LF_StringToJSON,
     "LF_WriteJSON": LF_WriteJSON
@@ -349,7 +391,8 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_ImageListFromJSON": "Image list from JSON",
     "LF_KeywordToggleFromJSON": "Keyword toggle from JSON",
     "LF_SetValueInJSON" : "Set/Create a Value in a JSON Object",
-    "LF_SortJSONKeys": "Sorts JSON keys",
+    "LF_ShuffleJSONKeys": "Shuffle JSON keys",
+    "LF_SortJSONKeys": "Sort JSON keys",
     "LF_StringToJSON": "Convert string to JSON",
     "LF_WriteJSON": "Write JSON"
 }
