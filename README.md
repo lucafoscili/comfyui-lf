@@ -68,6 +68,7 @@ That's a tough one—the nodes span quite a few categories. Here's a quick break
     - [KeywordToggleFromJSON](#keywordtogglefromjson)
     - [LoadLocalJSON](#loadlocaljson)
     - [SetValueInJSON](#setvalueinjson)
+    - [SortJSONKeys](#sortjsonkeys)
     - [StringToJSON](#stringtojson)
     - [WriteJSON](#writejson)
   - [Large Language Model nodes (`llm.py`)](#large-language-model-nodes-llmpy)
@@ -277,6 +278,11 @@ Loads JSON data from a local file specified by a URL. This node is useful for im
 
 Sets a new key or updates an existing one with a new value.
 ![SetValueInJSON](https://github.com/lucafoscili/comfyui-lf/blob/460888f68f9568b05d390add9733dc480ee0950f/docs/images/SetValueInJSON.png "JSON updated with the new value")
+
+### SortJSONKeys
+
+Sorts the keys at root level of a JSON, returning the sorted object. Optionally it can also sort the input JSON in place without making a copy of it.
+![SortJSONKeys](https://github.com/lucafoscili/comfyui-lf/blob/460888f68f9568b05d390add9733dc480ee0950f/docs/images/SortJSONKeys.png "JSON sorted")
 
 ### StringToJSON
 

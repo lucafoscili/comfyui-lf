@@ -61,6 +61,7 @@ import {
   UpdateUsageStatisticsPayload,
   ResizeImageToDimensionPayload,
   MathOperationPayload,
+  SortJSONKeysPayload,
 } from '../types/events.js';
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
 import { KulDataDataset } from '../types/ketchup-lite/components';
@@ -813,6 +814,16 @@ export class LFManager {
     );
     this.#APIS.event(EventName.schedulerSelector, (e: CustomEvent<SchedulerSelectorPayload>) => {
       nodes.eventHandlers.LF_SchedulerSelector(e, widgets.adders.KUL_HISTORY);
+    });
+    /*-------------------------------------------------------------------*/
+    /*                 I n i t   S o r t J S O N K e y s                 */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_SortJSONKeys(
+      widgets.setters.KUL_CODE,
+      widgets.adders.KUL_CODE,
+    );
+    this.#APIS.event(EventName.sortJsonKeys, (e: CustomEvent<SortJSONKeysPayload>) => {
+      nodes.eventHandlers.LF_SortJSONKeys(e, widgets.adders.KUL_CODE);
     });
     /*-------------------------------------------------------------------*/
     /*                      I n i t   S t r i n g                        */

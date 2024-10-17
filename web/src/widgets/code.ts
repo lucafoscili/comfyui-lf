@@ -75,6 +75,7 @@ export const codeFactory = {
     switch (node.comfyClass) {
       case NodeName.displayJson:
       case NodeName.displayPrimitiveAsJson:
+      case NodeName.sortJsonKeys:
         code.kulLanguage = 'json';
         code.kulValue = EMPTY;
         break;

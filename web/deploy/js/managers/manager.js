@@ -614,6 +614,13 @@ export class LFManager {
             nodes.eventHandlers.LF_SchedulerSelector(e, widgets.adders.KUL_HISTORY);
         });
         /*-------------------------------------------------------------------*/
+        /*                 I n i t   S o r t J S O N K e y s                 */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_SortJSONKeys(widgets.setters.KUL_CODE, widgets.adders.KUL_CODE);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.sortJsonKeys, (e) => {
+            nodes.eventHandlers.LF_SortJSONKeys(e, widgets.adders.KUL_CODE);
+        });
+        /*-------------------------------------------------------------------*/
         /*                      I n i t   S t r i n g                        */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_String(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
