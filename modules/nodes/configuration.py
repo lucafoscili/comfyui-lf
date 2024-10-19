@@ -130,7 +130,7 @@ class LF_CivitAIMetadataSetup:
                 print(f"Error calculating hash for VAE: {e}")
                    
         metadata_string = (
-            f"{positive_prompt if positive_prompt else ''}, {embeddings.replace('embedding:','') if embeddings else ''}, {lora_tags if lora_tags else ''}\n"
+            f"{embeddings if embeddings else ''}, {positive_prompt if positive_prompt else ''}, {lora_tags if lora_tags else ''}\n"
             f"Negative prompt: {negative_prompt if negative_prompt else ''}\n"
             f"Steps: {steps if steps else ''}, Sampler: {sampler_a1111 if sampler else ''}, Schedule type: {scheduler_a1111 if scheduler else ''}, CFG scale: {cfg if cfg else ''}, "
             f"Seed: {seed if seed else ''}, Size: {width if width else ''}x{height if height else ''}, "
@@ -142,17 +142,20 @@ class LF_CivitAIMetadataSetup:
             f"TI hashes: \"{emb_hashes_str if emb_hashes_str else ''}\", Version: ComfyUI.LF Nodes"
         )
         
+        clean_metadata_string = metadata_string.replace(".safetensors", "")
+        clean_metadata_string = clean_metadata_string.replace("embedding:", "")
+        
         PromptServer.instance.send_sync("lf-civitaimetadatasetup", {
             "node": node_id, 
-            "metadataString": metadata_string, 
+            "metadataString": clean_metadata_string, 
         })
 
         if positive_prompt:
-            output_prompt = positive_prompt + ", " + embeddings if embeddings else positive_prompt
+            output_prompt = f"{embeddings}, {positive_prompt}" if embeddings else positive_prompt
         else:
             output_prompt = ''
 
-        return (metadata_string, checkpoint, vae, 
+        return (clean_metadata_string, checkpoint, vae, 
                 sampler, scheduler, embeddings, lora_tags, 
                 output_prompt, negative_prompt, steps, denoising, clip_skip, cfg, seed,
                 width, height, hires_upscaler, hires_upscale, analytics_dataset)
