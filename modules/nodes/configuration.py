@@ -7,7 +7,7 @@ import comfy.utils
 from comfy.samplers import KSampler
 
 from ..utils.configuration import *
-from ..utils.conversion import tensor_to_base64
+from ..utils.image import tensor_to_base64
 from ..utils.selector import prepare_model_dataset, process_model, send_multi_selector_message
 
 from server import PromptServer
@@ -287,6 +287,67 @@ class LF_LoadLoraTags:
 
     def add_chip(self, value):
         return { "icon": "clear", "Description": "Failed to load this LoRA.", "id": value, "value": value}
+        
+class LF_Lora2Prompt:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "text": ("STRING", {"multiline": True, "tooltip": "The input text containing LoRa tags. These tags will be processed and replaced with extracted keywords."}),
+                "separator": ("STRING", { "default": "SEP", "tooltip": "Character(s) used to separate keywords within the name of a single LoRa file. Helps in extracting individual keywords."}),
+                "weight": ("FLOAT", { "default": 0.5, "tooltip": "A weight value associated with LoRa tags, which may influence processing or output significance."}),
+                "weight_placeholder": ("STRING", { "default": "wwWEIGHTww", "tooltip": "A placeholder within LoRa tags that gets replaced with the actual weight value during processing."}),
+            }
+        } 
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    RETURN_NAMES = ("prompt", "loras",)
+    RETURN_TYPES = ("STRING", "STRING",)
+
+    def on_exec(self, text: str, separator:str, weight:float, weight_placeholder:str):
+        # Regular expression to match loras in <lora:...> format
+        lora_pattern = r'<lora:[^<>]+>'
+        
+        # Find all matches of loras in the input text
+        loras = re.findall(lora_pattern, text)
+        
+        # Extract keywords from each lora and prepare them for replacement
+        lora_keyword_map = {}
+        for lora in loras:
+            # Map the original lora tag to its keywords
+            lora_keyword_map[lora] = cleanse_lora_tag(lora, separator)
+        
+        # Replace each lora tag in the text with its corresponding keywords
+        for lora_tag, keywords in lora_keyword_map.items():
+            text = text.replace(lora_tag, keywords)
+        
+        # Replace the weight_placeholder with the actual weight
+        loras = [lora.replace(weight_placeholder, str(weight)) for lora in loras]
+        loras_string = "".join(loras)
+        
+        return (text, loras_string,)
+    
+class LF_LoraTag2Prompt:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "tag": ("STRING", {"multiline": True, "tooltip": "The LoRA tag to be converted."}),
+                "separator": ("STRING", { "default": "SEP", "tooltip": "String separating each keyword in a LoRA filename."}),
+            }
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    RETURN_NAMES = ("keywords", "nr_keywords",)
+    RETURN_TYPES = ("STRING", "INT",)
+
+    def on_exec(self, tag: str, separator: str):
+        clean_lora = cleanse_lora_tag(tag, separator)   
+        keywords_count = count_words_in_comma_separated_string(clean_lora) 
+
+        return (clean_lora, keywords_count,)
 
 class LF_Notify:
     @classmethod
@@ -346,6 +407,8 @@ NODE_CLASS_MAPPINGS = {
     "LF_CivitAIMetadataSetup": LF_CivitAIMetadataSetup,
     "LF_ControlPanel": LF_ControlPanel,
     "LF_LoadLoraTags": LF_LoadLoraTags,
+    "LF_Lora2Prompt": LF_Lora2Prompt,
+    "LF_LoraTag2Prompt": LF_LoraTag2Prompt,
     "LF_Notify": LF_Notify,
 }
 
@@ -353,5 +416,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_CivitAIMetadataSetup": "CivitAI metadata setup",
     "LF_ControlPanel": "Control panel",
     "LF_LoadLoraTags": "Load LoRA tags",
+    "LF_Lora2Prompt": "Convert prompt and LoRAs",
+    "LF_LoraTag2Prompt": "Convert LoRA tag to prompt",
     "LF_Notify": "Notify",
 }

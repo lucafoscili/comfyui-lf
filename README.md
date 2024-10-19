@@ -17,7 +17,7 @@ That's a tough one—the nodes span quite a few categories. Here's a quick break
 
 - **Analytics nodes**: Visualize and track data, like checkpoint/LoRA usage or image histograms.
 - **Configuration nodes**: Manage CivitAI metadata, and control the suite via the Control Panel.
-- **Conversion nodes**: Handle input data manipulation, such as resizing images or concatenating strings.
+- **Image manipulation nodes**: Tools to manipulate images, such as filter and resize nodes.
 - **IO Operations nodes**: Load and save files to/from the file system.
 - **JSON nodes**: Tools to manipulate and display JSON data.
 - **LLM nodes**: Interface with locally running LLMs, like the Messenger node, which also manages characters.
@@ -41,19 +41,16 @@ That's a tough one—the nodes span quite a few categories. Here's a quick break
     - [CivitAIMetadataSetup](#civitaimetadatasetup)
     - [ControlPanel](#controlpanel)
     - [LoadLoraTags](#loadloratags)
-    - [Notify](#notify)
-  - [Conversion nodes (`conversion.py`)](#conversion-nodes-conversionpy)
-    - [BlurImages](#blurimages)
-    - [Extractor](#extractor)
     - [Lora2Prompt](#lora2prompt)
     - [LoraTag2Prompt](#loratag2prompt)
+    - [Notify](#notify)
+  - [Image manipulation nodes (`image.py`)](#image-manipulation-nodes-imagepy)
+    - [BlurImages](#blurimages)
+    - [ClarityEffect](#clarityeffect)
     - [MultipleImageResizeForWeb](#multipleimageresizeforweb)
     - [ResizeImageByEdge](#resizeimagebyedge)
     - [ResizeImageToDimension](#resizeimagetodimension)
     - [ResizeImageToSquare](#resizeimagetosquare)
-    - [Something2Number](#something2number)
-    - [Something2String](#something2string)
-    - [WallOfText](#walloftext)
   - [IO Operations nodes (`io.py`)](#io-operations-nodes-iopy)
     - [LoadFileOnce](#loadfileonce)
     - [LoadImages](#loadimages)
@@ -92,10 +89,14 @@ That's a tough one—the nodes span quite a few categories. Here's a quick break
     - [DisplayInteger](#displayinteger)
     - [DisplayPrimitiveAsJSON](#displayprimitiveasjson)
     - [DisplayString](#displaystring)
+    - [Extractor](#extractor)
     - [Float](#float)
     - [Integer](#integer)
-    - [String](#string)
     - [RandomBoolean](#randomboolean)
+    - [Something2Number](#something2number)
+    - [Something2String](#something2string)
+    - [String](#string)
+    - [WallOfText](#walloftext)
   - [Seed generation nodes (`seeds.py`)](#seed-generation-nodes-seedspy)
     - [SequentialSeedsGenerator](#sequentialseedsgenerator)
     - [UrandomSeedGenerator](#urandomseedgenerator)
@@ -154,23 +155,6 @@ Utilities to debug nodes and to change the theme of Ketchup Lite webcomponents.
 LoRA models are loaded in tag format, with a status widget displayed at the bottom indicating the loading progress.
 ![LoadLoraTags](https://github.com/lucafoscili/comfyui-lf/blob/947e736fd6505b9de5b89a5a85ef86d528eae644/docs/images/LoadLoraTags.png "Loaded LoRA tags")
 
-### Notify
-
-Triggers a browser notification when executed. Optionally, when clicked, it can queue a new prompt or focus the workflow's tab.
-![Notify](https://github.com/lucafoscili/comfyui-lf/blob/8f648bf3e9380bb410125d3e04a71baaf7d99ccf/docs/images/Notify.png "Simple notification example")
-
-## Conversion nodes (`conversion.py`)
-
-### BlurImages
-
-Applies the gaussian blur filter to a list of images and edits the filename of each image by adding the '_Blur' suffix.
-![Blurimages](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/BlurImages.png "Screenshot of the list of images processed with Gaussian blur")
-
-### Extractor
-
-Extracts text enclosed by a starting and ending delimiter.
-![Extractor](https://github.com/lucafoscili/comfyui-lf/blob/713db4caae57bf6ac9c4b14633bc21734667c42a/docs/images/Extractor.png "Extraction")
-
 ### Lora2Prompt
 
 Converts a prompt and LoRAs to a formatted string.
@@ -180,6 +164,23 @@ Converts a prompt and LoRAs to a formatted string.
 
 Processes a LoRA tag to extract keywords and count them. This node is useful for preparing prompts based on LoRA file names.
 ![LoraTag2Prompt](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/LoraTag2Prompt.png "Interface of LoraTag2Prompt node splitting LoRA tags to extract keywords")
+
+### Notify
+
+Triggers a browser notification when executed. Optionally, when clicked, it can queue a new prompt or focus the workflow's tab.
+![Notify](https://github.com/lucafoscili/comfyui-lf/blob/8f648bf3e9380bb410125d3e04a71baaf7d99ccf/docs/images/Notify.png "Simple notification example")
+
+## Image manipulation nodes (`image.py`)
+
+### BlurImages
+
+Applies the gaussian blur filter to a list of images and edits the filename of each image by adding the '_Blur' suffix.
+![Blurimages](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/BlurImages.png "Screenshot of the list of images processed with Gaussian blur")
+
+### ClarityEffect
+
+Applies a filter mimicking the clarity effect of Lightroom and Camera Raw.
+![ClarityEffect](https://github.com/lucafoscili/comfyui-lf/blob/8f648bf3e9380bb410125d3e04a71baaf7d99ccf/docs/images/ClarityEffect.png "Enhanced clarity")
 
 ### MultipleImageResizeForWeb
 
@@ -200,21 +201,6 @@ Resizes an image to the longest dimension and then crops it/pads it to fit the c
 
 Resizes one or more images in tensor format to fit a square (by cropping when the image is rectangular).
 ![ResizeImageToSquare](https://github.com/lucafoscili/comfyui-lf/blob/f146784989b4511a10dfc5e4be1eeb5fa1d93ae1/docs/images/ResizeImageToSquare.png "Interface of image resizing node to square")
-
-### Something2Number
-
-Converts multiple inputs to integers and floats, handling nested structures and mixed types. If multiple numbers are sent to the node, they are summed.
-![Something2Number](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/Something2Number.png "Interface example of how inputs are converted to numbers")
-
-### Something2String
-
-Converts multiple inputs to strings, handling nested structures and mixed types.
-![Something2String](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/Something2String.png "Example of results where various structures are converted to strings")
-
-### WallOfText
-
-Concatenates up to 10 strings, with the optional toggle to shuffle the order of concatenation.
-![WallOfText](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/WallOfText.png "Output example of concatenated text sequences")
 
 ## IO Operations nodes (`io.py`)
 
@@ -395,6 +381,11 @@ Displays different primitive values as a JSON output or directly in-widget throu
 Displays the value of a string in a widget.
 ![DisplayString](https://github.com/lucafoscili/comfyui-lf/blob/8f37015be9e81511fd159e59a468e12a251f54ef/docs/images/DisplayString.png "String value displayed")
 
+### Extractor
+
+Extracts text enclosed by a starting and ending delimiter.
+![Extractor](https://github.com/lucafoscili/comfyui-lf/blob/713db4caae57bf6ac9c4b14633bc21734667c42a/docs/images/Extractor.png "Extraction")
+
 ### Float
 
 Used to select a float. It keeps record of old values, displaying a clickable list below the widget.
@@ -405,15 +396,30 @@ Used to select a float. It keeps record of old values, displaying a clickable li
 Used to select an integer. It keeps record of old values, displaying a clickable list below the widget.
 ![Integer](https://github.com/lucafoscili/comfyui-lf/blob/460888f68f9568b05d390add9733dc480ee0950f/docs/images/Integer.png "Integer node with history")
 
+### RandomBoolean
+
+Outputs False or True depending on the chances specified by the percentage widget. 0 always false, 100 always true.
+![RandomBoolean](https://github.com/lucafoscili/comfyui-lf/blob/d45405d1e87b73b6bf7f42f8827aecf1ababc582/docs/images/RandomBoolean.png "20% chance to return True")
+
+### Something2Number
+
+Converts multiple inputs to integers and floats, handling nested structures and mixed types. If multiple numbers are sent to the node, they are summed.
+![Something2Number](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/Something2Number.png "Interface example of how inputs are converted to numbers")
+
+### Something2String
+
+Converts multiple inputs to strings, handling nested structures and mixed types.
+![Something2String](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/Something2String.png "Example of results where various structures are converted to strings")
+
 ### String
 
 Used to select a string. It keeps record of old prompts, displaying a clickable list below the textarea.
 ![String](https://github.com/lucafoscili/comfyui-lf/blob/22813956c616ec89b97b53411a0fc77dedef747b/docs/images/String.png "String node with history")
 
-### RandomBoolean
+### WallOfText
 
-Outputs False or True depending on the chances specified by the percentage widget. 0 always false, 100 always true.
-![RandomBoolean](https://github.com/lucafoscili/comfyui-lf/blob/d45405d1e87b73b6bf7f42f8827aecf1ababc582/docs/images/RandomBoolean.png "20% chance to return True")
+Concatenates up to 10 strings, with the optional toggle to shuffle the order of concatenation.
+![WallOfText](https://github.com/lucafoscili/comfyui-lf/blob/6d3c7e0ef3806a9e7755ec2878bc9dcfefac46a0/docs/images/WallOfText.png "Output example of concatenated text sequences")
 
 ## Seed generation nodes (`seeds.py`)
 

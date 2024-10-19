@@ -8,7 +8,7 @@ from PIL import Image
 from server import PromptServer
 
 from ..utils.configuration import get_sha256
-from ..utils.conversion import pil_to_tensor, tensor_to_base64
+from ..utils.image import pil_to_tensor, tensor_to_base64
 
 def filter_list(filter, list):
     normalized_filter = filter.replace('\\', '/')

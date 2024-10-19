@@ -1,6 +1,9 @@
 import random
 
+from itertools import combinations
 from server import PromptServer
+
+from ..utils.primitives import *
 
 category = "✨ LF Nodes/Primitives"
     
@@ -204,6 +207,44 @@ class LF_DisplayPrimitiveAsJSON:
         })
 
         return (dataset,)
+
+class LF_Extractor:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "text": ("STRING", {"default": "", "multiline": True, "tooltip": "The string from which the output will be extracted."}),
+                "starting_delimiter": ("STRING", {"default": "{", "tooltip": "The delimiter where extraction starts."}),
+                "ending_delimiter": ("STRING", {"default": "}", "tooltip": "The delimiter where extraction ends."}),
+                "result": ("KUL_CODE", {"tooltip": "Extracted string."}),
+            },
+            "hidden": { "node_id": "UNIQUE_ID" },
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    RETURN_NAMES = ("result_as_json", "extracted_text", "result_as_int", "result_as_float", "result_as_boolean")
+    RETURN_TYPES = ("JSON", "STRING", "INT", "FLOAT", "BOOLEAN")
+
+    def on_exec(self, **kwargs):
+        node_id = kwargs["node_id"]
+        text = kwargs["text"]
+        starting_delimiter = kwargs["starting_delimiter"]
+        ending_delimiter = kwargs["ending_delimiter"]
+
+        extracted_text = extract_nested(text, starting_delimiter, ending_delimiter)
+        
+        result_as_json = convert_to_json(extracted_text)
+        result_as_int = convert_to_int(extracted_text)
+        result_as_float = convert_to_float(extracted_text)
+        result_as_boolean = convert_to_boolean(extracted_text)
+
+        PromptServer.instance.send_sync("lf-extractor", {
+            "node": node_id, 
+            "result": extracted_text,
+        })
+        
+        return (result_as_json, extracted_text, result_as_int, result_as_float, result_as_boolean)
     
 class LF_Float:
     @classmethod 
@@ -256,6 +297,131 @@ class LF_Integer:
         })
 
         return (integer,)
+    
+
+class LF_Something2Number:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {},
+            "optional": {
+                "JSON": ("JSON", {"tooltip": "JSON value to convert to numbers."}),
+                "boolean": ("BOOLEAN", {"tooltip": "Boolean value to convert to numbers."}),
+                "string": ("STRING", {"tooltip": "String value to convert to numbers."}),
+                "integer": ("INT", {"tooltip": "Integer value to convert to numbers."}),
+                "float": ("FLOAT", {"tooltip": "Float value to convert to numbers."})
+            }
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    OUTPUT_IS_LIST = (False, False, True, True,)
+    RETURN_NAMES = ("float_sum", "integer_sum", "float_list", "integer_list",)
+    RETURN_TYPES = ("FLOAT", "INT", "FLOAT", "INT",)
+
+    def on_exec(self, **kwargs):
+        """
+        Converts various inputs to floats and integers, handles nested structures,
+        and computes their sums.
+
+        Returns:
+            tuple:
+                - float_sum (float): Sum of all values converted to floats.
+                - integer_sum (int): Sum of all values converted to integers.
+                - float_list (list): List of all values converted to floats.
+                - integer_list (list): List of all values converted to integers.
+        """
+        float_values = []
+        integer_values = []
+
+        def extract_numbers(data):
+            """
+            Recursively extract numbers from various data types.
+            """
+            if isinstance(data, (int, float)):
+                float_values.append(float(data))
+                integer_values.append(int(data))
+            elif isinstance(data, bool):
+                float_values.append(1.0 if data else 0.0)
+                integer_values.append(1 if data else 0)
+            elif isinstance(data, str):
+                data = data.strip()
+                try:
+                    num = float(data)
+                    float_values.append(num)
+                    integer_values.append(int(num))
+                except ValueError:
+                    try:
+                        parsed_json = json.loads(data)
+                        extract_numbers(parsed_json)
+                    except json.JSONDecodeError:
+                        pass  # Ignore strings that are neither numbers nor valid JSON
+            elif isinstance(data, dict):
+                for value in data.values():
+                    extract_numbers(value)
+            elif isinstance(data, (list, tuple, set)):
+                for item in data:
+                    extract_numbers(item)
+
+        for _, value in kwargs.items():
+            extract_numbers(value)
+
+        float_sum = sum(float_values)
+        integer_sum = sum(integer_values)
+
+        return (float_sum, integer_sum, float_values, integer_values,)
+    
+class LF_Something2String:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {},
+            "optional": {
+                "JSON": ("JSON", {"tooltip": "JSON value to convert to string."}),
+                "boolean": ("BOOLEAN", {"tooltip": "Boolean value to convert to string."}),
+                "float": ("FLOAT", {"tooltip": "Float value to convert to string."}),
+                "integer": ("INT", {"tooltip": "Integer value to convert to string."})
+            }
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+
+    input_keys = ["JSON", "boolean", "float", "integer"]
+    combinations_list = []
+
+    for r in range(1, len(input_keys) + 1):
+        for combo in combinations(input_keys, r):
+            combo_name = "_".join(combo)
+            combinations_list.append(combo_name)
+
+    OUTPUT_IS_LIST = tuple([False] * len(combinations_list))
+    RETURN_TYPES = tuple(["STRING"] * len(combinations_list))
+    RETURN_NAMES = tuple(combinations_list)
+
+    def on_exec(self, **kwargs):
+        """
+        Converts multiple inputs to strings and generates specific combinations.
+        """
+        def flatten_input(input_item):
+            if isinstance(input_item, list):
+                return [str(sub_item) for item in input_item for sub_item in flatten_input(item)]
+            elif isinstance(input_item, str):
+                return [input_item]
+            else:
+                return [str(input_item)]
+        
+        results = []
+
+        for combo_name in self.RETURN_NAMES:
+            items = combo_name.split("_")
+            flattened_combo = []
+            for item in items:
+                if item in kwargs:
+                    flattened_combo.extend(flatten_input(kwargs[item]))
+            results.append("".join(flattened_combo))
+
+        return tuple(results)
     
 class LF_String:
     @classmethod 
@@ -316,6 +482,50 @@ class LF_RandomBoolean:
     @classmethod
     def IS_CHANGED(cls, **kwargs):
         return float("NaN")
+    
+class LF_WallOfText:
+    @classmethod 
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "separator": ("STRING", {"default": ", ", "tooltip": "Character(s) separating each string apart."}),
+                "text_1": ("STRING", {"default": "", "multiline": True, "tooltip": "The first required string."}),
+                "text_2": ("STRING", {"default": "", "multiline": True, "tooltip": "The second required string."}),
+            },
+            "optional": {
+                "text_3": ("STRING", {"default": "", "multiline": True, "tooltip": "The third optional string."}),
+                "text_4": ("STRING", {"default": "", "multiline": True, "tooltip": "The fourth optional string."}),
+                "text_5": ("STRING", {"default": "", "multiline": True, "tooltip": "The fifth optional string."}),
+                "text_6": ("STRING", {"default": "", "multiline": True, "tooltip": "The sixth optional string."}),
+                "text_7": ("STRING", {"default": "", "multiline": True, "tooltip": "The seventh optional string."}),
+                "text_8": ("STRING", {"default": "", "multiline": True, "tooltip": "The eighth optional string."}),
+                "text_9": ("STRING", {"default": "", "multiline": True, "tooltip": "The ninth optional string."}),
+                "text_10": ("STRING", {"default": "", "multiline": True, "tooltip": "The tenth optional string."}),
+                "shuffle_inputs": ("BOOLEAN", {"default": False, "tooltip": "Toggle shuffling of input strings."}),
+                "seed": ("INT", {"default": 0, "tooltip": "Seed to control the randomness of the shuffling."}),
+            } 
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    RETURN_NAMES = ("wall_of_text",)
+    RETURN_TYPES = ("STRING",)
+
+    def on_exec(self, **kwargs):
+        texts = [kwargs.get(f"text_{i}", "") for i in range(1, 11)]
+        wall_of_text = ""
+        if len(texts) > 1:
+            separator = kwargs.get("separator", "")
+            shuffle_inputs = kwargs.get("shuffle_inputs", False)
+            if shuffle_inputs:
+                seed = kwargs.get("seed", 0)
+                random.seed(seed)
+                random.shuffle(texts)
+            wall_of_text = separator.join([text for text in texts if text])
+        else:
+            wall_of_text = texts[0]
+
+        return (wall_of_text,)
 
 NODE_CLASS_MAPPINGS = {
     "LF_Boolean": LF_Boolean,
@@ -324,10 +534,14 @@ NODE_CLASS_MAPPINGS = {
     "LF_DisplayInteger": LF_DisplayInteger,
     "LF_DisplayPrimitiveAsJSON": LF_DisplayPrimitiveAsJSON,
     "LF_DisplayString": LF_DisplayString,
+    "LF_Extractor": LF_Extractor,
     "LF_Float": LF_Float,
     "LF_Integer": LF_Integer,
     "LF_RandomBoolean": LF_RandomBoolean,
-    "LF_String": LF_String
+    "LF_Something2Number": LF_Something2Number,
+    "LF_Something2String": LF_Something2String,
+    "LF_String": LF_String,
+    "LF_WallOfText": LF_WallOfText
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_Boolean": "Boolean",
@@ -336,8 +550,12 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_DisplayInteger": "Display integer",
     "LF_DisplayPrimitiveAsJSON": "Display primitive as JSON",
     "LF_DisplayString": "Display string",
+    "LF_Extractor": "Extract from text",
     "LF_Float": "Float",
     "LF_Integer": "Integer",
     "LF_RandomBoolean": "Random boolean",
-    "LF_String": "String"
+    "LF_Something2Number": "Convert to number",
+    "LF_Something2String": "Convert to string",
+    "LF_String": "String",
+    "LF_WallOfText": "Wall of text"
 }             
