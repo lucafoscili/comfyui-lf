@@ -1,6 +1,7 @@
 numpy
 openai==1.12.0
+opencv-python
 piexif
 Pillow
-torch
 requests
+torch
