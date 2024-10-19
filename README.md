@@ -180,7 +180,7 @@ Applies the gaussian blur filter to a list of images and edits the filename of e
 ### ClarityEffect
 
 Applies a filter mimicking the clarity effect of Lightroom and Camera Raw.
-![ClarityEffect](https://github.com/lucafoscili/comfyui-lf/blob/8f648bf3e9380bb410125d3e04a71baaf7d99ccf/docs/images/ClarityEffect.png "Enhanced clarity")
+![ClarityEffect](https://github.com/lucafoscili/comfyui-lf/blob/6b74811c1b96259cca53cb96882fc1f9f55e5337/docs/images/ClarityEffect.png "Enhanced clarity")
 
 ### MultipleImageResizeForWeb
 
