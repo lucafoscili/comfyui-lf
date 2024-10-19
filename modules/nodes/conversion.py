@@ -71,6 +71,36 @@ class LF_BlurImages:
 
         return (blurred_images, blurred_file_names,)
 
+class LF_ClarityEffect:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "image": ("IMAGE", {"tooltip": "Input image tensor or a list of image tensors."}),
+                "clarity_strength": ("FLOAT", {"default": 0.5, "min": 0.0, "max": 5.0, "step": 0.1, "tooltip": "Controls the amount of contrast enhancement in midtones."}),
+                "sharpen_amount": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 5.0, "step": 0.1, "tooltip": "Controls how much sharpening is applied to the image."}),
+                "blur_kernel_size": ("INT", {"default": 7, "min": 1, "max": 15, "step": 2, "tooltip": "Controls the size of the Gaussian blur kernel. Higher values mean more smoothing."}),
+            },
+        }
+
+    CATEGORY = "Image Processing"
+    FUNCTION = "on_exec"
+    RETURN_NAMES = ("image",)
+    RETURN_TYPES = ("IMAGE",)
+
+    def on_exec(self, image, clarity_strength: float, sharpen_amount: float, blur_kernel_size: int):
+        if isinstance(image, list):
+            processed_images = [clarity_effect(img, clarity_strength, sharpen_amount, blur_kernel_size) for img in image]
+        else:
+            processed_images = clarity_effect(image, clarity_strength, sharpen_amount, blur_kernel_size)
+
+        dataset = {"nodes": [{"children": [], "icon": "help", "id": "", "value": ""}]}
+        summary_message = f"Applied Clarity (strength={clarity_strength}) and Sharpening (amount={sharpen_amount})"
+        dataset["nodes"][0]["id"] = summary_message
+        dataset["nodes"][0]["value"] = summary_message
+
+        return (processed_images,)
+
 class LF_Extractor:
     @classmethod
     def INPUT_TYPES(cls):
@@ -653,6 +683,7 @@ class LF_WallOfText:
 
 NODE_CLASS_MAPPINGS = {
     "LF_BlurImages": LF_BlurImages,
+    "LF_ClarityEffect": LF_ClarityEffect,
     "LF_Extractor": LF_Extractor,
     "LF_Lora2Prompt": LF_Lora2Prompt,
     "LF_LoraTag2Prompt": LF_LoraTag2Prompt,
@@ -666,6 +697,7 @@ NODE_CLASS_MAPPINGS = {
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_BlurImages": "Blur images",
+    "LF_ClarityEffect": "Clarity effect (filter)",
     "LF_Extractor": "Extracts something from text",
     "LF_Lora2Prompt": "Convert prompt and LoRAs",
     "LF_LoraTag2Prompt": "Convert LoRA tag to prompt",

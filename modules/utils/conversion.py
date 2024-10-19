@@ -1,4 +1,5 @@
 import base64
+import cv2
 import io
 import json
 import numpy as np
@@ -6,6 +7,32 @@ import torch
 
 from PIL import Image
 from torchvision.transforms import InterpolationMode, functional
+
+def clarity_effect(image_tensor, clarity_strength, sharpen_amount, blur_kernel_size):
+    def apply_clarity(image, clarity_strength):
+        lab_image = cv2.cvtColor(image, cv2.COLOR_BGR2LAB)
+        l_channel, a_channel, b_channel = cv2.split(lab_image)
+        blurred_l_channel = cv2.GaussianBlur(l_channel, (blur_kernel_size, blur_kernel_size), 0)
+        laplacian = cv2.Laplacian(blurred_l_channel, cv2.CV_64F)
+        enhanced_l_channel = l_channel + clarity_strength * laplacian
+        enhanced_l_channel = np.clip(enhanced_l_channel, 0, 255).astype(np.uint8)
+        enhanced_lab_image = cv2.merge([enhanced_l_channel, a_channel, b_channel])
+        final_image = cv2.cvtColor(enhanced_lab_image, cv2.COLOR_LAB2BGR)
+
+        return final_image
+    
+    def apply_sharpen(image, sharpen_amount):
+        gaussian_blur = cv2.GaussianBlur(image, (9, 9), 10.0)
+        sharpened_image = cv2.addWeighted(image, 1.0 + sharpen_amount, gaussian_blur, -sharpen_amount, 0)
+        
+        return sharpened_image    
+
+    image = tensor_to_numpy(image_tensor)
+    clarity_image = apply_clarity(image, clarity_strength)
+    final_image = apply_sharpen(clarity_image, sharpen_amount)
+    final_tensor_image = numpy_to_tensor(final_image)
+
+    return final_tensor_image
 
 def cleanse_lora_tag(lora_tag: str, separator: str):
     """
@@ -112,6 +139,37 @@ def count_words_in_comma_separated_string(input_string):
     words_list = input_string.split(',')
     word_count = len(words_list)
     return word_count
+
+def numpy_to_tensor(numpy_array):
+    """
+    Convert a NumPy array to a PyTorch tensor.
+
+    Args:
+        numpy_array (numpy.ndarray): The input NumPy array representing the image.
+            It should be a 2D array with shape [H, W, C] or a 3D array with shape [B, H, W, C].
+
+    Returns:
+        torch.Tensor: The converted PyTorch tensor.
+
+    Raises:
+        Exception: If there's an error during the conversion process.
+
+    Notes:
+        - If the input numpy_array is 3D, it will assume it's a batch of images.
+        - The tensor values are automatically scaled from [0, 255] to [0, 1].
+    """
+    try:
+        tensor = torch.from_numpy(numpy_array)
+
+        if tensor.dim() == 3:
+            tensor = tensor.unsqueeze(0)
+
+        tensor = tensor.float() / 255.0
+
+        return tensor
+    except Exception as e:
+        print(f"Error converting NumPy array to tensor: {e}")
+        raise
 
 def pil_to_tensor(image):
     """
