@@ -20,12 +20,10 @@ export const histogramFactory = {
       getValue() {
         return histogram.kulData?.nodes ? JSON.stringify(histogram.kulData) : undefined;
       },
-      setValue(value: Record<string, unknown> | string) {
-        histogram.kulData = value as KulDataDataset;
+      setValue(value) {
         try {
-          if (typeof value === 'string') {
-            histogram.kulData = deserializeValue(value).parsedJson;
-          }
+          const dataset = deserializeValue(value).parsedJson as KulDataDataset;
+          histogram.kulData = dataset;
         } catch (error) {
           getLFManager().log('Error when setting value!', { error, histogram }, LogSeverity.Error);
           if (value === undefined || value === '') {

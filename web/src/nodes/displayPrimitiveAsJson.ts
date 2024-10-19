@@ -15,7 +15,7 @@ export const displayPrimitiveAsJsonFactory = {
     const node = getApiRoutes().getNodeById(payload.id);
     if (node) {
       const widget = getCustomWidget(node, CustomWidgetName.code, addW);
-      widget.options.setValue(event.detail.dataset as Record<string, unknown>);
+      widget.options.setValue(JSON.stringify(event.detail.dataset));
       getApiRoutes().redraw();
     }
   },

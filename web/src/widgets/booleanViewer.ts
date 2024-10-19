@@ -18,7 +18,7 @@ export const booleanViewerFactory = {
       getValue() {
         return booleanViewer?.kulLabel;
       },
-      setValue(value: string) {
+      setValue(value) {
         const isFalse = value?.toLowerCase()?.includes('false');
         const isTrue = value?.toLowerCase()?.includes('true');
         if (isTrue) {

@@ -120,7 +120,7 @@ export interface CardWidget extends Widget {
 export interface CardWidgetOptions {
   hideOnZoom: boolean;
   getComp(): HTMLKulCardElement[];
-  getValue(): string;
+  getValue(): CardWidgetValue;
   setValue(value: CardWidgetValue): void;
 }
 export type CardWidgetSetter = () => {
@@ -204,8 +204,8 @@ export interface CodeWidget extends Widget {
 export interface CodeWidgetOptions {
   hideOnZoom: boolean;
   getComp(): HTMLKulCodeElement;
-  getValue(): string;
-  setValue(value: Record<string, unknown> | string): void;
+  getValue(): CodeWidgetValue;
+  setValue(value: CodeWidgetValue): void;
 }
 export type CodeWidgetSetter = () => {
   [CustomWidgetName.code]: BaseWidgetCallback;
@@ -245,12 +245,13 @@ export interface HistogramWidget extends Widget {
 export interface HistogramWidgetOptions {
   hideOnZoom: boolean;
   getComp(): HTMLKulChartElement;
-  getValue(): string;
-  setValue(value: KulDataDataset | string): void;
+  getValue(): HistogramWidgetValue;
+  setValue(value: HistogramWidgetValue): void;
 }
 export type HistogramWidgetSetter = () => {
   [CustomWidgetName.histogram]: BaseWidgetCallback;
 };
+export type HistogramWidgetDeserializedValue = KulDataDataset;
 export type HistogramWidgetValue = string;
 
 /*-------------------------------------------------------------------*/
@@ -270,7 +271,8 @@ export interface HistoryWidgetOptions {
 export declare type HistoryWidgetSetter = () => {
   [CustomWidgetName.history]: BaseWidgetCallback;
 };
-export type HistoryWidgetValue = string | KulDataDataset;
+export type HistoryWidgetValuetDeserializedValue = KulDataDataset;
+export type HistoryWidgetValue = string;
 
 /*-------------------------------------------------------------------*/
 /*        I m a g e   P r e v i e w   D e c l a r a t i o n s        */
@@ -312,7 +314,8 @@ export interface JsonInputWidgetOptions {
 export declare type JsonInputWidgetSetter = () => {
   [CustomWidgetName.jsonInput]: BaseWidgetCallback;
 };
-export type JsonInputWidgetValue = string | Record<string, unknown>;
+export type JsonInputWidgetDeserializedValue = Record<string, unknown>;
+export type JsonInputWidgetValue = string;
 
 /*-------------------------------------------------------------------*/
 /*      K e y w o r d s   C o u n t   D e c l a r a t i o n s        */
@@ -379,7 +382,8 @@ export interface RollViewerWidgetOptions {
 export declare type RollViewerWidgetSetter = () => {
   [CustomWidgetName.rollViewer]: BaseWidgetCallback;
 };
-export type RollViewerWidgetValue = { bool: boolean; roll: number };
+export type RollViewerWidgetDeserializedValue = { bool: boolean; roll: number };
+export type RollViewerWidgetValue = string;
 
 /*-------------------------------------------------------------------*/
 /*         T a b B a r C h a r t   D e c l a r a t i o n s           */

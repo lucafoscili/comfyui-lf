@@ -12,7 +12,7 @@ export const randomBooleanFactory = {
         const node = getApiRoutes().getNodeById(payload.id);
         if (node) {
             const widget = getCustomWidget(node, CustomWidgetName.rollViewer, addW);
-            widget.options.setValue(payload);
+            widget.options.setValue(JSON.stringify(payload));
             getApiRoutes().redraw();
         }
     },

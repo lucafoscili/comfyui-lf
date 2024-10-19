@@ -9,31 +9,27 @@ export const historyFactory = {
         content: BASE_CSS_CLASS,
         history: `${BASE_CSS_CLASS}__widget`,
     },
-    options: (history) => {
+    options: (list) => {
         return {
             hideOnZoom: true,
             getComp() {
-                return history;
+                return list;
             },
             getValue() {
-                const nodes = history?.kulData?.nodes;
+                const nodes = list?.kulData?.nodes;
                 if (nodes?.length) {
-                    return JSON.stringify(history.kulData);
+                    return JSON.stringify(list.kulData);
                 }
                 return '';
             },
             setValue(value) {
                 try {
-                    if (typeof value === 'string') {
-                        history.kulData = deserializeValue(value).parsedJson;
-                    }
-                    else {
-                        history.kulData = value;
-                    }
+                    const dataset = deserializeValue(value).parsedJson;
+                    list.kulData = dataset;
                 }
                 catch (error) {
-                    getLFManager().log('Error when setting value!', { error, history }, LogSeverity.Error);
-                    history.kulData = null;
+                    getLFManager().log('Error when setting value!', { error, list }, LogSeverity.Error);
+                    list.kulData = null;
                 }
             },
         };

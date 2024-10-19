@@ -18,11 +18,9 @@ export const histogramFactory = {
                 return histogram.kulData?.nodes ? JSON.stringify(histogram.kulData) : undefined;
             },
             setValue(value) {
-                histogram.kulData = value;
                 try {
-                    if (typeof value === 'string') {
-                        histogram.kulData = deserializeValue(value).parsedJson;
-                    }
+                    const dataset = deserializeValue(value).parsedJson;
+                    histogram.kulData = dataset;
                 }
                 catch (error) {
                     getLFManager().log('Error when setting value!', { error, histogram }, LogSeverity.Error);

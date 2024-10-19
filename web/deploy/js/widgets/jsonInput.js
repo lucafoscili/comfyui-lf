@@ -20,14 +20,8 @@ export const jsonInputFactory = {
             setValue(value) {
                 if (jsonInput) {
                     try {
-                        let parsedValue;
-                        if (typeof value === 'string') {
-                            const { unescapedStr, validJson, parsedJson } = deserializeValue(value);
-                            parsedValue = validJson ? parsedJson : JSON.parse(unescapedStr);
-                        }
-                        else {
-                            parsedValue = value;
-                        }
+                        const { unescapedStr, validJson, parsedJson } = deserializeValue(value);
+                        const parsedValue = validJson ? parsedJson : JSON.parse(unescapedStr);
                         jsonInput.value = JSON.stringify(parsedValue, null, 2);
                     }
                     catch (error) {

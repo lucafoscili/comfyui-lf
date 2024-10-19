@@ -14,7 +14,7 @@ export const imageHistogramFactory = {
             const widget = getCustomWidget(node, CustomWidgetName.histogram, addW);
             const comp = widget.options.getComp();
             comp.refresh();
-            widget.options.setValue(event.detail.dataset);
+            widget.options.setValue(JSON.stringify(event.detail.dataset));
             getApiRoutes().redraw();
         }
     },
