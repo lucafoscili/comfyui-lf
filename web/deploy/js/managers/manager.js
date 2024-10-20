@@ -391,6 +391,13 @@ export class LFManager {
             nodes.eventHandlers.LF_CivitAIMetadataSetup(e, widgets.adders.KUL_CODE);
         });
         /*-------------------------------------------------------------------*/
+        /*               I n i t   C l a r i t y E f f e c t                 */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_ClarityEffect(widgets.setters.KUL_COMPARE, widgets.adders.KUL_COMPARE);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.clarityEffect, (e) => {
+            nodes.eventHandlers.LF_ClarityEffect(e, widgets.adders.KUL_COMPARE);
+        });
+        /*-------------------------------------------------------------------*/
         /*               I n i t   C o n t r o l   P a n e l                 */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_ControlPanel(widgets.setters.KUL_CONTROL_PANEL, widgets.adders.KUL_CONTROL_PANEL);

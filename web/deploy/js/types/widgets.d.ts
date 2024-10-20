@@ -33,6 +33,7 @@ export type CustomWidgetMap = {
     [CustomWidgetName.chat]: ChatWidget;
     [CustomWidgetName.chip]: ChipWidget;
     [CustomWidgetName.code]: CodeWidget;
+    [CustomWidgetName.compare]: CompareWidget;
     [CustomWidgetName.controlPanel]: ControlPanelWidget;
     [CustomWidgetName.countBarChart]: CountBarChartWidget;
     [CustomWidgetName.histogram]: HistogramWidget;
@@ -52,6 +53,7 @@ export declare enum CustomWidgetName {
     chat = "KUL_CHAT",
     chip = "KUL_CHIP",
     code = "KUL_CODE",
+    compare = "KUL_COMPARE",
     controlPanel = "KUL_CONTROL_PANEL",
     countBarChart = "KUL_COUNT_BAR_CHART",
     histogram = "KUL_HISTOGRAM",
@@ -64,7 +66,7 @@ export declare enum CustomWidgetName {
     tree = "KUL_TREE",
     upload = "KUL_UPLOAD"
 }
-export type CustomWidgetOptions = BooleanViewerWidgetOptions | CardWidgetOptions | CardsWithChipWidgetOptions | ChatWidgetOptions | ChipWidgetOptions | CodeWidgetOptions | ControlPanelWidgetOptions | CountBarChartWidgetOptions | HistogramWidgetOptions | HistoryWidgetOptions | ImagePreviewWidgetOptions | JsonInputWidgetOptions | MessengerWidgetOptions | RollViewerWidgetOptions | TabBarChartWidgetOptions | TreeWidgetOptions | UploadWidgetOptions;
+export type CustomWidgetOptions = BooleanViewerWidgetOptions | CardWidgetOptions | CardsWithChipWidgetOptions | ChatWidgetOptions | ChipWidgetOptions | CodeWidgetOptions | CompareWidgetOptions | ControlPanelWidgetOptions | CountBarChartWidgetOptions | HistogramWidgetOptions | HistoryWidgetOptions | ImagePreviewWidgetOptions | JsonInputWidgetOptions | MessengerWidgetOptions | RollViewerWidgetOptions | TabBarChartWidgetOptions | TreeWidgetOptions | UploadWidgetOptions;
 export interface BooleanViewerWidget extends Widget {
     options: BooleanViewerWidgetOptions;
     type: [CustomWidgetName.booleanViewer];
@@ -160,6 +162,20 @@ export type CodeWidgetSetter = () => {
     [CustomWidgetName.code]: BaseWidgetCallback;
 };
 export type CodeWidgetValue = string;
+export interface CompareWidget extends Widget {
+    options: CompareWidgetOptions;
+    type: [CustomWidgetName.compare];
+}
+export interface CompareWidgetOptions {
+    hideOnZoom: boolean;
+    getComp(): HTMLKulCompareElement;
+    getValue(): CompareWidgetValue;
+    setValue(value: CompareWidgetValue): void;
+}
+export type CompareWidgetSetter = () => {
+    [CustomWidgetName.compare]: BaseWidgetCallback;
+};
+export type CompareWidgetValue = string;
 export interface ControlPanelWidget extends Widget {
     options: ControlPanelWidgetOptions;
     type: [CustomWidgetName.controlPanel];

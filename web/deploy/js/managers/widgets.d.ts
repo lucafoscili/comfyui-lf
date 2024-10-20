@@ -9,6 +9,7 @@ export declare class LFWidgets {
         KUL_CHAT: (nodeType: NodeType) => any;
         KUL_CHIP: (nodeType: NodeType) => any;
         KUL_CODE: (nodeType: NodeType) => any;
+        KUL_COMPARE: (nodeType: NodeType) => any;
         KUL_CONTROL_PANEL: (nodeType: NodeType) => any;
         KUL_COUNT_BAR_CHART: (nodeType: NodeType) => any;
         KUL_HISTOGRAM: (nodeType: NodeType) => any;
@@ -28,6 +29,7 @@ export declare class LFWidgets {
         KUL_CHAT: (chat: HTMLKulChatElement) => import("../types/widgets.js").ChatWidgetOptions;
         KUL_CHIP: (chip: HTMLKulChipElement) => import("../types/widgets.js").ChipWidgetOptions;
         KUL_CODE: (code: HTMLKulCodeElement) => import("../types/widgets.js").CodeWidgetOptions;
+        KUL_COMPARE: (compare: HTMLKulCompareElement) => import("../types/widgets.js").CompareWidgetOptions;
         KUL_CONTROL_PANEL: () => import("../types/widgets.js").ControlPanelWidgetOptions;
         KUL_COUNT_BAR_CHART: (chart: HTMLKulChartElement, chip: HTMLKulChipElement, button: HTMLKulButtonElement) => import("../types/widgets.js").CountBarChartWidgetOptions;
         KUL_HISTOGRAM: (histogram: HTMLKulChartElement) => import("../types/widgets.js").HistogramWidgetOptions;
@@ -66,6 +68,11 @@ export declare class LFWidgets {
         };
         KUL_CODE: () => {
             KUL_CODE: (nodeType: NodeType, name: CustomWidgetName) => {
+                widget: Widget;
+            };
+        };
+        KUL_COMPARE: () => {
+            KUL_COMPARE: (nodeType: NodeType, name: CustomWidgetName) => {
                 widget: Widget;
             };
         };
@@ -131,6 +138,7 @@ export declare class LFWidgets {
             KUL_CHAT: (nodeType: NodeType) => any;
             KUL_CHIP: (nodeType: NodeType) => any;
             KUL_CODE: (nodeType: NodeType) => any;
+            KUL_COMPARE: (nodeType: NodeType) => any;
             KUL_CONTROL_PANEL: (nodeType: NodeType) => any;
             KUL_COUNT_BAR_CHART: (nodeType: NodeType) => any;
             KUL_HISTOGRAM: (nodeType: NodeType) => any;
@@ -150,6 +158,7 @@ export declare class LFWidgets {
             KUL_CHAT: (chat: HTMLKulChatElement) => import("../types/widgets.js").ChatWidgetOptions;
             KUL_CHIP: (chip: HTMLKulChipElement) => import("../types/widgets.js").ChipWidgetOptions;
             KUL_CODE: (code: HTMLKulCodeElement) => import("../types/widgets.js").CodeWidgetOptions;
+            KUL_COMPARE: (compare: HTMLKulCompareElement) => import("../types/widgets.js").CompareWidgetOptions;
             KUL_CONTROL_PANEL: () => import("../types/widgets.js").ControlPanelWidgetOptions;
             KUL_COUNT_BAR_CHART: (chart: HTMLKulChartElement, chip: HTMLKulChipElement, button: HTMLKulButtonElement) => import("../types/widgets.js").CountBarChartWidgetOptions;
             KUL_HISTOGRAM: (histogram: HTMLKulChartElement) => import("../types/widgets.js").HistogramWidgetOptions;
@@ -188,6 +197,11 @@ export declare class LFWidgets {
             };
             KUL_CODE: () => {
                 KUL_CODE: (nodeType: NodeType, name: CustomWidgetName) => {
+                    widget: Widget;
+                };
+            };
+            KUL_COMPARE: () => {
+                KUL_COMPARE: (nodeType: NodeType, name: CustomWidgetName) => {
                     widget: Widget;
                 };
             };

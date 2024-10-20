@@ -26,7 +26,7 @@ const STYLES = {
         };
     },
     debugLogs: () => {
-        return { display: 'grid', gridTemplateRows: '1fr 1fr' };
+        return { display: 'grid', gridGap: '12px', gridTemplateRows: '1fr 1fr' };
     },
     logsArea: () => {
         return {

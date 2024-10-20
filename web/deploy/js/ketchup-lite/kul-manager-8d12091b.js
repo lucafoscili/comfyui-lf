@@ -1,29 +1,7 @@
-import { b as KUL_DROPDOWN_CLASS_VISIBLE, R as RIPPLE_SURFACE_CLASS } from './GenericVariables-0efba181.js';
-import { a as getAssetPath, d as setAssetPath } from './index-21ee70d9.js';
+import { h, a as getAssetPath, c as setAssetPath } from './index-4d533537.js';
+import { a as KulDataCyAttributes, b as KUL_DROPDOWN_CLASS_VISIBLE, R as RIPPLE_SURFACE_CLASS } from './GenericVariables-f3380974.js';
 
-/**
- * Retrieves component's prop values based on a list and option to include descriptions.
- * @param {KulComponent} comp - The component requesting prop values.
- * @param {GenericMap} list - A map listing the prop keys, optionally containing their descriptions.
- * @param {boolean} [descriptions=false] - If true, returns the list itself including descriptions. Otherwise, returns the actual prop values from the component.
- * @returns {GenericObject} - An object with prop keys and values, or keys and descriptions based on the `descriptions` parameter.
- */
-function getProps(comp, list, descriptions) {
-    let props = {};
-    if (descriptions) {
-        props = list;
-    }
-    else {
-        for (const key in list) {
-            if (Object.prototype.hasOwnProperty.call(list, key)) {
-                props[key] = comp[key];
-            }
-        }
-    }
-    return props;
-}
-
-function findColumns(dataset, filters) {
+const columnFind = (dataset, filters) => {
     const result = [];
     if (!dataset) {
         return result;
@@ -41,17 +19,12 @@ function findColumns(dataset, filters) {
         }
     }
     return result;
-}
+};
 
-/**
- * Finds all nodes in the input dataset that match the specified filter criteria.
- * @param {(value: unknown) => string} stringify - Method of KulData that stringifies a cell/value.
- * @param {KulDataDataset} dataset - The dataset containing nodes to search through.
- * @param {Partial<KulDataNode>} filters - Criteria to match nodes against.
- * @param {boolean} partialMatch - Whether to allow partial matches for filter values.
- * @returns {{ matchingNodes: KulDataNode[], remainingNodes: KulDataNode[], ancestorNodes: KulDataNode[] }} Object containing arrays of matching nodes, nodes remaining after filtering, and their ancestor nodes.
- */
-function filter(stringify, dataset, filters, partialMatch = false) {
+const nodeExists = (dataset) => {
+    return !!(dataset && dataset.nodes?.length);
+};
+const nodeFilter = (dataset, filters, partialMatch = false) => {
     const matchingNodes = new Set();
     const remainingNodes = new Set();
     const ancestorNodes = new Set();
@@ -61,8 +34,8 @@ function filter(stringify, dataset, filters, partialMatch = false) {
         for (const key in filters) {
             const nodeValue = node[key];
             const filterValue = filters[key];
-            const nodeValueStr = stringify(nodeValue).toLowerCase();
-            const filterValueStr = stringify(filterValue).toLowerCase();
+            const nodeValueStr = cellStringify(nodeValue).toLowerCase();
+            const filterValueStr = cellStringify(filterValue).toLowerCase();
             if (partialMatch) {
                 if (!nodeValueStr.includes(filterValueStr)) {
                     continue;
@@ -107,16 +80,25 @@ function filter(stringify, dataset, filters, partialMatch = false) {
         remainingNodes,
         ancestorNodes,
     };
-}
-/**
- * Gets information about the tree depth, such as max number of children and max depth.
- * @param {KulDataNode[]} nodes - Input array of nodes.
- * @returns {KulDataNodeDrilldownInfo} Information about the tree depth.
- */
-function getDrilldownInfo(nodes) {
+};
+const nodeFixIds = (nodes) => {
+    function updateNodeIds(node, depth = '0') {
+        node.id = depth;
+        if (node.children) {
+            node.children.forEach((child, index) => {
+                const newDepth = `${depth}.${index}`;
+                updateNodeIds(child, newDepth);
+            });
+        }
+    }
+    nodes.forEach((node) => {
+        updateNodeIds(node, '0');
+    });
+    return nodes;
+};
+const nodeGetDrilldownInfo = (nodes) => {
     let maxChildren = 0;
     let maxDepth = 0;
-    // Function to get the depth of a node
     const getDepth = function (n) {
         const depth = 0;
         if (n.children) {
@@ -126,7 +108,6 @@ function getDrilldownInfo(nodes) {
         }
         return depth;
     };
-    // Recursive function to traverse nodes and update maxDepth and maxChildren
     const recursive = (arr) => {
         maxDepth++;
         for (let index = 0; index < arr.length; index++) {
@@ -144,14 +125,8 @@ function getDrilldownInfo(nodes) {
         maxChildren,
         maxDepth,
     };
-}
-/**
- * Returns the parent of the given node.
- * @param {KulDataNode[]} nodes - Input array of nodes.
- * @param {KulDataNode} child - Child node.
- * @returns {KulDataNode} Parent node.
- */
-function getParent(nodes, child) {
+};
+const nodeGetParent = (nodes, child) => {
     let parent = null;
     for (let index = 0; index < nodes.length; index++) {
         const node = nodes[index];
@@ -169,18 +144,11 @@ function getParent(nodes, child) {
         }
     }
     return parent;
-}
-/**
- * Removes the given node from the input array, by searching even children.
- * @param {KulDataNode[]} nodes - Input array of nodes.
- * @param {KulDataNode} node2remove - Node to remove.
- * @returns {KulDataNode} Copy of the removed node.
- */
-function pop(nodes, node2remove) {
+};
+const nodePop = (nodes, node2remove) => {
     let removed = null;
     for (let index = 0; index < nodes.length; index++) {
         recursive(nodes[index], nodes);
-        // Recursive function to traverse nodes and remove the specified node
         function recursive(node, array) {
             const i = array.indexOf(node2remove);
             if (i > -1) {
@@ -196,23 +164,14 @@ function pop(nodes, node2remove) {
         }
     }
     return removed;
-}
-/**
- * Sets the values specified in the properties to every node of the input array.
- * @param {KulDataNode[]} nodes - Input array of nodes.
- * @param {Partial<KulDataNode>} properties - New properties values to set.
- * @param {boolean} recursively - Sets values to every child node.
- * @param {KulDataNode[]} exclude - Nodes to exclude (they won't be updated).
- * @returns {KulDataNode[]} Array of the updated nodes.
- */
-function setProperties(nodes, properties, recursively, exclude) {
+};
+const nodeSetProperties = (nodes, properties, recursively, exclude) => {
     const updated = [];
     if (!exclude) {
         exclude = [];
     }
-    // Streamline nodes if properties should be set recursively
     if (recursively) {
-        nodes = toStream(nodes);
+        nodes = nodeToStream(nodes);
     }
     for (let index = 0; index < nodes.length; index++) {
         const node = nodes[index];
@@ -224,18 +183,12 @@ function setProperties(nodes, properties, recursively, exclude) {
         }
     }
     return updated;
-}
-/**
- * Streamlines an array of nodes by recursively fetching every child node.
- * @param {KulDataNode[]} nodes - Input array of nodes.
- * @returns {KulDataNode[]} Streamlined array of every node and their children.
- */
-function toStream(nodes) {
+};
+const nodeToStream = (nodes) => {
     const streamlined = [];
     for (let index = 0; index < nodes.length; index++) {
         const node = nodes[index];
         recursive(node);
-        // Recursive function to traverse nodes and add them to the streamlined array
         function recursive(node) {
             streamlined.push(node);
             for (let index = 0; node.children && index < node.children.length; index++) {
@@ -244,169 +197,239 @@ function toStream(nodes) {
         }
     }
     return streamlined;
-}
+};
+
+const decorateSpreader = (toSpread, props) => {
+    const clean = () => {
+        if (toSpread['value'] && !toSpread['kulValue']) {
+            toSpread['kulValue'] = toSpread['value'];
+        }
+        delete toSpread['shape'];
+        delete toSpread['value'];
+    };
+    if (props.htmlProps) {
+        for (const key in props.htmlProps) {
+            const prop = props.htmlProps[key];
+            if (prop === 'className') {
+                toSpread['class'] = prop;
+            }
+            else {
+                toSpread[key] = prop;
+            }
+        }
+    }
+    for (const key in props) {
+        const prop = props[key];
+        toSpread[key] = prop;
+    }
+    clean();
+};
+const cellDecorateShapes = (component, shape, items, eventDispatcher, defaultProps, defaultCb) => {
+    const r = { element: [], ref: [] };
+    switch (shape) {
+        case 'number':
+        case 'text':
+            for (let index = 0; items && index < items.length; index++) {
+                const props = items[index].value;
+                r.element.push(h("div", { id: `${shape}${index}`, ref: (el) => {
+                        if (el) {
+                            r.ref.push(el);
+                        }
+                    } }, props));
+            }
+            return r;
+        default:
+            for (let index = 0; items && index < items.length; index++) {
+                const props = items[index];
+                const toSpread = {};
+                if (defaultProps?.[index]) {
+                    decorateSpreader(toSpread, defaultProps[index]);
+                }
+                decorateSpreader(toSpread, props);
+                const TagName = 'kul-' + shape;
+                const eventHandler = {
+                    ['onKul-' + shape + '-event']: (e) => {
+                        if (defaultCb) {
+                            defaultCb(e);
+                        }
+                        eventDispatcher(e);
+                    },
+                };
+                r.element.push(h(TagName, { "data-component": component, "data-cy": KulDataCyAttributes.SHAPE, id: `${shape}${index}`, ref: (el) => {
+                        if (el) {
+                            r.ref.push(el);
+                        }
+                    }, ...eventHandler, ...toSpread }));
+            }
+            break;
+    }
+    return r;
+};
+const cellExists = (node) => {
+    return !!(node && node.cells && Object.keys(node.cells).length);
+};
+const cellGetShape = (cell) => {
+    const prefix = 'kul';
+    const shapeProps = {};
+    for (const prop in cell) {
+        switch (prop) {
+            case 'htmlProps':
+                Object.assign(shapeProps, cell[prop]);
+                break;
+            case 'shape':
+                break;
+            default:
+                if (prop.indexOf(prefix) === 0) {
+                    shapeProps[prop] = cell[prop];
+                }
+                else {
+                    const prefixedProp = prefix + prop.charAt(0).toUpperCase() + prop.slice(1);
+                    if (!shapeProps[prefixedProp]) {
+                        shapeProps[prefixedProp] = cell[prop];
+                    }
+                }
+                break;
+        }
+    }
+    return shapeProps;
+};
+const cellGetAllShapes = (dataset) => {
+    if (!nodeExists(dataset)) {
+        return;
+    }
+    const shapes = {
+        badge: [],
+        button: [],
+        card: [],
+        chart: [],
+        chat: [],
+        chip: [],
+        code: [],
+        image: [],
+        number: [],
+        switch: [],
+        text: [],
+        upload: [],
+    };
+    const nodes = dataset.nodes;
+    const browseCells = (node) => {
+        if (!cellExists(node)) {
+            return;
+        }
+        const cells = node.cells;
+        for (const key in cells) {
+            if (Object.prototype.hasOwnProperty.call(cells, key)) {
+                const cell = cells[key];
+                const extracted = cellGetShape(cell);
+                switch (cell.shape) {
+                    case 'badge':
+                        shapes.badge.push(extracted);
+                        break;
+                    case 'button':
+                        shapes.button.push(extracted);
+                        break;
+                    case 'card':
+                        shapes.card.push(extracted);
+                        break;
+                    case 'chart':
+                        shapes.chart.push(extracted);
+                        break;
+                    case 'chat':
+                        shapes.chat.push(extracted);
+                        break;
+                    case 'chip':
+                        shapes.chip.push(extracted);
+                        break;
+                    case 'code':
+                        shapes.code.push(extracted);
+                        break;
+                    case 'image':
+                        shapes.image.push(extracted);
+                        break;
+                    case 'switch':
+                        shapes.switch.push(extracted);
+                        break;
+                    case 'number':
+                        shapes.number.push(cell);
+                        break;
+                    case 'upload':
+                        shapes.upload.push(extracted);
+                        break;
+                    case 'text':
+                    default:
+                        shapes.text.push(cell);
+                        break;
+                }
+            }
+        }
+    };
+    for (let index = 0; index < nodes.length; index++) {
+        const node = nodes[index];
+        browseCells(node);
+    }
+    return shapes;
+};
+const cellStringify = (value) => {
+    if (value === null || value === undefined) {
+        return String(value).valueOf();
+    }
+    else if (value instanceof Date) {
+        return value.toISOString();
+    }
+    else if (typeof value === 'object') {
+        try {
+            return JSON.stringify(value, null, 2);
+        }
+        catch (error) {
+            console.error('Failed to stringify object:', error);
+            return '[object Object]';
+        }
+    }
+    else {
+        return String(value).valueOf();
+    }
+};
 
 /**
  * Handles data operations.
  * @module KulData
  */
 class KulData {
+    #SHAPES_MAP = {
+        badge: 'KulBadge',
+        button: 'KulButton',
+        card: 'KulCard',
+        chart: 'KulChart',
+        chat: 'KulChat',
+        chip: 'KulChip',
+        code: 'KulCode',
+        image: 'KulImage',
+        number: 'KulTextfield',
+        switch: 'KulSwitch',
+        text: 'KulTextfield',
+        upload: 'KulUpload',
+    };
     cell = {
-        exists: (node) => {
-            return !!(node && node.cells && Object.keys(node.cells).length);
+        exists: (node) => cellExists(node),
+        shapes: {
+            decorate: (shape, items, eventDispatcher, defaultProps, defaultCb) => cellDecorateShapes(this.#SHAPES_MAP[shape], shape, items, eventDispatcher, defaultProps, defaultCb),
+            get: (cell) => cellGetShape(cell),
+            getAll: (dataset) => cellGetAllShapes(dataset),
         },
-        stringify: (value) => {
-            if (value === null || value === undefined) {
-                return String(value);
-            }
-            else if (value instanceof Date) {
-                return value.toISOString();
-            }
-            else if (typeof value === 'object') {
-                try {
-                    return JSON.stringify(value, null, 2);
-                }
-                catch (error) {
-                    console.error('Failed to stringify object:', error);
-                    return '[object Object]';
-                }
-            }
-            else {
-                return String(value);
-            }
-        },
+        stringify: (value) => cellStringify(value),
     };
     column = {
-        find(dataset, filters) {
-            return findColumns(dataset, filters);
-        },
-    };
-    extract = {
-        shapes: (dataset) => {
-            if (!this.node.exists(dataset)) {
-                return;
-            }
-            const shapes = {
-                badge: [],
-                button: [],
-                chat: [],
-                code: [],
-                image: [],
-                number: [],
-                switch: [],
-                text: [],
-            };
-            const nodes = dataset.nodes;
-            const browseCells = (node) => {
-                if (!this.cell.exists(node)) {
-                    return;
-                }
-                const cells = node.cells;
-                for (const key in cells) {
-                    if (Object.prototype.hasOwnProperty.call(cells, key)) {
-                        const cell = cells[key];
-                        const extracted = this.extract.singleShape(cell);
-                        switch (cell.shape) {
-                            case 'badge':
-                                shapes.badge.push(extracted);
-                                break;
-                            case 'button':
-                                shapes.button.push(extracted);
-                                break;
-                            case 'chat':
-                                shapes.chat.push(extracted);
-                                break;
-                            case 'code':
-                                shapes.code.push(extracted);
-                                break;
-                            case 'image':
-                                shapes.image.push(extracted);
-                                break;
-                            case 'switch':
-                                shapes.switch.push(extracted);
-                                break;
-                            case 'number':
-                                shapes.number.push(cell);
-                                break;
-                            case 'text':
-                            default:
-                                shapes.text.push(cell);
-                                break;
-                        }
-                    }
-                }
-            };
-            for (let index = 0; index < nodes.length; index++) {
-                const node = nodes[index];
-                browseCells(node);
-            }
-            return shapes;
-        },
-        singleShape: (cell) => {
-            const prefix = 'kul';
-            const shapeProps = {};
-            for (const prop in cell) {
-                switch (prop) {
-                    case 'htmlProps':
-                        Object.assign(shapeProps, cell[prop]);
-                        break;
-                    case 'shape':
-                        break;
-                    default:
-                        if (prop.indexOf(prefix) === 0) {
-                            shapeProps[prop] = cell[prop];
-                        }
-                        else {
-                            const prefixedProp = prefix +
-                                prop.charAt(0).toUpperCase() +
-                                prop.slice(1);
-                            if (!shapeProps[prefixedProp]) {
-                                shapeProps[prefixedProp] = cell[prop];
-                            }
-                        }
-                        break;
-                }
-            }
-            return shapeProps;
-        },
+        find: (dataset, filters) => columnFind(dataset, filters),
     };
     node = {
-        exists: (dataset) => {
-            return !!(dataset && dataset.nodes?.length);
-        },
-        filter: (dataset, filters, partialMatch = false) => {
-            return filter(this.cell.stringify, dataset, filters, partialMatch);
-        },
-        fixIds: (nodes) => {
-            function updateNodeIds(node, depth = '0') {
-                node.id = depth;
-                if (node.children) {
-                    node.children.forEach((child, index) => {
-                        const newDepth = `${depth}.${index}`;
-                        updateNodeIds(child, newDepth);
-                    });
-                }
-            }
-            nodes.forEach((node) => {
-                updateNodeIds(node, '0');
-            });
-            return nodes;
-        },
-        getDrilldownInfo(nodes) {
-            return getDrilldownInfo(nodes);
-        },
-        getParent(nodes, child) {
-            return getParent(nodes, child);
-        },
-        pop(nodes, node2remove) {
-            return pop(nodes, node2remove);
-        },
-        setProperties(nodes, properties, recursively, exclude) {
-            return setProperties(nodes, properties, recursively, exclude);
-        },
-        toStream(nodes) {
-            return toStream(nodes);
-        },
+        exists: (dataset) => nodeExists(dataset),
+        filter: (dataset, filters, partialMatch = false) => nodeFilter(dataset, filters, partialMatch),
+        fixIds: (nodes) => nodeFixIds(nodes),
+        getDrilldownInfo: (nodes) => nodeGetDrilldownInfo(nodes),
+        getParent: (nodes, child) => nodeGetParent(nodes, child),
+        pop: (nodes, node2remove) => nodePop(nodes, node2remove),
+        setProperties: (nodes, properties, recursively, exclude) => nodeSetProperties(nodes, properties, recursively, exclude),
+        toStream: (nodes) => nodeToStream(nodes),
     };
 }
 
@@ -532,9 +555,6 @@ class KulDates {
     dayjs;
     locale;
     managedComponents;
-    /**
-     * Initializes KulDates.
-     */
     constructor(locale) {
         this.managedComponents = new Set();
         this.setLocale(locale);
@@ -1206,665 +1226,163 @@ class KulDates {
 }
 
 const dom$7 = document.documentElement;
-/**
- * Debugging suite, used to log messages and statuses from the Ketchup components.
- * @module KulDebug
- */
 class KulDebug {
-    active;
-    autoPrint;
-    container;
-    logLimit;
-    logs;
-    //#debugWidget: HTMLKulCardElement;
-    /**
-     * Initializes KulDebug.
-     * @param {boolean} active - When true, the debug is active on initialization.
-     * @param {boolean} autoprint - When true, logs will be automatically printed inside the debug widget.
-     * @param {number} logLimit - Maximum amount of logs stored, when they exceed the number specified in logLimit the cache will be automatically cleared.
-     */
-    constructor(active, autoprint, logLimit) {
-        this.active = active ? true : false;
-        this.autoPrint = autoprint ? true : false;
-        this.container = document.createElement('div');
-        this.container.setAttribute('kul-debug', '');
-        document.body.appendChild(this.container);
-        this.logLimit = logLimit ? logLimit : 250;
-        this.logs = [];
+    #IS_ENABLED;
+    #LOG_LIMIT;
+    #LOGS;
+    #MANAGED_COMPONENTS;
+    constructor(active, logLimit) {
+        this.#IS_ENABLED = active ? true : false;
+        this.#LOG_LIMIT = logLimit ? logLimit : 250;
+        this.#LOGS = [];
+        this.#MANAGED_COMPONENTS = { codes: new Set(), switches: new Set() };
     }
-    /*  this.#debugWidget = null;
-        document.addEventListener('kul-language-change', () => {
-            if (this.active && this.#debugWidget) {
-                this.hideWidget();
-                this.showWidget();
+    #codeDispatcher = (log) => {
+        Array.from(this.#MANAGED_COMPONENTS.codes).forEach((comp) => {
+            if (log) {
+                comp.kulValue = `# ${log.id}:\n${log.message}\n\n${comp.kulValue}`;
+            }
+            else {
+                comp.kulValue = '';
             }
         });
-    }
-    /**
-     * Allows the download of props by creating a temporary clickable anchor element.
-     */
-    /*private downloadProps(res: GenericObject) {
-        const dataStr: string =
-            'data:text/json;charset=utf-8,' +
-            encodeURIComponent(JSON.stringify(res, null, 2));
-        const downloadAnchorNode: HTMLAnchorElement =
-            document.createElement('a');
-        downloadAnchorNode.setAttribute('href', dataStr);
-        downloadAnchorNode.setAttribute('download', 'kul_props.json');
-        this.container.appendChild(downloadAnchorNode);
-        downloadAnchorNode.click();
-        downloadAnchorNode.remove();
-    }
-    /**
-     * Creates the debug widget.
-     */
-    /*private showWidget(): void {
-        const debugWidget: HTMLKulCardElement =
-            document.createElement('kul-card');
-        const languages: string[] = dom.ketchupLite.language.getLanguages();
-        const languagesListData: KulListNode[] = [];
-        for (let index = 0; index < languages.length; index++) {
-            languagesListData.push({
-                id: languages[index],
-                selected:
-                    languages[index] === dom.ketchupLite.language.name
-                        ? true
-                        : false,
-                value: languages[index],
-            });
-        }
-        const themes: string[] = dom.ketchupLite.theme.getThemes();
-        const themesListData: KulListNode[] = [];
-        for (let index = 0; index < themes.length; index++) {
-            themesListData.push({
-                id: themes[index],
-                selected:
-                    themes[index] === dom.ketchupLite.theme.name ? true : false,
-                value: themes[index],
-            });
-        }
-        const locales: string[] = dom.ketchupLite.dates.getLocales();
-        const localesListData: KulListNode[] = [];
-        for (let index = 0; index < locales.length; index++) {
-            localesListData.push({
-                id: locales[index],
-                selected:
-                    locales[index] === dom.ketchupLite.dates.locale ? true : false,
-                value: locales[index],
-            });
-        }
-        debugWidget.data = {
-            button: [
-                {
-                    icon: 'power_settings_new',
-                    id: 'kul-debug-off',
-                    customStyle:
-                        ':host {--kul-font-size: 0.875em; border-left: 1px solid var(--kul-border-color); border-right: 1px solid var(--kul-border-color);}',
-                    title: dom.ketchupLite.language.translate(KulLanguageDebug.OFF),
-                },
-                {
-                    customStyle: ':host {--kul-font-size: 0.875em;}',
-                    icon: 'print',
-                    id: 'kul-debug-print',
-                    title: dom.ketchupLite.language.translate(
-                        KulLanguageDebug.PRINT
-                    ),
-                },
-                {
-                    checked: this.autoPrint,
-                    customStyle:
-                        ':host {--kul-font-size: 0.875em; border-right: 1px solid var(--kul-border-color);}',
-                    icon: 'speaker_notes',
-                    iconOff: 'speaker_notes_off',
-                    id: 'kul-debug-autoprint',
-                    title: dom.ketchupLite.language.translate(
-                        KulLanguageDebug.AUTOPRINT
-                    ),
-                    toggable: true,
-                },
-                {
-                    customStyle: ':host {--kul-font-size: 0.875em;}',
-                    icon: 'broom',
-                    id: 'kul-debug-clear',
-                    title: dom.ketchupLite.language.translate(
-                        KulLanguageDebug.CLEAR
-                    ),
-                },
-                {
-                    customStyle: ':host {--kul-font-size: 0.875em;}',
-                    icon: 'delete',
-                    id: 'kul-debug-delete',
-                    title: dom.ketchupLite.language.translate(
-                        KulLanguageDebug.DUMP
-                    ),
-                },
-                {
-                    className: 'kul-full-height',
-                    customStyle:
-                        ':host {border-left: 1px solid var(--kul-border-color);}',
-                    icon: 'download',
-                    id: 'kul-debug-dl-props',
-                    label: 'Props',
-                    styling: 'flat',
-                    title: dom.ketchupLite.language.translate(
-                        KulLanguageDebug.DL_PROPS
-                    ),
-                },
-                {
-                    className: 'kul-full-height',
-                    customStyle:
-                        ':host {border-right: 1px solid var(--kul-border-color);}',
-                    icon: 'download',
-                    id: 'kul-debug-dl-all',
-                    label: dom.ketchupLite.language.translate(
-                        KulLanguageDebug.DL_ALL
-                    ),
-                    styling: 'flat',
-                    title: dom.ketchupLite.language.translate(
-                        KulLanguageDebug.DL_ALL
-                    ),
-                },
-                {
-                    customStyle: ':host {--kul-font-size: 0.875em;}',
-                    icon: 'auto-fix',
-                    id: 'kul-debug-magic-box',
-                    title: dom.ketchupLite.language.translate(
-                        KulLanguageDebug.MAGIC_BOX
-                    ),
-                },
-            ],
-            combobox: [
-                {
-                    className: 'kul-full-height',
-                    data: {
-                        'kul-list': {
-                            data: themesListData,
-                            id: 'kul-debug-theme-changer-list',
-                        },
-                        'kul-text-field': {
-                            className: 'kul-full-height',
-                            emitSubmitEventOnEnter: false,
-                            inputType: 'text',
-                            label: dom.ketchupLite.language.translate(
-                                KulLanguageDebug.THEME_CHANGER
-                            ),
-                        },
-                    },
-                    id: 'kul-debug-theme-changer',
-                    initialValue: dom.ketchupLite.theme.name,
-                    isSelect: true,
-                },
-                {
-                    className: 'kul-full-height',
-                    data: {
-                        'kul-list': {
-                            data: languagesListData,
-                            id: 'kul-debug-language-changer-list',
-                        },
-                        'kul-text-field': {
-                            className: 'kul-full-height',
-                            emitSubmitEventOnEnter: false,
-                            inputType: 'text',
-                            label: dom.ketchupLite.language.translate(
-                                KulLanguageDebug.LANGUAGE_CHANGER
-                            ),
-                        },
-                    },
-                    id: 'kul-debug-language-changer',
-                    initialValue: dom.ketchupLite.language.name,
-                    isSelect: true,
-                },
-                {
-                    className: 'kul-full-height',
-                    data: {
-                        'kul-list': {
-                            data: localesListData,
-                            id: 'kul-debug-locale-changer-list',
-                        },
-                        'kul-text-field': {
-                            className: 'kul-full-height',
-                            emitSubmitEventOnEnter: false,
-                            inputType: 'text',
-                            label: dom.ketchupLite.language.translate(
-                                KulLanguageDebug.LOCALE_CHANGER
-                            ),
-                        },
-                    },
-                    id: 'kul-debug-locale-changer',
-                    initialValue: dom.ketchupLite.dates.locale,
-                    isSelect: true,
-                },
-            ],
-            textfield: [
-                {
-                    className: 'kul-full-height',
-                    id: 'kul-debug-log-limit',
-                    label: dom.ketchupLite.language.translate(
-                        KulLanguageDebug.LOG_LIMIT
-                    ),
-                    initialValue: this.logLimit,
-                    emitSubmitEventOnEnter: false,
-                    inputType: 'number',
-                },
-            ],
-        };
-        debugWidget.customStyle =
-            '#kul-debug-log-limit {width: 120px;} #kul-debug-theme-changer {width: 190px;} #kul-debug-language-changer {width: 190px;} #kul-debug-locale-changer {width: 190px;}';
-        debugWidget.id = 'kul-debug-widget';
-        debugWidget.layoutFamily = KulCardFamily.DIALOG;
-        debugWidget.layoutNumber = 3;
-        debugWidget.sizeX = 'max-content';
-        debugWidget.sizeY = 'auto';
-        const handler = this.handleEvents;
-        debugWidget.addEventListener('kul-card-event', (e: CustomEvent) =>
-            handler(e, this)
-        );
-
-        this.container.append(debugWidget);
-        this.#debugWidget = debugWidget;
-    }
-    /**
-     * Listens the card events and handles the related actions.
-     * @param {CustomEvent<KulCardEventPayload>} e - kul-card-event.
-     * @param {KulDebug} kulDebug - Instance of the KulDebug class.
-     */
-    /*private handleEvents(
-        e: CustomEvent<KulCardEventPayload>,
-        kulDebug: KulDebug
-    ): void {
-        const compEvent: CustomEvent = e.detail.event;
-        const compID: string = compEvent.detail.id;
-        switch (compEvent.type) {
-            case 'kul-button-click':
-                switch (compID) {
-                    case 'kul-debug-autoprint':
-                        kulDebug.autoPrint = !kulDebug.autoPrint;
-                        break;
-                    case 'kul-debug-clear':
-                        kulDebug.widgetClear();
-                        kulDebug.#debugWidget.refresh();
-                        break;
-                    case 'kul-debug-dl-props':
-                        kulDebug.getProps().then((res: GenericObject) => {
-                            kulDebug.downloadProps(res);
-                        });
-                        break;
-                    case 'kul-debug-dl-all':
-                        kulDebug.getProps(true).then((res: GenericObject) => {
-                            kulDebug.downloadProps(res);
-                        });
-                        break;
-                    case 'kul-debug-delete':
-                        kulDebug.dump();
-                        break;
-                    case 'kul-debug-off':
-                        kulDebug.toggle();
-                        break;
-                    case 'kul-debug-print':
-                        kulDebug.widgetClear();
-                        kulDebug.widgetPrint();
-                        kulDebug.#debugWidget.refresh();
-                        break;
+    };
+    #switchDispatcher = () => {
+        Array.from(this.#MANAGED_COMPONENTS.switches).forEach((comp) => {
+            comp.setValue(this.#IS_ENABLED ? 'on' : 'off');
+        });
+    };
+    logs = {
+        dump: () => {
+            this.#LOGS = [];
+            this.#codeDispatcher();
+        },
+        fromComponent(comp) {
+            return comp.rootElement !== undefined;
+        },
+        new: async (comp, message, category = 'informational') => {
+            if (this.#MANAGED_COMPONENTS.codes.has(comp)) {
+                return;
+            }
+            const isFromComponent = this.logs.fromComponent(comp);
+            const log = {
+                category,
+                class: null,
+                date: new Date(),
+                id: isFromComponent
+                    ? `${comp.rootElement.tagName} ${comp.rootElement.id ? '( #' + comp.rootElement.id + ' )' : ''}`
+                    : 'KulManager',
+                message,
+                type: message.indexOf('Render #') > -1
+                    ? 'render'
+                    : message.indexOf('Component ready') > -1
+                        ? 'load'
+                        : message.indexOf('Size changed') > -1
+                            ? 'resize'
+                            : 'misc',
+            };
+            if (this.#LOGS.length > this.#LOG_LIMIT) {
+                if (this.isEnabled()) {
+                    console.warn(dom$7.ketchupLite.dates.format(log.date, 'LLL:ms') +
+                        ' kul-debug => ' +
+                        'Too many logs (> ' +
+                        this.#LOG_LIMIT +
+                        ')! Dumping (increase debug.logLimit to store more logs)... .');
                 }
-                break;
-            case 'kul-combobox-itemclick':
-                switch (compID) {
-                    case 'kul-debug-language-changer':
-                        dom.ketchupLite.language.set(compEvent.detail.value);
-                        break;
-                    case 'kul-debug-locale-changer':
-                        dom.ketchupLite.dates.setLocale(compEvent.detail.value);
-                        dom.ketchupLite.math.setLocale(compEvent.detail.value);
-                        break;
-                    case 'kul-debug-theme-changer':
-                        dom.ketchupLite.theme.set(compEvent.detail.value);
-                        break;
-                }
-            case 'kul-textfield-input':
-                switch (compID) {
-                    case 'kul-debug-log-limit':
-                        if (
-                            compEvent.detail.value === '' ||
-                            compEvent.detail.value < 1
-                        ) {
-                            kulDebug.logLimit = 1;
-                        } else {
-                            kulDebug.logLimit = compEvent.detail.value;
-                        }
-                        break;
-                }
-        }
-    }
-    /**
-     * Closes the debug widget.
-     */
-    /*private hideWidget() {
-        this.#debugWidget.remove();
-        this.#debugWidget = null;
-    }
-    /**
-     * Clears all the printed logs inside the debug widget.
-     */
-    /*private widgetClear(): void {
-        const children: HTMLCollection = Array.prototype.slice.call(
-            this.#debugWidget.children,
-            0
-        );
-        for (let index = 0; index < children.length; index++) {
-            children[index].remove();
-        }
-    }
-    /**
-     * Prints the stored logs inside the debug widget.
-     */
-    /*private widgetPrint(): void {
-        const slots: Array<HTMLDivElement> = [];
-        for (let index = 0; index < this.logs.length; index++) {
-            // Wrapper div
-            const slot: HTMLDivElement = document.createElement('div');
-            slot.classList.add('text');
-            switch (this.logs[index].category) {
-                case KulDebugCategory.ERROR:
-                    slot.style.backgroundColor =
-                        'rgba(var(--kul-danger-color-rgb), 0.15)';
-                    slot.style.borderLeft = '5px solid var(--kul-danger-color)';
+                this.logs.dump();
+            }
+            this.#LOGS.push(log);
+            switch (category) {
+                case 'error':
+                    console.error(dom$7.ketchupLite.dates.format(log.date, 'LLL:ms') +
+                        log.id +
+                        log.message, log.class);
                     break;
-                case KulDebugCategory.WARNING:
-                    slot.style.backgroundColor =
-                        'rgba(var(--kul-warning-color-rgb), 0.15)';
-                    slot.style.borderLeft =
-                        '5px solid var(--kul-warning-color)';
-                    break;
-                case KulDebugCategory.INFO:
-                default:
-                    slot.style.borderLeft = '5px solid var(--kul-info-color)';
+                case 'warning':
+                    console.warn(dom$7.ketchupLite.dates.format(log.date, 'LLL:ms') +
+                        log.id +
+                        log.message, log.class);
                     break;
             }
-            // If the log is tied to a KulComponent, on click its props will be downloaded.
-            // Also, a different style will be applied to distinguish it between the others.
-            if (typeof this.logs[index].element == 'object') {
-                slot.title = dom.ketchupLite.language.translate(
-                    KulLanguageDebug.DL_PROPS_COMP
-                );
-                slot.style.fontWeight = 'bold';
-                slot.style.cursor = 'pointer';
-                slot.onclick = () => {
-                    try {
-                        (this.logs[index].element as KulComponent)
-                            .getProps()
-                            .then((res: GenericObject) => {
-                                this.downloadProps(res);
-                            });
-                    } catch (err) {
-                        this.logMessage(
-                            'kul-debug',
-                            err,
-                            KulDebugCategory.WARNING
-                        );
-                    }
+            if (this.isEnabled()) {
+                this.#codeDispatcher(log);
+            }
+        },
+        print: () => {
+            const logsToPrint = {
+                load: [],
+                misc: [],
+                render: [],
+                resize: [],
+            };
+            for (let index = 0; index < this.#LOGS.length; index++) {
+                const log = this.#LOGS[index];
+                const printEntry = {
+                    class: log.class,
+                    date: dom$7.ketchupLite.dates.format(log.date, 'LLL:ms'),
+                    message: log.id + log.message,
                 };
+                logsToPrint[log.type].push(printEntry);
             }
-            // ID span
-            const id: HTMLSpanElement = document.createElement('span');
-            id.innerHTML = this.logs[index].id;
-            id.style.opacity = '0.75';
-            id.style.marginLeft = '5px';
-            // Message span
-            const message: HTMLSpanElement = document.createElement('span');
-            message.innerHTML = this.logs[index].message;
-            // Append elements
-            slot.append(id, message);
-            slots.push(slot);
-        }
-        slots.reverse();
-        for (let index = 0; index < slots.length; index++) {
-            this.#debugWidget.append(slots[index]);
-        }
-    }
-    /**
-     * Dumps the stored logs.
-     */
-    dump() {
-        this.logs = [];
-    }
-    /**
-     * Displays a table with debug information inside the browser's console.
-     */
-    print() {
-        let printLog = {};
-        for (let index = 0; index < this.logs.length; index++) {
-            const type = this.logs[index].message.indexOf('Render #') > -1
-                ? 'Render'
-                : this.logs[index].message.indexOf('Component ready') > -1
-                    ? 'Load'
-                    : this.logs[index].message.indexOf('Size changed') > -1
-                        ? 'Resize'
-                        : 'Misc';
-            const isComponent = !!this.logs[index]
-                .element;
-            if (!printLog[type]) {
-                printLog[type] = [];
-            }
-            printLog[type].push({
-                date: dom$7.ketchupLite.dates.format(this.logs[index].date, 'LLL:ms'),
-                element: isComponent
-                    ? this.logs[index]
-                        .element
-                    : this.logs[index].id,
-                message: isComponent
-                    ? this.logs[index].id + this.logs[index].message
-                    : this.logs[index].message,
-            });
-        }
-        for (const key in printLog) {
-            if (Object.prototype.hasOwnProperty.call(printLog, key)) {
-                console.groupCollapsed('%c  %c' +
-                    key +
-                    ' logs ' +
-                    '(' +
-                    printLog[key].length +
-                    ')', 'background-color: green; margin-right: 10px; border-radius: 50%', 'background-color: transparent');
-                for (let index = 0; index < printLog[key].length; index++) {
-                    console.log(printLog[key][index].date, printLog[key][index].message, printLog[key][index].element);
+            for (const key in logsToPrint) {
+                if (Object.prototype.hasOwnProperty.call(logsToPrint, key)) {
+                    const logs = logsToPrint[key];
+                    console.groupCollapsed('%c  %c' +
+                        key +
+                        ' logs ' +
+                        '(' +
+                        logsToPrint[key].length +
+                        ')', 'background-color: green; margin-right: 10px; border-radius: 50%', 'background-color: transparent');
+                    for (let index = 0; index < logs.length; index++) {
+                        const log = logs[index];
+                        console.log(log.date, log.message, log.class);
+                    }
+                    console.groupEnd();
                 }
+            }
+            if (this.#LOGS.length > 0) {
+                console.groupCollapsed('%c  %c' + 'All logs (' + this.#LOGS.length + ')', 'background-color: blue; margin-right: 10px; border-radius: 50%', 'background-color: transparent');
+                console.table(this.#LOGS);
                 console.groupEnd();
             }
-        }
-        if (this.logs.length > 0) {
-            console.groupCollapsed('%c  %c' + 'All logs (' + this.logs.length + ')', 'background-color: blue; margin-right: 10px; border-radius: 50%', 'background-color: transparent');
-            console.table(this.logs);
-            console.groupEnd();
-        }
+        },
+    };
+    isEnabled() {
+        return this.#IS_ENABLED;
     }
-    /**
-     * Function used to set the status of the debug.
-     * If no argument is provided, this method will work as a toggler.
-     * @param {boolean} value - If this argument is provided, the debug status will be forced to its value.
-     */
-    /*toggle(value?: boolean): void {
-        if (typeof value !== 'boolean') {
-            this.active = !this.active;
-        } else {
-            this.active = value;
-        }
-        if (this.active) {
-            document.dispatchEvent(new CustomEvent('kul-debug-active'));
-            if (!this.#debugWidget) {
-                this.showWidget();
-            }
-        } else {
-            document.dispatchEvent(new CustomEvent('kul-debug-inactive'));
-            if (this.#debugWidget) {
-                this.hideWidget();
-            }
-        }
-    }
-    /**
-     * Function used to check whether the debug is active or not.
-     * @returns {boolean} Status of the debug.
-     */
-    isDebug() {
-        return this.active;
-    }
-    /**
-     * Retrieves the information for every component in this.logs by invoking the getProps public method of each component.
-     * 'tag' will contain the props of the component's html tag (i.e.: <kul-chip>).
-     * 'props' will contain the developer defined props of the component, making it handy for test purposes.
-     * @param {boolean} detail - If provided and true, the returned object will contain additional information (i.e.: className, id).
-     * @returns {GenericObject} Props of the components.
-     */
-    /*async getProps(detail?: boolean): Promise<GenericObject> {
-        let comps: Set<KulComponent> = new Set();
-        let props: GenericObject = detail ? { descriptions: {} } : {};
-        // Storing unique components inside "comps"
-        for (let index = 0; index < this.logs.length; index++) {
-            if (typeof this.logs[index].element !== 'string') {
-                if (!comps.has(this.logs[index].element as KulComponent)) {
-                    comps.add(this.logs[index].element as KulComponent);
-                }
-            }
-        }
-        // Object of two arrays, positionally matching each other.
-        // One contains components, the other the relative promise.
-        const matchingObject: {
-            comps: KulComponent[];
-            promises: Promise<GenericObject>[];
-        } = {
-            comps: [],
-            promises: [],
-        };
-        comps.forEach((el: KulComponent) => {
-            try {
-                matchingObject.comps.push(el);
-                matchingObject.promises.push(el.getProps());
-            } catch (error) {
-                this.logMessage(
-                    'kul-debug',
-                    'Exception when accessing "getProps" public method for component: ' +
-                        el.rootElement.tagName,
-                    KulDebugCategory.WARNING
-                );
-            }
-        });
-        // Returning "props", which is returned by the Promise.all
-        return Promise.all(matchingObject.promises).then((responses) => {
-            for (let index = 0; index < matchingObject.comps.length; index++) {
-                const el: KulComponent = matchingObject.comps[index];
-                const res: GenericObject = responses[index];
-                let cnt: number = 0;
-                let key: string = el.rootElement.id
-                    ? el.rootElement.tagName + '#' + el.rootElement.id
-                    : el.rootElement.tagName + '_' + ++cnt;
-                while (props[key]) {
-                    key = el.rootElement.tagName + '_' + ++cnt;
-                }
-                if (detail) {
-                    let tag: GenericObject = {};
-                    for (const key in el.rootElement) {
-                        tag[key] = el.rootElement[key];
-                    }
-                    props[key] = {
-                        props: res,
-                        tagInfo: tag,
-                    };
-                    if (!props.descriptions[el.rootElement.tagName]) {
-                        try {
-                            el.getProps(true).then((res: GenericObject) => {
-                                props.descriptions[el.rootElement.tagName] =
-                                    res;
-                            });
-                        } catch (error) {
-                            this.logMessage(
-                                'kul-debug',
-                                'Exception when accessing "getProps" public method for component: ' +
-                                    el.rootElement.tagName,
-                                KulDebugCategory.WARNING
-                            );
-                        }
-                    }
-                } else {
-                    props[key] = res;
-                }
-            }
-            return props;
-        });
-    }
-    /**
-     * Displays a timestamped message in the browser's console when the kulDebug property on document.documentElement is true.
-     * Warnings and errors will be displayed even when kulDebug !== true.
-     * @param {any} comp - The component calling this function or a string.
-     * @param {string} message - The actual message that will be printed.
-     * @param {KulDebugCategory} category - The type of console message, defaults to log but warning and error can be used as well.
-     */
-    logMessage(comp, message, category) {
-        if ((!category || category === 'informational') && !this.isDebug()) {
-            return;
-        }
-        const date = new Date();
-        if (!category) {
-            category = 'informational';
-        }
-        let obj = null;
-        let id = '';
-        if (typeof comp !== 'string') {
-            id =
-                ' ' +
-                    comp.rootElement.tagName +
-                    '#' +
-                    comp.rootElement.id +
-                    ' => ';
-            obj = comp;
+    register(comp) {
+        if (comp.rootElement.tagName.toLowerCase() === 'kul-code') {
+            this.#MANAGED_COMPONENTS.codes.add(comp);
         }
         else {
-            id = ' ' + comp + ' => ';
-            obj = '';
-        }
-        if (this.isDebug() && id.indexOf('#kul-debug') < 0) {
-            const log = {
-                category: category,
-                date: date,
-                element: obj,
-                id: id,
-                message: message,
-            };
-            if (this.logs.length > this.logLimit) {
-                console.warn(dom$7.ketchupLite.dates.format(date, 'LLL:ms') +
-                    ' kul-debug => ' +
-                    'Too many logs (> ' +
-                    this.logLimit +
-                    ')! Dumping (increase debug.logLimit to store more logs)... .');
-                this.dump();
-            }
-            this.logs.push(log);
-            /*if (this.autoPrint && this.#debugWidget) {
-                this.widgetClear();
-                this.widgetPrint();
-                this.#debugWidget.refresh();
-            }*/
-        }
-        switch (category) {
-            case 'error':
-                console.error(dom$7.ketchupLite.dates.format(date, 'LLL:ms') + id + message, obj);
-                window.dispatchEvent(new CustomEvent('kul-debug-error', {
-                    bubbles: true,
-                    detail: { comp, date, message },
-                }));
-                break;
-            case 'warning':
-                console.warn(dom$7.ketchupLite.dates.format(date, 'LLL:ms') + id + message, obj);
-                break;
+            this.#MANAGED_COMPONENTS.switches.add(comp);
         }
     }
-    /**
-     * Function used to time the loading times of a component.
-     * @param {any} KulComponent - The component calling this function or a string.
-     * @param {boolean} didLoad - Must be set to false when called inside a componentWillLoad() lifecycle hook and true when called inside componentDidLoad().
-     */
+    toggle(value, dispatch = true) {
+        if (value === false || value === true) {
+            this.#IS_ENABLED = value;
+        }
+        else {
+            this.#IS_ENABLED = !this.#IS_ENABLED;
+        }
+        if (dispatch) {
+            this.#switchDispatcher();
+        }
+        return this.#IS_ENABLED;
+    }
+    unregister(comp) {
+        if (comp.rootElement.tagName.toLowerCase() === 'kul-code') {
+            this.#MANAGED_COMPONENTS.codes.delete(comp);
+        }
+        else {
+            this.#MANAGED_COMPONENTS.switches.delete(comp);
+        }
+    }
     async updateDebugInfo(comp, lifecycle) {
         switch (lifecycle) {
             case 'custom':
-                if (this.isDebug()) {
-                    this.logMessage(comp, 'Custom breakpoint ' +
+                if (this.isEnabled()) {
+                    this.logs.new(comp, 'Custom breakpoint ' +
                         ' took ' +
                         (window.performance.now() -
                             comp.debugInfo.renderStart) +
@@ -1873,8 +1391,8 @@ class KulDebug {
                 break;
             case 'did-render':
                 comp.debugInfo.renderEnd = window.performance.now();
-                if (this.isDebug()) {
-                    this.logMessage(comp, 'Render #' +
+                if (this.isEnabled()) {
+                    this.logs.new(comp, 'Render #' +
                         comp.debugInfo.renderCount +
                         ' took ' +
                         (comp.debugInfo.renderEnd -
@@ -1884,7 +1402,7 @@ class KulDebug {
                 break;
             case 'did-load':
                 comp.debugInfo.endTime = window.performance.now();
-                this.logMessage(comp, 'Component ready after ' +
+                this.logs.new(comp, 'Component ready after ' +
                     (comp.debugInfo.endTime - comp.debugInfo.startTime) +
                     'ms.');
                 break;
@@ -3319,7 +2837,7 @@ class KulLanguage {
             return invalidKey(key);
         }
         function invalidKey(key) {
-            dom$5.ketchupLite.debug.logMessage('kul-language', 'Invalid translation for key (' + key + ')!', 'warning');
+            dom$5.ketchupLite.debug.logs.new(this, 'Invalid translation for key (' + key + ')!', 'warning');
             return key;
         }
     }
@@ -3332,7 +2850,7 @@ class KulLanguage {
             language = language.toLowerCase();
         }
         else {
-            dom$5.ketchupLite.debug.logMessage('kul-language', "Couldn't set language, invalid string received (" +
+            dom$5.ketchupLite.debug.logs.new(this, "Couldn't set language, invalid string received (" +
                 language +
                 ')!', 'warning');
             return;
@@ -3342,12 +2860,12 @@ class KulLanguage {
         const dVariant = decodedLanguage.variant;
         if (this.list[dLanguage]) {
             if (dVariant && !this.list[dLanguage].variants[dVariant]) {
-                dom$5.ketchupLite.debug.logMessage('kul-language', 'Variant not found (' + dVariant + ')!', 'warning');
+                dom$5.ketchupLite.debug.logs.new(this, 'Variant not found (' + dVariant + ')!', 'warning');
                 return;
             }
         }
         else {
-            dom$5.ketchupLite.debug.logMessage('kul-language', 'Language not found (' + dLanguage + ')!', 'warning');
+            dom$5.ketchupLite.debug.logs.new(this, 'Language not found (' + dLanguage + ')!', 'warning');
             return;
         }
         this.name = language;
@@ -4700,7 +4218,7 @@ function customFormula(formula, row) {
         return result;
     }
     catch (e) {
-        dom$4.ketchupLite.debug.logMessage('kul-data', 'Error while evaluating the following formula!(' + formula + ')', 'warning');
+        dom$4.ketchupLite.debug.logs.new(this, 'Error while evaluating the following formula!(' + formula + ')', 'warning');
         return NaN;
     }
 }
@@ -4777,7 +4295,7 @@ class KulMath {
     setLocale(locale) {
         if (!Object.values(KulMathLocales).includes(locale)) {
             locale = KulMathLocales.en;
-            dom$3.ketchupLite.debug.logMessage('kul-math', 'Invalid locale (' + locale + ')! Defaulting to english.', 'warning');
+            dom$3.ketchupLite.debug.logs.new(this, 'Invalid locale (' + locale + ')! Defaulting to english.', 'warning');
         }
         this.locale = locale;
         this.numeral.locale(locale);
@@ -6508,9 +6026,9 @@ class KulTheme {
         if (list) {
             this.list = list;
         }
-        dom$1.ketchupLite.debug.logMessage('theme manager', 'Setting theme to: ' + this.name + '.');
+        dom$1.ketchupLite.debug.logs.new(this, 'Setting theme to: ' + this.name + '.');
         if (!this.list[this.name]) {
-            dom$1.ketchupLite.debug.logMessage('theme manager', 'Invalid theme name, falling back to default ("silver").');
+            dom$1.ketchupLite.debug.logs.new(this, 'Invalid theme name, falling back to default ("silver").');
             this.name = 'silver';
         }
         this.isDarkTheme = this.list[this.name].isDark;
@@ -6561,11 +6079,11 @@ class KulTheme {
                     this.icons() +
                     '}';
             this.customStyle();
-            dom$1.ketchupLite.debug.logMessage('kul-theme', 'Theme ' + dom$1.getAttribute('kul-theme') + ' refreshed.');
+            dom$1.ketchupLite.debug.logs.new(this, 'Theme ' + dom$1.getAttribute('kul-theme') + ' refreshed.');
             document.dispatchEvent(new CustomEvent('kul-theme-refresh'));
         }
         catch (error) {
-            dom$1.ketchupLite.debug.logMessage('kul-theme', 'Theme not refreshed.', 'warning');
+            dom$1.ketchupLite.debug.logs.new(this, 'Theme not refreshed.', 'warning');
         }
     }
     /**
@@ -6690,7 +6208,7 @@ class KulTheme {
             this.set(themes[index]);
         }
         else {
-            dom$1.ketchupLite.debug.logMessage('kul-theme', "Couldn't set a random theme: no themes available!", 'warning');
+            dom$1.ketchupLite.debug.logs.new(this, "Couldn't set a random theme: no themes available!", 'warning');
         }
     }
     /**
@@ -6702,7 +6220,7 @@ class KulTheme {
         //Testing whether the color is transparent, if it is a fall back value will be returned matching the background-color
         if (color === 'transparent') {
             color = this.cssVars['--kul-background-color'];
-            dom$1.ketchupLite.debug.logMessage('theme manager', 'Received TRANSPARENT color, converted to ' +
+            dom$1.ketchupLite.debug.logs.new(this, 'Received TRANSPARENT color, converted to ' +
                 color +
                 ' (theme background).');
         }
@@ -6720,7 +6238,7 @@ class KulTheme {
             const oldColor = color;
             color = this.codeToHex(color);
             isHex = color.substring(0, 1) === '#' ? true : false;
-            dom$1.ketchupLite.debug.logMessage('theme manager', 'Received CODE NAME color ' +
+            dom$1.ketchupLite.debug.logs.new(this, 'Received CODE NAME color ' +
                 oldColor +
                 ', converted to ' +
                 color +
@@ -6774,14 +6292,14 @@ class KulTheme {
                 else {
                     hexColor = this.rgbToHex(rgbColorObj.r, rgbColorObj.g, rgbColorObj.b);
                 }
-                dom$1.ketchupLite.debug.logMessage('theme-manager', 'Received HEX color ' +
+                dom$1.ketchupLite.debug.logs.new(this, 'Received HEX color ' +
                     oldColor +
                     ', converted to ' +
                     color +
                     '.');
             }
             catch (error) {
-                dom$1.ketchupLite.debug.logMessage('theme-manager', 'Invalid color: ' + color + '.');
+                dom$1.ketchupLite.debug.logs.new(this, 'Invalid color: ' + color + '.');
             }
         }
         let rgbValues = null;
@@ -6791,14 +6309,14 @@ class KulTheme {
             rgbColor = color;
         }
         catch (error) {
-            dom$1.ketchupLite.debug.logMessage('theme-manager', 'Color not converted to rgb values: ' + color + '.');
+            dom$1.ketchupLite.debug.logs.new(this, 'Color not converted to rgb values: ' + color + '.');
         }
         if (!hexColor) {
             try {
                 hexColor = this.rgbToHex(parseInt(values[1]), parseInt(values[2]), parseInt(values[3]));
             }
             catch (error) {
-                dom$1.ketchupLite.debug.logMessage('theme-manager', 'Color not converted to hex value: ' + color + '.');
+                dom$1.ketchupLite.debug.logs.new(this, 'Color not converted to hex value: ' + color + '.');
             }
         }
         if (!hslColor || !hslValues) {
@@ -6811,7 +6329,7 @@ class KulTheme {
                 hslColor = 'hsl(' + hsl.h + ',' + hsl.s + '%,' + hsl.l + '%)';
             }
             catch (error) {
-                dom$1.ketchupLite.debug.logMessage('theme-manager', 'Color not converted to hex value: ' + color + '.');
+                dom$1.ketchupLite.debug.logs.new(this, 'Color not converted to hex value: ' + color + '.');
             }
         }
         return {
@@ -7116,7 +6634,7 @@ class KulTheme {
             return colorCodes[color.toLowerCase()];
         }
         else {
-            dom$1.ketchupLite.debug.logMessage('theme manager', 'Could not decode color ' + color + '!');
+            dom$1.ketchupLite.debug.logs.new(this, 'Could not decode color ' + color + '!');
             return color;
         }
     }
@@ -7166,7 +6684,7 @@ class KulLLM {
                 .map((result) => result[0])
                 .map((result) => result.transcript)
                 .join('');
-            kulManager.debug.logMessage('KulChat (stt)', 'STT response: ' + transcript);
+            kulManager.debug.logs.new(this, 'STT response: ' + transcript);
             textarea.setValue(transcript);
             const isFinal = event.results[event.results.length - 1].isFinal;
             if (isFinal) {
@@ -7185,7 +6703,7 @@ class KulLLM {
             recognition.start();
         }
         catch (err) {
-            kulManager.debug.logMessage('KulLLM', 'Error: ' + err, 'error');
+            kulManager.debug.logs.new(this, 'Error: ' + err, 'error');
         }
     }
 }
@@ -7215,7 +6733,7 @@ class KulManager {
         }
         this.data = new KulData();
         this.dates = new KulDates(overrides?.dates?.locale ?? null);
-        this.debug = new KulDebug(overrides?.debug?.active ?? null, overrides?.debug?.autoPrint ?? null, overrides?.debug?.logLimit ?? null);
+        this.debug = new KulDebug(overrides?.debug?.active ?? null, overrides?.debug?.logLimit ?? null);
         this.dynamicPosition = new KulDynamicPosition();
         this.language = new KulLanguage(overrides?.language?.list ?? null, overrides?.language?.name ?? null);
         this.llm = new KulLLM();
@@ -7290,11 +6808,11 @@ class KulManager {
      */
     setLibraryLocalization(locale) {
         if (!Object.values(KulDatesLocales).includes(locale)) {
-            this.debug.logMessage('kul-manager', 'Missing locale (' + locale + ')!', 'error');
+            this.debug.logs.new(this, 'Missing locale (' + locale + ')!', 'error');
             return;
         }
         if (!KulLanguageDefaults[locale]) {
-            this.debug.logMessage('kul-manager', 'Missing language for locale (' + locale + ')!', 'error');
+            this.debug.logs.new(this, 'Missing language for locale (' + locale + ')!', 'error');
             return;
         }
         this.dates.setLocale(locale);
@@ -7326,6 +6844,6 @@ function kulManagerInstance() {
     return dom.ketchupLite;
 }
 
-export { KulThemeColorValues as K, KulLanguageSearch as a, KulLanguageGeneric as b, commonjsGlobal as c, KulDynamicPositionPlacement as d, getProps as g, kulManagerInstance as k };
+export { KulThemeColorValues as K, KulLanguageSearch as a, KulLanguageGeneric as b, commonjsGlobal as c, KulDynamicPositionPlacement as d, kulManagerInstance as k };
 
-//# sourceMappingURL=kul-manager-57799b8b.js.map
+//# sourceMappingURL=kul-manager-8d12091b.js.map

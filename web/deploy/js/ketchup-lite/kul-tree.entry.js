@@ -1,7 +1,7 @@
-import { h, a as getAssetPath, r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, H as Host } from './index-21ee70d9.js';
-import { k as kulManagerInstance, g as getProps, a as KulLanguageSearch, b as KulLanguageGeneric } from './kul-manager-57799b8b.js';
-import { K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './GenericVariables-0efba181.js';
-import { K as KulDataCyAttributes } from './GenericTypes-8038330a.js';
+import { h, a as getAssetPath, r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, H as Host } from './index-4d533537.js';
+import { k as kulManagerInstance, a as KulLanguageSearch, b as KulLanguageGeneric } from './kul-manager-8d12091b.js';
+import { g as getProps } from './componentUtils-a994b230.js';
+import { a as KulDataCyAttributes, K as KUL_WRAPPER_ID, c as KUL_STYLE_ID } from './GenericVariables-f3380974.js';
 
 /*-------------------------------------------------*/
 /*                    P r o p s                    */
@@ -148,7 +148,7 @@ const KulTree = class {
     /*-------------------------------------------------*/
     /**
      * Retrieves the debug information reflecting the current state of the component.
-     * @returns {Promise<KulDebugComponentInfo>} A promise that resolves to a KulDebugComponentInfo object containing debug information.
+     * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves to a KulDebugLifecycleInfo object containing debug information.
      */
     async getDebugInfo() {
         return this.debugInfo;
@@ -166,6 +166,16 @@ const KulTree = class {
      */
     async refresh() {
         forceUpdate(this);
+    }
+    /**
+     * Initiates the unmount sequence, which removes the component from the DOM after a delay.
+     * @param {number} ms - Number of milliseconds
+     */
+    async unmount(ms = 0) {
+        setTimeout(() => {
+            this.onKulEvent(new CustomEvent('unmount'), 'unmount');
+            this.rootElement.remove();
+        }, ms);
     }
     /*-------------------------------------------------*/
     /*           P r i v a t e   M e t h o d s         */
@@ -283,7 +293,7 @@ const KulTree = class {
     render() {
         const isEmpty = !!!this.kulData?.nodes?.length;
         this.#rippleSurface = {};
-        return (h(Host, { key: '9a013876088cdc8ef6bd796e8995a676a602cfad' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '9da8d158d3177eb6d5e89e11ef30d2ddd0fdac59', id: KUL_WRAPPER_ID }, h("div", { key: 'a82998aaf16c5734b268b0de95a4b2f63580ab99', class: "tree" }, this.kulFilter ? (h("kul-textfield", { kulIcon: "magnify", kulFullWidth: true, kulLabel: this.#kulManager.language.translate(KulLanguageSearch.SEARCH), kulStyling: "flat", "onKul-textfield-event": (e) => {
+        return (h(Host, { key: 'f2ade58dc3fb2e0521b3443dac1a400d77591bcd' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '82559ec41d2b14b6f5a311090510f7120a4fe6e2', id: KUL_WRAPPER_ID }, h("div", { key: '4c78a5c1e376f645bc2a39a6ce8fa8b104c3b10f', class: "tree" }, this.kulFilter ? (h("kul-textfield", { kulIcon: "magnify", kulFullWidth: true, kulLabel: this.#kulManager.language.translate(KulLanguageSearch.SEARCH), kulStyling: "flat", "onKul-textfield-event": (e) => {
                 this.onKulEvent(e, 'kul-event');
                 if (e.detail.eventType === 'input') {
                     this.#filter(e);

@@ -40,6 +40,7 @@ export type CustomWidgetMap = {
   [CustomWidgetName.chat]: ChatWidget;
   [CustomWidgetName.chip]: ChipWidget;
   [CustomWidgetName.code]: CodeWidget;
+  [CustomWidgetName.compare]: CompareWidget;
   [CustomWidgetName.controlPanel]: ControlPanelWidget;
   [CustomWidgetName.countBarChart]: CountBarChartWidget;
   [CustomWidgetName.histogram]: HistogramWidget;
@@ -59,6 +60,7 @@ export enum CustomWidgetName {
   chat = 'KUL_CHAT',
   chip = 'KUL_CHIP',
   code = 'KUL_CODE',
+  compare = 'KUL_COMPARE',
   controlPanel = 'KUL_CONTROL_PANEL',
   countBarChart = 'KUL_COUNT_BAR_CHART',
   histogram = 'KUL_HISTOGRAM',
@@ -78,6 +80,7 @@ export type CustomWidgetOptions =
   | ChatWidgetOptions
   | ChipWidgetOptions
   | CodeWidgetOptions
+  | CompareWidgetOptions
   | ControlPanelWidgetOptions
   | CountBarChartWidgetOptions
   | HistogramWidgetOptions
@@ -211,6 +214,25 @@ export type CodeWidgetSetter = () => {
   [CustomWidgetName.code]: BaseWidgetCallback;
 };
 export type CodeWidgetValue = string;
+
+/*-------------------------------------------------------------------*/
+/*                 C o d e   D e c l a r a t i o n s                 */
+/*-------------------------------------------------------------------*/
+
+export interface CompareWidget extends Widget {
+  options: CompareWidgetOptions;
+  type: [CustomWidgetName.compare];
+}
+export interface CompareWidgetOptions {
+  hideOnZoom: boolean;
+  getComp(): HTMLKulCompareElement;
+  getValue(): CompareWidgetValue;
+  setValue(value: CompareWidgetValue): void;
+}
+export type CompareWidgetSetter = () => {
+  [CustomWidgetName.compare]: BaseWidgetCallback;
+};
+export type CompareWidgetValue = string;
 
 /*-------------------------------------------------------------------*/
 /*       C o n t r o l   P a n e l   D e c l a r a t i o n s         */

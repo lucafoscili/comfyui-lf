@@ -1,7 +1,7 @@
-import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-21ee70d9.js';
-import { K as KulDataCyAttributes } from './GenericTypes-8038330a.js';
-import { k as kulManagerInstance, g as getProps } from './kul-manager-57799b8b.js';
-import { K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './GenericVariables-0efba181.js';
+import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-4d533537.js';
+import { K as KUL_WRAPPER_ID, a as KulDataCyAttributes, c as KUL_STYLE_ID } from './GenericVariables-f3380974.js';
+import { k as kulManagerInstance } from './kul-manager-8d12091b.js';
+import { g as getProps } from './componentUtils-a994b230.js';
 
 /*-------------------------------------------------*/
 /*                    P r o p s                    */
@@ -72,7 +72,7 @@ const KulSwitch = class {
     /*-------------------------------------------------*/
     /**
      * Fetches debug information of the component's current state.
-     * @returns {Promise<KulDebugComponentInfo>} A promise that resolves with the debug information object.
+     * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves with the debug information object.
      */
     async getDebugInfo() {
         return this.debugInfo;
@@ -105,6 +105,16 @@ const KulSwitch = class {
      */
     async setValue(value) {
         this.#updateState(value);
+    }
+    /**
+     * Initiates the unmount sequence, which removes the component from the DOM after a delay.
+     * @param {number} ms - Number of milliseconds
+     */
+    async unmount(ms = 0) {
+        setTimeout(() => {
+            this.onKulEvent(new CustomEvent('unmount'), 'unmount');
+            this.rootElement.remove();
+        }, ms);
     }
     /*-------------------------------------------------*/
     /*           P r i v a t e   M e t h o d s         */
@@ -150,11 +160,11 @@ const KulSwitch = class {
             'form-field': true,
             'form-field--align-end': this.kulLeadingLabel,
         };
-        return (h(Host, { key: '27bcb0d73f79a5030ca5b6f9990faf32da751050' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'fcb2ad74f0e7d3f77fe8b3e3645c291914bb6538', id: KUL_WRAPPER_ID }, h("div", { key: 'ac31bf0651cb63bdf3138dfb67e2df5916f0b155', class: formClassName }, h("div", { key: '743ebfaa3c3d64d6fef964d4d6d4939b4d49f6e4', class: className }, h("div", { key: '23c064145ee0daccdf7af917a1c11989cfb53a0c', class: "switch__track" }), h("div", { key: '5905b32fa51cf59096a129a7104a3e0552de0cf3', class: "switch__thumb-underlay" }, h("div", { key: '503a181f172af234dd8840dad3384b268d165046', class: "switch__thumb" }, h("div", { key: '097e5ef71a88bb3e938f0bae7aad3e8a5a47c5fc', ref: (el) => {
+        return (h(Host, { key: '2c0923d2738afc6e2a9d27cd6b8155fff1696563' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '69e7e5968b025cd7935fa91e9fee0ca38d96460a', id: KUL_WRAPPER_ID }, h("div", { key: '06f175a0df9b70236817092a1b2b00f92816d328', class: formClassName }, h("div", { key: 'f9d2c2b9f6f94091853c6ae69beb6cca0165b6c0', class: className }, h("div", { key: 'ee48bb77fabb4aac016e3509da9f22948ef3c072', class: "switch__track" }), h("div", { key: '57428239c1c244a7d28f849dd18e5cfc0fe48552', class: "switch__thumb-underlay" }, h("div", { key: '1fed862a4a498242174547f3e551ed262d26a0b1', class: "switch__thumb" }, h("div", { key: '0faa7fd1bb175860ef890081ce14335db2ebb464', ref: (el) => {
                 if (this.kulRipple) {
                     this.#rippleSurface = el;
                 }
-            } }), h("input", { key: '197548d2be9bb82a376b7a5a6d867f63ca0c8912', class: "switch__native-control", checked: this.#isOn(), "data-cy": KulDataCyAttributes.INPUT, disabled: this.kulDisabled, onBlur: (e) => {
+            } }), h("input", { key: '50fb3b5061fa7cdd7be851a18f10f61f3c1e37d0', class: "switch__native-control", checked: this.#isOn(), "data-cy": KulDataCyAttributes.INPUT, disabled: this.kulDisabled, onBlur: (e) => {
                 this.onKulEvent(e, 'blur');
             }, onChange: (e) => {
                 this.#updateState(this.#isOn() ? 'off' : 'on', e);
@@ -162,7 +172,7 @@ const KulSwitch = class {
                 this.onKulEvent(e, 'focus');
             }, onPointerDown: (e) => {
                 this.onKulEvent(e, 'pointerdown');
-            }, role: "switch", type: "checkbox", value: this.value ? 'on' : 'off' })))), h("label", { key: 'ac63ce9b7479d50eea6dc3b778ffde25bf46eab8', class: "switch__label", onClick: (e) => {
+            }, role: "switch", type: "checkbox", value: this.value ? 'on' : 'off' })))), h("label", { key: '170d6a84910abfb08997eed7b19af060729a5d96', class: "switch__label", onClick: (e) => {
                 this.onKulEvent(e, 'change');
             } }, this.kulLabel)))));
     }

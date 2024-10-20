@@ -1346,6 +1346,6 @@ var flush = () => {
 var nextTick = (cb) => promiseResolve().then(cb);
 var writeTask = /* @__PURE__ */ queueTask(queueDomWrites, true);
 
-export { Fragment as F, Host as H, getAssetPath as a, bootstrapLazy as b, createEvent as c, setAssetPath as d, forceUpdate as f, getElement as g, h, promiseResolve as p, registerInstance as r, setNonce as s };
+export { Fragment as F, Host as H, getAssetPath as a, bootstrapLazy as b, setAssetPath as c, createEvent as d, forceUpdate as f, getElement as g, h, promiseResolve as p, registerInstance as r, setNonce as s };
 
-//# sourceMappingURL=index-21ee70d9.js.map
+//# sourceMappingURL=index-4d533537.js.map
