@@ -134,7 +134,8 @@ const KulArticle = class {
             return shape.element[0];
         }
         else {
-            return (h("span", { class: `content content--span`, "data-depth": depth.toString(), style: node.cssStyle }, node.value));
+            const ComponentTag = node.tagName ? node.tagName : 'span';
+            return (h(ComponentTag, { class: `content content--${ComponentTag}`, "data-depth": depth.toString(), style: node.cssStyle }, node.value));
         }
     }
     #prepArticle() {
@@ -163,7 +164,7 @@ const KulArticle = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: 'a1d637f8f676f965935d60613b6bd2ec01404b63' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '799d5e0293906fe00698478c218f7a2687fe07fd', id: KUL_WRAPPER_ID }, this.kulData?.nodes?.length ? (this.#prepArticle()) : (h("div", { class: "empty-data" }, h("div", { class: "empty-data__text" }, this.#kulManager.language.translate(KulLanguageGeneric.EMPTY_DATA)))))));
+        return (h(Host, { key: '2a66a844e4953a15105699fdb133e202239e4719' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '174c4e321d742d3742230154ce289dc40a56aa88', id: KUL_WRAPPER_ID }, this.kulData?.nodes?.length ? (this.#prepArticle()) : (h("div", { class: "empty-data" }, h("div", { class: "empty-data__text" }, this.#kulManager.language.translate(KulLanguageGeneric.EMPTY_DATA)))))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);
