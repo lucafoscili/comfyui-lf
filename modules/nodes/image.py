@@ -7,6 +7,8 @@ from ..utils.image import *
 
 category = "✨ LF Nodes/Conversion"
 
+b64_prefix = "data:image/png;charset=utf-8;base64,"
+
 class LF_BlurImages:
     @classmethod
     def INPUT_TYPES(cls):
@@ -77,6 +79,7 @@ class LF_ClarityEffect:
                 "sharpen_amount": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 5.0, "step": 0.1, "tooltip": "Controls how much sharpening is applied to the image."}),
                 "blur_kernel_size": ("INT", {"default": 7, "min": 1, "max": 15, "step": 2, "tooltip": "Controls the size of the Gaussian blur kernel. Higher values mean more smoothing."}),
             },
+            "hidden": {"node_id": "UNIQUE_ID"}
         }
 
     CATEGORY = category
@@ -84,16 +87,24 @@ class LF_ClarityEffect:
     RETURN_NAMES = ("image",)
     RETURN_TYPES = ("IMAGE",)
 
-    def on_exec(self, image, clarity_strength: float, sharpen_amount: float, blur_kernel_size: int):
+    def on_exec(self, node_id, image, clarity_strength: float, sharpen_amount: float, blur_kernel_size: int):
+        b64_source =  tensor_to_base64(image)
+
         if isinstance(image, list):
             processed_images = [clarity_effect(img, clarity_strength, sharpen_amount, blur_kernel_size) for img in image]
         else:
             processed_images = clarity_effect(image, clarity_strength, sharpen_amount, blur_kernel_size)
 
-        dataset = {"nodes": [{"children": [], "icon": "help", "id": "", "value": ""}]}
-        summary_message = f"Applied Clarity (strength={clarity_strength}) and Sharpening (amount={sharpen_amount})"
-        dataset["nodes"][0]["id"] = summary_message
-        dataset["nodes"][0]["value"] = summary_message
+        b64_target =  tensor_to_base64(processed_images)
+
+        dataset = {"nodes": [{"children": [], "id": ""}]}
+        node = dataset["nodes"][0]
+        node["cells"] = { "kulImage": { "kulValue": f"{b64_prefix}{b64_source}", "shape": "image" }, "kulImage2": { "kulValue": f"{b64_prefix}{b64_target}", "shape": "image" } }
+
+        PromptServer.instance.send_sync("lf-clarityeffect", {
+            "node": node_id,
+            "dataset": dataset,
+        })
 
         return (processed_images,)
     

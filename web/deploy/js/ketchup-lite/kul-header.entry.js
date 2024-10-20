@@ -1,6 +1,7 @@
-import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-21ee70d9.js';
-import { k as kulManagerInstance, g as getProps } from './kul-manager-57799b8b.js';
-import { K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './GenericVariables-0efba181.js';
+import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-4d533537.js';
+import { k as kulManagerInstance } from './kul-manager-8d12091b.js';
+import { g as getProps } from './componentUtils-a994b230.js';
+import { K as KUL_WRAPPER_ID, c as KUL_STYLE_ID } from './GenericVariables-f3380974.js';
 
 /*-------------------------------------------------*/
 /*                    P r o p s                    */
@@ -51,7 +52,7 @@ const KulHeader = class {
     /*-------------------------------------------------*/
     /**
      * Fetches debug information of the component's current state.
-     * @returns {Promise<KulDebugComponentInfo>} A promise that resolves with the debug information object.
+     * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves with the debug information object.
      */
     async getDebugInfo() {
         return this.debugInfo;
@@ -70,6 +71,16 @@ const KulHeader = class {
     async refresh() {
         forceUpdate(this);
     }
+    /**
+     * Initiates the unmount sequence, which removes the component from the DOM after a delay.
+     * @param {number} ms - Number of milliseconds
+     */
+    async unmount(ms = 0) {
+        setTimeout(() => {
+            this.onKulEvent(new CustomEvent('unmount'), 'unmount');
+            this.rootElement.remove();
+        }, ms);
+    }
     /*-------------------------------------------------*/
     /*          L i f e c y c l e   H o o k s          */
     /*-------------------------------------------------*/
@@ -87,7 +98,7 @@ const KulHeader = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: '28c52b77b473033f00c6518bd43064f7d652cb0e', class: "header" }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '5b0a2985d28b4ee99f6b15fcfdf568e4c6c43880', id: KUL_WRAPPER_ID }, h("header", { key: '3f11f631797bff0bb1a4b6c1d8e9af2502a699f3', class: "header" }, h("section", { key: '7f81478e92b07877ddbe2fb317e65eb7b19af4ed', class: "header__section" }, h("slot", { key: '3c05f27690212861401e5bf282c696b78d234119', name: "content" }))))));
+        return (h(Host, { key: 'ebd44dd21c8dfad33ca69535a9a763f62d13d830', class: "header" }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'de6c0dbc7653c53615fbbcd49fa1bc8a185c800e', id: KUL_WRAPPER_ID }, h("header", { key: '8f103cff3d6904c0e585e8db5b34e014dfe324ba', class: "header" }, h("section", { key: '0bb5b431776fa12a5bd8d54235c53794bd7b0020', class: "header__section" }, h("slot", { key: '123c2ae0e8f07c0bea2be9fb9f91ea07421f0367', name: "content" }))))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

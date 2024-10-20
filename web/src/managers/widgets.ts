@@ -17,6 +17,7 @@ import { messengerFactory } from '../widgets/messenger.js';
 import { cardFactory } from '../widgets/card.js';
 import { cardsWithChipFactory } from '../widgets/cardsWithChip.js';
 import { tabBarChartFactory } from '../widgets/tabBarChart.js';
+import { compareFactory } from '../widgets/compare.js';
 
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
@@ -66,6 +67,13 @@ export class LFWidgets {
     },
     [CustomWidgetName.code]: (nodeType: NodeType) => {
       const widget = app.widgets[CustomWidgetName.code](nodeType, CustomWidgetName.code).widget;
+      return widget;
+    },
+    [CustomWidgetName.compare]: (nodeType: NodeType) => {
+      const widget = app.widgets[CustomWidgetName.compare](
+        nodeType,
+        CustomWidgetName.compare,
+      ).widget;
       return widget;
     },
     [CustomWidgetName.controlPanel]: (nodeType: NodeType) => {
@@ -149,6 +157,7 @@ export class LFWidgets {
     [CustomWidgetName.chat]: (chat: HTMLKulChatElement) => chatFactory.options(chat),
     [CustomWidgetName.chip]: (chip: HTMLKulChipElement) => chipFactory.options(chip),
     [CustomWidgetName.code]: (code: HTMLKulCodeElement) => codeFactory.options(code),
+    [CustomWidgetName.compare]: (compare: HTMLKulCompareElement) => compareFactory.options(compare),
     [CustomWidgetName.controlPanel]: () => controlPanelFactory.options(),
     [CustomWidgetName.countBarChart]: (
       chart: HTMLKulChartElement,
@@ -217,6 +226,13 @@ export class LFWidgets {
       return {
         [CustomWidgetName.code]: (nodeType: NodeType, name: CustomWidgetName) => {
           return codeFactory.render(nodeType, name);
+        },
+      };
+    },
+    [CustomWidgetName.compare]: () => {
+      return {
+        [CustomWidgetName.compare]: (nodeType: NodeType, name: CustomWidgetName) => {
+          return compareFactory.render(nodeType, name);
         },
       };
     },

@@ -4,7 +4,7 @@ export declare const historyFactory: {
         content: string;
         history: string;
     };
-    options: (history: HTMLKulListElement) => HistoryWidgetOptions;
+    options: (list: HTMLKulListElement) => HistoryWidgetOptions;
     render: (node: NodeType, name: CustomWidgetName) => {
         widget: Widget;
     };

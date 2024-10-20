@@ -63,6 +63,7 @@ import {
   MathOperationPayload,
   SortJSONKeysPayload,
   ShuffleJSONKeysPayload,
+  ClarityEffectPayload,
 } from '../types/events.js';
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
 import { KulDataDataset } from '../types/ketchup-lite/components';
@@ -506,6 +507,16 @@ export class LFManager {
         nodes.eventHandlers.LF_CivitAIMetadataSetup(e, widgets.adders.KUL_CODE);
       },
     );
+    /*-------------------------------------------------------------------*/
+    /*               I n i t   C l a r i t y E f f e c t                 */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_ClarityEffect(
+      widgets.setters.KUL_COMPARE,
+      widgets.adders.KUL_COMPARE,
+    );
+    this.#APIS.event(EventName.clarityEffect, (e: CustomEvent<ClarityEffectPayload>) => {
+      nodes.eventHandlers.LF_ClarityEffect(e, widgets.adders.KUL_COMPARE);
+    });
     /*-------------------------------------------------------------------*/
     /*               I n i t   C o n t r o l   P a n e l                 */
     /*-------------------------------------------------------------------*/

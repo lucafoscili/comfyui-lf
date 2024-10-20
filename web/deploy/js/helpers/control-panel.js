@@ -12,12 +12,28 @@ var Labels;
     Labels["THEME"] = "Random theme";
 })(Labels || (Labels = {}));
 const STYLES = {
+    customization: () => {
+        return {
+            margin: '0',
+        };
+    },
+    debugGrid: () => {
+        return {
+            display: 'grid',
+            gridTemplateRows: 'repeat(5,max-content) 1fr',
+            height: '100%',
+            margin: '0',
+        };
+    },
+    debugLogs: () => {
+        return { display: 'grid', gridGap: '12px', gridTemplateRows: '1fr 1fr' };
+    },
     logsArea: () => {
         return {
             backgroundColor: 'rgba(var(--kul-text-color-rgb), 0.075)',
             borderRadius: '8px',
             display: 'block',
-            height: '250px',
+            height: '100%',
             marginBottom: '16px',
             overflow: 'auto',
         };
@@ -328,6 +344,7 @@ export const sectionsFactory = {
     debug: (logsData) => {
         return {
             id: 'section',
+            cssStyle: STYLES.debugGrid(),
             value: 'Debug',
             children: [
                 {
@@ -372,14 +389,23 @@ export const sectionsFactory = {
                         },
                         {
                             id: 'content',
+                            tagName: 'br',
+                            value: '',
+                        },
+                        {
+                            id: 'content',
+                            value: 'Further below another widget will display additional Ketchup Lite components information.',
+                        },
+                        {
+                            id: 'content',
                             value: '',
                             cells: {
                                 kulButton: {
+                                    htmlProps: { className: 'kul-danger kul-full-width' },
                                     shape: 'button',
                                     kulIcon: 'refresh',
                                     kulLabel: Labels.CLEAR_LOGS,
-                                    kulStyle: ':host { margin: auto; padding-bottom: 4px; padding-top: 16px; text-align: center }',
-                                    kulStyling: 'flat',
+                                    kulStyle: ':host { padding-top: 16px; }',
                                     value: '',
                                 },
                             },
@@ -388,14 +414,48 @@ export const sectionsFactory = {
                 },
                 {
                     id: 'paragraph',
+                    cssStyle: STYLES.debugLogs(),
                     value: '',
-                    cssStyle: STYLES.logsArea(),
-                    children: logsData,
-                },
-                {
-                    cssStyle: STYLES.separator(),
-                    id: 'content_separator',
-                    value: '',
+                    children: [
+                        {
+                            id: 'content-wrapper',
+                            cssStyle: STYLES.logsArea(),
+                            value: '',
+                            children: logsData,
+                        },
+                        {
+                            cells: {
+                                kulCard: {
+                                    kulData: {
+                                        nodes: [
+                                            {
+                                                cells: {
+                                                    kulCode: { shape: 'code', value: '' },
+                                                    kulButton: {
+                                                        shape: 'button',
+                                                        value: '',
+                                                    },
+                                                    kulButton_2: {
+                                                        shape: 'button',
+                                                        value: '',
+                                                    },
+                                                    kulSwitch: {
+                                                        shape: 'switch',
+                                                        value: !!getKulManager().debug.isEnabled(),
+                                                    },
+                                                },
+                                                id: 'debug',
+                                            },
+                                        ],
+                                    },
+                                    kulLayout: 'debug',
+                                    shape: 'card',
+                                    value: '',
+                                },
+                            },
+                            id: 'content-wrapper',
+                        },
+                    ],
                 },
             ],
         };
@@ -459,6 +519,7 @@ export const sectionsFactory = {
         return {
             id: 'section',
             value: 'Customization',
+            cssStyle: STYLES.customization(),
             children: [
                 {
                     id: 'paragraph',

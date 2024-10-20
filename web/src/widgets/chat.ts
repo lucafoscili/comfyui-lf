@@ -20,7 +20,7 @@ export const chatFactory = {
       getValue() {
         return chat?.dataset.history;
       },
-      setValue(history: string) {
+      setValue(history) {
         chat.setHistory(history);
       },
     } as ChatWidgetOptions;

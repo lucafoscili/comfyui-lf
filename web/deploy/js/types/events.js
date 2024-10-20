@@ -4,6 +4,7 @@ export var EventName;
     EventName["boolean"] = "lf-boolean";
     EventName["checkpointSelector"] = "lf-checkpointselector";
     EventName["civitAIMetadataSetup"] = "lf-civitaimetadatasetup";
+    EventName["clarityEffect"] = "lf-clarityeffect";
     EventName["controlPanel"] = "lf-controlpanel";
     EventName["displayBoolean"] = "lf-displayboolean";
     EventName["displayFloat"] = "lf-displayfloat";

@@ -13,6 +13,7 @@ export enum EventName {
   boolean = 'lf-boolean',
   checkpointSelector = 'lf-checkpointselector',
   civitAIMetadataSetup = 'lf-civitaimetadatasetup',
+  clarityEffect = 'lf-clarityeffect',
   controlPanel = 'lf-controlpanel',
   displayBoolean = 'lf-displayboolean',
   displayFloat = 'lf-displayfloat',
@@ -62,6 +63,7 @@ export type EventPayload =
   | BooleanPayload
   | CheckpointSelectorPayload
   | CivitAIMetadataSetupPayload
+  | ClarityEffectPayload
   | DisplayBooleanPayload
   | DisplayJSONPayload
   | EmbeddingSelectorPayload
@@ -134,6 +136,14 @@ export interface CheckpointSelectorPayload extends BaseEventPayload {
 
 export interface CivitAIMetadataSetupPayload extends BaseEventPayload {
   metadataString: string;
+}
+
+/*-------------------------------------------------------------------*/
+/*             C l a r i t y E f f e c t   D e c l a r .             */
+/*-------------------------------------------------------------------*/
+
+export interface ClarityEffectPayload extends BaseEventPayload {
+  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/

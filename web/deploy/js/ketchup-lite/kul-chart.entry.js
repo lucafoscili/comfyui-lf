@@ -1,6 +1,7 @@
-import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-21ee70d9.js';
-import { k as kulManagerInstance, g as getProps, K as KulThemeColorValues } from './kul-manager-57799b8b.js';
-import { K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './GenericVariables-0efba181.js';
+import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-4d533537.js';
+import { k as kulManagerInstance, K as KulThemeColorValues } from './kul-manager-8d12091b.js';
+import { g as getProps } from './componentUtils-a994b230.js';
+import { K as KUL_WRAPPER_ID, c as KUL_STYLE_ID } from './GenericVariables-f3380974.js';
 
 /*-------------------------------------------------*/
 /*                    P r o p s                    */
@@ -84422,7 +84423,7 @@ const KulChart = class {
     /*-------------------------------------------------*/
     /**
      * Fetches debug information of the component's current state.
-     * @returns {Promise<KulDebugComponentInfo>} A promise that resolves with the debug information object.
+     * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves with the debug information object.
      */
     async getDebugInfo() {
         return this.debugInfo;
@@ -84441,6 +84442,16 @@ const KulChart = class {
     async refresh() {
         forceUpdate(this);
     }
+    /**
+     * Initiates the unmount sequence, which removes the component from the DOM after a delay.
+     * @param {number} ms - Number of milliseconds
+     */
+    async unmount(ms = 0) {
+        setTimeout(() => {
+            this.onKulEvent(new CustomEvent('unmount'), 'unmount', {});
+            this.rootElement.remove();
+        }, ms);
+    }
     /*-------------------------------------------------*/
     /*           P r i v a t e   M e t h o d s         */
     /*-------------------------------------------------*/
@@ -84453,7 +84464,7 @@ const KulChart = class {
             this.#createChart();
         }
         else {
-            this.#kulManager.debug.logMessage(this, "Can't intialize chart without specifiying at least 1 type.", 'warning');
+            this.#kulManager.debug.logs.new(this, "Can't intialize chart without specifiying at least 1 type.", 'warning');
         }
     }
     #createX(dataset = null) {
@@ -85491,7 +85502,7 @@ const KulChart = class {
             this.#initChart();
         }
         else {
-            this.#kulManager.debug.logMessage(this, 'Not enough data. (' + JSON.stringify(this.kulData) + ')', 'informational');
+            this.#kulManager.debug.logs.new(this, 'Not enough data. (' + JSON.stringify(this.kulData) + ')', 'informational');
         }
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
@@ -85500,7 +85511,7 @@ const KulChart = class {
             '--kul_chart_height': this.kulSizeY ? this.kulSizeY : '100%',
             '--kul_chart_width': this.kulSizeX ? this.kulSizeX : '100%',
         };
-        return (h(Host, { key: '4ce6375997027a3bef51ea364c0c820777985e3d', style: style }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '7834270ec9ded9d39be9cf07e5f2fa1de32f261b', id: KUL_WRAPPER_ID, ref: (chartContainer) => (this.#chartContainer = chartContainer) })));
+        return (h(Host, { key: 'c1b91df476f158c3e149df2ba8e8957dc2ddaf35', style: style }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '7d823a095faa6af8cb7e6ab87fdb05d667a3d3b7', id: KUL_WRAPPER_ID, ref: (chartContainer) => (this.#chartContainer = chartContainer) })));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

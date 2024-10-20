@@ -1,7 +1,7 @@
-import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, F as Fragment, H as Host } from './index-21ee70d9.js';
-import { k as kulManagerInstance, g as getProps, b as KulLanguageGeneric } from './kul-manager-57799b8b.js';
-import { K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './GenericVariables-0efba181.js';
-import { K as KulDataCyAttributes } from './GenericTypes-8038330a.js';
+import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, F as Fragment, H as Host } from './index-4d533537.js';
+import { k as kulManagerInstance, b as KulLanguageGeneric } from './kul-manager-8d12091b.js';
+import { g as getProps } from './componentUtils-a994b230.js';
+import { K as KUL_WRAPPER_ID, c as KUL_STYLE_ID } from './GenericVariables-f3380974.js';
 
 /*-------------------------------------------------*/
 /*                    P r o p s                    */
@@ -12,7 +12,7 @@ var KulArticleProps;
     KulArticleProps["kulStyle"] = "Custom style of the component.";
 })(KulArticleProps || (KulArticleProps = {}));
 
-const kulArticleCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}:host{--kul_article_content_color:var(\n    --kul-article-content-color,\n    var(--kul-text-color)\n  );--kul_article_content_font_family:var(\n    --kul-article-content-font-family,\n    var(--kul-font-family)\n  );--kul_article_content_font_size:var(\n    --kul-article-content-font-size,\n    var(--kul-font-size)\n  );--kul_article_h1_color:var(--kul-article-h1-color, var(--kul-text-color));--kul_article_h1_font_family:var(\n    --kul-article-h1-font-family,\n    var(--kul-font-family)\n  );--kul_article_h1_font_size:var(\n    --kul-article-h1-font-size,\n    calc(var(--kul-font-size) * 1.25)\n  );--kul_article_h2_color:var(--kul-article-h2-color, var(--kul-text-color));--kul_article_h2_font_family:var(\n    --kul-article-h2-font-family,\n    var(--kul-font-family)\n  );--kul_article_h2_font_size:var(\n    --kul-article-h2-font-size,\n    calc(var(--kul-font-size) * 1.125)\n  );--kul_article_h3_color:var(--kul-article-h3-color, var(--kul-text-color));--kul_article_h3_font_family:var(\n    --kul-article-h3-font-family,\n    var(--kul-font-family)\n  );--kul_article_h3_font_size:var(--kul-article-h3-font-size, 1.5em);--kul_article_margin:var(--kul-article-margin, auto);--kul_article_max_width:var(--kul-article-max-width, 1200px);--kul_article_padding:var(--kul-article-padding, 40px);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);background-color:rgba(var(--kul-background-color-rgb), 0.375);display:block;height:100%;width:100%}#kul-component{height:100%;width:100%}.article{margin:var(--kul_article_margin);max-width:var(--kul_article_max_width);padding:var(--kul_article_padding)}.content{color:var(--kul_article_content_color);font-family:var(--kul_article_content_font_family);font-size:var(--kul_article_content_font_size)}.content--kul-code{max-width:max-content;margin:auto;padding:1.75em 0}h1{color:var(--kul_article_h1_color);font-family:var(--kul_article_h1_font_family);font-size:var(--kul_article_h1_font_size);font-size:2.375em;font-weight:600;line-height:1.2;margin-bottom:1.25em;word-break:break-word}h2{color:var(--kul_article_h2_color);font-family:var(--kul_article_h2_font_family);font-size:var(--kul_article_h2_font_size);font-size:2em;font-weight:500;line-height:1.2;margin-bottom:0.375em}h3{color:var(--kul_article_h3_color);font-family:var(--kul_article_h3_font_family);font-size:var(--kul_article_h3_font_size);font-weight:300;line-height:1.2;margin:0.5em 0}.empty-data{align-items:center;display:flex;justify-content:center;height:100%;width:100%}";
+const kulArticleCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}:host{--kul_article_content_color:var(\n    --kul-article-content-color,\n    var(--kul-text-color)\n  );--kul_article_content_font_family:var(\n    --kul-article-content-font-family,\n    var(--kul-font-family)\n  );--kul_article_content_font_size:var(\n    --kul-article-content-font-size,\n    var(--kul-font-size)\n  );--kul_article_h1_color:var(--kul-article-h1-color, var(--kul-text-color));--kul_article_h1_font_family:var(\n    --kul-article-h1-font-family,\n    var(--kul-font-family)\n  );--kul_article_h1_font_size:var(\n    --kul-article-h1-font-size,\n    calc(var(--kul-font-size) * 1.25)\n  );--kul_article_h2_color:var(--kul-article-h2-color, var(--kul-text-color));--kul_article_h2_font_family:var(\n    --kul-article-h2-font-family,\n    var(--kul-font-family)\n  );--kul_article_h2_font_size:var(\n    --kul-article-h2-font-size,\n    calc(var(--kul-font-size) * 1.125)\n  );--kul_article_h3_color:var(--kul-article-h3-color, var(--kul-text-color));--kul_article_h3_font_family:var(\n    --kul-article-h3-font-family,\n    var(--kul-font-family)\n  );--kul_article_h3_font_size:var(--kul-article-h3-font-size, 1.5em);--kul_article_margin:var(--kul-article-margin, auto);--kul_article_max_width:var(--kul-article-max-width, 1200px);--kul_article_padding:var(--kul-article-padding, 40px);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);background-color:rgba(var(--kul-background-color-rgb), 0.375);display:block;height:100%;width:100%}#kul-component{height:100%;width:100%}.article{margin:var(--kul_article_margin);max-width:var(--kul_article_max_width);padding:var(--kul_article_padding)}.content{color:var(--kul_article_content_color);font-family:var(--kul_article_content_font_family);font-size:var(--kul_article_content_font_size)}h1{color:var(--kul_article_h1_color);font-family:var(--kul_article_h1_font_family);font-size:var(--kul_article_h1_font_size);font-size:2.375em;font-weight:600;line-height:1.2;margin-bottom:1.25em;word-break:break-word}h2{color:var(--kul_article_h2_color);font-family:var(--kul_article_h2_font_family);font-size:var(--kul_article_h2_font_size);font-size:2em;font-weight:500;line-height:1.2;margin-bottom:0.375em}h3{color:var(--kul_article_h3_color);font-family:var(--kul_article_h3_font_family);font-size:var(--kul_article_h3_font_size);font-weight:300;line-height:1.2;margin:0.5em 0}.empty-data{align-items:center;display:flex;justify-content:center;height:100%;width:100%}[data-component=KulCode]{max-width:max-content;margin:auto;padding:1.75em 0}";
 const KulArticleStyle0 = kulArticleCss;
 
 const KulArticle = class {
@@ -54,7 +54,7 @@ const KulArticle = class {
     /*-------------------------------------------------*/
     /**
      * Retrieves the debug information reflecting the current state of the component.
-     * @returns {Promise<KulDebugComponentInfo>} A promise that resolves to a KulDebugComponentInfo object containing debug information.
+     * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves to a KulDebugLifecycleInfo object containing debug information.
      */
     async getDebugInfo() {
         return this.debugInfo;
@@ -72,6 +72,16 @@ const KulArticle = class {
      */
     async refresh() {
         forceUpdate(this);
+    }
+    /**
+     * Initiates the unmount sequence, which removes the component from the DOM after a delay.
+     * @param {number} ms - Number of milliseconds
+     */
+    async unmount(ms = 0) {
+        setTimeout(() => {
+            this.onKulEvent(new CustomEvent('unmount'), 'unmount');
+            this.rootElement.remove();
+        }, ms);
     }
     /*-------------------------------------------------*/
     /*           P r i v a t e   M e t h o d s         */
@@ -116,23 +126,15 @@ const KulArticle = class {
             : null)));
     }
     #contentTemplate(node, depth) {
+        const decorator = kulManagerInstance().data.cell.shapes.decorate;
         const key = node?.cells && Object.keys(node.cells)[0];
         const cell = node?.cells?.[key];
-        const ComponentTag = cell
-            ? 'kul-' + cell.shape
-            : node.tagName
-                ? node.tagName
-                : 'span';
         if (cell) {
-            const eventName = `onKul-${cell.shape}-event`;
-            const eventBinder = {
-                [eventName]: (e) => {
-                    this.onKulEvent(e, 'kul-event');
-                },
-            };
-            return (h(ComponentTag, { class: `content content--${ComponentTag}`, "data-cy": KulDataCyAttributes.SHAPE, "data-depth": depth.toString(), ...this.#kulManager.data.extract.singleShape(cell), ...eventBinder, style: node.cssStyle }, node.value));
+            const shape = decorator(cell.shape, [cell], async (e) => this.onKulEvent(e, 'kul-event'));
+            return shape.element[0];
         }
         else {
+            const ComponentTag = node.tagName ? node.tagName : 'span';
             return (h(ComponentTag, { class: `content content--${ComponentTag}`, "data-depth": depth.toString(), style: node.cssStyle }, node.value));
         }
     }
@@ -162,7 +164,7 @@ const KulArticle = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: '91e1721b627c36b7c42313a6e7810c3a58f1472b' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '01896d33c49dc5fb42aa41ce835f89ba6fe16ba6', id: KUL_WRAPPER_ID }, this.kulData?.nodes?.length ? (this.#prepArticle()) : (h("div", { class: "empty-data" }, h("div", { class: "empty-data__text" }, this.#kulManager.language.translate(KulLanguageGeneric.EMPTY_DATA)))))));
+        return (h(Host, { key: '2a66a844e4953a15105699fdb133e202239e4719' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '174c4e321d742d3742230154ce289dc40a56aa88', id: KUL_WRAPPER_ID }, this.kulData?.nodes?.length ? (this.#prepArticle()) : (h("div", { class: "empty-data" }, h("div", { class: "empty-data__text" }, this.#kulManager.language.translate(KulLanguageGeneric.EMPTY_DATA)))))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

@@ -21,7 +21,7 @@ export const codeFactory = {
       getValue() {
         return code.kulValue;
       },
-      setValue(value: Record<string, unknown> | string) {
+      setValue(value) {
         const isEmpty = () => {
           return (
             value === '' ||

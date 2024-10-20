@@ -1,7 +1,7 @@
-import { h, F as Fragment, r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, H as Host, a as getAssetPath } from './index-21ee70d9.js';
-import { k as kulManagerInstance, g as getProps, K as KulThemeColorValues } from './kul-manager-57799b8b.js';
-import { K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './GenericVariables-0efba181.js';
-import { K as KulDataCyAttributes } from './GenericTypes-8038330a.js';
+import { h, F as Fragment, r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, H as Host, a as getAssetPath } from './index-4d533537.js';
+import { k as kulManagerInstance, K as KulThemeColorValues } from './kul-manager-8d12091b.js';
+import { g as getProps } from './componentUtils-a994b230.js';
+import { K as KUL_WRAPPER_ID, c as KUL_STYLE_ID, a as KulDataCyAttributes } from './GenericVariables-f3380974.js';
 
 /*-------------------------------------------------*/
 /*                    P r o p s                    */
@@ -342,7 +342,7 @@ const KulChat = class {
     /*-------------------------------------------------*/
     /**
      * Retrieves the debug information reflecting the current state of the component.
-     * @returns {Promise<KulDebugComponentInfo>} A promise that resolves to a KulDebugComponentInfo object containing debug information.
+     * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves to a KulDebugLifecycleInfo object containing debug information.
      */
     async getDebugInfo() {
         return this.debugInfo;
@@ -389,6 +389,16 @@ const KulChat = class {
             this.#updateHistory(cb);
         }
         catch { }
+    }
+    /**
+     * Initiates the unmount sequence, which removes the component from the DOM after a delay.
+     * @param {number} ms - Number of milliseconds
+     */
+    async unmount(ms = 0) {
+        setTimeout(() => {
+            this.onKulEvent(new CustomEvent('unmount'), 'unmount');
+            this.rootElement.remove();
+        }, ms);
     }
     /*-------------------------------------------------*/
     /*           P r i v a t e   M e t h o d s         */
@@ -576,7 +586,7 @@ const KulChat = class {
                 this.#updateHistory(cb);
             }
             catch (error) {
-                this.#kulManager.debug.logMessage(this, "Couldn't set value for chat history", 'warning');
+                this.#kulManager.debug.logs.new(this, "Couldn't set value for chat history", 'warning');
             }
         }
     }
@@ -595,7 +605,7 @@ const KulChat = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: '7f25f4217fcb5829f526948b56f8695398f470bb' }, this.kulStyle && (h("style", { key: '4a4c4defd1ece21160fb267cbaf80c148de5e179', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: '3a54cf5519dd5bc193a46ff6744135ccc86f2e87', id: KUL_WRAPPER_ID }, h("div", { key: '4bebb8a0d019dcdbe9c68eeeb9f571ca3af434fa', class: `${this.view} ${this.view}--${this.kulLayout} ${this.view}--${this.status}` }, this.view === 'settings'
+        return (h(Host, { key: 'e4ae662f1345993b33580dad37cca1f566745af4' }, this.kulStyle && (h("style", { key: '04a95adf6d799cf5b48da393778d67232d9e0f9c', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: 'f376ac5a40f3a5399f5873877b468cf6124c01d9', id: KUL_WRAPPER_ID }, h("div", { key: '7869e41912aef3cb171dbaca7bdaafad6256242e', class: `${this.view} ${this.view}--${this.kulLayout} ${this.view}--${this.status}` }, this.view === 'settings'
             ? prepSettings(this.#adapter)
             : this.status === 'ready'
                 ? prepChat(this.#adapter)
@@ -710,7 +720,7 @@ const KulChip = class {
     /*-------------------------------------------------*/
     /**
      * Fetches debug information of the component's current state.
-     * @returns {Promise<KulDebugComponentInfo>} A promise that resolves with the debug information object.
+     * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves with the debug information object.
      */
     async getDebugInfo() {
         return this.debugInfo;
@@ -729,6 +739,12 @@ const KulChip = class {
      */
     async getSelectedNodes() {
         return this.selectedNodes;
+    }
+    /**
+     * This method is used to trigger a new render of the component.
+     */
+    async refresh() {
+        forceUpdate(this);
     }
     /**
      * Selects one or more nodes in the chip component.
@@ -754,10 +770,14 @@ const KulChip = class {
         this.selectedNodes = nodesToAdd;
     }
     /**
-     * This method is used to trigger a new render of the component.
+     * Initiates the unmount sequence, which removes the component from the DOM after a delay.
+     * @param {number} ms - Number of milliseconds
      */
-    async refresh() {
-        forceUpdate(this);
+    async unmount(ms = 0) {
+        setTimeout(() => {
+            this.onKulEvent(new CustomEvent('unmount'), 'unmount');
+            this.rootElement.remove();
+        }, ms);
     }
     /*-------------------------------------------------*/
     /*           P r i v a t e   M e t h o d s         */
@@ -912,7 +932,7 @@ const KulChip = class {
             'chip-set--filter': this.#isFilter(),
             'chip-set--input': this.#isInput(),
         };
-        return (h(Host, { key: 'b62fc66ed0334cfe7c67261bcb72afd98d268743' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'c848e72fefda1c2f15c5cec863c53131efbadc38', id: KUL_WRAPPER_ID }, h("div", { key: '95416b2cffed95ed5f35f061c7898f135c97185b', class: className, role: "grid" }, this.#prepChipSet()))));
+        return (h(Host, { key: 'dc32210666ee1b15dbf5a2381fed30d21947bf94' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '72840f2ab66a7b108792d81ef75590e93ed3d52c', id: KUL_WRAPPER_ID }, h("div", { key: '7c2cfc5672a2ef0d3229d009b8e421daa6e9a373', class: className, role: "grid" }, this.#prepChipSet()))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);
@@ -990,7 +1010,7 @@ const KulTabbar = class {
     /*-------------------------------------------------*/
     /**
      * Retrieves the debug information reflecting the current state of the component.
-     * @returns {Promise<KulDebugComponentInfo>} A promise that resolves to a KulDebugComponentInfo object containing debug information.
+     * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves to a KulDebugLifecycleInfo object containing debug information.
      */
     async getDebugInfo() {
         return this.debugInfo;
@@ -1038,6 +1058,16 @@ const KulTabbar = class {
         };
         return this.value;
     }
+    /**
+     * Initiates the unmount sequence, which removes the component from the DOM after a delay.
+     * @param {number} ms - Number of milliseconds
+     */
+    async unmount(ms = 0) {
+        setTimeout(() => {
+            this.onKulEvent(new CustomEvent('unmount'), 'unmount');
+            this.rootElement.remove();
+        }, ms);
+    }
     /*-------------------------------------------------*/
     /*          L i f e c y c l e   H o o k s          */
     /*-------------------------------------------------*/
@@ -1060,7 +1090,7 @@ const KulTabbar = class {
             }
         }
         catch (error) {
-            this.#kulManager.debug.logMessage(this, 'Something went wrong while setting the initial selected value.', 'warning');
+            this.#kulManager.debug.logs.new(this, 'Something went wrong while setting the initial selected value.', 'warning');
         }
         this.#kulManager.theme.register(this);
     }

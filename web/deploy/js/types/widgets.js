@@ -17,6 +17,7 @@ export var CustomWidgetName;
     CustomWidgetName["chat"] = "KUL_CHAT";
     CustomWidgetName["chip"] = "KUL_CHIP";
     CustomWidgetName["code"] = "KUL_CODE";
+    CustomWidgetName["compare"] = "KUL_COMPARE";
     CustomWidgetName["controlPanel"] = "KUL_CONTROL_PANEL";
     CustomWidgetName["countBarChart"] = "KUL_COUNT_BAR_CHART";
     CustomWidgetName["histogram"] = "KUL_HISTOGRAM";

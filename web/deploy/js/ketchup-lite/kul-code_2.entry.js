@@ -1,6 +1,7 @@
-import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, a as getAssetPath, h, H as Host } from './index-21ee70d9.js';
-import { c as commonjsGlobal, k as kulManagerInstance, g as getProps } from './kul-manager-57799b8b.js';
-import { K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './GenericVariables-0efba181.js';
+import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, a as getAssetPath, h, H as Host } from './index-4d533537.js';
+import { c as commonjsGlobal, k as kulManagerInstance } from './kul-manager-8d12091b.js';
+import { g as getProps } from './componentUtils-a994b230.js';
+import { K as KUL_WRAPPER_ID, c as KUL_STYLE_ID } from './GenericVariables-f3380974.js';
 
 /*-------------------------------------------------*/
 /*                    P r o p s                    */
@@ -2902,7 +2903,6 @@ const KulCode = class {
     /*-------------------------------------------------*/
     /*       I n t e r n a l   V a r i a b l e s       */
     /*-------------------------------------------------*/
-    #copyTimeoutId;
     #el;
     #kulManager = kulManagerInstance();
     /*-------------------------------------------------*/
@@ -2925,7 +2925,7 @@ const KulCode = class {
     /*-------------------------------------------------*/
     /**
      * Retrieves the debug information reflecting the current state of the component.
-     * @returns {Promise<KulDebugComponentInfo>} A promise that resolves to a KulDebugComponentInfo object containing debug information.
+     * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves to a KulDebugLifecycleInfo object containing debug information.
      */
     async getDebugInfo() {
         return this.debugInfo;
@@ -2944,25 +2944,19 @@ const KulCode = class {
     async refresh() {
         forceUpdate(this);
     }
+    /**
+     * Initiates the unmount sequence, which removes the component from the DOM after a delay.
+     * @param {number} ms - Number of milliseconds
+     */
+    async unmount(ms = 0) {
+        setTimeout(() => {
+            this.onKulEvent(new CustomEvent('unmount'), 'unmount');
+            this.rootElement.remove();
+        }, ms);
+    }
     /*-------------------------------------------------*/
     /*           P r i v a t e   M e t h o d s         */
     /*-------------------------------------------------*/
-    #copy(e) {
-        if (e.detail.eventType === 'pointerdown') {
-            const button = e.detail.comp;
-            navigator.clipboard.writeText(this.kulValue);
-            button.kulLabel = 'Copied!';
-            button.kulIcon = 'check';
-            if (this.#copyTimeoutId) {
-                clearTimeout(this.#copyTimeoutId);
-            }
-            this.#copyTimeoutId = setTimeout(() => {
-                button.kulLabel = 'Copy';
-                button.kulIcon = 'content_copy';
-                this.#copyTimeoutId = null;
-            }, 1000);
-        }
-    }
     #format(value) {
         if (typeof value === 'string' && /^[\{\}]\s*$/i.test(value)) {
             return value.trim();
@@ -2983,7 +2977,7 @@ const KulCode = class {
             Prism.highlightElement(this.#el);
         }
         catch (error) {
-            this.#kulManager.debug.logMessage(this, 'Failed to highlight code:' + error, 'error');
+            this.#kulManager.debug.logs.new(this, 'Failed to highlight code:' + error, 'error');
             this.#el.innerHTML = this.value;
         }
     }
@@ -3056,7 +3050,15 @@ const KulCode = class {
             this.kulLanguage.toLowerCase() === '';
         const shouldPreserveSpace = this.kulPreserveSpaces ||
             (isPreserveSpaceMissing && !isLikelyTextual);
-        return (h(Host, { key: '8ce1b29f6f811d6cfaa6f44a2b77bb11393d6303' }, this.kulStyle && (h("style", { key: 'b9669a7c27d9f2b6075769974d16d4d6e991d067', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: 'b6e85d94ecc65946c34130cb58d64bf3d85d54b0', id: KUL_WRAPPER_ID }, h("div", { key: 'e3b15b04ed348257e83c827b24148c134ad91a7d', class: "container" }, h("div", { key: '94114a1401917bf10682fb2d2d2b95b53bf2db08', class: "header" }, h("span", { key: '3e7af98326f1bbb6fbff593a791a7fcc43795e42', class: "title" }, this.kulLanguage), h("kul-button", { key: 'f3ff87ed8584f0a02715b23fb422335b02fc07b0', class: 'kul-slim kul-full-height', kulIcon: "content_copy", kulLabel: "Copy", kulStyling: "flat", "onKul-button-event": (e) => this.#copy(e) })), shouldPreserveSpace ? (h("pre", { class: 'language-' + this.kulLanguage, key: this.value, ref: (el) => {
+        return (h(Host, { key: '07b9411ea3b727974942040cbb4d71af75515396' }, this.kulStyle && (h("style", { key: 'ba9d0f27f706fa7bc05839de598ec1b828574c33', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: '085fc5a274c97ed00f5e8e7a3c47d8366f04aa6c', id: KUL_WRAPPER_ID }, h("div", { key: '36486148e9a6404803279e6306695b03617e920c', class: "container" }, h("div", { key: 'd2084f554df0d909009a29538eac8ac8e8c03303', class: "header" }, h("span", { key: 'c6f5bed5fc066ac35c800bc337b453808503468b', class: "title" }, this.kulLanguage), h("kul-button", { key: '4ee0fb77859dcc421c35f04b1c25991575afc054', class: 'kul-slim kul-full-height', kulIcon: "content_copy", kulLabel: "Copy", kulStyling: "flat", "onKul-button-event": (e) => {
+                const { comp, eventType } = e.detail;
+                switch (eventType) {
+                    case 'click':
+                        navigator.clipboard.writeText(this.kulValue);
+                        comp.setMessage();
+                        break;
+                }
+            } })), shouldPreserveSpace ? (h("pre", { class: 'language-' + this.kulLanguage, key: this.value, ref: (el) => {
                 if (el) {
                     this.#el = el;
                 }
@@ -3133,7 +3135,7 @@ const KulProgressbar = class {
     /*-------------------------------------------------*/
     /**
      * Retrieves the debug information reflecting the current state of the component.
-     * @returns {Promise<KulDebugComponentInfo>} A promise that resolves to a KulDebugComponentInfo object containing debug information.
+     * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves to a KulDebugLifecycleInfo object containing debug information.
      */
     async getDebugInfo() {
         return this.debugInfo;
@@ -3151,6 +3153,16 @@ const KulProgressbar = class {
      */
     async refresh() {
         forceUpdate(this);
+    }
+    /**
+     * Initiates the unmount sequence, which removes the component from the DOM after a delay.
+     * @param {number} ms - Number of milliseconds
+     */
+    async unmount(ms = 0) {
+        setTimeout(() => {
+            this.onKulEvent(new CustomEvent('unmount'), 'unmount');
+            this.rootElement.remove();
+        }, ms);
     }
     /*-------------------------------------------------*/
     /*           P r i v a t e   M e t h o d s         */
@@ -3199,7 +3211,7 @@ const KulProgressbar = class {
             ['--kul_progressbar_percentage_width']: `${this.kulValue}%`,
             ['--kul_progressbar_transform']: `rotate(${this.kulValue * 3.6}deg)`,
         };
-        return (h(Host, { key: 'e3da6d6e7cee60d3fc8f6fd47b5500850d05835d' }, this.kulStyle && (h("style", { key: 'c01b7042f8cbb9912ddee16a0531631e6d42df7b', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: 'd7fc51caf730e1fe642a1c11db9c5554fbc02573', id: KUL_WRAPPER_ID, style: style }, this.kulIsRadial
+        return (h(Host, { key: 'c39e9107828672dbddaa21e48d46e63b9266d7be' }, this.kulStyle && (h("style", { key: '7b1a7ea9ae8f3437150d9af590aa5aa5713e0ac3', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: '649022702f454002dd5c1ec743475bc3beeee6c0', id: KUL_WRAPPER_ID, style: style }, this.kulIsRadial
             ? this.#prepRadialBar()
             : this.#prepProgressBar())));
     }

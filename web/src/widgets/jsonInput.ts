@@ -19,18 +19,11 @@ export const jsonInputFactory = {
       getValue() {
         return jsonInput?.value;
       },
-      setValue(value: Record<string, unknown> | string) {
+      setValue(value) {
         if (jsonInput) {
           try {
-            let parsedValue: Record<string, unknown>;
-
-            if (typeof value === 'string') {
-              const { unescapedStr, validJson, parsedJson } = deserializeValue(value);
-              parsedValue = validJson ? parsedJson : JSON.parse(unescapedStr);
-            } else {
-              parsedValue = value;
-            }
-
+            const { unescapedStr, validJson, parsedJson } = deserializeValue(value);
+            const parsedValue = validJson ? parsedJson : JSON.parse(unescapedStr);
             jsonInput.value = JSON.stringify(parsedValue, null, 2);
           } catch (error) {
             getLFManager().log(

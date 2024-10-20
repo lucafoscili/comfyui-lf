@@ -1,6 +1,7 @@
-import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-21ee70d9.js';
-import { k as kulManagerInstance, g as getProps } from './kul-manager-57799b8b.js';
-import { K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './GenericVariables-0efba181.js';
+import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-4d533537.js';
+import { k as kulManagerInstance } from './kul-manager-8d12091b.js';
+import { g as getProps } from './componentUtils-a994b230.js';
+import { K as KUL_WRAPPER_ID, c as KUL_STYLE_ID } from './GenericVariables-f3380974.js';
 
 /*-------------------------------------------------*/
 /*                    P r o p s                    */
@@ -71,7 +72,7 @@ const KulUpload = class {
     /*-------------------------------------------------*/
     /**
      * Retrieves the debug information reflecting the current state of the component.
-     * @returns {Promise<KulDebugComponentInfo>} A promise that resolves to a KulDebugComponentInfo object containing debug information.
+     * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves to a KulDebugLifecycleInfo object containing debug information.
      */
     async getDebugInfo() {
         return this.debugInfo;
@@ -95,6 +96,16 @@ const KulUpload = class {
      */
     async refresh() {
         forceUpdate(this);
+    }
+    /**
+     * Initiates the unmount sequence, which removes the component from the DOM after a delay.
+     * @param {number} ms - Number of milliseconds
+     */
+    async unmount(ms = 0) {
+        setTimeout(() => {
+            this.onKulEvent(new CustomEvent('unmount'), 'unmount');
+            this.rootElement.remove();
+        }, ms);
     }
     /*-------------------------------------------------*/
     /*           P r i v a t e   M e t h o d s         */
@@ -159,15 +170,15 @@ const KulUpload = class {
     }
     render() {
         const hasSelectedFiles = this.selectedFiles && this.selectedFiles.length;
-        return (h(Host, { key: 'b34f292b648b543b2b689cc626fedd095542f6e0' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '71be8ecbd7c6185d5274d67d3e26a7800f6d603f', id: KUL_WRAPPER_ID }, h("div", { key: 'a44c818ab148a7c99ad44dfd72c46a328e9b3eec', class: `wrapper ${this.selectedFiles && this.selectedFiles.length
+        return (h(Host, { key: 'a00462139e2ea32013e88d4feaaf801f3db60bd9' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '1f4188284cb7559ceb5a06c2246091c2d49e2dc9', id: KUL_WRAPPER_ID }, h("div", { key: '567da2844b2df0d69289d7080765c1d45add9b41', class: `wrapper ${this.selectedFiles && this.selectedFiles.length
                 ? 'wrapper--with-info'
-                : ''}` }, h("div", { key: '463f466b438d9617dccdcfaaa78b0e7f9e85d139', class: "file-upload", onPointerDown: (e) => this.onKulEvent(e, 'pointerdown') }, h("input", { key: '47d1e0e0f522378ea2c53e7b2b365afdde8d0430', class: "file-upload__input", id: "upload-input", multiple: true, onChange: () => this.#handleFileChange(), ref: (el) => {
+                : ''}` }, h("div", { key: '84a4d15ae8205c26f09e06d78fdeadc226460e09', class: "file-upload", onPointerDown: (e) => this.onKulEvent(e, 'pointerdown') }, h("input", { key: '72cf4bacb2f3341ea56471133f2b638d220f0532', class: "file-upload__input", id: "upload-input", multiple: true, onChange: () => this.#handleFileChange(), ref: (el) => {
                 this.#input = el;
-            }, type: "file" }), h("label", { key: '8c0446e60c2f826770c4b943ce349b1bd0dab6ae', class: "file-upload__label", htmlFor: "upload-input", ref: (el) => {
+            }, type: "file" }), h("label", { key: '0d24d73e4755a71b2c1433fc6bfe6ba9ebf6d969', class: "file-upload__label", htmlFor: "upload-input", ref: (el) => {
                 if (this.kulRipple) {
                     this.#rippleSurface = el;
                 }
-            } }, h("div", { key: '3b73188c2244512509319424718d01e6bb579edb', class: "file-upload__text" }, this.kulLabel))), h("div", { key: '792b5cec1705c904d199b47a1a70ffc4f733d076', class: "file-info" }, hasSelectedFiles
+            } }, h("div", { key: 'b00137a0876d71a7a86db7d400f377a275b98480', class: "file-upload__text" }, this.kulLabel))), h("div", { key: '406affa669d0cc9c92d49cc5b19bf492aab9e5c3', class: "file-info" }, hasSelectedFiles
             ? this.#prepFileInfo()
             : undefined)))));
     }

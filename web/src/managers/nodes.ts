@@ -52,6 +52,7 @@ import { resizeImageToDimensionFactory } from '../nodes/resizeImageToDimension';
 import { mathOperationFactory } from '../nodes/mathOperation';
 import { sortJsonKeysFactory } from '../nodes/sortJsonKeys';
 import { shuffleJsonKeysFactory } from '../nodes/shuffleJsonKeys';
+import { clarityEffectFactory } from '../nodes/clarityEffect';
 
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
@@ -63,6 +64,7 @@ export class LFNodes {
     [NodeName.boolean]: booleanFactory.eventHandler,
     [NodeName.checkpointSelector]: checkpointSelectorFactory.eventHandler,
     [NodeName.civitaiMetadataSetup]: civitaiMetadataSetupFactory.eventHandler,
+    [NodeName.clarityEffect]: clarityEffectFactory.eventHandler,
     [NodeName.displayBoolean]: displayBooleanFactory.eventHandler,
     [NodeName.displayFloat]: displayFloatFactory.eventHandler,
     [NodeName.displayInteger]: displayIntegerFactory.eventHandler,
@@ -113,6 +115,7 @@ export class LFNodes {
     [NodeName.boolean]: booleanFactory.register,
     [NodeName.checkpointSelector]: checkpointSelectorFactory.register,
     [NodeName.civitaiMetadataSetup]: civitaiMetadataSetupFactory.register,
+    [NodeName.clarityEffect]: clarityEffectFactory.register,
     [NodeName.controlPanel]: controlPanelFactory.register,
     [NodeName.displayBoolean]: displayBooleanFactory.register,
     [NodeName.displayFloat]: displayFloatFactory.register,

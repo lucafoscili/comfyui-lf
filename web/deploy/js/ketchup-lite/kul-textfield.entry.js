@@ -1,7 +1,7 @@
-import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, a as getAssetPath, H as Host } from './index-21ee70d9.js';
-import { k as kulManagerInstance, g as getProps } from './kul-manager-57799b8b.js';
-import { K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './GenericVariables-0efba181.js';
-import { K as KulDataCyAttributes } from './GenericTypes-8038330a.js';
+import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, a as getAssetPath, H as Host } from './index-4d533537.js';
+import { k as kulManagerInstance } from './kul-manager-8d12091b.js';
+import { g as getProps } from './componentUtils-a994b230.js';
+import { a as KulDataCyAttributes, K as KUL_WRAPPER_ID, c as KUL_STYLE_ID } from './GenericVariables-f3380974.js';
 
 /*-------------------------------------------------*/
 /*                    P r o p s                    */
@@ -89,7 +89,7 @@ const KulTextfield = class {
     /*-------------------------------------------------*/
     /**
      * Fetches debug information of the component's current state.
-     * @returns {Promise<KulDebugComponentInfo>} A promise that resolves with the debug information object.
+     * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves with the debug information object.
      */
     async getDebugInfo() {
         return this.debugInfo;
@@ -134,6 +134,16 @@ const KulTextfield = class {
      */
     async setValue(value) {
         this.#updateState(value);
+    }
+    /**
+     * Initiates the unmount sequence, which removes the component from the DOM after a delay.
+     * @param {number} ms - Number of milliseconds
+     */
+    async unmount(ms = 0) {
+        setTimeout(() => {
+            this.onKulEvent(new CustomEvent('unmount'), 'unmount');
+            this.rootElement.remove();
+        }, ms);
     }
     /*-------------------------------------------------*/
     /*           P r i v a t e   M e t h o d s         */
@@ -270,7 +280,7 @@ const KulTextfield = class {
         this.status.forEach((status) => {
             classList.push(`textfield--${status}`);
         });
-        return (h(Host, { key: '471474f3e057f40832f8d9342b988afa480cfc89' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '0eeaa32f5313800d5fbf9e1ca20a77c5dc9d096d', id: KUL_WRAPPER_ID }, h("div", { key: '69b1bf3fc35deede97c867b1145802cc79bd1e7e', class: classList.join(' ') }, this.kulStyling === 'textarea'
+        return (h(Host, { key: 'e40159672b0140c7a7f5b2dd7f11978ae5e4b7e8' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'b896a55e489dfd2232d3cbb83f00f029f8032235', id: KUL_WRAPPER_ID }, h("div", { key: '7d2c660ac961f2c366731ea5eaf3a9e8e5686d4c', class: classList.join(' ') }, this.kulStyling === 'textarea'
             ? [
                 this.#prepCounter(),
                 this.#prepIcon(),

@@ -1,6 +1,7 @@
-import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-21ee70d9.js';
-import { k as kulManagerInstance, g as getProps } from './kul-manager-57799b8b.js';
-import { K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './GenericVariables-0efba181.js';
+import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-4d533537.js';
+import { k as kulManagerInstance } from './kul-manager-8d12091b.js';
+import { g as getProps } from './componentUtils-a994b230.js';
+import { K as KUL_WRAPPER_ID, c as KUL_STYLE_ID } from './GenericVariables-f3380974.js';
 
 /*-------------------------------------------------*/
 /*                    P r o p s                    */
@@ -54,7 +55,7 @@ const KulSplash = class {
     /*-------------------------------------------------*/
     /**
      * Retrieves the debug information reflecting the current state of the component.
-     * @returns {Promise<KulDebugComponentInfo>} A promise that resolves to a KulDebugComponentInfo object containing debug information.
+     * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves to a KulDebugLifecycleInfo object containing debug information.
      */
     async getDebugInfo() {
         return this.debugInfo;
@@ -103,8 +104,8 @@ const KulSplash = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: '5b6e27e2bb73290fcab5e7c6bc211f0faac7f416' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '1676da109f7475bad036dfb6a8075fd07f2321f0', id: KUL_WRAPPER_ID }, h("div", { key: 'd62b5c099426fd8331b08c3ac813efc51277ad3b', class: 'modal' +
-                (this.state === 'unmounting' ? ' active' : '') }, h("div", { key: '8a7dd24f3924a16a1b1f3112bca9dfc65c33c642', class: "wrapper" }, h("div", { key: 'a6931e3d74bbb9a69bf3cf9490d69e91f27d5018', class: "widget" }, h("slot", { key: 'e03d18d3d3c2f27c72476df10f1504ba5eb664b6' })), h("div", { key: '9a062311121256d15ffb11a5e991599edd5d6b65', class: "label" }, this.state === 'unmounting'
+        return (h(Host, { key: '7d4ab47e92e4c5ed32820ed766db52b21a22c7a5' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'c860adebac9a46ec420400889c812d88e310e8b3', id: KUL_WRAPPER_ID }, h("div", { key: 'ccb1d9b5bf8f9157bc394b4312efdf51bed6da2c', class: 'modal' +
+                (this.state === 'unmounting' ? ' active' : '') }, h("div", { key: 'a5a3ce70a03f368b7451588f0669cff1bd507c69', class: "wrapper" }, h("div", { key: '0b90e6df936e1d240d36b511254df4fe1468459f', class: "widget" }, h("slot", { key: 'b8201708fba2e3a96a4800fe0e2a4f50fc900eb8' })), h("div", { key: 'b7eb459a86f8433643a4653d86251f5341ee5b18', class: "label" }, this.state === 'unmounting'
             ? 'Ready!'
             : this.kulLabel))))));
     }

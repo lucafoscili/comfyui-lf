@@ -118,11 +118,15 @@ const createArticle = () => {
       {
         children: [
           {
-            children: [theme(), analytics(), metadata(), backup(), debug(logsData), bug()],
+            children: [theme(), analytics(), metadata(), backup(), bug()],
             id: 'section',
-            value: 'Control panel',
+          },
+          {
+            children: [debug(logsData)],
+            id: 'section',
           },
         ],
+        cssStyle: { display: 'grid', gridTemplateColumns: '1fr 1fr' },
         id: 'root',
         value: '',
       },

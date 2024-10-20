@@ -178,12 +178,14 @@ web/deploy/js/ketchup-lite/*showcase*
 !web/deploy/assets/svg/arrow_drop_down.svg
 !web/deploy/assets/svg/audiotrack.svg
 !web/deploy/assets/svg/auto-fix.svg
+!web/deploy/assets/svg/book-open.svg
 !web/deploy/assets/svg/check.svg
 !web/deploy/assets/svg/chevron_left.svg
 !web/deploy/assets/svg/chevron_right.svg
 !web/deploy/assets/svg/clear.svg
 !web/deploy/assets/svg/clock.svg
 !web/deploy/assets/svg/cloud_download.svg
+!web/deploy/assets/svg/compare.svg
 !web/deploy/assets/svg/content_copy.svg
 !web/deploy/assets/svg/delete.svg
 !web/deploy/assets/svg/download.svg

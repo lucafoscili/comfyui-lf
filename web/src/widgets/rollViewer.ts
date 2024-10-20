@@ -1,6 +1,12 @@
+import { LogSeverity } from '../types/manager';
 import { NodeName } from '../types/nodes';
-import { CustomWidgetName, RollViewerWidgetOptions, RollViewerWidgetValue } from '../types/widgets';
-import { createDOMWidget } from '../utils/common';
+import {
+  CustomWidgetName,
+  RollViewerWidgetDeserializedValue,
+  RollViewerWidgetOptions,
+  RollViewerWidgetValue,
+} from '../types/widgets';
+import { createDOMWidget, deserializeValue, getLFManager } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-rollviewer';
 const TYPE = CustomWidgetName.rollViewer;
@@ -16,42 +22,56 @@ export const rollViewerFactory = {
         return rollViewer;
       },
       getValue() {
-        return { bool: rollViewer.kulLabel === 'true' ? true : false, roll: rollViewer.kulValue };
+        const value = {
+          bool: rollViewer.kulLabel === 'true' ? true : false,
+          roll: rollViewer.kulValue,
+        };
+        return JSON.stringify(value);
       },
-      setValue(value: RollViewerWidgetValue) {
-        const { bool, roll } = value;
+      setValue(value) {
+        try {
+          const parsedJson = deserializeValue(value)
+            .parsedJson as RollViewerWidgetDeserializedValue;
+          const { bool, roll } = parsedJson;
 
-        const isFalse = !!(bool === false);
-        const isTrue = !!(bool === true);
+          const isFalse = !!(bool === false);
+          const isTrue = !!(bool === true);
 
-        switch (nodeType.comfyClass) {
-          case NodeName.resolutionSwitcher:
-            rollViewer.kulLabel = '!';
-            if (isTrue) {
-              rollViewer.kulIcon = 'landscape';
-            } else if (isFalse) {
-              rollViewer.kulIcon = 'portrait';
-            } else {
-              rollViewer.kulLabel = 'Roll!';
-            }
-            break;
-          default:
-            rollViewer.classList.remove('kul-success');
-            rollViewer.classList.remove('kul-danger');
-            if (isTrue) {
-              rollViewer.classList.add('kul-success');
-              rollViewer.kulLabel = 'true';
-            } else if (isFalse) {
-              rollViewer.classList.add('kul-danger');
-              rollViewer.kulLabel = 'false';
-            } else {
-              rollViewer.kulLabel = 'Roll!';
-            }
-            break;
+          switch (nodeType.comfyClass) {
+            case NodeName.resolutionSwitcher:
+              rollViewer.kulLabel = '!';
+              if (isTrue) {
+                rollViewer.kulIcon = 'landscape';
+              } else if (isFalse) {
+                rollViewer.kulIcon = 'portrait';
+              } else {
+                rollViewer.kulLabel = 'Roll!';
+              }
+              break;
+            default:
+              rollViewer.classList.remove('kul-success');
+              rollViewer.classList.remove('kul-danger');
+              if (isTrue) {
+                rollViewer.classList.add('kul-success');
+                rollViewer.kulLabel = 'true';
+              } else if (isFalse) {
+                rollViewer.classList.add('kul-danger');
+                rollViewer.kulLabel = 'false';
+              } else {
+                rollViewer.kulLabel = 'Roll!';
+              }
+              break;
+          }
+
+          rollViewer.title = 'Actual roll: ' + roll.toString();
+          rollViewer.kulValue = roll;
+        } catch (error) {
+          getLFManager().log(
+            'Error setting RollViewer value',
+            { error, value },
+            LogSeverity.Warning,
+          );
         }
-
-        rollViewer.title = 'Actual roll: ' + roll.toString();
-        rollViewer.kulValue = roll;
       },
     } as RollViewerWidgetOptions;
   },

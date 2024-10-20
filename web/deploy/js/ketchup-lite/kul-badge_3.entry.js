@@ -1,6 +1,7 @@
-import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, H as Host, a as getAssetPath } from './index-21ee70d9.js';
-import { k as kulManagerInstance, g as getProps, K as KulThemeColorValues } from './kul-manager-57799b8b.js';
-import { K as KUL_WRAPPER_ID, a as KUL_STYLE_ID, C as CSS_VAR_PREFIX } from './GenericVariables-0efba181.js';
+import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, H as Host, a as getAssetPath } from './index-4d533537.js';
+import { k as kulManagerInstance, K as KulThemeColorValues } from './kul-manager-8d12091b.js';
+import { g as getProps } from './componentUtils-a994b230.js';
+import { K as KUL_WRAPPER_ID, c as KUL_STYLE_ID, C as CSS_VAR_PREFIX } from './GenericVariables-f3380974.js';
 
 /*-------------------------------------------------*/
 /*                    P r o p s                    */
@@ -55,7 +56,7 @@ const KulBadge = class {
     /*-------------------------------------------------*/
     /**
      * Fetches debug information of the component's current state.
-     * @returns {Promise<KulDebugComponentInfo>} A promise that resolves with the debug information object.
+     * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves with the debug information object.
      */
     async getDebugInfo() {
         return this.debugInfo;
@@ -73,6 +74,16 @@ const KulBadge = class {
      */
     async refresh() {
         forceUpdate(this);
+    }
+    /**
+     * Initiates the unmount sequence, which removes the component from the DOM after a delay.
+     * @param {number} ms - Number of milliseconds
+     */
+    async unmount(ms = 0) {
+        setTimeout(() => {
+            this.onKulEvent(new CustomEvent('unmount'), 'unmount');
+            this.rootElement.remove();
+        }, ms);
     }
     /*-------------------------------------------------*/
     /*          L i f e c y c l e   H o o k s          */
@@ -96,9 +107,9 @@ const KulBadge = class {
             if (!this.kulImageProps.kulColor) {
                 this.kulImageProps.kulColor = `var(${KulThemeColorValues.TEXT_ON_PRIMARY})`;
             }
-            imageEl = h("kul-image", { key: '5b4695412198cdf0cd226a4978962aaa4f5c236e', ...this.kulImageProps });
+            imageEl = h("kul-image", { key: '7b791716faeb2d64a1efc25ac587dc7b4188fef7', ...this.kulImageProps });
         }
-        return (h(Host, { key: 'b87c8e7521b0b33d3db0070b1590d59599242f97' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '18d7dc0d0388ddb4c026c10798c3b0e1fd9a98a0', id: KUL_WRAPPER_ID, onClick: (e) => this.onKulEvent(e, 'click') }, this.kulLabel, imageEl)));
+        return (h(Host, { key: '2b083832a5469320c830a34a4c42633e4e9650b1' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '6f22d25c8907dfdf7f225c079fbd00dc4cb25682', id: KUL_WRAPPER_ID, onClick: (e) => this.onKulEvent(e, 'click') }, this.kulLabel, imageEl)));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);
@@ -167,7 +178,7 @@ const KulImage = class {
     /*-------------------------------------------------*/
     /**
      * Fetches debug information of the component's current state.
-     * @returns {Promise<KulDebugComponentInfo>} A promise that resolves with the debug information object.
+     * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves with the debug information object.
      */
     async getDebugInfo() {
         return this.debugInfo;
@@ -185,6 +196,16 @@ const KulImage = class {
      */
     async refresh() {
         forceUpdate(this);
+    }
+    /**
+     * Initiates the unmount sequence, which removes the component from the DOM after a delay.
+     * @param {number} ms - Number of milliseconds
+     */
+    async unmount(ms = 0) {
+        setTimeout(() => {
+            this.onKulEvent(new CustomEvent('unmount'), 'unmount');
+            this.rootElement.remove();
+        }, ms);
     }
     /*-------------------------------------------------*/
     /*           P r i v a t e   M e t h o d s         */
@@ -243,7 +264,7 @@ const KulImage = class {
     }
     render() {
         if (!this.kulValue) {
-            this.#kulManager.debug.logMessage(this, 'Empty image.');
+            this.#kulManager.debug.logs.new(this, 'Empty image.');
             return;
         }
         let el;
@@ -340,7 +361,7 @@ const KulSpinner = class {
     /*-------------------------------------------------*/
     /**
      * Fetches debug information of the component's current state.
-     * @returns {Promise<KulDebugComponentInfo>} A promise that resolves with the debug information object.
+     * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves with the debug information object.
      */
     async getDebugInfo() {
         return this.debugInfo;
@@ -358,6 +379,16 @@ const KulSpinner = class {
      */
     async refresh() {
         forceUpdate(this);
+    }
+    /**
+     * Initiates the unmount sequence, which removes the component from the DOM after a delay.
+     * @param {number} ms - Number of milliseconds
+     */
+    async unmount(ms = 0) {
+        setTimeout(() => {
+            this.onKulEvent(new CustomEvent('unmount'), 'unmount');
+            this.rootElement.remove();
+        }, ms);
     }
     /*-------------------------------------------------*/
     /*          L i f e c y c l e   H o o k s          */
@@ -405,59 +436,59 @@ const KulSpinner = class {
             spinnerClass = 'spinner-v' + this.kulLayout;
             if (this.kulLayout === 7) {
                 spinnerEl = [
-                    h("div", { key: '304e7221bd3583e18d812bd4121bd736221e7963', class: "sk-spinner-v7-dot" }),
-                    h("div", { key: 'aa76c4e28241e8fcb7c369b5398643d5487f7b4e', class: "sk-spinner-v7-dot" }),
-                    h("div", { key: 'f55ef1895f13976007c4cfaf4dc9fedb9f4fcc21', class: "sk-spinner-v7-dot" }),
-                    h("div", { key: '275f3c5ee097f9b9af9282e0ecaa293361c7e784', class: "sk-spinner-v7-dot" }),
-                    h("div", { key: '330c98f4b06e4c5f0ad1f390ff07a61798c46843', class: "sk-spinner-v7-dot" }),
-                    h("div", { key: '7c913a9d8bda71a5fc502074b7dbd397efbaf44a', class: "sk-spinner-v7-dot" }),
+                    h("div", { key: '96122a6495aacc41728c970a96c031d3c04c56a1', class: "sk-spinner-v7-dot" }),
+                    h("div", { key: '540efd6927f42d484826e6437911a433687c7900', class: "sk-spinner-v7-dot" }),
+                    h("div", { key: 'cdbe890531f6547635ec422092fc2056c5c74fa2', class: "sk-spinner-v7-dot" }),
+                    h("div", { key: 'ce2a6356a9ae670da17333dc128920a35ddf6527', class: "sk-spinner-v7-dot" }),
+                    h("div", { key: '4529641131c075cdd506b081dc67f75e49124b44', class: "sk-spinner-v7-dot" }),
+                    h("div", { key: '7626e38c40a9aaea65edd65f845b28f87b5e7ccb', class: "sk-spinner-v7-dot" }),
                 ];
             }
             if (this.kulLayout === 9) {
                 spinnerEl = [
-                    h("div", { key: '4b8450640e334bcb02af712ed0e068ef49ad9b7c', class: "sk-spinner-v9-bounce1" }),
-                    h("div", { key: '5622abaa56fc65ea9529d2480d87d0fb830ab61b', class: "sk-spinner-v9-bounce2" }),
+                    h("div", { key: '1610d8839d730418eb84c7db81b3d8d7b123b714', class: "sk-spinner-v9-bounce1" }),
+                    h("div", { key: '3d311717528a04f9de6ca6534c9df9cba4e9ca16', class: "sk-spinner-v9-bounce2" }),
                 ];
             }
             if (this.kulLayout === 10) {
                 spinnerEl = [
-                    h("div", { key: 'cda2fbe4a8cda05dfedb810ed2e8dfb73a1122ac', class: "sk-spinner-v10-cube1" }),
-                    h("div", { key: '1044fa542f6d066f183da12bae1e3bf0f20c5398', class: "sk-spinner-v10-cube2" }),
+                    h("div", { key: 'be46c590672f7734f391f4f47253bab8b6b034c0', class: "sk-spinner-v10-cube1" }),
+                    h("div", { key: 'c03a73ac072905706357da5984fe1112eeb14a54', class: "sk-spinner-v10-cube2" }),
                 ];
             }
             if (this.kulLayout === 12) {
                 spinnerEl = [
-                    h("div", { key: '24bfc61dcc59ba976db01f62d2e07266354ebfff', class: "sk-spinner-v12-dot1" }),
-                    h("div", { key: '61356db2164228a96f22e4ade913d7dc59f11e1a', class: "sk-spinner-v12-dot2" }),
+                    h("div", { key: '188f5928c64b0d0287a1232b287760658b98bc31', class: "sk-spinner-v12-dot1" }),
+                    h("div", { key: '41ea25ba9d25027375194360166408645c84b727', class: "sk-spinner-v12-dot2" }),
                 ];
             }
             if (this.kulLayout === 13) {
                 spinnerEl = [
-                    h("div", { key: 'bb933c1e67141b920c3b11cf1b81590a226449a9', class: "sk-spinner-v13-cube sk-spinner-v13-cube1" }),
-                    h("div", { key: '08bcf16b09a2c1207a7866f4e4acd95336f346f1', class: "sk-spinner-v13-cube sk-spinner-v13-cube2" }),
-                    h("div", { key: '9ce4cd758695e73b19747d20ec23037e9f43f9c0', class: "sk-spinner-v13-cube sk-spinner-v13-cube3" }),
-                    h("div", { key: 'baed32b51628d818919a60fa810162f53e4b4515', class: "sk-spinner-v13-cube sk-spinner-v13-cube4" }),
-                    h("div", { key: '0abd09c4aecff8479f6d6cc4d924abdfb9cc1360', class: "sk-spinner-v13-cube sk-spinner-v13-cube5" }),
-                    h("div", { key: 'c857b5ee00e8bc72f25ca68ad31311093f3364ba', class: "sk-spinner-v13-cube sk-spinner-v13-cube6" }),
-                    h("div", { key: '9cdc9c62d56926b7c9b179202fe052d654be4123', class: "sk-spinner-v13-cube sk-spinner-v13-cube7" }),
-                    h("div", { key: '1ac08a53f84a17bc000733e9de1f848b5847e4af', class: "sk-spinner-v13-cube sk-spinner-v13-cube8" }),
-                    h("div", { key: '315bd8753f9909a7555f687891baf17a6b371361', class: "sk-spinner-v13-cube sk-spinner-v13-cube9" }),
+                    h("div", { key: '35d24da9e386e9736ceed9b3275def0c7b93a703', class: "sk-spinner-v13-cube sk-spinner-v13-cube1" }),
+                    h("div", { key: '19e25d2b78c2cb836ba271648ead09f0689468a7', class: "sk-spinner-v13-cube sk-spinner-v13-cube2" }),
+                    h("div", { key: '27035a9f04dabcc152954996f743d995c75f086c', class: "sk-spinner-v13-cube sk-spinner-v13-cube3" }),
+                    h("div", { key: '1611d15b5d2b2601edb299f63649c516c410885e', class: "sk-spinner-v13-cube sk-spinner-v13-cube4" }),
+                    h("div", { key: '60a26463a4a082610e27c36933df4d621542a012', class: "sk-spinner-v13-cube sk-spinner-v13-cube5" }),
+                    h("div", { key: '9509c6aeb3a2fed379eda2f0ee092645cf8bb3b1', class: "sk-spinner-v13-cube sk-spinner-v13-cube6" }),
+                    h("div", { key: 'b3ee3ff8f747fcf640248ccc02650a8a6d434b2d', class: "sk-spinner-v13-cube sk-spinner-v13-cube7" }),
+                    h("div", { key: 'ab74cec14e4f2384bd56aa42eb18759788498f30', class: "sk-spinner-v13-cube sk-spinner-v13-cube8" }),
+                    h("div", { key: '72cbe642ae262ac0a5ae3f1d8f943e1835598475', class: "sk-spinner-v13-cube sk-spinner-v13-cube9" }),
                 ];
             }
             if (this.kulLayout === 14) {
                 spinnerEl = [
-                    h("div", { key: 'ab068ac8ba27b1abb7f6bcc996a0b158e8cf2dcf', class: "sk-spinner-v14-circle1 sk-spinner-v14-circle" }),
-                    h("div", { key: 'c3849417f1dcd2ef1a94e510464b52bb1d9870f6', class: "sk-spinner-v14-circle2 sk-spinner-v14-circle" }),
-                    h("div", { key: 'c9d547dadd4c3196bda7a79821faf0698b4f9b7d', class: "sk-spinner-v14-circle3 sk-spinner-v14-circle" }),
-                    h("div", { key: 'f69df95430ed22d44743808604cfd82b6f2d811a', class: "sk-spinner-v14-circle4 sk-spinner-v14-circle" }),
-                    h("div", { key: 'a52696bb4edd5935d9eb02cb353d750630a60af4', class: "sk-spinner-v14-circle5 sk-spinner-v14-circle" }),
-                    h("div", { key: 'd2bca8edc5f1c2174f80d8ee7cfddacf6be00a62', class: "sk-spinner-v14-circle6 sk-spinner-v14-circle" }),
-                    h("div", { key: 'b9b161bf70f8b20dc298b6fe2e22d4bba76dc630', class: "sk-spinner-v14-circle7 sk-spinner-v14-circle" }),
-                    h("div", { key: '6503c945444acda07dbe53866d3b62415928a18e', class: "sk-spinner-v14-circle8 sk-spinner-v14-circle" }),
-                    h("div", { key: '23e7afa7ab501092af63a6ca549d215c3d708182', class: "sk-spinner-v14-circle9 sk-spinner-v14-circle" }),
-                    h("div", { key: 'e269f3d28b29be2d55b7c1451863f6afb87ae11f', class: "sk-spinner-v14-circle10 sk-spinner-v14-circle" }),
-                    h("div", { key: 'b1091dc316a9224f55d25430837b22814db776c5', class: "sk-spinner-v14-circle11 sk-spinner-v14-circle" }),
-                    h("div", { key: 'e494c4e4c628a3acb489f25ca90eb163214e252a', class: "sk-spinner-v14-circle12 sk-spinner-v14-circle" }),
+                    h("div", { key: '135dc93fde7c75819641b8c91d64e2da5599ed72', class: "sk-spinner-v14-circle1 sk-spinner-v14-circle" }),
+                    h("div", { key: '33a699ad374a665669f45bd15b8d9e5e2c2d3c64', class: "sk-spinner-v14-circle2 sk-spinner-v14-circle" }),
+                    h("div", { key: '4de1ac0af2565941b3509891ab916485b6ad6694', class: "sk-spinner-v14-circle3 sk-spinner-v14-circle" }),
+                    h("div", { key: 'd4c276b0d3a7158c1b405f77a530903510b1b7df', class: "sk-spinner-v14-circle4 sk-spinner-v14-circle" }),
+                    h("div", { key: 'fd92086af4dab0ae2e1b6b80e8b9fa5ed4da033e', class: "sk-spinner-v14-circle5 sk-spinner-v14-circle" }),
+                    h("div", { key: '459a0dedaf7f06502935f580a62dd0292314451a', class: "sk-spinner-v14-circle6 sk-spinner-v14-circle" }),
+                    h("div", { key: '9f2a4d5aae6613f0470ce0767e71b05b88512633', class: "sk-spinner-v14-circle7 sk-spinner-v14-circle" }),
+                    h("div", { key: 'fb6e6cb797e1bf5051be43dee1437108448b701c', class: "sk-spinner-v14-circle8 sk-spinner-v14-circle" }),
+                    h("div", { key: '1e9d6a7abb8f60ad9781a34a28f05fed078f0c3e', class: "sk-spinner-v14-circle9 sk-spinner-v14-circle" }),
+                    h("div", { key: '3715c403b1318d4ad96adceff65f782c90089386', class: "sk-spinner-v14-circle10 sk-spinner-v14-circle" }),
+                    h("div", { key: '25b486157cd4ef83fea0e3acfe78aecd3dd0f9cb', class: "sk-spinner-v14-circle11 sk-spinner-v14-circle" }),
+                    h("div", { key: 'f281c508d4426f23c14ec36c62130e44c287fb61', class: "sk-spinner-v14-circle12 sk-spinner-v14-circle" }),
                 ];
             }
         }
@@ -485,7 +516,7 @@ const KulSpinner = class {
                 fontSize: '3px',
             };
         }
-        return (h(Host, { key: 'e364e1b6f1cc61f4119b686cb5d3cdfea4db42dc', style: elStyle }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '41f07b703b6bc474da27bfa5b39825625ec1bb53', id: KUL_WRAPPER_ID, style: elStyle }, h("div", { key: '8e4418ced2df1cc936753bf974b2e0a7d5cc1542', id: "loading-wrapper-master", class: masterClass, style: elStyle }, h("div", { key: '6314d2d33480197a98cddacfda2dd57b9a4d66b4', id: wrapperClass, style: elStyle }, h("div", { key: '0cff3a26e60e5fe15e1b4b4c183e32f790a2bdab', class: spinnerClass }, spinnerEl))))));
+        return (h(Host, { key: 'cf7d1260df30549f04d8850fda6e5ea3905853bc', style: elStyle }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '4ec33186efee3ca5cbc729b38924641b45c3b64a', id: KUL_WRAPPER_ID, style: elStyle }, h("div", { key: 'aa0e5fefedc8fcb6f8fd4c6376f85469632f1360', id: "loading-wrapper-master", class: masterClass, style: elStyle }, h("div", { key: '0023b3e3b6fe1ece02eec3041c741d0024dce1a3', id: wrapperClass, style: elStyle }, h("div", { key: '7571aacf0ceed3e0c08d3b8e498ba691ab17420b', class: spinnerClass }, spinnerEl))))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

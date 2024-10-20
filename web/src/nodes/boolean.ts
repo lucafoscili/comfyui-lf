@@ -27,7 +27,7 @@ export const booleanFactory = {
             icon: 'history',
             id: strValue,
             description: 'Execution date: ' + new Date().toLocaleString() + '.',
-            value,
+            value: strValue,
           };
           if (dataset) {
             const existingNode = dataset?.nodes?.find((n) => n.id === strValue);

@@ -1,6 +1,7 @@
-import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, a as getAssetPath, h, H as Host } from './index-21ee70d9.js';
-import { k as kulManagerInstance, g as getProps } from './kul-manager-57799b8b.js';
-import { K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './GenericVariables-0efba181.js';
+import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, a as getAssetPath, h, H as Host } from './index-4d533537.js';
+import { a as KulDataCyAttributes, K as KUL_WRAPPER_ID, c as KUL_STYLE_ID } from './GenericVariables-f3380974.js';
+import { k as kulManagerInstance } from './kul-manager-8d12091b.js';
+import { g as getProps } from './componentUtils-a994b230.js';
 
 /*-------------------------------------------------*/
 /*                    P r o p s                    */
@@ -66,7 +67,7 @@ const KulAccordion = class {
     /*-------------------------------------------------*/
     /**
      * Fetches debug information of the component's current state.
-     * @returns {Promise<KulDebugComponentInfo>} A promise that resolves with the debug information object.
+     * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves with the debug information object.
      */
     async getDebugInfo() {
         return this.debugInfo;
@@ -120,6 +121,16 @@ const KulAccordion = class {
         }
         this.refresh();
     }
+    /**
+     * Initiates the unmount sequence, which removes the component from the DOM after a delay.
+     * @param {number} ms - Number of milliseconds
+     */
+    async unmount(ms = 0) {
+        setTimeout(() => {
+            this.onKulEvent(new CustomEvent('unmount'), 'unmount');
+            this.rootElement.remove();
+        }, ms);
+    }
     /*-------------------------------------------------*/
     /*           P r i v a t e   M e t h o d s         */
     /*-------------------------------------------------*/
@@ -162,7 +173,9 @@ const KulAccordion = class {
                 node__content: true,
                 'node__content--selected': isSelected ? true : false,
             };
-            nodes.push(h("div", { class: "node" }, h("div", { tabindex: "1", title: node.description, class: headerClassName, onClick: (e) => this.toggleNode(node.id, e), onPointerDown: (e) => {
+            nodes.push(h("div", { class: "node" }, h("div", { tabindex: "1", title: node.description, class: headerClassName, "data-cy": isExpandible
+                    ? undefined
+                    : KulDataCyAttributes.BUTTON, onClick: (e) => this.toggleNode(node.id, e), onPointerDown: (e) => {
                     this.onKulEvent(e, 'pointerdown', node);
                 } }, h("div", { ref: (el) => {
                     if (el && this.kulRipple) {
@@ -198,7 +211,7 @@ const KulAccordion = class {
     }
     render() {
         this.#rippleSurface = {};
-        return (h(Host, { key: 'd16d6da3f45552cfc43e18f2e3c213108cbe20c6' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '40ba8792a17978a22f7bb4b21104eb1a536bf694', id: KUL_WRAPPER_ID }, h("div", { key: 'a8362575b746b358d546deadee15d8d1c9069866', class: "accordion" }, this.#prepAccordion()))));
+        return (h(Host, { key: '51e0579637b4d70fc882c43afa30e3a8ea948610' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '0bcf7ba149a4fc2952fe1674e589c7a7f01585af', id: KUL_WRAPPER_ID }, h("div", { key: 'a33784bc3e08d5dd5e23413e8b07d24de75928c1', class: "accordion" }, this.#prepAccordion()))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

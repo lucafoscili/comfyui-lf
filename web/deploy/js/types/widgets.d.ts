@@ -33,6 +33,7 @@ export type CustomWidgetMap = {
     [CustomWidgetName.chat]: ChatWidget;
     [CustomWidgetName.chip]: ChipWidget;
     [CustomWidgetName.code]: CodeWidget;
+    [CustomWidgetName.compare]: CompareWidget;
     [CustomWidgetName.controlPanel]: ControlPanelWidget;
     [CustomWidgetName.countBarChart]: CountBarChartWidget;
     [CustomWidgetName.histogram]: HistogramWidget;
@@ -52,6 +53,7 @@ export declare enum CustomWidgetName {
     chat = "KUL_CHAT",
     chip = "KUL_CHIP",
     code = "KUL_CODE",
+    compare = "KUL_COMPARE",
     controlPanel = "KUL_CONTROL_PANEL",
     countBarChart = "KUL_COUNT_BAR_CHART",
     histogram = "KUL_HISTOGRAM",
@@ -64,7 +66,7 @@ export declare enum CustomWidgetName {
     tree = "KUL_TREE",
     upload = "KUL_UPLOAD"
 }
-export type CustomWidgetOptions = BooleanViewerWidgetOptions | CardWidgetOptions | CardsWithChipWidgetOptions | ChatWidgetOptions | ChipWidgetOptions | CodeWidgetOptions | ControlPanelWidgetOptions | CountBarChartWidgetOptions | HistogramWidgetOptions | HistoryWidgetOptions | ImagePreviewWidgetOptions | JsonInputWidgetOptions | MessengerWidgetOptions | RollViewerWidgetOptions | TabBarChartWidgetOptions | TreeWidgetOptions | UploadWidgetOptions;
+export type CustomWidgetOptions = BooleanViewerWidgetOptions | CardWidgetOptions | CardsWithChipWidgetOptions | ChatWidgetOptions | ChipWidgetOptions | CodeWidgetOptions | CompareWidgetOptions | ControlPanelWidgetOptions | CountBarChartWidgetOptions | HistogramWidgetOptions | HistoryWidgetOptions | ImagePreviewWidgetOptions | JsonInputWidgetOptions | MessengerWidgetOptions | RollViewerWidgetOptions | TabBarChartWidgetOptions | TreeWidgetOptions | UploadWidgetOptions;
 export interface BooleanViewerWidget extends Widget {
     options: BooleanViewerWidgetOptions;
     type: [CustomWidgetName.booleanViewer];
@@ -86,7 +88,7 @@ export interface CardWidget extends Widget {
 export interface CardWidgetOptions {
     hideOnZoom: boolean;
     getComp(): HTMLKulCardElement[];
-    getValue(): string;
+    getValue(): CardWidgetValue;
     setValue(value: CardWidgetValue): void;
 }
 export type CardWidgetSetter = () => {
@@ -153,13 +155,27 @@ export interface CodeWidget extends Widget {
 export interface CodeWidgetOptions {
     hideOnZoom: boolean;
     getComp(): HTMLKulCodeElement;
-    getValue(): string;
-    setValue(value: Record<string, unknown> | string): void;
+    getValue(): CodeWidgetValue;
+    setValue(value: CodeWidgetValue): void;
 }
 export type CodeWidgetSetter = () => {
     [CustomWidgetName.code]: BaseWidgetCallback;
 };
 export type CodeWidgetValue = string;
+export interface CompareWidget extends Widget {
+    options: CompareWidgetOptions;
+    type: [CustomWidgetName.compare];
+}
+export interface CompareWidgetOptions {
+    hideOnZoom: boolean;
+    getComp(): HTMLKulCompareElement;
+    getValue(): CompareWidgetValue;
+    setValue(value: CompareWidgetValue): void;
+}
+export type CompareWidgetSetter = () => {
+    [CustomWidgetName.compare]: BaseWidgetCallback;
+};
+export type CompareWidgetValue = string;
 export interface ControlPanelWidget extends Widget {
     options: ControlPanelWidgetOptions;
     type: [CustomWidgetName.controlPanel];
@@ -184,12 +200,13 @@ export interface HistogramWidget extends Widget {
 export interface HistogramWidgetOptions {
     hideOnZoom: boolean;
     getComp(): HTMLKulChartElement;
-    getValue(): string;
-    setValue(value: KulDataDataset | string): void;
+    getValue(): HistogramWidgetValue;
+    setValue(value: HistogramWidgetValue): void;
 }
 export type HistogramWidgetSetter = () => {
     [CustomWidgetName.histogram]: BaseWidgetCallback;
 };
+export type HistogramWidgetDeserializedValue = KulDataDataset;
 export type HistogramWidgetValue = string;
 export interface HistoryWidget extends Widget {
     options: HistoryWidgetOptions;
@@ -204,7 +221,8 @@ export interface HistoryWidgetOptions {
 export declare type HistoryWidgetSetter = () => {
     [CustomWidgetName.history]: BaseWidgetCallback;
 };
-export type HistoryWidgetValue = string | KulDataDataset;
+export type HistoryWidgetValuetDeserializedValue = KulDataDataset;
+export type HistoryWidgetValue = string;
 export interface ImagePreviewWidget extends Widget {
     options: ImagePreviewWidgetOptions;
     type: [CustomWidgetName.imagePreview];
@@ -236,7 +254,8 @@ export interface JsonInputWidgetOptions {
 export declare type JsonInputWidgetSetter = () => {
     [CustomWidgetName.jsonInput]: BaseWidgetCallback;
 };
-export type JsonInputWidgetValue = string | Record<string, unknown>;
+export type JsonInputWidgetDeserializedValue = Record<string, unknown>;
+export type JsonInputWidgetValue = string;
 export interface CountBarChartWidget extends Widget {
     options: CountBarChartWidgetOptions;
     type: [CustomWidgetName.countBarChart];
@@ -287,10 +306,11 @@ export interface RollViewerWidgetOptions {
 export declare type RollViewerWidgetSetter = () => {
     [CustomWidgetName.rollViewer]: BaseWidgetCallback;
 };
-export type RollViewerWidgetValue = {
+export type RollViewerWidgetDeserializedValue = {
     bool: boolean;
     roll: number;
 };
+export type RollViewerWidgetValue = string;
 export interface TabBarChartWidget extends Widget {
     options: TabBarChartWidgetOptions;
     type: [CustomWidgetName.tabBarChart];

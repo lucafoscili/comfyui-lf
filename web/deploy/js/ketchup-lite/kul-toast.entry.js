@@ -1,6 +1,7 @@
-import { r as registerInstance, c as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-21ee70d9.js';
-import { k as kulManagerInstance, g as getProps } from './kul-manager-57799b8b.js';
-import { K as KUL_WRAPPER_ID, a as KUL_STYLE_ID } from './GenericVariables-0efba181.js';
+import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-4d533537.js';
+import { k as kulManagerInstance } from './kul-manager-8d12091b.js';
+import { g as getProps } from './componentUtils-a994b230.js';
+import { K as KUL_WRAPPER_ID, c as KUL_STYLE_ID } from './GenericVariables-f3380974.js';
 
 /*-------------------------------------------------*/
 /*                    P r o p s                    */
@@ -35,14 +36,6 @@ const KulToast = class {
             kulValue: 'clear',
         };
         this.kulCloseCallback = () => {
-            const e = new CustomEvent('unmount');
-            this.onKulEvent(e, 'unmount');
-            this.kulEvent.emit({
-                comp: this,
-                eventType: 'unmount',
-                id: this.rootElement.id,
-                originalEvent: e,
-            });
             this.rootElement.remove();
         };
         this.kulIcon = {
@@ -79,7 +72,7 @@ const KulToast = class {
     /*-------------------------------------------------*/
     /**
      * Retrieves the debug information reflecting the current state of the component.
-     * @returns {Promise<KulDebugComponentInfo>} A promise that resolves to a KulDebugComponentInfo object containing debug information.
+     * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves to a KulDebugLifecycleInfo object containing debug information.
      */
     async getDebugInfo() {
         return this.debugInfo;
@@ -97,6 +90,16 @@ const KulToast = class {
      */
     async refresh() {
         forceUpdate(this);
+    }
+    /**
+     * Initiates the unmount sequence, which removes the component from the DOM after a delay.
+     * @param {number} ms - Number of milliseconds
+     */
+    async unmount(ms = 0) {
+        setTimeout(() => {
+            this.onKulEvent(new CustomEvent('unmount'), 'unmount');
+            this.rootElement.remove();
+        }, ms);
     }
     /*-------------------------------------------------*/
     /*          L i f e c y c l e   H o o k s          */
@@ -118,7 +121,7 @@ const KulToast = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: '880157ffeac478870214e000ac860def1555304c' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'd50c4bf021a570a8dee4f3342e3a5c8e1bbdcba3', id: KUL_WRAPPER_ID }, h("div", { key: 'a10339a27a9b311490018fe086cf91a50ed32bbc', class: "toast" }, h("div", { key: 'fa79b4d6009f45c0881e23db752a4932acb5c980', class: `toast__accent ${this.kulTimer ? 'toast__accent--temporary' : ''}` }), h("div", { key: '2a5f9888f729d927e6d6f925daabeea1bec2c3ac', class: "toast__message-wrapper" }, this.kulIcon ? (h("div", { class: "toast__icon" }, h("kul-image", { ...this.kulIcon }))) : undefined, this.kulMessage ? (h("div", { class: "toast__message" }, this.kulMessage)) : undefined, this.kulCloseIcon ? (h("div", { class: "toast__icon toast__icon--close", onClick: () => this.kulCloseCallback() }, h("kul-image", { ...this.kulCloseIcon }))) : undefined)))));
+        return (h(Host, { key: 'c3ceb4d5dc4943bfd869943e625f5e2f0ce2c0ad' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '0d008fa34f949e6d21d3cc348501a7d081693477', id: KUL_WRAPPER_ID }, h("div", { key: 'fad2719796c7e3e27c79cd8190210339bb2d8363', class: "toast" }, h("div", { key: '8da963598ef9771e0e56553318f40bac612df37e', class: `toast__accent ${this.kulTimer ? 'toast__accent--temporary' : ''}` }), h("div", { key: '471d59d53fd43216434687924128490f7c37c7b5', class: "toast__message-wrapper" }, this.kulIcon ? (h("div", { class: "toast__icon" }, h("kul-image", { ...this.kulIcon }))) : undefined, this.kulMessage ? (h("div", { class: "toast__message" }, this.kulMessage)) : undefined, this.kulCloseIcon ? (h("div", { class: "toast__icon toast__icon--close", onClick: () => this.kulCloseCallback() }, h("kul-image", { ...this.kulCloseIcon }))) : undefined)))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);
