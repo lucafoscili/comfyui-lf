@@ -82,30 +82,51 @@ class LF_ClarityEffect:
             "hidden": {"node_id": "UNIQUE_ID"}
         }
 
-    CATEGORY = category
+    CATEGORY = "Image Processing"
     FUNCTION = "on_exec"
     RETURN_NAMES = ("image",)
     RETURN_TYPES = ("IMAGE",)
 
     def on_exec(self, node_id, image, clarity_strength: float, sharpen_amount: float, blur_kernel_size: int):
-        b64_source =  tensor_to_base64(image)
+        def normalize_input(image):
+            """
+            Converts a tensor or list input into a list of individual images.
+            """
+            if isinstance(image, torch.Tensor) and len(image.shape) == 4:
+                return [img for img in image]
+            elif isinstance(image, list):
+                return image
+            else:
+                return [image]
+        
+        image_list = normalize_input(image)
+        
+        processed_images = [clarity_effect(img, clarity_strength, sharpen_amount, blur_kernel_size) for img in image_list]
 
-        if isinstance(image, list):
-            processed_images = [clarity_effect(img, clarity_strength, sharpen_amount, blur_kernel_size) for img in image]
-        else:
-            processed_images = clarity_effect(image, clarity_strength, sharpen_amount, blur_kernel_size)
+        dataset = {"nodes": []}
+        for i, img in enumerate(image_list):
+            b64_source = tensor_to_base64(img)
+            b64_target = tensor_to_base64(processed_images[i])
 
-        b64_target =  tensor_to_base64(processed_images)
-
-        dataset = {"nodes": [{"children": [], "id": ""}]}
-        node = dataset["nodes"][0]
-        node["cells"] = { "kulImage": { "kulValue": f"{b64_prefix}{b64_source}", "shape": "image" }, "kulImage2": { "kulValue": f"{b64_prefix}{b64_target}", "shape": "image" } }
+            dataset["nodes"].append({
+                "cells": {
+                    "kulImage": {"shape": "image", "kulValue": f"{b64_prefix}{b64_source}", "value": ''},
+                    "kulImage_after": {"shape": "image", "kulValue": f"{b64_prefix}{b64_target}", "value": ''}
+                },
+                "id": f"image_{i+1}",
+                "value": f"Comparison {i+1}"
+            })
 
         PromptServer.instance.send_sync("lf-clarityeffect", {
             "node": node_id,
             "dataset": dataset,
         })
 
+        if len(processed_images) > 1:
+            processed_images = torch.stack(processed_images)
+        else:
+            processed_images = processed_images[0]
+        
         return (processed_images,)
     
 class LF_MultipleImageResizeForWeb:
