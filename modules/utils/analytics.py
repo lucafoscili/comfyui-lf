@@ -4,39 +4,45 @@ import os
 
 def adapt_histograms_for_kuldata(histograms):
     """
-    Adapt the histogram data to the KulDataDataset format for use in a line chart.
+    Adapt the histogram data to the KulDataDataset format for use in a line chart, 
+    and return it in a dictionary format where keys are 'Image #X'.
 
     Args:
-        histograms (dict): Dictionary containing histogram data.
+        histograms (list[dict]): List of dictionaries containing histogram data.
 
     Returns:
-        dict: A KulDataDataset-compatible dictionary.
+        dict: A KulDataDataset-compatible dictionary, where each key is 'Image #X'.
     """
-    kuldata = {
-        "columns": [
-            {"id": "Axis_0", "title": "Intensity"},
-            {"id": "Series_0", "shape": "number", "title": "Red Channel"},
-            {"id": "Series_1", "shape": "number", "title": "Green Channel"},
-            {"id": "Series_2", "shape": "number", "title": "Blue Channel"},
-            {"id": "Series_3", "shape": "number", "title": "Sum of Channels"},
-        ],
-        "nodes": []
-    }
+    datasets = {}
 
-    for i in range(256):
-        node = {
-            "cells": {
-                "Axis_0": {"value": i},
-                "Series_0": {"value": histograms["red_hist"][i]},
-                "Series_1": {"value": histograms["green_hist"][i]},
-                "Series_2": {"value": histograms["blue_hist"][i]},
-                "Series_3": {"value": histograms["sum_hist"][i] if i < len(histograms["sum_hist"]) else 0},
-            },
-            "id": str(i),
+    for index, hist in enumerate(histograms):
+        dataset = {
+            "columns": [
+                {"id": "Axis_0", "title": "Intensity"},
+                {"id": "Series_0", "shape": "number", "title": "Red Channel"},
+                {"id": "Series_1", "shape": "number", "title": "Green Channel"},
+                {"id": "Series_2", "shape": "number", "title": "Blue Channel"},
+                {"id": "Series_3", "shape": "number", "title": "Sum of Channels"},
+            ],
+            "nodes": []
         }
-        kuldata["nodes"].append(node)
+    
+        for i in range(256):
+            node = {
+                "cells": {
+                    "Axis_0": {"value": i},
+                    "Series_0": {"value": hist["red_hist"][i]},
+                    "Series_1": {"value": hist["green_hist"][i]},
+                    "Series_2": {"value": hist["blue_hist"][i]},
+                    "Series_3": {"value": hist["sum_hist"][i] if i < len(hist["sum_hist"]) else 0},
+                },
+                "id": str(i),
+            }
+            dataset["nodes"].append(node)
+        
+        datasets[f"Image #{index + 1}"] = dataset
 
-    return kuldata
+    return datasets
 
 def adapt_keyword_count_for_chart(keyword_count):
     """
@@ -90,38 +96,41 @@ def adapt_keyword_count_for_chip(keyword_count):
 def calculate_histograms(image_tensor):
     """
     Calculate the histograms for the RGB channels and their sum from a given image tensor
-    formatted in the shape [1, H, W, 3].
+    formatted in the shape [B, H, W, C].
 
     Args:
-        image_tensor (torch.Tensor): A tensor representing the image, assumed to be in the shape [1, H, W, 3].
+        image_tensor (torch.Tensor): A tensor representing the image batch, assumed to be in the shape [B, H, W, C].
     
     Returns:
-        dict: A dictionary containing the histograms for the R, G, B channels and their sum.
+        list[dict]: A list of dictionaries containing the histograms for the R, G, B channels and their sum for each image.
     """
-    # Convert tensor to numpy array, expected shape [1, H, W, 3]
-    image_np = image_tensor.squeeze(0).cpu().numpy() * 255.0
-    image_np = image_np.astype(np.uint8)
+    image_batch_np = image_tensor.cpu().numpy() * 255.0
+    image_batch_np = image_batch_np.astype(np.uint8)
 
-    # Extract individual RGB channels
-    red_channel = image_np[:, :, 0]
-    green_channel = image_np[:, :, 1]
-    blue_channel = image_np[:, :, 2]
+    batch_histograms = []
 
-    # Calculate histograms for each channel
-    red_hist = np.histogram(red_channel, bins=256, range=(0, 255))[0]
-    green_hist = np.histogram(green_channel, bins=256, range=(0, 255))[0]
-    blue_hist = np.histogram(blue_channel, bins=256, range=(0, 255))[0]
+    for i in range(image_batch_np.shape[0]):
+        image_np = image_batch_np[i]
 
-    # Calculate the sum of the RGB channels
-    sum_channel = red_channel.astype(np.int32) + green_channel.astype(np.int32) + blue_channel.astype(np.int32)
-    sum_hist = np.histogram(sum_channel, bins=256, range=(0, 765))[0]
+        red_channel = image_np[:, :, 0]
+        green_channel = image_np[:, :, 1]
+        blue_channel = image_np[:, :, 2]
 
-    return {
-        "red_hist": red_hist.tolist(),
-        "green_hist": green_hist.tolist(),
-        "blue_hist": blue_hist.tolist(),
-        "sum_hist": sum_hist.tolist(),
-    }
+        red_hist = np.histogram(red_channel, bins=256, range=(0, 255))[0]
+        green_hist = np.histogram(green_channel, bins=256, range=(0, 255))[0]
+        blue_hist = np.histogram(blue_channel, bins=256, range=(0, 255))[0]
+
+        sum_channel = red_channel.astype(np.int32) + green_channel.astype(np.int32) + blue_channel.astype(np.int32)
+        sum_hist = np.histogram(sum_channel, bins=256, range=(0, 765))[0]
+
+        batch_histograms.append({
+            "red_hist": red_hist.tolist(),
+            "green_hist": green_hist.tolist(),
+            "blue_hist": blue_hist.tolist(),
+            "sum_hist": sum_hist.tolist(),
+        })
+
+    return batch_histograms
     
 def update_usage_json(resource_file:str, resource_name:str, resource_value:str):
     resource_value = os.path.splitext(resource_value)[0]

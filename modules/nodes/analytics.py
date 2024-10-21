@@ -30,21 +30,21 @@ class LF_ImageHistogram:
         and format it to the KulDataDataset structure.
 
         Args:
-            image (torch.Tensor): Input image tensor in the shape [1, H, W, 3].
+            image (torch.Tensor): Input image tensor in the shape [B, H, W, C].
             node_id (str): Unique identifier for the node instance.
 
         Returns:
             dict: A formatted KulDataDataset containing the histogram data.
         """
         histograms = calculate_histograms(image)
-        dataset = adapt_histograms_for_kuldata(histograms)
+        datasets = adapt_histograms_for_kuldata(histograms)
 
         PromptServer.instance.send_sync("lf-imagehistogram", {
             "node": node_id, 
-            "dataset": dataset,
+            "datasets": datasets,
         })
 
-        return (image, dataset,)
+        return (image, datasets,)
     
 class LF_KeywordCounter:
     @classmethod
