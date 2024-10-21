@@ -83,6 +83,20 @@ const KulCompare = class {
         });
     }
     /*-------------------------------------------------*/
+    /*                 W a t c h e r s                 */
+    /*-------------------------------------------------*/
+    async updateShapes() {
+        try {
+            this.shapes = this.#kulManager.data.cell.shapes.getAll(this.kulData);
+            const shapes = this.#getShapes();
+            this.leftShape = shapes[0];
+            this.rightShape = shapes[1];
+        }
+        catch (error) {
+            this.#kulManager.debug.logs.new(this, 'Error updating shapes: ' + error, 'error');
+        }
+    }
+    /*-------------------------------------------------*/
     /*           P u b l i c   M e t h o d s           */
     /*-------------------------------------------------*/
     /**
@@ -222,15 +236,7 @@ const KulCompare = class {
     componentWillLoad() {
         this.#kulManager.theme.register(this);
         this.view = this.kulView;
-        try {
-            this.shapes = this.#kulManager.data.cell.shapes.getAll(this.kulData);
-            const shapes = this.#getShapes();
-            this.leftShape = shapes[0];
-            this.rightShape = shapes[1];
-        }
-        catch (error) {
-            this.#kulManager.debug.logs.new(this, 'Error when initializing shapes: ' + error, 'error');
-        }
+        this.updateShapes();
     }
     componentDidLoad() {
         this.onKulEvent(new CustomEvent('ready'), 'ready');
@@ -243,11 +249,15 @@ const KulCompare = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: '1c7304f8f6c037abecb2266dd3e84b6eb7b5fb61' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '277aa84fad5d7662a23b9e018273e7e50b5f0bce', id: KUL_WRAPPER_ID }, h("div", { key: 'affbe8d85c0aea948bed276413e25e8c2a224788', class: "compare" }, this.#prepCompare()))));
+        return (h(Host, { key: '004e029f793300f609c6b012a19c31eb86a14a4d' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '92e0ba3d5055f22bf684c53e8162ee1b2a532ce7', id: KUL_WRAPPER_ID }, h("div", { key: '2f8f4ae581da85878130ed4eeae466f2b423f47e', class: "compare" }, this.#prepCompare()))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);
     }
+    static get watchers() { return {
+        "kulData": ["updateShapes"],
+        "kulShape": ["updateShapes"]
+    }; }
 };
 KulCompare.style = KulCompareStyle0;
 

@@ -125,7 +125,7 @@ class LF_ClarityEffect:
         if len(processed_images) > 1:
             processed_images = torch.stack(processed_images)
         else:
-            processed_images = processed_images[0]
+            processed_images = processed_images[0].unsqueeze(0)
         
         return (processed_images,)
     
