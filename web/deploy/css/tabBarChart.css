@@ -11,5 +11,11 @@
   height: 100%;
   width: 100%;
 }
+.lf-tabbarchart__grid--no-directory {
+  grid-template-rows: auto 1fr;
+}
+.lf-tabbarchart__directory--hidden {
+  display: none;
+}
 
 /*# sourceMappingURL=tabBarChart.css.map */

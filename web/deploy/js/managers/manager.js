@@ -474,9 +474,9 @@ export class LFManager {
         /*-------------------------------------------------------------------*/
         /*               I n i t   I m a g e H i s t o g r a m               */
         /*-------------------------------------------------------------------*/
-        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_ImageHistogram(widgets.setters.KUL_HISTOGRAM, widgets.adders.KUL_HISTOGRAM);
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_ImageHistogram(widgets.setters.KUL_TAB_BAR_CHART, widgets.adders.KUL_TAB_BAR_CHART);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.imageHistogram, (e) => {
-            nodes.eventHandlers.LF_ImageHistogram(e, widgets.adders.KUL_HISTOGRAM);
+            nodes.eventHandlers.LF_ImageHistogram(e, widgets.adders.KUL_TAB_BAR_CHART);
         });
         /*-------------------------------------------------------------------*/
         /*                I n i t   I m a g e s L o a d e r                  */

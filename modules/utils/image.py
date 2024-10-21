@@ -9,16 +9,40 @@ from torchvision.transforms import InterpolationMode, functional
 
 def clarity_effect(image_tensor, clarity_strength, sharpen_amount, blur_kernel_size):
     """
-    Apply a clarity effect followed by sharpening on a given image tensor.
+    Apply a clarity effect followed by sharpening on a given image tensor or a batch of image tensors.
 
     Args:
-        image_tensor (torch.Tensor): The input image tensor.
+        image_tensor (torch.Tensor): The input image tensor(s) [B, H, W, C] or [H, W, C].
         clarity_strength (float): The strength of the clarity effect.
         sharpen_amount (float): The amount of sharpening to apply.
         blur_kernel_size (int): The size of the kernel to use for blurring.
 
     Returns:
         torch.Tensor: The resulting image tensor after applying the effects.
+    """
+    
+    is_batch = len(image_tensor.shape) == 4
+    
+    if is_batch:
+        processed_images = [process_single_image(img, clarity_strength, sharpen_amount, blur_kernel_size) for img in image_tensor]
+        return torch.stack(processed_images)
+    else:
+        return process_single_image(image_tensor, clarity_strength, sharpen_amount, blur_kernel_size)
+
+
+
+def process_single_image(image_tensor, clarity_strength, sharpen_amount, blur_kernel_size):
+    """
+    Processes a single image tensor by applying clarity and sharpen effects.
+
+    Args:
+        image_tensor (torch.Tensor): The input image tensor.
+        clarity_strength (float): The clarity effect strength.
+        sharpen_amount (float): The sharpening amount.
+        blur_kernel_size (int): The kernel size for blurring.
+
+    Returns:
+        torch.Tensor: The processed image tensor.
     """
     def apply_clarity(image, clarity_strength):
         """
@@ -57,14 +81,12 @@ def clarity_effect(image_tensor, clarity_strength, sharpen_amount, blur_kernel_s
         sharpened_image = cv2.addWeighted(image, 1.0 + sharpen_amount, gaussian_blur, -sharpen_amount, 0)
 
         return sharpened_image
-
+    
     image = tensor_to_numpy(image_tensor)
     clarity_image = apply_clarity(image, clarity_strength)
     final_image = apply_sharpen(clarity_image, sharpen_amount)
-    final_tensor_image = numpy_to_tensor(final_image)
 
-    return final_tensor_image
-
+    return numpy_to_tensor(final_image)
 
 def numpy_to_tensor(numpy_array):
     """
@@ -77,22 +99,18 @@ def numpy_to_tensor(numpy_array):
     Returns:
         torch.Tensor: The converted PyTorch tensor.
 
-    Raises:
-        Exception: If there's an error during the conversion process.
-
     Notes:
-        - If the input numpy_array is 3D, it will assume it's a batch of images.
         - The tensor values are automatically scaled from [0, 255] to [0, 1].
     """
     try:
-        tensor = torch.from_numpy(numpy_array)
+        tensor = torch.from_numpy(numpy_array).float() / 255.0
 
         if tensor.dim() == 3:
-            tensor = tensor.unsqueeze(0)
-
-        tensor = tensor.float() / 255.0
-
-        return tensor
+            return tensor
+        elif tensor.dim() == 4:
+            return tensor
+        else:
+            raise ValueError(f"Unexpected input shape: {tensor.shape}")
     except Exception as e:
         print(f"Error converting NumPy array to tensor: {e}")
         raise

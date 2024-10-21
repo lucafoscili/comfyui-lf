@@ -118,7 +118,6 @@ export const log = () => {
 export const refreshChart = (node) => {
     try {
         const domWidget = findWidget(node, CustomWidgetName.countBarChart)?.element ||
-            findWidget(node, CustomWidgetName.histogram)?.element ||
             findWidget(node, CustomWidgetName.tabBarChart)?.element;
         if (domWidget) {
             const chart = domWidget.querySelector('kul-chart');

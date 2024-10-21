@@ -1,7 +1,6 @@
 import { app } from '/scripts/app.js';
 import { controlPanelFactory } from '../widgets/controlPanel.js';
 import { codeFactory } from '../widgets/code.js';
-import { histogramFactory } from '../widgets/histogram.js';
 import { CustomWidgetName } from '../types/widgets.js';
 import { imagePreviewFactory } from '../widgets/imagePreview.js';
 import { booleanViewerFactory } from '../widgets/booleanViewer.js';
@@ -18,6 +17,7 @@ import { cardFactory } from '../widgets/card.js';
 import { cardsWithChipFactory } from '../widgets/cardsWithChip.js';
 import { tabBarChartFactory } from '../widgets/tabBarChart.js';
 import { compareFactory } from '../widgets/compare.js';
+import { NodeName } from '../types/nodes.js';
 
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
@@ -90,13 +90,6 @@ export class LFWidgets {
       ).widget;
       return widget;
     },
-    [CustomWidgetName.histogram]: (nodeType: NodeType) => {
-      const widget = app.widgets[CustomWidgetName.histogram](
-        nodeType,
-        CustomWidgetName.histogram,
-      ).widget;
-      return widget;
-    },
     [CustomWidgetName.history]: (nodeType: NodeType) => {
       const widget = app.widgets[CustomWidgetName.history](
         nodeType,
@@ -164,8 +157,6 @@ export class LFWidgets {
       chip: HTMLKulChipElement,
       button: HTMLKulButtonElement,
     ) => countBarChartFactory.options(chart, chip, button),
-    [CustomWidgetName.histogram]: (histogram: HTMLKulChartElement) =>
-      histogramFactory.options(histogram),
     [CustomWidgetName.history]: (history: HTMLKulListElement) => historyFactory.options(history),
     [CustomWidgetName.jsonInput]: (content: HTMLTextAreaElement) =>
       jsonInputFactory.options(content),
@@ -181,7 +172,8 @@ export class LFWidgets {
       chart: HTMLKulChartElement,
       tabbar: HTMLKulTabbarElement,
       textfield: HTMLKulTextfieldElement,
-    ) => tabBarChartFactory.options(chart, tabbar, textfield),
+      node: NodeName,
+    ) => tabBarChartFactory.options(chart, tabbar, textfield, node),
     [CustomWidgetName.tree]: (tree: HTMLKulTreeElement) => treeFactory.options(tree),
     [CustomWidgetName.upload]: (upload: HTMLKulUploadElement) => uploadFactory.options(upload),
   };
@@ -247,13 +239,6 @@ export class LFWidgets {
       return {
         [CustomWidgetName.countBarChart]: (nodeType: NodeType, name: CustomWidgetName) => {
           return countBarChartFactory.render(nodeType, name);
-        },
-      };
-    },
-    [CustomWidgetName.histogram]: () => {
-      return {
-        [CustomWidgetName.histogram]: (nodeType: NodeType, name: CustomWidgetName) => {
-          return histogramFactory.render(nodeType, name);
         },
       };
     },

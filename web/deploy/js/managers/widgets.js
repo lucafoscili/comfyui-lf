@@ -7,7 +7,6 @@ var _LFWidgets_CSS_EMBEDS;
 import { app } from '/scripts/app.js';
 import { controlPanelFactory } from '../widgets/controlPanel.js';
 import { codeFactory } from '../widgets/code.js';
-import { histogramFactory } from '../widgets/histogram.js';
 import { CustomWidgetName } from '../types/widgets.js';
 import { imagePreviewFactory } from '../widgets/imagePreview.js';
 import { booleanViewerFactory } from '../widgets/booleanViewer.js';
@@ -67,10 +66,6 @@ export class LFWidgets {
                 const widget = app.widgets[CustomWidgetName.countBarChart](nodeType, CustomWidgetName.countBarChart).widget;
                 return widget;
             },
-            [CustomWidgetName.histogram]: (nodeType) => {
-                const widget = app.widgets[CustomWidgetName.histogram](nodeType, CustomWidgetName.histogram).widget;
-                return widget;
-            },
             [CustomWidgetName.history]: (nodeType) => {
                 const widget = app.widgets[CustomWidgetName.history](nodeType, CustomWidgetName.history).widget;
                 return widget;
@@ -114,13 +109,12 @@ export class LFWidgets {
             [CustomWidgetName.compare]: (compare) => compareFactory.options(compare),
             [CustomWidgetName.controlPanel]: () => controlPanelFactory.options(),
             [CustomWidgetName.countBarChart]: (chart, chip, button) => countBarChartFactory.options(chart, chip, button),
-            [CustomWidgetName.histogram]: (histogram) => histogramFactory.options(histogram),
             [CustomWidgetName.history]: (history) => historyFactory.options(history),
             [CustomWidgetName.jsonInput]: (content) => jsonInputFactory.options(content),
             [CustomWidgetName.imagePreview]: (content, isSelectable) => imagePreviewFactory.options(content, isSelectable),
             [CustomWidgetName.messenger]: (messenger, placeholder) => messengerFactory.options(messenger, placeholder),
             [CustomWidgetName.rollViewer]: (rollViewer, nodeType) => rollViewerFactory.options(rollViewer, nodeType),
-            [CustomWidgetName.tabBarChart]: (chart, tabbar, textfield) => tabBarChartFactory.options(chart, tabbar, textfield),
+            [CustomWidgetName.tabBarChart]: (chart, tabbar, textfield, node) => tabBarChartFactory.options(chart, tabbar, textfield, node),
             [CustomWidgetName.tree]: (tree) => treeFactory.options(tree),
             [CustomWidgetName.upload]: (upload) => uploadFactory.options(upload),
         };
@@ -185,13 +179,6 @@ export class LFWidgets {
                 return {
                     [CustomWidgetName.countBarChart]: (nodeType, name) => {
                         return countBarChartFactory.render(nodeType, name);
-                    },
-                };
-            },
-            [CustomWidgetName.histogram]: () => {
-                return {
-                    [CustomWidgetName.histogram]: (nodeType, name) => {
-                        return histogramFactory.render(nodeType, name);
                     },
                 };
             },

@@ -1,4 +1,4 @@
-import { KulDataDataset, KulMessengerDataset, KulMessengerConfig } from './ketchup-lite/components';
+import { KulDataDataset, KulMessengerConfig, KulMessengerDataset } from './ketchup-lite/components';
 import { AnalyticsType } from './manager';
 
 /*-------------------------------------------------------------------*/
@@ -43,7 +43,6 @@ export type CustomWidgetMap = {
   [CustomWidgetName.compare]: CompareWidget;
   [CustomWidgetName.controlPanel]: ControlPanelWidget;
   [CustomWidgetName.countBarChart]: CountBarChartWidget;
-  [CustomWidgetName.histogram]: HistogramWidget;
   [CustomWidgetName.history]: HistoryWidget;
   [CustomWidgetName.imagePreview]: ImagePreviewWidget;
   [CustomWidgetName.jsonInput]: JsonInputWidget;
@@ -63,7 +62,6 @@ export enum CustomWidgetName {
   compare = 'KUL_COMPARE',
   controlPanel = 'KUL_CONTROL_PANEL',
   countBarChart = 'KUL_COUNT_BAR_CHART',
-  histogram = 'KUL_HISTOGRAM',
   history = 'KUL_HISTORY',
   imagePreview = 'KUL_IMAGE_PREVIEW_B64',
   jsonInput = 'KUL_JSON_INPUT',
@@ -83,7 +81,6 @@ export type CustomWidgetOptions =
   | CompareWidgetOptions
   | ControlPanelWidgetOptions
   | CountBarChartWidgetOptions
-  | HistogramWidgetOptions
   | HistoryWidgetOptions
   | ImagePreviewWidgetOptions
   | JsonInputWidgetOptions
@@ -257,26 +254,6 @@ export type ControlPanelWidgetDeserializedValue = {
 export type ControlPanelWidgetValue = string;
 
 /*-------------------------------------------------------------------*/
-/*            H i s t o g r a m   D e c l a r a t i o n s            */
-/*-------------------------------------------------------------------*/
-
-export interface HistogramWidget extends Widget {
-  options: HistogramWidgetOptions;
-  type: [CustomWidgetName.histogram];
-}
-export interface HistogramWidgetOptions {
-  hideOnZoom: boolean;
-  getComp(): HTMLKulChartElement;
-  getValue(): HistogramWidgetValue;
-  setValue(value: HistogramWidgetValue): void;
-}
-export type HistogramWidgetSetter = () => {
-  [CustomWidgetName.histogram]: BaseWidgetCallback;
-};
-export type HistogramWidgetDeserializedValue = KulDataDataset;
-export type HistogramWidgetValue = string;
-
-/*-------------------------------------------------------------------*/
 /*              H i s t o r y   D e c l a r a t i o n s              */
 /*-------------------------------------------------------------------*/
 
@@ -425,6 +402,7 @@ export interface TabBarChartWidgetOptions {
 export type TabBarChartWidgetSetter = () => {
   [CustomWidgetName.tabBarChart]: BaseWidgetCallback;
 };
+export type TabBarChartWidgetDeserializedValue = Record<string, KulDataDataset>;
 export type TabBarChartWidgetValue = string;
 
 /*-------------------------------------------------------------------*/

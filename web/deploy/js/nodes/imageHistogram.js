@@ -9,13 +9,15 @@ export const imageHistogramFactory = {
         const name = EventName.imageHistogram;
         getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
         const payload = event.detail;
-        const node = getApiRoutes().getNodeById(payload.id);
-        if (node) {
-            const widget = getCustomWidget(node, CustomWidgetName.histogram, addW);
-            const comp = widget.options.getComp();
-            comp.refresh();
-            widget.options.setValue(JSON.stringify(event.detail.dataset));
-            getApiRoutes().redraw();
+        const triggerNode = getApiRoutes().getNodeById(payload.id);
+        const nodes = triggerNode?.graph?._nodes || [];
+        for (let index = 0; index < nodes.length; index++) {
+            const node = nodes[index];
+            if (node?.comfyClass === NAME) {
+                const widget = getCustomWidget(node, CustomWidgetName.tabBarChart, addW);
+                widget.options.setValue(JSON.stringify(payload.datasets));
+                getApiRoutes().redraw();
+            }
         }
     },
     register: (setW, addW) => {
@@ -34,7 +36,7 @@ export const imageHistogramFactory = {
                     nodeType.prototype.onNodeCreated = function () {
                         const r = onNodeCreated?.apply(this, arguments);
                         const node = this;
-                        addW(node, CustomWidgetName.histogram);
+                        addW(node, CustomWidgetName.tabBarChart);
                         return r;
                     };
                 }

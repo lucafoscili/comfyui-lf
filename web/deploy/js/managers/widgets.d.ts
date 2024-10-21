@@ -1,4 +1,5 @@
 import { CustomWidgetName } from '../types/widgets.js';
+import { NodeName } from '../types/nodes.js';
 export declare class LFWidgets {
     #private;
     constructor();
@@ -12,7 +13,6 @@ export declare class LFWidgets {
         KUL_COMPARE: (nodeType: NodeType) => any;
         KUL_CONTROL_PANEL: (nodeType: NodeType) => any;
         KUL_COUNT_BAR_CHART: (nodeType: NodeType) => any;
-        KUL_HISTOGRAM: (nodeType: NodeType) => any;
         KUL_HISTORY: (nodeType: NodeType) => any;
         KUL_IMAGE_PREVIEW_B64: (nodeType: NodeType) => any;
         KUL_JSON_INPUT: (nodeType: NodeType) => any;
@@ -32,13 +32,12 @@ export declare class LFWidgets {
         KUL_COMPARE: (compare: HTMLKulCompareElement) => import("../types/widgets.js").CompareWidgetOptions;
         KUL_CONTROL_PANEL: () => import("../types/widgets.js").ControlPanelWidgetOptions;
         KUL_COUNT_BAR_CHART: (chart: HTMLKulChartElement, chip: HTMLKulChipElement, button: HTMLKulButtonElement) => import("../types/widgets.js").CountBarChartWidgetOptions;
-        KUL_HISTOGRAM: (histogram: HTMLKulChartElement) => import("../types/widgets.js").HistogramWidgetOptions;
         KUL_HISTORY: (history: HTMLKulListElement) => import("../types/widgets.js").HistoryWidgetOptions;
         KUL_JSON_INPUT: (content: HTMLTextAreaElement) => import("../types/widgets.js").JsonInputWidgetOptions;
         KUL_IMAGE_PREVIEW_B64: (content: HTMLDivElement, isSelectable: boolean) => import("../types/widgets.js").ImagePreviewWidgetOptions;
         KUL_MESSENGER: (messenger: HTMLKulMessengerElement, placeholder: HTMLDivElement) => import("../types/widgets.js").MessengerWidgetOptions;
         KUL_ROLL_VIEWER: (rollViewer: HTMLKulProgressbarElement, nodeType: NodeType) => import("../types/widgets.js").RollViewerWidgetOptions;
-        KUL_TAB_BAR_CHART: (chart: HTMLKulChartElement, tabbar: HTMLKulTabbarElement, textfield: HTMLKulTextfieldElement) => import("../types/widgets.js").TabBarChartWidgetOptions;
+        KUL_TAB_BAR_CHART: (chart: HTMLKulChartElement, tabbar: HTMLKulTabbarElement, textfield: HTMLKulTextfieldElement, node: NodeName) => import("../types/widgets.js").TabBarChartWidgetOptions;
         KUL_TREE: (tree: HTMLKulTreeElement) => import("../types/widgets.js").TreeWidgetOptions;
         KUL_UPLOAD: (upload: HTMLKulUploadElement) => import("../types/widgets.js").UploadWidgetOptions;
     };
@@ -83,11 +82,6 @@ export declare class LFWidgets {
         };
         KUL_COUNT_BAR_CHART: () => {
             KUL_COUNT_BAR_CHART: (nodeType: NodeType, name: CustomWidgetName) => {
-                widget: Widget;
-            };
-        };
-        KUL_HISTOGRAM: () => {
-            KUL_HISTOGRAM: (nodeType: NodeType, name: CustomWidgetName) => {
                 widget: Widget;
             };
         };
@@ -141,7 +135,6 @@ export declare class LFWidgets {
             KUL_COMPARE: (nodeType: NodeType) => any;
             KUL_CONTROL_PANEL: (nodeType: NodeType) => any;
             KUL_COUNT_BAR_CHART: (nodeType: NodeType) => any;
-            KUL_HISTOGRAM: (nodeType: NodeType) => any;
             KUL_HISTORY: (nodeType: NodeType) => any;
             KUL_IMAGE_PREVIEW_B64: (nodeType: NodeType) => any;
             KUL_JSON_INPUT: (nodeType: NodeType) => any;
@@ -161,13 +154,12 @@ export declare class LFWidgets {
             KUL_COMPARE: (compare: HTMLKulCompareElement) => import("../types/widgets.js").CompareWidgetOptions;
             KUL_CONTROL_PANEL: () => import("../types/widgets.js").ControlPanelWidgetOptions;
             KUL_COUNT_BAR_CHART: (chart: HTMLKulChartElement, chip: HTMLKulChipElement, button: HTMLKulButtonElement) => import("../types/widgets.js").CountBarChartWidgetOptions;
-            KUL_HISTOGRAM: (histogram: HTMLKulChartElement) => import("../types/widgets.js").HistogramWidgetOptions;
             KUL_HISTORY: (history: HTMLKulListElement) => import("../types/widgets.js").HistoryWidgetOptions;
             KUL_JSON_INPUT: (content: HTMLTextAreaElement) => import("../types/widgets.js").JsonInputWidgetOptions;
             KUL_IMAGE_PREVIEW_B64: (content: HTMLDivElement, isSelectable: boolean) => import("../types/widgets.js").ImagePreviewWidgetOptions;
             KUL_MESSENGER: (messenger: HTMLKulMessengerElement, placeholder: HTMLDivElement) => import("../types/widgets.js").MessengerWidgetOptions;
             KUL_ROLL_VIEWER: (rollViewer: HTMLKulProgressbarElement, nodeType: NodeType) => import("../types/widgets.js").RollViewerWidgetOptions;
-            KUL_TAB_BAR_CHART: (chart: HTMLKulChartElement, tabbar: HTMLKulTabbarElement, textfield: HTMLKulTextfieldElement) => import("../types/widgets.js").TabBarChartWidgetOptions;
+            KUL_TAB_BAR_CHART: (chart: HTMLKulChartElement, tabbar: HTMLKulTabbarElement, textfield: HTMLKulTextfieldElement, node: NodeName) => import("../types/widgets.js").TabBarChartWidgetOptions;
             KUL_TREE: (tree: HTMLKulTreeElement) => import("../types/widgets.js").TreeWidgetOptions;
             KUL_UPLOAD: (upload: HTMLKulUploadElement) => import("../types/widgets.js").UploadWidgetOptions;
         };
@@ -212,11 +204,6 @@ export declare class LFWidgets {
             };
             KUL_COUNT_BAR_CHART: () => {
                 KUL_COUNT_BAR_CHART: (nodeType: NodeType, name: CustomWidgetName) => {
-                    widget: Widget;
-                };
-            };
-            KUL_HISTOGRAM: () => {
-                KUL_HISTOGRAM: (nodeType: NodeType, name: CustomWidgetName) => {
                     widget: Widget;
                 };
             };

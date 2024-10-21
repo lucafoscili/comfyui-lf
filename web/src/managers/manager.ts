@@ -1,5 +1,3 @@
-import type { KulDom } from '../types/ketchup-lite/managers/kul-manager/kul-manager-declarations';
-import type { KulManager } from '../types/ketchup-lite/managers/kul-manager/kul-manager';
 import { api } from '/scripts/api.js';
 import { app } from '/scripts/app.js';
 import { defineCustomElements } from '../ketchup-lite/loader.js';
@@ -66,8 +64,10 @@ import {
   ClarityEffectPayload,
 } from '../types/events.js';
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
-import { KulDataDataset } from '../types/ketchup-lite/components';
 import { LFTooltip } from './tooltip';
+import { KulDataDataset } from '../types/ketchup-lite/components.js';
+import { KulDom } from '../types/ketchup-lite/managers/kul-manager/kul-manager-declarations.js';
+import { KulManager } from '../types/ketchup-lite/managers/kul-manager/kul-manager.js';
 
 /*-------------------------------------------------*/
 /*                 L F   C l a s s                 */
@@ -616,11 +616,11 @@ export class LFManager {
     /*               I n i t   I m a g e H i s t o g r a m               */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_ImageHistogram(
-      widgets.setters.KUL_HISTOGRAM,
-      widgets.adders.KUL_HISTOGRAM,
+      widgets.setters.KUL_TAB_BAR_CHART,
+      widgets.adders.KUL_TAB_BAR_CHART,
     );
     this.#APIS.event(EventName.imageHistogram, (e: CustomEvent<ImageHistogramPayload>) => {
-      nodes.eventHandlers.LF_ImageHistogram(e, widgets.adders.KUL_HISTOGRAM);
+      nodes.eventHandlers.LF_ImageHistogram(e, widgets.adders.KUL_TAB_BAR_CHART);
     });
     /*-------------------------------------------------------------------*/
     /*                I n i t   I m a g e s L o a d e r                  */
