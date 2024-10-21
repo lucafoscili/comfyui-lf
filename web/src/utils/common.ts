@@ -1,5 +1,3 @@
-import type { KulDataDataset } from '../types/ketchup-lite/components';
-import type { KulDom } from '../types/ketchup-lite/managers/kul-manager/kul-manager-declarations';
 import type { LFWindow } from '../managers/manager';
 import {
   BaseWidgetCallback,
@@ -11,9 +9,12 @@ import {
 } from '../types/widgets';
 import { LogSeverity } from '../types/manager';
 import { KulButton } from '../types/ketchup-lite/components/kul-button/kul-button';
+import { KulChart } from '../types/ketchup-lite/components/kul-chart/kul-chart';
+import { KulDataDataset } from '../types/ketchup-lite/components';
 import { KulList } from '../types/ketchup-lite/components/kul-list/kul-list';
 import { KulSwitch } from '../types/ketchup-lite/components/kul-switch/kul-switch';
-import { KulChart } from '../types/ketchup-lite/components/kul-chart/kul-chart';
+import { KulComponent, KulComponentName } from '../types/ketchup-lite/types/GenericTypes';
+import { KulDom } from '../types/ketchup-lite/managers/kul-manager/kul-manager-declarations';
 
 const DOM = document.documentElement as KulDom;
 const WINDOW = window as unknown as LFWindow;
@@ -148,16 +149,16 @@ export const getWidget = <T extends ComfyWidgetName>(
   ) as ComfyWidgetMap[T];
 };
 
-export const isButton = (comp: any): comp is KulButton => {
+export const isButton = (comp: KulComponent<KulComponentName>): comp is KulButton => {
   return comp.rootElement.tagName.toLowerCase() === 'kul-button';
 };
-export const isChart = (comp: any): comp is KulChart => {
+export const isChart = (comp: KulComponent<KulComponentName>): comp is KulChart => {
   return comp.rootElement.tagName.toLowerCase() === 'kul-chart';
 };
-export const isList = (comp: any): comp is KulList => {
+export const isList = (comp: KulComponent<KulComponentName>): comp is KulList => {
   return comp.rootElement.tagName.toLowerCase() === 'kul-list';
 };
-export const isSwitch = (comp: any): comp is KulSwitch => {
+export const isSwitch = (comp: KulComponent<KulComponentName>): comp is KulSwitch => {
   return comp.rootElement.tagName.toLowerCase() === 'kul-switch';
 };
 
@@ -182,7 +183,6 @@ export const refreshChart = (node: NodeType) => {
   try {
     const domWidget =
       findWidget(node, CustomWidgetName.countBarChart)?.element ||
-      findWidget(node, CustomWidgetName.histogram)?.element ||
       findWidget(node, CustomWidgetName.tabBarChart)?.element;
     if (domWidget) {
       const chart = domWidget.querySelector('kul-chart') as HTMLKulChartElement;

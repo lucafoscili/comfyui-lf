@@ -66,7 +66,7 @@ export declare class LFNodes {
         LF_EmbeddingSelector: (setW: import("../types/widgets").CardWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_Extractor: (setW: import("../types/widgets").CodeWidgetSetter) => void;
         LF_Float: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
-        LF_ImageHistogram: (setW: import("../types/widgets").HistogramWidgetSetter, addW: BaseWidgetCallback) => void;
+        LF_ImageHistogram: (setW: import("../types/widgets").TabBarChartWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_ImageListFromJSON: (setW: import("../types/widgets").ImagePreviewWidgetSetter) => void;
         LF_Integer: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_KeywordCounter: (setW: import("../types/widgets").CountBarChartWidgetSetter, addW: BaseWidgetCallback) => void;
@@ -172,7 +172,7 @@ export declare class LFNodes {
             LF_EmbeddingSelector: (setW: import("../types/widgets").CardWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_Extractor: (setW: import("../types/widgets").CodeWidgetSetter) => void;
             LF_Float: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
-            LF_ImageHistogram: (setW: import("../types/widgets").HistogramWidgetSetter, addW: BaseWidgetCallback) => void;
+            LF_ImageHistogram: (setW: import("../types/widgets").TabBarChartWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_ImageListFromJSON: (setW: import("../types/widgets").ImagePreviewWidgetSetter) => void;
             LF_Integer: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_KeywordCounter: (setW: import("../types/widgets").CountBarChartWidgetSetter, addW: BaseWidgetCallback) => void;

@@ -1,11 +1,10 @@
-import {
-  KulButtonEventPayload,
-  KulListEventPayload,
-  KulSwitchEventPayload,
-} from '../types/ketchup-lite/components';
+import { KulListEventPayload, KulSwitchEventPayload } from '../types/ketchup-lite/components';
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
 import { KulButton } from '../types/ketchup-lite/components/kul-button/kul-button';
-import { KulButtonEvent } from '../types/ketchup-lite/components/kul-button/kul-button-declarations';
+import {
+  KulButtonEvent,
+  KulButtonEventPayload,
+} from '../types/ketchup-lite/components/kul-button/kul-button-declarations';
 import { KulList } from '../types/ketchup-lite/components/kul-list/kul-list';
 import { KulSwitch } from '../types/ketchup-lite/components/kul-switch/kul-switch';
 import { KulSwitchEvent } from '../types/ketchup-lite/components/kul-switch/kul-switch-declarations';
@@ -40,13 +39,17 @@ const STYLES = {
   debugGrid: () => {
     return {
       display: 'grid',
-      gridTemplateRows: 'repeat(5,max-content) 1fr',
+      gridTemplateRows: 'repeat(5, max-content) 1fr',
       height: '100%',
       margin: '0',
     };
   },
   debugLogs: () => {
-    return { display: 'grid', gridGap: '12px', gridTemplateRows: '1fr 1fr' };
+    return {
+      display: 'grid',
+      gridGap: '12px',
+      gridTemplateRows: 'repeat(2, minmax(250px, 600px))',
+    };
   },
   logsArea: () => {
     return {

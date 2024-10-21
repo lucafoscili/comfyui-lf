@@ -1,5 +1,5 @@
-import type { KulArticleDataset } from '../types/ketchup-lite/components';
 import {
+  KulArticleDataset,
   KulArticleEventPayload,
   KulArticleNode,
 } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';

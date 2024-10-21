@@ -1,4 +1,5 @@
 import { KulDataDataset } from './ketchup-lite/components';
+import { TabBarChartWidgetDeserializedValue } from './widgets';
 export interface BaseEventPayload {
     id: string;
 }
@@ -110,7 +111,7 @@ export interface ImageListFromJSONPayload extends BaseEventPayload {
     images: Array<string>;
 }
 export interface ImageHistogramPayload extends BaseEventPayload {
-    dataset: KulDataDataset;
+    datasets: TabBarChartWidgetDeserializedValue;
 }
 export interface IntegerPayload extends BaseEventPayload {
     isHistoryEnabled: boolean;

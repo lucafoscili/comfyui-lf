@@ -20,7 +20,6 @@ export var CustomWidgetName;
     CustomWidgetName["compare"] = "KUL_COMPARE";
     CustomWidgetName["controlPanel"] = "KUL_CONTROL_PANEL";
     CustomWidgetName["countBarChart"] = "KUL_COUNT_BAR_CHART";
-    CustomWidgetName["histogram"] = "KUL_HISTOGRAM";
     CustomWidgetName["history"] = "KUL_HISTORY";
     CustomWidgetName["imagePreview"] = "KUL_IMAGE_PREVIEW_B64";
     CustomWidgetName["jsonInput"] = "KUL_JSON_INPUT";

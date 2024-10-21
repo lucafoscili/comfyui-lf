@@ -1,4 +1,4 @@
-import { KulDataDataset, KulMessengerDataset, KulMessengerConfig } from './ketchup-lite/components';
+import { KulDataDataset, KulMessengerConfig, KulMessengerDataset } from './ketchup-lite/components';
 import { AnalyticsType } from './manager';
 export type BaseWidgetCallback = <T extends CustomWidgetName>(node: NodeType, name: T) => {
     widget: Widget;
@@ -36,7 +36,6 @@ export type CustomWidgetMap = {
     [CustomWidgetName.compare]: CompareWidget;
     [CustomWidgetName.controlPanel]: ControlPanelWidget;
     [CustomWidgetName.countBarChart]: CountBarChartWidget;
-    [CustomWidgetName.histogram]: HistogramWidget;
     [CustomWidgetName.history]: HistoryWidget;
     [CustomWidgetName.imagePreview]: ImagePreviewWidget;
     [CustomWidgetName.jsonInput]: JsonInputWidget;
@@ -56,7 +55,6 @@ export declare enum CustomWidgetName {
     compare = "KUL_COMPARE",
     controlPanel = "KUL_CONTROL_PANEL",
     countBarChart = "KUL_COUNT_BAR_CHART",
-    histogram = "KUL_HISTOGRAM",
     history = "KUL_HISTORY",
     imagePreview = "KUL_IMAGE_PREVIEW_B64",
     jsonInput = "KUL_JSON_INPUT",
@@ -66,7 +64,7 @@ export declare enum CustomWidgetName {
     tree = "KUL_TREE",
     upload = "KUL_UPLOAD"
 }
-export type CustomWidgetOptions = BooleanViewerWidgetOptions | CardWidgetOptions | CardsWithChipWidgetOptions | ChatWidgetOptions | ChipWidgetOptions | CodeWidgetOptions | CompareWidgetOptions | ControlPanelWidgetOptions | CountBarChartWidgetOptions | HistogramWidgetOptions | HistoryWidgetOptions | ImagePreviewWidgetOptions | JsonInputWidgetOptions | MessengerWidgetOptions | RollViewerWidgetOptions | TabBarChartWidgetOptions | TreeWidgetOptions | UploadWidgetOptions;
+export type CustomWidgetOptions = BooleanViewerWidgetOptions | CardWidgetOptions | CardsWithChipWidgetOptions | ChatWidgetOptions | ChipWidgetOptions | CodeWidgetOptions | CompareWidgetOptions | ControlPanelWidgetOptions | CountBarChartWidgetOptions | HistoryWidgetOptions | ImagePreviewWidgetOptions | JsonInputWidgetOptions | MessengerWidgetOptions | RollViewerWidgetOptions | TabBarChartWidgetOptions | TreeWidgetOptions | UploadWidgetOptions;
 export interface BooleanViewerWidget extends Widget {
     options: BooleanViewerWidgetOptions;
     type: [CustomWidgetName.booleanViewer];
@@ -193,21 +191,6 @@ export type ControlPanelWidgetDeserializedValue = {
     themes: string;
 };
 export type ControlPanelWidgetValue = string;
-export interface HistogramWidget extends Widget {
-    options: HistogramWidgetOptions;
-    type: [CustomWidgetName.histogram];
-}
-export interface HistogramWidgetOptions {
-    hideOnZoom: boolean;
-    getComp(): HTMLKulChartElement;
-    getValue(): HistogramWidgetValue;
-    setValue(value: HistogramWidgetValue): void;
-}
-export type HistogramWidgetSetter = () => {
-    [CustomWidgetName.histogram]: BaseWidgetCallback;
-};
-export type HistogramWidgetDeserializedValue = KulDataDataset;
-export type HistogramWidgetValue = string;
 export interface HistoryWidget extends Widget {
     options: HistoryWidgetOptions;
     type: [CustomWidgetName.history];
@@ -328,6 +311,7 @@ export interface TabBarChartWidgetOptions {
 export type TabBarChartWidgetSetter = () => {
     [CustomWidgetName.tabBarChart]: BaseWidgetCallback;
 };
+export type TabBarChartWidgetDeserializedValue = Record<string, KulDataDataset>;
 export type TabBarChartWidgetValue = string;
 export interface TreeWidget extends Widget {
     options: TreeWidgetOptions;

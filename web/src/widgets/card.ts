@@ -7,10 +7,10 @@ import {
   getCustomWidget,
 } from '../utils/common';
 import { NodeName } from '../types/nodes';
-import { KulButtonEventPayload } from '../types/ketchup-lite/components';
 import { cardPlaceholders, fetchModelMetadata } from '../utils/api';
 import { KulButton } from '../types/ketchup-lite/components/kul-button/kul-button';
 import { APIMetadataEntry } from '../types/manager';
+import { KulButtonEventPayload } from '../types/ketchup-lite/components';
 
 const BASE_CSS_CLASS = 'lf-card';
 const TYPE = CustomWidgetName.card;

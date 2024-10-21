@@ -20,13 +20,17 @@ const STYLES = {
     debugGrid: () => {
         return {
             display: 'grid',
-            gridTemplateRows: 'repeat(5,max-content) 1fr',
+            gridTemplateRows: 'repeat(5, max-content) 1fr',
             height: '100%',
             margin: '0',
         };
     },
     debugLogs: () => {
-        return { display: 'grid', gridGap: '12px', gridTemplateRows: '1fr 1fr' };
+        return {
+            display: 'grid',
+            gridGap: '12px',
+            gridTemplateRows: 'repeat(2, minmax(250px, 600px))',
+        };
     },
     logsArea: () => {
         return {
