@@ -5,6 +5,7 @@ export declare enum NodeName {
     checkpointSelector = "LF_CheckpointSelector",
     civitaiMetadataSetup = "LF_CivitAIMetadataSetup",
     clarityEffect = "LF_ClarityEffect",
+    compareImages = "LF_CompareImages",
     controlPanel = "LF_ControlPanel",
     displayBoolean = "LF_DisplayBoolean",
     displayFloat = "LF_DisplayFloat",

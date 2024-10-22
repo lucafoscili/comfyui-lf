@@ -52,6 +52,7 @@ import { mathOperationFactory } from '../nodes/mathOperation.js';
 import { sortJsonKeysFactory } from '../nodes/sortJsonKeys.js';
 import { shuffleJsonKeysFactory } from '../nodes/shuffleJsonKeys.js';
 import { clarityEffectFactory } from '../nodes/clarityEffect.js';
+import { compareImagesFactory } from '../nodes/compareImages.js';
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
 /*-------------------------------------------------*/
@@ -63,6 +64,7 @@ export class LFNodes {
             [NodeName.checkpointSelector]: checkpointSelectorFactory.eventHandler,
             [NodeName.civitaiMetadataSetup]: civitaiMetadataSetupFactory.eventHandler,
             [NodeName.clarityEffect]: clarityEffectFactory.eventHandler,
+            [NodeName.compareImages]: compareImagesFactory.eventHandler,
             [NodeName.displayBoolean]: displayBooleanFactory.eventHandler,
             [NodeName.displayFloat]: displayFloatFactory.eventHandler,
             [NodeName.displayInteger]: displayIntegerFactory.eventHandler,
@@ -113,6 +115,7 @@ export class LFNodes {
             [NodeName.checkpointSelector]: checkpointSelectorFactory.register,
             [NodeName.civitaiMetadataSetup]: civitaiMetadataSetupFactory.register,
             [NodeName.clarityEffect]: clarityEffectFactory.register,
+            [NodeName.compareImages]: compareImagesFactory.register,
             [NodeName.controlPanel]: controlPanelFactory.register,
             [NodeName.displayBoolean]: displayBooleanFactory.register,
             [NodeName.displayFloat]: displayFloatFactory.register,

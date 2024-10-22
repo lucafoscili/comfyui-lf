@@ -398,6 +398,13 @@ export class LFManager {
             nodes.eventHandlers.LF_ClarityEffect(e, widgets.adders.KUL_COMPARE);
         });
         /*-------------------------------------------------------------------*/
+        /*               I n i t   C o m p a r e I m a g e s                 */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_CompareImages(widgets.setters.KUL_COMPARE, widgets.adders.KUL_COMPARE);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.compareImages, (e) => {
+            nodes.eventHandlers.LF_CompareImages(e, widgets.adders.KUL_COMPARE);
+        });
+        /*-------------------------------------------------------------------*/
         /*               I n i t   C o n t r o l   P a n e l                 */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_ControlPanel(widgets.setters.KUL_CONTROL_PANEL, widgets.adders.KUL_CONTROL_PANEL);

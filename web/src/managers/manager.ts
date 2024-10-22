@@ -62,6 +62,7 @@ import {
   SortJSONKeysPayload,
   ShuffleJSONKeysPayload,
   ClarityEffectPayload,
+  CompareImagesPayload,
 } from '../types/events.js';
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
 import { LFTooltip } from './tooltip';
@@ -516,6 +517,16 @@ export class LFManager {
     );
     this.#APIS.event(EventName.clarityEffect, (e: CustomEvent<ClarityEffectPayload>) => {
       nodes.eventHandlers.LF_ClarityEffect(e, widgets.adders.KUL_COMPARE);
+    });
+    /*-------------------------------------------------------------------*/
+    /*               I n i t   C o m p a r e I m a g e s                 */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_CompareImages(
+      widgets.setters.KUL_COMPARE,
+      widgets.adders.KUL_COMPARE,
+    );
+    this.#APIS.event(EventName.compareImages, (e: CustomEvent<CompareImagesPayload>) => {
+      nodes.eventHandlers.LF_CompareImages(e, widgets.adders.KUL_COMPARE);
     });
     /*-------------------------------------------------------------------*/
     /*               I n i t   C o n t r o l   P a n e l                 */

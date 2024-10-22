@@ -200,7 +200,6 @@ class LF_SwitchImage:
         })
 
         return (on_true if boolean else on_false,)
-
     
 class LF_SwitchInteger:
     @classmethod

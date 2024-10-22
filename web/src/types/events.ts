@@ -15,6 +15,7 @@ export enum EventName {
   checkpointSelector = 'lf-checkpointselector',
   civitAIMetadataSetup = 'lf-civitaimetadatasetup',
   clarityEffect = 'lf-clarityeffect',
+  compareImages = 'lf-compareimages',
   controlPanel = 'lf-controlpanel',
   displayBoolean = 'lf-displayboolean',
   displayFloat = 'lf-displayfloat',
@@ -65,6 +66,7 @@ export type EventPayload =
   | CheckpointSelectorPayload
   | CivitAIMetadataSetupPayload
   | ClarityEffectPayload
+  | CompareImagesPayload
   | DisplayBooleanPayload
   | DisplayJSONPayload
   | EmbeddingSelectorPayload
@@ -144,6 +146,14 @@ export interface CivitAIMetadataSetupPayload extends BaseEventPayload {
 /*-------------------------------------------------------------------*/
 
 export interface ClarityEffectPayload extends BaseEventPayload {
+  dataset: KulDataDataset;
+}
+
+/*-------------------------------------------------------------------*/
+/*              C o m p a r e I m a g e s   D e c l a r .            */
+/*-------------------------------------------------------------------*/
+
+export interface CompareImagesPayload extends BaseEventPayload {
   dataset: KulDataDataset;
 }
 

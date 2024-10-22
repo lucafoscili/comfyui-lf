@@ -6,6 +6,7 @@ export declare class LFNodes {
         LF_CheckpointSelector: (event: CustomEvent<import("../types/events").CheckpointSelectorPayload>, addW: BaseWidgetCallback) => void;
         LF_CivitAIMetadataSetup: (event: CustomEvent<import("../types/events").CivitAIMetadataSetupPayload>, addW: BaseWidgetCallback) => void;
         LF_ClarityEffect: (event: CustomEvent<import("../types/events").ClarityEffectPayload>, addW: BaseWidgetCallback) => void;
+        LF_CompareImages: (event: CustomEvent<import("../types/events").CompareImagesPayload>, addW: BaseWidgetCallback) => void;
         LF_DisplayBoolean: (event: CustomEvent<import("../types/events").DisplayBooleanPayload>, addW: BaseWidgetCallback) => void;
         LF_DisplayFloat: (event: CustomEvent<import("../types/events").DisplayFloatPayload>, addW: BaseWidgetCallback) => void;
         LF_DisplayInteger: (event: CustomEvent<import("../types/events").DisplayIntegerPayload>, addW: BaseWidgetCallback) => void;
@@ -56,6 +57,7 @@ export declare class LFNodes {
         LF_CheckpointSelector: (setW: import("../types/widgets").CardWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_CivitAIMetadataSetup: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_ClarityEffect: (setW: import("../types/widgets").CompareWidgetSetter, addW: BaseWidgetCallback) => void;
+        LF_CompareImages: (setW: import("../types/widgets").CompareWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_ControlPanel: (setW: import("../types/widgets").ControlPanelWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_DisplayBoolean: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_DisplayFloat: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback) => void;
@@ -112,6 +114,7 @@ export declare class LFNodes {
             LF_CheckpointSelector: (event: CustomEvent<import("../types/events").CheckpointSelectorPayload>, addW: BaseWidgetCallback) => void;
             LF_CivitAIMetadataSetup: (event: CustomEvent<import("../types/events").CivitAIMetadataSetupPayload>, addW: BaseWidgetCallback) => void;
             LF_ClarityEffect: (event: CustomEvent<import("../types/events").ClarityEffectPayload>, addW: BaseWidgetCallback) => void;
+            LF_CompareImages: (event: CustomEvent<import("../types/events").CompareImagesPayload>, addW: BaseWidgetCallback) => void;
             LF_DisplayBoolean: (event: CustomEvent<import("../types/events").DisplayBooleanPayload>, addW: BaseWidgetCallback) => void;
             LF_DisplayFloat: (event: CustomEvent<import("../types/events").DisplayFloatPayload>, addW: BaseWidgetCallback) => void;
             LF_DisplayInteger: (event: CustomEvent<import("../types/events").DisplayIntegerPayload>, addW: BaseWidgetCallback) => void;
@@ -162,6 +165,7 @@ export declare class LFNodes {
             LF_CheckpointSelector: (setW: import("../types/widgets").CardWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_CivitAIMetadataSetup: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_ClarityEffect: (setW: import("../types/widgets").CompareWidgetSetter, addW: BaseWidgetCallback) => void;
+            LF_CompareImages: (setW: import("../types/widgets").CompareWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_ControlPanel: (setW: import("../types/widgets").ControlPanelWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_DisplayBoolean: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_DisplayFloat: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback) => void;

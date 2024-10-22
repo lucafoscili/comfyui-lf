@@ -8,6 +8,7 @@ export var NodeName;
     NodeName["checkpointSelector"] = "LF_CheckpointSelector";
     NodeName["civitaiMetadataSetup"] = "LF_CivitAIMetadataSetup";
     NodeName["clarityEffect"] = "LF_ClarityEffect";
+    NodeName["compareImages"] = "LF_CompareImages";
     NodeName["controlPanel"] = "LF_ControlPanel";
     NodeName["displayBoolean"] = "LF_DisplayBoolean";
     NodeName["displayFloat"] = "LF_DisplayFloat";
