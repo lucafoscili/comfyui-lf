@@ -129,6 +129,74 @@ class LF_ClarityEffect:
         
         return (processed_images,)
     
+class LF_CompareImages:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "image": ("IMAGE", {"tooltip": "First input image tensor or a list of image tensors."}),
+            },
+            "optional": {
+                "image_opt": ("IMAGE", {"tooltip": "Second input image tensor or a list of image tensors (optional)."})
+            },
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    INPUT_IS_LIST = (True, True)
+    OUTPUT_IS_LIST = (False, True, False)
+    RETURN_NAMES = ("image", "all_images", "dataset")
+    RETURN_TYPES = ("IMAGE", "IMAGE", "JSON")
+
+    def on_exec(self, node_id, image, image_opt=None):
+        def normalize_input(image):
+            if isinstance(image, torch.Tensor):
+                if len(image.shape) == 4:
+                    return [img for img in image]
+                elif len(image.shape) == 3:
+                    return [image.unsqueeze(0)]
+            elif isinstance(image, list):
+                return image
+            else:
+                return [image.unsqueeze(0)] if isinstance(image, torch.Tensor) else [image]
+        
+        image_list_1 = normalize_input(image)
+        image_list_2 = normalize_input(image_opt) if image_opt is not None else image_list_1
+
+        if len(image_list_1) != len(image_list_2):
+            raise ValueError("Image lists must have the same length if both inputs are provided.")
+        
+        dataset = {"nodes": []}
+        for i, img1 in enumerate(image_list_1):
+            b64_img1 = tensor_to_base64(img1)
+            dataset_entry = {
+                "cells": {
+                    "kulImage_1": {"shape": "image", "kulValue": f"{b64_prefix}{b64_img1}", "value": ''}
+                },
+                "id": f"comparison_{i+1}",
+                "value": f"Comparison {i+1}"
+            }
+
+            if image_opt is not None:
+                b64_img2 = tensor_to_base64(image_list_2[i])
+                dataset_entry["cells"]["kulImage_2"] = {"shape": "image", "kulValue": f"{b64_prefix}{b64_img2}", "value": ''}
+
+            dataset["nodes"].append(dataset_entry)
+
+        PromptServer.instance.send_sync("lf-compareimages", {
+            "node": node_id,
+            "dataset": dataset,
+        })
+
+        image_batch = torch.cat(image_list_1, dim=0) if len(image_list_1) > 1 else image_list_1[0]
+
+        all_images_list = image_list_1 + (image_list_2 if image_opt is not None else [])
+
+        return (image_batch, all_images_list, dataset)
+
 class LF_MultipleImageResizeForWeb:
     @classmethod
     def INPUT_TYPES(cls):
@@ -439,6 +507,7 @@ class LF_ResizeImageToSquare:
 NODE_CLASS_MAPPINGS = {
     "LF_BlurImages": LF_BlurImages,
     "LF_ClarityEffect": LF_ClarityEffect,
+    "LF_CompareImages": LF_CompareImages,
     "LF_MultipleImageResizeForWeb": LF_MultipleImageResizeForWeb,
     "LF_ResizeImageToDimension": LF_ResizeImageToDimension,
     "LF_ResizeImageToSquare": LF_ResizeImageToSquare,
@@ -447,6 +516,7 @@ NODE_CLASS_MAPPINGS = {
 NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_BlurImages": "Blur images",
     "LF_ClarityEffect": "Clarity effect (filter)",
+    "LF_CompareImages": "Compare images",
     "LF_MultipleImageResizeForWeb": "Multiple image resize for Web",
     "LF_ResizeImageToDimension": "Resize image to dimension",
     "LF_ResizeImageToSquare": "Resize image to square",
