@@ -3,6 +3,8 @@ import random
 
 from server import PromptServer
 
+from ..utils.common import normalize_input_image
+
 class AnyType(str):
     def __ne__(self, __value: object) -> bool:
         return False
@@ -11,6 +13,58 @@ any = AnyType("*")
 
 category = "✨ LF Nodes/Logic"
 
+class LF_IsLandscape:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "image": ("IMAGE", {"tooltip": "Input image/images."})
+            },
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
+        }
+
+    CATEGORY = category
+    FUNCTION = "on_exec"
+    INPUT_IS_LIST = (True,)
+    OUTPUT_IS_LIST = (False, False, False, True, True, True)
+    RETURN_NAMES = ("is_landscape_first", "height_first", "width_first", 
+                    "is_landscape_list", "heights_list", "widths_list")
+    RETURN_TYPES = ("BOOLEAN", "INT", "INT", "BOOLEAN", "INT", "INT")
+
+    def on_exec(self, node_id, image):
+        nodes = []
+        dataset = {"nodes": nodes}
+        image_list = normalize_input_image(image)
+
+        heights_list = []
+        widths_list = []
+        is_landscape_list = []
+
+        counter = 0
+
+        for img in image_list:
+            counter += 1
+            _, height, width, _ = img.shape
+            heights_list.append(height)
+            widths_list.append(width)
+            is_landscape_list.append(width >= height)
+            nodes.append({"id": counter, "value": f"Image {counter}: {str(width >= height)}"})
+
+        height_first = heights_list[0]
+        width_first = widths_list[0]
+        is_landscape_first = is_landscape_list[0]
+
+        PromptServer.instance.send_sync("lf-islandscape", {
+            "node": node_id, 
+            "dataset": dataset,
+        })
+
+
+        return (is_landscape_first, height_first, width_first, 
+                is_landscape_list, heights_list, widths_list)
+    
 class LF_MathOperation:
     @classmethod
     def INPUT_TYPES(cls):
@@ -298,6 +352,7 @@ class LF_SwitchString:
         return (on_true if boolean else on_false,)
     
 NODE_CLASS_MAPPINGS = {
+    "LF_IsLandscape": LF_IsLandscape,
     "LF_MathOperation": LF_MathOperation,
     "LF_ResolutionSwitcher": LF_ResolutionSwitcher,
     "LF_SwitchFloat": LF_SwitchFloat,
@@ -307,6 +362,7 @@ NODE_CLASS_MAPPINGS = {
     "LF_SwitchString": LF_SwitchString,
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
+    "LF_IsLandscape": "Is image in landscape res.?",
     "LF_MathOperation": "Math operation",
     "LF_ResolutionSwitcher": "Resolution switcher",
     "LF_SwitchFloat": "Switch Float",

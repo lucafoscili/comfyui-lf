@@ -3,6 +3,7 @@ import io
 from PIL import Image, ImageFilter
 from server import PromptServer
 
+from ..utils.common import normalize_input_image, normalize_list_to_value, normalize_output_image
 from ..utils.image import *
 
 category = "✨ LF Nodes/Conversion"
@@ -82,24 +83,18 @@ class LF_ClarityEffect:
             "hidden": {"node_id": "UNIQUE_ID"}
         }
 
-    CATEGORY = "Image Processing"
+    CATEGORY = category
     FUNCTION = "on_exec"
-    RETURN_NAMES = ("image",)
-    RETURN_TYPES = ("IMAGE",)
+    INPUT_IS_LIST = (True, False, False, False)
+    OUTPUT_IS_LIST = (False, True)
+    RETURN_NAMES = ("image","image")
+    RETURN_TYPES = ("IMAGE","IMAGE")
 
     def on_exec(self, node_id, image, clarity_strength: float, sharpen_amount: float, blur_kernel_size: int):
-        def normalize_input(image):
-            """
-            Converts a tensor or list input into a list of individual images.
-            """
-            if isinstance(image, torch.Tensor) and len(image.shape) == 4:
-                return [img for img in image]
-            elif isinstance(image, list):
-                return image
-            else:
-                return [image]
-        
-        image_list = normalize_input(image)
+        image_list = normalize_input_image(image)
+        clarity_strength = normalize_list_to_value(clarity_strength)
+        sharpen_amount = normalize_list_to_value(sharpen_amount)
+        blur_kernel_size = normalize_list_to_value(blur_kernel_size)
         
         processed_images = [clarity_effect(img, clarity_strength, sharpen_amount, blur_kernel_size) for img in image_list]
 
@@ -121,13 +116,10 @@ class LF_ClarityEffect:
             "node": node_id,
             "dataset": dataset,
         })
-
-        if len(processed_images) > 1:
-            processed_images = torch.stack(processed_images)
-        else:
-            processed_images = processed_images[0].unsqueeze(0)
         
-        return (processed_images,)
+        batch, list = normalize_output_image(processed_images)
+        
+        return (batch, list)
     
 class LF_CompareImages:
     @classmethod
@@ -152,19 +144,8 @@ class LF_CompareImages:
     RETURN_TYPES = ("IMAGE", "IMAGE", "JSON")
 
     def on_exec(self, node_id, image, image_opt=None):
-        def normalize_input(image):
-            if isinstance(image, torch.Tensor):
-                if len(image.shape) == 4:
-                    return [img for img in image]
-                elif len(image.shape) == 3:
-                    return [image.unsqueeze(0)]
-            elif isinstance(image, list):
-                return image
-            else:
-                return [image.unsqueeze(0)] if isinstance(image, torch.Tensor) else [image]
-        
-        image_list_1 = normalize_input(image)
-        image_list_2 = normalize_input(image_opt) if image_opt is not None else image_list_1
+        image_list_1 = normalize_input_image(image)
+        image_list_2 = normalize_input_image(image_opt) if image_opt is not None else image_list_1
 
         if len(image_list_1) != len(image_list_2):
             raise ValueError("Image lists must have the same length if both inputs are provided.")
