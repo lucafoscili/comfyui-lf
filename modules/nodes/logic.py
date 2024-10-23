@@ -29,7 +29,7 @@ class LF_IsLandscape:
     FUNCTION = "on_exec"
     INPUT_IS_LIST = (True,)
     OUTPUT_IS_LIST = (False, False, False, True, True, True)
-    RETURN_NAMES = ("is_landscape_first", "height_first", "width_first", 
+    RETURN_NAMES = ("is_landscape", "height", "width", 
                     "is_landscape_list", "heights_list", "widths_list")
     RETURN_TYPES = ("BOOLEAN", "INT", "INT", "BOOLEAN", "INT", "INT")
 
@@ -60,7 +60,6 @@ class LF_IsLandscape:
             "node": node_id, 
             "dataset": dataset,
         })
-
 
         return (is_landscape_first, height_first, width_first, 
                 is_landscape_list, heights_list, widths_list)

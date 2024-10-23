@@ -117,9 +117,9 @@ class LF_ClarityEffect:
             "dataset": dataset,
         })
         
-        batch, list = normalize_output_image(processed_images)
+        batch_list, list = normalize_output_image(processed_images)
         
-        return (batch, list)
+        return (batch_list[0], list)
     
 class LF_CompareImages:
     @classmethod

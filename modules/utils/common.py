@@ -71,10 +71,10 @@ def normalize_output_image(image_input):
     """
     Normalize the given image input into both batch and list formats.
 
-    This function ensures that the image input, which can be a list of tensors, 
-    a single tensor, or a list of batches, is handled correctly and outputs:
-    - A list of individual image tensors, each in the [1, H, W, C] format (with batch size of 1).
-    - A properly formatted batch tensor with shape [B, H, W, C].
+    This function handles images of varying resolutions by grouping them into batches
+    based on their [H, W] dimensions. It outputs:
+    - A list of batch tensors with shape [B, H, W, C], one for each unique resolution.
+    - A list of individual image tensors with shape [1, H, W, C].
 
     Parameters:
     image_input (torch.Tensor or list): The image input to be normalized. It can be:
@@ -84,16 +84,15 @@ def normalize_output_image(image_input):
 
     Returns:
     tuple: A tuple containing:
-        - batch_tensor (torch.Tensor): A tensor with shape [B, H, W, C] (batch format)
+        - batch_list (list): A list of tensors, each with shape [B, H, W, C] for a unique resolution.
         - image_list (list): A list of tensors with shape [1, H, W, C], preserving the batch dimension.
     """
     if isinstance(image_input, list):
-        # Flatten list if it contains batches of images
         image_list = []
         for img in image_input:
             if isinstance(img, torch.Tensor):
                 if len(img.shape) == 4:  # Handle batch format [B, H, W, C]
-                    image_list.extend([i.unsqueeze(0) if len(i.shape) == 3 else i for i in img])  # Keep [1, H, W, C]
+                    image_list.extend([i.unsqueeze(0) if len(i.shape) == 3 else i for i in img])
                 elif len(img.shape) == 3:  # Single image case, add batch dimension
                     image_list.append(img.unsqueeze(0))  # Convert to [1, H, W, C]
             else:
@@ -108,10 +107,20 @@ def normalize_output_image(image_input):
     else:
         raise TypeError("Unsupported input type for image normalization.")
 
-    # Create batch tensor: [B, H, W, C]
-    if len(image_list) > 1:
-        batch_tensor = torch.cat(image_list, dim=0)  # Concatenate into batch format [B, H, W, C]
-    else:
-        batch_tensor = image_list[0]  # Already has [1, H, W, C] format
+    # Group images by resolution
+    resolution_groups = {}
+    for img in image_list:
+        h, w = img.shape[1:3]  # Extract height and width
+        if (h, w) not in resolution_groups:
+            resolution_groups[(h, w)] = []
+        resolution_groups[(h, w)].append(img)
 
-    return batch_tensor, image_list
+    # Create separate batch tensors for each unique resolution
+    batch_list = []
+    for resolution, imgs in resolution_groups.items():
+        if len(imgs) > 1:
+            batch_list.append(torch.cat(imgs, dim=0))  # Create batch [B, H, W, C]
+        else:
+            batch_list.append(imgs[0])  # Single image in this resolution, keep as is
+
+    return batch_list, image_list
