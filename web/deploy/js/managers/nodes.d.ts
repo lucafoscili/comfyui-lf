@@ -19,6 +19,7 @@ export declare class LFNodes {
         LF_ImageHistogram: (event: CustomEvent<import("../types/events").ImageHistogramPayload>, addW: BaseWidgetCallback) => void;
         LF_ImageListFromJSON: (event: CustomEvent<import("../types/events").ImageListFromJSONPayload>, addW: BaseWidgetCallback) => void;
         LF_Integer: (event: CustomEvent<import("../types/events").IntegerPayload>, addW: BaseWidgetCallback) => void;
+        LF_IsLandscape: (event: CustomEvent<import("../types/events").IsLandscapePayload>, addW: BaseWidgetCallback) => void;
         LF_KeywordCounter: (event: CustomEvent<import("../types/events").KeywordCounterPayload>, addW: BaseWidgetCallback) => void;
         LF_LoadFileOnce: (event: CustomEvent<import("../types/events").LoadFileOncePayload>, addW: BaseWidgetCallback) => void;
         LF_LoadImages: (event: CustomEvent<import("../types/events").LoadImagesPayload>, addW: BaseWidgetCallback) => void;
@@ -71,6 +72,7 @@ export declare class LFNodes {
         LF_ImageHistogram: (setW: import("../types/widgets").TabBarChartWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_ImageListFromJSON: (setW: import("../types/widgets").ImagePreviewWidgetSetter) => void;
         LF_Integer: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
+        LF_IsLandscape: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_KeywordCounter: (setW: import("../types/widgets").CountBarChartWidgetSetter, addW: BaseWidgetCallback) => void;
         LF_KeywordToggleFromJSON: (setW: import("../types/widgets").ChipWidgetSetter) => void;
         LF_LLMChat: (setW: import("../types/widgets").ChatWidgetSetter, addW: BaseWidgetCallback) => void;
@@ -127,6 +129,7 @@ export declare class LFNodes {
             LF_ImageHistogram: (event: CustomEvent<import("../types/events").ImageHistogramPayload>, addW: BaseWidgetCallback) => void;
             LF_ImageListFromJSON: (event: CustomEvent<import("../types/events").ImageListFromJSONPayload>, addW: BaseWidgetCallback) => void;
             LF_Integer: (event: CustomEvent<import("../types/events").IntegerPayload>, addW: BaseWidgetCallback) => void;
+            LF_IsLandscape: (event: CustomEvent<import("../types/events").IsLandscapePayload>, addW: BaseWidgetCallback) => void;
             LF_KeywordCounter: (event: CustomEvent<import("../types/events").KeywordCounterPayload>, addW: BaseWidgetCallback) => void;
             LF_LoadFileOnce: (event: CustomEvent<import("../types/events").LoadFileOncePayload>, addW: BaseWidgetCallback) => void;
             LF_LoadImages: (event: CustomEvent<import("../types/events").LoadImagesPayload>, addW: BaseWidgetCallback) => void;
@@ -179,6 +182,7 @@ export declare class LFNodes {
             LF_ImageHistogram: (setW: import("../types/widgets").TabBarChartWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_ImageListFromJSON: (setW: import("../types/widgets").ImagePreviewWidgetSetter) => void;
             LF_Integer: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
+            LF_IsLandscape: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_KeywordCounter: (setW: import("../types/widgets").CountBarChartWidgetSetter, addW: BaseWidgetCallback) => void;
             LF_KeywordToggleFromJSON: (setW: import("../types/widgets").ChipWidgetSetter) => void;
             LF_LLMChat: (setW: import("../types/widgets").ChatWidgetSetter, addW: BaseWidgetCallback) => void;

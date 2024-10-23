@@ -54,6 +54,7 @@ import { sortJsonKeysFactory } from '../nodes/sortJsonKeys';
 import { shuffleJsonKeysFactory } from '../nodes/shuffleJsonKeys';
 import { clarityEffectFactory } from '../nodes/clarityEffect';
 import { compareImagesFactory } from '../nodes/compareImages';
+import { isLandscapeFactory } from '../nodes/isLandscape';
 
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
@@ -79,6 +80,7 @@ export class LFNodes {
     [NodeName.imageHistogram]: imageHistogramFactory.eventHandler,
     [NodeName.imageListFromJSON]: imageListFromJsonFactory.eventHandler,
     [NodeName.integer]: integerFactory.eventHandler,
+    [NodeName.isLandscape]: isLandscapeFactory.eventHandler,
     [NodeName.keywordCounter]: keywordCounterFactory.eventHandler,
     [NodeName.loadFileOnce]: loadFileOnceFactory.eventHandler,
     [NodeName.loadImages]: loadImagesFactory.eventHandler,
@@ -132,6 +134,7 @@ export class LFNodes {
     [NodeName.imageHistogram]: imageHistogramFactory.register,
     [NodeName.imageListFromJSON]: imageListFromJsonFactory.register,
     [NodeName.integer]: integerFactory.register,
+    [NodeName.isLandscape]: isLandscapeFactory.register,
     [NodeName.keywordCounter]: keywordCounterFactory.register,
     [NodeName.keywordToggleFromJson]: keywordToggleFromJsonFactory.register,
     [NodeName.llmChat]: llmChatFactory.register,

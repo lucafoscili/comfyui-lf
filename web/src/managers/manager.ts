@@ -63,6 +63,7 @@ import {
   ShuffleJSONKeysPayload,
   ClarityEffectPayload,
   CompareImagesPayload,
+  IsLandscapePayload,
 } from '../types/events.js';
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
 import { LFTooltip } from './tooltip';
@@ -652,6 +653,13 @@ export class LFManager {
     );
     this.#APIS.event(EventName.integer, (e: CustomEvent<IntegerPayload>) => {
       nodes.eventHandlers.LF_Integer(e, widgets.adders.KUL_HISTORY);
+    });
+    /*-------------------------------------------------------------------*/
+    /*                   I n i t   I s L a n d s c a p e                 */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_IsLandscape(widgets.setters.KUL_TREE, widgets.adders.KUL_TREE);
+    this.#APIS.event(EventName.isLandscape, (e: CustomEvent<IsLandscapePayload>) => {
+      nodes.eventHandlers.LF_IsLandscape(e, widgets.adders.KUL_TREE);
     });
     /*-------------------------------------------------------------------*/
     /*               I n i t   K e y w o r d C o u n t e r               */

@@ -3,15 +3,18 @@ import { LogSeverity } from '../types/manager.js';
 import { NodeName } from '../types/nodes.js';
 import { CustomWidgetName } from '../types/widgets.js';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common.js';
-const NAME = NodeName.resizeImageByEdge;
-export const resizeImageByEdgeFactory = {
+const NAME = NodeName.isLandscape;
+export const isLandscapeFactory = {
     eventHandler: (event, addW) => {
-        const name = EventName.resizeimageByEdge;
+        const name = EventName.isLandscape;
         getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
         const payload = event.detail;
         const node = getApiRoutes().getNodeById(payload.id);
         if (node) {
             const widget = getCustomWidget(node, CustomWidgetName.tree, addW);
+            const comp = widget.options.getComp();
+            comp.kulAccordionLayout = true;
+            comp.kulSelectable = false;
             widget.options.setValue(JSON.stringify(event.detail.dataset));
             getApiRoutes().redraw();
         }

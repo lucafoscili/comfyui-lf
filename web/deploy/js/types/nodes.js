@@ -22,6 +22,7 @@ export var NodeName;
     NodeName["imageListFromJSON"] = "LF_ImageListFromJSON";
     NodeName["imageHistogram"] = "LF_ImageHistogram";
     NodeName["integer"] = "LF_Integer";
+    NodeName["isLandscape"] = "LF_IsLandscape";
     NodeName["keywordCounter"] = "LF_KeywordCounter";
     NodeName["keywordToggleFromJson"] = "LF_KeywordToggleFromJSON";
     NodeName["llmChat"] = "LF_LLMChat";

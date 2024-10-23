@@ -500,6 +500,13 @@ export class LFManager {
             nodes.eventHandlers.LF_Integer(e, widgets.adders.KUL_HISTORY);
         });
         /*-------------------------------------------------------------------*/
+        /*                   I n i t   I s L a n d s c a p e                 */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_IsLandscape(widgets.setters.KUL_TREE, widgets.adders.KUL_TREE);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.isLandscape, (e) => {
+            nodes.eventHandlers.LF_IsLandscape(e, widgets.adders.KUL_TREE);
+        });
+        /*-------------------------------------------------------------------*/
         /*               I n i t   K e y w o r d C o u n t e r               */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_KeywordCounter(widgets.setters.KUL_COUNT_BAR_CHART, widgets.adders.KUL_COUNT_BAR_CHART);

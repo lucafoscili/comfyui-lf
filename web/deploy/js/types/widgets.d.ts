@@ -326,7 +326,8 @@ export interface TreeWidgetOptions {
 export declare type TreeWidgetSetter = () => {
     [CustomWidgetName.tree]: BaseWidgetCallback;
 };
-export type TreeWidgetValue = string | KulDataDataset;
+export type TreeWidgetValuetDeserializedValue = KulDataDataset;
+export type TreeWidgetValue = string;
 export interface UploadWidget extends Widget {
     options: UploadWidgetOptions;
     type: [CustomWidgetName.upload];

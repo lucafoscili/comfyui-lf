@@ -1,21 +1,23 @@
-import { EventName, UrandomSeedGeneratorPayload } from '../types/events';
+import { EventName, IsLandscapePayload } from '../types/events';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import { CustomWidgetName, TreeWidgetSetter, type BaseWidgetCallback } from '../types/widgets';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 
-const NAME = NodeName.urandomSeedGenerator;
+const NAME = NodeName.isLandscape;
 
-export const uRandomSeedGeneratorFactory = {
-  eventHandler: (event: CustomEvent<UrandomSeedGeneratorPayload>, addW: BaseWidgetCallback) => {
-    const name = EventName.urandomSeedGenerator;
+export const isLandscapeFactory = {
+  eventHandler: (event: CustomEvent<IsLandscapePayload>, addW: BaseWidgetCallback) => {
+    const name = EventName.isLandscape;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
     const payload = event.detail;
-    const isHistoryEnabled = payload.isHistoryEnabled;
     const node = getApiRoutes().getNodeById(payload.id);
-    if (isHistoryEnabled && node) {
+    if (node) {
       const widget = getCustomWidget(node, CustomWidgetName.tree, addW);
+      const comp = widget.options.getComp();
+      comp.kulAccordionLayout = true;
+      comp.kulSelectable = false;
       widget.options.setValue(JSON.stringify(event.detail.dataset));
       getApiRoutes().redraw();
     }

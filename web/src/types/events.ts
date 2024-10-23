@@ -28,6 +28,7 @@ export enum EventName {
   float = 'lf-float',
   imageListFromJSON = 'lf-imagelistfromjson',
   imageHistogram = 'lf-imagehistogram',
+  isLandscape = 'lf-islandscape',
   integer = 'lf-integer',
   keywordCounter = 'lf-keywordcounter',
   loadFileOnce = 'lf-loadfileonce',
@@ -75,6 +76,7 @@ export type EventPayload =
   | ImageListFromJSONPayload
   | ImageHistogramPayload
   | IntegerPayload
+  | IsLandscapePayload
   | KeywordCounterPayload
   | LoadImagesPayload
   | LoraAndEmbeddingSelectorPayload
@@ -257,6 +259,14 @@ export interface ImageHistogramPayload extends BaseEventPayload {
 export interface IntegerPayload extends BaseEventPayload {
   isHistoryEnabled: boolean;
   value: number;
+}
+
+/*-------------------------------------------------------------------*/
+/*          I s L a n d s c a p e   D e c l a r a t i o n s          */
+/*-------------------------------------------------------------------*/
+
+export interface IsLandscapePayload extends BaseEventPayload {
+  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/

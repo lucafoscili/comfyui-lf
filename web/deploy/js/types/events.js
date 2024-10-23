@@ -18,6 +18,7 @@ export var EventName;
     EventName["float"] = "lf-float";
     EventName["imageListFromJSON"] = "lf-imagelistfromjson";
     EventName["imageHistogram"] = "lf-imagehistogram";
+    EventName["isLandscape"] = "lf-islandscape";
     EventName["integer"] = "lf-integer";
     EventName["keywordCounter"] = "lf-keywordcounter";
     EventName["loadFileOnce"] = "lf-loadfileonce";
