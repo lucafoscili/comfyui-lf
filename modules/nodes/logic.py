@@ -50,7 +50,9 @@ class LF_IsLandscape:
             heights_list.append(height)
             widths_list.append(width)
             is_landscape_list.append(width >= height)
-            nodes.append({"id": counter, "value": f"Image {counter}: {str(width >= height)}"})
+            nodes.append({"icon": "check" if width >= height else "clear",
+                          "id": counter, 
+                          "value": f"Image {counter}: {str(width >= height)}"})
 
         height_first = heights_list[0]
         width_first = widths_list[0]
