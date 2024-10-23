@@ -7,6 +7,40 @@ import torch
 from PIL import Image
 from torchvision.transforms import InterpolationMode, functional
 
+def base64_to_tensor(base64_str):
+    """
+    Convert a base64-encoded image string to a PyTorch tensor in [B, H, W, C] format.
+    
+    Args:
+        base64_str (str): The base64 encoded image string.
+    
+    Returns:
+        torch.Tensor: A PyTorch tensor with shape [B, H, W, C], where B is the batch size.
+    """
+    # Decode the base64 string back to binary image data
+    image_data = base64.b64decode(base64_str)
+    
+    # Create a BytesIO buffer and load it as an image
+    buffer = io.BytesIO(image_data)
+    pil_img = Image.open(buffer)
+
+    # Convert the PIL image to a numpy array (scale values between 0 and 1)
+    img_array = np.asarray(pil_img) / 255.0
+
+    # Convert the numpy array to a PyTorch tensor (H, W, C format)
+    img_tensor = torch.from_numpy(img_array).float()
+
+    # If the image is grayscale, expand it to 3 channels to match RGB format
+    if img_tensor.ndim == 2:  # If the image has no color channels
+        img_tensor = img_tensor.unsqueeze(-1).repeat(1, 1, 3)  # Add channel dimension and repeat to get 3 channels
+    elif img_tensor.shape[-1] == 1:  # If it has a single color channel
+        img_tensor = img_tensor.repeat(1, 1, 3)  # Repeat the channel dimension 3 times
+
+    # Add batch dimension at the start: [B=1, H, W, C]
+    img_tensor = img_tensor.unsqueeze(0)
+    
+    return img_tensor
+
 def clarity_effect(image_tensor, clarity_strength, sharpen_amount, blur_kernel_size):
     """
     Apply a clarity effect followed by sharpening on a given image tensor or a batch of image tensors.

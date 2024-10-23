@@ -6,6 +6,8 @@ import requests
 from aiohttp import web
 from folder_paths import get_filename_list, get_full_path, user_directory
 
+from ..constants.common import base64_web_prefix
+
 from server import PromptServer
 
 backup_folder_name = "Backups"
@@ -76,7 +78,7 @@ async def save_model_info(request):
             try:
                 image_data = requests.get(image_url).content
                 image_base64 =  base64.b64encode(image_data).decode('utf-8')
-                metadata_json["nodes"][0]["cells"]["kulImage"]["value"] = f"data:image/png;charset=utf-8;base64,{image_base64}"
+                metadata_json["nodes"][0]["cells"]["kulImage"]["value"] = f"{base64_web_prefix}{image_base64}"
             except Exception as e:
                 return web.Response(status=500, text=f"Error fetching image: {str(e)}")
 

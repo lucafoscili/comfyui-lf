@@ -15,6 +15,7 @@ from PIL import Image
 from PIL.PngImagePlugin import PngInfo
 from server import PromptServer
 
+from ..utils.common import normalize_output_image
 from ..utils.io import *
 
 category = "✨ LF Nodes/IO Operations"
@@ -91,9 +92,9 @@ class LF_LoadImages:
 
     CATEGORY = category
     FUNCTION = "on_exec"
-    OUTPUT_IS_LIST = (True, True, True, False, False, False, False)
-    RETURN_NAMES = ("images", "names", "creation_dates", "nr", "selected_image", "selected_index", "selected_name")
-    RETURN_TYPES = ("IMAGE", "STRING",  "STRING", "INT", "IMAGE", "INT", "STRING")
+    OUTPUT_IS_LIST = (False, True, True, True, False, False, False, False)
+    RETURN_NAMES = ("images", "images_list", "names", "creation_dates", "nr", "selected_image", "selected_index", "selected_name")
+    RETURN_TYPES = ("IMAGE", "IMAGE", "STRING",  "STRING", "INT", "IMAGE", "INT", "STRING")
 
     def on_exec(self, dir, subdir, strip_ext, load_cap, dummy_output, node_id, KUL_IMAGE_PREVIEW_B64):
         count = 0
@@ -170,7 +171,9 @@ class LF_LoadImages:
             "selectedName": selected_name
         })
 
-        return (images, file_names, output_creation_dates, count, selected_image, selected_index, selected_name)
+        batch, list = normalize_output_image(images)
+
+        return (batch[0], list, file_names, output_creation_dates, count, selected_image, selected_index, selected_name)
 
 class LF_LoadLocalJSON:
     @classmethod

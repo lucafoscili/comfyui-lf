@@ -6,6 +6,7 @@ import comfy.sd
 import comfy.utils
 from comfy.samplers import KSampler
 
+from ..constants.common import base64_web_prefix
 from ..utils.configuration import *
 from ..utils.image import tensor_to_base64
 from ..utils.selector import prepare_model_dataset, process_model, send_multi_selector_message
@@ -383,7 +384,7 @@ class LF_Notify:
         title_to_send = title[0] if isinstance(title, list) else title
         if image:
             image = image[0] if isinstance(image, list) else image
-            image_to_send = "data:image/webp;base64," + tensor_to_base64(image)
+            image_to_send = base64_web_prefix + tensor_to_base64(image)
         else:
             image_to_send = None
         if tag:

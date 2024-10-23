@@ -38,7 +38,6 @@ SCHEDULER_MAP = {
 def clean_prompt(prompt):
     return re.sub(r'(embedding:)?(.*?)(\.pt|\.pth|\.sft|\.safetensors)?', r'\2', prompt).strip()
 
-
 def cleanse_lora_tag(lora_tag: str, separator: str):
     """
     Cleanse the lora tag by removing unnecessary parts and extracting keywords.
@@ -48,43 +47,36 @@ def cleanse_lora_tag(lora_tag: str, separator: str):
         separator (str): The separator used in the file name.
 
     Returns:
-        str: The cleaned up string with extracted keywords.
+        str: The cleaned-up string with extracted keywords.
     """
     # Remove the <lora: and last '>': part to get the safetensors file name and weight
     safetensors_info = lora_tag[len('<lora:'):][:-1]
     
-    # Split the safetensors_info by ':' to separate the file name and weight
+    # Split the safetensors_info by ':' to separate the file name and weight (if any)
     file_name_with_weight = safetensors_info.split(':')
-    if len(file_name_with_weight) > 1:
-        file_name, _ = file_name_with_weight
-    else:
-        file_name = file_name_with_weight[0]
+    
+    # Handle cases with or without weight information
+    file_name = file_name_with_weight[0]  # Always take the first part as the file name
     
     # Split the file name by '\\' to separate the file name and the folder containing it
     file_name_with_folder = file_name.split('\\')
-    if len(file_name_with_folder) > 1:
-        _, file_name = file_name_with_folder
-    else:
-        file_name = file_name_with_folder[0]
+    file_name = file_name_with_folder[-1]  # Always take the last part as the file name
     
     # Split the file name by '.safetensors' to separate the file name and the extension
     file_name_with_extension = file_name.split('.safetensors')
-    if len(file_name_with_extension) > 1:
-        file_name, _ = file_name_with_extension
-    else:
-        file_name = file_name_with_extension[0]
+    file_name = file_name_with_extension[0]  # Take the part before '.safetensors'
+    
     # Extract keywords from the file name
-    if str(file_name).find(separator) > 1:
+    if separator in file_name:
         keywords = ', '.join(file_name.split(separator))
-    else: 
+    else:
         keywords = file_name
+    
     # Join keywords into a string to replace the lora tag
-    # Assuming keywords can be a single string or a list of strings
     if isinstance(keywords, str):
-    # If keywords is a single string, keep it as is
         keyword_str = keywords
     elif isinstance(keywords, list):
-        keyword_str = ''.join(keywords[:-1]) + ', ' + keywords[-1]
+        keyword_str = ', '.join(keywords[:-1]) + ', ' + keywords[-1]
     else:
         raise ValueError("keywords must be a string or a list of strings")
     

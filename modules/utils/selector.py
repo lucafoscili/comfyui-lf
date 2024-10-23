@@ -7,8 +7,9 @@ from PIL import Image
 
 from server import PromptServer
 
+from ..constants.common import base64_web_prefix
 from ..utils.configuration import get_sha256
-from ..utils.image import pil_to_tensor, tensor_to_base64
+from ..utils.image import base64_to_tensor, pil_to_tensor, tensor_to_base64
 
 def filter_list(filter, list):
     normalized_filter = filter.replace('\\', '/')
@@ -46,7 +47,7 @@ def prepare_model_dataset (model_name, model_hash, model_base64, model_path):
                             "kulImage": {
                                 "kulStyle": "img {object-fit: cover;}",
                                 "shape": "image",
-                                "value": "data:image/webp;base64," + model_base64 if model_path else "broken_image"
+                                "value": base64_web_prefix + model_base64 if model_base64 and model_path else "broken_image"
                             }
                         },
                         "id": model_name
@@ -82,15 +83,23 @@ def process_model(model_type, model_name, folder):
         model_hash = "Unknown"
         print(f"Error calculating hash for {model_type}: {e}")
 
+    model_base64 = None
+    model_cover = None
     model_image_path = find_checkpoint_image(model_path)
 
-    if model_image_path:
+    if saved_info:
+        try:
+            kul_image_value = saved_info['nodes'][0]['cells']['kulImage']['value']
+            if kul_image_value.startswith(base64_web_prefix):
+                model_base64 = kul_image_value.replace(base64_web_prefix, "")
+                model_cover = base64_to_tensor(model_base64)
+        except (KeyError, IndexError):
+            print("kulImage not found in saved_info, using defaults.")
+
+    if model_image_path and model_cover == None:
         pil_image = Image.open(model_image_path)
         model_cover = pil_to_tensor(pil_image)
         model_base64 = tensor_to_base64(model_cover)
-    else:
-        model_base64 = "None"
-        model_cover = None
 
     return {
         "model_path": model_path,

@@ -3,12 +3,11 @@ import io
 from PIL import Image, ImageFilter
 from server import PromptServer
 
+from ..constants.common import base64_web_prefix
 from ..utils.common import normalize_input_image, normalize_list_to_value, normalize_output_image
 from ..utils.image import *
 
-category = "✨ LF Nodes/Conversion"
-
-b64_prefix = "data:image/png;charset=utf-8;base64,"
+category = "✨ LF Nodes/Image"
 
 class LF_BlurImages:
     @classmethod
@@ -105,8 +104,8 @@ class LF_ClarityEffect:
 
             dataset["nodes"].append({
                 "cells": {
-                    "kulImage": {"shape": "image", "kulValue": f"{b64_prefix}{b64_source}", "value": ''},
-                    "kulImage_after": {"shape": "image", "kulValue": f"{b64_prefix}{b64_target}", "value": ''}
+                    "kulImage": {"shape": "image", "kulValue": f"{base64_web_prefix}{b64_source}", "value": ''},
+                    "kulImage_after": {"shape": "image", "kulValue": f"{base64_web_prefix}{b64_target}", "value": ''}
                 },
                 "id": f"image_{i+1}",
                 "value": f"Comparison {i+1}"
@@ -140,6 +139,7 @@ class LF_CompareImages:
     FUNCTION = "on_exec"
     INPUT_IS_LIST = (True, True)
     OUTPUT_IS_LIST = (False, True, False)
+    OUTPUT_NODE = True
     RETURN_NAMES = ("image", "all_images", "dataset")
     RETURN_TYPES = ("IMAGE", "IMAGE", "JSON")
 
@@ -155,7 +155,7 @@ class LF_CompareImages:
             b64_img1 = tensor_to_base64(img1)
             dataset_entry = {
                 "cells": {
-                    "kulImage_1": {"shape": "image", "kulValue": f"{b64_prefix}{b64_img1}", "value": ''}
+                    "kulImage_1": {"shape": "image", "kulValue": f"{base64_web_prefix}{b64_img1}", "value": ''}
                 },
                 "id": f"comparison_{i+1}",
                 "value": f"Comparison {i+1}"
@@ -163,7 +163,7 @@ class LF_CompareImages:
 
             if image_opt is not None:
                 b64_img2 = tensor_to_base64(image_list_2[i])
-                dataset_entry["cells"]["kulImage_2"] = {"shape": "image", "kulValue": f"{b64_prefix}{b64_img2}", "value": ''}
+                dataset_entry["cells"]["kulImage_2"] = {"shape": "image", "kulValue": f"{base64_web_prefix}{b64_img2}", "value": ''}
 
             dataset["nodes"].append(dataset_entry)
 
@@ -172,9 +172,9 @@ class LF_CompareImages:
             "dataset": dataset,
         })
 
-        image_batch = torch.cat(image_list_1, dim=0) if len(image_list_1) > 1 else image_list_1[0]
+        combined_images = image_list_1 + (image_list_2 if image_opt is not None else [])
 
-        all_images_list = image_list_1 + (image_list_2 if image_opt is not None else [])
+        image_batch, all_images_list = normalize_output_image(combined_images)
 
         return (image_batch, all_images_list, dataset)
 
@@ -191,7 +191,6 @@ class LF_MultipleImageResizeForWeb:
 
     CATEGORY = category
     FUNCTION = "on_exec"
-    INPUT_IS_LIST = (True, True,)
     OUTPUT_IS_LIST = (True, True, True, False,)
     RETURN_NAMES = ("images", "names", "names_with_dir", "json_data",)
     RETURN_TYPES = ("IMAGE", "STRING", "STRING", "JSON",)
