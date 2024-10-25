@@ -8,17 +8,18 @@ import piexif
 import requests
 import torch
 
-import comfy.utils
 from comfy.cli_args import args
 from datetime import datetime
 from PIL import Image
 from PIL.PngImagePlugin import PngInfo
 from server import PromptServer
 
-from ..utils.common import normalize_output_image
+from ..constants.common import *
+from ..utils.common import *
+from ..utils.image import tensor_to_numpy
 from ..utils.io import *
 
-category = "✨ LF Nodes/IO Operations"
+CATEGORY = f"{CATEGORY_PREFIX}/IO Operations"
  
 class LF_LoadFileOnce:
     @classmethod
@@ -36,16 +37,22 @@ class LF_LoadFileOnce:
             } 
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
-    RETURN_NAMES = ("files", "names")
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    RETURN_NAMES = ("file", "name")
     RETURN_TYPES = ("*", "STRING")
 
-    def on_exec(self, node_id, dir, subdir, strip_ext, enable_history, history):
+    def on_exec(self, node_id:int , dir:str, subdir:str, strip_ext:bool, enable_history:bool, history:str):
+        dir = normalize_list_to_value(dir)
+        subdir = normalize_list_to_value(subdir)
+        strip_ext = normalize_list_to_value(strip_ext)
+        enable_history = normalize_list_to_value(enable_history)
+        history = normalize_list_to_value(history)
+
         previous_files = set()
         if history:
             try:
-                history_data = json.loads(history)
+                history_data:dict = json.loads(history)
                 previous_files = {entry['value'] for entry in history_data.get('nodes', [])}
             except (json.JSONDecodeError, KeyError):
                 pass
@@ -65,7 +72,7 @@ class LF_LoadFileOnce:
                     file = file_data
                     file_name = file_name_stripped
 
-        PromptServer.instance.send_sync("lf-loadfileonce", {
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}loadfileonce", {
             "node": node_id,
             "isHistoryEnabled": enable_history,
             "value": file_name,
@@ -78,11 +85,11 @@ class LF_LoadImages:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "dir": ("STRING", {"label": "Directory path", "tooltip": "Path to the directory containing the images to load."}),
-                "subdir": ("BOOLEAN", {"default": False, "label": "Load from subdir", "tooltip": "Indicates whether to also load images from subdirectories."}),
-                "strip_ext": ("BOOLEAN", {"default": True, "label": "Strip extension from name", "tooltip": "Whether to remove file extensions from filenames."}),
-                "load_cap": ("INT", {"default": 0, "label": "Maximum images to load, 0 to disable.", "tooltip": "Maximum number of images to load before stopping. Set 0 for an unlimited amount."}),
-                "dummy_output": ("BOOLEAN", {"default": False, "label": "Outputs a dummy image in tensor format when the list is empty", "tooltip": "Flag indicating whether to output a dummy image tensor and string when the list is empty."}),
+                "dir": ("STRING", {"default":"", "tooltip": "Path to the directory containing the images to load."}),
+                "subdir": ("BOOLEAN", {"default": False, "tooltip": "Indicates whether to also load images from subdirectories."}),
+                "strip_ext": ("BOOLEAN", {"default": True, "tooltip": "Whether to remove file extensions from filenames."}),
+                "load_cap": ("INT", {"default": 0, "tooltip": "Maximum number of images to load before stopping. Set 0 for an unlimited amount."}),
+                "dummy_output": ("BOOLEAN", {"default": False, "tooltip": "Flag indicating whether to output a dummy image tensor and string when the list is empty."}),
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID",
@@ -90,13 +97,20 @@ class LF_LoadImages:
             } 
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
     OUTPUT_IS_LIST = (False, True, True, True, False, False, False, False)
-    RETURN_NAMES = ("images", "images_list", "names", "creation_dates", "nr", "selected_image", "selected_index", "selected_name")
-    RETURN_TYPES = ("IMAGE", "IMAGE", "STRING",  "STRING", "INT", "IMAGE", "INT", "STRING")
+    RETURN_NAMES = ("image", "image_list", "name", "creation_date", "nr", "selected_image", "selected_index", "selected_name")
+    RETURN_TYPES = ("IMAGE", "IMAGE", "STRING", "STRING", "INT", "IMAGE", "INT", "STRING")
 
-    def on_exec(self, dir, subdir, strip_ext, load_cap, dummy_output, node_id, KUL_IMAGE_PREVIEW_B64):
+    def on_exec(self, node_id:int, dir:str, subdir:bool, strip_ext:bool, load_cap:int, dummy_output:bool, KUL_IMAGE_PREVIEW_B64:dict):
+        dir = normalize_list_to_value(dir)
+        subdir = normalize_list_to_value(subdir)
+        strip_ext = normalize_list_to_value(strip_ext)
+        load_cap = normalize_list_to_value(load_cap)
+        dummy_output = normalize_list_to_value(dummy_output)
+        KUL_IMAGE_PREVIEW_B64 = normalize_input_json(KUL_IMAGE_PREVIEW_B64)
+
         count = 0
         file_names = []
         images_buffer = []
@@ -109,13 +123,7 @@ class LF_LoadImages:
             json_data = json.loads(json_string)
             selected_index = json_data.get("selectedIndex", None)
             selected_name = json_data.get("selectedName", None)
-        except json.JSONDecodeError:
-            selected_index = None
-            selected_name = None
-        except KeyError:
-            selected_index = None
-            selected_name = None
-        except Exception as e:
+        except Exception:
             selected_index = None
             selected_name = None
 
@@ -163,7 +171,7 @@ class LF_LoadImages:
         if dummy_output and images and selected_image is None:
             selected_image = create_dummy_image_tensor()
 
-        PromptServer.instance.send_sync("lf-loadimages", {
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}loadimages", {
             "node": node_id, 
             "fileNames": file_names,
             "images": images_buffer,
@@ -171,9 +179,9 @@ class LF_LoadImages:
             "selectedName": selected_name
         })
 
-        batch, list = normalize_output_image(images)
+        image_batch, image_list = normalize_output_image(images)
 
-        return (batch[0], list, file_names, output_creation_dates, count, selected_image, selected_index, selected_name)
+        return (image_batch[0], image_list, file_names, output_creation_dates, count, selected_image, selected_index, selected_name)
 
 class LF_LoadLocalJSON:
     @classmethod
@@ -184,13 +192,15 @@ class LF_LoadLocalJSON:
             },
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
     RETURN_TYPES = ("JSON",)
 
-    def on_exec(self, url: str):
+    def on_exec(self, url:str):
+        url = normalize_list_to_value(url)
+
         if not url.startswith("file://"):
-            url = "file://" + url
+            url = f"file://{url}"
         
         file_path = requests.utils.unquote(url[7:])
         with open(file_path, 'r', encoding='utf-8') as file:
@@ -203,37 +213,40 @@ class LF_LoadMetadata:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "file_names": ("KUL_UPLOAD", {"label": "File Names", "tooltip": "List of file names separated by semicolons (e.g., file1.jpg;file2.png;file3.jpg)."}),
+                "file_names": ("KUL_UPLOAD", {"tooltip": "List of file names separated by semicolons (e.g., file1.jpg;file2.png;file3.jpg)."}),
             }
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
     RETURN_NAMES = ("metadata_list",)
     RETURN_TYPES = ("JSON",)
 
-    def on_exec(self, file_names):
+    def on_exec(self, file_names:str):
+        file_names = normalize_input_list(file_names)
+
         input_dir = folder_paths.get_input_directory()
         metadata_list = []
 
-        file_names_list = file_names.split(';')
+        if file_names:
+            file_names_list = file_names.split(';')
 
-        for file_name in file_names_list:
-            file_path = os.path.join(input_dir, file_name.strip())
-
-            try:
-                pil_image = Image.open(file_path)
-                
-                if pil_image.format == "JPEG":
-                    metadata = extract_jpeg_metadata(pil_image, file_name)
-                elif pil_image.format == "PNG":
-                    metadata = extract_png_metadata(pil_image)
-                else:
-                    metadata = {"error": f"Unsupported image format for {file_name}"}
-
-                metadata_list.append({"file": file_name, "metadata": metadata})
-            except Exception as e:
-                metadata_list.append({"file": file_name, "error": str(e)})
+            for file_name in file_names_list:
+                file_path = os.path.join(input_dir, file_name.strip())
+    
+                try:
+                    pil_image = Image.open(file_path)
+                    
+                    if pil_image.format == "JPEG":
+                        metadata = extract_jpeg_metadata(pil_image, file_name)
+                    elif pil_image.format == "PNG":
+                        metadata = extract_png_metadata(pil_image)
+                    else:
+                        metadata = {"error": f"Unsupported image format for {file_name}"}
+    
+                    metadata_list.append({"file": file_name, "metadata": metadata})
+                except Exception as e:
+                    metadata_list.append({"file": file_name, "error": str(e)})
 
         return (metadata_list,)
 
@@ -242,10 +255,11 @@ class LF_SaveImageForCivitAI:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "images": ("IMAGE", {"label": "Images tensor", "tooltip": "Input image tensor batch to save with metadata."}),
+                "image": ("IMAGE", {"tooltip": "Input images to save."}),
                 "filepath": ("STRING", {"default": '', "tooltip": "Path and filename. Use slashes to specify directories."}),
                 "add_timestamp": ("BOOLEAN", {"default": True, "tooltip": "Sets the execution time's timestamp as a suffix of the file name."}),
-                "extension": (['png', 'jpeg', 'webp'], {"tooltip": "Supported file formats."}),
+                "embed_workflow": ("BOOLEAN", {"default": True, "tooltip": "Whether to embed inside the images the current workflow or not."}),
+                "extension": (['png', 'jpeg', 'webp'], {"default": "png", "tooltip": "Supported file formats."}),
                 "quality": ("INT", {"default": 100, "min": 1, "max": 100, "tooltip": "Quality of saved images in jpeg or webp format."}),
             },
             "optional": {
@@ -258,61 +272,42 @@ class LF_SaveImageForCivitAI:
             }
         }
     
-    CATEGORY = category
-    FUNCTION = "on_exec"
-    INPUT_IS_LIST = (True, False, False, False, False)
-    OUTPUT_IS_LIST = (True,)
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    OUTPUT_IS_LIST = (True, False)
     OUTPUT_NODE = True
-    RETURN_NAMES = ("file_names",)
-    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("file_names", "civitai_metadata")
+    RETURN_TYPES = ("STRING", "STRING")
 
-    def on_exec(self, extra_pnginfo, node_id, prompt, images, filepath, add_timestamp, extension, quality, civitai_metadata=None):
+    def on_exec(self, node_id:int, extra_pnginfo:list[dict], prompt:dict, image:torch.Tensor,
+                filepath:str, add_timestamp:bool, embed_workflow:bool, extension:str, quality:int, civitai_metadata:str = None):
+        image = normalize_input_image(image)
+        filepath = normalize_list_to_value(filepath)
+        add_timestamp = normalize_list_to_value(add_timestamp)
+        embed_workflow = normalize_list_to_value(embed_workflow)
+        extension = normalize_list_to_value(extension)
+        quality = normalize_list_to_value(quality)
+        civitai_metadata = normalize_list_to_value(civitai_metadata)
+        extra_pnginfo = normalize_input_list(extra_pnginfo)
+        prompt = normalize_list_to_value(prompt)
         
+        count = 0
         file_names = []
         images_buffer = []
-        output_dir = folder_paths.output_directory
-
-        if isinstance(filepath, list):
-            filepath = filepath[0] 
-        if isinstance(prompt, list):
-            prompt = prompt[0] 
-        if isinstance(extra_pnginfo, list):
-            extra_pnginfo = extra_pnginfo[0] 
-        if isinstance(add_timestamp, list):
-            add_timestamp = add_timestamp[0] 
-        if isinstance(extension, list):
-            extension = extension[0] 
-        if isinstance(quality, list):
-            quality = quality[0] 
-        if isinstance(civitai_metadata, list):
-            civitai_metadata = civitai_metadata[0] 
-        if isinstance(images, list):
-            processed_images = []
-            for image in images:
-                if len(processed_images) == 0:
-                    processed_images.append(image)
-                else:
-                    if processed_images[0].shape[1:] != image.shape[1:]:
-                        image = comfy.utils.common_upscale(image.movedim(-1, 1), processed_images[0].shape[2], processed_images[0].shape[1], "lanczos", "center").movedim(1, -1)
-                    processed_images.append(image)
-
-            images = torch.cat(processed_images, dim=0)
-        
-        batch_size = images.shape[0]
 
         if add_timestamp:
             ts = datetime.now()
             timestamp = ts.strftime("%Y%m%d-%H%M%S")
             filepath = f"{filepath}_{timestamp}"
 
-        for i in range(batch_size):
-            img_array = images[i].cpu().numpy()
-            img = Image.fromarray(np.clip(img_array * 255, 0, 255).astype(np.uint8))
+        for img in image:
+            count += 1
+            np_img = tensor_to_numpy(img)
 
             directory, filename = os.path.split(filepath)
-            file_name = f"{filename}_{i}.{extension}"
+            file_name = f"{filename}_{count}.{extension}"
 
-            directory = os.path.join(output_dir, directory)
+            directory = os.path.join(BASE_OUTPUT_PATH, directory)
             if not os.path.exists(directory):
                 os.makedirs(directory, exist_ok=True)
 
@@ -320,7 +315,7 @@ class LF_SaveImageForCivitAI:
 
             if extension == 'png':
                 png_info = PngInfo()
-                if not args.disable_metadata:
+                if embed_workflow and not args.disable_metadata:
                     if prompt is not None:
                         png_info.add_text("prompt", json.dumps(prompt))
                     if extra_pnginfo is not None:
@@ -330,7 +325,7 @@ class LF_SaveImageForCivitAI:
                 if civitai_metadata:
                     png_info.add_text("parameters", civitai_metadata)
 
-                img.save(output_file, format="PNG", pnginfo=png_info)
+                np_img.save(output_file, format="PNG", pnginfo=png_info)
 
             elif extension == 'jpeg':
                 exif_bytes = piexif.dump({
@@ -338,11 +333,11 @@ class LF_SaveImageForCivitAI:
                         piexif.ExifIFD.UserComment: piexif.helper.UserComment.dump(civitai_metadata, encoding="unicode")
                     }
                 }) if civitai_metadata else None
-                img.save(output_file, format="JPEG", quality=quality)
+                np_img.save(output_file, format="JPEG", quality=quality)
                 if exif_bytes:
                     piexif.insert(exif_bytes, output_file)
             else:
-                img.save(output_file, format=extension.upper(), quality=quality)
+                np_img.save(output_file, format=extension.upper(), quality=quality)
 
             img_resized = resize_image(img, max_size=1024)
             buffered = io.BytesIO()
@@ -352,13 +347,13 @@ class LF_SaveImageForCivitAI:
 
             file_names.append(file_name)
 
-        PromptServer.instance.send_sync("lf-saveimageforcivitai", {
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}saveimageforcivitai", {
             "node": node_id, 
             "fileNames": file_names,
             "images": images_buffer,
         })
 
-        return (file_names,)
+        return (file_names, civitai_metadata)
     
 class LF_SaveJSON:
     @classmethod
@@ -371,13 +366,15 @@ class LF_SaveJSON:
             },
         }
     
-    CATEGORY = category
-    FUNCTION = "on_exec"
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
     OUTPUT_NODE = True
     RETURN_TYPES = ()
 
-    def on_exec(self, json_data, filepath, add_timestamp):
-        output_dir = folder_paths.output_directory
+    def on_exec(self, json_data:dict, filepath:str, add_timestamp:bool):
+        json_data = normalize_input_json(json_data)
+        filepath = normalize_list_to_value(filepath)
+        add_timestamp = normalize_list_to_value(add_timestamp)
 
         try:
             if add_timestamp:
@@ -388,8 +385,7 @@ class LF_SaveJSON:
                 filepath = f"{filepath}.json"
 
             directory = os.path.dirname(filepath)
-            directory = os.path.join(output_dir, directory)
-
+            directory = os.path.join(BASE_OUTPUT_PATH, directory)
             output_file = os.path.join(directory, filepath)
 
             if not os.path.exists(directory):

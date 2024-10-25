@@ -30,7 +30,7 @@ class LF_ImageHistogram:
     RETURN_NAMES = ("image", "image_list", "dataset")
     RETURN_TYPES = ("IMAGE", "IMAGE", "JSON")
 
-    def on_exec(self, node_id:int, image:torch.Tensor):
+    def on_exec(self, node_id:str, image:torch.Tensor):
         image = normalize_input_image(image)
 
         batch_histograms = []
@@ -116,7 +116,7 @@ class LF_KeywordCounter:
     RETURN_NAMES = ("chart_dataset", "chip_dataset")
     RETURN_TYPES = ("JSON", "JSON")
 
-    def on_exec(self, node_id:int, prompt:str, separator:str):
+    def on_exec(self, node_id:str, prompt:str, separator:str):
         prompt = normalize_list_to_value(prompt)
         separator = normalize_list_to_value(separator)
 
@@ -184,7 +184,7 @@ class LF_UpdateUsageStatistics:
     RETURN_NAMES = ("dir", "dataset")
     RETURN_TYPES = ("STRING", "JSON")
 
-    def on_exec(self, node_id:int, datasets_dir:str, dataset:str|dict):
+    def on_exec(self, node_id:str, datasets_dir:str, dataset:str|dict):
         def update_usage_json(resource_file:str, resource_name:str, resource_value:str):
             resource_value = os.path.splitext(resource_value)[0]
             template = {"columns": [{"id": "name", "title": resource_name}, {"id": "counter", "title": "Nr. of times used", "shape": "number"}], "nodes": []}

@@ -1,7 +1,7 @@
 import json
 import torch
 
-def normalize_input_image(image: list[torch.Tensor]|torch.Tensor):
+def normalize_input_image(image: list[torch.Tensor] | torch.Tensor):
     """
     Converts an input tensor or list of image tensors into a standardized list of individual image tensors.
     
@@ -9,6 +9,7 @@ def normalize_input_image(image: list[torch.Tensor]|torch.Tensor):
     
     - A 4D tensor (batch of images) is converted into a list of tensors, each with shape [1, H, W, C].
     - A 3D tensor (single image) is converted into a list with one element, maintaining a batch dimension as [1, H, W, C].
+    - A list with only one element is handled as a single batch or image, as applicable.
     - A list of images is returned as-is, with each element assumed to be an individual image tensor.
     
     Parameters:
@@ -28,10 +29,12 @@ def normalize_input_image(image: list[torch.Tensor]|torch.Tensor):
         else:
             raise ValueError("Input tensor must be either 3D or 4D.")
     elif isinstance(image, list):
-        return image
+        if len(image) == 1 and isinstance(image[0], torch.Tensor):
+            # Handle single element list as a single image or batch
+            return normalize_input_image(image[0])
+        return image  # Return the list as-is if it has multiple elements
     else:
         raise TypeError("Input must be a torch.Tensor or list.")
-
     
 def normalize_input_json(input):
     """

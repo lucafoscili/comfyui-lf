@@ -161,7 +161,7 @@ class LF_LoadLoraTags:
     RETURN_NAMES = ("model", "clip")
     RETURN_TYPES = ("MODEL", "CLIP")
 
-    def on_exec(self, node_id:int, get_civitai_info:bool, model, clip, tags:str):
+    def on_exec(self, node_id:str, get_civitai_info:bool, model, clip, tags:str):
         def get_lora_weights(tag_content:str):
             name = tag_content[1]
             try:
@@ -347,7 +347,7 @@ class LF_Notify:
     RETURN_NAMES = ("any",)
     RETURN_TYPES = (ANY,)
 
-    def on_exec(self, node_id:int, any:AnyType, on_click_action:str, title:str, message:str, silent:bool, tag:str = None, image:torch.Tensor = None):
+    def on_exec(self, node_id:str, any:AnyType, on_click_action:str, title:str, message:str, silent:bool, tag:str = None, image:torch.Tensor = None):
         any = normalize_list_to_value(any)
         on_click_action = normalize_list_to_value(on_click_action)
         title = normalize_list_to_value(title)

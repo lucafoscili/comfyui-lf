@@ -27,14 +27,16 @@ class LF_BlurImages:
 
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
+    INPUT_IS_LIST = (True, False, True, False)
     OUTPUT_IS_LIST = (False, True, True, False)
     RETURN_NAMES = ("image", "image_list", "file_name", "count")
     RETURN_TYPES = ("IMAGE", "IMAGE", "STRING", "INT")
 
-    def on_exec(self, node_id:int, image:torch.Tensor, file_name:str, blur_percentage:float):
-        blur_percentage:float = normalize_list_to_value(blur_percentage)
+    def on_exec(self, node_id:str, image:torch.Tensor|list[torch.Tensor], file_name:list[str], blur_percentage:float):
+        blur_percentage = normalize_list_to_value(blur_percentage)
         file_name = normalize_input_list(file_name)
         image = normalize_input_image(image)
+        node_id = normalize_list_to_value(node_id)
 
         blurred_images = []
         blurred_file_names = []
@@ -94,16 +96,18 @@ class LF_ClarityEffect:
 
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
+    INPUT_IS_LIST = (True, False, False, False, False)
     OUTPUT_IS_LIST = (False, True)
     OUTPUT_NODE = True
     RETURN_NAMES = ("image", "image_list")
     RETURN_TYPES = ("IMAGE", "IMAGE")
 
-    def on_exec(self, node_id:int, image:torch.Tensor, clarity_strength:float, sharpen_amount:float, blur_kernel_size:int):
+    def on_exec(self, node_id:str, image:torch.Tensor|list[torch.Tensor], clarity_strength:float, sharpen_amount:float, blur_kernel_size:int):
         image = normalize_input_image(image)
         clarity_strength = normalize_list_to_value(clarity_strength)
         sharpen_amount = normalize_list_to_value(sharpen_amount)
         blur_kernel_size = normalize_list_to_value(blur_kernel_size)
+        node_id = normalize_list_to_value(node_id)
 
         nodes = []
         dataset = { "nodes": nodes }
@@ -149,14 +153,16 @@ class LF_CompareImages:
 
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
+    INPUT_IS_LIST = (True, True, False)
     OUTPUT_IS_LIST = (False, True, True, False)
     OUTPUT_NODE = True
     RETURN_NAMES = ("image", "image_list", "all_images", "dataset")
     RETURN_TYPES = ("IMAGE", "IMAGE", "IMAGE", "JSON")
 
-    def on_exec(self, node_id:int, image:torch.Tensor, image_opt:torch.Tensor = None):
+    def on_exec(self, node_id:str, image:torch.Tensor|list[torch.Tensor], image_opt:torch.Tensor|list[torch.Tensor] = None):
         image_list_1 = normalize_input_image(image)
         image_list_2 = normalize_input_image(image_opt) if image_opt is not None else image_list_1
+        node_id = normalize_list_to_value(node_id)
         
         nodes = []
         dataset = { "nodes": nodes }
@@ -207,13 +213,15 @@ class LF_MultipleImageResizeForWeb:
 
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
+    INPUT_IS_LIST = (True, True, False)
     OUTPUT_IS_LIST = (False, True, True, True, False)
     RETURN_NAMES = ("image", "image_list", "name", "names_with_dir", "dataset")
     RETURN_TYPES = ("IMAGE", "IMAGE", "STRING", "STRING", "JSON")
 
-    def on_exec(self, node_id:int, image:torch.Tensor, file_name:str):
+    def on_exec(self, node_id:str, image:list[torch.Tensor], file_name:list[str]):
         image = normalize_input_image(image)
         file_name = normalize_input_list(file_name)
+        node_id = normalize_list_to_value(node_id)
 
         nodes = []
         dataset = { "nodes": nodes }
@@ -288,7 +296,7 @@ class LF_MultipleImageResizeForWeb:
             "dataset": dataset,
         })
 
-        image_batch, image_list = normalize_output_image(image)
+        image_batch, image_list = normalize_output_image(output_images)
 
         return (image_batch[0], image_list, output_file_names, output_file_names_with_dir, dataset)
 
@@ -309,14 +317,17 @@ class LF_ResizeImageByEdge:
 
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
+    INPUT_IS_LIST = (True, False, False, False, False)
+    OUTPUT_IS_LIST = (False, True, False)
     RETURN_NAMES = ("image", "image_list", "count")
     RETURN_TYPES = ("IMAGE", "IMAGE", "INT")
 
-    def on_exec(self, node_id:int, image:torch.Tensor, longest_edge: bool, new_size: int, resize_method: str):
+    def on_exec(self, node_id:str, image:torch.Tensor|list[torch.Tensor], longest_edge: bool, new_size: int, resize_method: str):
         image = normalize_input_image(image)
         longest_edge = normalize_list_to_value(longest_edge)
         new_size = normalize_list_to_value(new_size)
         resize_method = normalize_list_to_value(resize_method)
+        node_id = normalize_list_to_value(node_id)
 
         nodes = []
         root = { "children": nodes, "icon":"help", "id": "", "value": "" }
@@ -377,16 +388,19 @@ class LF_ResizeImageToDimension:
 
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
+    INPUT_IS_LIST = (True, False, False, False, False, False, False)
+    OUTPUT_IS_LIST = (False, True, False)
     RETURN_NAMES = ("image", "image_list", "count")
     RETURN_TYPES = ("IMAGE", "IMAGE", "INT")
 
-    def on_exec(self, node_id:int, image:torch.Tensor, height: int, width: int, resize_method: str, resize_mode:str, pad_color:str):
+    def on_exec(self, node_id:str, image:torch.Tensor|list[torch.Tensor], height: int, width: int, resize_method: str, resize_mode:str, pad_color:str):
         image = normalize_input_image(image)
         height = normalize_list_to_value(height)
         width = normalize_list_to_value(width)
         resize_method = normalize_list_to_value(resize_method)
         resize_mode = normalize_list_to_value(resize_mode)
         pad_color = normalize_list_to_value(pad_color)
+        node_id = normalize_list_to_value(node_id)
 
         nodes = []
         root = { "children": nodes, "icon":"help", "id": "", "value": "" }
@@ -445,14 +459,17 @@ class LF_ResizeImageToSquare:
 
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
-    RETURN_NAMES = ("resized_images",)
-    RETURN_TYPES = ("IMAGE",)
+    INPUT_IS_LIST = (True, False, False, False, False)
+    OUTPUT_IS_LIST = (False, True, False)
+    RETURN_NAMES = ("image", "image_list", "count")
+    RETURN_TYPES = ("IMAGE", "IMAGE", "INT")
 
-    def on_exec(self, node_id, image:torch.Tensor, square_size: int, resize_method: str, crop_position: str):
+    def on_exec(self, node_id:str, image, square_size: int, resize_method: str, crop_position: str):
         image = normalize_input_image(image)
         square_size = normalize_list_to_value(square_size)
         resize_method = normalize_list_to_value(resize_method)
         crop_position = normalize_list_to_value(crop_position)
+        node_id = normalize_list_to_value(node_id)
 
         nodes = []
         root = { "children": nodes, "icon":"help", "id": "", "value": "" }

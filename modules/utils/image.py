@@ -41,31 +41,7 @@ def base64_to_tensor(base64_str):
     
     return img_tensor
 
-def clarity_effect(image_tensor, clarity_strength, sharpen_amount, blur_kernel_size):
-    """
-    Apply a clarity effect followed by sharpening on a given image tensor or a batch of image tensors.
-
-    Args:
-        image_tensor (torch.Tensor): The input image tensor(s) [B, H, W, C] or [H, W, C].
-        clarity_strength (float): The strength of the clarity effect.
-        sharpen_amount (float): The amount of sharpening to apply.
-        blur_kernel_size (int): The size of the kernel to use for blurring.
-
-    Returns:
-        torch.Tensor: The resulting image tensor after applying the effects.
-    """
-    
-    is_batch = len(image_tensor.shape) == 4
-    
-    if is_batch:
-        processed_images = [process_single_image(img, clarity_strength, sharpen_amount, blur_kernel_size) for img in image_tensor]
-        return torch.stack(processed_images)
-    else:
-        return process_single_image(image_tensor, clarity_strength, sharpen_amount, blur_kernel_size)
-
-
-
-def process_single_image(image_tensor, clarity_strength, sharpen_amount, blur_kernel_size):
+def clarity_effect(image_tensor:torch.Tensor, clarity_strength:float, sharpen_amount:float, blur_kernel_size:int):
     """
     Processes a single image tensor by applying clarity and sharpen effects.
 
@@ -78,7 +54,7 @@ def process_single_image(image_tensor, clarity_strength, sharpen_amount, blur_ke
     Returns:
         torch.Tensor: The processed image tensor.
     """
-    def apply_clarity(image, clarity_strength):
+    def apply_clarity(image:torch.Tensor, clarity_strength:float):
         """
         Apply clarity enhancement to an image using the LAB color space.
 
@@ -116,7 +92,7 @@ def process_single_image(image_tensor, clarity_strength, sharpen_amount, blur_ke
 
         return sharpened_image
     
-    image = tensor_to_numpy(image_tensor)
+    image = tensor_to_numpy(image_tensor, True)
     clarity_image = apply_clarity(image, clarity_strength)
     final_image = apply_sharpen(clarity_image, sharpen_amount)
 
@@ -365,33 +341,35 @@ def tensor_to_bytes(tensor, format):
     img.save(image_bytes, format)
     return image_bytes.getvalue()
 
-def tensor_to_numpy(tensor):
+def tensor_to_numpy(image: torch.Tensor, threeD: bool = False):
     """
-    Convert a PyTorch tensor to a NumPy array.
-
+    Converts a PyTorch tensor into a NumPy array suitable for OpenCV processing.
+    
     Args:
-        tensor (torch.Tensor): The input tensor representing the image.
-            It should be a 4D tensor with shape [B, H, W, C] or a 3D tensor with shape [H, W, C].
-
+        image (torch.Tensor): Input image tensor, expected as either (1, H, W, C) or (H, W, C).
+        threeD (bool, optional): If True, returns a 3D array (H, W, C) regardless of initial 4D shape.
+    
     Returns:
-        numpy.ndarray: The converted NumPy array.
-
-    Raises:
-        Exception: If there's an error during the conversion process.
-
-    Notes:
-        - If the input tensor is 4D, it will use the first image in the batch.
-        - The tensor values are scaled from [0, 1] to [0, 255] and converted to uint8.
+        np.ndarray: The converted NumPy array in uint8 format with pixel values scaled to [0, 255].
     """
+    if image.dim() == 4 and threeD:
+        # If `threeD=True`, bypass validation and strip batch dimension
+        image = image.squeeze(0)
+    elif image.dim() == 4:
+        # Ensure batch size of 1 in default mode
+        if image.shape[0] != 1:
+            raise ValueError(f"Expected batch size of 1, but got shape {image.shape}")
+        image = image.squeeze(0)
+    elif image.dim() == 3:
+        # Accept 3D tensor as-is
+        pass
+    else:
+        raise ValueError(f"Unexpected tensor shape for conversion: {image.shape}")
+
+    # Convert tensor to numpy and rescale to [0, 255] with uint8 type
     try:
-        # Ensure that the tensor is 4D [B, H, W, C]
-        if tensor.dim() == 4:
-            tensor = tensor[0]  # Use the first image in the batch
-
-        # Convert the tensor from [H, W, C] format
-        numpy_array = tensor.cpu().numpy()  # Convert to a NumPy array
-        numpy_array = (numpy_array * 255).astype("uint8")  # Convert to uint8
-
+        numpy_array = image.cpu().numpy()
+        numpy_array = (numpy_array * 255).astype(np.uint8)
         return numpy_array
     except Exception as e:
         print(f"Error converting tensor to NumPy array: {e}")

@@ -1,6 +1,6 @@
 import os
 
-from folder_paths import get_filename_list, user_directory
+from folder_paths import get_filename_list, output_directory, user_directory
 from comfy.samplers import KSampler
 
 class AnyType(str):
@@ -25,6 +25,7 @@ BACKUP_PATH = os.path.join(BASE_PATH, BACKUP_FOLDER)
 
 FUNCTION = "on_exec"
 
+BASE_OUTPUT_PATH = output_directory
 CHECKPOINTS = get_filename_list("checkpoints")
 RESAMPLERS = ["bicubic", "bilinear", "linear", "nearest", "nearest exact"]
 SAMPLERS = KSampler.SAMPLERS
