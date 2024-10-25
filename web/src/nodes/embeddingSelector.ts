@@ -13,7 +13,10 @@ import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 const NAME = NodeName.embeddingSelector;
 
 export const embeddingSelectorFactory = {
-  eventHandler: (event: CustomEvent<EmbeddingSelectorPayload>, addW: BaseWidgetCallback) => {
+  eventHandler: (
+    event: CustomEvent<EmbeddingSelectorPayload>,
+    addW: BaseWidgetCallback<CustomWidgetName.card>,
+  ) => {
     const name = EventName.embeddingSelector;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
@@ -46,7 +49,7 @@ export const embeddingSelectorFactory = {
       });
     }
   },
-  register: (setW: CardWidgetSetter, addW: BaseWidgetCallback) => {
+  register: (setW: CardWidgetSetter, addW: BaseWidgetCallback<CustomWidgetName.card>) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

@@ -12,11 +12,12 @@ export const imageListFromJsonFactory = {
         const node = getApiRoutes().getNodeById(payload.id);
         if (node) {
             const widget = getCustomWidget(node, CustomWidgetName.imagePreview, addW);
-            widget.options.setValue({
+            const value = {
                 ...payload,
                 selectedIndex: undefined,
                 selectedName: undefined,
-            });
+            };
+            widget.options.setValue(JSON.stringify(value));
             getApiRoutes().redraw();
         }
     },

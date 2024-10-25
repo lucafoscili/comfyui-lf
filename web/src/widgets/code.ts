@@ -1,13 +1,16 @@
-import { LogSeverity } from '../types/manager';
 import { NodeName } from '../types/nodes';
-import { CodeWidgetOptions, CustomWidgetName } from '../types/widgets';
-import { createDOMWidget, getLFManager, deserializeValue } from '../utils/common';
+import {
+  CodeWidgetFactory,
+  CustomWidgetDeserializedValuesMap,
+  CustomWidgetName,
+  NormalizeValueCallback,
+} from '../types/widgets';
+import { createDOMWidget, normalizeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-code';
-const EMPTY = '{ "Wow": "Such empty!" }';
 const TYPE = CustomWidgetName.code;
 
-export const codeFactory = {
+export const codeFactory: CodeWidgetFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
     code: `${BASE_CSS_CLASS}__widget`,
@@ -19,51 +22,27 @@ export const codeFactory = {
         return code;
       },
       getValue() {
-        return code.kulValue;
+        return code.kulValue || '';
       },
       setValue(value) {
-        const isEmpty = () => {
-          return (
-            value === '' ||
-            value === null ||
-            value === undefined ||
-            value === '{}' ||
-            !Object.keys(value).length
-          );
+        const callback: NormalizeValueCallback<
+          CustomWidgetDeserializedValuesMap<typeof TYPE> | string
+        > = (v, u) => {
+          switch (code.kulLanguage) {
+            case 'json':
+              code.kulValue = u.unescapedStr || '';
+              break;
+            default:
+              code.kulValue = v || '';
+              break;
+          }
         };
-        switch (code.kulLanguage) {
-          case 'json':
-            if (isEmpty()) {
-              code.kulValue = EMPTY;
-            }
-            try {
-              if (typeof value === 'string') {
-                code.kulValue = deserializeValue(value).unescapedStr;
-              } else {
-                code.kulValue = JSON.stringify(value);
-              }
-            } catch (error) {
-              getLFManager().log('Error when setting value!', { error, code }, LogSeverity.Error);
-              if (value === undefined || value === '') {
-                code.kulValue = EMPTY;
-              }
-            }
-            break;
-          default:
-            if (isEmpty()) {
-              code.kulValue = '';
-            }
-            if (typeof value === 'string') {
-              code.kulValue = value;
-            } else {
-              code.kulValue = JSON.stringify(value);
-            }
-            break;
-        }
+
+        normalizeValue(value, callback, TYPE);
       },
-    } as CodeWidgetOptions;
+    };
   },
-  render: (node: NodeType, name: CustomWidgetName) => {
+  render: (node, name) => {
     const wrapper = document.createElement('div');
     const content = document.createElement('div');
     const code = document.createElement('kul-code');
@@ -78,10 +57,10 @@ export const codeFactory = {
       case NodeName.shuffleJsonKeys:
       case NodeName.sortJsonKeys:
         code.kulLanguage = 'json';
-        code.kulValue = EMPTY;
         break;
       default:
         code.kulLanguage = 'markdown';
+        break;
     }
 
     content.appendChild(code);

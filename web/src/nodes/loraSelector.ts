@@ -13,7 +13,10 @@ import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 const NAME = NodeName.loraSelector;
 
 export const loraSelectorFactory = {
-  eventHandler: (event: CustomEvent<LoraSelectorPayload>, addW: BaseWidgetCallback) => {
+  eventHandler: (
+    event: CustomEvent<LoraSelectorPayload>,
+    addW: BaseWidgetCallback<CustomWidgetName.card>,
+  ) => {
     const name = EventName.loraSelector;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
@@ -46,7 +49,7 @@ export const loraSelectorFactory = {
       });
     }
   },
-  register: (setW: CardWidgetSetter, addW: BaseWidgetCallback) => {
+  register: (setW: CardWidgetSetter, addW: BaseWidgetCallback<CustomWidgetName.card>) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

@@ -1,6 +1,6 @@
 import { StringPayload } from '../types/events';
-import { HistoryWidgetSetter, type BaseWidgetCallback } from '../types/widgets';
+import { CustomWidgetName, HistoryWidgetSetter, type BaseWidgetCallback } from '../types/widgets';
 export declare const stringFactory: {
-    eventHandler: (event: CustomEvent<StringPayload>, addW: BaseWidgetCallback) => void;
-    register: (setW: HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
+    eventHandler: (event: CustomEvent<StringPayload>, addW: BaseWidgetCallback<CustomWidgetName.history>) => void;
+    register: (setW: HistoryWidgetSetter, addW: BaseWidgetCallback<CustomWidgetName.history>) => void;
 };

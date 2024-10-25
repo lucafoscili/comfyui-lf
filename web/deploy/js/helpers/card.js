@@ -1,5 +1,5 @@
 import { LogSeverity } from '../types/manager.js';
-import { getLFManager, deserializeValue, getApiRoutes } from '../utils/common.js';
+import { getLFManager, getApiRoutes, unescapeJson } from '../utils/common.js';
 export const CARD_PROPS_TO_SERIALIZE = ['kulData', 'kulStyle'];
 export const cardHandler = (container, propsArray) => {
     let count = 0;
@@ -16,7 +16,7 @@ export const cardHandler = (container, propsArray) => {
                     if (key === 'kulData') {
                         try {
                             if (typeof prop === 'string') {
-                                card.kulData = deserializeValue(prop).parsedJson;
+                                card.kulData = unescapeJson(prop).parsedJson;
                             }
                             else {
                                 card.kulData = prop;

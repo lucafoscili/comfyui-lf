@@ -1,7 +1,11 @@
 import { app } from '/scripts/app.js';
 import { controlPanelFactory } from '../widgets/controlPanel.js';
 import { codeFactory } from '../widgets/code.js';
-import { CustomWidgetName } from '../types/widgets.js';
+import {
+  CustomWidgetName,
+  CustomWidgetOptionsCallbacks,
+  CustomWidgetOptionsCallbacksMap,
+} from '../types/widgets.js';
 import { imagePreviewFactory } from '../widgets/imagePreview.js';
 import { booleanViewerFactory } from '../widgets/booleanViewer.js';
 import { jsonInputFactory } from '../widgets/jsonInput.js';
@@ -142,9 +146,8 @@ export class LFWidgets {
     },
   };
 
-  option = {
-    [CustomWidgetName.booleanViewer]: (booleanViewer: HTMLKulTextfieldElement) =>
-      booleanViewerFactory.options(booleanViewer),
+  option: { [K in CustomWidgetName]: CustomWidgetOptionsCallbacksMap<K> } = {
+    [CustomWidgetName.booleanViewer]: (textfield) => booleanViewerFactory.options(textfield),
     [CustomWidgetName.card]: (grid: HTMLDivElement) => cardFactory.options(grid),
     [CustomWidgetName.cardsWithChip]: (grid: HTMLDivElement) => cardsWithChipFactory.options(grid),
     [CustomWidgetName.chat]: (chat: HTMLKulChatElement) => chatFactory.options(chat),

@@ -1,11 +1,12 @@
-import { CardWidgetDeserializedValue, CardWidgetOptions, CustomWidgetName } from '../types/widgets';
-import { cardHandler, getCardProps } from '../helpers/card';
 import {
-  createDOMWidget,
-  serializeValue,
-  deserializeValue,
-  getCustomWidget,
-} from '../utils/common';
+  CardWidgetDeserializedValue,
+  CardWidgetFactory,
+  CustomWidgetDeserializedValuesMap,
+  CustomWidgetName,
+  NormalizeValueCallback,
+} from '../types/widgets';
+import { cardHandler, getCardProps } from '../helpers/card';
+import { createDOMWidget, getCustomWidget, normalizeValue } from '../utils/common';
 import { NodeName } from '../types/nodes';
 import { cardPlaceholders, fetchModelMetadata } from '../utils/api';
 import { KulButton } from '../types/ketchup-lite/components/kul-button/kul-button';
@@ -15,40 +16,39 @@ import { KulButtonEventPayload } from '../types/ketchup-lite/components';
 const BASE_CSS_CLASS = 'lf-card';
 const TYPE = CustomWidgetName.card;
 
-export const cardFactory = {
+export const cardFactory: CardWidgetFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
     contentHasButton: `${BASE_CSS_CLASS}--has-button`,
     grid: `${BASE_CSS_CLASS}__grid`,
   },
-  options: (grid: HTMLDivElement) => {
+  options: (grid) => {
     return {
       hideOnZoom: false,
       getComp() {
-        return Array.from(grid.querySelectorAll('kul-card')) as HTMLKulCardElement[];
+        return Array.from(grid.querySelectorAll('kul-card'));
       },
       getValue() {
-        const value: CardWidgetDeserializedValue = {
-          propsArray: getCardProps(grid),
+        return {
+          propsArray: getCardProps(grid) || [],
           template: grid?.style.getPropertyValue('--card-grid') || '',
         };
-        return serializeValue(value);
       },
       setValue(value) {
-        if (!value) {
-          return;
-        }
-        const { propsArray, template } = deserializeValue(value)
-          .parsedJson as CardWidgetDeserializedValue;
+        const callback: NormalizeValueCallback<
+          CustomWidgetDeserializedValuesMap<typeof TYPE> | string
+        > = (_, u) => {
+          const { propsArray, template } = u.parsedJson as CardWidgetDeserializedValue;
+          const gridTemplate = template || 'repeat(1, 1fr) / repeat(1, 1fr)';
+          grid.style.setProperty('--card-grid', gridTemplate);
+          cardHandler(grid, propsArray);
+        };
 
-        const gridTemplate = template || 'repeat(1, 1fr) / repeat(1, 1fr)';
-        grid.style.setProperty('--card-grid', gridTemplate);
-
-        cardHandler(grid, propsArray);
+        normalizeValue(value, callback, TYPE);
       },
-    } as CardWidgetOptions;
+    };
   },
-  render: (node: NodeType, name: CustomWidgetName) => {
+  render: (node, name) => {
     const wrapper = document.createElement('div');
     const content = document.createElement('div');
     const grid = document.createElement('div');
@@ -89,7 +89,7 @@ const selectorButton = (grid: HTMLDivElement, node: NodeType) => {
           cards.forEach((card) => {
             const hashCell = card.kulData?.nodes?.[0]?.cells?.kulCode;
             if (hashCell) {
-              const { hash, path } = JSON.parse(hashCell.value);
+              const { hash, path } = JSON.parse(JSON.stringify(hashCell.value));
               const dataset = card.kulData;
               button.kulShowSpinner = true;
               models.push({ apiFlag: true, dataset, hash, path });

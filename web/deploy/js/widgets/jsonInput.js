@@ -1,7 +1,7 @@
 import { LogSeverity } from '../types/manager.js';
 import { NodeName } from '../types/nodes.js';
-import { CustomWidgetName } from '../types/widgets.js';
-import { createDOMWidget, findWidget, getLFManager, deserializeValue } from '../utils/common.js';
+import { CustomWidgetName, } from '../types/widgets.js';
+import { createDOMWidget, findWidget, getLFManager, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-jsoninput';
 const TYPE = CustomWidgetName.jsonInput;
 let VALIDATION_TIMEOUT;
@@ -11,23 +11,18 @@ export const jsonInputFactory = {
         widget: `${BASE_CSS_CLASS}__widget`,
         widgetError: `${BASE_CSS_CLASS}__widget--error`,
     },
-    options: (jsonInput) => {
+    options: (textarea) => {
         return {
             hideOnZoom: false,
             getValue() {
-                return jsonInput?.value;
+                return JSON.parse(textarea?.value || '{}') || {};
             },
             setValue(value) {
-                if (jsonInput) {
-                    try {
-                        const { unescapedStr, validJson, parsedJson } = deserializeValue(value);
-                        const parsedValue = validJson ? parsedJson : JSON.parse(unescapedStr);
-                        jsonInput.value = JSON.stringify(parsedValue, null, 2);
-                    }
-                    catch (error) {
-                        getLFManager().log('Error setting WriteJSON value', { error, value }, LogSeverity.Warning);
-                    }
-                }
+                const callback = (_, u) => {
+                    const parsedJson = u.parsedJson;
+                    textarea.value = JSON.stringify(parsedJson, null, 2) || '{}';
+                };
+                normalizeValue(value, callback, TYPE);
             },
         };
     },

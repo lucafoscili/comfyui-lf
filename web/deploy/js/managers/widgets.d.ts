@@ -1,5 +1,4 @@
-import { CustomWidgetName } from '../types/widgets.js';
-import { NodeName } from '../types/nodes.js';
+import { CustomWidgetName, CustomWidgetOptionsCallbacksMap } from '../types/widgets.js';
 export declare class LFWidgets {
     #private;
     constructor();
@@ -23,23 +22,7 @@ export declare class LFWidgets {
         KUL_UPLOAD: (nodeType: NodeType) => any;
     };
     option: {
-        KUL_BOOLEAN_VIEWER: (booleanViewer: HTMLKulTextfieldElement) => import("../types/widgets.js").BooleanViewerWidgetOptions;
-        KUL_CARD: (grid: HTMLDivElement) => import("../types/widgets.js").CardWidgetOptions;
-        KUL_CARDS_WITH_CHIP: (grid: HTMLDivElement) => import("../types/widgets.js").CardsWithChipWidgetOptions;
-        KUL_CHAT: (chat: HTMLKulChatElement) => import("../types/widgets.js").ChatWidgetOptions;
-        KUL_CHIP: (chip: HTMLKulChipElement) => import("../types/widgets.js").ChipWidgetOptions;
-        KUL_CODE: (code: HTMLKulCodeElement) => import("../types/widgets.js").CodeWidgetOptions;
-        KUL_COMPARE: (compare: HTMLKulCompareElement) => import("../types/widgets.js").CompareWidgetOptions;
-        KUL_CONTROL_PANEL: () => import("../types/widgets.js").ControlPanelWidgetOptions;
-        KUL_COUNT_BAR_CHART: (chart: HTMLKulChartElement, chip: HTMLKulChipElement, button: HTMLKulButtonElement) => import("../types/widgets.js").CountBarChartWidgetOptions;
-        KUL_HISTORY: (history: HTMLKulListElement) => import("../types/widgets.js").HistoryWidgetOptions;
-        KUL_JSON_INPUT: (content: HTMLTextAreaElement) => import("../types/widgets.js").JsonInputWidgetOptions;
-        KUL_IMAGE_PREVIEW_B64: (content: HTMLDivElement, isSelectable: boolean) => import("../types/widgets.js").ImagePreviewWidgetOptions;
-        KUL_MESSENGER: (messenger: HTMLKulMessengerElement, placeholder: HTMLDivElement) => import("../types/widgets.js").MessengerWidgetOptions;
-        KUL_ROLL_VIEWER: (rollViewer: HTMLKulProgressbarElement, nodeType: NodeType) => import("../types/widgets.js").RollViewerWidgetOptions;
-        KUL_TAB_BAR_CHART: (chart: HTMLKulChartElement, tabbar: HTMLKulTabbarElement, textfield: HTMLKulTextfieldElement, node: NodeName) => import("../types/widgets.js").TabBarChartWidgetOptions;
-        KUL_TREE: (tree: HTMLKulTreeElement) => import("../types/widgets.js").TreeWidgetOptions;
-        KUL_UPLOAD: (upload: HTMLKulUploadElement) => import("../types/widgets.js").UploadWidgetOptions;
+        [K in CustomWidgetName]: CustomWidgetOptionsCallbacksMap<K>;
     };
     set: {
         KUL_BOOLEAN_VIEWER: () => {
@@ -58,7 +41,9 @@ export declare class LFWidgets {
             };
         };
         KUL_CHAT: () => {
-            KUL_CHAT: (nodeType: NodeType, name: CustomWidgetName) => any;
+            KUL_CHAT: (nodeType: NodeType, name: CustomWidgetName) => {
+                widget: Widget;
+            };
         };
         KUL_CHIP: () => {
             KUL_CHIP: (nodeType: NodeType, name: CustomWidgetName) => {
@@ -91,7 +76,9 @@ export declare class LFWidgets {
             };
         };
         KUL_JSON_INPUT: () => {
-            KUL_JSON_INPUT: (nodeType: NodeType, name: CustomWidgetName) => any;
+            KUL_JSON_INPUT: (nodeType: NodeType, name: CustomWidgetName) => {
+                widget: Widget;
+            };
         };
         KUL_IMAGE_PREVIEW_B64: () => {
             KUL_IMAGE_PREVIEW_B64: (nodeType: NodeType, name: CustomWidgetName) => {
@@ -145,23 +132,23 @@ export declare class LFWidgets {
             KUL_UPLOAD: (nodeType: NodeType) => any;
         };
         options: {
-            KUL_BOOLEAN_VIEWER: (booleanViewer: HTMLKulTextfieldElement) => import("../types/widgets.js").BooleanViewerWidgetOptions;
-            KUL_CARD: (grid: HTMLDivElement) => import("../types/widgets.js").CardWidgetOptions;
-            KUL_CARDS_WITH_CHIP: (grid: HTMLDivElement) => import("../types/widgets.js").CardsWithChipWidgetOptions;
-            KUL_CHAT: (chat: HTMLKulChatElement) => import("../types/widgets.js").ChatWidgetOptions;
-            KUL_CHIP: (chip: HTMLKulChipElement) => import("../types/widgets.js").ChipWidgetOptions;
-            KUL_CODE: (code: HTMLKulCodeElement) => import("../types/widgets.js").CodeWidgetOptions;
-            KUL_COMPARE: (compare: HTMLKulCompareElement) => import("../types/widgets.js").CompareWidgetOptions;
-            KUL_CONTROL_PANEL: () => import("../types/widgets.js").ControlPanelWidgetOptions;
-            KUL_COUNT_BAR_CHART: (chart: HTMLKulChartElement, chip: HTMLKulChipElement, button: HTMLKulButtonElement) => import("../types/widgets.js").CountBarChartWidgetOptions;
-            KUL_HISTORY: (history: HTMLKulListElement) => import("../types/widgets.js").HistoryWidgetOptions;
-            KUL_JSON_INPUT: (content: HTMLTextAreaElement) => import("../types/widgets.js").JsonInputWidgetOptions;
-            KUL_IMAGE_PREVIEW_B64: (content: HTMLDivElement, isSelectable: boolean) => import("../types/widgets.js").ImagePreviewWidgetOptions;
-            KUL_MESSENGER: (messenger: HTMLKulMessengerElement, placeholder: HTMLDivElement) => import("../types/widgets.js").MessengerWidgetOptions;
-            KUL_ROLL_VIEWER: (rollViewer: HTMLKulProgressbarElement, nodeType: NodeType) => import("../types/widgets.js").RollViewerWidgetOptions;
-            KUL_TAB_BAR_CHART: (chart: HTMLKulChartElement, tabbar: HTMLKulTabbarElement, textfield: HTMLKulTextfieldElement, node: NodeName) => import("../types/widgets.js").TabBarChartWidgetOptions;
-            KUL_TREE: (tree: HTMLKulTreeElement) => import("../types/widgets.js").TreeWidgetOptions;
-            KUL_UPLOAD: (upload: HTMLKulUploadElement) => import("../types/widgets.js").UploadWidgetOptions;
+            KUL_BOOLEAN_VIEWER: import("../types/widgets.js").BooleanViewerWidgetOptionsCallback;
+            KUL_CARD: import("../types/widgets.js").CardWidgetOptionsCallback;
+            KUL_CARDS_WITH_CHIP: import("../types/widgets.js").CardsWithChipWidgetOptionsCallback;
+            KUL_CHAT: import("../types/widgets.js").ChatWidgetOptionsCallback;
+            KUL_CHIP: import("../types/widgets.js").ChipWidgetOptionsCallback;
+            KUL_CODE: import("../types/widgets.js").CodeWidgetOptionsCallback;
+            KUL_COMPARE: import("../types/widgets.js").CompareWidgetOptionsCallback;
+            KUL_CONTROL_PANEL: import("../types/widgets.js").ControlPanelWidgetOptionsCallback;
+            KUL_COUNT_BAR_CHART: import("../types/widgets.js").CountBarChartWidgetOptionsCallback;
+            KUL_HISTORY: import("../types/widgets.js").HistoryWidgetOptionsCallback;
+            KUL_IMAGE_PREVIEW_B64: import("../types/widgets.js").ImagePreviewWidgetOptionsCallback;
+            KUL_JSON_INPUT: import("../types/widgets.js").JsonInputWidgetOptionsCallback;
+            KUL_MESSENGER: import("../types/widgets.js").MessengerWidgetOptionsCallback;
+            KUL_ROLL_VIEWER: import("../types/widgets.js").RollViewerWidgetOptionsCallback;
+            KUL_TAB_BAR_CHART: import("../types/widgets.js").TabBarChartWidgetOptionsCallback;
+            KUL_TREE: import("../types/widgets.js").TreeWidgetOptionsCallback;
+            KUL_UPLOAD: import("../types/widgets.js").UploadWidgetOptionsCallback;
         };
         setters: {
             KUL_BOOLEAN_VIEWER: () => {
@@ -180,7 +167,9 @@ export declare class LFWidgets {
                 };
             };
             KUL_CHAT: () => {
-                KUL_CHAT: (nodeType: NodeType, name: CustomWidgetName) => any;
+                KUL_CHAT: (nodeType: NodeType, name: CustomWidgetName) => {
+                    widget: Widget;
+                };
             };
             KUL_CHIP: () => {
                 KUL_CHIP: (nodeType: NodeType, name: CustomWidgetName) => {
@@ -213,7 +202,9 @@ export declare class LFWidgets {
                 };
             };
             KUL_JSON_INPUT: () => {
-                KUL_JSON_INPUT: (nodeType: NodeType, name: CustomWidgetName) => any;
+                KUL_JSON_INPUT: (nodeType: NodeType, name: CustomWidgetName) => {
+                    widget: Widget;
+                };
             };
             KUL_IMAGE_PREVIEW_B64: () => {
                 KUL_IMAGE_PREVIEW_B64: (nodeType: NodeType, name: CustomWidgetName) => {

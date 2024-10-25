@@ -5,23 +5,24 @@ import {
 } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
 import {
   ControlPanelWidgetDeserializedValue,
-  ControlPanelWidgetOptions,
+  ControlPanelWidgetFactory,
+  CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
+  NormalizeValueCallback,
 } from '../types/widgets';
 import {
   createDOMWidget,
-  deserializeValue,
   getApiRoutes,
   getKulManager,
   getLFManager,
-  serializeValue,
+  normalizeValue,
 } from '../utils/common';
 import { handleKulEvent, sectionsFactory } from '../helpers/control-panel';
 
 const BASE_CSS_CLASS = 'lf-controlpanel';
 const TYPE = CustomWidgetName.controlPanel;
 
-export const controlPanelFactory = {
+export const controlPanelFactory: ControlPanelWidgetFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
     article: `${BASE_CSS_CLASS}__article`,
@@ -29,44 +30,49 @@ export const controlPanelFactory = {
   },
   options: () => {
     return {
+      hideOnZoom: false,
       getValue() {
-        return serializeValue({
-          backup: getLFManager()?.isBackupEnabled(),
-          debug: getLFManager()?.isDebug(),
-          themes: getKulManager()?.theme.name,
-        });
+        return {
+          backup: getLFManager().isBackupEnabled() || false,
+          debug: getLFManager().isDebug() || false,
+          themes: getKulManager()?.theme?.name || '',
+        };
       },
       setValue(value) {
-        const { backup, debug, themes } = deserializeValue(value)
-          .parsedJson as ControlPanelWidgetDeserializedValue;
+        const callback: NormalizeValueCallback<
+          CustomWidgetDeserializedValuesMap<typeof TYPE> | string
+        > = (_, u) => {
+          const { backup, debug, themes } = u.parsedJson as ControlPanelWidgetDeserializedValue;
 
-        const set = () => {
-          if (backup === true || backup === false) {
-            getLFManager().toggleBackup(backup);
+          const set = () => {
+            if (backup === true || backup === false) {
+              getLFManager().toggleBackup(backup);
+            }
+            if (debug === true || debug === false) {
+              getLFManager().toggleDebug(debug);
+            }
+            if (themes) {
+              getKulManager().theme.set(themes);
+            }
+            return value;
+          };
+
+          if (getKulManager()) {
+            set();
+          } else {
+            const managerCb = () => {
+              set();
+              document.removeEventListener('kul-manager-ready', managerCb);
+            };
+            document.addEventListener('kul-manager-ready', managerCb);
           }
-          if (debug === true || debug === false) {
-            getLFManager().toggleDebug(debug);
-          }
-          if (themes) {
-            getKulManager().theme.set(themes);
-          }
-          return value;
         };
 
-        const kulManager = getKulManager();
-        if (kulManager) {
-          set();
-        } else {
-          const managerCb = () => {
-            set();
-            document.removeEventListener('kul-manager-ready', managerCb);
-          };
-          document.addEventListener('kul-manager-ready', managerCb);
-        }
+        normalizeValue(value, callback, TYPE);
       },
-    } as ControlPanelWidgetOptions;
+    };
   },
-  render: (node: NodeType, name: CustomWidgetName) => {
+  render: (node, name) => {
     const wrapper = document.createElement('div');
     const options = controlPanelFactory.options();
 

@@ -985,7 +985,7 @@ const KulMessenger = class {
         set: null,
     };
     #hasCharacters() {
-        const nodes = this.kulData.nodes || [];
+        const nodes = this.kulData?.nodes || [];
         return !!nodes.length;
     }
     #hasNodes() {

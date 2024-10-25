@@ -9,7 +9,10 @@ import { getApiRoutes } from '../utils/common';
 const NAME = NodeName.controlPanel;
 
 export const controlPanelFactory = {
-  register: (setW: ControlPanelWidgetSetter, addW: BaseWidgetCallback) => {
+  register: (
+    setW: ControlPanelWidgetSetter,
+    addW: BaseWidgetCallback<CustomWidgetName.controlPanel>,
+  ) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

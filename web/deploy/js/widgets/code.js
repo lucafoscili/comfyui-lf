@@ -1,9 +1,7 @@
-import { LogSeverity } from '../types/manager.js';
 import { NodeName } from '../types/nodes.js';
-import { CustomWidgetName } from '../types/widgets.js';
-import { createDOMWidget, getLFManager, deserializeValue } from '../utils/common.js';
+import { CustomWidgetName, } from '../types/widgets.js';
+import { createDOMWidget, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-code';
-const EMPTY = '{ "Wow": "Such empty!" }';
 const TYPE = CustomWidgetName.code;
 export const codeFactory = {
     cssClasses: {
@@ -17,48 +15,20 @@ export const codeFactory = {
                 return code;
             },
             getValue() {
-                return code.kulValue;
+                return code.kulValue || '';
             },
             setValue(value) {
-                const isEmpty = () => {
-                    return (value === '' ||
-                        value === null ||
-                        value === undefined ||
-                        value === '{}' ||
-                        !Object.keys(value).length);
+                const callback = (v, u) => {
+                    switch (code.kulLanguage) {
+                        case 'json':
+                            code.kulValue = u.unescapedStr || '';
+                            break;
+                        default:
+                            code.kulValue = v || '';
+                            break;
+                    }
                 };
-                switch (code.kulLanguage) {
-                    case 'json':
-                        if (isEmpty()) {
-                            code.kulValue = EMPTY;
-                        }
-                        try {
-                            if (typeof value === 'string') {
-                                code.kulValue = deserializeValue(value).unescapedStr;
-                            }
-                            else {
-                                code.kulValue = JSON.stringify(value);
-                            }
-                        }
-                        catch (error) {
-                            getLFManager().log('Error when setting value!', { error, code }, LogSeverity.Error);
-                            if (value === undefined || value === '') {
-                                code.kulValue = EMPTY;
-                            }
-                        }
-                        break;
-                    default:
-                        if (isEmpty()) {
-                            code.kulValue = '';
-                        }
-                        if (typeof value === 'string') {
-                            code.kulValue = value;
-                        }
-                        else {
-                            code.kulValue = JSON.stringify(value);
-                        }
-                        break;
-                }
+                normalizeValue(value, callback, TYPE);
             },
         };
     },
@@ -75,10 +45,10 @@ export const codeFactory = {
             case NodeName.shuffleJsonKeys:
             case NodeName.sortJsonKeys:
                 code.kulLanguage = 'json';
-                code.kulValue = EMPTY;
                 break;
             default:
                 code.kulLanguage = 'markdown';
+                break;
         }
         content.appendChild(code);
         wrapper.appendChild(content);

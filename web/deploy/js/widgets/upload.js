@@ -1,6 +1,6 @@
 import { LogSeverity } from '../types/manager.js';
-import { CustomWidgetName } from '../types/widgets.js';
-import { createDOMWidget, getLFManager } from '../utils/common.js';
+import { CustomWidgetName, } from '../types/widgets.js';
+import { createDOMWidget, getLFManager, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-upload';
 const TYPE = CustomWidgetName.upload;
 export const uploadFactory = {
@@ -15,10 +15,13 @@ export const uploadFactory = {
                 return upload;
             },
             getValue() {
-                return upload.dataset.files;
+                return upload.dataset.files || '';
             },
             setValue(value) {
-                upload.dataset.files = value;
+                const callback = (v) => {
+                    upload.dataset.files = value = v;
+                };
+                normalizeValue(value, callback, TYPE);
             },
         };
     },

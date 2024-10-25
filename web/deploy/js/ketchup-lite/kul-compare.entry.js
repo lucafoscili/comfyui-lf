@@ -51,7 +51,7 @@ const KulCompare = class {
             renderStart: 0,
             startTime: performance.now(),
         };
-        this.shapes = undefined;
+        this.shapes = {};
         this.view = 'overlay';
         this.isLeftPanelOpened = false;
         this.isRightPanelOpened = false;
@@ -134,7 +134,7 @@ const KulCompare = class {
     /*           P r i v a t e   M e t h o d s         */
     /*-------------------------------------------------*/
     #getShapes() {
-        return this.shapes[this.kulShape];
+        return this.shapes?.[this.kulShape] || [];
     }
     #hasShapes() {
         return !!this.shapes?.[this.kulShape];
@@ -249,7 +249,7 @@ const KulCompare = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: '004e029f793300f609c6b012a19c31eb86a14a4d' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '92e0ba3d5055f22bf684c53e8162ee1b2a532ce7', id: KUL_WRAPPER_ID }, h("div", { key: '2f8f4ae581da85878130ed4eeae466f2b423f47e', class: "compare" }, this.#prepCompare()))));
+        return (h(Host, { key: '0f7568ab5a070f0c9f58f2e92bda6df5ec4515d9' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '83752dbc1f8b5282cb1c8734af4edfb735bce053', id: KUL_WRAPPER_ID }, h("div", { key: 'fc8d9db56a3ec1bad294d470b88f116ab909dbc0', class: "compare" }, this.#prepCompare()))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

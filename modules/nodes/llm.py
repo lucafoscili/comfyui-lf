@@ -1,9 +1,10 @@
 import json
-import torch
 import requests
+import torch
 
-from ..utils.llm import *
+from ..constants.common import *
 from ..constants.llm import *
+from ..utils.llm import *
 
 category = "✨ LF Nodes/LLM"
 
@@ -12,12 +13,12 @@ class LF_CharacterImpersonator:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "temperature" : ("FLOAT", {"max": 1.901, "min": 0.1, "step": 0.1, "display": "number", "round": 0.1, "default": 0.7, "tooltip": "Controls the randomness of the generated text. Higher values make the output more random."}),
-                "max_tokens" : ("INT", {"max": 8000, "min": 20, "step": 10, "default": 500, "display": "number", "tooltip": "Limits the length of the generated text. Adjusting this value can help control the verbosity of the output."}),
+                "temperature": ("FLOAT", {"max": 1.901, "min": 0.1, "step": 0.1, "round": 0.1, "default": 0.7, "tooltip": "Controls the randomness of the generated text. Higher values make the output more random."}),
+                "max_tokens": ("INT", {"max": 8000, "min": 20, "step": 10, "default": 500, "tooltip": "Limits the length of the generated text. Adjusting this value can help control the verbosity of the output."}),
                 "prompt": ("STRING", {"multiline": True, "default": "", "tooltip": "The initial input or question that guides the generation process. Can be a single line or multiple lines of text."}),
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff, "tooltip": "Determines the starting point for generating random numbers. Setting a specific seed ensures reproducibility of results."}),
                 "character_bio": ("STRING", {"multiline": True, "default": "", "tooltip": "Biographical details of the character to be impersonated. Helps in shaping the tone and content of the generated text."}),
-                "url": ("STRING", {"multiline": True, "default": "http://localhost:5001/v1/chat/completions", "tooltip": "URL of the local endpoint where the request is sent."}),
+                "url": ("STRING", {"default": "http://localhost:5001/v1/chat/completions", "tooltip": "URL of the local endpoint where the request is sent."}),
             },
             "optional":{
                 "image" : ("IMAGE", {"default": None, "tooltip": "An optional image that can be included in the generation process to influence the output based on visual cues."})
@@ -29,7 +30,7 @@ class LF_CharacterImpersonator:
     RETURN_NAMES = ("request_json", "response_json", "answer")
     RETURN_TYPES = ("JSON", "JSON", "STRING")
 
-    def on_exec(self, temperature, max_tokens, prompt, seed, character_bio, url, image=None):
+    def on_exec(self, temperature: float, max_tokens: int, prompt: str, seed: int, character_bio: str, url: str, image: torch.Tensor = None):
         if isinstance(image, torch.Tensor):
             image = tensor_to_b64(image)
 
@@ -37,7 +38,7 @@ class LF_CharacterImpersonator:
 
         content = []
         if image:
-            image_url = f"data:image/jpeg;base64,{image}"
+            image_url = f"{base64_web_prefix}{image}"
             content.append({"type": "image_url", "image_url": {"url":image_url}})
         if prompt:
             content.append({"type": "text", "text": prompt})
@@ -73,13 +74,15 @@ class LF_ImageClassifier:
         return {
             "required": {
                 "image" : ("IMAGE", {"default": None, "tooltip": "The image that the LLM will try to classify."}),
-                "temperature" : ("FLOAT", {"max": 1.901, "min": 0.1, "step": 0.1, "display": "number", "round": 0.1, "default": 0.7, "tooltip": "Controls the randomness of the generated text. Higher values make the output more random."}),
-                "max_tokens" : ("INT", {"max": 8000, "min": 20, "step": 10, "default": 500, "display": "number", "tooltip": "Limits the length of the generated text. Adjusting this value can help control the verbosity of the output."}),
+                "temperature" : ("FLOAT", {"max": 1.901, "min": 0.1, "step": 0.1, "round": 0.1, "default": 0.7, "tooltip": "Controls the randomness of the generated text. Higher values make the output more random."}),
+                "max_tokens" : ("INT", {"max": 8000, "min": 20, "step": 10, "default": 500, "tooltip": "Limits the length of the generated text. Adjusting this value can help control the verbosity of the output."}),
                 "prompt": ("STRING", {"multiline": True, "default": "", "tooltip": "The initial input or question that guides the generation process. Can be a single line or multiple lines of text."}),
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff, "tooltip": "Determines the starting point for generating random numbers. Setting a specific seed ensures reproducibility of results."}),
-                "character_bio": ("STRING", {"multiline": True, "default": "", "tooltip": "Biographical details of the character to be impersonated. Helps in shaping the tone and content of the generated text."}),
-                "url": ("STRING", {"multiline": True, "default": "http://localhost:5001/v1/chat/completions", "tooltip": "URL of the local endpoint where the request is sent."}),
+                "url": ("STRING", {"default": "http://localhost:5001/v1/chat/completions", "tooltip": "URL of the local endpoint where the request is sent."}),
             },
+            "optional": {
+                "character_bio": ("STRING", {"multiline": True, "default": "", "tooltip": "Biographical details of the character to be impersonated. Helps in shaping the tone and content of the generated text."}),
+            }
         }
 
     CATEGORY = category
@@ -87,7 +90,7 @@ class LF_ImageClassifier:
     RETURN_NAMES = ("request_json", "response_json", "message")
     RETURN_TYPES = ("JSON", "JSON", "STRING")
 
-    def on_exec(self, temperature, max_tokens, prompt, seed, character_bio, url, image=None):
+    def on_exec(self, temperature: float, max_tokens: int, prompt: str, seed: int, url: str, image: torch.Tensor, character_bio: str = None):
         if isinstance(image, torch.Tensor):
             image = tensor_to_b64(image)
 
@@ -99,7 +102,7 @@ class LF_ImageClassifier:
 
         content = []
         if image:
-            image_url = f"data:image/jpeg;base64,{image}"
+            image_url = f"{base64_web_prefix}{image}"
             content.append({"type": "image_url", "image_url": {"url":image_url}})
         if prompt:
             content.append({"type": "text", "text": prompt})
@@ -145,13 +148,18 @@ class LF_LLMChat:
     RETURN_NAMES = ("chat_history_json", "last_message", "last_user_message", "last_llm_message", "all_messages")
     RETURN_TYPES = ("JSON", "STRING", "STRING", "STRING", "STRING")
 
-    def on_exec(self, KUL_CHAT):
-        chat_data = json.loads(KUL_CHAT)
-        all_messages = [message["content"] for message in chat_data]
+    def on_exec(self, KUL_CHAT: dict | str):
+        if isinstance(KUL_CHAT, str):
+            json_data = json.loads(KUL_CHAT)
+        else:
+            json_data = KUL_CHAT
+
+        all_messages = [message.get("content") for message in json_data]
         last_message = all_messages[-1]
-        last_user_message = next((message["content"] for message in reversed(chat_data) if message["role"] == "user"), "")
-        last_llm_message = next((message["content"] for message in reversed(chat_data) if message["role"] == "llm"), "")
-        return (chat_data, last_message, last_user_message, last_llm_message, json.dumps(all_messages))
+        last_user_message = next((message.get("content") for message in reversed(json_data) if message["role"] == "user"), "")
+        last_llm_message = next((message.get("content") for message in reversed(json_data) if message["role"] == "llm"), "")
+
+        return (json_data, last_message, last_user_message, last_llm_message, json.dumps(all_messages))
 
 class LF_LLMMessenger:
     @classmethod
@@ -175,27 +183,23 @@ class LF_LLMMessenger:
                     "STRING", "STRING", "STRING", "STRING", 
                     "STRING", "STRING", "STRING", "STRING", "STRING")
 
-    def on_exec(self, **kwargs):
-        messenger = kwargs["messenger"]
-    
-        try:
-            payload = json.loads(messenger)
-            dataset = payload["dataset"]
-            config = payload["config"]
-        except (json.JSONDecodeError, KeyError):
-            raise ValueError("It looks like the chat is empty!")
-        
+    def on_exec(self, **kwargs):    
         def find_node_by_id(dataset, target_id):
             for node in dataset:
                 if isinstance(node, dict) and 'id' in node and node['id'] == target_id:
                     return node
             return None
         
-        if isinstance(config, str):
-            try:
-                config = json.loads(config)
-            except json.JSONDecodeError:
-                raise ValueError("Invalid config format")
+        messenger: dict | str = kwargs["messenger"]
+
+        if isinstance(messenger, str):
+            messenger = json.loads(messenger)
+
+
+        dataset = messenger.get("dataset")
+        config = messenger.get("config")
+        if not dataset or not config:
+            raise ValueError("It looks like the chat is empty!")            
     
         if "currentCharacter" not in config:
             raise ValueError("You must choose a character")

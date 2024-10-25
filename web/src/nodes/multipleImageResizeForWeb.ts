@@ -9,7 +9,7 @@ const NAME = NodeName.multipleImageResizeForWeb;
 export const multipleImageResizeForWebFactory = {
   eventHandler: (
     event: CustomEvent<MultipleImageResizeForWebPayload>,
-    addW: BaseWidgetCallback,
+    addW: BaseWidgetCallback<CustomWidgetName.tree>,
   ) => {
     const name = EventName.multipleImageResizeForWeb;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
@@ -22,7 +22,7 @@ export const multipleImageResizeForWebFactory = {
       getApiRoutes().redraw();
     }
   },
-  register: (setW: TreeWidgetSetter, addW: BaseWidgetCallback) => {
+  register: (setW: TreeWidgetSetter, addW: BaseWidgetCallback<CustomWidgetName.tree>) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

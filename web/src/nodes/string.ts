@@ -8,7 +8,10 @@ import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 const NAME = NodeName.string;
 
 export const stringFactory = {
-  eventHandler: (event: CustomEvent<StringPayload>, addW: BaseWidgetCallback) => {
+  eventHandler: (
+    event: CustomEvent<StringPayload>,
+    addW: BaseWidgetCallback<CustomWidgetName.history>,
+  ) => {
     const name = EventName.string;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
@@ -45,7 +48,7 @@ export const stringFactory = {
       getApiRoutes().redraw();
     }
   },
-  register: (setW: HistoryWidgetSetter, addW: BaseWidgetCallback) => {
+  register: (setW: HistoryWidgetSetter, addW: BaseWidgetCallback<CustomWidgetName.history>) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

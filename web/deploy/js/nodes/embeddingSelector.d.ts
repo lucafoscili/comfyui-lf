@@ -1,6 +1,6 @@
 import { EmbeddingSelectorPayload } from '../types/events';
-import { type BaseWidgetCallback, type CardWidgetSetter } from '../types/widgets';
+import { CustomWidgetName, type BaseWidgetCallback, type CardWidgetSetter } from '../types/widgets';
 export declare const embeddingSelectorFactory: {
-    eventHandler: (event: CustomEvent<EmbeddingSelectorPayload>, addW: BaseWidgetCallback) => void;
-    register: (setW: CardWidgetSetter, addW: BaseWidgetCallback) => void;
+    eventHandler: (event: CustomEvent<EmbeddingSelectorPayload>, addW: BaseWidgetCallback<CustomWidgetName.card>) => void;
+    register: (setW: CardWidgetSetter, addW: BaseWidgetCallback<CustomWidgetName.card>) => void;
 };

@@ -11,7 +11,10 @@ import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 const NAME = NodeName.switchImage;
 
 export const switchImageFactory = {
-  eventHandler: (event: CustomEvent<SwitchImagePayload>, addW: BaseWidgetCallback) => {
+  eventHandler: (
+    event: CustomEvent<SwitchImagePayload>,
+    addW: BaseWidgetCallback<CustomWidgetName.booleanViewer>,
+  ) => {
     const name = EventName.switchImage;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
@@ -25,7 +28,10 @@ export const switchImageFactory = {
       getApiRoutes().redraw();
     }
   },
-  register: (setW: BooleanViewerWidgetSetter, addW: BaseWidgetCallback) => {
+  register: (
+    setW: BooleanViewerWidgetSetter,
+    addW: BaseWidgetCallback<CustomWidgetName.booleanViewer>,
+  ) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

@@ -3,6 +3,7 @@ import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import {
   CustomWidgetName,
+  ImagePreviewWidgetDeserializedValue,
   type BaseWidgetCallback,
   type ImagePreviewWidgetSetter,
 } from '../types/widgets';
@@ -11,7 +12,10 @@ import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 const NAME = NodeName.blurImages;
 
 export const blurImagesFactory = {
-  eventHandler: (event: CustomEvent<BlurImagesPayload>, addW: BaseWidgetCallback) => {
+  eventHandler: (
+    event: CustomEvent<BlurImagesPayload>,
+    addW: BaseWidgetCallback<CustomWidgetName.imagePreview>,
+  ) => {
     const name = EventName.blurImages;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
@@ -19,11 +23,19 @@ export const blurImagesFactory = {
     const node = getApiRoutes().getNodeById(payload.id);
     if (node) {
       const widget = getCustomWidget(node, CustomWidgetName.imagePreview, addW);
-      widget.options.setValue({ ...payload, selectedIndex: undefined, selectedName: undefined });
+      const value: ImagePreviewWidgetDeserializedValue = {
+        ...payload,
+        selectedIndex: undefined,
+        selectedName: undefined,
+      };
+      widget.options.setValue(JSON.stringify(value));
       getApiRoutes().redraw();
     }
   },
-  register: (setW: ImagePreviewWidgetSetter, addW: BaseWidgetCallback) => {
+  register: (
+    setW: ImagePreviewWidgetSetter,
+    addW: BaseWidgetCallback<CustomWidgetName.imagePreview>,
+  ) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

@@ -1,40 +1,42 @@
-import { LogSeverity } from '../types/manager';
 import { NodeName } from '../types/nodes';
 import {
+  CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
-  TreeWidgetOptions,
-  TreeWidgetValuetDeserializedValue,
+  NormalizeValueCallback,
+  TreeWidgetFactory,
+  TreeWidgetValueDeserializedValue,
 } from '../types/widgets';
-import { createDOMWidget, getLFManager, deserializeValue } from '../utils/common';
+import { createDOMWidget, normalizeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-tree';
 const TYPE = CustomWidgetName.tree;
 
-export const treeFactory = {
+export const treeFactory: TreeWidgetFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
     tree: `${BASE_CSS_CLASS}__widget`,
   },
-  options: (tree: HTMLKulTreeElement) => {
+  options: (tree) => {
     return {
       hideOnZoom: true,
       getComp() {
         return tree;
       },
       getValue() {
-        return '';
+        return tree.kulData || {};
       },
       setValue(value) {
-        try {
-          tree.kulData = deserializeValue(value).parsedJson as TreeWidgetValuetDeserializedValue;
-        } catch (error) {
-          getLFManager().log('Error when setting value!', { error, tree }, LogSeverity.Error);
-          tree.kulData = null;
-        }
+        const callback: NormalizeValueCallback<
+          CustomWidgetDeserializedValuesMap<typeof TYPE> | string
+        > = (_, u) => {
+          tree.kulData = (u.parsedJson as TreeWidgetValueDeserializedValue) || {};
+        };
+
+        normalizeValue(value, callback, TYPE);
       },
-    } as TreeWidgetOptions;
+    };
   },
-  render: (node: NodeType, name: CustomWidgetName) => {
+  render: (node, name) => {
     const wrapper = document.createElement('div');
     const content = document.createElement('div');
     const tree = document.createElement('kul-tree');

@@ -91,8 +91,13 @@ def process_model(model_type, model_name, folder):
         try:
             kul_image_value = saved_info['nodes'][0]['cells']['kulImage']['value']
             if kul_image_value.startswith(base64_web_prefix):
-                model_base64 = kul_image_value.replace(base64_web_prefix, "")
-                model_cover = base64_to_tensor(model_base64)
+                try:
+                    model_base64 = kul_image_value.replace(base64_web_prefix, "")
+                    model_cover = base64_to_tensor(model_base64)
+                except Exception as e:
+                    model_cover = None
+            else:
+                model_cover = None
         except (KeyError, IndexError):
             print("kulImage not found in saved_info, using defaults.")
 

@@ -8,7 +8,10 @@ import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 const NAME = NodeName.loadFileOnce;
 
 export const loadFileOnceFactory = {
-  eventHandler: (event: CustomEvent<LoadFileOncePayload>, addW: BaseWidgetCallback) => {
+  eventHandler: (
+    event: CustomEvent<LoadFileOncePayload>,
+    addW: BaseWidgetCallback<CustomWidgetName.history>,
+  ) => {
     const name = EventName.string;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 

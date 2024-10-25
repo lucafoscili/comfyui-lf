@@ -1,6 +1,6 @@
 import { NodeName } from '../types/nodes.js';
-import { CustomWidgetName } from '../types/widgets.js';
-import { createDOMWidget, deserializeValue } from '../utils/common.js';
+import { CustomWidgetName, } from '../types/widgets.js';
+import { createDOMWidget, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-compare';
 const TYPE = CustomWidgetName.compare;
 export const compareFactory = {
@@ -14,9 +14,14 @@ export const compareFactory = {
             getComp() {
                 return compare;
             },
-            getValue() { },
+            getValue() {
+                return {};
+            },
             setValue(value) {
-                compare.kulData = deserializeValue(value).parsedJson;
+                const callback = (_, u) => {
+                    compare.kulData = u.parsedJson || {};
+                };
+                normalizeValue(value, callback, TYPE);
             },
         };
     },

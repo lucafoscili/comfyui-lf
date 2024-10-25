@@ -11,7 +11,10 @@ import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 const NAME = NodeName.randomBoolean;
 
 export const randomBooleanFactory = {
-  eventHandler: (event: CustomEvent<RandomBooleanPayload>, addW: BaseWidgetCallback) => {
+  eventHandler: (
+    event: CustomEvent<RandomBooleanPayload>,
+    addW: BaseWidgetCallback<CustomWidgetName.rollViewer>,
+  ) => {
     const name = EventName.randomBoolean;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
@@ -23,7 +26,10 @@ export const randomBooleanFactory = {
       getApiRoutes().redraw();
     }
   },
-  register: (setW: RollViewerWidgetSetter, addW: BaseWidgetCallback) => {
+  register: (
+    setW: RollViewerWidgetSetter,
+    addW: BaseWidgetCallback<CustomWidgetName.rollViewer>,
+  ) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

@@ -1,33 +1,44 @@
 import { KulUploadEventPayload } from '../types/ketchup-lite/components';
 import { LogSeverity } from '../types/manager';
-import { CustomWidgetName, UploadWidgetOptions } from '../types/widgets';
-import { createDOMWidget, getLFManager } from '../utils/common';
+import {
+  CustomWidgetDeserializedValuesMap,
+  CustomWidgetName,
+  NormalizeValueCallback,
+  UploadWidgetFactory,
+} from '../types/widgets';
+import { createDOMWidget, getLFManager, normalizeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-upload';
 const TYPE = CustomWidgetName.upload;
 
-export const uploadFactory = {
+export const uploadFactory: UploadWidgetFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
     upload: `${BASE_CSS_CLASS}__widget`,
   },
 
-  options: (upload: HTMLKulUploadElement) => {
+  options: (upload) => {
     return {
       hideOnZoom: true,
       getComp() {
         return upload;
       },
       getValue() {
-        return upload.dataset.files;
+        return upload.dataset.files || '';
       },
       setValue(value: string) {
-        upload.dataset.files = value;
+        const callback: NormalizeValueCallback<
+          CustomWidgetDeserializedValuesMap<typeof TYPE> | string
+        > = (v) => {
+          upload.dataset.files = value = v;
+        };
+
+        normalizeValue(value, callback, TYPE);
       },
-    } as UploadWidgetOptions;
+    };
   },
 
-  render: (node: NodeType, name: CustomWidgetName) => {
+  render: (node, name) => {
     const wrapper = document.createElement('div');
     const content = document.createElement('div');
     const upload = document.createElement('kul-upload');

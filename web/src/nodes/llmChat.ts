@@ -5,7 +5,7 @@ import { getApiRoutes } from '../utils/common';
 const NAME = NodeName.llmChat;
 
 export const llmChatFactory = {
-  register: (setW: ChatWidgetSetter, addW: BaseWidgetCallback) => {
+  register: (setW: ChatWidgetSetter, addW: BaseWidgetCallback<CustomWidgetName.chat>) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

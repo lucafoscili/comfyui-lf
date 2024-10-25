@@ -7,7 +7,10 @@ import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 const NAME = NodeName.isLandscape;
 
 export const isLandscapeFactory = {
-  eventHandler: (event: CustomEvent<IsLandscapePayload>, addW: BaseWidgetCallback) => {
+  eventHandler: (
+    event: CustomEvent<IsLandscapePayload>,
+    addW: BaseWidgetCallback<CustomWidgetName.tree>,
+  ) => {
     const name = EventName.isLandscape;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
@@ -19,7 +22,7 @@ export const isLandscapeFactory = {
       getApiRoutes().redraw();
     }
   },
-  register: (setW: TreeWidgetSetter, addW: BaseWidgetCallback) => {
+  register: (setW: TreeWidgetSetter, addW: BaseWidgetCallback<CustomWidgetName.tree>) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

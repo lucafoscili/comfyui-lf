@@ -1,6 +1,6 @@
 import { LoadLoraTagsPayload } from '../types/events';
-import { CardsWithChipWidgetSetter, type BaseWidgetCallback } from '../types/widgets';
+import { CardsWithChipWidgetSetter, CustomWidgetName, type BaseWidgetCallback } from '../types/widgets';
 export declare const loadLoraTagsFactory: {
-    eventHandler: (event: CustomEvent<LoadLoraTagsPayload>, addW: BaseWidgetCallback) => void;
-    register: (setW: CardsWithChipWidgetSetter, addW: BaseWidgetCallback) => void;
+    eventHandler: (event: CustomEvent<LoadLoraTagsPayload>, addW: BaseWidgetCallback<CustomWidgetName.cardsWithChip>) => void;
+    register: (setW: CardsWithChipWidgetSetter, addW: BaseWidgetCallback<CustomWidgetName.cardsWithChip>) => void;
 };

@@ -11,7 +11,10 @@ import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 const NAME = NodeName.clarityEffect;
 
 export const clarityEffectFactory = {
-  eventHandler: (event: CustomEvent<ClarityEffectPayload>, addW: BaseWidgetCallback) => {
+  eventHandler: (
+    event: CustomEvent<ClarityEffectPayload>,
+    addW: BaseWidgetCallback<CustomWidgetName.compare>,
+  ) => {
     const name = EventName.clarityEffect;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
@@ -23,7 +26,7 @@ export const clarityEffectFactory = {
       getApiRoutes().redraw();
     }
   },
-  register: (setW: CompareWidgetSetter, addW: BaseWidgetCallback) => {
+  register: (setW: CompareWidgetSetter, addW: BaseWidgetCallback<CustomWidgetName.compare>) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

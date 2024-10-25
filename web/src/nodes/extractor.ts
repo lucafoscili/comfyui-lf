@@ -7,7 +7,10 @@ import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 const NAME = NodeName.extractor;
 
 export const extractorFactory = {
-  eventHandler: (event: CustomEvent<ExtractorPayload>, addW: BaseWidgetCallback) => {
+  eventHandler: (
+    event: CustomEvent<ExtractorPayload>,
+    addW: BaseWidgetCallback<CustomWidgetName.code>,
+  ) => {
     const name = EventName.extractor;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 

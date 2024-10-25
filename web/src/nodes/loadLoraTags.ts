@@ -13,7 +13,10 @@ import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 const NAME = NodeName.loadLoraTags;
 
 export const loadLoraTagsFactory = {
-  eventHandler: (event: CustomEvent<LoadLoraTagsPayload>, addW: BaseWidgetCallback) => {
+  eventHandler: (
+    event: CustomEvent<LoadLoraTagsPayload>,
+    addW: BaseWidgetCallback<CustomWidgetName.cardsWithChip>,
+  ) => {
     const name = EventName.loadLoraTags;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
@@ -52,7 +55,10 @@ export const loadLoraTagsFactory = {
       });
     }
   },
-  register: (setW: CardsWithChipWidgetSetter, addW: BaseWidgetCallback) => {
+  register: (
+    setW: CardsWithChipWidgetSetter,
+    addW: BaseWidgetCallback<CustomWidgetName.cardsWithChip>,
+  ) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

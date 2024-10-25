@@ -11,7 +11,10 @@ import { getApiRoutes, getCustomWidget, getLFManager, refreshChart } from '../ut
 const NAME = NodeName.imageHistogram;
 
 export const imageHistogramFactory = {
-  eventHandler: (event: CustomEvent<ImageHistogramPayload>, addW: BaseWidgetCallback) => {
+  eventHandler: (
+    event: CustomEvent<ImageHistogramPayload>,
+    addW: BaseWidgetCallback<CustomWidgetName.tabBarChart>,
+  ) => {
     const name = EventName.imageHistogram;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
@@ -27,7 +30,10 @@ export const imageHistogramFactory = {
       }
     }
   },
-  register: (setW: TabBarChartWidgetSetter, addW: BaseWidgetCallback) => {
+  register: (
+    setW: TabBarChartWidgetSetter,
+    addW: BaseWidgetCallback<CustomWidgetName.tabBarChart>,
+  ) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

@@ -4,6 +4,7 @@ import random
 
 from ..utils.io import image_to_base64
 from ..utils.json import *
+from ..utils.primitives import convert_to_json
 
 from server import PromptServer
 
@@ -262,6 +263,8 @@ class LF_ShuffleJSONKeys:
     RETURN_TYPES = ("JSON",)
 
     def on_exec(self, node_id, json: dict, mutate_source: bool, seed: int):
+        if isinstance(json, str):
+            json = convert_to_json(json)
         random.seed(seed)
 
         if mutate_source:
@@ -303,6 +306,9 @@ class LF_SortJSONKeys:
     RETURN_TYPES = ("JSON",)
 
     def on_exec(self, node_id, json: dict, ascending: bool, mutate_source: bool):
+        if isinstance(json, str):
+            json = convert_to_json(json)
+            
         if mutate_source:
             items = {key: json[key] for key in json}
             json.clear()
@@ -362,8 +368,11 @@ class LF_WriteJSON:
     OUTPUT_NODE = True
     RETURN_TYPES = ("JSON",)
 
-    def on_exec(self, KUL_JSON_INPUT: str, node_id: str):
-        json_data = json.loads(KUL_JSON_INPUT)
+    def on_exec(self, KUL_JSON_INPUT: str | dict, node_id: str):
+        if isinstance(KUL_JSON_INPUT, str):
+            json_data = json.loads(KUL_JSON_INPUT)
+        else:
+            json_data = KUL_JSON_INPUT
 
         PromptServer.instance.send_sync("lf-writejson", {
             "node": node_id,

@@ -1,44 +1,44 @@
 import { KulChipEventPayload } from '../types/ketchup-lite/components';
 import { KulChip } from '../types/ketchup-lite/components/kul-chip/kul-chip';
 import { NodeName } from '../types/nodes';
-import { CustomWidgetName, ChipWidgetOptions } from '../types/widgets';
-import { createDOMWidget, getKulManager } from '../utils/common';
+import {
+  CustomWidgetName,
+  ChipWidgetFactory,
+  CustomWidgetDeserializedValuesMap,
+  NormalizeValueCallback,
+} from '../types/widgets';
+import { createDOMWidget, normalizeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-chip';
 const TYPE = CustomWidgetName.chip;
 
-export const chipFactory = {
+export const chipFactory: ChipWidgetFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
     chip: `${BASE_CSS_CLASS}__widget`,
   },
-  options: (chip: HTMLKulChipElement) => {
+  options: (chip) => {
     return {
       hideOnZoom: true,
       getComp() {
         return chip;
       },
       getValue() {
-        return chip?.dataset.selectedChips;
+        return chip?.dataset.selectedChips || '';
       },
-      setValue(value: string) {
-        if (value) {
-          const kulManager = getKulManager();
-          chip.dataset.selectedChips = value;
-          if (kulManager) {
-            chip.setSelectedNodes(value.split(', '));
-          } else {
-            const managerCb = () => {
-              chip.setSelectedNodes(value.split(', '));
-              document.removeEventListener('kul-manager-ready', managerCb);
-            };
-            document.addEventListener('kul-manager-ready', managerCb);
-          }
-        }
+      setValue(value) {
+        const callback: NormalizeValueCallback<
+          CustomWidgetDeserializedValuesMap<typeof TYPE> | string
+        > = (v) => {
+          chip.dataset.selectedChips = v;
+          chip.setSelectedNodes(v.split(', '));
+        };
+
+        normalizeValue(value, callback, TYPE);
       },
-    } as ChipWidgetOptions;
+    };
   },
-  render: (node: NodeType, name: CustomWidgetName) => {
+  render: (node, name) => {
     const wrapper = document.createElement('div');
     const content = document.createElement('div');
     const chip = document.createElement('kul-chip');

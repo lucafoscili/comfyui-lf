@@ -7,7 +7,10 @@ import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 const NAME = NodeName.resizeImageToSquare;
 
 export const resizeImageToSquareFactory = {
-  eventHandler: (event: CustomEvent<ResizeImageToSquarePayload>, addW: BaseWidgetCallback) => {
+  eventHandler: (
+    event: CustomEvent<ResizeImageToSquarePayload>,
+    addW: BaseWidgetCallback<CustomWidgetName.tree>,
+  ) => {
     const name = EventName.resizeimageToSquare;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
@@ -19,7 +22,7 @@ export const resizeImageToSquareFactory = {
       getApiRoutes().redraw();
     }
   },
-  register: (setW: TreeWidgetSetter, addW: BaseWidgetCallback) => {
+  register: (setW: TreeWidgetSetter, addW: BaseWidgetCallback<CustomWidgetName.tree>) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

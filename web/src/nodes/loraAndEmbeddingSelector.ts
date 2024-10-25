@@ -13,7 +13,10 @@ import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 const NAME = NodeName.loraAndEmbeddingSelector;
 
 export const loraAndEmbeddingSelectorFactory = {
-  eventHandler: (event: CustomEvent<LoraAndEmbeddingSelectorPayload>, addW: BaseWidgetCallback) => {
+  eventHandler: (
+    event: CustomEvent<LoraAndEmbeddingSelectorPayload>,
+    addW: BaseWidgetCallback<CustomWidgetName.card>,
+  ) => {
     const name = EventName.loraAndEmbeddingSelector;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
@@ -52,7 +55,7 @@ export const loraAndEmbeddingSelectorFactory = {
       });
     }
   },
-  register: (setW: CardWidgetSetter, addW: BaseWidgetCallback) => {
+  register: (setW: CardWidgetSetter, addW: BaseWidgetCallback<CustomWidgetName.card>) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

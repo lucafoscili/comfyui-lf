@@ -1,6 +1,6 @@
-import { CustomWidgetName } from '../types/widgets.js';
+import { CustomWidgetName, } from '../types/widgets.js';
 import { cardHandler, getCardProps } from '../helpers/card.js';
-import { createDOMWidget, serializeValue, deserializeValue, getCustomWidget, } from '../utils/common.js';
+import { createDOMWidget, getCustomWidget, normalizeValue } from '../utils/common.js';
 import { NodeName } from '../types/nodes.js';
 import { cardPlaceholders, fetchModelMetadata } from '../utils/api.js';
 const BASE_CSS_CLASS = 'lf-card';
@@ -18,21 +18,19 @@ export const cardFactory = {
                 return Array.from(grid.querySelectorAll('kul-card'));
             },
             getValue() {
-                const value = {
-                    propsArray: getCardProps(grid),
+                return {
+                    propsArray: getCardProps(grid) || [],
                     template: grid?.style.getPropertyValue('--card-grid') || '',
                 };
-                return serializeValue(value);
             },
             setValue(value) {
-                if (!value) {
-                    return;
-                }
-                const { propsArray, template } = deserializeValue(value)
-                    .parsedJson;
-                const gridTemplate = template || 'repeat(1, 1fr) / repeat(1, 1fr)';
-                grid.style.setProperty('--card-grid', gridTemplate);
-                cardHandler(grid, propsArray);
+                const callback = (_, u) => {
+                    const { propsArray, template } = u.parsedJson;
+                    const gridTemplate = template || 'repeat(1, 1fr) / repeat(1, 1fr)';
+                    grid.style.setProperty('--card-grid', gridTemplate);
+                    cardHandler(grid, propsArray);
+                };
+                normalizeValue(value, callback, TYPE);
             },
         };
     },
@@ -70,7 +68,7 @@ const selectorButton = (grid, node) => {
                     cards.forEach((card) => {
                         const hashCell = card.kulData?.nodes?.[0]?.cells?.kulCode;
                         if (hashCell) {
-                            const { hash, path } = JSON.parse(hashCell.value);
+                            const { hash, path } = JSON.parse(JSON.stringify(hashCell.value));
                             const dataset = card.kulData;
                             button.kulShowSpinner = true;
                             models.push({ apiFlag: true, dataset, hash, path });

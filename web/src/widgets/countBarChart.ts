@@ -1,12 +1,13 @@
 import { KulButtonEventPayload } from '../types/ketchup-lite/components';
 import { KulButton } from '../types/ketchup-lite/components/kul-button/kul-button';
-import { LogSeverity } from '../types/manager';
 import {
-  CountBarChartWidgetOptions,
-  CountBarChartWidgetValue,
+  CountBarChartWidgetDeserializedValue,
+  CountBarChartWidgetFactory,
+  CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
+  NormalizeValueCallback,
 } from '../types/widgets';
-import { createDOMWidget, getLFManager, deserializeValue } from '../utils/common';
+import { createDOMWidget, normalizeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-countbarchart';
 const TYPE = CustomWidgetName.countBarChart;
@@ -14,7 +15,7 @@ const DEF_ICON = 'content_copy';
 const DEF_LABEL = 'Copy selected';
 let TIMEOUT: NodeJS.Timeout;
 
-export const countBarChartFactory = {
+export const countBarChartFactory: CountBarChartWidgetFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
     grid: `${BASE_CSS_CLASS}__grid`,
@@ -23,40 +24,37 @@ export const countBarChartFactory = {
     button: `${BASE_CSS_CLASS}__button`,
     buttonHidden: `${BASE_CSS_CLASS}__button--hidden`,
   },
-  options: (chart: HTMLKulChartElement, chip: HTMLKulChipElement, button: HTMLKulButtonElement) => {
+  options: (chart, chip, button) => {
     return {
       hideOnZoom: true,
       getComp() {
         return { chart, chip, button };
       },
       getValue() {
-        const chartDataset = chart.kulData ?? JSON.stringify(chart.kulData);
-        const chipDataset = chip.kulData ?? JSON.stringify(chip.kulData);
-        return JSON.stringify({ chartDataset, chipDataset });
+        return {
+          chartDataset: chart.kulData || {},
+          chipDataset: chip.kulData || {},
+        };
       },
       setValue(value) {
-        try {
-          if (typeof value === 'string') {
-            const parsed = deserializeValue(value).parsedJson as CountBarChartWidgetValue;
-            chart.kulData = parsed['chartDataset'];
-            chip.kulData = parsed['chipDataset'];
-          } else {
-            const { chartDataset, chipDataset } = value;
-            chart.kulData = chartDataset;
-            chip.kulData = chipDataset;
-          }
+        const callback: NormalizeValueCallback<
+          CustomWidgetDeserializedValuesMap<typeof TYPE> | string
+        > = (_, u) => {
+          const { chartDataset, chipDataset } =
+            u.parsedJson as CountBarChartWidgetDeserializedValue;
+          chart.kulData = chartDataset || {};
+          chip.kulData = chipDataset || {};
           button.classList.remove(countBarChartFactory.cssClasses.buttonHidden);
-        } catch (error) {
-          getLFManager().log('Error when setting value!', { error, chart }, LogSeverity.Error);
-          if (value === undefined || value === '') {
-            chart.kulData = undefined;
-          }
+        };
+        const onException = () => {
           button.classList.add(countBarChartFactory.cssClasses.buttonHidden);
-        }
+        };
+
+        normalizeValue(value, callback, TYPE, onException);
       },
-    } as CountBarChartWidgetOptions;
+    };
   },
-  render: (node: NodeType, name: CustomWidgetName) => {
+  render: (node, name) => {
     const wrapper = document.createElement('div');
     const content = document.createElement('div');
     const grid = document.createElement('div');

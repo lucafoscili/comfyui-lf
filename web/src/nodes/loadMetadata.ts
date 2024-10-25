@@ -1,5 +1,5 @@
 import { NodeName, type Extension } from '../types/nodes';
-import { BaseWidgetCallback, CustomWidgetName, UploadWidgetSetter } from '../types/widgets';
+import { UploadWidgetSetter } from '../types/widgets';
 import { getApiRoutes } from '../utils/common';
 
 const NAME = NodeName.loadMetadata;

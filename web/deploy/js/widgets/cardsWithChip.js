@@ -1,6 +1,6 @@
 import { CustomWidgetName, } from '../types/widgets.js';
 import { cardHandler, getCardProps } from '../helpers/card.js';
-import { createDOMWidget, serializeValue, deserializeValue } from '../utils/common.js';
+import { createDOMWidget, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-cardswithchip';
 const TYPE = CustomWidgetName.cardsWithChip;
 export const cardsWithChipFactory = {
@@ -19,25 +19,26 @@ export const cardsWithChipFactory = {
                 return { cards, chip };
             },
             getValue() {
-                const value = {
-                    cardPropsArray: getCardProps(grid),
-                    chipDataset: grid.querySelector('kul-chip')?.kulData,
+                return {
+                    cardPropsArray: getCardProps(grid) || [],
+                    chipDataset: grid.querySelector('kul-chip')?.kulData || {},
                 };
-                return serializeValue(value);
             },
             setValue(value) {
-                const { cardPropsArray, chipDataset } = deserializeValue(value)
-                    .parsedJson;
-                const cardsCount = cardHandler(grid.querySelector(`.${cardsWithChipFactory.cssClasses.cards}`), cardPropsArray);
-                if (!cardsCount || !value) {
-                    return;
-                }
-                const columns = cardsCount > 1 ? 2 : 1;
-                grid.style.setProperty('--card-grid', String(columns).valueOf());
-                const chip = grid.querySelector('kul-chip');
-                if (chip) {
-                    chip.kulData = chipDataset;
-                }
+                const callback = (v, u) => {
+                    const { cardPropsArray, chipDataset } = u.parsedJson;
+                    const cardsCount = cardHandler(grid.querySelector(`.${cardsWithChipFactory.cssClasses.cards}`), cardPropsArray);
+                    if (!cardsCount || !v) {
+                        return;
+                    }
+                    const columns = cardsCount > 1 ? 2 : 1;
+                    grid.style.setProperty('--card-grid', String(columns).valueOf());
+                    const chip = grid.querySelector('kul-chip');
+                    if (chip) {
+                        chip.kulData = chipDataset;
+                    }
+                };
+                normalizeValue(value, callback, TYPE);
             },
         };
     },

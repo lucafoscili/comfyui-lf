@@ -11,7 +11,10 @@ import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 const NAME = NodeName.compareImages;
 
 export const compareImagesFactory = {
-  eventHandler: (event: CustomEvent<CompareImagesPayload>, addW: BaseWidgetCallback) => {
+  eventHandler: (
+    event: CustomEvent<CompareImagesPayload>,
+    addW: BaseWidgetCallback<CustomWidgetName.compare>,
+  ) => {
     const name = EventName.compareImages;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
@@ -23,7 +26,7 @@ export const compareImagesFactory = {
       getApiRoutes().redraw();
     }
   },
-  register: (setW: CompareWidgetSetter, addW: BaseWidgetCallback) => {
+  register: (setW: CompareWidgetSetter, addW: BaseWidgetCallback<CustomWidgetName.compare>) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

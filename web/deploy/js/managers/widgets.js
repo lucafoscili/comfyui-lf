@@ -7,7 +7,7 @@ var _LFWidgets_CSS_EMBEDS;
 import { app } from '/scripts/app.js';
 import { controlPanelFactory } from '../widgets/controlPanel.js';
 import { codeFactory } from '../widgets/code.js';
-import { CustomWidgetName } from '../types/widgets.js';
+import { CustomWidgetName, } from '../types/widgets.js';
 import { imagePreviewFactory } from '../widgets/imagePreview.js';
 import { booleanViewerFactory } from '../widgets/booleanViewer.js';
 import { jsonInputFactory } from '../widgets/jsonInput.js';
@@ -100,7 +100,7 @@ export class LFWidgets {
             },
         };
         this.option = {
-            [CustomWidgetName.booleanViewer]: (booleanViewer) => booleanViewerFactory.options(booleanViewer),
+            [CustomWidgetName.booleanViewer]: (textfield) => booleanViewerFactory.options(textfield),
             [CustomWidgetName.card]: (grid) => cardFactory.options(grid),
             [CustomWidgetName.cardsWithChip]: (grid) => cardsWithChipFactory.options(grid),
             [CustomWidgetName.chat]: (chat) => chatFactory.options(chat),
