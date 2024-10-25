@@ -12,6 +12,7 @@ export const tabBarChartFactory = {
         grid: `${BASE_CSS_CLASS}__grid`,
         gridNoDirectory: `${BASE_CSS_CLASS}__grid--no-directory`,
         spinner: `${BASE_CSS_CLASS}__spinner`,
+        tabbar: `${BASE_CSS_CLASS}__tabbar`,
     },
     options: (chart, tabbar, textfield, node) => {
         return {
@@ -114,6 +115,7 @@ export const tabBarChartFactory = {
         grid.classList.add(tabBarChartFactory.cssClasses.grid);
         tabbar.addEventListener('kul-tabbar-event', tabbarEventHandler.bind(tabbarEventHandler, chart, node.comfyClass));
         tabbar.kulValue = null;
+        tabbar.classList.add(tabBarChartFactory.cssClasses.tabbar);
         textfield.classList.add(tabBarChartFactory.cssClasses.directory);
         textfield.kulIcon = 'folder';
         textfield.kulLabel = 'Directory';
