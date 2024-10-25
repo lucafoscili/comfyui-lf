@@ -26,6 +26,7 @@ BACKUP_PATH = os.path.join(BASE_PATH, BACKUP_FOLDER)
 FUNCTION = "on_exec"
 
 CHECKPOINTS = get_filename_list("checkpoints")
+RESAMPLERS = ["bicubic", "bilinear", "linear", "nearest", "nearest exact"]
 SAMPLERS = KSampler.SAMPLERS
 SCHEDULERS = KSampler.SCHEDULERS
 UPSCALERS = get_filename_list("upscale_models")

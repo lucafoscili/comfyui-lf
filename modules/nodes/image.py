@@ -4,70 +4,78 @@ from PIL import Image, ImageFilter
 from server import PromptServer
 
 from ..constants.common import *
-from ..utils.common import normalize_input_image, normalize_list_to_value, normalize_output_image
+from ..utils.common import *
 from ..utils.image import *
 
-category = "✨ LF Nodes/Image"
+CATEGORY = f"{CATEGORY_PREFIX}/Image"
 
 class LF_BlurImages:
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "images": ("IMAGE", {"tooltip": "List of images to blur."}),
-                "file_names": ("STRING", {"forceInput": True, "tooltip": "Corresponding list of file names for the images."}),
+                "image": ("IMAGE", {"tooltip": "List of images to blur."}),
                 "blur_percentage": ("FLOAT", {"default": 0.25, "min": 0.05, "max": 1.0, "step": 0.05, "tooltip": "0% Blur: No blur applied, the image remains as-is. 100% Blur: Maximum blur applied based on the image's dimensions, which would result in a highly blurred (almost unrecognizable) image."})
             },
-            "hidden": {"node_id": "UNIQUE_ID"}
+            "optional": {
+                "file_name": ("STRING", {"forceInput": True, "tooltip": "Corresponding list of file names for the images."}),
+            },
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
-    INPUT_IS_LIST = (True, True, False, False)
-    OUTPUT_IS_LIST = (True, True)
-    RETURN_NAMES = ("images", "file_names")
-    RETURN_TYPES = ("IMAGE", "STRING")
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    OUTPUT_IS_LIST = (False, True, True, False)
+    RETURN_NAMES = ("image", "image_list", "file_name", "count")
+    RETURN_TYPES = ("IMAGE", "IMAGE", "STRING", "INT")
 
-    def on_exec(self, node_id, images, file_names, blur_percentage):
+    def on_exec(self, node_id:int, image:torch.Tensor, file_name:str, blur_percentage:float):
+        blur_percentage:float = normalize_list_to_value(blur_percentage)
+        file_name = normalize_input_list(file_name)
+        image = normalize_input_image(image)
+
         blurred_images = []
         blurred_file_names = []
+        b64_images = []
 
-        if isinstance(blur_percentage, (list, tuple)):
-            blur_percentage = blur_percentage[0]  # Take the first value if it's a list or tuple
+        for index, img in enumerate(image):
+            f_name = file_name[index]
+            split_name = f_name.rsplit('.', 1)
+            if len(split_name) == 2:
+                base_name, original_extension = split_name
+            else:
+                base_name = split_name[0]
+                original_extension = ""
 
-        for index, image_data in enumerate(images):
+            pil_image = tensor_to_pil(img)
             
-            file_name = file_names[index]
-            base_name, original_extension = file_name.rsplit('.', 1)  # Split base name and extension
-            
-            # Convert the tensor to a PIL Image
-            image = tensor_to_pil(image_data)
-            
-            # Scale the blur radius based on image size
-            width, height = image.size
+            width, height = pil_image.size
             min_dimension = min(width, height)
-            adjusted_blur_radius = blur_percentage * (min_dimension / 10)
+            adjusted_blur_radius:float = blur_percentage * (min_dimension / 10)
             
-            # Apply Gaussian blur with the adjusted blur radius
-            blurred_image = image.filter(ImageFilter.GaussianBlur(adjusted_blur_radius))
+            blurred_image = pil_image.filter(ImageFilter.GaussianBlur(adjusted_blur_radius))
             
-            # Convert the blurred image back to a tensor
             blurred_tensor = pil_to_tensor(blurred_image)
             blurred_images.append(blurred_tensor)
+
+            b64_image = tensor_to_base64(blurred_tensor)
+            b64_images.append(b64_image)
             
-            # Construct the new file name with '_Blur' suffix
-            new_file_name = f"{base_name}_Blur.{original_extension}"
+            new_file_name = f"{base_name}_Blur{'.' + original_extension if original_extension else ''}"
             blurred_file_names.append(new_file_name)
 
-        b64_images = tensor_to_base64(blurred_images)
         
-        PromptServer.instance.send_sync("lf-blurimages", {
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}blurimages", {
             "node": node_id,
             "fileNames": blurred_file_names,
             "images": b64_images,
         })
 
-        return (blurred_images, blurred_file_names,)
+        image_batch, image_list = normalize_output_image(blurred_images)
+
+        return (image_batch[0], image_list, blurred_file_names, index)
 
 class LF_ClarityEffect:
     @classmethod
@@ -79,30 +87,34 @@ class LF_ClarityEffect:
                 "sharpen_amount": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 5.0, "step": 0.1, "tooltip": "Controls how much sharpening is applied to the image."}),
                 "blur_kernel_size": ("INT", {"default": 7, "min": 1, "max": 15, "step": 2, "tooltip": "Controls the size of the Gaussian blur kernel. Higher values mean more smoothing."}),
             },
-            "hidden": {"node_id": "UNIQUE_ID"}
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
-    INPUT_IS_LIST = (True, False, False, False)
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
     OUTPUT_IS_LIST = (False, True)
-    RETURN_NAMES = ("image","image")
-    RETURN_TYPES = ("IMAGE","IMAGE")
+    OUTPUT_NODE = True
+    RETURN_NAMES = ("image", "image_list")
+    RETURN_TYPES = ("IMAGE", "IMAGE")
 
-    def on_exec(self, node_id, image, clarity_strength: float, sharpen_amount: float, blur_kernel_size: int):
-        image_list = normalize_input_image(image)
+    def on_exec(self, node_id:int, image:torch.Tensor, clarity_strength:float, sharpen_amount:float, blur_kernel_size:int):
+        image = normalize_input_image(image)
         clarity_strength = normalize_list_to_value(clarity_strength)
         sharpen_amount = normalize_list_to_value(sharpen_amount)
         blur_kernel_size = normalize_list_to_value(blur_kernel_size)
-        
-        processed_images = [clarity_effect(img, clarity_strength, sharpen_amount, blur_kernel_size) for img in image_list]
 
-        dataset = {"nodes": []}
-        for i, img in enumerate(image_list):
+        nodes = []
+        dataset = { "nodes": nodes }
+        
+        processed_images = [clarity_effect(img, clarity_strength, sharpen_amount, blur_kernel_size) for img in image]
+
+        for i, img in enumerate(image):
             b64_source = tensor_to_base64(img)
             b64_target = tensor_to_base64(processed_images[i])
 
-            dataset["nodes"].append({
+            nodes.append({
                 "cells": {
                     "kulImage": {"shape": "image", "kulValue": f"{BASE64_PNG_PREFIX}{b64_source}", "value": ''},
                     "kulImage_after": {"shape": "image", "kulValue": f"{BASE64_PNG_PREFIX}{b64_target}", "value": ''}
@@ -111,7 +123,7 @@ class LF_ClarityEffect:
                 "value": f"Comparison {i+1}"
             })
 
-        PromptServer.instance.send_sync("lf-clarityeffect", {
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}clarityeffect", {
             "node": node_id,
             "dataset": dataset,
         })
@@ -135,22 +147,23 @@ class LF_CompareImages:
             }
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
-    INPUT_IS_LIST = (True, True)
-    OUTPUT_IS_LIST = (False, True, False)
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    OUTPUT_IS_LIST = (False, True, True, False)
     OUTPUT_NODE = True
-    RETURN_NAMES = ("image", "all_images", "dataset")
-    RETURN_TYPES = ("IMAGE", "IMAGE", "JSON")
+    RETURN_NAMES = ("image", "image_list", "all_images", "dataset")
+    RETURN_TYPES = ("IMAGE", "IMAGE", "IMAGE", "JSON")
 
-    def on_exec(self, node_id, image, image_opt=None):
+    def on_exec(self, node_id:int, image:torch.Tensor, image_opt:torch.Tensor = None):
         image_list_1 = normalize_input_image(image)
         image_list_2 = normalize_input_image(image_opt) if image_opt is not None else image_list_1
+        
+        nodes = []
+        dataset = { "nodes": nodes }
 
         if len(image_list_1) != len(image_list_2):
             raise ValueError("Image lists must have the same length if both inputs are provided.")
         
-        dataset = {"nodes": []}
         for i, img1 in enumerate(image_list_1):
             b64_img1 = tensor_to_base64(img1)
             dataset_entry = {
@@ -165,103 +178,119 @@ class LF_CompareImages:
                 b64_img2 = tensor_to_base64(image_list_2[i])
                 dataset_entry["cells"]["kulImage_2"] = {"shape": "image", "kulValue": f"{BASE64_PNG_PREFIX}{b64_img2}", "value": ''}
 
-            dataset["nodes"].append(dataset_entry)
+            nodes.append(dataset_entry)
 
-        PromptServer.instance.send_sync("lf-compareimages", {
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}compareimages", {
             "node": node_id,
             "dataset": dataset,
         })
 
+        image_batch, image_list = normalize_output_image(image)
+
         combined_images = image_list_1 + (image_list_2 if image_opt is not None else [])
+        _, all_images_list = normalize_output_image(combined_images)
 
-        image_batch, all_images_list = normalize_output_image(combined_images)
-
-        return (image_batch, all_images_list, dataset)
+        return (image_batch[0], image_list, all_images_list, dataset)
 
 class LF_MultipleImageResizeForWeb:
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "images": ("IMAGE", {"type": "IMAGE", "tooltip": "List of images to process."}),
-                "file_names": ("STRING", {"forceInput": True, "type": "STRING", "tooltip": "Corresponding list of file names for the images."}),
+                "image": ("IMAGE", {"type": "IMAGE", "tooltip": "List of images to process."}),
+                "file_name": ("STRING", {"forceInput": True, "tooltip": "Corresponding list of file names for the images."}),
             },
-            "hidden": {"node_id": "UNIQUE_ID"}
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
-    OUTPUT_IS_LIST = (True, True, True, False,)
-    RETURN_NAMES = ("images", "names", "names_with_dir", "json_data",)
-    RETURN_TYPES = ("IMAGE", "STRING", "STRING", "JSON",)
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    OUTPUT_IS_LIST = (False, True, True, True, False)
+    RETURN_NAMES = ("image", "image_list", "name", "names_with_dir", "dataset")
+    RETURN_TYPES = ("IMAGE", "IMAGE", "STRING", "STRING", "JSON")
 
-    def on_exec(self, node_id, images, file_names):
-        dataset = { "nodes": [], }
+    def on_exec(self, node_id:int, image:torch.Tensor, file_name:str):
+        image = normalize_input_image(image)
+        file_name = normalize_input_list(file_name)
+
+        nodes = []
+        dataset = { "nodes": nodes }
+
         output_file_names = []
         output_file_names_with_dir = []
         output_images = []
         resolutions = [256, 320, 512, 640, 1024, 1280, 2048, 2560]
 
-        for index, image_data in enumerate(images):
-            file_name = file_names[index]
-            base_name = file_name.split('.')[0]
-            original_extension = file_name.split('.')[-1].lower()
+        for index, img in enumerate(image):
+            f_name = file_name[index]
+            split_name = f_name.rsplit('.', 1)
+            if len(split_name) == 2:
+                base_name, original_extension = split_name
+                original_extension.lower()
+            else:
+                base_name = split_name[0]
+                original_extension = ""
 
-            image = tensor_to_pil(image_data)
+            img = tensor_to_pil(img)
 
             img_byte_arr = io.BytesIO()
 
             try:
                 image_format = 'PNG' if original_extension not in ['jpeg', 'jpg', 'png', 'webp'] else original_extension.upper()
-                image.save(img_byte_arr, format=image_format)
-            except KeyError as e:
+                img.save(img_byte_arr, format=image_format)
+            except KeyError:
                 print(f"Unknown format '{original_extension}', falling back to PNG.")
-                image.save(img_byte_arr, format='PNG')
+                img.save(img_byte_arr, format='PNG')
 
             img_byte_arr = img_byte_arr.getvalue()
 
-            output_images.append(pil_to_tensor(image)) 
+            output_images.append(pil_to_tensor(img)) 
             output_file_names.append(f"{base_name}.{image_format}")
             output_file_names_with_dir.append(f"HD/{base_name}.{image_format}")
 
+            children:list[dict] = []
             rootNode = {
-                "children": [],
+                "children": children,
                 "id": base_name,
                 "value": base_name
             }
 
-            for resolution in resolutions:
-                if image.width > image.height:
-                    new_width = resolution
-                    new_height = int(image.height * resolution / image.width)
+            for r in resolutions:
+                if img.width > img.height:
+                    new_width = r
+                    new_height = int(img.height * r / img.width)
                 else:
-                    new_height = resolution
-                    new_width = int(image.width * resolution / image.height)
+                    new_height = r
+                    new_width = int(img.width * r / img.height)
 
-                resized_image = image.resize((new_width, new_height), Image.Resampling.LANCZOS)
+                resized_image = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
 
                 img_byte_arr = io.BytesIO()
                 resized_image.save(img_byte_arr, format='WEBP', quality=60)
                 img_byte_arr = img_byte_arr.getvalue()
 
                 output_images.append(pil_to_tensor(resized_image))
-                output_file_names.append(f"{resolution}w_{base_name}.webp")
-                output_file_names_with_dir.append(f"{resolution}w/{resolution}w_{base_name}.webp")
+                output_file_names.append(f"{r}w_{base_name}.webp")
+                output_file_names_with_dir.append(f"{r}w/{r}w_{base_name}.webp")
 
                 childNode = {
-                    "id": f"{resolution}w_{base_name}",
-                    "value": f"{resolution}w_{base_name}"
+                    "id": f"{r}w_{base_name}",
+                    "value": f"{r}w_{base_name}"
                 }
-                rootNode["children"].append(childNode)
+                children.append(childNode)
 
-            dataset["nodes"].append(rootNode)
+            nodes.append(rootNode)
 
-        PromptServer.instance.send_sync("lf-multipleimageresizeforweb", {
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}multipleimageresizeforweb", {
             "node": node_id,
             "dataset": dataset,
         })
 
-        return (output_images, output_file_names, output_file_names_with_dir, dataset)
+        image_batch, image_list = normalize_output_image(image)
+
+        return (image_batch[0], image_list, output_file_names, output_file_names_with_dir, dataset)
 
 class LF_ResizeImageByEdge:
     @classmethod
@@ -271,78 +300,63 @@ class LF_ResizeImageByEdge:
                 "image": ("IMAGE", {"tooltip": "Input image tensor or a list of image tensors."}),
                 "longest_edge": ("BOOLEAN", {"default": False, "tooltip": "Resizes the image by the longest side if set to True. Otherwise, resizes by the shortest side."}),
                 "new_size": ("INT", {"default": 1024, "tooltip": "The size of the longest edge of the output image."}),
-                "resize_method": (["bicubic", "bilinear", "linear", "nearest", "nearest exact"], {"default": "bicubic", "tooltip": "Method to resize the image."})
+                "resize_method": (RESAMPLERS, {"default": "bicubic", "tooltip": "Method to resize the image."})
             },
-            "hidden": {"node_id": "UNIQUE_ID"}
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
-    RETURN_NAMES = ("resized_image",)
-    RETURN_TYPES = ("IMAGE",)
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    RETURN_NAMES = ("image", "image_list", "count")
+    RETURN_TYPES = ("IMAGE", "IMAGE", "INT")
 
-    def on_exec(self, node_id, image, longest_edge: bool, new_size: int, resize_method: str):
-        dataset = { "nodes": [{ "children": [], "icon":"help", "id": "", "value": "" }] }
-        resized_image = []
-        
+    def on_exec(self, node_id:int, image:torch.Tensor, longest_edge: bool, new_size: int, resize_method: str):
+        image = normalize_input_image(image)
+        longest_edge = normalize_list_to_value(longest_edge)
+        new_size = normalize_list_to_value(new_size)
+        resize_method = normalize_list_to_value(resize_method)
+
+        nodes = []
+        root = { "children": nodes, "icon":"help", "id": "", "value": "" }
+        dataset = { "nodes": [root] }
+
         original_heights = []
         original_widths = []
         heights = []
         widths = []
 
-        if isinstance(image, list):
-            for idx, img in enumerate(image):
-                original_height, original_width = img.shape[1], img.shape[2]
-                original_heights.append(original_height)
-                original_widths.append(original_width)
+        resized_images = []
 
-            resized_images = [resize_image(tensor, resize_method, longest_edge, new_size) for tensor in image]
+        for idx, img in enumerate(image):
+            original_height, original_width = img.shape[1], img.shape[2]
+            original_heights.append(original_height)
+            original_widths.append(original_width)
+
+            resized_img = resize_image(img, resize_method, longest_edge, new_size)
+            resized_images.append(resized_img)
+
+            new_height, new_width = resized_img.shape[1], resized_img.shape[2]
+            heights.append(new_height)
+            widths.append(new_width)
+
+            log_str = f"[{idx}] From {original_height}x{original_width} to {new_height}x{new_width}"
+            nodes.append({ "id": log_str, "value": log_str })
             
-            for img in resized_images:
-                height, width = img.shape[1], img.shape[2]
-                heights.append(height)
-                widths.append(width)
+        num_resized = len(resized_images)
+        summary_message = f"Resized {num_resized} {'image' if num_resized == 1 else 'images'}"
+        root["id"] = summary_message
+        root["value"] = summary_message
 
-            log_str = f"[{idx}] From {original_height}x{original_width} to {height}x{width}"
-            node = {
-                "id": log_str,
-                "value": log_str
-            }
-            dataset["nodes"][0]["children"].append(node)
-
-            resized_image = resized_images
-        else:
-            original_height, original_width = image.shape[1], image.shape[2]
-            original_heights = [original_height]
-            original_widths = [original_width]
-
-            resized_image = resize_image(image, resize_method, longest_edge, new_size)
-            height, width = resized_image.shape[1], resized_image.shape[2] 
-            heights = [height]
-            widths = [width]
-
-            log_str = f"From {original_height}x{original_width} to {height}x{width}."
-            node = {
-                "id": log_str,
-                "value": log_str
-            }
-            dataset["nodes"][0]["children"].append(node)
-
-        num_resized = len(image)
-        summary_message = f"Resized {num_resized} {'image' if num_resized == 1 else 'images'}"   
-        dataset["nodes"][0]["id"] = summary_message
-        dataset["nodes"][0]["value"] = summary_message
-
-        PromptServer.instance.send_sync("lf-resizeimagebyedge", {
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}resizeimagebyedge", {
             "node": node_id,
             "dataset": dataset,
-            "original_heights": original_heights,
-            "original_widths": original_widths,
-            "heights": heights,
-            "widths": widths
         })
 
-        return (resized_image,)
+        image_batch, image_list = normalize_output_image(resized_images)
+
+        return (image_batch[0], image_list, num_resized)
     
 class LF_ResizeImageToDimension:
     @classmethod
@@ -352,137 +366,133 @@ class LF_ResizeImageToDimension:
                 "image": ("IMAGE", {"tooltip": "Input image tensor or a list of image tensors."}),
                 "height": ("INT", {"default": 1216, "tooltip": "The target height for the output image."}),
                 "width": ("INT", {"default": 832, "tooltip": "The target width for the output image."}),
-                "resize_method": (["bicubic", "bilinear", "nearest", "nearest exact"], {"default": "bicubic", "tooltip": "Method to resize the image."}),
+                "resize_method": (RESAMPLERS, {"default": "bicubic", "tooltip": "Method to resize the image."}),
                 "resize_mode": (["crop", "pad"], {"default": "crop", "tooltip": "Choose whether to crop or pad when resizing."}),
                 "pad_color": ("STRING", {"default": "000000", "tooltip": "Color to use for padding if 'pad' mode is selected (hexadecimal)."})
             },
-            "hidden": {"node_id": "UNIQUE_ID"}
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
-    RETURN_NAMES = ("resized_image",)
-    RETURN_TYPES = ("IMAGE",)
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    RETURN_NAMES = ("image", "image_list", "count")
+    RETURN_TYPES = ("IMAGE", "IMAGE", "INT")
 
-    def on_exec(self, node_id, image, height: int, width: int, resize_method: str, resize_mode:str, pad_color:str):
-        dataset = { "nodes": [{ "children": [], "icon":"help", "id": "", "value": "" }] }
+    def on_exec(self, node_id:int, image:torch.Tensor, height: int, width: int, resize_method: str, resize_mode:str, pad_color:str):
+        image = normalize_input_image(image)
+        height = normalize_list_to_value(height)
+        width = normalize_list_to_value(width)
+        resize_method = normalize_list_to_value(resize_method)
+        resize_mode = normalize_list_to_value(resize_mode)
+        pad_color = normalize_list_to_value(pad_color)
+
+        nodes = []
+        root = { "children": nodes, "icon":"help", "id": "", "value": "" }
+        dataset = { "nodes": [root] }
+
         original_heights = []
         original_widths = []
         heights = []
         widths = []
 
-        if isinstance(image, list):
-            for idx, img in enumerate(image):
-                original_height, original_width = img.shape[1], img.shape[2]
-                original_heights.append(original_height)
-                original_widths.append(original_width)
+        resized_images = []
 
-            resized_images = [resize_and_crop_image(img, resize_method, height, width, resize_mode, pad_color) for img in image]
-            
-            for idx, img in enumerate(resized_images):
-                height, width = img.shape[1], img.shape[2]
-                heights.append(height)
-                widths.append(width)
-                log_str = f"[{idx}] From {original_height}x{original_width} to {height}x{width}"
-                node = {
-                    "id": log_str,
-                    "value": log_str
-                }
-                dataset["nodes"][0]["children"].append(node)
-        else:
-            original_height, original_width = image.shape[1], image.shape[2]
+        for idx, img in enumerate(image):
+            original_height, original_width = img.shape[1], img.shape[2]
+            original_heights.append(original_height)
+            original_widths.append(original_width)
 
-            resized_images = resize_and_crop_image(image, resize_method, height, width, resize_mode, pad_color)
+            resized_img = resize_and_crop_image(img, resize_method, height, width, resize_mode, pad_color)
+            resized_images.append(resized_img)
 
-            log_str = f"From {original_height}x{original_width} to {height}x{width}"
-            node = {
-                "id": log_str,
-                "value": log_str
-            }
-            dataset["nodes"][0]["children"].append(node)
+            new_height, new_width = resized_img.shape[1], resized_img.shape[2]
+            heights.append(new_height)
+            widths.append(new_width)
 
+            log_str = f"[{idx}] From {original_height}x{original_width} to {new_height}x{new_width}"
+            nodes.append({ "id": log_str, "value": log_str })
+        
         num_resized = len(resized_images)
         summary_message = f"Resized {num_resized} {'image' if num_resized == 1 else 'images'}"
-        dataset["nodes"][0]["id"] = summary_message
-        dataset["nodes"][0]["value"] = summary_message
+        root["id"] = summary_message
+        root["value"] = summary_message
 
-        PromptServer.instance.send_sync("lf-resizeimagetodimension", {
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}resizeimagetodimension", {
             "node": node_id,
             "dataset": dataset,
         })
 
-        return (resized_images,)
+        image_batch, image_list = normalize_output_image(resized_images)
+
+        return (image_batch[0], image_list, num_resized)
 
 class LF_ResizeImageToSquare:
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "images": ("IMAGE", {"tooltip": "Input image tensors in [B, H, W, C] format."}),
+                "image": ("IMAGE", {"tooltip": "Input image tensor or a list of image tensors."}),
                 "square_size": ("INT", {"default": 1024, "tooltip": "The length of the square's edge."}),
-                "resample_method": (["bicubic", "bilinear", "linear", "nearest", "nearest exact"], {"default": "bicubic", "tooltip": "Resampling method for resizing."}),
+                "resize_method": (RESAMPLERS, {"default": "bicubic", "tooltip": "Resampling method for resizing."}),
                 "crop_position": (["top", "bottom", "left", "right", "center"], {"default": "center", "tooltip": "Where to crop the image."})
             },
-            "hidden": {"node_id": "UNIQUE_ID"}
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
     RETURN_NAMES = ("resized_images",)
     RETURN_TYPES = ("IMAGE",)
 
-    def on_exec(self, node_id, images, square_size: int, resample_method: str, crop_position: str):
-        dataset = { "nodes": [{ "children": [], "icon":"help", "id": "", "value": "" }] }
-        resized_images = []
+    def on_exec(self, node_id, image:torch.Tensor, square_size: int, resize_method: str, crop_position: str):
+        image = normalize_input_image(image)
+        square_size = normalize_list_to_value(square_size)
+        resize_method = normalize_list_to_value(resize_method)
+        crop_position = normalize_list_to_value(crop_position)
+
+        nodes = []
+        root = { "children": nodes, "icon":"help", "id": "", "value": "" }
+        dataset = { "nodes": [root] }
+
         original_heights = []
         original_widths = []
         heights = []
         widths = []
 
-        if isinstance(images, list):
-            for idx, img in enumerate(images):
-                original_height, original_width = img.shape[1], img.shape[2]
-                original_heights.append(original_height)
-                original_widths.append(original_width)
+        resized_images = []
 
-                resized_img = resize_to_square(img, square_size, resample_method, crop_position)
-                resized_images.append(resized_img)
+        for idx, img in enumerate(image):
+            original_height, original_width = img.shape[1], img.shape[2]
+            original_heights.append(original_height)
+            original_widths.append(original_width)
 
-                new_height, new_width = resized_img.shape[1], resized_img.shape[2]
-                heights.append(new_height)
-                widths.append(new_width)
-
-                log_str = f"[{idx}] From {original_height}x{original_width} to {new_height}x{new_width}"
-                node = {"id": log_str, "value": log_str}
-                dataset["nodes"][0]["children"].append(node)
-
-        else:
-            original_height, original_width = images.shape[1], images.shape[2]
-            original_heights = [original_height]
-            original_widths = [original_width]
-
-            resized_img = resize_to_square(images, square_size, resample_method, crop_position)
-            resized_images = [resized_img]
+            resized_img = resize_to_square(img, square_size, resize_method, crop_position)
+            resized_images.append(resized_img)
 
             new_height, new_width = resized_img.shape[1], resized_img.shape[2]
-            heights = [new_height]
-            widths = [new_width]
+            heights.append(new_height)
+            widths.append(new_width)
 
-            log_str = f"From {original_height}x{original_width} to {new_height}x{new_width}."
-            node = {"id": log_str, "value": log_str}
-            dataset["nodes"][0]["children"].append(node)
+            log_str = f"[{idx}] From {original_height}x{original_width} to {new_height}x{new_width}"
+            nodes.append({ "id": log_str, "value": log_str })
 
         num_resized = len(resized_images)
         summary_message = f"Resized {num_resized} {'image' if num_resized == 1 else 'images'}"
-        dataset["nodes"][0]["id"] = summary_message
-        dataset["nodes"][0]["value"] = summary_message
+        root["id"] = summary_message
+        root["value"] = summary_message
 
-        PromptServer.instance.send_sync("lf-resizeimagetosquare", {
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}resizeimagetosquare", {
             "node": node_id,
             "dataset": dataset,
         })
 
-        return resized_images
+        image_batch, image_list = normalize_output_image(resized_images)
+
+        return (image_batch[0], image_list, num_resized)
 
 NODE_CLASS_MAPPINGS = {
     "LF_BlurImages": LF_BlurImages,
