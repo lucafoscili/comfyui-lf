@@ -1,32 +1,37 @@
 import json
 import torch
 
-def normalize_input_image(image):
+def normalize_input_image(image: list[torch.Tensor]|torch.Tensor):
     """
-    Converts a tensor or list of images into a standard list of individual image tensors.
+    Converts an input tensor or list of image tensors into a standardized list of individual image tensors.
     
-    This function ensures the input, whether it's a single image tensor or a batch of images, 
-    is normalized into a list format where each element represents an individual image. It handles:
+    This function ensures that:
     
-    - A 4D tensor (batch of images) by returning a list of tensors, each with the shape [H, W, C].
-    - A 3D tensor (single image) by converting it into a list with one element, ensuring the batch dimension [1, H, W, C].
-    - A list of images remains unchanged.
-
+    - A 4D tensor (batch of images) is converted into a list of tensors, each with shape [1, H, W, C].
+    - A 3D tensor (single image) is converted into a list with one element, maintaining a batch dimension as [1, H, W, C].
+    - A list of images is returned as-is, with each element assumed to be an individual image tensor.
+    
     Parameters:
-    image (torch.Tensor or list): The input image(s), either as a tensor (3D/4D) or a list.
-
+    image (torch.Tensor or list): Input image(s) as a tensor (3D/4D) or a list.
+    
     Returns:
-    list: A list of individual image tensors.
+    list: A list of individual image tensors, each with a batch dimension.
+    
+    Raises:
+    ValueError: If the input tensor is neither 3D nor 4D.
     """
     if isinstance(image, torch.Tensor):
         if len(image.shape) == 4:
-            return [img for img in image]
+            return [img.unsqueeze(0) for img in image]
         elif len(image.shape) == 3:
             return [image.unsqueeze(0)]
+        else:
+            raise ValueError("Input tensor must be either 3D or 4D.")
     elif isinstance(image, list):
         return image
     else:
-        return [image.unsqueeze(0)] if isinstance(image, torch.Tensor) else [image]
+        raise TypeError("Input must be a torch.Tensor or list.")
+
     
 def normalize_input_json(input):
     """
@@ -80,7 +85,7 @@ def normalize_input_list(input):
     Returns:
     list or None: A list if the input is valid, or None if input is empty or invalid.
     """
-    if input and (input != (str(input) == "None")) and len(input) > 0:
+    if not_none(input) and len(input) > 0:
         if not isinstance(input, list):
             input = [input]
     else:
@@ -100,10 +105,12 @@ def normalize_list_to_value(input):
     Returns:
     any type or None: The first element of the list if input is a valid list, otherwise None.
     """
-    if input and (input != (str(input) == "None")) and isinstance(input, list):
+    if isinstance(input, list) and not_none(input):
         return input[0]
-    else:
-        return None
+    elif input:
+        return input
+    
+    return None
 
 def normalize_output_image(image_input):
     """
@@ -155,10 +162,25 @@ def normalize_output_image(image_input):
 
     # Create separate batch tensors for each unique resolution
     batch_list = []
-    for resolution, imgs in resolution_groups.items():
+    for _, imgs in resolution_groups.items():
         if len(imgs) > 1:
             batch_list.append(torch.cat(imgs, dim=0))  # Create batch [B, H, W, C]
         else:
             batch_list.append(imgs[0])  # Single image in this resolution, keep as is
 
     return batch_list, image_list
+
+def not_none(input):
+    """
+    Check if the input is neither None nor a string representation of "None".
+
+    This function evaluates the input to determine if it is a value that is neither None
+    nor the string "None". It returns True for any other valid input.
+
+    Parameters:
+    input (any type): The input to be checked.
+
+    Returns:
+    bool: True if input is not None or "None"; otherwise, False.
+    """
+    return bool(input and str(input) != "None")
