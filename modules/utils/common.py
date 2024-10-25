@@ -1,3 +1,4 @@
+import json
 import torch
 
 def normalize_input_image(image):
@@ -18,16 +19,53 @@ def normalize_input_image(image):
     list: A list of individual image tensors.
     """
     if isinstance(image, torch.Tensor):
-        if len(image.shape) == 4:  # Batch of images [B, H, W, C]
+        if len(image.shape) == 4:
             return [img for img in image]
-        elif len(image.shape) == 3:  # Single image [H, W, C]
+        elif len(image.shape) == 3:
             return [image.unsqueeze(0)]
     elif isinstance(image, list):
         return image
     else:
-        # Handle edge case, return the input as a list with batch dimension if it's a tensor
         return [image.unsqueeze(0)] if isinstance(image, torch.Tensor) else [image]
-
+    
+def normalize_input_json(input):
+    """
+    Normalize input JSON-like data into a standard Python object.
+    
+    This function processes inputs of various types to ensure that the JSON data is
+    returned as a dictionary, list, or other valid JSON object. It handles:
+    
+    - A pre-parsed JSON object, which is returned as is.
+    - A string containing JSON data, which is parsed using json.loads.
+    - A list of JSON strings, which are individually parsed.
+    
+    Parameters:
+    input (json, str, or list): The JSON input to be normalized. It can be:
+        - A pre-parsed JSON object.
+        - A JSON string.
+        - A list of JSON strings.
+    
+    Returns:
+    dict or list: A parsed JSON object or a list of parsed JSON objects.
+    
+    Raises:
+    TypeError: If the input type is unsupported.
+    """
+    if isinstance(input, dict) or input is None:
+        return input
+    
+    elif isinstance(input, str):
+        return json.loads(input)
+    
+    elif isinstance(input, list):
+        if len(input) > 1:
+            return [json.loads(s) for s in input]
+        else:
+            return json.loads(input[0])
+    
+    else:
+        raise TypeError(f"Unsupported input type: {type(input)}")
+    
 def normalize_input_list(input):
     """
     Ensures that the input is either None or a properly formatted list.
