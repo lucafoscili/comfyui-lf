@@ -15,13 +15,18 @@ export const codeFactory = {
                 return code;
             },
             getValue() {
-                return code.kulValue || '';
+                switch (code.kulLanguage) {
+                    case 'json':
+                        return code.kulValue || '{}';
+                    default:
+                        return code.kulValue || '';
+                }
             },
             setValue(value) {
                 const callback = (v, u) => {
                     switch (code.kulLanguage) {
                         case 'json':
-                            code.kulValue = u.unescapedStr || '';
+                            code.kulValue = u.unescapedStr || '{}';
                             break;
                         default:
                             code.kulValue = v || '';
@@ -45,9 +50,11 @@ export const codeFactory = {
             case NodeName.shuffleJsonKeys:
             case NodeName.sortJsonKeys:
                 code.kulLanguage = 'json';
+                code.kulValue = '{}';
                 break;
             default:
                 code.kulLanguage = 'markdown';
+                code.kulValue = '';
                 break;
         }
         content.appendChild(code);
