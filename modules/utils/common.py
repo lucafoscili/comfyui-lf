@@ -107,10 +107,7 @@ def normalize_list_to_value(input):
     """
     if isinstance(input, list) and not_none(input):
         return input[0]
-    elif input:
-        return input
-    
-    return None
+    return input
 
 def normalize_output_image(image_input):
     """

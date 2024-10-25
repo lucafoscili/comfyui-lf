@@ -3,38 +3,6 @@ import hashlib
 import os
 import re
 
-SAMPLER_MAP = {
-    "euler": "Euler",
-    "euler_cfg_pp": "Euler a",
-    "euler_ancestral": "Euler a",
-    "heun": "Heun",
-    "dpm_2": "DPM2",
-    "dpm_2_ancestral": "DPM2 a",
-    "lms": "LMS",
-    "dpmpp_2s_ancestral": "DPM++ 2S a",
-    "dpmpp_sde": "DPM++ SDE",
-    "dpmpp_2m": "DPM++ 2M",
-    "dpmpp_2m_sde": "DPM++ 2M SDE",
-    "dpmpp_3m_sde": "DPM++ 3M SDE",
-    "ddpm": "DDPM",
-    "dpm_fast": "DPM fast",
-    "dpm_adaptive": "DPM adaptive",
-    "ipndm": "IPNDM",
-    "ipndm_v": "IPNDM V",
-    "deis": "DEIS",
-    "restart": "Restart"
-}
-
-SCHEDULER_MAP = {
-    "normal": "Normal",
-    "karras": "Karras",
-    "exponential": "Exponential",
-    "sgm_uniform": "SGM Uniform",
-    "simple": "Simple",
-    "ddim_uniform": "DDIM",
-    "beta": "Beta"
-}
-
 def clean_prompt(prompt):
     return re.sub(r'(embedding:)?(.*?)(\.pt|\.pth|\.sft|\.safetensors)?', r'\2', prompt).strip()
 
@@ -120,7 +88,7 @@ def get_embedding_hashes(embeddings, analytics_dataset:dict):
                     emb_hashes.append(f"{emb_name}: Unknown")
     return emb_hashes
 
-def get_lora_hashes(lora_tags, analytics_dataset):
+def get_lora_hashes(lora_tags:str, analytics_dataset:dict):
     children = []
     lora_hashes = []
     lora_tags = lora_tags.replace("><", ">,<")
