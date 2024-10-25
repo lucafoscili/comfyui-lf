@@ -5,12 +5,11 @@ import torch
 from server import PromptServer
 
 from ..constants.analytics import *
-from ..constants.common import user_folder
-from ..utils.common import normalize_input_json
+from ..constants.common import *
+from ..utils.common import *
 from ..utils.analytics import *
 
 category = "✨ LF Nodes/Analytics"
-fun = "on_exec"
 
 class LF_ImageHistogram:
     @classmethod
@@ -24,11 +23,14 @@ class LF_ImageHistogram:
 
     CATEGORY = category
     FUNCTION = fun
+    OUTPUT_IS_LIST = (False, True, False)
     OUTPUT_NODE = True
-    RETURN_NAMES = ("image", "dataset")
-    RETURN_TYPES = ("IMAGE", "JSON")
+    RETURN_NAMES = ("image", "image_list", "dataset")
+    RETURN_TYPES = ("IMAGE", "IMAGE", "JSON")
 
     def on_exec(self, node_id:int, image:torch.Tensor):
+        image = normalize_input_image(image)
+
         histograms = calculate_histograms(image)
         datasets = adapt_histograms_for_kuldata(histograms)
 
@@ -37,7 +39,9 @@ class LF_ImageHistogram:
             "datasets": datasets,
         })
 
-        return (image, datasets,)
+        batch, list = normalize_output_image(image)
+
+        return (batch[0], list, datasets)
     
 class LF_KeywordCounter:
     @classmethod
@@ -57,6 +61,9 @@ class LF_KeywordCounter:
     RETURN_TYPES = ("JSON", "JSON")
 
     def on_exec(self, node_id:int, prompt:str, separator:str):
+        prompt = normalize_list_to_value(prompt)
+        separator = normalize_list_to_value(separator)
+
         keywords = prompt.split(separator)
         keyword_count = {}
 
@@ -92,7 +99,8 @@ class LF_UpdateUsageStatistics:
     CATEGORY = category
     FUNCTION = fun
     OUTPUT_NODE = True
-    RETURN_TYPES = ()
+    RETURN_NAMES = ("dir", "dataset")
+    RETURN_TYPES = ("STRING", "JSON")
 
     def on_exec(self, node_id:int, datasets_dir:str, dataset:str|dict):
         def process_list(input, type): 
@@ -102,7 +110,8 @@ class LF_UpdateUsageStatistics:
             for i in input:
                 log += update_usage_json(file, get_usage_title(filename), i)
             return log
-                
+
+        datasets_dir = normalize_list_to_value(datasets_dir)                
         dataset = normalize_input_json(dataset)
         
         base_path = os.path.join(folder_paths.user_directory, user_folder)
@@ -132,7 +141,7 @@ class LF_UpdateUsageStatistics:
             "log": log_title + log if log else log_title + "\nThere were no updates this run!"
         })
 
-        return ()
+        return (actual_path, dataset)
 
 class LF_UsageStatistics:
     @classmethod

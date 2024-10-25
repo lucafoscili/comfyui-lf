@@ -1,6 +1,7 @@
 import json
 import numpy as np
 import os
+import torch
 
 def adapt_histograms_for_kuldata(histograms):
     """
@@ -93,42 +94,33 @@ def adapt_keyword_count_for_chip(keyword_count):
 
     return kuldata
 
-def calculate_histograms(image_tensor):
-    """
-    Calculate the histograms for the RGB channels and their sum from a given image tensor
-    formatted in the shape [B, H, W, C].
-
-    Args:
-        image_tensor (torch.Tensor): A tensor representing the image batch, assumed to be in the shape [B, H, W, C].
-    
-    Returns:
-        list[dict]: A list of dictionaries containing the histograms for the R, G, B channels and their sum for each image.
-    """
-    image_batch_np = image_tensor.cpu().numpy() * 255.0
-    image_batch_np = image_batch_np.astype(np.uint8)
-
+def calculate_histograms(images:list[torch.Tensor]):
     batch_histograms = []
 
-    for i in range(image_batch_np.shape[0]):
-        image_np = image_batch_np[i]
+    for image in images:
+        image_batch_np = image.cpu().numpy() * 255.0
+        image_batch_np = image_batch_np.astype(np.uint8)
+    
+        for i in range(image_batch_np.shape[0]):
+            image_np = image_batch_np[i]
 
-        red_channel = image_np[:, :, 0]
-        green_channel = image_np[:, :, 1]
-        blue_channel = image_np[:, :, 2]
+            red_channel = image_np[:, :, 0]
+            green_channel = image_np[:, :, 1]
+            blue_channel = image_np[:, :, 2]
 
-        red_hist = np.histogram(red_channel, bins=256, range=(0, 255))[0]
-        green_hist = np.histogram(green_channel, bins=256, range=(0, 255))[0]
-        blue_hist = np.histogram(blue_channel, bins=256, range=(0, 255))[0]
+            red_hist = np.histogram(red_channel, bins=256, range=(0, 255))[0]
+            green_hist = np.histogram(green_channel, bins=256, range=(0, 255))[0]
+            blue_hist = np.histogram(blue_channel, bins=256, range=(0, 255))[0]
 
-        sum_channel = red_channel.astype(np.int32) + green_channel.astype(np.int32) + blue_channel.astype(np.int32)
-        sum_hist = np.histogram(sum_channel, bins=256, range=(0, 765))[0]
+            sum_channel = red_channel.astype(np.int32) + green_channel.astype(np.int32) + blue_channel.astype(np.int32)
+            sum_hist = np.histogram(sum_channel, bins=256, range=(0, 765))[0]
 
-        batch_histograms.append({
-            "red_hist": red_hist.tolist(),
-            "green_hist": green_hist.tolist(),
-            "blue_hist": blue_hist.tolist(),
-            "sum_hist": sum_hist.tolist(),
-        })
+            batch_histograms.append({
+                "red_hist": red_hist.tolist(),
+                "green_hist": green_hist.tolist(),
+                "blue_hist": blue_hist.tolist(),
+                "sum_hist": sum_hist.tolist(),
+            })
 
     return batch_histograms
     
