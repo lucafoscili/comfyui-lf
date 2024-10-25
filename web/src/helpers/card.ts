@@ -109,7 +109,7 @@ export const contextMenuHandler = (card: HTMLKulCardElement, e: MouseEvent) => {
       const code = node?.cells?.kulCode;
       if (code) {
         try {
-          const path = JSON.parse(code.value).path;
+          const path = JSON.parse(JSON.stringify(code.value)).path;
           lfManager.log(
             `Updating cover for model with path: ${path}`,
             { b64image },
