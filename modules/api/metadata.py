@@ -4,17 +4,14 @@ import os
 import requests
 
 from aiohttp import web
-from folder_paths import get_filename_list, get_full_path, user_directory
+from folder_paths import get_filename_list, get_full_path
 
-from ..constants.common import base64_web_prefix
+from ..constants.common import *
 
 from server import PromptServer
 
-backup_folder_name = "Backups"
-base_path = os.path.join(user_directory, "LF_Nodes")
-
-@PromptServer.instance.routes.post("/comfyui-lf/clear-metadata")
-async def clear_model_info(request):
+@PromptServer.instance.routes.post(f"{API_ROUTE_PREFIX}/clear-metadata")
+async def clear_model_info(_):
     try:
         directories = [
             ("checkpoints", get_filename_list("checkpoints")),
@@ -50,7 +47,7 @@ async def clear_model_info(request):
     except Exception as e:
         return web.Response(status=500, text=f"Error: {str(e)}")
 
-@PromptServer.instance.routes.post("/comfyui-lf/save-metadata")
+@PromptServer.instance.routes.post(f"{API_ROUTE_PREFIX}/save-metadata")
 async def save_model_info(request):
     try:
         r = await request.post()
@@ -78,7 +75,7 @@ async def save_model_info(request):
             try:
                 image_data = requests.get(image_url).content
                 image_base64 =  base64.b64encode(image_data).decode('utf-8')
-                metadata_json["nodes"][0]["cells"]["kulImage"]["value"] = f"{base64_web_prefix}{image_base64}"
+                metadata_json["nodes"][0]["cells"]["kulImage"]["value"] = f"{BASE64_PNG_PREFIX}{image_base64}"
             except Exception as e:
                 return web.Response(status=500, text=f"Error fetching image: {str(e)}")
 
@@ -90,7 +87,7 @@ async def save_model_info(request):
     except Exception as e:
         return web.Response(status=500, text=f"Error: {str(e)}")
 
-@PromptServer.instance.routes.post("/comfyui-lf/update-metadata-cover")
+@PromptServer.instance.routes.post(f"{API_ROUTE_PREFIX}/update-metadata-cover")
 async def update_metadata_cover(request):
     try:
         r = await request.post()

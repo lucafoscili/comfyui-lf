@@ -1,4 +1,4 @@
-headers =  {
+HEADERS =  {
     "Content-Type": "application/json",
 }
 

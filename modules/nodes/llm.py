@@ -38,7 +38,7 @@ class LF_CharacterImpersonator:
 
         content = []
         if image:
-            image_url = f"{base64_web_prefix}{image}"
+            image_url = f"{BASE64_PNG_PREFIX}{image}"
             content.append({"type": "image_url", "image_url": {"url":image_url}})
         if prompt:
             content.append({"type": "text", "text": prompt})
@@ -60,7 +60,7 @@ class LF_CharacterImpersonator:
             ],
         }
 
-        response = requests.post(url, headers=headers, data=json.dumps(request))
+        response = requests.post(url, headers=HEADERS, data=json.dumps(request))
         response_data = response.json()
         status_code, method, message = handle_response(response, method="POST")
         if status_code != 200:
@@ -96,13 +96,9 @@ class LF_ImageClassifier:
 
         system = get_image_classifier_system(character_bio)
 
-        headers = {
-            "Content-Type": "application/json",
-        }
-
         content = []
         if image:
-            image_url = f"{base64_web_prefix}{image}"
+            image_url = f"{BASE64_PNG_PREFIX}{image}"
             content.append({"type": "image_url", "image_url": {"url":image_url}})
         if prompt:
             content.append({"type": "text", "text": prompt})
@@ -124,7 +120,7 @@ class LF_ImageClassifier:
             ],
         }
 
-        response = requests.post(url, headers=headers, data=json.dumps(request))
+        response = requests.post(url, headers=HEADERS, data=json.dumps(request))
         response_data = response.json()
         status_code, method, message = handle_response(response, method="POST")
         if status_code != 200:

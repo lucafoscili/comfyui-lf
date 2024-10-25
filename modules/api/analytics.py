@@ -2,14 +2,12 @@ import json
 import os
 
 from aiohttp import web
-from folder_paths import user_directory
 
 from server import PromptServer
 
-backup_folder_name = "Backups"
-base_path = os.path.join(user_directory, "LF_Nodes")
+from ..constants.common import *
 
-@PromptServer.instance.routes.post("/comfyui-lf/clear-analytics")
+@PromptServer.instance.routes.post(f"{API_ROUTE_PREFIX}/clear-analytics")
 async def clear_usage_analytics(request):
     try:
         r = await request.post()
@@ -21,8 +19,8 @@ async def clear_usage_analytics(request):
         
         deleted_files = []
         
-        for root, _, files in os.walk(base_path):
-            if backup_folder_name in root:
+        for root, _, files in os.walk(BASE_PATH):
+            if BACKUP_FOLDER in root:
                 continue
             
             for file_name in files:
@@ -45,7 +43,7 @@ async def clear_usage_analytics(request):
     except Exception as e:
         return web.Response(status=500, text=f"Error: {str(e)}")
 
-@PromptServer.instance.routes.post("/comfyui-lf/get-analytics")
+@PromptServer.instance.routes.post(f"{API_ROUTE_PREFIX}/get-analytics")
 async def get_usage_analytics(request):
     try:
         r = await request.post()
@@ -56,7 +54,7 @@ async def get_usage_analytics(request):
         if not directory or not analytics_type:
             return web.Response(status=500, text=f"Missing directory (received {directory}) or type (received {analytics_type}).")
 
-        analytics_dir = os.path.join(base_path, directory)
+        analytics_dir = os.path.join(BASE_PATH, directory)
         
         if not os.path.exists(analytics_dir):
             return web.Response(status=404, text="Directory not found.")

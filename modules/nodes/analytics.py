@@ -1,4 +1,5 @@
 import folder_paths
+import numpy as np
 import os
 import torch
 
@@ -9,7 +10,7 @@ from ..constants.common import *
 from ..utils.common import *
 from ..utils.analytics import *
 
-category = "✨ LF Nodes/Analytics"
+CATEGORY = f"{CATEGORY_PREFIX}/Analytics"
 
 class LF_ImageHistogram:
     @classmethod
@@ -18,11 +19,13 @@ class LF_ImageHistogram:
             "required": {
                 "image": ("IMAGE", {"label": "Image tensor", "tooltip": "Input image tensor to generate histograms from."}),
             },
-            "hidden": { "node_id": "UNIQUE_ID" }
+            "hidden": { 
+                "node_id": "UNIQUE_ID"
+            }
         }
 
-    CATEGORY = category
-    FUNCTION = fun
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
     OUTPUT_IS_LIST = (False, True, False)
     OUTPUT_NODE = True
     RETURN_NAMES = ("image", "image_list", "dataset")
@@ -31,10 +34,62 @@ class LF_ImageHistogram:
     def on_exec(self, node_id:int, image:torch.Tensor):
         image = normalize_input_image(image)
 
-        histograms = calculate_histograms(image)
-        datasets = adapt_histograms_for_kuldata(histograms)
+        batch_histograms = []
+        datasets = {}
 
-        PromptServer.instance.send_sync("lf-imagehistogram", {
+        for img in image:
+            image_batch_np = img.cpu().numpy() * 255.0
+            image_batch_np = image_batch_np.astype(np.uint8)
+
+            for i in range(image_batch_np.shape[0]):
+                image_np = image_batch_np[i]
+
+                red_channel = image_np[:, :, 0]
+                green_channel = image_np[:, :, 1]
+                blue_channel = image_np[:, :, 2]
+
+                red_hist = np.histogram(red_channel, bins=256, range=(0, 255))[0]
+                green_hist = np.histogram(green_channel, bins=256, range=(0, 255))[0]
+                blue_hist = np.histogram(blue_channel, bins=256, range=(0, 255))[0]
+
+                sum_channel = red_channel.astype(np.int32) + green_channel.astype(np.int32) + blue_channel.astype(np.int32)
+                sum_hist = np.histogram(sum_channel, bins=256, range=(0, 765))[0]
+
+                batch_histograms.append({
+                    "red_hist": red_hist.tolist(),
+                    "green_hist": green_hist.tolist(),
+                    "blue_hist": blue_hist.tolist(),
+                    "sum_hist": sum_hist.tolist(),
+                })
+
+        for index, hist in enumerate(batch_histograms):
+            dataset = {
+                "columns": [
+                    {"id": "Axis_0", "title": "Intensity"},
+                    {"id": "Series_0", "shape": "number", "title": "Red Channel"},
+                    {"id": "Series_1", "shape": "number", "title": "Green Channel"},
+                    {"id": "Series_2", "shape": "number", "title": "Blue Channel"},
+                    {"id": "Series_3", "shape": "number", "title": "Sum of Channels"},
+                ],
+                "nodes": []
+            }
+
+            for i in range(256):
+                node = {
+                    "cells": {
+                        "Axis_0": {"value": i},
+                        "Series_0": {"value": hist["red_hist"][i]},
+                        "Series_1": {"value": hist["green_hist"][i]},
+                        "Series_2": {"value": hist["blue_hist"][i]},
+                        "Series_3": {"value": hist["sum_hist"][i] if i < len(hist["sum_hist"]) else 0},
+                    },
+                    "id": str(i),
+                }
+                dataset["nodes"].append(node)
+
+            datasets[f"Image #{index + 1}"] = dataset
+
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}imagehistogram", {
             "node": node_id, 
             "datasets": datasets,
         })
@@ -51,11 +106,13 @@ class LF_KeywordCounter:
                 "prompt": ("STRING", {"multiline": True, "tooltip": "Prompt containing keywords to count."}),
                 "separator": ("STRING", {"default": ", ", "tooltip": "Character(s) used to separate keywords in the prompt."}),
             },
-            "hidden": { "node_id": "UNIQUE_ID" }
+            "hidden": { 
+                "node_id": "UNIQUE_ID"
+            }
         }
 
-    CATEGORY = category
-    FUNCTION = fun
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
     OUTPUT_NODE = True
     RETURN_NAMES = ("chart_dataset", "chip_dataset")
     RETURN_TYPES = ("JSON", "JSON")
@@ -72,10 +129,36 @@ class LF_KeywordCounter:
             if keyword:
                 keyword_count[keyword] = keyword_count.get(keyword, 0) + 1
 
-        chart_dataset = adapt_keyword_count_for_chart(keyword_count)
-        chip_dataset = adapt_keyword_count_for_chip(keyword_count)
+        chart_dataset = {
+            "columns": [
+                {"id": "Axis_0", "title": "Keyword"},
+                {"id": "Series_0", "shape": "number", "title": "Count"},
+            ],
+            "nodes": []
+        }
 
-        PromptServer.instance.send_sync("lf-keywordcounter", {
+        for idx, (keyword, count) in enumerate(keyword_count.items()):
+            node = {
+                "cells": {
+                    "Axis_0": {"value": keyword},
+                    "Series_0": {"value": count},
+                },
+                "id": str(idx)
+            }
+            chart_dataset["nodes"].append(node)
+
+        chip_dataset = {
+            "nodes": []
+        }
+
+        for keyword in keyword_count:
+            node = {
+                "id": keyword,
+                "value": keyword
+            }
+            chip_dataset["nodes"].append(node)
+
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}keywordcounter", {
             "node": node_id, 
             "chartDataset": chart_dataset,
             "chipDataset": chip_dataset,
@@ -92,12 +175,12 @@ class LF_UpdateUsageStatistics:
                 "dataset": ("JSON", {"defaultInput": True, "tooltip": "Dataset including the resources (produced by CivitAIMetadataSetup)."}),
             },
             "hidden": { 
-                "node_id": "UNIQUE_ID" 
+                "node_id": "UNIQUE_ID"
             }
         }
 
-    CATEGORY = category
-    FUNCTION = fun
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
     OUTPUT_NODE = True
     RETURN_NAMES = ("dir", "dataset")
     RETURN_TYPES = ("STRING", "JSON")
@@ -114,7 +197,7 @@ class LF_UpdateUsageStatistics:
         datasets_dir = normalize_list_to_value(datasets_dir)                
         dataset = normalize_input_json(dataset)
         
-        base_path = os.path.join(folder_paths.user_directory, user_folder)
+        base_path = os.path.join(folder_paths.user_directory, USER_FOLDER)
         actual_path = os.path.join(base_path, datasets_dir)
 
         log_title = "# Update summary\n"
@@ -136,7 +219,7 @@ class LF_UpdateUsageStatistics:
         else:
             print(f"Unexpected dataset format: {dataset}")
 
-        PromptServer.instance.send_sync("lf-updateusagestatistics", {
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}updateusagestatistics", {
             "node": node_id, 
             "log": log_title + log if log else log_title + "\nThere were no updates this run!"
         })
@@ -150,8 +233,8 @@ class LF_UsageStatistics:
             "required": {},
         }
     
-    CATEGORY = category
-    FUNCTION = fun
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
     RETURN_TYPES = ()
 
     def on_exec(self):

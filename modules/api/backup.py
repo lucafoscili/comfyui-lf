@@ -3,24 +3,22 @@ import shutil
 
 from aiohttp import web
 from datetime import datetime
-from folder_paths import get_filename_list, get_full_path, user_directory
+from folder_paths import get_filename_list, get_full_path
 
 from server import PromptServer
 
-backup_folder_name = "Backups"
-base_path = os.path.join(user_directory, "LF_Nodes")
+from ..constants.common import *
 
-@PromptServer.instance.routes.post("/comfyui-lf/new-backup")
+@PromptServer.instance.routes.post(f"{API_ROUTE_PREFIX}/new-backup")
 async def backup_usage_analytics(request):
     try:
-        backups_path = os.path.join(base_path, backup_folder_name)
-        os.makedirs(backups_path, exist_ok=True)
+        os.makedirs(BACKUP_PATH, exist_ok=True)
         
         r = await request.post()
         backup_type = r.get('backup_type', 'automatic')
         
         if backup_type == 'automatic':
-            for folder_name in os.listdir(backups_path):
+            for folder_name in os.listdir(BACKUP_PATH):
                 if folder_name.startswith('automatic_'):
                     folder_date_str = folder_name.split('_')[1]
                     folder_date = datetime.strptime(folder_date_str, '%Y%m%d')
@@ -32,7 +30,7 @@ async def backup_usage_analytics(request):
                         }, status=200)
         
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        backup_folder = os.path.join(backups_path, f"{backup_type}_{timestamp}")
+        backup_folder = os.path.join(BACKUP_PATH, f"{backup_type}_{timestamp}")
         os.makedirs(backup_folder, exist_ok=True)
         
         models_backup_folder = os.path.join(backup_folder, "models")
@@ -67,15 +65,15 @@ async def backup_usage_analytics(request):
                     shutil.copy2(info_file_path, backup_path)
                     backed_up_files.append(backup_path)
 
-        for root, _, files in os.walk(base_path):
-            if backup_folder_name in root:
+        for root, _, files in os.walk(BASE_PATH):
+            if BACKUP_FOLDER in root:
                 continue
             
             for file_name in files:
                 full_path = os.path.join(root, file_name)
                 
                 if os.path.exists(full_path) and file_name.endswith(".json"):
-                    relative_path = os.path.relpath(full_path, base_path)
+                    relative_path = os.path.relpath(full_path, BASE_PATH)
                     backup_path = os.path.join(analytics_backup_folder, relative_path)
                     backup_dir = os.path.dirname(backup_path)
                     
