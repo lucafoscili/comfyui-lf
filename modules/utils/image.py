@@ -283,127 +283,84 @@ def resize_to_square(image_tensor: torch.Tensor, square_size: int, resample_meth
 
     return cropped_img
 
-def tensor_to_base64(tensors):
+def tensor_to_base64(tensors: list[torch.Tensor] | torch.Tensor):
     """
     Convert PyTorch tensor(s) to base64 encoding.
     
     Args:
-        tensors (torch.Tensor or List[torch.Tensor]): Input tensor(s) containing image data.
-    
+        tensors (torch.Tensor or List[torch.Tensor]): Image tensor(s).
     Returns:
-        str or List[str]: Base64 encoded string representation(s) of the tensor image(s).
+        str or List[str]: Base64 encoded string(s) of tensor images.
     """
-    def convert_single_tensor(tensor):
-        if len(tensor.shape) == 4 and tensor.shape[-1] != 3:
-            tensor = tensor[:, :, :3]
+    def convert_single_tensor(tensor: torch.Tensor):
+        if len(tensor.shape) == 4:
+            tensor = tensor[0]  # Take the first image in the batch
+        if tensor.shape[-1] != 3:
+            tensor = tensor[:, :, :3]  # Limit to 3 channels if necessary
         
-        # Handle both 3D and 4D tensors
-        if tensor.dim() == 4:
-            # For 4D tensors, take the first image in the batch
-            tensor = tensor[0]
+        # Use tensor_to_numpy to get the numpy array, then convert to PIL
+        numpy_image = tensor_to_numpy(tensor, threeD=True)
+        pil_img = Image.fromarray(numpy_image)
         
-        # Convert tensor to PIL Image
-        pil_img = Image.fromarray(np.uint8(tensor.cpu().numpy() * 255))
-        
-        # Save the image to a BytesIO buffer
-        buffered = io.BytesIO()
-        pil_img.save(buffered, format="webp", quality=60)
-        
-        # Encode the buffer contents to base64 and decode it back to a string
-        img_base64 = base64.b64encode(buffered.getvalue()).decode('utf-8')
-        
-        return img_base64
+        buffer = io.BytesIO()
+        pil_img.save(buffer, format="png", quality=60)
+        return base64.b64encode(buffer.getvalue()).decode('utf-8')
 
     if isinstance(tensors, list):
         return [convert_single_tensor(tensor) for tensor in tensors]
-    else:
-        return convert_single_tensor(tensors)
+    return convert_single_tensor(tensors)
 
-def tensor_to_bytes(tensor, format):
+def tensor_to_bytes(tensor: torch.Tensor, format: str):
     """
-    Convert the tensor to image bytes (JPEG or PNG).
-
+    Convert a tensor to image bytes (JPEG or PNG).
+    
     Args:
-        tensor (torch.Tensor): The input tensor representing the image.
-            It should be a 4D tensor with shape [B, H, W, C] or a 3D tensor with shape [H, W, C].
-        format (string): The format of the image.
+        tensor (torch.Tensor): Image tensor, 4D [B, H, W, C] or 3D [H, W, C].
+        format (str): Desired image format (e.g., "JPEG", "PNG").
     """
-    if isinstance(tensor, torch.Tensor):
-        tensor = tensor.detach().cpu().numpy()
+    numpy_image = tensor_to_numpy(tensor, threeD=True)
+    img = Image.fromarray(numpy_image)
     
-    if len(tensor.shape) == 4 and tensor.shape[0] == 1:
-        tensor = tensor.squeeze(0)
-    
-    tensor = np.clip(tensor * 255, 0, 255).astype(np.uint8)
-    
-    img = Image.fromarray(tensor)
-    image_bytes = io.BytesIO()
-    img.save(image_bytes, format)
-    return image_bytes.getvalue()
+    buffer = io.BytesIO()
+    img.save(buffer, format)
+    return buffer.getvalue()
 
 def tensor_to_numpy(image: torch.Tensor, threeD: bool = False):
     """
-    Converts a PyTorch tensor into a NumPy array suitable for OpenCV processing.
+    Convert a tensor to a NumPy array for OpenCV processing.
     
     Args:
-        image (torch.Tensor): Input image tensor, expected as either (1, H, W, C) or (H, W, C).
-        threeD (bool, optional): If True, returns a 3D array (H, W, C) regardless of initial 4D shape.
-    
+        image (torch.Tensor): 4D (1, H, W, C) or 3D (H, W, C) tensor.
+        threeD (bool): If True, returns a 3D array (H, W, C).
     Returns:
-        np.ndarray: The converted NumPy array in uint8 format with pixel values scaled to [0, 255].
+        np.ndarray: Converted NumPy array in uint8 format.
     """
-    if image.dim() == 4 and threeD:
-        # If `threeD=True`, bypass validation and strip batch dimension
-        image = image.squeeze(0)
-    elif image.dim() == 4:
-        # Ensure batch size of 1 in default mode
+    if image.dim() == 4:
         if image.shape[0] != 1:
             raise ValueError(f"Expected batch size of 1, but got shape {image.shape}")
-        image = image.squeeze(0)
-    elif image.dim() == 3:
-        # Accept 3D tensor as-is
-        pass
-    else:
+        image = image.squeeze(0) if not threeD else image[0]
+    elif image.dim() != 3:
         raise ValueError(f"Unexpected tensor shape for conversion: {image.shape}")
 
-    # Convert tensor to numpy and rescale to [0, 255] with uint8 type
     try:
-        numpy_array = image.cpu().numpy()
-        numpy_array = (numpy_array * 255).astype(np.uint8)
+        numpy_array = (image.cpu().numpy() * 255).astype(np.uint8)
         return numpy_array
     except Exception as e:
         print(f"Error converting tensor to NumPy array: {e}")
         raise
-    
-def tensor_to_pil(tensor):
+
+def tensor_to_pil(tensor: torch.Tensor):
     """
-    Convert a PyTorch tensor to a PIL Image.
-
+    Convert a tensor to a PIL Image.
+    
     Args:
-        tensor (torch.Tensor): The input tensor representing the image.
-            It should be a 4D tensor with shape [B, H, W, C] or a 3D tensor with shape [H, W, C].
-
+        tensor (torch.Tensor): Image tensor, 4D [B, H, W, C] or 3D [H, W, C].
     Returns:
-        PIL.Image: The converted PIL Image.
-
-    Raises:
-        Exception: If there's an error during the conversion process.
-
-    Notes:
-        - If the input tensor is 4D, it will use the first image in the batch.
-        - The tensor is converted to a NumPy array and then to a PIL Image.
-        - The image values are scaled from [0, 1] to [0, 255] and converted to uint8.
+        PIL.Image: Converted PIL image.
     """
     try:
-        # Ensure that the tensor is 4D [B, H, W, C]
-        if tensor.dim() == 4:
-            tensor = tensor[0]  # Use the first image in the batch
-
-        # Convert the tensor from [H, W, C] format
-        image = tensor.cpu().numpy()  # Convert to a NumPy array
-        image = (image * 255).astype("uint8")  # Convert to uint8
-
-        return Image.fromarray(image)
+        numpy_image = tensor_to_numpy(tensor, threeD=True)
+        return Image.fromarray(numpy_image)
     except Exception as e:
         print(f"Error converting tensor to PIL image: {e}")
         raise

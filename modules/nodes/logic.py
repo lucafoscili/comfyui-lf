@@ -3,16 +3,12 @@ import random
 
 from server import PromptServer
 
-from ..utils.common import normalize_input_image
+from ..utils.constants import *
+from ..utils.helpers import *
 
-class AnyType(str):
-    def __ne__(self, __value: object) -> bool:
-        return False
+CATEGORY = f"{CATEGORY_PREFIX}/Logic"
 
-any = AnyType("*")
-
-category = "✨ LF Nodes/Logic"
-
+# region LF_IsLandscape
 class LF_IsLandscape:
     @classmethod
     def INPUT_TYPES(cls):
@@ -25,18 +21,19 @@ class LF_IsLandscape:
             }
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
     INPUT_IS_LIST = (True,)
     OUTPUT_IS_LIST = (False, False, False, True, True, True)
     RETURN_NAMES = ("is_landscape", "height", "width", 
                     "is_landscape_list", "heights_list", "widths_list")
     RETURN_TYPES = ("BOOLEAN", "INT", "INT", "BOOLEAN", "INT", "INT")
 
-    def on_exec(self, node_id, image):
+    def on_exec(self, node_id:str, image:torch.Tensor):
+        image = normalize_input_image(image)
+
         nodes = []
         dataset = {"nodes": nodes}
-        image_list = normalize_input_image(image)
 
         heights_list = []
         widths_list = []
@@ -44,7 +41,7 @@ class LF_IsLandscape:
 
         counter = 0
 
-        for img in image_list:
+        for img in image:
             counter += 1
             _, height, width, _ = img.shape
             heights_list.append(height)
@@ -54,18 +51,15 @@ class LF_IsLandscape:
                           "id": counter, 
                           "value": f"Image {counter}: {str(width >= height)}"})
 
-        height_first = heights_list[0]
-        width_first = widths_list[0]
-        is_landscape_first = is_landscape_list[0]
-
-        PromptServer.instance.send_sync("lf-islandscape", {
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}islandscape", {
             "node": node_id, 
             "dataset": dataset,
         })
 
-        return (is_landscape_first, height_first, width_first, 
+        return (is_landscape_list[0], heights_list[0], widths_list[0], 
                 is_landscape_list, heights_list, widths_list)
-    
+# endregion
+# region LF_MathOperation
 class LF_MathOperation:
     @classmethod
     def INPUT_TYPES(cls):
@@ -74,22 +68,25 @@ class LF_MathOperation:
                 "operation": ("STRING", {"default": "a * b / c + d", "tooltip": "Math operation to execute. Use variables like 'a', 'b', 'c', 'd'."}),
             },
             "optional": {
-                "a": (any, {"tooltip": "Value for 'a'."}),
-                "b": (any, {"tooltip": "Value for 'b'."}),
-                "c": (any, {"tooltip": "Value for 'c'."}),
-                "d": (any, {"tooltip": "Value for 'd'."}),
+                "a": (ANY, {"tooltip": "Value for 'a'."}),
+                "b": (ANY, {"tooltip": "Value for 'b'."}),
+                "c": (ANY, {"tooltip": "Value for 'c'."}),
+                "d": (ANY, {"tooltip": "Value for 'd'."}),
             },
-            "hidden": { "node_id": "UNIQUE_ID" }
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
     RETURN_NAMES = ("int_result", "float_result")
     RETURN_TYPES = ("INT", "FLOAT")
 
-    def on_exec(self, node_id, operation: str, a=None, b=None, c=None, d=None):
+    def on_exec(self, node_id:str, operation:str, a=None, b=None, c=None, d=None):
         def normalize_input(variable):
-            variable = variable[0] if isinstance(variable, list) else variable
+
+            variable = normalize_list_to_value(variable)
 
             if isinstance(variable, str):
                 return float(variable)
@@ -141,7 +138,7 @@ class LF_MathOperation:
   {str_operation}
     """    
 
-        PromptServer.instance.send_sync("lf-mathoperation", {
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}mathoperation", {
             "node": node_id, 
             "log": log
         })
@@ -151,27 +148,36 @@ class LF_MathOperation:
     @classmethod
     def VALIDATE_INPUTS(self, **kwargs):
          return True
-
+# endregion
+# region LF_ResolutionSwitcher
 class LF_ResolutionSwitcher:
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "chance_landscape": ("FLOAT", {"default": 20.0, "step": 1, "min": 0, "max": 100, "tooltip": "Percentage chance for landscape output, 0-100."}),
+                "chance_landscape": ("FLOAT", {"default": 20.0, "step": 5, "min": 0, "max": 100, "tooltip": "Percentage chance for landscape output, 0-100."}),
                 "portrait_width": ("INT", {"default": 832, "min": 1, "step": 1}),
                 "portrait_height": ("INT", {"default": 1216, "min": 1, "step": 1}),
                 "landscape_width": ("INT", {"default": 1216, "min": 1, "step": 1}),
                 "landscape_height": ("INT", {"default": 832, "min": 1, "step": 1}),
             },
-            "hidden": { "node_id": "UNIQUE_ID" }
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
     RETURN_NAMES = ("width", "height", "is_landscape")
     RETURN_TYPES = ("INT", "INT", "BOOLEAN")
 
-    def on_exec(self, node_id, chance_landscape: float, portrait_width: int, portrait_height: int, landscape_width: int, landscape_height: int):
+    def on_exec(self, node_id:str, chance_landscape:float, portrait_width:int, portrait_height:int, landscape_width:int, landscape_height:int):
+        chance_landscape = normalize_list_to_value(chance_landscape)
+        portrait_width = normalize_list_to_value(portrait_width)
+        portrait_height = normalize_list_to_value(portrait_height)
+        landscape_width = normalize_list_to_value(landscape_width)
+        landscape_height = normalize_list_to_value(landscape_height)
+        
         chance_landscape = max(0, min(100, chance_landscape))
         random_value = random.uniform(0, 100)
 
@@ -180,7 +186,7 @@ class LF_ResolutionSwitcher:
         width = landscape_width if is_landscape else portrait_width
         height = landscape_height if is_landscape else portrait_height
 
-        PromptServer.instance.send_sync("lf-resolutionswitcher", {
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}resolutionswitcher", {
             "node": node_id, 
             "bool": is_landscape,
             "chanceTrue": chance_landscape,
@@ -188,25 +194,25 @@ class LF_ResolutionSwitcher:
         })
 
         return (width, height, is_landscape)
-    
-    @classmethod
-    def VALIDATE_INPUTS(self, **kwargs):
-         return True
-
+# endregion
+# region LF_SwitchFloat
 class LF_SwitchFloat:
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
-            "on_true": ("FLOAT", {"lazy": True, "default": 0, "tooltip": "Value to return if the boolean condition is true."}),
-            "on_false": ("FLOAT", {"lazy": True, "default": 0, "tooltip": "Value to return if the boolean condition is false."}),
-            "boolean": ("BOOLEAN", {"default": False, "tooltip": "Boolean condition to switch between 'on_true' and 'on_false' values."}),
-        },
-            "hidden": { "node_id": "UNIQUE_ID" }
+                "on_true": ("FLOAT", {"lazy": True, "default": 0, "tooltip": "Value to return if the boolean condition is true."}),
+                "on_false": ("FLOAT", {"lazy": True, "default": 0, "tooltip": "Value to return if the boolean condition is false."}),
+                "boolean": ("BOOLEAN", {"default": False, "tooltip": "Boolean condition to switch between 'on_true' and 'on_false' values."}),
+            },
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    RETURN_NAMES = ("float",)
     RETURN_TYPES = ("FLOAT",)
 
     def check_lazy_status(self, **kwargs):
@@ -216,15 +222,16 @@ class LF_SwitchFloat:
         else:
             return ["on_false"]
 
-    def on_exec(self, node_id, on_true: int, on_false: int, boolean: bool):
+    def on_exec(self, node_id:str, on_true:int, on_false:int, boolean:bool):
         
-        PromptServer.instance.send_sync("lf-switchfloat", {
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}switchfloat", {
             "node": node_id, 
             "bool": boolean, 
         })
 
         return (on_true if boolean else on_false,)
-
+# endregion
+# region LF_SwitchImage
 class LF_SwitchImage:
     @classmethod
     def INPUT_TYPES(cls):
@@ -234,11 +241,14 @@ class LF_SwitchImage:
                 "on_false": ("IMAGE", {"lazy": True, "tooltip": "Value to return if the boolean condition is false."}),
                 "boolean": ("BOOLEAN", {"default": False, "tooltip": "Boolean condition to switch between 'on_true' and 'on_false' values."}),
             },
-            "hidden": { "node_id": "UNIQUE_ID" }
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    RETURN_NAMES = ("image",)
     RETURN_TYPES = ("IMAGE",)
 
     def check_lazy_status(self, **kwargs):
@@ -248,28 +258,33 @@ class LF_SwitchImage:
         else:
             return ["on_false"]
 
-    def on_exec(self, node_id, on_true, on_false, boolean: bool):
-        PromptServer.instance.send_sync("lf-switchimage", {
+    def on_exec(self, node_id:str, on_true:torch.Tensor, on_false:torch.Tensor, boolean:bool):
+
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}switchimage", {
             "node": node_id, 
             "bool": boolean, 
         })
 
         return (on_true if boolean else on_false,)
-    
+# endregion
+# region LF_SwitchInteger    
 class LF_SwitchInteger:
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
-            "on_true": ("INT", {"lazy": True, "default": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Value to return if the boolean condition is true."}),
-            "on_false": ("INT", {"lazy": True, "default": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Value to return if the boolean condition is false."}),
-            "boolean": ("BOOLEAN", {"default": False, "tooltip": "Boolean condition to switch between 'on_true' and 'on_false' values."}),
-        },
-            "hidden": { "node_id": "UNIQUE_ID" }
+                "on_true": ("INT", {"lazy": True, "default": 0, "max": INT_MAX, "tooltip": "Value to return if the boolean condition is true."}),
+                "on_false": ("INT", {"lazy": True, "default": 0, "max": INT_MAX, "tooltip": "Value to return if the boolean condition is false."}),
+                "boolean": ("BOOLEAN", {"default": False, "tooltip": "Boolean condition to switch between 'on_true' and 'on_false' values."}),
+            },
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
         } 
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    RETURN_NAMES = ("int",)
     RETURN_TYPES = ("INT",)
 
     def check_lazy_status(self, **kwargs):
@@ -279,29 +294,33 @@ class LF_SwitchInteger:
         else:
             return ["on_false"]
 
-    def on_exec(self, node_id, on_true: int, on_false: int, boolean: bool):
+    def on_exec(self, node_id:str, on_true:int, on_false:int, boolean:bool):
         
-        PromptServer.instance.send_sync("lf-switchinteger", {
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}switchinteger", {
             "node": node_id, 
             "bool": boolean, 
         })
 
         return (on_true if boolean else on_false,)
-
+# endregion
+# region LF_SwitchJSON
 class LF_SwitchJSON:
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
-            "on_true": ("JSON", {"lazy": True, "tooltip": "Value to return if the boolean condition is true."}),
-            "on_false": ("JSON", {"lazy": True, "tooltip": "Value to return if the boolean condition is false."}),
-            "boolean": ("BOOLEAN", {"default": False, "tooltip": "Boolean condition to switch between 'on_true' and 'on_false' values."}),
-        },
-            "hidden": { "node_id": "UNIQUE_ID" }
+                "on_true": ("JSON", {"lazy": True, "tooltip": "Value to return if the boolean condition is true."}),
+                "on_false": ("JSON", {"lazy": True, "tooltip": "Value to return if the boolean condition is false."}),
+                "boolean": ("BOOLEAN", {"default": False, "tooltip": "Boolean condition to switch between 'on_true' and 'on_false' values."}),
+            },
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    RETURN_NAMES = ("json",)
     RETURN_TYPES = ("JSON",)
 
     def check_lazy_status(self, **kwargs):
@@ -311,15 +330,16 @@ class LF_SwitchJSON:
         else:
             return ["on_false"]
 
-    def on_exec(self, node_id, on_true:dict, on_false:dict, boolean: bool):
+    def on_exec(self, node_id:str, on_true:dict, on_false:dict, boolean:bool):
         
-        PromptServer.instance.send_sync("lf-switchimage", {
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}switchimage", {
             "node": node_id, 
             "bool": boolean, 
         })
 
         return (on_true if boolean else on_false,)
-
+# endregion
+# region LF_SwitchString
 class LF_SwitchString:
     @classmethod
     def INPUT_TYPES(cls):
@@ -332,8 +352,9 @@ class LF_SwitchString:
             "hidden": { "node_id": "UNIQUE_ID" }
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    RETURN_NAMES = ("string",)
     RETURN_TYPES = ("STRING",)
 
     def check_lazy_status(self, **kwargs):
@@ -343,15 +364,16 @@ class LF_SwitchString:
         else:
             return ["on_false"]
 
-    def on_exec(self, node_id, on_true: str, on_false: str, boolean: bool):
+    def on_exec(self, node_id:str, on_true:str, on_false:str, boolean:bool):
         
-        PromptServer.instance.send_sync("lf-switchstring", {
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}switchstring", {
             "node": node_id, 
             "bool": boolean, 
         })
 
         return (on_true if boolean else on_false,)
-    
+# endregion
+# region Mappings
 NODE_CLASS_MAPPINGS = {
     "LF_IsLandscape": LF_IsLandscape,
     "LF_MathOperation": LF_MathOperation,
@@ -372,3 +394,4 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_SwitchJSON": "Switch JSON",
     "LF_SwitchString": "Switch String",
 } 
+# endregion

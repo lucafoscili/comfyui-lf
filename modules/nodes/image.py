@@ -3,12 +3,13 @@ import io
 from PIL import Image, ImageFilter
 from server import PromptServer
 
-from ..constants.common import *
-from ..utils.common import *
+from ..utils.constants import *
+from ..utils.helpers import *
 from ..utils.image import *
 
 CATEGORY = f"{CATEGORY_PREFIX}/Image"
 
+# region LF_BlurImages
 class LF_BlurImages:
     @classmethod
     def INPUT_TYPES(cls):
@@ -36,7 +37,6 @@ class LF_BlurImages:
         blur_percentage = normalize_list_to_value(blur_percentage)
         file_name = normalize_input_list(file_name)
         image = normalize_input_image(image)
-        node_id = normalize_list_to_value(node_id)
 
         blurred_images = []
         blurred_file_names = []
@@ -78,7 +78,8 @@ class LF_BlurImages:
         image_batch, image_list = normalize_output_image(blurred_images)
 
         return (image_batch[0], image_list, blurred_file_names, index)
-
+# endregion
+# region LF_ClarityEffect
 class LF_ClarityEffect:
     @classmethod
     def INPUT_TYPES(cls):
@@ -107,7 +108,6 @@ class LF_ClarityEffect:
         clarity_strength = normalize_list_to_value(clarity_strength)
         sharpen_amount = normalize_list_to_value(sharpen_amount)
         blur_kernel_size = normalize_list_to_value(blur_kernel_size)
-        node_id = normalize_list_to_value(node_id)
 
         nodes = []
         dataset = { "nodes": nodes }
@@ -135,7 +135,8 @@ class LF_ClarityEffect:
         batch_list, list = normalize_output_image(processed_images)
         
         return (batch_list[0], list)
-    
+# endregion
+# region LF_CompareImages
 class LF_CompareImages:
     @classmethod
     def INPUT_TYPES(cls):
@@ -162,7 +163,6 @@ class LF_CompareImages:
     def on_exec(self, node_id:str, image:torch.Tensor|list[torch.Tensor], image_opt:torch.Tensor|list[torch.Tensor] = None):
         image_list_1 = normalize_input_image(image)
         image_list_2 = normalize_input_image(image_opt) if image_opt is not None else image_list_1
-        node_id = normalize_list_to_value(node_id)
         
         nodes = []
         dataset = { "nodes": nodes }
@@ -197,7 +197,8 @@ class LF_CompareImages:
         _, all_images_list = normalize_output_image(combined_images)
 
         return (image_batch[0], image_list, all_images_list, dataset)
-
+# endregion
+# region LF_MultipleImageResizeForWeb
 class LF_MultipleImageResizeForWeb:
     @classmethod
     def INPUT_TYPES(cls):
@@ -214,14 +215,13 @@ class LF_MultipleImageResizeForWeb:
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
     INPUT_IS_LIST = (True, True, False)
-    OUTPUT_IS_LIST = (False, True, True, True, False)
-    RETURN_NAMES = ("image", "image_list", "name", "names_with_dir", "dataset")
-    RETURN_TYPES = ("IMAGE", "IMAGE", "STRING", "STRING", "JSON")
+    OUTPUT_IS_LIST = (False, True, False, True, True, False)
+    RETURN_NAMES = ("image", "image_list", "name", "name_list", "names_with_dir", "dataset")
+    RETURN_TYPES = ("IMAGE", "IMAGE", "STRING", "STRING", "STRING", "JSON")
 
     def on_exec(self, node_id:str, image:list[torch.Tensor], file_name:list[str]):
         image = normalize_input_image(image)
         file_name = normalize_input_list(file_name)
-        node_id = normalize_list_to_value(node_id)
 
         nodes = []
         dataset = { "nodes": nodes }
@@ -298,8 +298,9 @@ class LF_MultipleImageResizeForWeb:
 
         image_batch, image_list = normalize_output_image(output_images)
 
-        return (image_batch[0], image_list, output_file_names, output_file_names_with_dir, dataset)
-
+        return (image_batch[0], image_list, output_file_names, output_file_names, output_file_names_with_dir, dataset)
+# endregion
+# region LF_ResizeImageByEdge
 class LF_ResizeImageByEdge:
     @classmethod
     def INPUT_TYPES(cls):
@@ -327,7 +328,6 @@ class LF_ResizeImageByEdge:
         longest_edge = normalize_list_to_value(longest_edge)
         new_size = normalize_list_to_value(new_size)
         resize_method = normalize_list_to_value(resize_method)
-        node_id = normalize_list_to_value(node_id)
 
         nodes = []
         root = { "children": nodes, "icon":"help", "id": "", "value": "" }
@@ -368,7 +368,8 @@ class LF_ResizeImageByEdge:
         image_batch, image_list = normalize_output_image(resized_images)
 
         return (image_batch[0], image_list, num_resized)
-    
+# endregion
+# region LF_ResizeImageToDimension
 class LF_ResizeImageToDimension:
     @classmethod
     def INPUT_TYPES(cls):
@@ -400,7 +401,6 @@ class LF_ResizeImageToDimension:
         resize_method = normalize_list_to_value(resize_method)
         resize_mode = normalize_list_to_value(resize_mode)
         pad_color = normalize_list_to_value(pad_color)
-        node_id = normalize_list_to_value(node_id)
 
         nodes = []
         root = { "children": nodes, "icon":"help", "id": "", "value": "" }
@@ -441,7 +441,8 @@ class LF_ResizeImageToDimension:
         image_batch, image_list = normalize_output_image(resized_images)
 
         return (image_batch[0], image_list, num_resized)
-
+# endregion
+# region LF_ResizeImageToSquare
 class LF_ResizeImageToSquare:
     @classmethod
     def INPUT_TYPES(cls):
@@ -469,7 +470,6 @@ class LF_ResizeImageToSquare:
         square_size = normalize_list_to_value(square_size)
         resize_method = normalize_list_to_value(resize_method)
         crop_position = normalize_list_to_value(crop_position)
-        node_id = normalize_list_to_value(node_id)
 
         nodes = []
         root = { "children": nodes, "icon":"help", "id": "", "value": "" }
@@ -510,7 +510,8 @@ class LF_ResizeImageToSquare:
         image_batch, image_list = normalize_output_image(resized_images)
 
         return (image_batch[0], image_list, num_resized)
-
+# endregion
+# region Mappings
 NODE_CLASS_MAPPINGS = {
     "LF_BlurImages": LF_BlurImages,
     "LF_ClarityEffect": LF_ClarityEffect,
@@ -529,3 +530,4 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_ResizeImageToSquare": "Resize image to square",
     "LF_ResizeImageByEdge": "Resize image by edge",
 }
+# endregion

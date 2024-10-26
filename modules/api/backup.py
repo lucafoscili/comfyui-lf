@@ -7,7 +7,7 @@ from folder_paths import get_filename_list, get_full_path
 
 from server import PromptServer
 
-from ..constants.common import *
+from ..utils.constants import API_ROUTE_PREFIX, BACKUP_FOLDER, BACKUP_PATH, BASE_PATH
 
 @PromptServer.instance.routes.post(f"{API_ROUTE_PREFIX}/new-backup")
 async def backup_usage_analytics(request):

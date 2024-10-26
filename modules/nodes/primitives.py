@@ -1,12 +1,16 @@
 import random
 
 from itertools import combinations
+
 from server import PromptServer
 
+from ..utils.constants import *
+from ..utils.helpers import *
 from ..utils.primitives import *
 
-category = "✨ LF Nodes/Primitives"
+CATEGORY = f"{CATEGORY_PREFIX}/Primitives"
     
+# region LF_Boolean
 class LF_Boolean:
     @classmethod 
     def INPUT_TYPES(cls):
@@ -15,24 +19,29 @@ class LF_Boolean:
                 "boolean": ("BOOLEAN", {"default": False, "tooltip": "Boolean value."}),
                 "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
             },
-            "hidden": { "node_id": "UNIQUE_ID" }
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
     RETURN_NAMES = ("boolean",)
     RETURN_TYPES = ("BOOLEAN",)
 
-    def on_exec(self, node_id, boolean, enable_history):
+    def on_exec(self, node_id:str, boolean:bool, enable_history:bool):
+        boolean = normalize_list_to_value(boolean)
+        enable_history = normalize_list_to_value(enable_history)
 
-        PromptServer.instance.send_sync("lf-boolean", {
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}boolean", {
             "node": node_id, 
             "isHistoryEnabled": enable_history,
             "value": boolean,
         })
 
         return (boolean,)
-    
+# endregion
+# region LF_DisplayBoolean
 class LF_DisplayBoolean:
     @classmethod 
     def INPUT_TYPES(cls):
@@ -40,30 +49,33 @@ class LF_DisplayBoolean:
             "required": {
                 "boolean": ("BOOLEAN", {"default": False, "forceInput": True, "tooltip": "Boolean value."}),
             },
-            "hidden": { "node_id": "UNIQUE_ID" }
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
-    INPUT_IS_LIST = (True,)
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
     OUTPUT_NODE = True
     RETURN_NAMES = ("boolean",)
     RETURN_TYPES = ("BOOLEAN",)
 
-    def on_exec(self, node_id, boolean):
-        if isinstance(boolean, list) and len(boolean) > 1:
-            markdown_value = "\n".join(f"{i+1}. {item}" for i, item in enumerate(boolean))
-        else:
-            markdown_value = str(boolean[0]) if isinstance(boolean, list) else str(boolean)
-            boolean = markdown_value
+    def on_exec(self, node_id:str, boolean:bool):
+        display_boolean = normalize_input_list(boolean)
 
-        PromptServer.instance.send_sync("lf-displayboolean", {
+        if len(display_boolean) > 1:
+            markdown_value = "\n\n".join(f"{i+1}. {item}" for i, item in enumerate(display_boolean))
+        else:
+            markdown_value = str(display_boolean[0]) 
+        
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}displayboolean", {
             "node": node_id, 
             "value": markdown_value,
         })
 
         return (boolean,)
-    
+# endregion
+# region LF_DisplayFloat
 class LF_DisplayFloat:
     @classmethod 
     def INPUT_TYPES(cls):
@@ -71,30 +83,33 @@ class LF_DisplayFloat:
             "required": {
                 "float": ("FLOAT", {"default": 0, "forceInput": True, "tooltip": "Float value."}),
             },
-            "hidden": { "node_id": "UNIQUE_ID" }
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
-    INPUT_IS_LIST = (True,)
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
     OUTPUT_NODE = True
     RETURN_NAMES = ("float",)
     RETURN_TYPES = ("FLOAT",)
 
-    def on_exec(self, node_id, float):
-        if isinstance(float, list) and len(float) > 1:
-            markdown_value = "\n".join(f"{i+1}. {item}" for i, item in enumerate(float))
-        else:
-            markdown_value = str(float[0]) if isinstance(float, list) else str(float)
-            float = markdown_value
+    def on_exec(self, node_id:str, float:float):
+        display_float = normalize_input_list(float)
 
-        PromptServer.instance.send_sync("lf-displayfloat", {
+        if len(display_float) > 1:
+            markdown_value = "\n\n".join(f"{i+1}. {item}" for i, item in enumerate(display_float))
+        else:
+            markdown_value = str(display_float[0]) 
+        
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}displayfloat", {
             "node": node_id, 
             "value": markdown_value,
         })
 
         return (float,)
-    
+# endregion
+# region LF_DisplayInteger
 class LF_DisplayInteger:
     @classmethod 
     def INPUT_TYPES(cls):
@@ -102,61 +117,33 @@ class LF_DisplayInteger:
             "required": {
                 "integer": ("INT", {"default": 0, "forceInput": True, "tooltip": "Integer value."}),
             },
-            "hidden": { "node_id": "UNIQUE_ID" }
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
-    INPUT_IS_LIST = (True,)
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
     OUTPUT_NODE = True
     RETURN_NAMES = ("integer",)
     RETURN_TYPES = ("INT",)
 
-    def on_exec(self, node_id, integer):
-        if isinstance(integer, list) and len(integer) > 1:
-            markdown_value = "\n".join(f"{i+1}. {item}" for i, item in enumerate(integer))
-        else:
-            markdown_value = str(integer[0]) if isinstance(integer, list) else str(integer)
-            integer = markdown_value
+    def on_exec(self, node_id:str, integer:int):
+        display_integer = normalize_input_list(integer)
 
-        PromptServer.instance.send_sync("lf-displayinteger", {
+        if len(display_integer) > 1:
+            markdown_value = "\n\n".join(f"{i+1}. {item}" for i, item in enumerate(display_integer))
+        else:
+            markdown_value = str(display_integer[0]) 
+        
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}displayinteger", {
             "node": node_id, 
             "value": markdown_value,
         })
 
         return (integer,)
-    
-class LF_DisplayString:
-    @classmethod 
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "string": ("STRING", {"default": "", "forceInput": True, "tooltip": "String value."}),
-            },
-            "hidden": { "node_id": "UNIQUE_ID" }
-        }
-
-    CATEGORY = category
-    FUNCTION = "on_exec"
-    INPUT_IS_LIST = (True,)
-    OUTPUT_NODE = True
-    RETURN_NAMES = ("string",)
-    RETURN_TYPES = ("STRING",)
-
-    def on_exec(self, node_id, string):
-        if isinstance(string, list) and len(string) > 1:
-            markdown_value = "\n".join(f"{i+1}. {item}" for i, item in enumerate(string))
-        else:
-            markdown_value = "".join(string)
-            string = markdown_value
-
-        PromptServer.instance.send_sync("lf-displaystring", {
-            "node": node_id, 
-            "value": markdown_value,
-        })
-
-        return (string,)
-    
+# endregion
+# region LF_DisplayPrimitiveAsJSON
 class LF_DisplayPrimitiveAsJSON:
     @classmethod
     def INPUT_TYPES(cls):
@@ -165,49 +152,101 @@ class LF_DisplayPrimitiveAsJSON:
                 "json": ("KUL_CODE", {}),
             },
             "optional": {
-                "integer": ("INT", {"default": 0, "forceInput": True, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Integer value."}),
+                "integer": ("INT", {"default": 0, "forceInput": True, "max": INT_MAX, "tooltip": "Integer value."}),
                 "float": ("FLOAT", {"default": 0.0, "forceInput": True, "step": 0.1, "tooltip": "Float value."}),
                 "string": ("STRING", {"default": "", "forceInput": True, "multiline": True, "tooltip": "String value."}),
                 "boolean": ("BOOLEAN", {"default": False, "forceInput": True, "tooltip": "Boolean value."}),
             },
-            "hidden": {"node_id": "UNIQUE_ID"}
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
     OUTPUT_NODE = True
     RETURN_NAMES = ("json",)
     RETURN_TYPES = ("JSON",)
 
     def on_exec(self, **kwargs):
-        dataset = {"nodes": []}
+        integer_list = normalize_input_list(kwargs.get("integer"))
+        float_list = normalize_input_list(kwargs.get("float"))
+        string_list = normalize_input_list(kwargs.get("string"))
+        boolean_list = normalize_input_list(kwargs.get("boolean"))
+
+        nodes = []
+        dataset = {"nodes": nodes}
+
+        if boolean_list:
+            for idx, value in enumerate(boolean_list):
+                nodes.append({
+                    "children": [{"id": f"boolean_{idx}", "value": str(value)}],
+                    "description": str(value), "id": f"boolean_{idx}", "value": "boolean"
+                })
         
-        node_id = kwargs.get("node_id")
-        integer = kwargs.get("integer")
-        float_val = kwargs.get("float")
-        string = kwargs.get("string")
-        boolean = kwargs.get("boolean")
+        if float_list:
+            for idx, value in enumerate(float_list):
+                nodes.append({
+                    "children": [{"id": f"float_{idx}", "value": str(value)}],
+                    "description": str(value), "id": f"float_{idx}", "value": "float"
+                })
+        
+        if integer_list:
+            for idx, value in enumerate(integer_list):
+                nodes.append({
+                    "children": [{"id": f"integer_{idx}", "value": str(value)}],
+                    "description": str(value), "id": f"integer_{idx}", "value": "integer"
+                })
+        
+        if string_list:
+            for idx, value in enumerate(string_list):
+                nodes.append({
+                    "children": [{"id": f"string_{idx}", "value": value}],
+                    "description": value, "id": f"string_{idx}", "value": "string"
+                })
 
-        if boolean is not None:
-            dataset["nodes"].append({"children": [{"id": "boolean", "value": str(boolean)}],
-                                      "description": str(boolean), "id": "boolean", "value": "boolean"})
-        if float_val is not None:
-            dataset["nodes"].append({"children":[{"id": "float", "value":  str(float_val)}],
-                                      "description": str(float_val), "id": "float", "value": "float"})
-        if integer is not None:
-            dataset["nodes"].append({"children":[{"id": "integer", "value": str(integer)}],
-                                      "description": str(integer), "id": "integer", "value": "integer"})
-        if string is not None:
-            dataset["nodes"].append({"children":[{"id": "string", "value": string}],
-                                      "description": string, "id": "string", "value": "string"})
-
-        PromptServer.instance.send_sync("lf-displayprimitiveasjson", {
-            "node": node_id,
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}displayprimitiveasjson", {
+            "node": kwargs.get("node_id"),
             "dataset": dataset
         })
 
         return (dataset,)
+# endregion
+# region LF_DisplayString
+class LF_DisplayString:
+    @classmethod 
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "string": ("STRING", {"default": "", "forceInput": True, "tooltip": "String value."}),
+            },
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
+        }
 
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    OUTPUT_NODE = True
+    RETURN_NAMES = ("string",)
+    RETURN_TYPES = ("STRING",)
+
+    def on_exec(self, node_id:str, string:str):
+        display_string = normalize_input_list(string)
+
+        if len(display_string) > 1:
+            markdown_value = "\n\n".join(f"{i+1}. {item}" for i, item in enumerate(display_string))
+        else:
+            markdown_value = display_string[0]
+        
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}displaystring", {
+            "node": node_id, 
+            "value": markdown_value,
+        })
+
+        return (string,)
+# endregion
+# region LF_Extractor
 class LF_Extractor:
     @classmethod
     def INPUT_TYPES(cls):
@@ -218,19 +257,20 @@ class LF_Extractor:
                 "ending_delimiter": ("STRING", {"default": "}", "tooltip": "The delimiter where extraction ends."}),
                 "result": ("KUL_CODE", {"tooltip": "Extracted string."}),
             },
-            "hidden": { "node_id": "UNIQUE_ID" },
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
     RETURN_NAMES = ("result_as_json", "extracted_text", "result_as_int", "result_as_float", "result_as_boolean")
     RETURN_TYPES = ("JSON", "STRING", "INT", "FLOAT", "BOOLEAN")
 
     def on_exec(self, **kwargs):
-        node_id = kwargs["node_id"]
-        text = kwargs["text"]
-        starting_delimiter = kwargs["starting_delimiter"]
-        ending_delimiter = kwargs["ending_delimiter"]
+        text = normalize_list_to_value(kwargs.get("text"))
+        starting_delimiter = normalize_list_to_value(kwargs.get("starting_delimiter"))
+        ending_delimiter = normalize_list_to_value(kwargs.get("ending_delimiter"))
 
         extracted_text = extract_nested(text, starting_delimiter, ending_delimiter)
         
@@ -239,66 +279,113 @@ class LF_Extractor:
         result_as_float = convert_to_float(extracted_text)
         result_as_boolean = convert_to_boolean(extracted_text)
 
-        PromptServer.instance.send_sync("lf-extractor", {
-            "node": node_id, 
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}extractor", {
+            "node": kwargs.get("node_id"),
             "result": extracted_text,
         })
         
         return (result_as_json, extracted_text, result_as_int, result_as_float, result_as_boolean)
-    
+# endregion
+# region LF_Float
 class LF_Float:
     @classmethod 
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "float": ("FLOAT", {"default": 0, "max": 0xFFFFFFFFFFFFFFFF, "step": 0.1, "tooltip": "Float value."}),
+                "float": ("FLOAT", {"default": 0, "step": 0.1, "tooltip": "Float value."}),
                 "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
             },
-            "hidden": { "node_id": "UNIQUE_ID" }
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
     RETURN_NAMES = ("float",)
     RETURN_TYPES = ("FLOAT",)
 
-    def on_exec(self, node_id, float, enable_history):
+    def on_exec(self, node_id:str, float:float, enable_history:bool):
+        float = normalize_list_to_value(float)
+        enable_history = normalize_list_to_value(enable_history)
 
-        PromptServer.instance.send_sync("lf-float", {
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}float", {
             "node": node_id, 
             "isHistoryEnabled": enable_history,
             "value": float,
         })
 
         return (float,)
-    
+# endregion
+# region LF_Integer
 class LF_Integer:
     @classmethod 
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "integer": ("INT", {"default": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Integer value."}),
+                "integer": ("INT", {"default": 0, "max": INT_MAX, "tooltip": "Integer value."}),
                 "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
             },
-            "hidden": { "node_id": "UNIQUE_ID" }
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
     RETURN_NAMES = ("int",)
     RETURN_TYPES = ("INT",)
 
-    def on_exec(self, node_id, integer, enable_history):
+    def on_exec(self, node_id:str, integer:int, enable_history:bool):
+        integer = normalize_list_to_value(integer)
+        enable_history = normalize_list_to_value(enable_history)
 
-        PromptServer.instance.send_sync("lf-integer", {
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}integer", {
             "node": node_id, 
             "isHistoryEnabled": enable_history,
             "value": integer,
         })
 
         return (integer,)
-    
+# endregion
+# region LF_RandomBoolean
+class LF_RandomBoolean:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "chance_true": ("FLOAT", {"default": 50.0, "step": 1, "min": 0, "max": 100, "tooltip": "Percentage chance for True output, 0-100."}),
+            },
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
+        }
 
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    RETURN_NAMES = ("boolean",)
+    RETURN_TYPES = ("BOOLEAN",)
+
+    def on_exec(self, node_id:str, chance_true:float):
+        chance_true = max(0, min(100, chance_true))
+        random_value = random.uniform(0, 100)
+
+        result = random_value <= chance_true
+
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}randomboolean", {
+            "node": node_id, 
+            "bool": result,
+            "chanceTrue": chance_true,
+            "roll": random_value,
+        })
+
+        return (result,)
+
+    @classmethod
+    def IS_CHANGED(cls, **kwargs):
+        return float("NaN")
+# endregion
+# region LF_Something2Number
 class LF_Something2Number:
     @classmethod
     def INPUT_TYPES(cls):
@@ -313,31 +400,17 @@ class LF_Something2Number:
             }
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
-    OUTPUT_IS_LIST = (False, False, True, True,)
-    RETURN_NAMES = ("float_sum", "integer_sum", "float_list", "integer_list",)
-    RETURN_TYPES = ("FLOAT", "INT", "FLOAT", "INT",)
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    OUTPUT_IS_LIST = (False, False, True, True)
+    RETURN_NAMES = ("float_sum", "integer_sum", "float_list", "integer_list")
+    RETURN_TYPES = ("FLOAT", "INT", "FLOAT", "INT")
 
     def on_exec(self, **kwargs):
-        """
-        Converts various inputs to floats and integers, handles nested structures,
-        and computes their sums.
-
-        Returns:
-            tuple:
-                - float_sum (float): Sum of all values converted to floats.
-                - integer_sum (int): Sum of all values converted to integers.
-                - float_list (list): List of all values converted to floats.
-                - integer_list (list): List of all values converted to integers.
-        """
         float_values = []
         integer_values = []
 
         def extract_numbers(data):
-            """
-            Recursively extract numbers from various data types.
-            """
             if isinstance(data, (int, float)):
                 float_values.append(float(data))
                 integer_values.append(int(data))
@@ -345,17 +418,18 @@ class LF_Something2Number:
                 float_values.append(1.0 if data else 0.0)
                 integer_values.append(1 if data else 0)
             elif isinstance(data, str):
-                data = data.strip()
                 try:
-                    num = float(data)
+                    # Attempt to parse as number directly
+                    num = float(data.strip())
                     float_values.append(num)
                     integer_values.append(int(num))
                 except ValueError:
+                    # Attempt to parse as JSON if not directly a number
                     try:
                         parsed_json = json.loads(data)
                         extract_numbers(parsed_json)
                     except json.JSONDecodeError:
-                        pass  # Ignore strings that are neither numbers nor valid JSON
+                        pass  # Ignore non-numeric, non-JSON strings
             elif isinstance(data, dict):
                 for value in data.values():
                     extract_numbers(value)
@@ -363,29 +437,31 @@ class LF_Something2Number:
                 for item in data:
                     extract_numbers(item)
 
-        for _, value in kwargs.items():
+        # Process each input in kwargs
+        for value in kwargs.values():
             extract_numbers(value)
 
         float_sum = sum(float_values)
         integer_sum = sum(integer_values)
 
-        return (float_sum, integer_sum, float_values, integer_values,)
-    
+        return (float_sum, integer_sum, float_values, integer_values)
+# endregion
+# region LF_Something2String
 class LF_Something2String:
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {},
             "optional": {
-                "JSON": ("JSON", {"tooltip": "JSON value to convert to string."}),
+                "json": ("JSON", {"tooltip": "JSON value to convert to string."}),
                 "boolean": ("BOOLEAN", {"tooltip": "Boolean value to convert to string."}),
                 "float": ("FLOAT", {"tooltip": "Float value to convert to string."}),
                 "integer": ("INT", {"tooltip": "Integer value to convert to string."})
             }
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
 
     input_keys = ["JSON", "boolean", "float", "integer"]
     combinations_list = []
@@ -422,7 +498,8 @@ class LF_Something2String:
             results.append("".join(flattened_combo))
 
         return tuple(results)
-    
+# endregion
+# region LF_String
 class LF_String:
     @classmethod 
     def INPUT_TYPES(cls):
@@ -431,58 +508,29 @@ class LF_String:
                 "string": ("STRING", {"default": "", "multiline": True, "tooltip": "String value."}),
                 "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
             },
-            "hidden": { "node_id": "UNIQUE_ID" }
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
     RETURN_NAMES = ("string",)
     RETURN_TYPES = ("STRING",)
 
-    def on_exec(self, node_id, string, enable_history):
+    def on_exec(self, node_id:str, string:str, enable_history:bool):
+        string = normalize_list_to_value(string)
+        enable_history = normalize_list_to_value(enable_history)
 
-        PromptServer.instance.send_sync("lf-string", {
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}string", {
             "node": node_id, 
             "isHistoryEnabled": enable_history,
             "value": string,
         })
 
         return (string,)
-
-class LF_RandomBoolean:
-    @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "chance_true": ("FLOAT", {"default": 50.0, "step": 1, "min": 0, "max": 100, "tooltip": "Percentage chance for True output, 0-100."}),
-            },
-            "hidden": { "node_id": "UNIQUE_ID" }
-        }
-
-    CATEGORY = category
-    FUNCTION = "on_exec"
-    RETURN_NAMES = ("boolean",)
-    RETURN_TYPES = ("BOOLEAN",)
-
-    def on_exec(self, node_id, chance_true: float):
-        chance_true = max(0, min(100, chance_true))
-        random_value = random.uniform(0, 100)
-
-        result = random_value <= chance_true
-
-        PromptServer.instance.send_sync("lf-randomboolean", {
-            "node": node_id, 
-            "bool": result,
-            "chanceTrue": chance_true,
-            "roll": random_value,
-        })
-
-        return (result,)
-
-    @classmethod
-    def IS_CHANGED(cls, **kwargs):
-        return float("NaN")
-    
+# endregion
+# region LF_WallOfText
 class LF_WallOfText:
     @classmethod 
     def INPUT_TYPES(cls):
@@ -493,40 +541,42 @@ class LF_WallOfText:
                 "text_2": ("STRING", {"default": "", "multiline": True, "tooltip": "The second required string."}),
             },
             "optional": {
-                "text_3": ("STRING", {"default": "", "multiline": True, "tooltip": "The third optional string."}),
-                "text_4": ("STRING", {"default": "", "multiline": True, "tooltip": "The fourth optional string."}),
-                "text_5": ("STRING", {"default": "", "multiline": True, "tooltip": "The fifth optional string."}),
-                "text_6": ("STRING", {"default": "", "multiline": True, "tooltip": "The sixth optional string."}),
-                "text_7": ("STRING", {"default": "", "multiline": True, "tooltip": "The seventh optional string."}),
-                "text_8": ("STRING", {"default": "", "multiline": True, "tooltip": "The eighth optional string."}),
-                "text_9": ("STRING", {"default": "", "multiline": True, "tooltip": "The ninth optional string."}),
-                "text_10": ("STRING", {"default": "", "multiline": True, "tooltip": "The tenth optional string."}),
+                "text_3": ("STRING", {"default": "", "defaultInput": True, "multiline": True, "tooltip": "The third optional string."}),
+                "text_4": ("STRING", {"default": "", "defaultInput": True, "multiline": True, "tooltip": "The fourth optional string."}),
+                "text_5": ("STRING", {"default": "", "defaultInput": True, "multiline": True, "tooltip": "The fifth optional string."}),
+                "text_6": ("STRING", {"default": "", "defaultInput": True, "multiline": True, "tooltip": "The sixth optional string."}),
+                "text_7": ("STRING", {"default": "", "defaultInput": True, "multiline": True, "tooltip": "The seventh optional string."}),
+                "text_8": ("STRING", {"default": "", "defaultInput": True, "multiline": True, "tooltip": "The eighth optional string."}),
+                "text_9": ("STRING", {"default": "", "defaultInput": True, "multiline": True, "tooltip": "The ninth optional string."}),
+                "text_10": ("STRING", {"default": "", "defaultInput": True, "multiline": True, "tooltip": "The tenth optional string."}),
                 "shuffle_inputs": ("BOOLEAN", {"default": False, "tooltip": "Toggle shuffling of input strings."}),
-                "seed": ("INT", {"default": 0, "tooltip": "Seed to control the randomness of the shuffling."}),
+                "seed": ("INT", {"default": 42, "max": INT_MAX, "tooltip": "Seed to control the randomness of the shuffling."}),
             } 
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
-    RETURN_NAMES = ("wall_of_text",)
-    RETURN_TYPES = ("STRING",)
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    OUTPUT_IS_LIST = (False, True)
+    RETURN_NAMES = ("string", "string_list")
+    RETURN_TYPES = ("STRING", "STRING")
 
     def on_exec(self, **kwargs):
-        texts = [kwargs.get(f"text_{i}", "") for i in range(1, 11)]
-        wall_of_text = ""
+        texts = [normalize_list_to_value(kwargs.get(f"text_{i}", "")) for i in range(1, 11)]
+
         if len(texts) > 1:
             separator = kwargs.get("separator", "")
             shuffle_inputs = kwargs.get("shuffle_inputs", False)
             if shuffle_inputs:
-                seed = kwargs.get("seed", 0)
+                seed = kwargs.get("seed", 42)
                 random.seed(seed)
                 random.shuffle(texts)
             wall_of_text = separator.join([text for text in texts if text])
         else:
             wall_of_text = texts[0]
 
-        return (wall_of_text,)
-
+        return (wall_of_text, wall_of_text)
+# endregion
+# region Mappings
 NODE_CLASS_MAPPINGS = {
     "LF_Boolean": LF_Boolean,
     "LF_DisplayBoolean": LF_DisplayBoolean,
@@ -559,3 +609,4 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_String": "String",
     "LF_WallOfText": "Wall of text"
 }             
+# endregion

@@ -5,7 +5,7 @@ from aiohttp import web
 
 from server import PromptServer
 
-from ..constants.common import *
+from ..utils.constants import API_ROUTE_PREFIX, BACKUP_FOLDER, BASE_PATH
 
 @PromptServer.instance.routes.post(f"{API_ROUTE_PREFIX}/clear-analytics")
 async def clear_usage_analytics(request):

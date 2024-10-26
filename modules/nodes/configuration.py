@@ -1,14 +1,14 @@
-import folder_paths
+import re
 import torch
 
+from folder_paths import get_full_path
 from pathlib import Path
 
 import comfy.sd
 import comfy.utils
 
-from ..constants.common import *
-from ..utils.common import normalize_input_image, normalize_list_to_value
-from ..utils.configuration import *
+from ..utils.constants import ANY, BASE64_PNG_PREFIX, CATEGORY_PREFIX, CHECKPOINTS, EVENT_PREFIX, FUNCTION, INT_MAX, LORAS, NOTIFY_COMBO, SAMPLERS, SCHEDULERS, UPSCALERS, VAES
+from ..utils.helpers import count_words_in_comma_separated_string, get_embedding_hashes, get_lora_hashes, get_sha256, normalize_input_image, normalize_list_to_value, cleanse_lora_tag
 from ..utils.image import tensor_to_base64
 from ..utils.selector import prepare_model_dataset, process_model, send_multi_selector_message
 
@@ -16,6 +16,7 @@ from server import PromptServer
 
 CATEGORY = f"{CATEGORY_PREFIX}/Configuration"
 
+# region LF_CivitAIMetadataSetup
 class LF_CivitAIMetadataSetup:
     @classmethod
     def INPUT_TYPES(cls):
@@ -94,8 +95,8 @@ class LF_CivitAIMetadataSetup:
         add_metadata_node("vaes", vae)
 
         # Hashes for Model, VAE, LoRAs, and Embeddings
-        model_hash = get_sha256(folder_paths.get_full_path("checkpoints", checkpoint)) if checkpoint else "Unknown"
-        vae_hash = get_sha256(folder_paths.get_full_path("vae", vae)) if vae else "Unknown"
+        model_hash = get_sha256(get_full_path("checkpoints", checkpoint)) if checkpoint else "Unknown"
+        vae_hash = get_sha256(get_full_path("vae", vae)) if vae else "Unknown"
         emb_hashes_str = ", ".join(get_embedding_hashes(embeddings, analytics_dataset)) if embeddings else ""
         lora_hashes_str = ", ".join(get_lora_hashes(lora_tags, analytics_dataset)) if lora_tags else ""
 
@@ -125,7 +126,8 @@ class LF_CivitAIMetadataSetup:
             output_prompt, negative_prompt, steps, denoising, clip_skip, cfg, seed,
             width, height, hires_upscaler, hires_upscale, analytics_dataset
         )
-    
+# endregion
+# region LF_ControlPanel
 class LF_ControlPanel:
     @classmethod
     def INPUT_TYPES(cls):
@@ -142,7 +144,8 @@ class LF_ControlPanel:
 
     def on_exec(self):
         return ()
-
+# endregion
+# region LF_LoadLoraTags
 class LF_LoadLoraTags:
     @classmethod
     def INPUT_TYPES(cls):
@@ -153,7 +156,9 @@ class LF_LoadLoraTags:
                 "clip": ("CLIP", {"tooltip": "The CLIP model to modify."}),
                 "tags": ("STRING", {"default": '', "multiline": True, "tooltip": "Text containing LoRA tags, e.g., <lora:example:1.0>"}),
             },
-            "hidden": {"node_id": "UNIQUE_ID"}
+            "hidden": { 
+                "node_id": "UNIQUE_ID"
+            }
         }
 
     CATEGORY = CATEGORY
@@ -161,8 +166,8 @@ class LF_LoadLoraTags:
     RETURN_NAMES = ("model", "clip")
     RETURN_TYPES = ("MODEL", "CLIP")
 
-    def on_exec(self, node_id:str, get_civitai_info:bool, model, clip, tags:str):
-        def get_lora_weights(tag_content:str):
+    def on_exec(self, node_id: str, get_civitai_info: bool, model, clip, tags: str):   
+        def get_lora_weights(tag_content: str):
             name = tag_content[1]
             try:
                 m_weight = float(tag_content[2]) if len(tag_content) > 2 else 1.0
@@ -170,7 +175,7 @@ class LF_LoadLoraTags:
             except ValueError:
                 return None, None, None
 
-            lora_files = folder_paths.get_filename_list("loras")
+            lora_files = LORAS
 
             lora_name:str = None
             for lora_file in lora_files:
@@ -179,17 +184,15 @@ class LF_LoadLoraTags:
                     break
                 
             return lora_name, m_weight, c_weight
-
-        def load_lora_file(lora_path:str):
+        def load_lora_file(lora_path: str):
             lora = comfy.utils.load_torch_file(lora_path, safe_load=True)
             return lora
-
-        def add_chip(value:str):
+        def add_chip(value: str):
             return { "icon": "clear", 
                      "description": "Failed to load this LoRA.", 
                      "id": value, 
-                     "value": value }
-    
+                     "value": value } 
+        
         clip = normalize_list_to_value(clip)
         get_civitai_info = normalize_list_to_value(get_civitai_info)
         model = normalize_list_to_value(model)
@@ -199,7 +202,8 @@ class LF_LoadLoraTags:
         found_tags: list[str] = re.findall(regex, tags)
 
         api_flags = []
-        chip_dataset =  { "nodes": [] }
+        nodes = []
+        chip_dataset =  { "nodes": nodes }
         datasets =  []
         hashes = []
         lora_paths = []
@@ -209,16 +213,15 @@ class LF_LoadLoraTags:
             send_multi_selector_message(node_id, [], [], [], [], f"{EVENT_PREFIX}loadloratags")
             return (model, clip)
 
-    
         for tag in found_tags:
             tag_content = tag[1:-1].split(":")
             if tag_content[0] != 'lora' or len(tag_content) < 2:
-                chip_dataset["nodes"].append(add_chip(tag_content))
+                nodes.append(add_chip(tag_content))
                 continue
 
             lora_name, m_weight, c_weight = get_lora_weights(tag_content)
             if not lora_name:
-                chip_dataset["nodes"].append(add_chip(lora_name))
+                nodes.append(add_chip(lora_name))
                 lora_status[tag_content[1]] = False
                 continue
 
@@ -226,7 +229,7 @@ class LF_LoadLoraTags:
                 print(f"LoRA '{lora_name}' is already loaded, skipping.")
                 continue
 
-            lora_path = folder_paths.get_full_path("loras", lora_name)
+            lora_path = get_full_path("loras", lora_name)
             lora = load_lora_file(lora_path)
 
             model, clip = comfy.sd.load_lora_for_models(model, clip, lora, m_weight, c_weight)
@@ -250,16 +253,17 @@ class LF_LoadLoraTags:
                 datasets.append(prepare_model_dataset(name, hash, base64, path))
                 api_flags.append(get_civitai_info)
 
-        if not len(chip_dataset["nodes"]):
-            chip_dataset["nodes"].append({ "icon": "check",
-                                           "description": "Each LoRA has been loaded successfully!", 
-                                           "id": "0", 
-                                           "value": "LoRA loaded successfully!" })
+        if not len(nodes):
+            nodes.append({ "icon": "check",
+                           "description": "Each LoRA has been loaded successfully!", 
+                           "id": "0", 
+                           "value": "LoRA loaded successfully!" })
             
         send_multi_selector_message(node_id, datasets, hashes, api_flags, lora_paths, f"{EVENT_PREFIX}loadloratags", chip_dataset)
 
         return (model, clip)
-        
+# endregion
+# region LF_Lora2Prompt
 class LF_Lora2Prompt:
     @classmethod
     def INPUT_TYPES(cls):
@@ -269,6 +273,9 @@ class LF_Lora2Prompt:
                 "separator": ("STRING", { "default": "SEP", "tooltip": "Character(s) used to separate keywords within the name of a single LoRa file. Helps in extracting individual keywords."}),
                 "weight": ("FLOAT", { "default": 0.5, "tooltip": "A weight value associated with LoRa tags, which may influence processing or output significance."}),
                 "weight_placeholder": ("STRING", { "default": "wwWEIGHTww", "tooltip": "A placeholder within LoRa tags that gets replaced with the actual weight value during processing."}),
+            },
+            "hidden": { 
+                "node_id": "UNIQUE_ID"
             }
         } 
 
@@ -277,7 +284,7 @@ class LF_Lora2Prompt:
     RETURN_NAMES = ("prompt", "loras")
     RETURN_TYPES = ("STRING", "STRING")
 
-    def on_exec(self, text: str, separator:str, weight:float, weight_placeholder:str):
+    def on_exec(self, node_id: str, text: str, separator: str, weight: float, weight_placeholder: str):
         text = normalize_list_to_value(text)
         separator = normalize_list_to_value(separator)
         weight = normalize_list_to_value(weight)
@@ -298,7 +305,8 @@ class LF_Lora2Prompt:
         loras_string = "".join(loras)
         
         return (text, loras_string)
-    
+# endregion
+# region LF_LoraTag2Prompt
 class LF_LoraTag2Prompt:
     @classmethod
     def INPUT_TYPES(cls):
@@ -306,6 +314,9 @@ class LF_LoraTag2Prompt:
             "required": {
                 "tag": ("STRING", {"multiline": True, "tooltip": "The LoRA tag to be converted."}),
                 "separator": ("STRING", { "default": "SEP", "tooltip": "String separating each keyword in a LoRA filename."}),
+            },
+            "hidden": { 
+                "node_id": "UNIQUE_ID"
             }
         }
 
@@ -314,7 +325,7 @@ class LF_LoraTag2Prompt:
     RETURN_NAMES = ("keywords", "nr_keywords")
     RETURN_TYPES = ("STRING", "INT")
 
-    def on_exec(self, tag: str, separator: str):
+    def on_exec(self, node_id: str, tag: str, separator: str):
         tag = normalize_list_to_value(tag)
         separator = normalize_list_to_value(separator)
 
@@ -322,7 +333,8 @@ class LF_LoraTag2Prompt:
         keywords_count = count_words_in_comma_separated_string(clean_lora) 
 
         return (clean_lora, keywords_count)
-
+# endregion
+# region LF_Notify
 class LF_Notify:
     @classmethod
     def INPUT_TYPES(cls):
@@ -338,7 +350,9 @@ class LF_Notify:
                 "image": ("IMAGE", {"tooltip": "Image displayed in the notification."}),
                 "tag": ("STRING", {"default": '', "tooltip": "Used to group notifications (old ones with the same tag will be replaced)."}),
             },
-            "hidden": {"node_id": "UNIQUE_ID"}
+            "hidden": { 
+                "node_id": "UNIQUE_ID"
+            }
         }
 
     CATEGORY = CATEGORY
@@ -347,14 +361,15 @@ class LF_Notify:
     RETURN_NAMES = ("any",)
     RETURN_TYPES = (ANY,)
 
-    def on_exec(self, node_id:str, any:AnyType, on_click_action:str, title:str, message:str, silent:bool, tag:str = None, image:torch.Tensor = None):
+    def on_exec(self, node_id: str, any, on_click_action: str, title: str, message: str, silent: bool, tag: str = None, image: torch.Tensor = None):
         any = normalize_list_to_value(any)
         on_click_action = normalize_list_to_value(on_click_action)
         title = normalize_list_to_value(title)
         message = normalize_list_to_value(message)
         silent = normalize_list_to_value(silent)
         tag = normalize_list_to_value(tag)
-        image = normalize_input_image(image)
+        if isinstance(image, torch.Tensor):
+            image = normalize_input_image(image)
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}notify", {
             "node": node_id, 
@@ -367,7 +382,8 @@ class LF_Notify:
         })
 
         return (any,)
-
+# endregion
+# region Mappings
 NODE_CLASS_MAPPINGS = {
     "LF_CivitAIMetadataSetup": LF_CivitAIMetadataSetup,
     "LF_ControlPanel": LF_ControlPanel,
@@ -385,3 +401,4 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_LoraTag2Prompt": "Convert LoRA tag to prompt",
     "LF_Notify": "Notify",
 }
+# endregion

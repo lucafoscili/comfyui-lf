@@ -1,6 +1,5 @@
 import io
 import base64
-import folder_paths
 import json
 import numpy as np
 import os
@@ -14,13 +13,14 @@ from PIL import Image
 from PIL.PngImagePlugin import PngInfo
 from server import PromptServer
 
-from ..constants.common import *
-from ..utils.common import *
+from ..utils.constants import *
+from ..utils.helpers import *
 from ..utils.image import tensor_to_numpy
 from ..utils.io import *
 
 CATEGORY = f"{CATEGORY_PREFIX}/IO Operations"
  
+# region LF_LoadFileOnce
 class LF_LoadFileOnce:
     @classmethod
     def INPUT_TYPES(cls):
@@ -42,7 +42,7 @@ class LF_LoadFileOnce:
     RETURN_NAMES = ("file", "name")
     RETURN_TYPES = ("*", "STRING")
 
-    def on_exec(self, node_id:int , dir:str, subdir:str, strip_ext:bool, enable_history:bool, history:str):
+    def on_exec(self, node_id: str , dir: str, subdir: str, strip_ext: bool, enable_history: bool, history: str):
         dir = normalize_list_to_value(dir)
         subdir = normalize_list_to_value(subdir)
         strip_ext = normalize_list_to_value(strip_ext)
@@ -79,7 +79,8 @@ class LF_LoadFileOnce:
         })
 
         return (file, file_name)
-
+# endregion
+# region LF_LoadImages
 class LF_LoadImages:
     @classmethod
     def INPUT_TYPES(cls):
@@ -103,13 +104,13 @@ class LF_LoadImages:
     RETURN_NAMES = ("image", "image_list", "name", "creation_date", "nr", "selected_image", "selected_index", "selected_name")
     RETURN_TYPES = ("IMAGE", "IMAGE", "STRING", "STRING", "INT", "IMAGE", "INT", "STRING")
 
-    def on_exec(self, node_id:int, dir:str, subdir:bool, strip_ext:bool, load_cap:int, dummy_output:bool, KUL_IMAGE_PREVIEW_B64:dict):
+    def on_exec(self, node_id: str, dir: str, subdir: bool, strip_ext: bool, load_cap: int, dummy_output: bool, KUL_IMAGE_PREVIEW_B64: dict):
         dir = normalize_list_to_value(dir)
         subdir = normalize_list_to_value(subdir)
         strip_ext = normalize_list_to_value(strip_ext)
         load_cap = normalize_list_to_value(load_cap)
         dummy_output = normalize_list_to_value(dummy_output)
-        KUL_IMAGE_PREVIEW_B64 = normalize_input_json(KUL_IMAGE_PREVIEW_B64)
+        KUL_IMAGE_PREVIEW_B64 = normalize_json_input(KUL_IMAGE_PREVIEW_B64)
 
         count = 0
         file_names = []
@@ -182,7 +183,8 @@ class LF_LoadImages:
         image_batch, image_list = normalize_output_image(images)
 
         return (image_batch[0], image_list, file_names, output_creation_dates, count, selected_image, selected_index, selected_name)
-
+# endregion
+# region LF_LoadLocalJSON
 class LF_LoadLocalJSON:
     @classmethod
     def INPUT_TYPES(cls):
@@ -190,13 +192,16 @@ class LF_LoadLocalJSON:
             "required": {
                 "url": ("STRING", {"default": "", "multiline": True, "tooltip": "The local URL where the JSON file is stored (i.e.: file://C:/myjson.json)."}),
             },
+            "hidden": { 
+                "node_id": "UNIQUE_ID",
+            } 
         }
 
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
     RETURN_TYPES = ("JSON",)
 
-    def on_exec(self, url:str):
+    def on_exec(self, node_id: str, url: str):
         url = normalize_list_to_value(url)
 
         if not url.startswith("file://"):
@@ -207,14 +212,18 @@ class LF_LoadLocalJSON:
             data = json.load(file)
             
         return (data,)
-    
+# endregion
+# region LF_LoadMetadata
 class LF_LoadMetadata:
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
                 "file_names": ("KUL_UPLOAD", {"tooltip": "List of file names separated by semicolons (e.g., file1.jpg;file2.png;file3.jpg)."}),
-            }
+            },
+            "hidden": { 
+                "node_id": "UNIQUE_ID",
+            } 
         }
 
     CATEGORY = CATEGORY
@@ -222,8 +231,8 @@ class LF_LoadMetadata:
     RETURN_NAMES = ("metadata_list",)
     RETURN_TYPES = ("JSON",)
 
-    def on_exec(self, file_names:str):
-        file_names = normalize_input_list(file_names)
+    def on_exec(self, node_id: str, file_names: str):
+        file_names = normalize_list_to_value(file_names)
 
         input_dir = folder_paths.get_input_directory()
         metadata_list = []
@@ -233,23 +242,24 @@ class LF_LoadMetadata:
 
             for file_name in file_names_list:
                 file_path = os.path.join(input_dir, file_name.strip())
-    
+
                 try:
                     pil_image = Image.open(file_path)
-                    
+
                     if pil_image.format == "JPEG":
                         metadata = extract_jpeg_metadata(pil_image, file_name)
                     elif pil_image.format == "PNG":
                         metadata = extract_png_metadata(pil_image)
                     else:
                         metadata = {"error": f"Unsupported image format for {file_name}"}
-    
+
                     metadata_list.append({"file": file_name, "metadata": metadata})
                 except Exception as e:
                     metadata_list.append({"file": file_name, "error": str(e)})
 
         return (metadata_list,)
-
+# endregion
+# region LF_SaveImageForCivitAI
 class LF_SaveImageForCivitAI:
     @classmethod
     def INPUT_TYPES(cls):
@@ -271,47 +281,36 @@ class LF_SaveImageForCivitAI:
                 "prompt": "PROMPT",
             }
         }
-    
+
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
+    INPUT_IS_LIST = (True, True, False, False, False, False, False)
     OUTPUT_IS_LIST = (True, False)
     OUTPUT_NODE = True
     RETURN_NAMES = ("file_names", "civitai_metadata")
     RETURN_TYPES = ("STRING", "STRING")
 
-    def on_exec(self, node_id:int, extra_pnginfo:list[dict], prompt:dict, image:torch.Tensor,
-                filepath:str, add_timestamp:bool, embed_workflow:bool, extension:str, quality:int, civitai_metadata:str = None):
+    def on_exec(self, node_id: str, extra_pnginfo, prompt: dict, image: torch.Tensor,
+                filepath: str, add_timestamp: bool, embed_workflow: bool, extension: str, 
+                quality: int, civitai_metadata: str = None):
+
         image = normalize_input_image(image)
-        filepath = normalize_list_to_value(filepath)
+        filepath = normalize_input_list(filepath)
         add_timestamp = normalize_list_to_value(add_timestamp)
         embed_workflow = normalize_list_to_value(embed_workflow)
         extension = normalize_list_to_value(extension)
         quality = normalize_list_to_value(quality)
         civitai_metadata = normalize_list_to_value(civitai_metadata)
-        extra_pnginfo = normalize_input_list(extra_pnginfo)
         prompt = normalize_list_to_value(prompt)
-        
-        count = 0
+        extra_pnginfo = normalize_list_to_value(extra_pnginfo)
+
         file_names = []
         images_buffer = []
 
-        if add_timestamp:
-            ts = datetime.now()
-            timestamp = ts.strftime("%Y%m%d-%H%M%S")
-            filepath = f"{filepath}_{timestamp}"
+        for count, img in enumerate(image):
+            output_file = resolve_filepath(filepath, BASE_OUTPUT_PATH, count, add_timestamp, "output")
 
-        for img in image:
-            count += 1
-            np_img = tensor_to_numpy(img)
-
-            directory, filename = os.path.split(filepath)
-            file_name = f"{filename}_{count}.{extension}"
-
-            directory = os.path.join(BASE_OUTPUT_PATH, directory)
-            if not os.path.exists(directory):
-                os.makedirs(directory, exist_ok=True)
-
-            output_file = os.path.join(directory, file_name)
+            pil_img = Image.fromarray(tensor_to_numpy(img))
 
             if extension == 'png':
                 png_info = PngInfo()
@@ -319,13 +318,13 @@ class LF_SaveImageForCivitAI:
                     if prompt is not None:
                         png_info.add_text("prompt", json.dumps(prompt))
                     if extra_pnginfo is not None:
-                        for x in extra_pnginfo:
-                            png_info.add_text(x, json.dumps(extra_pnginfo[x]))
+                        for key, value in extra_pnginfo.items():
+                            png_info.add_text(key, json.dumps(value))
 
                 if civitai_metadata:
                     png_info.add_text("parameters", civitai_metadata)
 
-                np_img.save(output_file, format="PNG", pnginfo=png_info)
+                pil_img.save(output_file, format="PNG", pnginfo=png_info)
 
             elif extension == 'jpeg':
                 exif_bytes = piexif.dump({
@@ -333,19 +332,20 @@ class LF_SaveImageForCivitAI:
                         piexif.ExifIFD.UserComment: piexif.helper.UserComment.dump(civitai_metadata, encoding="unicode")
                     }
                 }) if civitai_metadata else None
-                np_img.save(output_file, format="JPEG", quality=quality)
+                pil_img.save(output_file, format="JPEG", quality=quality)
                 if exif_bytes:
                     piexif.insert(exif_bytes, output_file)
             else:
-                np_img.save(output_file, format=extension.upper(), quality=quality)
+                pil_img.save(output_file, format=extension.upper(), quality=quality)
 
-            img_resized = resize_image(img, max_size=1024)
+            # Resize for preview, encode to base64
+            img_resized = resize_image(pil_img, max_size=1024)
             buffered = io.BytesIO()
             img_resized.save(buffered, format="JPEG")
             img_base64 = base64.b64encode(buffered.getvalue()).decode('utf-8')
             images_buffer.append(img_base64)
 
-            file_names.append(file_name)
+            file_names.append(os.path.basename(output_file))
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}saveimageforcivitai", {
             "node": node_id, 
@@ -354,7 +354,8 @@ class LF_SaveImageForCivitAI:
         })
 
         return (file_names, civitai_metadata)
-    
+# endregion
+# region LF_SaveJSON
 class LF_SaveJSON:
     @classmethod
     def INPUT_TYPES(cls):
@@ -364,6 +365,9 @@ class LF_SaveJSON:
                 "filepath": ("STRING", {"default": '', "tooltip": "Path and filename for saving the JSON. Use slashes to specify directories."}),
                 "add_timestamp": ("BOOLEAN", {"default": True, "tooltip": "Add timestamp to the filename as a suffix."}),
             },
+            "hidden": { 
+                "node_id": "UNIQUE_ID",
+            } 
         }
     
     CATEGORY = CATEGORY
@@ -371,34 +375,24 @@ class LF_SaveJSON:
     OUTPUT_NODE = True
     RETURN_TYPES = ()
 
-    def on_exec(self, json_data:dict, filepath:str, add_timestamp:bool):
-        json_data = normalize_input_json(json_data)
+    def on_exec(self, node_id: str, json_data: dict, filepath: str, add_timestamp: bool):
+        json_data = normalize_json_input(json_data)
         filepath = normalize_list_to_value(filepath)
         add_timestamp = normalize_list_to_value(add_timestamp)
 
         try:
-            if add_timestamp:
-                ts = datetime.now()
-                timestamp = ts.strftime("%Y%m%d-%H%M%S")
-                filepath = f"{filepath}_{timestamp}.json"
-            else:
-                filepath = f"{filepath}.json"
-
-            directory = os.path.dirname(filepath)
-            directory = os.path.join(BASE_OUTPUT_PATH, directory)
-            output_file = os.path.join(directory, filepath)
-
-            if not os.path.exists(directory):
-                os.makedirs(directory, exist_ok=True)
+            output_file = resolve_filepath(filepath, BASE_OUTPUT_PATH, add_timestamp=add_timestamp, default_filename="output")
 
             with open(output_file, 'w', encoding='utf-8') as json_file:
                 json.dump(json_data, json_file, ensure_ascii=False, indent=4)
 
             return ()
-        
-        except Exception:
+
+        except Exception as e:
+            print(f"Error saving JSON: {e}")
             return None
-    
+# endregion
+# region Mappings
 NODE_CLASS_MAPPINGS = {
     "LF_LoadFileOnce": LF_LoadFileOnce,
     "LF_LoadImages": LF_LoadImages,
@@ -416,3 +410,4 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_SaveJSON": "Save JSON",
     "LF_SaveImageForCivitAI": "Save image with CivitAI-compatible metadata"
 }
+# endregion

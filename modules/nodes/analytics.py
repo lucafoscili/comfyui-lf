@@ -1,16 +1,16 @@
-import folder_paths
+import json
 import numpy as np
 import os
 import torch
 
 from server import PromptServer
 
-from ..constants.analytics import *
-from ..constants.common import *
-from ..utils.common import *
+from ..utils.constants import BASE_PATH, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, USER_FOLDER, get_usage_filename, get_usage_title
+from ..utils.helpers import normalize_input_image, normalize_json_input, normalize_list_to_value, normalize_output_image
 
 CATEGORY = f"{CATEGORY_PREFIX}/Analytics"
 
+# region LF_ImageHistogram
 class LF_ImageHistogram:
     @classmethod
     def INPUT_TYPES(cls):
@@ -30,7 +30,7 @@ class LF_ImageHistogram:
     RETURN_NAMES = ("image", "image_list", "dataset")
     RETURN_TYPES = ("IMAGE", "IMAGE", "JSON")
 
-    def on_exec(self, node_id:str, image:torch.Tensor):
+    def on_exec(self, node_id: str, image: torch.Tensor):
         image = normalize_input_image(image)
 
         batch_histograms = []
@@ -62,6 +62,7 @@ class LF_ImageHistogram:
                 })
 
         for index, hist in enumerate(batch_histograms):
+            nodes = []
             dataset = {
                 "columns": [
                     {"id": "Axis_0", "title": "Intensity"},
@@ -70,7 +71,7 @@ class LF_ImageHistogram:
                     {"id": "Series_2", "shape": "number", "title": "Blue Channel"},
                     {"id": "Series_3", "shape": "number", "title": "Sum of Channels"},
                 ],
-                "nodes": []
+                "nodes": nodes
             }
 
             for i in range(256):
@@ -84,7 +85,7 @@ class LF_ImageHistogram:
                     },
                     "id": str(i),
                 }
-                dataset["nodes"].append(node)
+                nodes.append(node)
 
             datasets[f"Image #{index + 1}"] = dataset
 
@@ -96,7 +97,8 @@ class LF_ImageHistogram:
         batch, list = normalize_output_image(image)
 
         return (batch[0], list, datasets)
-    
+# endregion
+# region LF_KeywordCounter
 class LF_KeywordCounter:
     @classmethod
     def INPUT_TYPES(cls):
@@ -116,7 +118,7 @@ class LF_KeywordCounter:
     RETURN_NAMES = ("chart_dataset", "chip_dataset")
     RETURN_TYPES = ("JSON", "JSON")
 
-    def on_exec(self, node_id:str, prompt:str, separator:str):
+    def on_exec(self, node_id: str, prompt: str, separator: str):
         prompt = normalize_list_to_value(prompt)
         separator = normalize_list_to_value(separator)
 
@@ -128,12 +130,13 @@ class LF_KeywordCounter:
             if keyword:
                 keyword_count[keyword] = keyword_count.get(keyword, 0) + 1
 
+        chart_nodes = []
         chart_dataset = {
             "columns": [
                 {"id": "Axis_0", "title": "Keyword"},
                 {"id": "Series_0", "shape": "number", "title": "Count"},
             ],
-            "nodes": []
+            "nodes": chart_nodes
         }
 
         for idx, (keyword, count) in enumerate(keyword_count.items()):
@@ -144,10 +147,11 @@ class LF_KeywordCounter:
                 },
                 "id": str(idx)
             }
-            chart_dataset["nodes"].append(node)
+            chart_nodes.append(node)
 
+        chip_nodes = []
         chip_dataset = {
-            "nodes": []
+            "nodes": chip_nodes
         }
 
         for keyword in keyword_count:
@@ -155,7 +159,7 @@ class LF_KeywordCounter:
                 "id": keyword,
                 "value": keyword
             }
-            chip_dataset["nodes"].append(node)
+            chip_nodes.append(node)
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}keywordcounter", {
             "node": node_id, 
@@ -164,7 +168,8 @@ class LF_KeywordCounter:
         })
 
         return (chart_dataset, chip_dataset)
-    
+# endregion
+# region LF_UpdateUsageStatistics
 class LF_UpdateUsageStatistics:
     @classmethod
     def INPUT_TYPES(cls):
@@ -184,8 +189,8 @@ class LF_UpdateUsageStatistics:
     RETURN_NAMES = ("dir", "dataset")
     RETURN_TYPES = ("STRING", "JSON")
 
-    def on_exec(self, node_id:str, datasets_dir:str, dataset:str|dict):
-        def update_usage_json(resource_file:str, resource_name:str, resource_value:str):
+    def on_exec(self, node_id: str, datasets_dir: str, dataset: dict):
+        def update_usage_json(resource_file: str, resource_name: str, resource_value: str):
             resource_value = os.path.splitext(resource_value)[0]
             template = {"columns": [{"id": "name", "title": resource_name}, {"id": "counter", "title": "Nr. of times used", "shape": "number"}], "nodes": []}
             if os.path.exists(resource_file):
@@ -232,9 +237,9 @@ class LF_UpdateUsageStatistics:
             return log
 
         datasets_dir = normalize_list_to_value(datasets_dir)                
-        dataset = normalize_input_json(dataset)
+        dataset = normalize_json_input(dataset)
         
-        base_path = os.path.join(folder_paths.user_directory, USER_FOLDER)
+        base_path = os.path.join(BASE_PATH, USER_FOLDER)
         actual_path = os.path.join(base_path, datasets_dir)
 
         log_title = "# Update summary\n"
@@ -262,7 +267,8 @@ class LF_UpdateUsageStatistics:
         })
 
         return (actual_path, dataset)
-
+# endregion
+# region LF_UsageStatistics
 class LF_UsageStatistics:
     @classmethod
     def INPUT_TYPES(cls):
@@ -276,7 +282,8 @@ class LF_UsageStatistics:
 
     def on_exec(self):
         return ()
-
+# endregion
+# region Mappings
 NODE_CLASS_MAPPINGS = {
     "LF_ImageHistogram": LF_ImageHistogram,
     "LF_KeywordCounter": LF_KeywordCounter,
@@ -290,3 +297,4 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_UpdateUsageStatistics": "Update usage statistics",
     "LF_UsageStatistics": "Usage statistics",
 }
+# endregion

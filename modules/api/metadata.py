@@ -6,7 +6,7 @@ import requests
 from aiohttp import web
 from folder_paths import get_filename_list, get_full_path
 
-from ..constants.common import *
+from ..utils.constants import API_ROUTE_PREFIX, BASE64_PNG_PREFIX
 
 from server import PromptServer
 

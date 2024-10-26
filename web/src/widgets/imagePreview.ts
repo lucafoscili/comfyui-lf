@@ -44,11 +44,13 @@ export const imagePreviewFactory: ImagePreviewWidgetFactory = {
             domWidget.dataset.selectedIndex = String(selectedIndex).valueOf();
             domWidget.dataset.selectedName = selectedName;
           }
-          const grid = drawGrid(images, fileNames, isSelectable, domWidget);
-          if (domWidget.firstChild) {
-            domWidget.replaceChild(grid, domWidget.firstChild);
-          } else {
-            domWidget.appendChild(grid);
+          if (images?.length) {
+            const grid = drawGrid(images, fileNames, isSelectable, domWidget);
+            if (domWidget.firstChild) {
+              domWidget.replaceChild(grid, domWidget.firstChild);
+            } else {
+              domWidget.appendChild(grid);
+            }
           }
         };
 
