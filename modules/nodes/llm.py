@@ -2,9 +2,8 @@ import json
 import requests
 import torch
 
-from ..utils.constants import *
-from ..utils.helpers import *
-from ..utils.llm import *
+from ..utils.constants import BASE64_PNG_PREFIX, CATEGORY_PREFIX, FUNCTION, HEADERS, INT_MAX, get_character_impersonator_system, get_image_classifier_system
+from ..utils.helpers import handle_response, normalize_input_image, normalize_json_input, normalize_list_to_value, tensor_to_base64
 
 CATEGORY = f"{CATEGORY_PREFIX}/LLM"
 
@@ -34,20 +33,20 @@ class LF_CharacterImpersonator:
     RETURN_NAMES = ("request_json", "response_json", "answer")
     RETURN_TYPES = ("JSON", "JSON", "STRING")
 
-    def on_exec(self, node_id:str, temperature:float, max_tokens:int, prompt:str, seed:int, character_bio:str, url:str, image:torch.Tensor = None):
+    def on_exec(self, node_id: str, temperature: float, max_tokens: int, prompt: str, seed: int, character_bio: str, url: str, image: torch.Tensor = None):
         temperature = normalize_list_to_value(temperature)
         max_tokens = normalize_list_to_value(max_tokens)
         prompt = normalize_list_to_value(prompt)
         seed = normalize_list_to_value(seed)
         character_bio = normalize_list_to_value(character_bio)
         url = normalize_list_to_value(url)
-        image = normalize_input_image(image)
 
         system = get_character_impersonator_system(character_bio)
 
         content = []
-        if isinstance(image, list) and len(image) > 1:
-            b64_image = tensor_to_b64(image[0])
+        if isinstance(image, list) and len(image) > 0:
+            image = normalize_input_image(image)
+            b64_image = tensor_to_base64(image[0])
             image_url = f"{BASE64_PNG_PREFIX}{b64_image}"
             content.append({"type": "image_url", "image_url": {"url":image_url}})
         
@@ -105,7 +104,7 @@ class LF_ImageClassifier:
     RETURN_NAMES = ("request_json", "response_json", "message")
     RETURN_TYPES = ("JSON", "JSON", "STRING")
 
-    def on_exec(self, node_id:str, temperature:float, max_tokens:int, prompt:str, seed:int, url:str, image:torch.Tensor, character_bio:str = None):
+    def on_exec(self, node_id: str, temperature: float, max_tokens: int, prompt: str, seed: int, url: str, image: torch.Tensor, character_bio: str = None):
         temperature = normalize_list_to_value(temperature)
         max_tokens = normalize_list_to_value(max_tokens)
         prompt = normalize_list_to_value(prompt)
@@ -117,8 +116,8 @@ class LF_ImageClassifier:
         system = get_image_classifier_system(character_bio)
 
         content = []
-        if isinstance(image, list) and len(image) > 1:
-            b64_image = tensor_to_b64(image[0])
+        if isinstance(image, list) and len(image) > 0:
+            b64_image = tensor_to_base64(image[0])
             image_url = f"{BASE64_PNG_PREFIX}{b64_image}"
             content.append({"type": "image_url", "image_url": {"url":image_url}})
         
@@ -165,7 +164,7 @@ class LF_LLMChat:
     RETURN_NAMES = ("chat_history_json", "last_message", "last_user_message", "last_llm_message", "all_messages")
     RETURN_TYPES = ("JSON", "STRING", "STRING", "STRING", "STRING")
 
-    def on_exec(self, json_input:dict):
+    def on_exec(self, json_input: dict):
         json_input = normalize_json_input(json_input)
 
         all_messages = [message.get("content") for message in json_input]
@@ -201,7 +200,7 @@ class LF_LLMMessenger:
         "STRING", "STRING", "STRING", "STRING", "STRING"
     )
 
-    def on_exec(self, **kwargs):
+    def on_exec(self, **kwargs: dict):
         # Helper functions
         def find_node_by_id(dataset, target_id):
             return next((node for node in dataset if isinstance(node, dict) and node.get('id') == target_id), None)

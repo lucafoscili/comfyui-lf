@@ -13,10 +13,8 @@ from PIL import Image
 from PIL.PngImagePlugin import PngInfo
 from server import PromptServer
 
-from ..utils.constants import *
-from ..utils.helpers import *
-from ..utils.image import tensor_to_numpy
-from ..utils.io import *
+from ..utils.constants import BASE_OUTPUT_PATH, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, BASE_INPUT_PATH
+from ..utils.helpers import create_dummy_image_tensor, extract_jpeg_metadata, extract_png_metadata, normalize_input_image, normalize_input_list, normalize_json_input, normalize_list_to_value, normalize_output_image, pil_to_tensor, resize_image, resolve_filepath, tensor_to_base64, tensor_to_numpy, numpy_to_tensor, tensor_to_pil
 
 CATEGORY = f"{CATEGORY_PREFIX}/IO Operations"
  
@@ -136,19 +134,22 @@ class LF_LoadImages:
                     image_path = os.path.join(root, file)
                     with open(image_path, 'rb') as img_file:
               
+                        # Get file creation time and date
                         file_creation_time = os.path.getctime(image_path)
                         creation_date = datetime.fromtimestamp(file_creation_time).strftime('%Y-%m-%d')
                         output_creation_dates.append(creation_date)
-
+        
+                        # Open image and convert to tensor
                         img_data = img_file.read()
                         img = Image.open(io.BytesIO(img_data)).convert("RGB")
-                        img_resized = resize_image(img, max_size=1024)
-
-                        img_base64 = image_to_base64(img_resized)
+                        img_tensor = pil_to_tensor(img)
+                        images.append(img_tensor)
+                        
+                        # Resize image tensor and convert to base64
+                        img_resized = resize_image(img_tensor, "BICUBIC", True, 1024)
+                        img_base64 = tensor_to_base64(img_resized)
                         images_buffer.append(img_base64)
-
-                        img_tensor = torch.from_numpy(np.array(img).astype(np.float32) / 255.0).unsqueeze(0)
-                        images.append(img_tensor) 
+                        
                         if strip_ext:
                             file = os.path.splitext(file)[0]
                         file_names.append(file)  
@@ -234,7 +235,7 @@ class LF_LoadMetadata:
     def on_exec(self, node_id: str, file_names: str):
         file_names = normalize_list_to_value(file_names)
 
-        input_dir = folder_paths.get_input_directory()
+        input_dir = BASE_INPUT_PATH
         metadata_list = []
 
         if file_names:
@@ -308,10 +309,11 @@ class LF_SaveImageForCivitAI:
         images_buffer = []
 
         for count, img in enumerate(image):
-            output_file = resolve_filepath(filepath, BASE_OUTPUT_PATH, count, add_timestamp, "output")
-
+            output_file = resolve_filepath(filepath, BASE_OUTPUT_PATH, count, add_timestamp, "output", extension)
+        
+            # Convert tensor to PIL image for saving
             pil_img = Image.fromarray(tensor_to_numpy(img))
-
+        
             if extension == 'png':
                 png_info = PngInfo()
                 if embed_workflow and not args.disable_metadata:
@@ -320,12 +322,12 @@ class LF_SaveImageForCivitAI:
                     if extra_pnginfo is not None:
                         for key, value in extra_pnginfo.items():
                             png_info.add_text(key, json.dumps(value))
-
+        
                 if civitai_metadata:
                     png_info.add_text("parameters", civitai_metadata)
-
+        
                 pil_img.save(output_file, format="PNG", pnginfo=png_info)
-
+        
             elif extension == 'jpeg':
                 exif_bytes = piexif.dump({
                     "Exif": {
@@ -337,15 +339,15 @@ class LF_SaveImageForCivitAI:
                     piexif.insert(exif_bytes, output_file)
             else:
                 pil_img.save(output_file, format=extension.upper(), quality=quality)
-
-            # Resize for preview, encode to base64
-            img_resized = resize_image(pil_img, max_size=1024)
+        
+            img_resized = tensor_to_pil(resize_image(img, "BICUBIC", True, 1024))
             buffered = io.BytesIO()
             img_resized.save(buffered, format="JPEG")
             img_base64 = base64.b64encode(buffered.getvalue()).decode('utf-8')
             images_buffer.append(img_base64)
-
+        
             file_names.append(os.path.basename(output_file))
+
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}saveimageforcivitai", {
             "node": node_id, 
@@ -381,7 +383,7 @@ class LF_SaveJSON:
         add_timestamp = normalize_list_to_value(add_timestamp)
 
         try:
-            output_file = resolve_filepath(filepath, BASE_OUTPUT_PATH, add_timestamp=add_timestamp, default_filename="output")
+            output_file = resolve_filepath(filepath, BASE_OUTPUT_PATH, add_timestamp=add_timestamp)
 
             with open(output_file, 'w', encoding='utf-8') as json_file:
                 json.dump(json_data, json_file, ensure_ascii=False, indent=4)

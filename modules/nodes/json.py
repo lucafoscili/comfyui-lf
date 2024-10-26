@@ -1,11 +1,11 @@
 import ast
+import numpy as np
 import random
 
-from ..utils.constants import *
-from ..utils.helpers import *
-from ..utils.image import pil_to_tensor
-from ..utils.io import image_to_base64
-from ..utils.json import *
+from PIL import Image
+
+from ..utils.constants import CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, INT_MAX
+from ..utils.helpers import normalize_input_list, normalize_output_image, numpy_to_tensor, pil_to_tensor, tensor_to_base64, normalize_list_to_value, normalize_json_input
 
 from server import PromptServer
 
@@ -30,7 +30,7 @@ class LF_DisplayJSON:
     RETURN_NAMES = ("json",)
     RETURN_TYPES = ("JSON",)
 
-    def on_exec(self, node_id:str, json_input:dict):
+    def on_exec(self, node_id: str, json_input: dict):
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}displayjson", {
             "node": node_id, 
@@ -58,7 +58,7 @@ class LF_GetRandomKeyFromJSON:
     RETURN_NAMES = ("string",)
     RETURN_TYPES = ("STRING",)
 
-    def on_exec(self, node_id:str, json_input:dict, seed:int):
+    def on_exec(self, node_id: str, json_input: dict, seed: int):
         json_input = normalize_json_input(json_input)
 
         random.seed(seed)
@@ -86,8 +86,10 @@ class LF_GetValueFromJSON:
     RETURN_NAMES = ("json", "string", "number", "int", "float", "boolean")
     RETURN_TYPES = ("JSON", "STRING", "NUMBER", "INT", "FLOAT", "BOOLEAN")
 
-    def on_exec(self, node_id:str, json_input:dict, key:str, index:int):
-        json_input = normalize_json_input(json_input)
+    def on_exec(self, node_id: str, json_input: dict, key:str, index: int):
+        if isinstance(json_input, list):
+            length = len(json_input)
+            json_input = json_input[index] if index < length else json_input[length - 1]
 
         value = json_input.get(key, None)
 
@@ -99,7 +101,7 @@ class LF_GetValueFromJSON:
         boolean_output = None
 
         if value is not None:
-            if isinstance(value, dict):
+            if isinstance(value, dict) or isinstance(value, list):
                 json_output = value
             else:
                 json_output = {"value": value}
@@ -153,40 +155,40 @@ class LF_ImageListFromJSON:
     RETURN_NAMES = ("image", "image_list", "keys", "nr", "width", "height")
     RETURN_TYPES = ("IMAGE", "IMAGE", "STRING", "INT", "INT", "INT")
 
-    def on_exec(self, **kwargs:dict):
-        node_id:str = kwargs.get("node_id")
-        json_input:dict = normalize_json_input(kwargs.get("json_input"))
-        add_noise:bool = normalize_list_to_value(kwargs.get("add_noise"))
-        width:int = normalize_list_to_value(kwargs.get("width"))
-        height:int = normalize_list_to_value(kwargs.get("height"))
-        seed:int = normalize_list_to_value(kwargs.get("seed"))
+    def on_exec(self, **kwargs: dict):
+        node_id: str = kwargs.get("node_id")
+        json_input: dict = normalize_json_input(kwargs.get("json_input"))
+        add_noise: bool = normalize_list_to_value(kwargs.get("add_noise"))
+        width: int = normalize_list_to_value(kwargs.get("width"))
+        height: int = normalize_list_to_value(kwargs.get("height"))
+        seed: int = normalize_list_to_value(kwargs.get("seed"))
 
         keys = list(json_input.keys())
         num_images = len(keys)
 
         np.random.seed(seed)
 
-        pil_batch = []
+        tensor_list = []
         for _ in range(num_images):
             if add_noise:
-                image = Image.fromarray(np.random.randint(0, 256, (height, width, 3), dtype=np.uint8))
+                image_tensor = numpy_to_tensor(np.random.randint(0, 256, (height, width, 3), dtype=np.uint8))
             else:
-                image = Image.new('RGB', (width, height), color='white')
-        pil_batch.append(image)
+                image_tensor = numpy_to_tensor(np.full((height, width, 3), 255, dtype=np.uint8))
+
+            tensor_list.append(image_tensor)
+
+        images_base64 = [tensor_to_base64(img) for img in tensor_list]
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}imagelistfromjson", {
             "node": node_id,
             "fileNames": keys,
-            "images": image_to_base64(pil_batch)
+            "images": images_base64
         })
-
-        tensor_list = []
-        for img in pil_batch:
-            tensor_list.append(pil_to_tensor(img))
 
         image_batch, image_list = normalize_output_image(tensor_list)
 
         return (image_batch[0], image_list, keys, num_images, width, height)
+
 # endregion
 # region LF_KeywordToggleFromJSON
 class LF_KeywordToggleFromJSON:
@@ -209,7 +211,7 @@ class LF_KeywordToggleFromJSON:
     RETURN_NAMES = ("json", "keywords", "keywords_list")
     RETURN_TYPES = ("JSON", "STRING", "STRING")
 
-    def on_exec(self, json_input:dict, separator: str, chip:str):
+    def on_exec(self, node_id: str, json_input: dict, separator: str, chip: str):
         selected_keywords = chip.split(", ")
 
         filtered_json = {
@@ -245,7 +247,7 @@ class LF_SetValueInJSON:
     RETURN_NAMES = ("json_output",)
     RETURN_TYPES = ("JSON",)
 
-    def on_exec(self, node_id:str, json_input:dict, key:str, value:str):
+    def on_exec(self, node_id: str, json_input: dict, key: str, value: str):
         json_input = normalize_json_input(json_input)
         key = normalize_list_to_value(key)
         value = normalize_input_list(value)
@@ -292,7 +294,7 @@ class LF_ShuffleJSONKeys:
     RETURN_NAMES = ("json",)
     RETURN_TYPES = ("JSON",)
 
-    def on_exec(self, node_id:str, json_input:dict, mutate_source:bool, seed:int):
+    def on_exec(self, node_id: str, json_input: dict, mutate_source: bool, seed: int):
         json_input = normalize_json_input(json_input)
 
         random.seed(seed)
@@ -338,7 +340,7 @@ class LF_SortJSONKeys:
     RETURN_NAMES = ("json",)
     RETURN_TYPES = ("JSON",)
 
-    def on_exec(self, node_id:str, json_input:dict, ascending:bool, mutate_source:bool):
+    def on_exec(self, node_id: str, json_input: dict, ascending: bool, mutate_source: bool):
         json_input = normalize_json_input(json_input)
             
         if mutate_source:
@@ -377,7 +379,7 @@ class LF_StringToJSON:
     RETURN_NAMES = ("json",)
     RETURN_TYPES = ("JSON",)
 
-    def on_exec(self, node_id:str, string:str):
+    def on_exec(self, node_id: str, string: str):
         return (normalize_json_input(string),)
 # endregion
 # region LF_WriteJSON

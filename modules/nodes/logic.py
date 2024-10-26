@@ -1,10 +1,11 @@
 import math
 import random
+import torch
 
 from server import PromptServer
 
-from ..utils.constants import *
-from ..utils.helpers import *
+from ..utils.constants import ANY, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, INT_MAX
+from ..utils.helpers import normalize_input_image, normalize_list_to_value
 
 CATEGORY = f"{CATEGORY_PREFIX}/Logic"
 
@@ -29,7 +30,7 @@ class LF_IsLandscape:
                     "is_landscape_list", "heights_list", "widths_list")
     RETURN_TYPES = ("BOOLEAN", "INT", "INT", "BOOLEAN", "INT", "INT")
 
-    def on_exec(self, node_id:str, image:torch.Tensor):
+    def on_exec(self, node_id: str, image: torch.Tensor):
         image = normalize_input_image(image)
 
         nodes = []
@@ -83,7 +84,7 @@ class LF_MathOperation:
     RETURN_NAMES = ("int_result", "float_result")
     RETURN_TYPES = ("INT", "FLOAT")
 
-    def on_exec(self, node_id:str, operation:str, a=None, b=None, c=None, d=None):
+    def on_exec(self, node_id: str, operation: str, a=None, b=None, c=None, d=None):
         def normalize_input(variable):
 
             variable = normalize_list_to_value(variable)
@@ -171,7 +172,7 @@ class LF_ResolutionSwitcher:
     RETURN_NAMES = ("width", "height", "is_landscape")
     RETURN_TYPES = ("INT", "INT", "BOOLEAN")
 
-    def on_exec(self, node_id:str, chance_landscape:float, portrait_width:int, portrait_height:int, landscape_width:int, landscape_height:int):
+    def on_exec(self, node_id: str, chance_landscape: float, portrait_width: int, portrait_height :int, landscape_width: int, landscape_height: int):
         chance_landscape = normalize_list_to_value(chance_landscape)
         portrait_width = normalize_list_to_value(portrait_width)
         portrait_height = normalize_list_to_value(portrait_height)
@@ -215,14 +216,14 @@ class LF_SwitchFloat:
     RETURN_NAMES = ("float",)
     RETURN_TYPES = ("FLOAT",)
 
-    def check_lazy_status(self, **kwargs):
+    def check_lazy_status(self, **kwargs: dict):
         switch_value = kwargs["boolean"]
         if switch_value:
             return ["on_true"]
         else:
             return ["on_false"]
 
-    def on_exec(self, node_id:str, on_true:int, on_false:int, boolean:bool):
+    def on_exec(self, node_id: str, on_true: int, on_false: int, boolean: bool):
         
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}switchfloat", {
             "node": node_id, 
@@ -251,14 +252,14 @@ class LF_SwitchImage:
     RETURN_NAMES = ("image",)
     RETURN_TYPES = ("IMAGE",)
 
-    def check_lazy_status(self, **kwargs):
+    def check_lazy_status(self, **kwargs: dict):
         switch_value = kwargs["boolean"]
         if switch_value:
             return ["on_true"]
         else:
             return ["on_false"]
 
-    def on_exec(self, node_id:str, on_true:torch.Tensor, on_false:torch.Tensor, boolean:bool):
+    def on_exec(self, node_id: str, on_true: torch.Tensor, on_false: torch.Tensor, boolean: bool):
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}switchimage", {
             "node": node_id, 
@@ -287,14 +288,14 @@ class LF_SwitchInteger:
     RETURN_NAMES = ("int",)
     RETURN_TYPES = ("INT",)
 
-    def check_lazy_status(self, **kwargs):
+    def check_lazy_status(self, **kwargs: dict):
         switch_value = kwargs["boolean"]
         if switch_value:
             return ["on_true"]
         else:
             return ["on_false"]
 
-    def on_exec(self, node_id:str, on_true:int, on_false:int, boolean:bool):
+    def on_exec(self, node_id: str, on_true: int, on_false: int, boolean: bool):
         
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}switchinteger", {
             "node": node_id, 
@@ -323,14 +324,14 @@ class LF_SwitchJSON:
     RETURN_NAMES = ("json",)
     RETURN_TYPES = ("JSON",)
 
-    def check_lazy_status(self, **kwargs):
+    def check_lazy_status(self, **kwargs: dict):
         switch_value = kwargs["boolean"]
         if switch_value:
             return ["on_true"]
         else:
             return ["on_false"]
 
-    def on_exec(self, node_id:str, on_true:dict, on_false:dict, boolean:bool):
+    def on_exec(self, node_id: str, on_true: dict, on_false: dict, boolean: bool):
         
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}switchimage", {
             "node": node_id, 
@@ -357,14 +358,14 @@ class LF_SwitchString:
     RETURN_NAMES = ("string",)
     RETURN_TYPES = ("STRING",)
 
-    def check_lazy_status(self, **kwargs):
+    def check_lazy_status(self, **kwargs: dict):
         switch_value = kwargs["boolean"]
         if switch_value:
             return ["on_true"]
         else:
             return ["on_false"]
 
-    def on_exec(self, node_id:str, on_true:str, on_false:str, boolean:bool):
+    def on_exec(self, node_id: str, on_true: str, on_false: str, boolean: bool):
         
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}switchstring", {
             "node": node_id, 

@@ -239,8 +239,7 @@ class LF_UpdateUsageStatistics:
         datasets_dir = normalize_list_to_value(datasets_dir)                
         dataset = normalize_json_input(dataset)
         
-        base_path = os.path.join(BASE_PATH, USER_FOLDER)
-        actual_path = os.path.join(base_path, datasets_dir)
+        actual_path = os.path.join(BASE_PATH, datasets_dir)
 
         log_title = "# Update summary\n"
         log = ""

@@ -2,9 +2,8 @@ import random
 
 from server import PromptServer
 
-from ..utils.constants import *
-from ..utils.helpers import *
-from ..utils.selector import *
+from ..utils.constants import CATEGORY_PREFIX, CHECKPOINTS, EMBEDDINGS, EVENT_PREFIX, FUNCTION, INT_MAX, LORAS, SAMPLERS, SCHEDULERS, UPSCALERS, VAES
+from ..utils.helpers import filter_list, prepare_model_dataset, process_model, send_multi_selector_message, send_single_selector_message
 
 CATEGORY = f"{CATEGORY_PREFIX}/Selectors"
 
@@ -32,8 +31,8 @@ class LF_CheckpointSelector:
     RETURN_NAMES = ("combo", "string", "path", "image")
     RETURN_TYPES = (CHECKPOINTS, "STRING", "STRING", "IMAGE")
 
-    def on_exec(self, node_id:str, checkpoint:str, get_civitai_info:bool,
-                randomize:bool, seed:int, filter:str):
+    def on_exec(self, node_id: str, checkpoint: str, get_civitai_info: bool,
+                randomize: bool, seed: int, filter: str):
         checkpoint = None if checkpoint is None or str(checkpoint) == "None" else checkpoint
         
         checkpoints = CHECKPOINTS
@@ -95,8 +94,8 @@ class LF_EmbeddingSelector:
     RETURN_NAMES = ("combo", "prompt", "string", "path", "image")
     RETURN_TYPES = (EMBEDDINGS, "STRING", "STRING", "STRING", "IMAGE")
 
-    def on_exec(self, node_id:str, embedding:str, get_civitai_info:bool, weight:float,
-                randomize:bool, seed:int, filter:bool, embedding_stack:str = ""):
+    def on_exec(self, node_id: str, embedding: str, get_civitai_info: bool, weight: float,
+                randomize: bool, seed: int, filter: bool, embedding_stack: str = ""):
         embedding = None if embedding is None or str(embedding) == "None" else embedding
         passthrough = bool(not embedding and not randomize)
 
@@ -171,8 +170,8 @@ class LF_LoraAndEmbeddingSelector:
     RETURN_TYPES = (LORAS, EMBEDDINGS, "STRING", "STRING", "STRING", "STRING",
                     "STRING", "STRING", "IMAGE", "IMAGE",)
 
-    def on_exec(self, node_id:str, lora:str, get_civitai_info:bool, weight:float,
-                randomize:bool, seed:int, filter:str, lora_stack:str = "", embedding_stack:str = ""):
+    def on_exec(self, node_id: str, lora: str, get_civitai_info: bool, weight:float,
+                randomize: bool, seed: int, filter: str, lora_stack: str = "", embedding_stack: str = ""):
         lora = None if lora is None or str(lora) == "None" else lora
         passthrough = bool(not lora and not randomize)
 
@@ -267,10 +266,10 @@ class LF_LoraSelector:
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
     RETURN_NAMES = ("lora", "lora_tag", "lora_name", "model_path", "model_cover")
-    RETURN_TYPES = (folder_paths.get_filename_list("loras"), "STRING", "STRING", "STRING", "IMAGE")
+    RETURN_TYPES = (LORAS, "STRING", "STRING", "STRING", "IMAGE")
 
-    def on_exec(self, node_id:str, lora:str, get_civitai_info:bool, weight:float,
-                randomize:bool, seed:int, filter:str, lora_stack:str = ""):
+    def on_exec(self, node_id: str, lora: str, get_civitai_info: bool, weight: float,
+                randomize: bool, seed: int, filter: str, lora_stack: str = ""):
         lora = None if lora is None or str(lora) == "None" else lora
         passthrough = bool(not lora and not randomize)
 
@@ -340,8 +339,8 @@ class LF_SamplerSelector:
     RETURN_NAMES = ("combo", "string")
     RETURN_TYPES = (SAMPLERS, "STRING")
 
-    def on_exec(self, node_id:str, sampler:str, enable_history:bool,
-                randomize:bool, seed:int, filter:str):
+    def on_exec(self, node_id: str, sampler: str, enable_history: bool,
+                randomize: bool, seed: int, filter: str):
         samplers = SAMPLERS
 
         if filter:
@@ -383,8 +382,8 @@ class LF_SchedulerSelector:
     RETURN_NAMES = ("combo", "string")
     RETURN_TYPES = (SCHEDULERS, "STRING")
 
-    def on_exec(self, node_id:str, scheduler:str, enable_history:bool,
-                randomize:bool, seed:int, filter:str):
+    def on_exec(self, node_id: str, scheduler: str, enable_history: bool,
+                randomize: bool, seed: int, filter: str):
         schedulers = SCHEDULERS
 
         if filter:
@@ -426,8 +425,8 @@ class LF_UpscaleModelSelector:
     RETURN_NAMES = ("combo", "string")
     RETURN_TYPES = (UPSCALERS, "STRING")
 
-    def on_exec(self, node_id:str, upscale_model:str, enable_history:bool,
-                randomize:bool, seed:int, filter:str):
+    def on_exec(self, node_id: str, upscale_model: str, enable_history: bool,
+                randomize: bool, seed: int, filter: str):
         upscalers = UPSCALERS
 
         if filter:
@@ -469,7 +468,7 @@ class LF_VAESelector:
     RETURN_NAMES = ("combo", "string")
     RETURN_TYPES = (VAES, "STRING")
 
-    def on_exec(self, node_id, vae, enable_history, randomize, seed, filter):
+    def on_exec(self, node_id: str, vae: str, enable_history: bool, randomize: bool, seed: int, filter: str):
         vaes = VAES
 
         if filter:
@@ -481,7 +480,7 @@ class LF_VAESelector:
             random.seed(seed)
             vae = random.choice(vaes)
 
-        PromptServer.instance.send_sync(f"{EVENT_PREFIX}upscalemodelselector", {
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}vaeselector", {
             "node": node_id, 
             "isHistoryEnabled": enable_history,
             "value": vae,

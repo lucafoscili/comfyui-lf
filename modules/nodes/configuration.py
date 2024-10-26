@@ -8,9 +8,7 @@ import comfy.sd
 import comfy.utils
 
 from ..utils.constants import ANY, BASE64_PNG_PREFIX, CATEGORY_PREFIX, CHECKPOINTS, EVENT_PREFIX, FUNCTION, INT_MAX, LORAS, NOTIFY_COMBO, SAMPLERS, SCHEDULERS, UPSCALERS, VAES
-from ..utils.helpers import count_words_in_comma_separated_string, get_embedding_hashes, get_lora_hashes, get_sha256, normalize_input_image, normalize_list_to_value, cleanse_lora_tag
-from ..utils.image import tensor_to_base64
-from ..utils.selector import prepare_model_dataset, process_model, send_multi_selector_message
+from ..utils.helpers import count_words_in_comma_separated_string, get_embedding_hashes, get_lora_hashes, get_sha256, normalize_input_image, normalize_list_to_value, cleanse_lora_tag, prepare_model_dataset, process_model, send_multi_selector_message, tensor_to_base64
 
 from server import PromptServer
 

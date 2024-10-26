@@ -30,7 +30,7 @@ class LF_SequentialSeedsGenerator:
     RETURN_NAMES = ("seed",) * 20
     RETURN_TYPES = ("INT",) * 20
 
-    def on_exec(self, node_id:str, seed:int):
+    def on_exec(self, node_id: str, seed: int):
         seeds = [seed + i for i in range(20)] 
         return seeds
 # endregion
@@ -57,7 +57,7 @@ class LF_UrandomSeedGenerator:
     RETURN_NAMES = tuple(["fixed_seeds_dataset"] + ["seed"] * 20)
     RETURN_TYPES = tuple(["JSON"] + ["INT"] * 20)
 
-    def on_exec(self, node_id:str, enable_history:bool, regen_each_run:bool, fixed_seeds:dict = None):
+    def on_exec(self, node_id: str, enable_history: bool, regen_each_run: bool, fixed_seeds: dict = None):
         json_data = normalize_json_input(fixed_seeds)
         existing_seeds = [None] * 20
 

@@ -1,12 +1,12 @@
+import json
 import random
 
 from itertools import combinations
 
 from server import PromptServer
 
-from ..utils.constants import *
-from ..utils.helpers import *
-from ..utils.primitives import *
+from ..utils.constants import CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, INT_MAX
+from ..utils.helpers import convert_to_boolean, convert_to_float, convert_to_int, convert_to_json, normalize_input_list, normalize_list_to_value
 
 CATEGORY = f"{CATEGORY_PREFIX}/Primitives"
     
@@ -29,7 +29,7 @@ class LF_Boolean:
     RETURN_NAMES = ("boolean",)
     RETURN_TYPES = ("BOOLEAN",)
 
-    def on_exec(self, node_id:str, boolean:bool, enable_history:bool):
+    def on_exec(self, node_id: str, boolean: bool, enable_history: bool):
         boolean = normalize_list_to_value(boolean)
         enable_history = normalize_list_to_value(enable_history)
 
@@ -60,7 +60,7 @@ class LF_DisplayBoolean:
     RETURN_NAMES = ("boolean",)
     RETURN_TYPES = ("BOOLEAN",)
 
-    def on_exec(self, node_id:str, boolean:bool):
+    def on_exec(self, node_id: str, boolean: bool):
         display_boolean = normalize_input_list(boolean)
 
         if len(display_boolean) > 1:
@@ -94,7 +94,7 @@ class LF_DisplayFloat:
     RETURN_NAMES = ("float",)
     RETURN_TYPES = ("FLOAT",)
 
-    def on_exec(self, node_id:str, float:float):
+    def on_exec(self, node_id: str, float: float):
         display_float = normalize_input_list(float)
 
         if len(display_float) > 1:
@@ -128,7 +128,7 @@ class LF_DisplayInteger:
     RETURN_NAMES = ("integer",)
     RETURN_TYPES = ("INT",)
 
-    def on_exec(self, node_id:str, integer:int):
+    def on_exec(self, node_id: str, integer: int):
         display_integer = normalize_input_list(integer)
 
         if len(display_integer) > 1:
@@ -168,7 +168,7 @@ class LF_DisplayPrimitiveAsJSON:
     RETURN_NAMES = ("json",)
     RETURN_TYPES = ("JSON",)
 
-    def on_exec(self, **kwargs):
+    def on_exec(self, **kwargs: dict):
         integer_list = normalize_input_list(kwargs.get("integer"))
         float_list = normalize_input_list(kwargs.get("float"))
         string_list = normalize_input_list(kwargs.get("string"))
@@ -231,7 +231,7 @@ class LF_DisplayString:
     RETURN_NAMES = ("string",)
     RETURN_TYPES = ("STRING",)
 
-    def on_exec(self, node_id:str, string:str):
+    def on_exec(self, node_id: str, string: str):
         display_string = normalize_input_list(string)
 
         if len(display_string) > 1:
@@ -267,7 +267,22 @@ class LF_Extractor:
     RETURN_NAMES = ("result_as_json", "extracted_text", "result_as_int", "result_as_float", "result_as_boolean")
     RETURN_TYPES = ("JSON", "STRING", "INT", "FLOAT", "BOOLEAN")
 
-    def on_exec(self, **kwargs):
+    def on_exec(self, **kwargs: dict):
+        def extract_nested(text, start_delim, end_delim):
+            stack = []
+            start_idx = None
+            extracted = []
+            for idx, char in enumerate(text):
+                if char == start_delim:
+                    if not stack:
+                        start_idx = idx
+                    stack.append(start_delim)
+                elif char == end_delim and stack:
+                    stack.pop()
+                    if not stack:
+                        extracted.append(text[start_idx + 1:idx])
+            return ''.join(extracted) if extracted else ""
+        
         text = normalize_list_to_value(kwargs.get("text"))
         starting_delimiter = normalize_list_to_value(kwargs.get("starting_delimiter"))
         ending_delimiter = normalize_list_to_value(kwargs.get("ending_delimiter"))
@@ -305,7 +320,7 @@ class LF_Float:
     RETURN_NAMES = ("float",)
     RETURN_TYPES = ("FLOAT",)
 
-    def on_exec(self, node_id:str, float:float, enable_history:bool):
+    def on_exec(self, node_id: str, float: float, enable_history: bool):
         float = normalize_list_to_value(float)
         enable_history = normalize_list_to_value(enable_history)
 
@@ -336,7 +351,7 @@ class LF_Integer:
     RETURN_NAMES = ("int",)
     RETURN_TYPES = ("INT",)
 
-    def on_exec(self, node_id:str, integer:int, enable_history:bool):
+    def on_exec(self, node_id: str, integer: int, enable_history: bool):
         integer = normalize_list_to_value(integer)
         enable_history = normalize_list_to_value(enable_history)
 
@@ -366,7 +381,7 @@ class LF_RandomBoolean:
     RETURN_NAMES = ("boolean",)
     RETURN_TYPES = ("BOOLEAN",)
 
-    def on_exec(self, node_id:str, chance_true:float):
+    def on_exec(self, node_id: str, chance_true: float):
         chance_true = max(0, min(100, chance_true))
         random_value = random.uniform(0, 100)
 
@@ -406,7 +421,7 @@ class LF_Something2Number:
     RETURN_NAMES = ("float_sum", "integer_sum", "float_list", "integer_list")
     RETURN_TYPES = ("FLOAT", "INT", "FLOAT", "INT")
 
-    def on_exec(self, **kwargs):
+    def on_exec(self, **kwargs: dict):
         float_values = []
         integer_values = []
 
@@ -475,7 +490,7 @@ class LF_Something2String:
     RETURN_TYPES = tuple(["STRING"] * len(combinations_list))
     RETURN_NAMES = tuple(combinations_list)
 
-    def on_exec(self, **kwargs):
+    def on_exec(self, **kwargs: dict):
         """
         Converts multiple inputs to strings and generates specific combinations.
         """
@@ -518,7 +533,7 @@ class LF_String:
     RETURN_NAMES = ("string",)
     RETURN_TYPES = ("STRING",)
 
-    def on_exec(self, node_id:str, string:str, enable_history:bool):
+    def on_exec(self, node_id: str, string: str, enable_history: bool):
         string = normalize_list_to_value(string)
         enable_history = normalize_list_to_value(enable_history)
 
@@ -560,7 +575,7 @@ class LF_WallOfText:
     RETURN_NAMES = ("string", "string_list")
     RETURN_TYPES = ("STRING", "STRING")
 
-    def on_exec(self, **kwargs):
+    def on_exec(self, **kwargs: dict):
         texts = [normalize_list_to_value(kwargs.get(f"text_{i}", "")) for i in range(1, 11)]
 
         if len(texts) > 1:
