@@ -355,9 +355,10 @@ class LF_Notify:
 
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
+    OUTPUT_IS_LIST = (False, True)
     OUTPUT_NODE = True
-    RETURN_NAMES = ("any",)
-    RETURN_TYPES = (ANY,)
+    RETURN_NAMES = ("any", "any_list")
+    RETURN_TYPES = (ANY, ANY)
 
     def on_exec(self, node_id: str, any, on_click_action: str, title: str, message: str, silent: bool, tag: str = None, image: torch.Tensor = None):
         any = normalize_list_to_value(any)
@@ -379,7 +380,7 @@ class LF_Notify:
             "tag": tag
         })
 
-        return (any,)
+        return (any, any)
 # endregion
 # region Mappings
 NODE_CLASS_MAPPINGS = {
