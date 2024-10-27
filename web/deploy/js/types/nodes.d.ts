@@ -46,6 +46,7 @@ export declare enum NodeName {
     saveImageForCivitai = "LF_SaveImageForCivitAI",
     saveJson = "LF_SaveJSON",
     schedulerSelector = "LF_SchedulerSelector",
+    sequentialSeedsGenerator = "LF_SequentialSeedsGenerator",
     shuffleJsonKeys = "LF_ShuffleJSONKeys",
     something2Number = "LF_Something2Number",
     something2String = "LF_Something2String",

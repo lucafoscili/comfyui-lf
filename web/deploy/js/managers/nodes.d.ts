@@ -42,6 +42,7 @@ export declare class LFNodes {
         LF_SaveImageForCivitAI: (event: CustomEvent<import("../types/events").SaveImageForCivitAIPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.imagePreview>) => void;
         LF_SaveJSON: (event: CustomEvent<import("../types/events").SaveJSONPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;
         LF_SchedulerSelector: (event: CustomEvent<import("../types/events").SchedulerSelectorPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
+        LF_SequentialSeedsGenerator: (event: CustomEvent<import("../types/events").SequentialSeedsGeneratorPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
         LF_ShuffleJSONKeys: (event: CustomEvent<import("../types/events").ShuffleJSONKeysPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
         LF_Something2Number: (event: CustomEvent<import("../types/events").Something2NumberPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
         LF_Something2String: (event: CustomEvent<import("../types/events").Something2StringPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
@@ -106,6 +107,7 @@ export declare class LFNodes {
         LF_SaveImageForCivitAI: (setW: import("../types/widgets").ImagePreviewWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.imagePreview>) => void;
         LF_SaveJSON: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;
         LF_SchedulerSelector: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
+        LF_SequentialSeedsGenerator: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
         LF_ShuffleJSONKeys: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
         LF_Something2Number: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
         LF_Something2String: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
@@ -166,6 +168,7 @@ export declare class LFNodes {
             LF_SaveImageForCivitAI: (event: CustomEvent<import("../types/events").SaveImageForCivitAIPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.imagePreview>) => void;
             LF_SaveJSON: (event: CustomEvent<import("../types/events").SaveJSONPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;
             LF_SchedulerSelector: (event: CustomEvent<import("../types/events").SchedulerSelectorPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
+            LF_SequentialSeedsGenerator: (event: CustomEvent<import("../types/events").SequentialSeedsGeneratorPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
             LF_ShuffleJSONKeys: (event: CustomEvent<import("../types/events").ShuffleJSONKeysPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
             LF_Something2Number: (event: CustomEvent<import("../types/events").Something2NumberPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
             LF_Something2String: (event: CustomEvent<import("../types/events").Something2StringPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
@@ -230,6 +233,7 @@ export declare class LFNodes {
             LF_SaveImageForCivitAI: (setW: import("../types/widgets").ImagePreviewWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.imagePreview>) => void;
             LF_SaveJSON: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;
             LF_SchedulerSelector: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
+            LF_SequentialSeedsGenerator: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
             LF_ShuffleJSONKeys: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
             LF_Something2Number: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
             LF_Something2String: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;

@@ -32,6 +32,7 @@ export type ComfyWidgetMap = {
     [ComfyWidgetName.integer]: Widget;
     [ComfyWidgetName.json]: Widget;
     [ComfyWidgetName.number]: Widget;
+    [ComfyWidgetName.seed]: Widget;
     [ComfyWidgetName.string]: Widget;
 };
 export declare enum ComfyWidgetName {
@@ -42,6 +43,7 @@ export declare enum ComfyWidgetName {
     integer = "INTEGER",
     json = "JSON",
     number = "NUMBER",
+    seed = "SEED",
     string = "STRING"
 }
 export type CustomWidgetMap = {

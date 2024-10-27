@@ -62,6 +62,7 @@ import { lora2PromptFactory } from '../nodes/lora2Prompt';
 import { saveJsonFactory } from '../nodes/saveJson';
 import { characterImpersonatorFactory } from '../nodes/characterImpersonator';
 import { imageClassifierFactory } from '../nodes/imageClassifier';
+import { sequentialSeedsGeneratorFactory } from '../nodes/sequentialSeedsGenerator';
 
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
@@ -110,6 +111,7 @@ export class LFNodes {
     [NodeName.saveImageForCivitai]: saveImageForCivitaiFactory.eventHandler,
     [NodeName.saveJson]: saveJsonFactory.eventHandler,
     [NodeName.schedulerSelector]: schedulerSelectorFactory.eventHandler,
+    [NodeName.sequentialSeedsGenerator]: sequentialSeedsGeneratorFactory.eventHandler,
     [NodeName.shuffleJsonKeys]: shuffleJsonKeysFactory.eventHandler,
     [NodeName.something2Number]: something2NumberFactory.eventHandler,
     [NodeName.something2String]: something2StringFactory.eventHandler,
@@ -175,6 +177,7 @@ export class LFNodes {
     [NodeName.saveImageForCivitai]: saveImageForCivitaiFactory.register,
     [NodeName.saveJson]: saveJsonFactory.register,
     [NodeName.schedulerSelector]: schedulerSelectorFactory.register,
+    [NodeName.sequentialSeedsGenerator]: sequentialSeedsGeneratorFactory.register,
     [NodeName.shuffleJsonKeys]: shuffleJsonKeysFactory.register,
     [NodeName.something2Number]: something2NumberFactory.register,
     [NodeName.something2String]: something2StringFactory.register,

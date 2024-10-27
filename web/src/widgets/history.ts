@@ -76,6 +76,7 @@ const handleEvent = (e: CustomEvent<KulListEventPayload>, comfyNode: NodeType) =
     const floatW = getWidget(comfyNode, ComfyWidgetName.float);
     const intW = getWidget(comfyNode, ComfyWidgetName.integer);
     const numberW = getWidget(comfyNode, ComfyWidgetName.number);
+    const seedW = getWidget(comfyNode, ComfyWidgetName.seed);
     const comboW = getWidget(comfyNode, ComfyWidgetName.combo);
     const stringW = getWidget(comfyNode, ComfyWidgetName.string);
 
@@ -91,10 +92,13 @@ const handleEvent = (e: CustomEvent<KulListEventPayload>, comfyNode: NodeType) =
         }
         break;
       case NodeName.integer:
+      case NodeName.sequentialSeedsGenerator:
         if (numberW) {
           numberW.value = Number(node.value).valueOf();
         } else if (intW) {
           intW.value = Number(node.value).valueOf();
+        } else if (seedW) {
+          seedW.value = Number(node.value).valueOf();
         }
         break;
       case NodeName.samplerSelector:

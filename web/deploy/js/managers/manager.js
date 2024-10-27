@@ -670,6 +670,13 @@ export class LFManager {
             nodes.eventHandlers.LF_SchedulerSelector(e, widgets.adders.KUL_HISTORY);
         });
         /*-------------------------------------------------------------------*/
+        /*     I n i t   S e q u e n t i a l S e e d s G e n e r a t o r     */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_SequentialSeedsGenerator(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.sequentialSeedsGenerator, (e) => {
+            nodes.eventHandlers.LF_SequentialSeedsGenerator(e, widgets.adders.KUL_HISTORY);
+        });
+        /*-------------------------------------------------------------------*/
         /*              I n i t   S h u f f l e J S O N K e y s              */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_ShuffleJSONKeys(widgets.setters.KUL_CODE, widgets.adders.KUL_CODE);

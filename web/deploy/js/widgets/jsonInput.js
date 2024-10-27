@@ -15,7 +15,12 @@ export const jsonInputFactory = {
         return {
             hideOnZoom: false,
             getValue() {
-                return JSON.parse(textarea?.value || '{}') || {};
+                try {
+                    return JSON.parse(textarea?.value || '{}') || {};
+                }
+                catch (error) {
+                    return { invalid_json: error };
+                }
             },
             setValue(value) {
                 const callback = (_, u) => {

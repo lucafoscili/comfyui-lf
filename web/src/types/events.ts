@@ -52,6 +52,7 @@ export enum EventName {
   saveImageForCivitAI = 'lf-saveimageforcivitai',
   saveJson = 'lf-savejson',
   schedulerSelector = 'lf-schedulerselector',
+  sequentialSeedsGenerator = 'lf_sequentialseedsgenerator',
   shuffleJsonKeys = 'lf-shufflejsonkeys',
   something2Number = 'lf-something2number',
   something2String = 'lf-something2string',
@@ -105,6 +106,7 @@ export type EventPayload =
   | SaveImageForCivitAIPayload
   | SaveJSONPayload
   | SchedulerSelectorPayload
+  | SequentialSeedsGeneratorPayload
   | ShuffleJSONKeysPayload
   | Something2NumberPayload
   | Something2StringPayload
@@ -486,6 +488,15 @@ export interface SaveImageForCivitAIPayload extends BaseEventPayload {
 export interface SchedulerSelectorPayload extends BaseEventPayload {
   isHistoryEnabled: boolean;
   value: string;
+}
+
+/*-------------------------------------------------------------------*/
+/*    S e q u e n t i a l S e e d s G e n e r a t o r   D e c l .    */
+/*-------------------------------------------------------------------*/
+
+export interface SequentialSeedsGeneratorPayload extends BaseEventPayload {
+  isHistoryEnabled: boolean;
+  value: number;
 }
 
 /*-------------------------------------------------------------------*/

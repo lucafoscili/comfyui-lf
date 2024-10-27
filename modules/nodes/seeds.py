@@ -18,6 +18,7 @@ class LF_SequentialSeedsGenerator:
         return {
             "required": {
                 "seed": ("INT", {"default": 0, "max": INT_MAX, "tooltip": "Seed value from which the other seeds will be progressively increased."}),
+                "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the random seeds at execution time."}),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -26,12 +27,18 @@ class LF_SequentialSeedsGenerator:
     
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
-    OUTPUT_NODE = True
     RETURN_NAMES = ("seed",) * 20
     RETURN_TYPES = ("INT",) * 20
 
-    def on_exec(self, node_id: str, seed: int):
+    def on_exec(self, node_id: str, seed: int, enable_history: bool):
         seeds = [seed + i for i in range(20)] 
+
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}sequentialseedsgenerator", {
+            "node": node_id, 
+            "isHistoryEnabled": enable_history,
+            "value": seed,
+        })        
+
         return seeds
 # endregion
 # region LF_UrandomSeedGenerator
@@ -53,7 +60,6 @@ class LF_UrandomSeedGenerator:
 
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
-    OUTPUT_NODE = True
     RETURN_NAMES = tuple(["fixed_seeds_dataset"] + ["seed"] * 20)
     RETURN_TYPES = tuple(["JSON"] + ["INT"] * 20)
 

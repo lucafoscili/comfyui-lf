@@ -71,6 +71,7 @@ import {
   SaveJSONPayload,
   CharacterImpersonatorPayload,
   ImageClassifierPayload,
+  SequentialSeedsGeneratorPayload,
 } from '../types/events.js';
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
 import { LFTooltip } from './tooltip';
@@ -900,6 +901,19 @@ export class LFManager {
     this.#APIS.event(EventName.schedulerSelector, (e: CustomEvent<SchedulerSelectorPayload>) => {
       nodes.eventHandlers.LF_SchedulerSelector(e, widgets.adders.KUL_HISTORY);
     });
+    /*-------------------------------------------------------------------*/
+    /*     I n i t   S e q u e n t i a l S e e d s G e n e r a t o r     */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_SequentialSeedsGenerator(
+      widgets.setters.KUL_HISTORY,
+      widgets.adders.KUL_HISTORY,
+    );
+    this.#APIS.event(
+      EventName.sequentialSeedsGenerator,
+      (e: CustomEvent<SequentialSeedsGeneratorPayload>) => {
+        nodes.eventHandlers.LF_SequentialSeedsGenerator(e, widgets.adders.KUL_HISTORY);
+      },
+    );
     /*-------------------------------------------------------------------*/
     /*              I n i t   S h u f f l e J S O N K e y s              */
     /*-------------------------------------------------------------------*/
