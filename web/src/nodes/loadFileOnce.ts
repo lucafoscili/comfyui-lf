@@ -31,7 +31,7 @@ export const loadFileOnceFactory = {
             description: 'Execution date: ' + new Date().toLocaleString() + '.',
             value,
           };
-          if (dataset) {
+          if (dataset?.nodes?.length) {
             const existingNode = dataset?.nodes?.find((n) => n.id === value);
             if (existingNode) {
               existingNode.description = newNode.description;
