@@ -24,7 +24,6 @@ class LF_IsLandscape:
 
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
-    INPUT_IS_LIST = (True,)
     OUTPUT_IS_LIST = (False, False, False, True, True, True)
     RETURN_NAMES = ("is_landscape", "height", "width", 
                     "is_landscape_list", "heights_list", "widths_list")
