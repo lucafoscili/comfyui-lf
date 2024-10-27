@@ -481,6 +481,7 @@ class LF_Something2Number:
   {int_log}
 
 ## Breakdown:
+
   {breakdown_log}
     """
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}something2number", {
@@ -558,6 +559,7 @@ class LF_Something2String:
         combinations_log = "\n".join([f"{i+1}. {val}" for i, val in enumerate(combination_logs)]) if combination_logs else "*Empty*"
 
         log = f"""## Breakdown
+
 {flattened_log}
 
 ## Combination Results:

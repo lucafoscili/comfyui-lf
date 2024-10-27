@@ -5,7 +5,7 @@ import torch
 from server import PromptServer
 
 from ..utils.constants import ANY, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, INT_MAX
-from ..utils.helpers import normalize_input_image, normalize_input_list, normalize_list_to_value
+from ..utils.helpers import normalize_input_image, normalize_input_list, normalize_list_to_value, not_none
 
 CATEGORY = f"{CATEGORY_PREFIX}/Logic"
 
@@ -86,21 +86,24 @@ class LF_MathOperation:
     def on_exec(self, node_id: str, operation: str, a=None, b=None, c=None, d=None):
         def normalize_and_sum_with_log(variable):
             normalized = normalize_input_list(variable)
-            
-            if isinstance(normalized, list) and len(normalized) > 1:
+
+            if len(normalized) > 1:
                 itemized_log = "\n".join(
-                    [f"    {i+1}. *{val}* <{type(val).__name__}>" for i, val in enumerate(normalized)]
+                    [f"    {i+1}. *{1 if val is True else 0 if val is False else val}* <{type(val).__name__}>" 
+                     for i, val in enumerate(normalized)]
                 )
-                return sum(normalized), f"**{sum(normalized)}** <list>\n{itemized_log}"
-            single_value = normalized[0] if isinstance(normalized, list) else normalized
+                total_sum = sum(1 if val is True else 0 if val is False else val for val in normalized)
+                return total_sum, f"**{total_sum}** <list>\n{itemized_log}"
+
+            single_value = 1 if normalized[0] is True else 0 if normalized[0] is False else normalized[0]
             return float(single_value), f"**{single_value}** <{type(single_value).__name__}>"
-        
+
         na_placeholder = "N/A"
 
-        a_sum, a_log = normalize_and_sum_with_log(a) if a else (None, na_placeholder)
-        b_sum, b_log = normalize_and_sum_with_log(b) if b else (None, na_placeholder)
-        c_sum, c_log = normalize_and_sum_with_log(c) if c else (None, na_placeholder)
-        d_sum, d_log = normalize_and_sum_with_log(d) if d else (None, na_placeholder)
+        a_sum, a_log = normalize_and_sum_with_log(a) if not_none(a) else (None, na_placeholder)
+        b_sum, b_log = normalize_and_sum_with_log(b) if not_none(b) else (None, na_placeholder)
+        c_sum, c_log = normalize_and_sum_with_log(c) if not_none(c) else (None, na_placeholder)
+        d_sum, d_log = normalize_and_sum_with_log(d) if not_none(d) else (None, na_placeholder)
 
         str_operation = operation.replace("a", str(a_sum)).replace("b", str(b_sum)).replace("c", str(c_sum)).replace("d", str(d_sum))
 
@@ -109,8 +112,7 @@ class LF_MathOperation:
         except Exception:
             result = float("NaN")
 
-        log = f"""
-## Result:
+        log = f"""## Result:
   **{str(result)}**
 
 ## Variables:
