@@ -5,7 +5,7 @@ import torch
 from server import PromptServer
 
 from ..utils.constants import ANY, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, INT_MAX
-from ..utils.helpers import normalize_input_image, normalize_list_to_value
+from ..utils.helpers import normalize_input_image, normalize_input_list, normalize_list_to_value
 
 CATEGORY = f"{CATEGORY_PREFIX}/Logic"
 
@@ -69,10 +69,10 @@ class LF_MathOperation:
                 "operation": ("STRING", {"default": "a * b / c + d", "tooltip": "Math operation to execute. Use variables like 'a', 'b', 'c', 'd'."}),
             },
             "optional": {
-                "a": (ANY, {"tooltip": "Value for 'a'."}),
-                "b": (ANY, {"tooltip": "Value for 'b'."}),
-                "c": (ANY, {"tooltip": "Value for 'c'."}),
-                "d": (ANY, {"tooltip": "Value for 'd'."}),
+                "a": (ANY, {"tooltip": "Value or list of values for 'a'."}),
+                "b": (ANY, {"tooltip": "Value or list of values for 'b'."}),
+                "c": (ANY, {"tooltip": "Value or list of values for 'c'."}),
+                "d": (ANY, {"tooltip": "Value or list of values for 'd'."}),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -85,43 +85,28 @@ class LF_MathOperation:
     RETURN_TYPES = ("INT", "FLOAT")
 
     def on_exec(self, node_id: str, operation: str, a=None, b=None, c=None, d=None):
-        def normalize_input(variable):
-
-            variable = normalize_list_to_value(variable)
-
-            if isinstance(variable, str):
-                return float(variable)
-            if isinstance(variable, bool):
-                return 1 if variable else 0
+        def normalize_and_sum_with_log(variable):
+            normalized = normalize_input_list(variable)
             
-            return variable
+            if isinstance(normalized, list) and len(normalized) > 1:
+                itemized_log = "\n".join(
+                    [f"    {i+1}. *{val}* <{type(val).__name__}>" for i, val in enumerate(normalized)]
+                )
+                return sum(normalized), f"**{sum(normalized)}** <list>\n{itemized_log}"
+            single_value = normalized[0] if isinstance(normalized, list) else normalized
+            return float(single_value), f"**{single_value}** <{type(single_value).__name__}>"
         
         na_placeholder = "N/A"
-        str_operation = operation
 
-        if a:
-            str_a = type(a)
-            a = normalize_input(a)
-            str_operation = str_operation.replace("a", str(a))
-            str_a = f"**{str(a)}** {str_a}"
-        if b:
-            str_b = type(b)
-            b = normalize_input(b)
-            str_operation = str_operation.replace("b", str(b))
-            str_b = f"**{str(b)}** {str_b}"
-        if c:
-            str_c = type(c)
-            c = normalize_input(c)
-            str_operation = str_operation.replace("c", str(c))
-            str_c = f"**{str(c)}** {str_c}"
-        if d:
-            str_d = type(d)
-            d = normalize_input(d)
-            str_operation = str_operation.replace("d", str(d))
-            str_d = f"**{str(d)}** {str_d}"
+        a_sum, a_log = normalize_and_sum_with_log(a) if a else (None, na_placeholder)
+        b_sum, b_log = normalize_and_sum_with_log(b) if b else (None, na_placeholder)
+        c_sum, c_log = normalize_and_sum_with_log(c) if c else (None, na_placeholder)
+        d_sum, d_log = normalize_and_sum_with_log(d) if d else (None, na_placeholder)
+
+        str_operation = operation.replace("a", str(a_sum)).replace("b", str(b_sum)).replace("c", str(c_sum)).replace("d", str(d_sum))
 
         try:
-            result = eval(operation, {"a": a, "b": b, "c": c, "d": d, "math": math})
+            result = eval(operation, {"a": a_sum, "b": b_sum, "c": c_sum, "d": d_sum, "math": math})
         except Exception:
             result = float("NaN")
 
@@ -130,14 +115,14 @@ class LF_MathOperation:
   **{str(result)}**
 
 ## Variables:
-  a: {str_a if a else na_placeholder}
-  b: {str_b if b else na_placeholder}
-  c: {str_c if c else na_placeholder}
-  d: {str_d if d else na_placeholder}
+  a: {a_log}
+  b: {b_log}
+  c: {c_log}
+  d: {d_log}
 
 ## Full operation:
   {str_operation}
-    """    
+        """    
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}mathoperation", {
             "node": node_id, 
