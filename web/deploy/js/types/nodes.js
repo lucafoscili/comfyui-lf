@@ -46,6 +46,7 @@ export var NodeName;
     NodeName["schedulerSelector"] = "LF_SchedulerSelector";
     NodeName["shuffleJsonKeys"] = "LF_ShuffleJSONKeys";
     NodeName["something2Number"] = "LF_Something2Number";
+    NodeName["something2String"] = "LF_Something2String";
     NodeName["sortJsonKeys"] = "LF_SortJSONKeys";
     NodeName["string"] = "LF_String";
     NodeName["switchFloat"] = "LF_SwitchFloat";

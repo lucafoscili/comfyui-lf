@@ -483,8 +483,7 @@ class LF_Something2Number:
 
 ## Breakdown:
   {breakdown_log}
-    """            
-
+    """
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}something2number", {
             "node": kwargs.get("node_id"), 
             "log": log,
@@ -526,18 +525,23 @@ class LF_Something2String:
 
     def on_exec(self, **kwargs: dict):
         def flatten_input(input_item):
-            """Flattens nested lists and stringifies each item."""
             if isinstance(input_item, list):
                 return [str(sub_item) for item in input_item for sub_item in flatten_input(item)]
             elif isinstance(input_item, (dict, bool, float, int)):
-                return [str(input_item)]
+                flattened_value = str(input_item)
+                breakdown.append(f"**{type(input_item).__name__}** detected => {flattened_value}")
+                return [flattened_value]
             elif input_item is not None:
-                return [str(input_item)]
+                flattened_value = str(input_item)
+                breakdown.append(f"**string** detected => {flattened_value}")
+                return [flattened_value]
             return []
 
         separator = kwargs.get("separator", ", ")
+        breakdown = []
 
         results = []
+        combination_logs = []
 
         for combo_name in self.RETURN_NAMES:
             items = combo_name.split("_")
@@ -547,7 +551,25 @@ class LF_Something2String:
                 if item in kwargs:
                     flattened_combo.extend(flatten_input(kwargs[item]))
 
-            results.append(separator.join(flattened_combo))
+            combined_string = separator.join(flattened_combo)
+            results.append(combined_string)
+            combination_logs.append(f"**{combo_name}** => {combined_string}")
+
+        flattened_log = "\n".join([f"{i+1}. {val}" for i, val in enumerate(breakdown)]) if breakdown else "*Empty*"
+        combinations_log = "\n".join([f"{i+1}. {val}" for i, val in enumerate(combination_logs)]) if combination_logs else "*Empty*"
+
+        log = f"""
+## Breakdown of Flattened Inputs:
+{flattened_log}
+
+## Combination Results:
+{combinations_log}
+        """
+        
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}something2string", {
+            "node": kwargs.get("node_id"), 
+            "log": log,
+        })
 
         return tuple(results)
 # endregion

@@ -43,6 +43,7 @@ export declare enum NodeName {
     schedulerSelector = "LF_SchedulerSelector",
     shuffleJsonKeys = "LF_ShuffleJSONKeys",
     something2Number = "LF_Something2Number",
+    something2String = "LF_Something2String",
     sortJsonKeys = "LF_SortJSONKeys",
     string = "LF_String",
     switchFloat = "LF_SwitchFloat",

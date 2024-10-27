@@ -65,6 +65,7 @@ import {
   CompareImagesPayload,
   IsLandscapePayload,
   Something2NumberPayload,
+  Something2StringPayload,
 } from '../types/events.js';
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
 import { LFTooltip } from './tooltip';
@@ -866,6 +867,16 @@ export class LFManager {
     );
     this.#APIS.event(EventName.something2Number, (e: CustomEvent<Something2NumberPayload>) => {
       nodes.eventHandlers.LF_Something2Number(e, widgets.adders.KUL_CODE);
+    });
+    /*-------------------------------------------------------------------*/
+    /*             I n i t   S o m e t h i n g 2 S t r i n g             */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_Something2String(
+      widgets.setters.KUL_CODE,
+      widgets.adders.KUL_CODE,
+    );
+    this.#APIS.event(EventName.something2String, (e: CustomEvent<Something2StringPayload>) => {
+      nodes.eventHandlers.LF_Something2String(e, widgets.adders.KUL_CODE);
     });
     /*-------------------------------------------------------------------*/
     /*                 I n i t   S o r t J S O N K e y s                 */

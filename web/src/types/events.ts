@@ -49,6 +49,7 @@ export enum EventName {
   schedulerSelector = 'lf-schedulerselector',
   shuffleJsonKeys = 'lf-shufflejsonkeys',
   something2Number = 'lf-something2number',
+  something2String = 'lf-something2string',
   sortJsonKeys = 'lf-sortjsonkeys',
   string = 'lf-string',
   switchFloat = 'lf-switchfloat',
@@ -96,6 +97,7 @@ export type EventPayload =
   | SchedulerSelectorPayload
   | ShuffleJSONKeysPayload
   | Something2NumberPayload
+  | Something2StringPayload
   | SortJSONKeysPayload
   | StringPayload
   | SwitchImagePayload
@@ -449,6 +451,14 @@ export interface ShuffleJSONKeysPayload extends BaseEventPayload {
 /*-------------------------------------------------------------------*/
 
 export interface Something2NumberPayload extends BaseEventPayload {
+  log: string;
+}
+
+/*-------------------------------------------------------------------*/
+/*     S o m e t h i n g 2 S t r i n g   D e c l a r a t i o n s     */
+/*-------------------------------------------------------------------*/
+
+export interface Something2StringPayload extends BaseEventPayload {
   log: string;
 }
 

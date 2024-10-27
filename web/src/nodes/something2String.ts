@@ -1,17 +1,17 @@
-import { EventName, Something2NumberPayload } from '../types/events';
+import { EventName, Something2StringPayload } from '../types/events';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import { CustomWidgetName, type BaseWidgetCallback, type CodeWidgetSetter } from '../types/widgets';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 
-const NAME = NodeName.something2Number;
+const NAME = NodeName.something2String;
 
-export const something2NumberFactory = {
+export const something2StringFactory = {
   eventHandler: (
-    event: CustomEvent<Something2NumberPayload>,
+    event: CustomEvent<Something2StringPayload>,
     addW: BaseWidgetCallback<CustomWidgetName.code>,
   ) => {
-    const name = EventName.something2Number;
+    const name = EventName.something2String;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
     const payload = event.detail;

@@ -39,6 +39,7 @@ export var EventName;
     EventName["schedulerSelector"] = "lf-schedulerselector";
     EventName["shuffleJsonKeys"] = "lf-shufflejsonkeys";
     EventName["something2Number"] = "lf-something2number";
+    EventName["something2String"] = "lf-something2string";
     EventName["sortJsonKeys"] = "lf-sortjsonkeys";
     EventName["string"] = "lf-string";
     EventName["switchFloat"] = "lf-switchfloat";
