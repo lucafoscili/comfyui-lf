@@ -48,6 +48,7 @@ export enum EventName {
   resolutionSwitcher = 'lf-resolutionswitcher',
   samplerSelector = 'lf-samplerselector',
   saveImageForCivitAI = 'lf-saveimageforcivitai',
+  saveJson = 'lf-savejson',
   schedulerSelector = 'lf-schedulerselector',
   shuffleJsonKeys = 'lf-shufflejsonkeys',
   something2Number = 'lf-something2number',
@@ -98,6 +99,7 @@ export type EventPayload =
   | ResolutionSwitcherPayload
   | SamplerSelectorPayload
   | SaveImageForCivitAIPayload
+  | SaveJSONPayload
   | SchedulerSelectorPayload
   | ShuffleJSONKeysPayload
   | Something2NumberPayload
@@ -438,6 +440,14 @@ export interface ResolutionSwitcherPayload extends BaseEventPayload {
 export interface SamplerSelectorPayload extends BaseEventPayload {
   isHistoryEnabled: boolean;
   value: string;
+}
+
+/*-------------------------------------------------------------------*/
+/*  R e s i z e I m a g e T o S q u a r e   D e c l a r a t i o n s  */
+/*-------------------------------------------------------------------*/
+
+export interface SaveJSONPayload extends BaseEventPayload {
+  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/

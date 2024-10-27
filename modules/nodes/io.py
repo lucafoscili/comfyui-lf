@@ -37,23 +37,20 @@ class LF_LoadFileOnce:
 
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
-    RETURN_NAMES = ("file", "name")
-    RETURN_TYPES = ("*", "STRING")
+    OUTPUT_IS_LIST = (False, False, True, True)
+    RETURN_NAMES = ("file", "name", "file_list", "name_list")
+    RETURN_TYPES = ("*", "STRING", "*", "STRING")
 
     def on_exec(self, node_id: str , dir: str, subdir: str, strip_ext: bool, enable_history: bool, history: str):
         dir = normalize_list_to_value(dir)
         subdir = normalize_list_to_value(subdir)
         strip_ext = normalize_list_to_value(strip_ext)
         enable_history = normalize_list_to_value(enable_history)
-        history = normalize_list_to_value(history)
+        history = normalize_json_input(history)
 
         previous_files = set()
         if history:
-            try:
-                history_data:dict = json.loads(history)
-                previous_files = {entry['value'] for entry in history_data.get('nodes', [])}
-            except (json.JSONDecodeError, KeyError):
-                pass
+            previous_files = {entry['value'] for entry in history.get('nodes', [])}
 
         for root, dirs, filenames in os.walk(dir):
             if not subdir:
@@ -76,7 +73,7 @@ class LF_LoadFileOnce:
             "value": file_name,
         })
 
-        return (file, file_name)
+        return (file, file_name, file, file_name)
 # endregion
 # region LF_LoadImages
 class LF_LoadImages:
@@ -375,7 +372,8 @@ class LF_SaveJSON:
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
     OUTPUT_NODE = True
-    RETURN_TYPES = ()
+    RETURN_NAMES = ("json",)
+    RETURN_TYPES = ("JSON",)
 
     def on_exec(self, node_id: str, json_data: dict, filepath: str, add_timestamp: bool):
         json_data = normalize_json_input(json_data)
@@ -388,7 +386,17 @@ class LF_SaveJSON:
             with open(output_file, 'w', encoding='utf-8') as json_file:
                 json.dump(json_data, json_file, ensure_ascii=False, indent=4)
 
-            return ()
+            nodes = []
+            root = { "children": nodes, "icon":"check", "id": "root", "value": "JSON saved successfully!" }
+            dataset = { "nodes": [root] }
+            nodes.append({ "description": output_file, "icon": "json", "id": output_file, "value": output_file })
+
+            PromptServer.instance.send_sync(f"{EVENT_PREFIX}savejson", {
+                "node": node_id,
+                "dataset": dataset,
+            })
+
+            return (json_data,)
 
         except Exception as e:
             print(f"Error saving JSON: {e}")

@@ -47,6 +47,7 @@ export enum NodeName {
   resolutionSwitcher = 'LF_ResolutionSwitcher',
   samplerSelector = 'LF_SamplerSelector',
   saveImageForCivitai = 'LF_SaveImageForCivitAI',
+  saveJson = 'LF_SaveJSON',
   schedulerSelector = 'LF_SchedulerSelector',
   shuffleJsonKeys = 'LF_ShuffleJSONKeys',
   something2Number = 'LF_Something2Number',

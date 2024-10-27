@@ -68,6 +68,7 @@ import {
   Something2StringPayload,
   LoraTag2PromptPayload,
   Lora2PromptPayload,
+  SaveJSONPayload,
 } from '../types/events.js';
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
 import { LFTooltip } from './tooltip';
@@ -857,6 +858,13 @@ export class LFManager {
         nodes.eventHandlers.LF_SaveImageForCivitAI(e, widgets.adders.KUL_IMAGE_PREVIEW_B64);
       },
     );
+    /*-------------------------------------------------------------------*/
+    /*                    I n i t   S a v e J S O N                      */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_SaveJSON(widgets.setters.KUL_TREE, widgets.adders.KUL_TREE);
+    this.#APIS.event(EventName.saveJson, (e: CustomEvent<SaveJSONPayload>) => {
+      nodes.eventHandlers.LF_SaveJSON(e, widgets.adders.KUL_TREE);
+    });
     /*-------------------------------------------------------------------*/
     /*           I n i t   S c h e d u l e r S e l e c t o r             */
     /*-------------------------------------------------------------------*/

@@ -38,6 +38,7 @@ export var EventName;
     EventName["resolutionSwitcher"] = "lf-resolutionswitcher";
     EventName["samplerSelector"] = "lf-samplerselector";
     EventName["saveImageForCivitAI"] = "lf-saveimageforcivitai";
+    EventName["saveJson"] = "lf-savejson";
     EventName["schedulerSelector"] = "lf-schedulerselector";
     EventName["shuffleJsonKeys"] = "lf-shufflejsonkeys";
     EventName["something2Number"] = "lf-something2number";

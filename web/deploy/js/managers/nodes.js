@@ -58,6 +58,7 @@ import { something2NumberFactory } from '../nodes/something2Number.js';
 import { something2StringFactory } from '../nodes/something2String.js';
 import { loraTag2PromptFactory } from '../nodes/loraTag2Prompt.js';
 import { lora2PromptFactory } from '../nodes/lora2Prompt.js';
+import { saveJsonFactory } from '../nodes/saveJson.js';
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
 /*-------------------------------------------------*/
@@ -101,6 +102,7 @@ export class LFNodes {
             [NodeName.resolutionSwitcher]: resolutionSwitcherFactory.eventHandler,
             [NodeName.samplerSelector]: samplerSelectorFactory.eventHandler,
             [NodeName.saveImageForCivitai]: saveImageForCivitaiFactory.eventHandler,
+            [NodeName.saveJson]: saveJsonFactory.eventHandler,
             [NodeName.schedulerSelector]: schedulerSelectorFactory.eventHandler,
             [NodeName.shuffleJsonKeys]: shuffleJsonKeysFactory.eventHandler,
             [NodeName.something2Number]: something2NumberFactory.eventHandler,
@@ -162,6 +164,7 @@ export class LFNodes {
             [NodeName.resolutionSwitcher]: resolutionSwitcherFactory.register,
             [NodeName.samplerSelector]: samplerSelectorFactory.register,
             [NodeName.saveImageForCivitai]: saveImageForCivitaiFactory.register,
+            [NodeName.saveJson]: saveJsonFactory.register,
             [NodeName.schedulerSelector]: schedulerSelectorFactory.register,
             [NodeName.shuffleJsonKeys]: shuffleJsonKeysFactory.register,
             [NodeName.something2Number]: something2NumberFactory.register,

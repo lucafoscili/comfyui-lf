@@ -45,6 +45,7 @@ export var NodeName;
     NodeName["resolutionSwitcher"] = "LF_ResolutionSwitcher";
     NodeName["samplerSelector"] = "LF_SamplerSelector";
     NodeName["saveImageForCivitai"] = "LF_SaveImageForCivitAI";
+    NodeName["saveJson"] = "LF_SaveJSON";
     NodeName["schedulerSelector"] = "LF_SchedulerSelector";
     NodeName["shuffleJsonKeys"] = "LF_ShuffleJSONKeys";
     NodeName["something2Number"] = "LF_Something2Number";
