@@ -47,6 +47,7 @@ export enum NodeName {
   saveImageForCivitai = 'LF_SaveImageForCivitAI',
   schedulerSelector = 'LF_SchedulerSelector',
   shuffleJsonKeys = 'LF_ShuffleJSONKeys',
+  something2Number = 'LF_Something2Number',
   sortJsonKeys = 'LF_SortJSONKeys',
   string = 'LF_String',
   switchFloat = 'LF_SwitchFloat',

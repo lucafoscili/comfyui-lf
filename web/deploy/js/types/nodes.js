@@ -45,6 +45,7 @@ export var NodeName;
     NodeName["saveImageForCivitai"] = "LF_SaveImageForCivitAI";
     NodeName["schedulerSelector"] = "LF_SchedulerSelector";
     NodeName["shuffleJsonKeys"] = "LF_ShuffleJSONKeys";
+    NodeName["something2Number"] = "LF_Something2Number";
     NodeName["sortJsonKeys"] = "LF_SortJSONKeys";
     NodeName["string"] = "LF_String";
     NodeName["switchFloat"] = "LF_SwitchFloat";

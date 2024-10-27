@@ -55,6 +55,7 @@ import { shuffleJsonKeysFactory } from '../nodes/shuffleJsonKeys';
 import { clarityEffectFactory } from '../nodes/clarityEffect';
 import { compareImagesFactory } from '../nodes/compareImages';
 import { isLandscapeFactory } from '../nodes/isLandscape';
+import { something2NumberFactory } from '../nodes/something2Number';
 
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
@@ -99,6 +100,7 @@ export class LFNodes {
     [NodeName.saveImageForCivitai]: saveImageForCivitaiFactory.eventHandler,
     [NodeName.schedulerSelector]: schedulerSelectorFactory.eventHandler,
     [NodeName.shuffleJsonKeys]: shuffleJsonKeysFactory.eventHandler,
+    [NodeName.something2Number]: something2NumberFactory.eventHandler,
     [NodeName.sortJsonKeys]: sortJsonKeysFactory.eventHandler,
     [NodeName.string]: stringFactory.eventHandler,
     [NodeName.switchFloat]: switchFloatFactory.eventHandler,
@@ -157,6 +159,7 @@ export class LFNodes {
     [NodeName.saveImageForCivitai]: saveImageForCivitaiFactory.register,
     [NodeName.schedulerSelector]: schedulerSelectorFactory.register,
     [NodeName.shuffleJsonKeys]: shuffleJsonKeysFactory.register,
+    [NodeName.something2Number]: something2NumberFactory.register,
     [NodeName.sortJsonKeys]: sortJsonKeysFactory.register,
     [NodeName.string]: stringFactory.register,
     [NodeName.switchFloat]: switchFloatFactory.register,

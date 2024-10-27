@@ -64,6 +64,7 @@ import {
   ClarityEffectPayload,
   CompareImagesPayload,
   IsLandscapePayload,
+  Something2NumberPayload,
 } from '../types/events.js';
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
 import { LFTooltip } from './tooltip';
@@ -855,6 +856,16 @@ export class LFManager {
     );
     this.#APIS.event(EventName.shuffleJsonKeys, (e: CustomEvent<ShuffleJSONKeysPayload>) => {
       nodes.eventHandlers.LF_ShuffleJSONKeys(e, widgets.adders.KUL_CODE);
+    });
+    /*-------------------------------------------------------------------*/
+    /*             I n i t   S o m e t h i n g 2 N u m b e r             */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_Something2Number(
+      widgets.setters.KUL_CODE,
+      widgets.adders.KUL_CODE,
+    );
+    this.#APIS.event(EventName.something2Number, (e: CustomEvent<Something2NumberPayload>) => {
+      nodes.eventHandlers.LF_Something2Number(e, widgets.adders.KUL_CODE);
     });
     /*-------------------------------------------------------------------*/
     /*                 I n i t   S o r t J S O N K e y s                 */

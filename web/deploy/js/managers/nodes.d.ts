@@ -38,6 +38,7 @@ export declare class LFNodes {
         LF_SaveImageForCivitAI: (event: CustomEvent<import("../types/events").SaveImageForCivitAIPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.imagePreview>) => void;
         LF_SchedulerSelector: (event: CustomEvent<import("../types/events").SchedulerSelectorPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
         LF_ShuffleJSONKeys: (event: CustomEvent<import("../types/events").ShuffleJSONKeysPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
+        LF_Something2Number: (event: CustomEvent<import("../types/events").MathOperationPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
         LF_SortJSONKeys: (event: CustomEvent<import("../types/events").SortJSONKeysPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
         LF_String: (event: CustomEvent<import("../types/events").StringPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
         LF_SwitchFloat: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.booleanViewer>) => void;
@@ -95,6 +96,7 @@ export declare class LFNodes {
         LF_SaveImageForCivitAI: (setW: import("../types/widgets").ImagePreviewWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.imagePreview>) => void;
         LF_SchedulerSelector: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
         LF_ShuffleJSONKeys: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
+        LF_Something2Number: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
         LF_SortJSONKeys: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
         LF_String: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
         LF_SwitchFloat: (setW: import("../types/widgets").BooleanViewerWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.booleanViewer>) => void;
@@ -148,6 +150,7 @@ export declare class LFNodes {
             LF_SaveImageForCivitAI: (event: CustomEvent<import("../types/events").SaveImageForCivitAIPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.imagePreview>) => void;
             LF_SchedulerSelector: (event: CustomEvent<import("../types/events").SchedulerSelectorPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
             LF_ShuffleJSONKeys: (event: CustomEvent<import("../types/events").ShuffleJSONKeysPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
+            LF_Something2Number: (event: CustomEvent<import("../types/events").MathOperationPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
             LF_SortJSONKeys: (event: CustomEvent<import("../types/events").SortJSONKeysPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
             LF_String: (event: CustomEvent<import("../types/events").StringPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
             LF_SwitchFloat: (event: CustomEvent<import("../types/events").SwitchImagePayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.booleanViewer>) => void;
@@ -205,6 +208,7 @@ export declare class LFNodes {
             LF_SaveImageForCivitAI: (setW: import("../types/widgets").ImagePreviewWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.imagePreview>) => void;
             LF_SchedulerSelector: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
             LF_ShuffleJSONKeys: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
+            LF_Something2Number: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
             LF_SortJSONKeys: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
             LF_String: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
             LF_SwitchFloat: (setW: import("../types/widgets").BooleanViewerWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.booleanViewer>) => void;

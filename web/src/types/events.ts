@@ -48,6 +48,7 @@ export enum EventName {
   saveImageForCivitAI = 'lf-saveimageforcivitai',
   schedulerSelector = 'lf-schedulerselector',
   shuffleJsonKeys = 'lf-shufflejsonkeys',
+  something2Number = 'lf-something2number',
   sortJsonKeys = 'lf-sortjsonkeys',
   string = 'lf-string',
   switchFloat = 'lf-switchfloat',
@@ -94,6 +95,7 @@ export type EventPayload =
   | SaveImageForCivitAIPayload
   | SchedulerSelectorPayload
   | ShuffleJSONKeysPayload
+  | Something2NumberPayload
   | SortJSONKeysPayload
   | StringPayload
   | SwitchImagePayload
@@ -440,6 +442,14 @@ export interface SchedulerSelectorPayload extends BaseEventPayload {
 
 export interface ShuffleJSONKeysPayload extends BaseEventPayload {
   json: Record<string, unknown>;
+}
+
+/*-------------------------------------------------------------------*/
+/*     S o m e t h i n g 2 N u m b e r   D e c l a r a t i o n s     */
+/*-------------------------------------------------------------------*/
+
+export interface Something2NumberPayload extends BaseEventPayload {
+  log: string;
 }
 
 /*-------------------------------------------------------------------*/

@@ -1,11 +1,7 @@
 import { app } from '/scripts/app.js';
 import { controlPanelFactory } from '../widgets/controlPanel.js';
 import { codeFactory } from '../widgets/code.js';
-import {
-  CustomWidgetName,
-  CustomWidgetOptionsCallbacks,
-  CustomWidgetOptionsCallbacksMap,
-} from '../types/widgets.js';
+import { CustomWidgetName, CustomWidgetOptionsCallbacksMap } from '../types/widgets.js';
 import { imagePreviewFactory } from '../widgets/imagePreview.js';
 import { booleanViewerFactory } from '../widgets/booleanViewer.js';
 import { jsonInputFactory } from '../widgets/jsonInput.js';

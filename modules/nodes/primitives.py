@@ -417,34 +417,37 @@ class LF_Something2Number:
 
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
-    OUTPUT_IS_LIST = (False, False, True, True)
-    RETURN_NAMES = ("float_sum", "integer_sum", "float_list", "integer_list")
-    RETURN_TYPES = ("FLOAT", "INT", "FLOAT", "INT")
+    OUTPUT_IS_LIST = (False, False, False, False, True, True)
+    RETURN_NAMES = ("float", "int", "float_sum", "int_sum", "float_list", "int_list")
+    RETURN_TYPES = ("FLOAT", "INT", "FLOAT", "INT", "FLOAT", "INT")
 
     def on_exec(self, **kwargs: dict):
-        float_values = []
-        integer_values = []
-
         def extract_numbers(data):
-            if isinstance(data, (int, float)):
-                float_values.append(float(data))
-                integer_values.append(int(data))
-            elif isinstance(data, bool):
-                float_values.append(1.0 if data else 0.0)
-                integer_values.append(1 if data else 0)
+            if isinstance(data, bool):
+                i_val = 1 if data else 0
+                f_val = 1.0 if data else 0.0
+                float_values.append(f_val)
+                integer_values.append(i_val)
+                breakdown.append(f"**boolean** detected => {f_val} (float) {i_val} (int)")
+            elif isinstance(data, (int, float)):
+                i_val = int(data)
+                f_val = float(data)
+                float_values.append(f_val)
+                integer_values.append(i_val)
+                breakdown.append(f"**number** detected => {f_val} (float) {i_val} (int)")
             elif isinstance(data, str):
                 try:
-                    # Attempt to parse as number directly
-                    num = float(data.strip())
-                    float_values.append(num)
-                    integer_values.append(int(num))
+                    f_val = float(data.strip())
+                    i_val = int(f_val)
+                    float_values.append(f_val)
+                    integer_values.append(i_val)
+                    breakdown.append(f"**string** detected => {f_val} (float) {i_val} (int)")
                 except ValueError:
-                    # Attempt to parse as JSON if not directly a number
                     try:
                         parsed_json = json.loads(data)
                         extract_numbers(parsed_json)
                     except json.JSONDecodeError:
-                        pass  # Ignore non-numeric, non-JSON strings
+                        pass
             elif isinstance(data, dict):
                 for value in data.values():
                     extract_numbers(value)
@@ -452,14 +455,42 @@ class LF_Something2Number:
                 for item in data:
                     extract_numbers(item)
 
-        # Process each input in kwargs
+        empty = "*Empty*"
+        float_values = []
+        integer_values = []
+        breakdown = []
+
         for value in kwargs.values():
             extract_numbers(value)
 
         float_sum = sum(float_values)
         integer_sum = sum(integer_values)
+        
+        float_log = "\n".join([str(val) for val in float_values]) if float_values else empty
+        int_log = "\n".join([str(val) for val in integer_values]) if integer_values else empty
+        breakdown_log = "\n".join([f"{i+1}. {val}" for i, val in enumerate(breakdown)]) if breakdown else empty
 
-        return (float_sum, integer_sum, float_values, integer_values)
+        log = f"""
+## Result:
+  **Float sum: {str(float_sum)}**
+  **Integer sum: {str(integer_sum)}**
+
+## List of floats:
+  {float_log}
+
+## List of integers:
+  {int_log}
+
+## Breakdown:
+  {breakdown_log}
+    """            
+
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}something2number", {
+            "node": kwargs.get("node_id"), 
+            "log": log,
+        })
+
+        return (float_values, integer_values, float_sum, integer_sum, float_values, integer_values)
 # endregion
 # region LF_Something2String
 class LF_Something2String:
@@ -478,7 +509,7 @@ class LF_Something2String:
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
 
-    input_keys = ["JSON", "boolean", "float", "integer"]
+    input_keys = ["json", "boolean", "float", "integer"]
     combinations_list = []
 
     for r in range(1, len(input_keys) + 1):
@@ -491,25 +522,28 @@ class LF_Something2String:
     RETURN_NAMES = tuple(combinations_list)
 
     def on_exec(self, **kwargs: dict):
-        """
-        Converts multiple inputs to strings and generates specific combinations.
-        """
         def flatten_input(input_item):
             if isinstance(input_item, list):
                 return [str(sub_item) for item in input_item for sub_item in flatten_input(item)]
-            elif isinstance(input_item, str):
-                return [input_item]
-            else:
+            elif isinstance(input_item, (dict, bool, float, int)):
                 return [str(input_item)]
-        
+            elif input_item is not None:
+                return [str(input_item)]
+            return []
+
         results = []
 
+        # Process each combination
         for combo_name in self.RETURN_NAMES:
             items = combo_name.split("_")
             flattened_combo = []
+
+            # Collect and flatten items in the current combination
             for item in items:
                 if item in kwargs:
                     flattened_combo.extend(flatten_input(kwargs[item]))
+
+            # Join all flattened items to form a single output string for this combination
             results.append("".join(flattened_combo))
 
         return tuple(results)
