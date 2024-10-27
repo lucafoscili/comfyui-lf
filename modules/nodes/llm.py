@@ -2,7 +2,9 @@ import json
 import requests
 import torch
 
-from ..utils.constants import BASE64_PNG_PREFIX, CATEGORY_PREFIX, FUNCTION, HEADERS, INT_MAX, get_character_impersonator_system, get_image_classifier_system
+from server import PromptServer
+
+from ..utils.constants import BASE64_PNG_PREFIX, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, HEADERS, INT_MAX, get_character_impersonator_system, get_image_classifier_system
 from ..utils.helpers import handle_response, normalize_input_image, normalize_json_input, normalize_list_to_value, tensor_to_base64
 
 CATEGORY = f"{CATEGORY_PREFIX}/LLM"
@@ -75,6 +77,11 @@ class LF_CharacterImpersonator:
         status_code, method, message = handle_response(response, method="POST")
         if status_code != 200:
             message = f"Whoops! Request failed with status code {status_code} and method {method}."
+        
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}characterimpersonator", {
+            "node": node_id, 
+            "value": message,
+        })
 
         return (request, response_data, message)
 # endregion
@@ -145,6 +152,11 @@ class LF_ImageClassifier:
         status_code, method, message = handle_response(response, method="POST")
         if status_code != 200:
             message = f"Whoops! Request failed with status code {status_code} and method {method}."
+        
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}imageclassifier", {
+            "node": node_id, 
+            "value": message,
+        })
 
         return (request, response_data, message)
 # endregion

@@ -60,6 +60,8 @@ import { something2StringFactory } from '../nodes/something2String';
 import { loraTag2PromptFactory } from '../nodes/loraTag2Prompt';
 import { lora2PromptFactory } from '../nodes/lora2Prompt';
 import { saveJsonFactory } from '../nodes/saveJson';
+import { characterImpersonatorFactory } from '../nodes/characterImpersonator';
+import { imageClassifierFactory } from '../nodes/imageClassifier';
 
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
@@ -69,6 +71,7 @@ export class LFNodes {
   eventHandler = {
     [NodeName.blurImages]: blurImagesFactory.eventHandler,
     [NodeName.boolean]: booleanFactory.eventHandler,
+    [NodeName.characterImpersonator]: characterImpersonatorFactory.eventHandler,
     [NodeName.checkpointSelector]: checkpointSelectorFactory.eventHandler,
     [NodeName.civitaiMetadataSetup]: civitaiMetadataSetupFactory.eventHandler,
     [NodeName.clarityEffect]: clarityEffectFactory.eventHandler,
@@ -82,6 +85,7 @@ export class LFNodes {
     [NodeName.embeddingSelector]: embeddingSelectorFactory.eventHandler,
     [NodeName.extractor]: extractorFactory.eventHandler,
     [NodeName.float]: floatFactory.eventHandler,
+    [NodeName.imageClassifier]: imageClassifierFactory.eventHandler,
     [NodeName.imageHistogram]: imageHistogramFactory.eventHandler,
     [NodeName.imageListFromJSON]: imageListFromJsonFactory.eventHandler,
     [NodeName.integer]: integerFactory.eventHandler,
@@ -127,6 +131,7 @@ export class LFNodes {
   register = {
     [NodeName.blurImages]: blurImagesFactory.register,
     [NodeName.boolean]: booleanFactory.register,
+    [NodeName.characterImpersonator]: characterImpersonatorFactory.register,
     [NodeName.checkpointSelector]: checkpointSelectorFactory.register,
     [NodeName.civitaiMetadataSetup]: civitaiMetadataSetupFactory.register,
     [NodeName.clarityEffect]: clarityEffectFactory.register,
@@ -141,6 +146,7 @@ export class LFNodes {
     [NodeName.embeddingSelector]: embeddingSelectorFactory.register,
     [NodeName.extractor]: extractorFactory.register,
     [NodeName.float]: floatFactory.register,
+    [NodeName.imageClassifier]: imageClassifierFactory.register,
     [NodeName.imageHistogram]: imageHistogramFactory.register,
     [NodeName.imageListFromJSON]: imageListFromJsonFactory.register,
     [NodeName.integer]: integerFactory.register,

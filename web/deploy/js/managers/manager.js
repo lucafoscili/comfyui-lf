@@ -377,6 +377,13 @@ export class LFManager {
             nodes.eventHandlers.LF_Boolean(e, widgets.adders.KUL_HISTORY);
         });
         /*-------------------------------------------------------------------*/
+        /*         I n i t   C h a r a c t e r I m p e r s o n a t o r       */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_CharacterImpersonator(widgets.setters.KUL_CODE, widgets.adders.KUL_CODE);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.characterImpersonator, (e) => {
+            nodes.eventHandlers.LF_CharacterImpersonator(e, widgets.adders.KUL_CODE);
+        });
+        /*-------------------------------------------------------------------*/
         /*            I n i t   C h e c k p o i n t S e l e c t o r          */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_CheckpointSelector(widgets.setters.KUL_CARD, widgets.adders.KUL_CARD);
@@ -470,6 +477,13 @@ export class LFManager {
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_Float(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.float, (e) => {
             nodes.eventHandlers.LF_Float(e, widgets.adders.KUL_HISTORY);
+        });
+        /*-------------------------------------------------------------------*/
+        /*               I n i t   I m a g e C l a s s i f i e r             */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_ImageClassifier(widgets.setters.KUL_CODE, widgets.adders.KUL_CODE);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.imageClassifier, (e) => {
+            nodes.eventHandlers.LF_ImageClassifier(e, widgets.adders.KUL_CODE);
         });
         /*-------------------------------------------------------------------*/
         /*            I n i t   I m a g e L i s t F r o m J S O N            */

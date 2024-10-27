@@ -12,6 +12,7 @@ export type EventCallback<T extends EventPayload> = (e: CustomEvent<T>) => void;
 export enum EventName {
   blurImages = 'lf-blurimages',
   boolean = 'lf-boolean',
+  characterImpersonator = 'lf-characterimpersonator',
   checkpointSelector = 'lf-checkpointselector',
   civitAIMetadataSetup = 'lf-civitaimetadatasetup',
   clarityEffect = 'lf-clarityeffect',
@@ -26,6 +27,7 @@ export enum EventName {
   embeddingSelector = 'lf-embeddingselector',
   extractor = 'lf-extractor',
   float = 'lf-float',
+  imageClassifier = 'lf-imageclassifier',
   imageListFromJSON = 'lf-imagelistfromjson',
   imageHistogram = 'lf-imagehistogram',
   isLandscape = 'lf-islandscape',
@@ -69,6 +71,7 @@ export enum EventName {
 export type EventPayload =
   | BlurImagesPayload
   | BooleanPayload
+  | CharacterImpersonatorPayload
   | CheckpointSelectorPayload
   | CivitAIMetadataSetupPayload
   | ClarityEffectPayload
@@ -78,6 +81,7 @@ export type EventPayload =
   | EmbeddingSelectorPayload
   | ExtractorPayload
   | FloatPayload
+  | ImageClassifierPayload
   | ImageListFromJSONPayload
   | ImageHistogramPayload
   | IntegerPayload
@@ -132,6 +136,14 @@ export interface BlurImagesPayload extends BaseEventPayload {
 export interface BooleanPayload extends BaseEventPayload {
   isHistoryEnabled: boolean;
   value: boolean;
+}
+
+/*-------------------------------------------------------------------*/
+/*     C h a r a c t e r I m p e r s o n a t o r    D e c l a r .    */
+/*-------------------------------------------------------------------*/
+
+export interface CharacterImpersonatorPayload extends BaseEventPayload {
+  value: string;
 }
 
 /*-------------------------------------------------------------------*/
@@ -243,6 +255,14 @@ export interface ExtractorPayload extends BaseEventPayload {
 export interface FloatPayload extends BaseEventPayload {
   isHistoryEnabled: boolean;
   value: number;
+}
+
+/*-------------------------------------------------------------------*/
+/*     I m a g e C l a s s i f i e r   D e c l a r a t i o n s       */
+/*-------------------------------------------------------------------*/
+
+export interface ImageClassifierPayload extends BaseEventPayload {
+  value: string;
 }
 
 /*-------------------------------------------------------------------*/

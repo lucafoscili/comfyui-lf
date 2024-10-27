@@ -7,6 +7,7 @@ import { CustomWidgetName } from './widgets';
 export enum NodeName {
   blurImages = 'LF_BlurImages',
   boolean = 'LF_Boolean',
+  characterImpersonator = 'LF_CharacterImpersonator',
   checkpointSelector = 'LF_CheckpointSelector',
   civitaiMetadataSetup = 'LF_CivitAIMetadataSetup',
   clarityEffect = 'LF_ClarityEffect',
@@ -21,6 +22,7 @@ export enum NodeName {
   float = 'LF_Float',
   embeddingSelector = 'LF_EmbeddingSelector',
   extractor = 'LF_Extractor',
+  imageClassifier = 'LF_ImageClassifier',
   imageListFromJSON = 'LF_ImageListFromJSON',
   imageHistogram = 'LF_ImageHistogram',
   integer = 'LF_Integer',

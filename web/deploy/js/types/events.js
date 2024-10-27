@@ -2,6 +2,7 @@ export var EventName;
 (function (EventName) {
     EventName["blurImages"] = "lf-blurimages";
     EventName["boolean"] = "lf-boolean";
+    EventName["characterImpersonator"] = "lf-characterimpersonator";
     EventName["checkpointSelector"] = "lf-checkpointselector";
     EventName["civitAIMetadataSetup"] = "lf-civitaimetadatasetup";
     EventName["clarityEffect"] = "lf-clarityeffect";
@@ -16,6 +17,7 @@ export var EventName;
     EventName["embeddingSelector"] = "lf-embeddingselector";
     EventName["extractor"] = "lf-extractor";
     EventName["float"] = "lf-float";
+    EventName["imageClassifier"] = "lf-imageclassifier";
     EventName["imageListFromJSON"] = "lf-imagelistfromjson";
     EventName["imageHistogram"] = "lf-imagehistogram";
     EventName["isLandscape"] = "lf-islandscape";

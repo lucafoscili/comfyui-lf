@@ -3,6 +3,7 @@ export declare class LFNodes {
     eventHandler: {
         LF_BlurImages: (event: CustomEvent<import("../types/events").BlurImagesPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.imagePreview>) => void;
         LF_Boolean: (event: CustomEvent<import("../types/events").BooleanPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
+        LF_CharacterImpersonator: (event: CustomEvent<import("../types/events").CharacterImpersonatorPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
         LF_CheckpointSelector: (event: CustomEvent<import("../types/events").CheckpointSelectorPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.card>) => void;
         LF_CivitAIMetadataSetup: (event: CustomEvent<import("../types/events").CivitAIMetadataSetupPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
         LF_ClarityEffect: (event: CustomEvent<import("../types/events").ClarityEffectPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.compare>) => void;
@@ -16,6 +17,7 @@ export declare class LFNodes {
         LF_EmbeddingSelector: (event: CustomEvent<import("../types/events").EmbeddingSelectorPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.card>) => void;
         LF_Extractor: (event: CustomEvent<import("../types/events").ExtractorPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
         LF_Float: (event: CustomEvent<import("../types/events").FloatPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
+        LF_ImageClassifier: (event: CustomEvent<import("../types/events").ImageClassifierPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
         LF_ImageHistogram: (event: CustomEvent<import("../types/events").ImageHistogramPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tabBarChart>) => void;
         LF_ImageListFromJSON: (event: CustomEvent<import("../types/events").ImageListFromJSONPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.imagePreview>) => void;
         LF_Integer: (event: CustomEvent<import("../types/events").IntegerPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
@@ -60,6 +62,7 @@ export declare class LFNodes {
     register: {
         LF_BlurImages: (setW: import("../types/widgets").ImagePreviewWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.imagePreview>) => void;
         LF_Boolean: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
+        LF_CharacterImpersonator: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
         LF_CheckpointSelector: (setW: import("../types/widgets").CardWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.card>) => void;
         LF_CivitAIMetadataSetup: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
         LF_ClarityEffect: (setW: import("../types/widgets").CompareWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.compare>) => void;
@@ -74,6 +77,7 @@ export declare class LFNodes {
         LF_EmbeddingSelector: (setW: import("../types/widgets").CardWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.card>) => void;
         LF_Extractor: (setW: import("../types/widgets").CodeWidgetSetter) => void;
         LF_Float: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
+        LF_ImageClassifier: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
         LF_ImageHistogram: (setW: import("../types/widgets").TabBarChartWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tabBarChart>) => void;
         LF_ImageListFromJSON: (setW: import("../types/widgets").ImagePreviewWidgetSetter) => void;
         LF_Integer: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
@@ -123,6 +127,7 @@ export declare class LFNodes {
         eventHandlers: {
             LF_BlurImages: (event: CustomEvent<import("../types/events").BlurImagesPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.imagePreview>) => void;
             LF_Boolean: (event: CustomEvent<import("../types/events").BooleanPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
+            LF_CharacterImpersonator: (event: CustomEvent<import("../types/events").CharacterImpersonatorPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
             LF_CheckpointSelector: (event: CustomEvent<import("../types/events").CheckpointSelectorPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.card>) => void;
             LF_CivitAIMetadataSetup: (event: CustomEvent<import("../types/events").CivitAIMetadataSetupPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
             LF_ClarityEffect: (event: CustomEvent<import("../types/events").ClarityEffectPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.compare>) => void;
@@ -136,6 +141,7 @@ export declare class LFNodes {
             LF_EmbeddingSelector: (event: CustomEvent<import("../types/events").EmbeddingSelectorPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.card>) => void;
             LF_Extractor: (event: CustomEvent<import("../types/events").ExtractorPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
             LF_Float: (event: CustomEvent<import("../types/events").FloatPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
+            LF_ImageClassifier: (event: CustomEvent<import("../types/events").ImageClassifierPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
             LF_ImageHistogram: (event: CustomEvent<import("../types/events").ImageHistogramPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tabBarChart>) => void;
             LF_ImageListFromJSON: (event: CustomEvent<import("../types/events").ImageListFromJSONPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.imagePreview>) => void;
             LF_Integer: (event: CustomEvent<import("../types/events").IntegerPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
@@ -180,6 +186,7 @@ export declare class LFNodes {
         registrations: {
             LF_BlurImages: (setW: import("../types/widgets").ImagePreviewWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.imagePreview>) => void;
             LF_Boolean: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
+            LF_CharacterImpersonator: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
             LF_CheckpointSelector: (setW: import("../types/widgets").CardWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.card>) => void;
             LF_CivitAIMetadataSetup: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
             LF_ClarityEffect: (setW: import("../types/widgets").CompareWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.compare>) => void;
@@ -194,6 +201,7 @@ export declare class LFNodes {
             LF_EmbeddingSelector: (setW: import("../types/widgets").CardWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.card>) => void;
             LF_Extractor: (setW: import("../types/widgets").CodeWidgetSetter) => void;
             LF_Float: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
+            LF_ImageClassifier: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
             LF_ImageHistogram: (setW: import("../types/widgets").TabBarChartWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tabBarChart>) => void;
             LF_ImageListFromJSON: (setW: import("../types/widgets").ImagePreviewWidgetSetter) => void;
             LF_Integer: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;

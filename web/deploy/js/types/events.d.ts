@@ -7,6 +7,7 @@ export type EventCallback<T extends EventPayload> = (e: CustomEvent<T>) => void;
 export declare enum EventName {
     blurImages = "lf-blurimages",
     boolean = "lf-boolean",
+    characterImpersonator = "lf-characterimpersonator",
     checkpointSelector = "lf-checkpointselector",
     civitAIMetadataSetup = "lf-civitaimetadatasetup",
     clarityEffect = "lf-clarityeffect",
@@ -21,6 +22,7 @@ export declare enum EventName {
     embeddingSelector = "lf-embeddingselector",
     extractor = "lf-extractor",
     float = "lf-float",
+    imageClassifier = "lf-imageclassifier",
     imageListFromJSON = "lf-imagelistfromjson",
     imageHistogram = "lf-imagehistogram",
     isLandscape = "lf-islandscape",
@@ -61,7 +63,7 @@ export declare enum EventName {
     vaeSelector = "lf-vaeselector",
     writeJson = "lf-writejson"
 }
-export type EventPayload = BlurImagesPayload | BooleanPayload | CheckpointSelectorPayload | CivitAIMetadataSetupPayload | ClarityEffectPayload | CompareImagesPayload | DisplayBooleanPayload | DisplayJSONPayload | EmbeddingSelectorPayload | ExtractorPayload | FloatPayload | ImageListFromJSONPayload | ImageHistogramPayload | IntegerPayload | IsLandscapePayload | KeywordCounterPayload | LoadImagesPayload | LoraAndEmbeddingSelectorPayload | LoraSelectorPayload | Lora2PromptPayload | LoraTag2PromptPayload | LoadLoraTagsPayload | MathOperationPayload | MultipleImageResizeForWebPayload | NotifyPayload | RandomBooleanPayload | ResizeImageByEdgePayload | ResizeImageToDimensionPayload | ResizeImageToSquarePayload | ResolutionSwitcherPayload | SamplerSelectorPayload | SaveImageForCivitAIPayload | SaveJSONPayload | SchedulerSelectorPayload | ShuffleJSONKeysPayload | Something2NumberPayload | Something2StringPayload | SortJSONKeysPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | UpdateUsageStatisticsPayload | UpscaleModelSelectorPayload | UrandomSeedGeneratorPayload | VAESelectorPayload | WriteJSONPayload;
+export type EventPayload = BlurImagesPayload | BooleanPayload | CharacterImpersonatorPayload | CheckpointSelectorPayload | CivitAIMetadataSetupPayload | ClarityEffectPayload | CompareImagesPayload | DisplayBooleanPayload | DisplayJSONPayload | EmbeddingSelectorPayload | ExtractorPayload | FloatPayload | ImageClassifierPayload | ImageListFromJSONPayload | ImageHistogramPayload | IntegerPayload | IsLandscapePayload | KeywordCounterPayload | LoadImagesPayload | LoraAndEmbeddingSelectorPayload | LoraSelectorPayload | Lora2PromptPayload | LoraTag2PromptPayload | LoadLoraTagsPayload | MathOperationPayload | MultipleImageResizeForWebPayload | NotifyPayload | RandomBooleanPayload | ResizeImageByEdgePayload | ResizeImageToDimensionPayload | ResizeImageToSquarePayload | ResolutionSwitcherPayload | SamplerSelectorPayload | SaveImageForCivitAIPayload | SaveJSONPayload | SchedulerSelectorPayload | ShuffleJSONKeysPayload | Something2NumberPayload | Something2StringPayload | SortJSONKeysPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | UpdateUsageStatisticsPayload | UpscaleModelSelectorPayload | UrandomSeedGeneratorPayload | VAESelectorPayload | WriteJSONPayload;
 export interface BlurImagesPayload extends BaseEventPayload {
     fileNames: Array<string>;
     images: Array<string>;
@@ -69,6 +71,9 @@ export interface BlurImagesPayload extends BaseEventPayload {
 export interface BooleanPayload extends BaseEventPayload {
     isHistoryEnabled: boolean;
     value: boolean;
+}
+export interface CharacterImpersonatorPayload extends BaseEventPayload {
+    value: string;
 }
 export interface CheckpointSelectorPayload extends BaseEventPayload {
     dataset: KulDataDataset;
@@ -115,6 +120,9 @@ export interface ExtractorPayload extends BaseEventPayload {
 export interface FloatPayload extends BaseEventPayload {
     isHistoryEnabled: boolean;
     value: number;
+}
+export interface ImageClassifierPayload extends BaseEventPayload {
+    value: string;
 }
 export interface ImageListFromJSONPayload extends BaseEventPayload {
     fileNames: Array<string>;

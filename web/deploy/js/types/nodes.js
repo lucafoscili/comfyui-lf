@@ -5,6 +5,7 @@ export var NodeName;
 (function (NodeName) {
     NodeName["blurImages"] = "LF_BlurImages";
     NodeName["boolean"] = "LF_Boolean";
+    NodeName["characterImpersonator"] = "LF_CharacterImpersonator";
     NodeName["checkpointSelector"] = "LF_CheckpointSelector";
     NodeName["civitaiMetadataSetup"] = "LF_CivitAIMetadataSetup";
     NodeName["clarityEffect"] = "LF_ClarityEffect";
@@ -19,6 +20,7 @@ export var NodeName;
     NodeName["float"] = "LF_Float";
     NodeName["embeddingSelector"] = "LF_EmbeddingSelector";
     NodeName["extractor"] = "LF_Extractor";
+    NodeName["imageClassifier"] = "LF_ImageClassifier";
     NodeName["imageListFromJSON"] = "LF_ImageListFromJSON";
     NodeName["imageHistogram"] = "LF_ImageHistogram";
     NodeName["integer"] = "LF_Integer";
