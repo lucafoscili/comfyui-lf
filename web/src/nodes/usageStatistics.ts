@@ -11,7 +11,10 @@ import { getApiRoutes, getCustomWidget, getLFManager, refreshChart } from '../ut
 const NAME = NodeName.usageStatistics;
 
 export const usageStatisticsFactory = {
-  eventHandler: (event: CustomEvent<UpdateUsageStatisticsPayload>, addW: BaseWidgetCallback) => {
+  eventHandler: (
+    event: CustomEvent<UpdateUsageStatisticsPayload>,
+    addW: BaseWidgetCallback<CustomWidgetName.tabBarChart>,
+  ) => {
     const name = EventName.updateUsageStatistics;
     getLFManager().log(
       `Event '${name}' received (UsageStatistics mirror)`,
@@ -31,7 +34,10 @@ export const usageStatisticsFactory = {
       }
     }
   },
-  register: (setW: TabBarChartWidgetSetter, addW: BaseWidgetCallback) => {
+  register: (
+    setW: TabBarChartWidgetSetter,
+    addW: BaseWidgetCallback<CustomWidgetName.tabBarChart>,
+  ) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

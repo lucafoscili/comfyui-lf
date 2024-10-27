@@ -9,7 +9,7 @@ import {
   getInput,
   getLFManager,
   isValidJSON,
-  deserializeValue,
+  unescapeJson,
 } from '../utils/common';
 import { messengerFactory } from '../widgets/messenger';
 
@@ -42,7 +42,7 @@ export const llmMessengerFactory = {
             const dataset = datasetW.options.getValue();
             const messenger = messengerW.options.getComp();
             try {
-              const newData = deserializeValue(dataset).parsedJson;
+              const newData = unescapeJson(dataset).parsedJson;
 
               if (isValidJSON(newData) && isValidJSON(messenger.kulData)) {
                 if (!areJSONEqual(newData, messenger.kulData)) {

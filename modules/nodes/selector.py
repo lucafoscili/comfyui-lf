@@ -1,34 +1,41 @@
-import folder_paths
 import random
 
-from comfy.samplers import KSampler
 from server import PromptServer
 
-from ..utils.selector import *
+from ..utils.constants import CATEGORY_PREFIX, CHECKPOINTS, EMBEDDINGS, EVENT_PREFIX, FUNCTION, INT_MAX, LORAS, SAMPLERS, SCHEDULERS, UPSCALERS, VAES
+from ..utils.helpers import filter_list, prepare_model_dataset, process_model, send_multi_selector_message, send_single_selector_message
 
-category = "✨ LF Nodes/Selectors"
+CATEGORY = f"{CATEGORY_PREFIX}/Selectors"
 
+# region LF_CheckpointSelector
 class LF_CheckpointSelector:
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "checkpoint": (folder_paths.get_filename_list("checkpoints"), {"default": "None", "tooltip": "Checkpoint used to generate the image."}),
                 "get_civitai_info": ("BOOLEAN", {"default": True, "tooltip": "Attempts to retrieve more info about the model from CivitAI."}),
                 "randomize": ("BOOLEAN", {"default": False, "tooltip": "Selects a checkpoint randomly from your checkpoints directory."}),
                 "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter checkpoint file names. Supports wildcards (*)"}),
-                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Seed value for when randomization is active."}),
+                "seed": ("INT", {"default": 42, "min": 0, "max": INT_MAX, "tooltip": "Seed value for when randomization is active."}),
             },
-            "hidden": {"node_id": "UNIQUE_ID"}
+            "optional": {
+                "checkpoint": (["None"] + CHECKPOINTS, {"default": "None", "tooltip": "Checkpoint used to generate the image."}),
+            },
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
-    RETURN_NAMES = ("checkpoint", "checkpoint_name", "checkpoint_image", "model_path")
-    RETURN_TYPES = (folder_paths.get_filename_list("checkpoints"), "STRING", "IMAGE", "STRING")
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    RETURN_NAMES = ("combo", "string", "path", "image")
+    RETURN_TYPES = (CHECKPOINTS, "STRING", "STRING", "IMAGE")
 
-    def on_exec(self, node_id, checkpoint, get_civitai_info, randomize, seed, filter):
-        checkpoints = folder_paths.get_filename_list("checkpoints")
+    def on_exec(self, node_id: str, checkpoint: str, get_civitai_info: bool,
+                randomize: bool, seed: int, filter: str):
+        checkpoint = None if checkpoint is None or str(checkpoint) == "None" else checkpoint
+        
+        checkpoints = CHECKPOINTS
 
         if filter:
             checkpoints = filter_list(filter, checkpoints)
@@ -53,10 +60,15 @@ class LF_CheckpointSelector:
         else:
             dataset = prepare_model_dataset(model_name, model_hash, model_base64, model_path)
 
-        send_single_selector_message(node_id, dataset, model_hash, get_civitai_info, model_path, "lf-checkpointselector")
+        send_single_selector_message(node_id, dataset, model_hash, get_civitai_info, model_path, f"{EVENT_PREFIX}checkpointselector")
 
-        return (checkpoint, model_name, model_cover, model_path)
-
+        return (checkpoint, model_name, model_path, model_cover)
+    
+    @classmethod
+    def VALIDATE_INPUTS(self, **kwargs):
+         return True
+# endregion
+# region LF_EmbeddingSelector
 class LF_EmbeddingSelector:
     @classmethod
     def INPUT_TYPES(cls):
@@ -65,31 +77,33 @@ class LF_EmbeddingSelector:
                 "get_civitai_info": ("BOOLEAN", {"default": True, "tooltip": "Attempts to retrieve more info about the model from CivitAI."}),
                 "weight": ("FLOAT", {"default": 1.0, "min": -3.0, "max": 3.0, "tooltip": "Embedding's weight."}),
                 "randomize": ("BOOLEAN", {"default": False, "tooltip": "Selects an embedding randomly from your embeddings directory."}),
-                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Seed value for when randomization is active."}),
+                "seed": ("INT", {"default": 42, "min": 0, "max": INT_MAX, "tooltip": "Seed value for when randomization is active."}),
                 "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter embedding file names. Supports wildcards (*)."}),
             },
             "optional": {
-                "embedding": (["None"] + folder_paths.get_filename_list("embeddings"), {"default": "None", "tooltip": "Embedding to use."}),
+                "embedding": (["None"] + EMBEDDINGS, {"default": "None", "tooltip": "Embedding to use."}),
                 "embedding_stack": ("STRING", {"default": "", "defaultInput": True, "tooltip": "Optional string usable to concatenate subsequent selector nodes."}),
             },
-            "hidden": {"node_id": "UNIQUE_ID"}
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
-    RETURN_NAMES = ("embedding", "formatted_embedding", "embedding_name", "model_path", "model_cover")
-    RETURN_TYPES = (folder_paths.get_filename_list("embeddings"), "STRING", "STRING", "STRING", "IMAGE")
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    RETURN_NAMES = ("combo", "prompt", "string", "path", "image")
+    RETURN_TYPES = (EMBEDDINGS, "STRING", "STRING", "STRING", "IMAGE")
 
-    def on_exec(self, node_id, embedding, get_civitai_info, weight, randomize, seed, filter, embedding_stack=""):
+    def on_exec(self, node_id: str, embedding: str, get_civitai_info: bool, weight: float,
+                randomize: bool, seed: int, filter: bool, embedding_stack: str = ""):
         embedding = None if embedding is None or str(embedding) == "None" else embedding
+        passthrough = bool(not embedding and not randomize)
 
-        if not embedding and not randomize:
-
-            send_single_selector_message(node_id, None, None, False, None, "lf-embeddingselector")
-
+        if passthrough:
+            send_single_selector_message(node_id, None, None, False, None, f"{EVENT_PREFIX}embeddingselector")
             return (None, embedding_stack, "", "", None)
         
-        embeddings = folder_paths.get_filename_list("embeddings")
+        embeddings = EMBEDDINGS
 
         if filter:
             embeddings = filter_list(filter, embeddings)
@@ -119,14 +133,15 @@ class LF_EmbeddingSelector:
         if embedding_stack:
             formatted_embedding = f"{formatted_embedding}, {embedding_stack}"
 
-        send_single_selector_message(node_id, dataset, model_hash, get_civitai_info, model_path, "lf-embeddingselector")
+        send_single_selector_message(node_id, dataset, model_hash, get_civitai_info, model_path, f"{EVENT_PREFIX}embeddingselector")
 
         return (embedding, formatted_embedding, model_name, model_path, model_cover)
     
     @classmethod
     def VALIDATE_INPUTS(self, **kwargs):
          return True
-    
+# endregion
+# region LF_LoraAndEmbeddingSelector
 class LF_LoraAndEmbeddingSelector:
     @classmethod
     def INPUT_TYPES(cls):
@@ -136,35 +151,36 @@ class LF_LoraAndEmbeddingSelector:
                 "weight": ("FLOAT", {"default": 1.0, "min": -3.0, "max": 3.0, "tooltip": "Lora and embedding weights."}),
                 "randomize": ("BOOLEAN", {"default": False, "tooltip": "Selects a combination of Lora and Embedding randomly from your directories."}),
                 "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter file names. Supports wildcards (*)."}),
-                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Seed value for when randomization is active."}),
+                "seed": ("INT", {"default": 42, "min": 0, "max": INT_MAX, "tooltip": "Seed value for when randomization is active."}),
             },
             "optional": {
-                "lora": (["None"] + folder_paths.get_filename_list("loras"), {"default": "None", "tooltip": "Lora model to use, it will also select the embedding with the same name."}),
+                "lora": (["None"] + LORAS, {"default": "None", "tooltip": "Lora model to use, it will also select the embedding with the same name."}),
                 "lora_stack": ("STRING", {"default": "", "defaultInput": True, "tooltip": "Optional string usable to concatenate subsequent Lora selector nodes."}),
                 "embedding_stack": ("STRING", {"default": "", "defaultInput": True, "tooltip": "Optional string usable to concatenate subsequent embedding selector nodes."}),
             },
-            "hidden": {"node_id": "UNIQUE_ID"}
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
-    RETURN_NAMES = ("lora", "embedding", "lora_tag", "formatted_embedding", "lora_name", "embedding_name",
-                    "lora_path", "embedding_path", "lora_cover", "embedding_cover")
-    RETURN_TYPES = (folder_paths.get_filename_list("loras"), folder_paths.get_filename_list("embeddings"), "STRING", "STRING", "STRING", "STRING",
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    RETURN_NAMES = ("lora_combo", "emb_combo", "lora_tag", "emb_prompt", "lora_string", "emb_string",
+                    "lora_path", "emb_path", "lora_image", "emb_image")
+    RETURN_TYPES = (LORAS, EMBEDDINGS, "STRING", "STRING", "STRING", "STRING",
                     "STRING", "STRING", "IMAGE", "IMAGE",)
 
-    def on_exec(self, node_id, lora, get_civitai_info, weight, randomize, seed, filter, lora_stack="", embedding_stack=""):
+    def on_exec(self, node_id: str, lora: str, get_civitai_info: bool, weight:float,
+                randomize: bool, seed: int, filter: str, lora_stack: str = "", embedding_stack: str = ""):
         lora = None if lora is None or str(lora) == "None" else lora
+        passthrough = bool(not lora and not randomize)
 
-        if not lora and not randomize:
-
-            send_single_selector_message(node_id, [], [], [], [], "lf-loraandembeddingselector")
-
+        if passthrough:
+            send_single_selector_message(node_id, [], [], [], [], f"{EVENT_PREFIX}loraandembeddingselector")
             return (None, None, lora_stack, embedding_stack, "", "", "", "", None, None)
         
-        loras = folder_paths.get_filename_list("loras")
-        embeddings = folder_paths.get_filename_list("embeddings")
-
+        loras = LORAS
+        
         if filter:
             loras = filter_list(filter, loras)
             if not loras:
@@ -175,7 +191,7 @@ class LF_LoraAndEmbeddingSelector:
             lora = random.choice(loras)
 
         embedding = lora
-        if embedding not in embeddings:
+        if embedding not in EMBEDDINGS:
             raise ValueError(f"Not found an embedding named {lora}")
 
         lora_data = process_model("lora", lora, "loras")
@@ -218,14 +234,15 @@ class LF_LoraAndEmbeddingSelector:
         hashes = [l_hash, e_hash]
         paths = [l_path, e_path]
 
-        send_multi_selector_message(node_id, datasets, hashes, api_flags, paths, "lf-loraandembeddingselector")
+        send_multi_selector_message(node_id, datasets, hashes, api_flags, paths, f"{EVENT_PREFIX}loraandembeddingselector")
 
         return (lora, embedding, lora_tag, formatted_embedding, l_name, e_name, l_path, e_path, l_cover, e_cover)
     
     @classmethod
     def VALIDATE_INPUTS(self, **kwargs):
          return True
-
+# endregion
+# region LF_LoraSelector
 class LF_LoraSelector:
     @classmethod
     def INPUT_TYPES(cls):
@@ -235,31 +252,33 @@ class LF_LoraSelector:
                 "weight": ("FLOAT", {"default": 1.0, "min": -3.0, "max": 3.0, "tooltip": "Lora weight."}),
                 "randomize": ("BOOLEAN", {"default": False, "tooltip": "Selects a Lora randomly from your loras directory."}),
                 "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter Lora file names. Supports wildcards (*)."}),
-                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Seed value for when randomization is active."}),
+                "seed": ("INT", {"default": 42, "min": 0, "max": INT_MAX, "tooltip": "Seed value for when randomization is active."}),
             },
             "optional": {
-                "lora": (["None"] + folder_paths.get_filename_list("loras"), {"default": "None", "tooltip": "Lora model to use."}),
+                "lora": (["None"] + LORAS, {"default": "None", "tooltip": "Lora model to use."}),
                 "lora_stack": ("STRING", {"default": "", "defaultInput": True, "tooltip": "Optional string usable to concatenate subsequent selector nodes."}),
             },
-            "hidden": {"node_id": "UNIQUE_ID"}
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
     RETURN_NAMES = ("lora", "lora_tag", "lora_name", "model_path", "model_cover")
-    RETURN_TYPES = (folder_paths.get_filename_list("loras"), "STRING", "STRING", "STRING", "IMAGE")
+    RETURN_TYPES = (LORAS, "STRING", "STRING", "STRING", "IMAGE")
 
-    def on_exec(self, node_id, lora, get_civitai_info, weight, randomize, seed, filter, lora_stack=""):
+    def on_exec(self, node_id: str, lora: str, get_civitai_info: bool, weight: float,
+                randomize: bool, seed: int, filter: str, lora_stack: str = ""):
         lora = None if lora is None or str(lora) == "None" else lora
+        passthrough = bool(not lora and not randomize)
 
-        if not lora and not randomize:
-
-            send_single_selector_message(node_id, None, None, False, None, "lf-loraselector")
-
+        if passthrough:
+            send_single_selector_message(node_id, None, None, False, None, f"{EVENT_PREFIX}loraselector")
             return (None, lora_stack, "", "", None)
         
-        loras = folder_paths.get_filename_list("loras")
-
+        loras = LORAS
+        
         if filter:
             loras = filter_list(filter, loras)
             if not loras:
@@ -285,7 +304,7 @@ class LF_LoraSelector:
         else:
             dataset = prepare_model_dataset(model_name, model_hash, model_base64, model_path)
 
-        send_single_selector_message(node_id, dataset, model_hash, get_civitai_info, model_path, "lf-loraselector")
+        send_single_selector_message(node_id, dataset, model_hash, get_civitai_info, model_path, f"{EVENT_PREFIX}loraselector")
 
         if lora_stack:
             lora_tag = f"{lora_tag}, {lora_stack}"
@@ -295,28 +314,34 @@ class LF_LoraSelector:
     @classmethod
     def VALIDATE_INPUTS(self, **kwargs):
          return True
-
+# endregion
+# region LF_SamplerSelector
 class LF_SamplerSelector:
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "sampler": (KSampler.SAMPLERS, {"default": "None", "tooltip": "Sampler used to generate the image."}),
                 "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
                 "randomize": ("BOOLEAN", {"default": False, "tooltip": "Selects a sampler randomly."}),
                 "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter sampler names. Supports wildcards (*)."}),
-                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Seed value for when randomization is active."}),
+                "seed": ("INT", {"default": 42, "min": 0, "max": INT_MAX, "tooltip": "Seed value for when randomization is active."}),
             },
-            "hidden": {"node_id": "UNIQUE_ID"}
+            "optional": {
+                "sampler": (["None"] + SAMPLERS, {"default": "None", "tooltip": "Sampler used to generate the image."}),
+            },
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
-    RETURN_NAMES = ("sampler", "sampler_name")
-    RETURN_TYPES = (KSampler.SAMPLERS, "STRING")
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    RETURN_NAMES = ("combo", "string")
+    RETURN_TYPES = (SAMPLERS, "STRING")
 
-    def on_exec(self, node_id, sampler, enable_history, randomize, seed, filter):
-        samplers = KSampler.SAMPLERS
+    def on_exec(self, node_id: str, sampler: str, enable_history: bool,
+                randomize: bool, seed: int, filter: str):
+        samplers = SAMPLERS
 
         if filter:
             samplers = filter_list(filter, samplers)
@@ -327,35 +352,39 @@ class LF_SamplerSelector:
             random.seed(seed)
             sampler = random.choice(samplers)
 
-        PromptServer.instance.send_sync("lf-samplerselector", {
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}samplerselector", {
             "node": node_id, 
             "isHistoryEnabled": enable_history,
             "value": sampler,
         })
 
         return (sampler, sampler)
-
+# endregion
+# region LF_SchedulerSelector
 class LF_SchedulerSelector:
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "scheduler": (KSampler.SCHEDULERS, {"default": "None", "tooltip": "Scheduler used to generate the image."}),
                 "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
                 "randomize": ("BOOLEAN", {"default": False, "tooltip": "Selects a scheduler randomly."}),
                 "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter scheduler names. Supports wildcards (*)."}),
-                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Seed value for when randomization is active."}),
+                "seed": ("INT", {"default": 42, "min": 0, "max": INT_MAX, "tooltip": "Seed value for when randomization is active."}),
+            },
+            "optional": {
+                "scheduler": (["None"] + SCHEDULERS, {"default": "None", "tooltip": "Scheduler used to generate the image."}),
             },
             "hidden": {"node_id": "UNIQUE_ID"}
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
-    RETURN_NAMES = ("scheduler", "scheduler_name")
-    RETURN_TYPES = (KSampler.SCHEDULERS, "STRING")
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    RETURN_NAMES = ("combo", "string")
+    RETURN_TYPES = (SCHEDULERS, "STRING")
 
-    def on_exec(self, node_id, scheduler, enable_history, randomize, seed, filter):
-        schedulers = KSampler.SCHEDULERS
+    def on_exec(self, node_id: str, scheduler: str, enable_history: bool,
+                randomize: bool, seed: int, filter: str):
+        schedulers = SCHEDULERS
 
         if filter:
             schedulers = filter_list(filter, schedulers)
@@ -366,35 +395,39 @@ class LF_SchedulerSelector:
             random.seed(seed)
             scheduler = random.choice(schedulers)
 
-        PromptServer.instance.send_sync("lf-schedulerselector", {
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}schedulerselector", {
             "node": node_id, 
             "isHistoryEnabled": enable_history,
             "value": scheduler,
         })
 
         return (scheduler, scheduler)
-
+# endregion
+# region LF_UpscaleModelSelector
 class LF_UpscaleModelSelector:
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "upscale_model": (folder_paths.get_filename_list("upscale_models"), {"default": "None", "tooltip": "Upscale model used to upscale the image."}),
                 "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
                 "randomize": ("BOOLEAN", {"default": False, "tooltip": "Selects a scheduler randomly."}),
                 "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter upscale models names. Supports wildcards (*)."}),
-                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Seed value for when randomization is active."}),
+                "seed": ("INT", {"default": 42, "min": 0, "max": INT_MAX, "tooltip": "Seed value for when randomization is active."}),
+            },
+            "optional": {
+                "upscale_model": (["None"] + UPSCALERS, {"default": "None", "tooltip": "Upscale model used to upscale the image."}),
             },
             "hidden": {"node_id": "UNIQUE_ID"}
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
-    RETURN_NAMES = ("upscale_model", "upscale_model_name")
-    RETURN_TYPES = (folder_paths.get_filename_list("upscale_models"), "STRING")
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    RETURN_NAMES = ("combo", "string")
+    RETURN_TYPES = (UPSCALERS, "STRING")
 
-    def on_exec(self, node_id, upscale_model, enable_history, randomize, seed, filter):
-        upscalers = folder_paths.get_filename_list("upscale_models")
+    def on_exec(self, node_id: str, upscale_model: str, enable_history: bool,
+                randomize: bool, seed: int, filter: str):
+        upscalers = UPSCALERS
 
         if filter:
             upscalers = filter_list(filter, upscalers)
@@ -405,35 +438,38 @@ class LF_UpscaleModelSelector:
             random.seed(seed)
             upscale_model = random.choice(upscalers)
 
-        PromptServer.instance.send_sync("lf-upscalemodelselector", {
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}upscalemodelselector", {
             "node": node_id, 
             "isHistoryEnabled": enable_history,
             "value": upscale_model,
         })
 
         return (upscale_model, upscale_model)
-
+# endregion
+# region LF_VAESelector
 class LF_VAESelector:
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "vae": (folder_paths.get_filename_list("vae"), {"default": "None", "tooltip": "VAE used to generate the image."}),
                 "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
                 "randomize": ("BOOLEAN", {"default": False, "tooltip": "Selects a VAE randomly."}),
                 "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter VAE names. Supports wildcards (*)."}),
-                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "tooltip": "Seed value for when randomization is active."}),
+                "seed": ("INT", {"default": 42, "min": 0, "max": INT_MAX, "tooltip": "Seed value for when randomization is active."}),
+            },
+            "optional":{
+                "vae": (["None"] + VAES, {"default": "None", "tooltip": "VAE used to generate the image."}),
             },
             "hidden": {"node_id": "UNIQUE_ID"}
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
-    RETURN_NAMES = ("vae", "vae_name")
-    RETURN_TYPES = (folder_paths.get_filename_list("vae"), "STRING")
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    RETURN_NAMES = ("combo", "string")
+    RETURN_TYPES = (VAES, "STRING")
 
-    def on_exec(self, node_id, vae, enable_history, randomize, seed, filter):
-        vaes = folder_paths.get_filename_list("vae")
+    def on_exec(self, node_id: str, vae: str, enable_history: bool, randomize: bool, seed: int, filter: str):
+        vaes = VAES
 
         if filter:
             vaes = filter_list(filter, vaes)
@@ -444,14 +480,15 @@ class LF_VAESelector:
             random.seed(seed)
             vae = random.choice(vaes)
 
-        PromptServer.instance.send_sync("lf-upscalemodelselector", {
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}vaeselector", {
             "node": node_id, 
             "isHistoryEnabled": enable_history,
             "value": vae,
         })
 
         return (vae, vae)
-    
+# endregion
+# region Mappings
 NODE_CLASS_MAPPINGS = {
     "LF_CheckpointSelector": LF_CheckpointSelector,
     "LF_EmbeddingSelector": LF_EmbeddingSelector,
@@ -473,3 +510,4 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_UpscaleModelSelector": "Upscale model selector",
     "LF_VAESelector": "VAE selector",
 }
+# endregion

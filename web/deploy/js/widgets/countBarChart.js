@@ -1,6 +1,5 @@
-import { LogSeverity } from '../types/manager.js';
 import { CustomWidgetName, } from '../types/widgets.js';
-import { createDOMWidget, getLFManager, deserializeValue } from '../utils/common.js';
+import { createDOMWidget, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-countbarchart';
 const TYPE = CustomWidgetName.countBarChart;
 const DEF_ICON = 'content_copy';
@@ -22,31 +21,22 @@ export const countBarChartFactory = {
                 return { chart, chip, button };
             },
             getValue() {
-                const chartDataset = chart.kulData ?? JSON.stringify(chart.kulData);
-                const chipDataset = chip.kulData ?? JSON.stringify(chip.kulData);
-                return JSON.stringify({ chartDataset, chipDataset });
+                return {
+                    chartDataset: chart.kulData || {},
+                    chipDataset: chip.kulData || {},
+                };
             },
             setValue(value) {
-                try {
-                    if (typeof value === 'string') {
-                        const parsed = deserializeValue(value).parsedJson;
-                        chart.kulData = parsed['chartDataset'];
-                        chip.kulData = parsed['chipDataset'];
-                    }
-                    else {
-                        const { chartDataset, chipDataset } = value;
-                        chart.kulData = chartDataset;
-                        chip.kulData = chipDataset;
-                    }
+                const callback = (_, u) => {
+                    const { chartDataset, chipDataset } = u.parsedJson;
+                    chart.kulData = chartDataset || {};
+                    chip.kulData = chipDataset || {};
                     button.classList.remove(countBarChartFactory.cssClasses.buttonHidden);
-                }
-                catch (error) {
-                    getLFManager().log('Error when setting value!', { error, chart }, LogSeverity.Error);
-                    if (value === undefined || value === '') {
-                        chart.kulData = undefined;
-                    }
+                };
+                const onException = () => {
                     button.classList.add(countBarChartFactory.cssClasses.buttonHidden);
-                }
+                };
+                normalizeValue(value, callback, TYPE, onException);
             },
         };
     },

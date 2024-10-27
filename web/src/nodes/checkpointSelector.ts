@@ -13,7 +13,10 @@ import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 const NAME = NodeName.checkpointSelector;
 
 export const checkpointSelectorFactory = {
-  eventHandler: (event: CustomEvent<CheckpointSelectorPayload>, addW: BaseWidgetCallback) => {
+  eventHandler: (
+    event: CustomEvent<CheckpointSelectorPayload>,
+    addW: BaseWidgetCallback<CustomWidgetName.card>,
+  ) => {
     const name = EventName.checkpointSelector;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
@@ -46,7 +49,7 @@ export const checkpointSelectorFactory = {
       });
     }
   },
-  register: (setW: CardWidgetSetter, addW: BaseWidgetCallback) => {
+  register: (setW: CardWidgetSetter, addW: BaseWidgetCallback<CustomWidgetName.card>) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

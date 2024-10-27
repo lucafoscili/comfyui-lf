@@ -12,10 +12,7 @@ export const resizeImageToSquareFactory = {
         const node = getApiRoutes().getNodeById(payload.id);
         if (node) {
             const widget = getCustomWidget(node, CustomWidgetName.tree, addW);
-            const comp = widget.options.getComp();
-            comp.kulAccordionLayout = true;
-            comp.kulSelectable = false;
-            widget.options.setValue(event.detail.dataset);
+            widget.options.setValue(JSON.stringify(event.detail.dataset));
             getApiRoutes().redraw();
         }
     },

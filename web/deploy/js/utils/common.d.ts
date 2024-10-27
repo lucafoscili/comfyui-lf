@@ -1,4 +1,4 @@
-import { BaseWidgetCallback, ComfyWidgetMap, ComfyWidgetName, CustomWidgetMap, CustomWidgetName, CustomWidgetOptions } from '../types/widgets';
+import { BaseWidgetCallback, ComfyWidgetMap, ComfyWidgetName, CustomWidgetDeserializedValuesMap, CustomWidgetMap, CustomWidgetName, CustomWidgetOptions, NormalizeValueCallback, UnescapeJSONPayload } from '../types/widgets';
 import { LogSeverity } from '../types/manager';
 import { KulButton } from '../types/ketchup-lite/components/kul-button/kul-button';
 import { KulChart } from '../types/ketchup-lite/components/kul-chart/kul-chart';
@@ -9,14 +9,9 @@ import { KulComponent, KulComponentName } from '../types/ketchup-lite/types/Gene
 export declare const areJSONEqual: (a: unknown, b: unknown) => boolean;
 export declare const capitalize: (input: string) => string;
 export declare const createDOMWidget: (name: string, type: CustomWidgetName, element: HTMLDivElement, node: NodeType, options?: CustomWidgetOptions) => Widget;
-export declare const deserializeValue: (input: any) => {
-    validJson: boolean;
-    parsedJson?: {};
-    unescapedStr: string;
-};
 export declare const findWidget: <T extends CustomWidgetName>(node: NodeType, type: T) => CustomWidgetMap[T];
 export declare const getApiRoutes: () => import("../types/manager").ComfyAPIs;
-export declare const getCustomWidget: <T extends CustomWidgetName>(node: NodeType, type: T, addW?: BaseWidgetCallback) => CustomWidgetMap[T];
+export declare const getCustomWidget: <T extends CustomWidgetName>(node: NodeType, type: T, addW?: BaseWidgetCallback<T>) => CustomWidgetMap[T];
 export declare const getInput: (node: NodeType, type: ComfyWidgetName | CustomWidgetName) => SlotInfo;
 export declare const getKulManager: () => import("../types/ketchup-lite/managers/kul-manager/kul-manager").KulManager;
 export declare const getKulThemes: () => KulDataDataset;
@@ -30,6 +25,7 @@ export declare const isSwitch: (comp: KulComponent<KulComponentName>) => comp is
 export declare const isValidJSON: (value: unknown) => boolean;
 export declare const kulManagerExists: () => boolean;
 export declare const log: () => (message: string, args?: Record<string, unknown>, severity?: LogSeverity) => void;
+export declare const normalizeValue: <W extends CustomWidgetName, V extends CustomWidgetDeserializedValuesMap<W>>(value: V | string, callback: NormalizeValueCallback<V | string>, widget: W, onException?: () => void) => void;
 export declare const refreshChart: (node: NodeType) => void;
-export declare const serializeValue: <T extends {}>(value: T) => string;
 export declare const splitByLastSpaceBeforeAnyBracket: (input: string) => string;
+export declare const unescapeJson: (input: any) => UnescapeJSONPayload;

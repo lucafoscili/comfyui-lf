@@ -5,7 +5,7 @@
 .lf-imagepreview__doge {
   color: var(--kul-text-color);
   font-family: var(--kul-font-family-monospace);
-  font-size: var(--kul-font-size);
+  font-size: calc(var(--kul-font-size) * 0.875);
   text-align: center;
   white-space: pre;
 }

@@ -1,47 +1,18 @@
 import { NodeName } from '../types/nodes';
 import {
+  CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
-  ImagePreviewWidgetOptions,
-  type ImagePreviewWidgetValue,
+  ImagePreviewWidgetDeserializedValue,
+  ImagePreviewWidgetFactory,
+  NormalizeValueCallback,
 } from '../types/widgets';
-import { createDOMWidget } from '../utils/common';
+import { createDOMWidget, normalizeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-imagepreview';
-const DOGE = `
-
-W O W .  S U C H   E M P T Y.
-
-
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡟⠋⠈⠙⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠤⢤⡀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⠀⠈⢇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠞⠀⠀⢠⡜⣦⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡃⠀⠀⠀⠀⠈⢷⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠊⣠⠀⠀⠀⠀⢻⡘⡇
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⠃⠀⠀⠀⠀⠀⠀⠙⢶⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡠⠚⢀⡼⠃⠀⠀⠀⠀⠸⣇⢳
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⠀⣀⠖⠀⠀⠀⠀⠉⠀⠀⠈⠉⠛⠛⡛⢛⠛⢳⡶⠖⠋⠀⢠⡞⠀⠀⠀⠐⠆⠀⠀⣿⢸
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠻⣦⣀⣴⡟⠀⠀⢶⣶⣾⡿⠀⠀⣿⢸
-⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⡠⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣏⠀⠀⠀⣶⣿⣿⡇⠀⠀⢏⡞
-⠀⠀⠀⠀⠀⠀⢀⡴⠛⠀⠀⠀⠀⠀⠀⠀⠀⢀⢀⡾⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢦⣤⣾⣿⣿⠋⠀⠀⡀⣾⠁
-⠀⠀⠀⠀⠀⣠⠟⠁⠀⠀⠀⣀⠀⠀⠀⠀⢀⡟⠈⢀⣤⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠙⣏⡁⠀⠐⠚⠃⣿⠀
-⠀⠀⠀⠀⣴⠋⠀⠀⠀⡴⣿⣿⡟⣷⠀⠀⠊⠀⠴⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠀⠀⠀⠀⢹⡆
-⠀⠀⠀⣴⠃⠀⠀⠀⠀⣇⣿⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⡶⢶⣶⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇
-⠀⠀⣸⠃⠀⠀⠀⢠⠀⠊⠛⠉⠁⠀⠀⠀⠀⠀⠀⠀⢲⣾⣿⡏⣾⣿⣿⣿⣿⠖⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢧
-⠀⢠⡇⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠈⠛⠿⣽⣿⡿⠏⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡜
-⢀⡿⠀⠀⠀⠀⢀⣤⣶⣟⣶⣦⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇
-⢸⠇⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇
-⣼⠀⢀⡀⠀⠀⢷⣿⣿⣿⣿⣿⣿⡿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⡇
-⡇⠀⠈⠀⠀⠀⣬⠻⣿⣿⣿⡿⠙⠀⠀⢀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⠁
-⢹⡀⠀⠀⠀⠈⣿⣶⣿⣿⣝⡛⢳⠭⠍⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⠃⠀
-⠸⡇⠀⠀⠀⠀⠙⣿⣿⣿⣿⣿⣿⣷⣦⣀⣀⣀⣤⣤⣴⡶⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⠇⠀⠀
-⠀⢿⡄⠀⠀⠀⠀⠀⠙⣇⠉⠉⠙⠛⠻⠟⠛⠛⠉⠙⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡰⠋⠀⠀⠀
-⠀⠈⢧⠀⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠞⠁⠀⠀⠀⠀
-⠀⠀⠘⢷⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠞⠁⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠱⢆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⡴⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠛⢦⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣠⠴⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠲⠤⣤⣤⣤⣄⠀⠀⠀⠀⠀⠀⠀⢠⣤⣤⠤⠴⠒⠛⠋⠀⠀⠀⠀⠀         
-`;
 const SELECTABLE_NODES = [NodeName.loadImages];
 const TYPE = CustomWidgetName.imagePreview;
 
-export const imagePreviewFactory = {
+export const imagePreviewFactory: ImagePreviewWidgetFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
     doge: `${BASE_CSS_CLASS}__doge`,
@@ -53,42 +24,41 @@ export const imagePreviewFactory = {
     image: `${BASE_CSS_CLASS}__image`,
     switchView: `${BASE_CSS_CLASS}__switch-view`,
   },
-  options: (domWidget: HTMLDivElement, isSelectable: boolean) => {
+  options: (domWidget, isSelectable) => {
     return {
       hideOnZoom: true,
       getValue() {
-        return isSelectable
-          ? {
-              selectedIndex: parseInt(domWidget?.dataset.selectedIndex),
-              selectedName: domWidget?.dataset.selectedName,
-            }
-          : '';
+        return {
+          selectedIndex: parseInt(domWidget?.dataset.selectedIndex) || 0,
+          selectedName: domWidget?.dataset.selectedName || '',
+        };
       },
       selectable: isSelectable,
-      setValue(value: ImagePreviewWidgetValue) {
-        if (value.images?.length > 0) {
-          if (isSelectable && value.selectedIndex && value.selectedName) {
-            domWidget.dataset.selectedIndex = String(value.selectedIndex).valueOf();
-            domWidget.dataset.selectedName = value.selectedName;
+      setValue(value) {
+        const callback: NormalizeValueCallback<
+          CustomWidgetDeserializedValuesMap<typeof TYPE> | string
+        > = (_, u) => {
+          const { images, fileNames, selectedIndex, selectedName } =
+            u.parsedJson as ImagePreviewWidgetDeserializedValue;
+          if (isSelectable && selectedIndex && selectedName) {
+            domWidget.dataset.selectedIndex = String(selectedIndex).valueOf();
+            domWidget.dataset.selectedName = selectedName;
           }
-          if (domWidget.firstChild) {
-            const grid = drawGrid(value, isSelectable, domWidget);
-            domWidget.replaceChild(grid, domWidget.firstChild);
-          } else {
-            const grid = drawGrid(value, isSelectable, domWidget);
-            domWidget.appendChild(grid);
+          if (images?.length) {
+            const grid = drawGrid(images, fileNames, isSelectable, domWidget);
+            if (domWidget.firstChild) {
+              domWidget.replaceChild(grid, domWidget.firstChild);
+            } else {
+              domWidget.appendChild(grid);
+            }
           }
-        } else {
-          if (domWidget.firstChild) {
-            domWidget.replaceChild(drawDoge(), domWidget.firstChild);
-          } else {
-            domWidget.appendChild(drawDoge());
-          }
-        }
+        };
+
+        normalizeValue(value, callback, TYPE);
       },
-    } as ImagePreviewWidgetOptions;
+    };
   },
-  render: (node: NodeType, name: CustomWidgetName) => {
+  render: (node, name) => {
     const wrapper = document.createElement('div');
     const isSelectable = !!SELECTABLE_NODES.includes(node.comfyClass as NodeName);
     const options = imagePreviewFactory.options(wrapper, isSelectable);
@@ -116,11 +86,11 @@ const createButtons = (grid: HTMLDivElement) => {
 };
 
 const drawGrid = (
-  value: ImagePreviewWidgetValue,
+  images: ImagePreviewWidgetDeserializedValue['images'],
+  fileNames: ImagePreviewWidgetDeserializedValue['fileNames'],
   isSelectable: boolean,
   domWidget: HTMLDivElement,
 ) => {
-  const { fileNames, images } = value;
   const content = document.createElement('div');
   const grid = document.createElement('div');
 
@@ -152,17 +122,6 @@ const drawGrid = (
 
   content.appendChild(grid);
   content.appendChild(createButtons(grid));
-  return content;
-};
-
-const drawDoge = () => {
-  const content = document.createElement('div');
-  content.title = 'No images were loaded/found.';
-  content.classList.add(imagePreviewFactory.cssClasses.content);
-  const doge = document.createElement('div');
-  doge.classList.add(imagePreviewFactory.cssClasses.doge);
-  doge.innerText = DOGE;
-  content.appendChild(doge);
   return content;
 };
 

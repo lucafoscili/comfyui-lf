@@ -7,6 +7,7 @@ export var ComfyWidgetName;
     ComfyWidgetName["integer"] = "INTEGER";
     ComfyWidgetName["json"] = "JSON";
     ComfyWidgetName["number"] = "NUMBER";
+    ComfyWidgetName["seed"] = "SEED";
     ComfyWidgetName["string"] = "STRING";
 })(ComfyWidgetName || (ComfyWidgetName = {}));
 export var CustomWidgetName;

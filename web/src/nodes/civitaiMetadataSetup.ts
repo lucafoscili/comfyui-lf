@@ -7,7 +7,10 @@ import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 const NAME = NodeName.civitaiMetadataSetup;
 
 export const civitaiMetadataSetupFactory = {
-  eventHandler: (event: CustomEvent<CivitAIMetadataSetupPayload>, addW: BaseWidgetCallback) => {
+  eventHandler: (
+    event: CustomEvent<CivitAIMetadataSetupPayload>,
+    addW: BaseWidgetCallback<CustomWidgetName.code>,
+  ) => {
     const name = EventName.civitAIMetadataSetup;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
@@ -19,7 +22,7 @@ export const civitaiMetadataSetupFactory = {
       getApiRoutes().redraw();
     }
   },
-  register: (setW: CodeWidgetSetter, addW: BaseWidgetCallback) => {
+  register: (setW: CodeWidgetSetter, addW: BaseWidgetCallback<CustomWidgetName.code>) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

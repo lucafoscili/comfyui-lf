@@ -12,9 +12,11 @@ export type EventCallback<T extends EventPayload> = (e: CustomEvent<T>) => void;
 export enum EventName {
   blurImages = 'lf-blurimages',
   boolean = 'lf-boolean',
+  characterImpersonator = 'lf-characterimpersonator',
   checkpointSelector = 'lf-checkpointselector',
   civitAIMetadataSetup = 'lf-civitaimetadatasetup',
   clarityEffect = 'lf-clarityeffect',
+  compareImages = 'lf-compareimages',
   controlPanel = 'lf-controlpanel',
   displayBoolean = 'lf-displayboolean',
   displayFloat = 'lf-displayfloat',
@@ -25,8 +27,10 @@ export enum EventName {
   embeddingSelector = 'lf-embeddingselector',
   extractor = 'lf-extractor',
   float = 'lf-float',
+  imageClassifier = 'lf-imageclassifier',
   imageListFromJSON = 'lf-imagelistfromjson',
   imageHistogram = 'lf-imagehistogram',
+  isLandscape = 'lf-islandscape',
   integer = 'lf-integer',
   keywordCounter = 'lf-keywordcounter',
   loadFileOnce = 'lf-loadfileonce',
@@ -34,6 +38,8 @@ export enum EventName {
   loadLoraTags = 'lf-loadloratags',
   loraAndEmbeddingSelector = 'lf-loraandembeddingselector',
   loraSelector = 'lf-loraselector',
+  lora2Prompt = 'lf-lora2prompt',
+  loraTag2Prompt = 'lf-loratag2prompt',
   mathOperation = 'lf-mathoperation',
   multipleImageResizeForWeb = 'lf-multipleimageresizeforweb',
   notify = 'lf-notify',
@@ -44,8 +50,12 @@ export enum EventName {
   resolutionSwitcher = 'lf-resolutionswitcher',
   samplerSelector = 'lf-samplerselector',
   saveImageForCivitAI = 'lf-saveimageforcivitai',
+  saveJson = 'lf-savejson',
   schedulerSelector = 'lf-schedulerselector',
+  sequentialSeedsGenerator = 'lf_sequentialseedsgenerator',
   shuffleJsonKeys = 'lf-shufflejsonkeys',
+  something2Number = 'lf-something2number',
+  something2String = 'lf-something2string',
   sortJsonKeys = 'lf-sortjsonkeys',
   string = 'lf-string',
   switchFloat = 'lf-switchfloat',
@@ -62,21 +72,27 @@ export enum EventName {
 export type EventPayload =
   | BlurImagesPayload
   | BooleanPayload
+  | CharacterImpersonatorPayload
   | CheckpointSelectorPayload
   | CivitAIMetadataSetupPayload
   | ClarityEffectPayload
+  | CompareImagesPayload
   | DisplayBooleanPayload
   | DisplayJSONPayload
   | EmbeddingSelectorPayload
   | ExtractorPayload
   | FloatPayload
+  | ImageClassifierPayload
   | ImageListFromJSONPayload
   | ImageHistogramPayload
   | IntegerPayload
+  | IsLandscapePayload
   | KeywordCounterPayload
   | LoadImagesPayload
   | LoraAndEmbeddingSelectorPayload
   | LoraSelectorPayload
+  | Lora2PromptPayload
+  | LoraTag2PromptPayload
   | LoadLoraTagsPayload
   | MathOperationPayload
   | MultipleImageResizeForWebPayload
@@ -88,8 +104,12 @@ export type EventPayload =
   | ResolutionSwitcherPayload
   | SamplerSelectorPayload
   | SaveImageForCivitAIPayload
+  | SaveJSONPayload
   | SchedulerSelectorPayload
+  | SequentialSeedsGeneratorPayload
   | ShuffleJSONKeysPayload
+  | Something2NumberPayload
+  | Something2StringPayload
   | SortJSONKeysPayload
   | StringPayload
   | SwitchImagePayload
@@ -121,6 +141,14 @@ export interface BooleanPayload extends BaseEventPayload {
 }
 
 /*-------------------------------------------------------------------*/
+/*     C h a r a c t e r I m p e r s o n a t o r    D e c l a r .    */
+/*-------------------------------------------------------------------*/
+
+export interface CharacterImpersonatorPayload extends BaseEventPayload {
+  value: string;
+}
+
+/*-------------------------------------------------------------------*/
 /*   C h e c k p o i n t S e l e c t o r   D e c l a r a t i o n s   */
 /*-------------------------------------------------------------------*/
 
@@ -144,6 +172,14 @@ export interface CivitAIMetadataSetupPayload extends BaseEventPayload {
 /*-------------------------------------------------------------------*/
 
 export interface ClarityEffectPayload extends BaseEventPayload {
+  dataset: KulDataDataset;
+}
+
+/*-------------------------------------------------------------------*/
+/*              C o m p a r e I m a g e s   D e c l a r .            */
+/*-------------------------------------------------------------------*/
+
+export interface CompareImagesPayload extends BaseEventPayload {
   dataset: KulDataDataset;
 }
 
@@ -224,6 +260,14 @@ export interface FloatPayload extends BaseEventPayload {
 }
 
 /*-------------------------------------------------------------------*/
+/*     I m a g e C l a s s i f i e r   D e c l a r a t i o n s       */
+/*-------------------------------------------------------------------*/
+
+export interface ImageClassifierPayload extends BaseEventPayload {
+  value: string;
+}
+
+/*-------------------------------------------------------------------*/
 /*    I m a g e L i s t F r o m J S O N   D e c l a r a t i o n s    */
 /*-------------------------------------------------------------------*/
 
@@ -247,6 +291,14 @@ export interface ImageHistogramPayload extends BaseEventPayload {
 export interface IntegerPayload extends BaseEventPayload {
   isHistoryEnabled: boolean;
   value: number;
+}
+
+/*-------------------------------------------------------------------*/
+/*          I s L a n d s c a p e   D e c l a r a t i o n s          */
+/*-------------------------------------------------------------------*/
+
+export interface IsLandscapePayload extends BaseEventPayload {
+  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/
@@ -288,6 +340,22 @@ export interface LoadLoraTagsPayload extends BaseEventPayload {
   hashes: string[];
   paths: string[];
   chipDataset: KulDataDataset;
+}
+
+/*-------------------------------------------------------------------*/
+/*          L o r a 2 P r o m p t   D e c l a r a t i o n s          */
+/*-------------------------------------------------------------------*/
+
+export interface Lora2PromptPayload extends BaseEventPayload {
+  log: string;
+}
+
+/*-------------------------------------------------------------------*/
+/*      L o r a T a g 2 P r o m p t   D e c l a r a t i o n s        */
+/*-------------------------------------------------------------------*/
+
+export interface LoraTag2PromptPayload extends BaseEventPayload {
+  log: string;
 }
 
 /*-------------------------------------------------------------------*/
@@ -397,6 +465,14 @@ export interface SamplerSelectorPayload extends BaseEventPayload {
 }
 
 /*-------------------------------------------------------------------*/
+/*  R e s i z e I m a g e T o S q u a r e   D e c l a r a t i o n s  */
+/*-------------------------------------------------------------------*/
+
+export interface SaveJSONPayload extends BaseEventPayload {
+  dataset: KulDataDataset;
+}
+
+/*-------------------------------------------------------------------*/
 /*  S a v e I m a g e F o r C i v i t A I   D e c l a r a t i o n s  */
 /*-------------------------------------------------------------------*/
 
@@ -415,11 +491,36 @@ export interface SchedulerSelectorPayload extends BaseEventPayload {
 }
 
 /*-------------------------------------------------------------------*/
+/*    S e q u e n t i a l S e e d s G e n e r a t o r   D e c l .    */
+/*-------------------------------------------------------------------*/
+
+export interface SequentialSeedsGeneratorPayload extends BaseEventPayload {
+  isHistoryEnabled: boolean;
+  value: number;
+}
+
+/*-------------------------------------------------------------------*/
 /*     S h u f f l e J S O N K e y s   D e c l a r a t i o n s       */
 /*-------------------------------------------------------------------*/
 
 export interface ShuffleJSONKeysPayload extends BaseEventPayload {
   json: Record<string, unknown>;
+}
+
+/*-------------------------------------------------------------------*/
+/*     S o m e t h i n g 2 N u m b e r   D e c l a r a t i o n s     */
+/*-------------------------------------------------------------------*/
+
+export interface Something2NumberPayload extends BaseEventPayload {
+  log: string;
+}
+
+/*-------------------------------------------------------------------*/
+/*     S o m e t h i n g 2 S t r i n g   D e c l a r a t i o n s     */
+/*-------------------------------------------------------------------*/
+
+export interface Something2StringPayload extends BaseEventPayload {
+  log: string;
 }
 
 /*-------------------------------------------------------------------*/

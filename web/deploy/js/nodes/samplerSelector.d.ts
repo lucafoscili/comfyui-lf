@@ -1,6 +1,6 @@
 import { SamplerSelectorPayload } from '../types/events';
-import { HistoryWidgetSetter, type BaseWidgetCallback } from '../types/widgets';
+import { CustomWidgetName, HistoryWidgetSetter, type BaseWidgetCallback } from '../types/widgets';
 export declare const samplerSelectorFactory: {
-    eventHandler: (event: CustomEvent<SamplerSelectorPayload>, addW: BaseWidgetCallback) => void;
-    register: (setW: HistoryWidgetSetter, addW: BaseWidgetCallback) => void;
+    eventHandler: (event: CustomEvent<SamplerSelectorPayload>, addW: BaseWidgetCallback<CustomWidgetName.history>) => void;
+    register: (setW: HistoryWidgetSetter, addW: BaseWidgetCallback<CustomWidgetName.history>) => void;
 };

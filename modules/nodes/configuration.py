@@ -1,35 +1,31 @@
-import folder_paths
-import os
+import re
+import torch
+
+from folder_paths import get_full_path
 from pathlib import Path
 
 import comfy.sd
 import comfy.utils
-from comfy.samplers import KSampler
 
-from ..utils.configuration import *
-from ..utils.image import tensor_to_base64
-from ..utils.selector import prepare_model_dataset, process_model, send_multi_selector_message
+from ..utils.constants import ANY, BASE64_PNG_PREFIX, CATEGORY_PREFIX, CHECKPOINTS, EVENT_PREFIX, FUNCTION, INT_MAX, LORA_TAG_REGEX, LORAS, NOTIFY_COMBO, SAMPLERS, SCHEDULERS, UPSCALERS, VAES
+from ..utils.helpers import count_words_in_comma_separated_string, get_embedding_hashes, get_lora_hashes, get_sha256, normalize_input_image, normalize_input_list, normalize_list_to_value, cleanse_lora_tag, prepare_model_dataset, process_model, send_multi_selector_message, tensor_to_base64
 
 from server import PromptServer
 
-category = "✨ LF Nodes/Configuration"
+CATEGORY = f"{CATEGORY_PREFIX}/Configuration"
 
-class AnyType(str):
-    def __ne__(self, __value: object) -> bool:
-        return False
-
-any = AnyType("*")
-
+# region LF_CivitAIMetadataSetup
 class LF_CivitAIMetadataSetup:
     @classmethod
     def INPUT_TYPES(cls):
         return {
-            "required": {},
+            "required": {
+                "checkpoint": (CHECKPOINTS, {"default": "None", "tooltip": "Checkpoint used to generate the image."}),
+            },
             "optional": {
-                "checkpoint": (folder_paths.get_filename_list("checkpoints"), {"default": "None", "tooltip": "Checkpoint used to generate the image."}),
-                "vae": (folder_paths.get_filename_list("vae"), {"tooltip": "VAE used to generate the image."}),
-                "sampler": (KSampler.SAMPLERS, {"default": "None", "tooltip": "Sampler used to generate the image."}),
-                "scheduler": (KSampler.SCHEDULERS, {"default": "None", "tooltip": "Scheduler used to generate the image."}),
+                "vae": (VAES, {"tooltip": "VAE used to generate the image."}),
+                "sampler": (SAMPLERS, {"default": "None", "tooltip": "Sampler used to generate the image."}),
+                "scheduler": (SCHEDULERS, {"default": "None", "tooltip": "Scheduler used to generate the image."}),
                 "embeddings": ("STRING", {"default": '', "multiline": True, "tooltip": "Embeddings used to generate the image."}),
                 "lora_tags": ("STRING", {"default": '', "multiline": True, "tooltip": "Tags of the LoRAs used to generate the image."}),
                 "positive_prompt": ("STRING", {"default": '', "multiline": True, "tooltip": "Prompt to generate the image."}),
@@ -38,143 +34,116 @@ class LF_CivitAIMetadataSetup:
                 "denoising": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 1.0, "tooltip": "Denoising strength used to generate the image."}),
                 "clip_skip": ("INT", {"default": -1, "min": -24, "max": -1, "tooltip": "CLIP skip used to generate the image."}),
                 "cfg": ("FLOAT", {"default": 7.0, "min": 0.0, "max": 30.0, "tooltip": "CFG used to generate the image."}),
-                "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff, "tooltip": "Seed used to generate the image."}),
+                "seed": ("INT", {"default": 0, "min": 0, "max": INT_MAX, "tooltip": "Seed used to generate the image."}),
                 "width": ("INT", {"default": 1024, "tooltip": "Width of the image."}),
                 "height": ("INT", {"default": 1024, "tooltip": "Height of the image."}),
                 "hires_upscale": ("FLOAT", {"default": 1.5, "tooltip": "Upscale factor for Hires-fix."}),
-                "hires_upscaler": (folder_paths.get_filename_list("upscale_models"), {"tooltip": "Upscale model for Hires-fix."}),
+                "hires_upscaler": (UPSCALERS, {"tooltip": "Upscale model for Hires-fix."}),
             },
-            "hidden": { "node_id": "UNIQUE_ID" }
+            "hidden": { 
+                "node_id": "UNIQUE_ID"
+            }
         }
     
-    CATEGORY = category
-    FUNCTION = "on_exec"
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
     RETURN_NAMES = ("metadata_string", "checkpoint", "vae", 
                     "sampler", "scheduler", "embeddings", "lora_tags",
                     "full_pos_prompt", "neg_prompt", "steps", "denoising", "clip_skip", "cfg", "seed", 
                     "width", "height", "hires_upscaler", "hires_upscale", "analytics_dataset")
-    RETURN_TYPES = ("STRING", folder_paths.get_filename_list("checkpoints"), folder_paths.get_filename_list("vae"),
-                    KSampler.SAMPLERS, KSampler.SCHEDULERS, "STRING", "STRING",
+    RETURN_TYPES = ("STRING", CHECKPOINTS, VAES,
+                    SAMPLERS, SCHEDULERS, "STRING", "STRING",
                     "STRING", "STRING", "INT", "FLOAT", "INT", "FLOAT", "INT",
-                    "INT", "INT", folder_paths.get_filename_list("upscale_models"), "FLOAT", "JSON")
+                    "INT", "INT", UPSCALERS, "FLOAT", "JSON")
 
-    def on_exec(self, **kwargs):
-        analytics_dataset = { "nodes": [] }
+    def on_exec(self, **kwargs:dict):
+        def add_metadata_node(category, item):
+            """Add metadata information for a specific category."""
+            if item:
+                analytics_dataset["nodes"].append({
+                    "children": [{"id": item, "value": item}],
+                    "id": category
+                })
 
-        cfg = kwargs.get("cfg")
-        checkpoint = kwargs.get("checkpoint")
-        clip_skip = kwargs.get("clip_skip")
-        denoising = kwargs.get("denoising")
-        embeddings = kwargs.get("embeddings")
-        height = kwargs.get("height")
-        hires_upscale = kwargs.get("hires_upscale")
-        hires_upscaler = kwargs.get("hires_upscaler")
-        lora_tags = kwargs.get("lora_tags")
-        negative_prompt = kwargs.get("negative_prompt")
-        node_id = kwargs.get("node_id")
-        positive_prompt = kwargs.get("positive_prompt")
-        sampler = kwargs.get("sampler")
-        seed = kwargs.get("seed")
-        steps = kwargs.get("steps")
-        scheduler = kwargs.get("scheduler")
-        vae = kwargs.get("vae")
-        width = kwargs.get("width")
-        
-        if checkpoint:
-            checkpoint_path = folder_paths.get_full_path("checkpoints", checkpoint)
-            checkpoint_name = os.path.basename(checkpoint_path)
-            try:
-                checkpoint_hash = get_sha256(checkpoint_path)
-                analytics_dataset["nodes"].append({ "children": [{ "id": checkpoint_name, "value": checkpoint_name }], "id": "checkpoints"})
-            except Exception as e:
-                checkpoint_hash = "Unknown"
-                print(f"Error calculating hash for checkpoint: {e}")
+        cfg:float = normalize_list_to_value(kwargs.get("cfg"))
+        checkpoint:str = normalize_list_to_value(kwargs.get("checkpoint"))
+        clip_skip:int = normalize_list_to_value(kwargs.get("clip_skip"))
+        denoising:float = normalize_list_to_value(kwargs.get("denoising"))
+        embeddings:str = normalize_list_to_value(kwargs.get("embeddings"))
+        height:int = normalize_list_to_value(kwargs.get("height"))
+        hires_upscale:float = normalize_list_to_value(kwargs.get("hires_upscale"))
+        hires_upscaler:str = normalize_list_to_value(kwargs.get("hires_upscaler"))
+        lora_tags:str = normalize_list_to_value(kwargs.get("lora_tags"))
+        negative_prompt:str = normalize_list_to_value(kwargs.get("negative_prompt"))
+        positive_prompt:str = normalize_list_to_value(kwargs.get("positive_prompt"))
+        sampler:str = normalize_list_to_value(kwargs.get("sampler"))
+        scheduler:str = normalize_list_to_value(kwargs.get("scheduler"))
+        seed:int = normalize_list_to_value(kwargs.get("seed"))
+        steps:int = normalize_list_to_value(kwargs.get("steps"))
+        vae:str = normalize_list_to_value(kwargs.get("vae"))
+        width:int = normalize_list_to_value(kwargs.get("width"))
 
-        if embeddings:
-            emb_hashes = get_embedding_hashes(embeddings, analytics_dataset) if embeddings else []
-            emb_hashes_str = ", ".join(emb_hashes) if emb_hashes else "None"
-        else:
-            emb_hashes = []
-            emb_hashes_str = ""
+        analytics_dataset = {"nodes": []}
 
-        if hires_upscaler:
-            upscaler_path = folder_paths.get_full_path("upscale_models", hires_upscaler)
-            upscaler_name = os.path.basename(upscaler_path)
-            analytics_dataset["nodes"].append({ "children": [{ "id": upscaler_name, "value": upscaler_name }], "id": "upscale_models"})
-        else:
-            upscaler_name = "Latent"
+        # Adding nodes to analytics dataset
+        add_metadata_node("checkpoints", checkpoint)
+        add_metadata_node("samplers", sampler)
+        add_metadata_node("schedulers", scheduler)
+        add_metadata_node("upscale_models", hires_upscaler)
+        add_metadata_node("vaes", vae)
 
-        if lora_tags:
-            lora_hashes = get_lora_hashes(lora_tags, analytics_dataset) if lora_tags else []
-            lora_hashes_str = ", ".join(lora_hashes) if lora_hashes else "None"
-        else:
-            lora_hashes = []
-            lora_hashes_str = ""
+        # Hashes for Model, VAE, LoRAs, and Embeddings
+        model_hash = get_sha256(get_full_path("checkpoints", checkpoint)) if checkpoint else "Unknown"
+        vae_hash = get_sha256(get_full_path("vae", vae)) if vae else "Unknown"
+        emb_hashes_str = ", ".join(get_embedding_hashes(embeddings, analytics_dataset)) if embeddings else ""
+        lora_hashes_str = ", ".join(get_lora_hashes(lora_tags, analytics_dataset)) if lora_tags else ""
 
-        if sampler:
-            analytics_dataset["nodes"].append({ "children": [{ "id": sampler, "value": sampler }], "id": "samplers"})
-            sampler_a1111 = SAMPLER_MAP.get(sampler, sampler)
-
-        if scheduler:
-            analytics_dataset["nodes"].append({ "children": [{ "id": scheduler, "value": scheduler }], "id": "schedulers"})
-            scheduler_a1111 = SCHEDULER_MAP.get(scheduler, scheduler)
-
-        if vae:
-            vae_path = folder_paths.get_full_path("vae", vae)
-            vae_name = os.path.basename(vae_path)
-            try:
-                vae_hash = get_sha256(vae_path)
-                analytics_dataset["nodes"].append({ "children": [{ "id": vae_name, "value": vae_name }], "id": "vaes"})
-            except Exception as e:
-                vae_hash = "Unknown"
-                print(f"Error calculating hash for VAE: {e}")
-                   
+        # Metadata string generation
         metadata_string = (
-            f"{embeddings if embeddings else ''}, {positive_prompt if positive_prompt else ''}, {lora_tags if lora_tags else ''}\n"
-            f"Negative prompt: {negative_prompt if negative_prompt else ''}\n"
-            f"Steps: {steps if steps else ''}, Sampler: {sampler_a1111 if sampler else ''}, Schedule type: {scheduler_a1111 if scheduler else ''}, CFG scale: {cfg if cfg else ''}, "
-            f"Seed: {seed if seed else ''}, Size: {width if width else ''}x{height if height else ''}, "
-            f"Denoising strength: {denoising if denoising else ''}, Clip skip: {abs(clip_skip) if clip_skip else ''},  "
-            f"VAE hash: {vae_hash if vae_hash else ''}, VAE: {vae_name if vae_name else ''}, "
-            f"Model hash: {checkpoint_hash if checkpoint_hash else ''}, Model: {checkpoint_name if checkpoint_name else ''}, "
-            f"Hires upscale: {hires_upscale if hires_upscale else ''}, Hires upscaler: {upscaler_name if upscaler_name else ''}, "
-            f"Lora hashes: \"{lora_hashes_str if lora_hashes_str else ''}\", "
-            f"TI hashes: \"{emb_hashes_str if emb_hashes_str else ''}\", Version: ComfyUI.LF Nodes"
+            f"{embeddings or ''}, {positive_prompt or ''}, {lora_tags or ''}\n"
+            f"Negative prompt: {negative_prompt or ''}\n"
+            f"Steps: {steps or ''}, Sampler: {sampler or ''}, Schedule type: {scheduler or ''}, CFG scale: {cfg or ''}, "
+            f"Seed: {seed or ''}, Size: {width or ''}x{height or ''}, "
+            f"Denoising strength: {denoising or ''}, Clip skip: {abs(clip_skip) or ''}, "
+            f"VAE hash: {vae_hash}, "
+            f"Model hash: {model_hash}, Model: {checkpoint}, "
+            f"Hires upscale: {hires_upscale or ''}, Hires upscaler: {hires_upscaler or 'Latent'}, "
+            f"Lora hashes: \"{lora_hashes_str}\", TI hashes: \"{emb_hashes_str}\", Version: ComfyUI.LF Nodes"
         )
+
+        clean_metadata_string = metadata_string.replace(".safetensors", "").replace("embedding:", "")
         
-        clean_metadata_string = metadata_string.replace(".safetensors", "")
-        clean_metadata_string = clean_metadata_string.replace("embedding:", "")
-        
-        PromptServer.instance.send_sync("lf-civitaimetadatasetup", {
-            "node": node_id, 
-            "metadataString": clean_metadata_string, 
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}civitaimetadatasetup", {
+            "node": kwargs.get("node_id"),
+            "metadataString": clean_metadata_string,
         })
 
-        if positive_prompt:
-            output_prompt = f"{embeddings}, {positive_prompt}" if embeddings else positive_prompt
-        else:
-            output_prompt = ''
-
-        return (clean_metadata_string, checkpoint, vae, 
-                sampler, scheduler, embeddings, lora_tags, 
-                output_prompt, negative_prompt, steps, denoising, clip_skip, cfg, seed,
-                width, height, hires_upscaler, hires_upscale, analytics_dataset)
-    
+        output_prompt = f"{embeddings}, {positive_prompt}" if positive_prompt else ""
+        return (
+            clean_metadata_string, checkpoint, vae, sampler, scheduler, embeddings, lora_tags,
+            output_prompt, negative_prompt, steps, denoising, clip_skip, cfg, seed,
+            width, height, hires_upscaler, hires_upscale, analytics_dataset
+        )
+# endregion
+# region LF_ControlPanel
 class LF_ControlPanel:
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {},
-            "hidden": { "node_id": "UNIQUE_ID" }
+            "hidden": { 
+                "node_id": "UNIQUE_ID"
+            }
         }
     
-    CATEGORY = category
-    FUNCTION = "on_exec"
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
     RETURN_TYPES = ()
 
     def on_exec(self):
         return ()
-
+# endregion
+# region LF_LoadLoraTags
 class LF_LoadLoraTags:
     @classmethod
     def INPUT_TYPES(cls):
@@ -185,42 +154,72 @@ class LF_LoadLoraTags:
                 "clip": ("CLIP", {"tooltip": "The CLIP model to modify."}),
                 "tags": ("STRING", {"default": '', "multiline": True, "tooltip": "Text containing LoRA tags, e.g., <lora:example:1.0>"}),
             },
-            "hidden": {"node_id": "UNIQUE_ID"}
+            "hidden": { 
+                "node_id": "UNIQUE_ID"
+            }
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
-    RETURN_NAMES = ("model_with_lora", "clip_with_lora")
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    RETURN_NAMES = ("model", "clip")
     RETURN_TYPES = ("MODEL", "CLIP")
 
-    def on_exec(self, node_id, get_civitai_info, model, clip, tags):
-        datasets =  []
-        chip_dataset =  {"nodes": []}
+    def on_exec(self, node_id: str, get_civitai_info: bool, model, clip, tags: str):   
+        def get_lora_weights(tag_content: str):
+            name = tag_content[1]
+            try:
+                m_weight = float(tag_content[2]) if len(tag_content) > 2 else 1.0
+                c_weight = float(tag_content[3]) if len(tag_content) > 3 else m_weight
+            except ValueError:
+                return None, None, None
+
+            lora_files = LORAS
+
+            lora_name:str = None
+            for lora_file in lora_files:
+                if Path(lora_file).name.startswith(name) or lora_file.startswith(name):
+                    lora_name = lora_file
+                    break
+                
+            return lora_name, m_weight, c_weight
+        def load_lora_file(lora_path: str):
+            lora = comfy.utils.load_torch_file(lora_path, safe_load=True)
+            return lora
+        def add_chip(value: str):
+            return { "icon": "clear", 
+                     "description": "Failed to load this LoRA.", 
+                     "id": value, 
+                     "value": value } 
+        
+        clip = normalize_list_to_value(clip)
+        get_civitai_info = normalize_list_to_value(get_civitai_info)
+        model = normalize_list_to_value(model)
+        tags = normalize_list_to_value(tags)
 
         regex = r"\<[0-9a-zA-Z\:\_\-\.\s\/\(\)\\\\]+\>"
-        found_tags = re.findall(regex, tags)
+        found_tags: list[str] = re.findall(regex, tags)
 
         api_flags = []
-        lora_paths = []
+        nodes = []
+        chip_dataset =  { "nodes": nodes }
+        datasets =  []
         hashes = []
+        lora_paths = []
+        lora_status = {}
 
         if not found_tags:
-
-            send_multi_selector_message(node_id, [], [], [], [], "lf-loadloratags")
-
+            send_multi_selector_message(node_id, [], [], [], [], f"{EVENT_PREFIX}loadloratags")
             return (model, clip)
 
-        lora_status = {}
-    
         for tag in found_tags:
             tag_content = tag[1:-1].split(":")
             if tag_content[0] != 'lora' or len(tag_content) < 2:
-                chip_dataset["nodes"].append(self.add_chip(tag_content))
+                nodes.append(add_chip(tag_content))
                 continue
 
-            lora_name, m_weight, c_weight = self.get_lora_weights(tag_content)
+            lora_name, m_weight, c_weight = get_lora_weights(tag_content)
             if not lora_name:
-                chip_dataset["nodes"].append(self.add_chip(lora_name))
+                nodes.append(add_chip(lora_name))
                 lora_status[tag_content[1]] = False
                 continue
 
@@ -228,8 +227,8 @@ class LF_LoadLoraTags:
                 print(f"LoRA '{lora_name}' is already loaded, skipping.")
                 continue
 
-            lora_path = folder_paths.get_full_path("loras", lora_name)
-            lora = self.load_lora_file(lora_path)
+            lora_path = get_full_path("loras", lora_name)
+            lora = load_lora_file(lora_path)
 
             model, clip = comfy.sd.load_lora_for_models(model, clip, lora, m_weight, c_weight)
 
@@ -252,42 +251,17 @@ class LF_LoadLoraTags:
                 datasets.append(prepare_model_dataset(name, hash, base64, path))
                 api_flags.append(get_civitai_info)
 
-        if not len(chip_dataset["nodes"]):
-            chip_dataset["nodes"].append({ "icon": "check",
-                                          "Description": "Every LoRA has been loaded successfully!", 
-                                          "id": "0", 
-                                          "value": "LoRA loaded successfully!"})
+        if not len(nodes):
+            nodes.append({ "icon": "check",
+                           "description": "Each LoRA has been loaded successfully!", 
+                           "id": "0", 
+                           "value": "LoRA loaded successfully!" })
             
-        send_multi_selector_message(node_id, datasets, hashes, api_flags, lora_paths, "lf-loadloratags", chip_dataset)
+        send_multi_selector_message(node_id, datasets, hashes, api_flags, lora_paths, f"{EVENT_PREFIX}loadloratags", chip_dataset)
 
         return (model, clip)
-
-
-    def get_lora_weights(self, tag_content):
-        name = tag_content[1]
-        try:
-            m_weight = float(tag_content[2]) if len(tag_content) > 2 else 1.0
-            c_weight = float(tag_content[3]) if len(tag_content) > 3 else m_weight
-        except ValueError:
-            return None, None, None
-    
-        lora_files = folder_paths.get_filename_list("loras")
-    
-        lora_name = None
-        for lora_file in lora_files:
-            if Path(lora_file).name.startswith(name) or lora_file.startswith(name):
-                lora_name = lora_file
-                break
-    
-        return lora_name, m_weight, c_weight
-
-    def load_lora_file(self, lora_path):
-        lora = comfy.utils.load_torch_file(lora_path, safe_load=True)
-        return lora
-
-    def add_chip(self, value):
-        return { "icon": "clear", "Description": "Failed to load this LoRA.", "id": value, "value": value}
-        
+# endregion
+# region LF_Lora2Prompt
 class LF_Lora2Prompt:
     @classmethod
     def INPUT_TYPES(cls):
@@ -297,37 +271,62 @@ class LF_Lora2Prompt:
                 "separator": ("STRING", { "default": "SEP", "tooltip": "Character(s) used to separate keywords within the name of a single LoRa file. Helps in extracting individual keywords."}),
                 "weight": ("FLOAT", { "default": 0.5, "tooltip": "A weight value associated with LoRa tags, which may influence processing or output significance."}),
                 "weight_placeholder": ("STRING", { "default": "wwWEIGHTww", "tooltip": "A placeholder within LoRa tags that gets replaced with the actual weight value during processing."}),
+            },
+            "hidden": { 
+                "node_id": "UNIQUE_ID"
             }
         } 
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
-    RETURN_NAMES = ("prompt", "loras",)
-    RETURN_TYPES = ("STRING", "STRING",)
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    RETURN_NAMES = ("prompt", "loras")
+    RETURN_TYPES = ("STRING", "STRING")
 
-    def on_exec(self, text: str, separator:str, weight:float, weight_placeholder:str):
-        # Regular expression to match loras in <lora:...> format
-        lora_pattern = r'<lora:[^<>]+>'
+    def on_exec(self, node_id: str, text: str, separator: str, weight: float, weight_placeholder: str):
+        text = normalize_list_to_value(text)
+        separator = normalize_list_to_value(separator)
+        weight = normalize_list_to_value(weight)
+        weight_placeholder = normalize_list_to_value(weight_placeholder)
         
-        # Find all matches of loras in the input text
-        loras = re.findall(lora_pattern, text)
+        loras = re.findall(LORA_TAG_REGEX, text)
         
-        # Extract keywords from each lora and prepare them for replacement
         lora_keyword_map = {}
         for lora in loras:
-            # Map the original lora tag to its keywords
             lora_keyword_map[lora] = cleanse_lora_tag(lora, separator)
         
-        # Replace each lora tag in the text with its corresponding keywords
         for lora_tag, keywords in lora_keyword_map.items():
             text = text.replace(lora_tag, keywords)
         
-        # Replace the weight_placeholder with the actual weight
-        loras = [lora.replace(weight_placeholder, str(weight)) for lora in loras]
-        loras_string = "".join(loras)
+        loras_weighted = [lora.replace(weight_placeholder, str(weight)) for lora in loras]
+        loras_string = "".join(loras_weighted)
+
+        log_entries = [f"## Breakdown\n"]
+        log_entries.append(f"**Original Text**: {text}")
+        log_entries.append(f"**Separator Used**: '{separator}'")
+        log_entries.append(f"**Weight Placeholder**: '{weight_placeholder}', Weight Value: {weight}")
         
-        return (text, loras_string,)
-    
+        log_entries.append("\n### Extracted LoRA Tags:\n")
+        for lora_tag in loras:
+            log_entries.append(f"- **LoRA Tag**: {lora_tag}")
+
+        log_entries.append("\n### Keyword Mapping:\n")
+        for lora_tag, keywords in lora_keyword_map.items():
+            log_entries.append(f"- **Original Tag**: {lora_tag}")
+            log_entries.append(f"  - **Cleansed Keywords**: {keywords}")
+
+        log_entries.append("\n### Final Prompt Substitution:\n")
+        log_entries.append(f"**Modified Text**: {text}")
+        
+        log = "\n".join(log_entries)
+
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}lora2prompt", {
+            "node": node_id, 
+            "log": log
+        })
+
+        return (text, loras_string)
+# endregion
+# region LF_LoraTag2Prompt
 class LF_LoraTag2Prompt:
     @classmethod
     def INPUT_TYPES(cls):
@@ -335,74 +334,111 @@ class LF_LoraTag2Prompt:
             "required": {
                 "tag": ("STRING", {"multiline": True, "tooltip": "The LoRA tag to be converted."}),
                 "separator": ("STRING", { "default": "SEP", "tooltip": "String separating each keyword in a LoRA filename."}),
+            },
+            "hidden": { 
+                "node_id": "UNIQUE_ID"
             }
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
-    RETURN_NAMES = ("keywords", "nr_keywords",)
-    RETURN_TYPES = ("STRING", "INT",)
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    RETURN_NAMES = ("keywords", "keywords_count", "keywords_list", "keywords_count_list")
+    RETURN_TYPES = ("STRING", "INT", "STRING", "INT")
 
-    def on_exec(self, tag: str, separator: str):
-        clean_lora = cleanse_lora_tag(tag, separator)   
-        keywords_count = count_words_in_comma_separated_string(clean_lora) 
+    def on_exec(self, node_id: str, tag: str, separator: str):
+        tag_list = normalize_input_list(tag)
+        separator = normalize_list_to_value(separator)
 
-        return (clean_lora, keywords_count,)
+        clean_loras = []
+        keyword_counts = []
+        log_entries = []
 
+        for tag_entry in tag_list:
+            tags_in_entry = re.findall(LORA_TAG_REGEX, tag_entry)
+
+            for t in tags_in_entry:
+                clean_lora = cleanse_lora_tag(t, separator)   
+                keywords_count = count_words_in_comma_separated_string(clean_lora)
+                clean_loras.append(clean_lora)
+                keyword_counts.append(keywords_count)
+
+                log_entries.append(f"""
+### LoRA Tag Entry:
+                                   
+- **Original Tag**: {t}
+- **Cleaned LoRA Tag**: {clean_lora}
+- **Number of Keywords**: {keywords_count}
+- **Keywords Extracted**: {clean_lora.split(', ') if clean_lora else '*No keywords extracted*'}
+                """)
+
+        log = f"""## Breakdown
+
+### Input Details:
+
+- **Original Tags**: {tag_list}
+- **Separator Used**: '{separator}'
+
+{''.join(log_entries)}
+        """
+
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}loratag2prompt", {
+            "node": node_id, 
+            "log": log
+        })
+
+        return (clean_loras, keyword_counts, clean_loras, keyword_counts)
+# endregion
+# region LF_Notify
 class LF_Notify:
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "any": (any, {"tooltip": "Pass-through data."}),
+                "any": (ANY, {"tooltip": "Pass-through data."}),
                 "title": ("STRING", {"default": "ComfyUI - LF Nodes", "tooltip": "The title displayed by the notification."}),
                 "message": ("STRING", {"default": "Your ComfyUI workflow sent you a notification!", "multiline": True, "tooltip": "The message displayed by the notification."}),
-                "on_click_action": (["None", "Focus tab", "Interrupt", "Interrupt and queue", "Queue prompt"], {"tooltip": "Action triggered when clicking on the notification."}),
+                "on_click_action": (NOTIFY_COMBO, {"tooltip": "Action triggered when clicking on the notification."}),
                 "silent": ("BOOLEAN", {"default": True, "tooltip": "The notifications will be displayed without triggering a sound effect."}),
             },
             "optional": {
                 "image": ("IMAGE", {"tooltip": "Image displayed in the notification."}),
                 "tag": ("STRING", {"default": '', "tooltip": "Used to group notifications (old ones with the same tag will be replaced)."}),
             },
-            "hidden": {"node_id": "UNIQUE_ID"}
+            "hidden": { 
+                "node_id": "UNIQUE_ID"
+            }
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
-    INPUT_IS_LIST = (True, False, False, False, False, False, False)
-    OUTPUT_IS_LIST = (True,)
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    OUTPUT_IS_LIST = (False, True)
     OUTPUT_NODE = True
-    RETURN_NAMES = ("any",)
-    RETURN_TYPES = (any,)
+    RETURN_NAMES = ("any", "any_list")
+    RETURN_TYPES = (ANY, ANY)
 
-    def on_exec(self, node_id, any, on_click_action:str, title, message, silent, tag=None, image=None):
+    def on_exec(self, node_id: str, any, on_click_action: str, title: str, message: str, silent: bool, tag: str = None, image: torch.Tensor = None):
+        any = normalize_list_to_value(any)
+        on_click_action = normalize_list_to_value(on_click_action)
+        title = normalize_list_to_value(title)
+        message = normalize_list_to_value(message)
+        silent = normalize_list_to_value(silent)
+        tag = normalize_list_to_value(tag)
+        if isinstance(image, torch.Tensor):
+            image = normalize_input_image(image)
 
-        action_to_send = on_click_action[0] if isinstance(on_click_action, list) else on_click_action
-        silent_to_send = silent[0] if isinstance(silent, list) else silent
-        message_to_send = message[0] if isinstance(message, list) else message
-        title_to_send = title[0] if isinstance(title, list) else title
-        if image:
-            image = image[0] if isinstance(image, list) else image
-            image_to_send = "data:image/webp;base64," + tensor_to_base64(image)
-        else:
-            image_to_send = None
-        if tag:
-            tag_to_send = tag[0] if isinstance(tag, list) else tag
-        else:
-            tag_to_send = None
-
-        PromptServer.instance.send_sync("lf-notify", {
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}notify", {
             "node": node_id, 
-            "title": title_to_send,
-            "message": message_to_send,
-            "action": action_to_send.lower(),
-            "image": image_to_send,
-            "silent": silent_to_send,
-            "tag": tag_to_send
+            "title": title,
+            "message": message,
+            "action": on_click_action.lower(),
+            "image": f"{BASE64_PNG_PREFIX}{tensor_to_base64(image[0])}" if image != None else None,
+            "silent": silent,
+            "tag": tag
         })
 
-        return (any,)
-
+        return (any, any)
+# endregion
+# region Mappings
 NODE_CLASS_MAPPINGS = {
     "LF_CivitAIMetadataSetup": LF_CivitAIMetadataSetup,
     "LF_ControlPanel": LF_ControlPanel,
@@ -420,3 +456,4 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_LoraTag2Prompt": "Convert LoRA tag to prompt",
     "LF_Notify": "Notify",
 }
+# endregion

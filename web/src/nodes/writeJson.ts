@@ -7,7 +7,10 @@ import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 const NAME = NodeName.writeJson;
 
 export const writeJsonFactory = {
-  eventHandler: (event: CustomEvent<WriteJSONPayload>, addW: BaseWidgetCallback) => {
+  eventHandler: (
+    event: CustomEvent<WriteJSONPayload>,
+    addW: BaseWidgetCallback<CustomWidgetName.jsonInput>,
+  ) => {
     const name = EventName.writeJson;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 

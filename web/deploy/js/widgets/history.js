@@ -1,7 +1,6 @@
-import { LogSeverity } from '../types/manager.js';
 import { NodeName } from '../types/nodes.js';
-import { ComfyWidgetName, CustomWidgetName } from '../types/widgets.js';
-import { createDOMWidget, getLFManager, getWidget, deserializeValue } from '../utils/common.js';
+import { ComfyWidgetName, CustomWidgetName, } from '../types/widgets.js';
+import { createDOMWidget, getWidget, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-history';
 const TYPE = CustomWidgetName.history;
 export const historyFactory = {
@@ -16,21 +15,13 @@ export const historyFactory = {
                 return list;
             },
             getValue() {
-                const nodes = list?.kulData?.nodes;
-                if (nodes?.length) {
-                    return JSON.stringify(list.kulData);
-                }
-                return '';
+                return list?.kulData || {};
             },
             setValue(value) {
-                try {
-                    const dataset = deserializeValue(value).parsedJson;
-                    list.kulData = dataset;
-                }
-                catch (error) {
-                    getLFManager().log('Error when setting value!', { error, list }, LogSeverity.Error);
-                    list.kulData = null;
-                }
+                const callback = (_, u) => {
+                    list.kulData = u.parsedJson || {};
+                };
+                normalizeValue(value, callback, TYPE);
             },
         };
     },
@@ -67,6 +58,7 @@ const handleEvent = (e, comfyNode) => {
         const floatW = getWidget(comfyNode, ComfyWidgetName.float);
         const intW = getWidget(comfyNode, ComfyWidgetName.integer);
         const numberW = getWidget(comfyNode, ComfyWidgetName.number);
+        const seedW = getWidget(comfyNode, ComfyWidgetName.seed);
         const comboW = getWidget(comfyNode, ComfyWidgetName.combo);
         const stringW = getWidget(comfyNode, ComfyWidgetName.string);
         switch (comfyNode.comfyClass) {
@@ -82,11 +74,15 @@ const handleEvent = (e, comfyNode) => {
                 }
                 break;
             case NodeName.integer:
+            case NodeName.sequentialSeedsGenerator:
                 if (numberW) {
                     numberW.value = Number(node.value).valueOf();
                 }
                 else if (intW) {
                     intW.value = Number(node.value).valueOf();
+                }
+                else if (seedW) {
+                    seedW.value = Number(node.value).valueOf();
                 }
                 break;
             case NodeName.samplerSelector:

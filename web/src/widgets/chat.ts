@@ -1,31 +1,42 @@
 import { LogSeverity } from '../types/manager';
 import { NodeName } from '../types/nodes';
-import { ChatWidgetOptions, CustomWidgetName } from '../types/widgets';
-import { createDOMWidget, findWidget, getLFManager } from '../utils/common';
+import {
+  ChatWidgetFactory,
+  CustomWidgetDeserializedValuesMap,
+  CustomWidgetName,
+  NormalizeValueCallback,
+} from '../types/widgets';
+import { createDOMWidget, findWidget, getLFManager, normalizeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-chat';
 const TYPE = CustomWidgetName.chat;
 
-export const chatFactory = {
+export const chatFactory: ChatWidgetFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
     chat: `${BASE_CSS_CLASS}__widget`,
   },
-  options: (chat: HTMLKulChatElement) => {
+  options: (chat) => {
     return {
       hideOnZoom: false,
       getComp() {
         return chat;
       },
       getValue() {
-        return chat?.dataset.history;
+        return chat?.dataset.history || '';
       },
-      setValue(history) {
-        chat.setHistory(history);
+      setValue(value) {
+        const callback: NormalizeValueCallback<
+          CustomWidgetDeserializedValuesMap<typeof TYPE> | string
+        > = (v) => {
+          chat.setHistory(v);
+        };
+
+        normalizeValue(value, callback, TYPE);
       },
-    } as ChatWidgetOptions;
+    };
   },
-  render: (node: NodeType, name: CustomWidgetName) => {
+  render: (node, name) => {
     const w = findWidget(node, TYPE);
     if (findWidget(node, TYPE) && node.comfyClass === NodeName.llmChat) {
       return w.element;

@@ -1,42 +1,43 @@
 import { KulDataDataset, KulListEventPayload } from '../types/ketchup-lite/components';
-import { LogSeverity } from '../types/manager';
 import { NodeName } from '../types/nodes';
-import { ComfyWidgetName, CustomWidgetName, HistoryWidgetOptions } from '../types/widgets';
-import { createDOMWidget, getLFManager, getWidget, deserializeValue } from '../utils/common';
+import {
+  ComfyWidgetName,
+  CustomWidgetDeserializedValuesMap,
+  CustomWidgetName,
+  HistoryWidgetFactory,
+  NormalizeValueCallback,
+} from '../types/widgets';
+import { createDOMWidget, getWidget, normalizeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-history';
 const TYPE = CustomWidgetName.history;
 
-export const historyFactory = {
+export const historyFactory: HistoryWidgetFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
     history: `${BASE_CSS_CLASS}__widget`,
   },
-  options: (list: HTMLKulListElement) => {
+  options: (list) => {
     return {
       hideOnZoom: true,
       getComp() {
         return list;
       },
       getValue() {
-        const nodes = list?.kulData?.nodes;
-        if (nodes?.length) {
-          return JSON.stringify(list.kulData);
-        }
-        return '';
+        return list?.kulData || {};
       },
       setValue(value) {
-        try {
-          const dataset = deserializeValue(value).parsedJson as KulDataDataset;
-          list.kulData = dataset;
-        } catch (error) {
-          getLFManager().log('Error when setting value!', { error, list }, LogSeverity.Error);
-          list.kulData = null;
-        }
+        const callback: NormalizeValueCallback<
+          CustomWidgetDeserializedValuesMap<typeof TYPE> | string
+        > = (_, u) => {
+          list.kulData = (u.parsedJson as KulDataDataset) || {};
+        };
+
+        normalizeValue(value, callback, TYPE);
       },
-    } as HistoryWidgetOptions;
+    };
   },
-  render: (node: NodeType, name: CustomWidgetName) => {
+  render: (node, name) => {
     const wrapper = document.createElement('div');
     const content = document.createElement('div');
     const history = document.createElement('kul-list');
@@ -75,6 +76,7 @@ const handleEvent = (e: CustomEvent<KulListEventPayload>, comfyNode: NodeType) =
     const floatW = getWidget(comfyNode, ComfyWidgetName.float);
     const intW = getWidget(comfyNode, ComfyWidgetName.integer);
     const numberW = getWidget(comfyNode, ComfyWidgetName.number);
+    const seedW = getWidget(comfyNode, ComfyWidgetName.seed);
     const comboW = getWidget(comfyNode, ComfyWidgetName.combo);
     const stringW = getWidget(comfyNode, ComfyWidgetName.string);
 
@@ -90,10 +92,13 @@ const handleEvent = (e: CustomEvent<KulListEventPayload>, comfyNode: NodeType) =
         }
         break;
       case NodeName.integer:
+      case NodeName.sequentialSeedsGenerator:
         if (numberW) {
           numberW.value = Number(node.value).valueOf();
         } else if (intW) {
           intW.value = Number(node.value).valueOf();
+        } else if (seedW) {
+          seedW.value = Number(node.value).valueOf();
         }
         break;
       case NodeName.samplerSelector:

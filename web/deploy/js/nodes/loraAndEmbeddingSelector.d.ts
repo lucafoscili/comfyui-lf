@@ -1,6 +1,6 @@
 import { LoraAndEmbeddingSelectorPayload } from '../types/events';
-import { CardWidgetSetter, type BaseWidgetCallback } from '../types/widgets';
+import { CardWidgetSetter, CustomWidgetName, type BaseWidgetCallback } from '../types/widgets';
 export declare const loraAndEmbeddingSelectorFactory: {
-    eventHandler: (event: CustomEvent<LoraAndEmbeddingSelectorPayload>, addW: BaseWidgetCallback) => void;
-    register: (setW: CardWidgetSetter, addW: BaseWidgetCallback) => void;
+    eventHandler: (event: CustomEvent<LoraAndEmbeddingSelectorPayload>, addW: BaseWidgetCallback<CustomWidgetName.card>) => void;
+    register: (setW: CardWidgetSetter, addW: BaseWidgetCallback<CustomWidgetName.card>) => void;
 };

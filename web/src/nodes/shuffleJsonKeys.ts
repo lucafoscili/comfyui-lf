@@ -7,7 +7,10 @@ import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 const NAME = NodeName.shuffleJsonKeys;
 
 export const shuffleJsonKeysFactory = {
-  eventHandler: (event: CustomEvent<ShuffleJSONKeysPayload>, addW: BaseWidgetCallback) => {
+  eventHandler: (
+    event: CustomEvent<ShuffleJSONKeysPayload>,
+    addW: BaseWidgetCallback<CustomWidgetName.code>,
+  ) => {
     const name = EventName.shuffleJsonKeys;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
@@ -19,7 +22,7 @@ export const shuffleJsonKeysFactory = {
       getApiRoutes().redraw();
     }
   },
-  register: (setW: CodeWidgetSetter, addW: BaseWidgetCallback) => {
+  register: (setW: CodeWidgetSetter, addW: BaseWidgetCallback<CustomWidgetName.code>) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

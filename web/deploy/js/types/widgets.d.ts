@@ -1,11 +1,29 @@
 import { KulDataDataset, KulMessengerConfig, KulMessengerDataset } from './ketchup-lite/components';
 import { AnalyticsType } from './manager';
-export type BaseWidgetCallback = <T extends CustomWidgetName>(node: NodeType, name: T) => {
+import { NodeName } from './nodes';
+export type UnescapeJSONPayload = {
+    validJson: boolean;
+    parsedJson?: {};
+    unescapedStr: string;
+};
+export type NormalizeValueCallback<V extends CustomWidgetDeserializedValuesMap<CustomWidgetName>> = (origValue: V, unescaped: UnescapeJSONPayload) => void;
+export type BaseWidgetCallback<T extends CustomWidgetName> = (node: NodeType, name: T) => {
     widget: Widget;
 };
 export type ComfyWidgetCallback = <T extends ComfyWidgetName>(node: NodeType, name: T) => {
     widget: Widget;
 };
+export interface BaseWidgetFactory<T extends CustomWidgetOptions> {
+    cssClasses: Record<string, string>;
+    options: BaseWidgetOptionsCallback<T>;
+    render: BaseWidgetCallback<CustomWidgetName>;
+}
+export interface BaseWidgetOptions<V extends CustomWidgetDeserializedValuesMap<CustomWidgetName>> {
+    hideOnZoom: boolean;
+    getValue: () => V;
+    setValue(value: string | V): void;
+}
+export type BaseWidgetOptionsCallback<T extends CustomWidgetOptions> = (...args: any[]) => T;
 export type ComfyWidgetMap = {
     [ComfyWidgetName.boolean]: Widget;
     [ComfyWidgetName.combo]: Widget;
@@ -14,6 +32,7 @@ export type ComfyWidgetMap = {
     [ComfyWidgetName.integer]: Widget;
     [ComfyWidgetName.json]: Widget;
     [ComfyWidgetName.number]: Widget;
+    [ComfyWidgetName.seed]: Widget;
     [ComfyWidgetName.string]: Widget;
 };
 export declare enum ComfyWidgetName {
@@ -24,6 +43,7 @@ export declare enum ComfyWidgetName {
     integer = "INTEGER",
     json = "JSON",
     number = "NUMBER",
+    seed = "SEED",
     string = "STRING"
 }
 export type CustomWidgetMap = {
@@ -64,35 +84,76 @@ export declare enum CustomWidgetName {
     tree = "KUL_TREE",
     upload = "KUL_UPLOAD"
 }
+export type CustomWidgetDeserializedValues = BooleanViewerWidgetDeserializedValue | CardWidgetDeserializedValue | CardsWithChipWidgetDeserializedValue | ChatWidgetValueDeserializedValue | ChipWidgetValueDeserializedValue | CodeWidgetValueDeserializedValue | CompareWidgetValueDeserializedValue | ControlPanelWidgetDeserializedValue | CountBarChartWidgetDeserializedValue | HistoryWidgetValuetDeserializedValue | ImagePreviewWidgetDeserializedValue | JsonInputWidgetDeserializedValue | MessengerWidgetDeserializedValue | RollViewerWidgetDeserializedValue | TabBarChartWidgetDeserializedValue | TreeWidgetValueDeserializedValue | UploadWidgetDeserializedValue;
+export type CustomWidgetDeserializedValuesMap<Name extends CustomWidgetName> = {
+    [CustomWidgetName.booleanViewer]: BooleanViewerWidgetDeserializedValue;
+    [CustomWidgetName.card]: CardWidgetDeserializedValue;
+    [CustomWidgetName.cardsWithChip]: CardsWithChipWidgetDeserializedValue;
+    [CustomWidgetName.chat]: ChatWidgetValueDeserializedValue;
+    [CustomWidgetName.chip]: ChipWidgetValueDeserializedValue;
+    [CustomWidgetName.code]: CodeWidgetValueDeserializedValue;
+    [CustomWidgetName.compare]: CompareWidgetValueDeserializedValue;
+    [CustomWidgetName.controlPanel]: ControlPanelWidgetDeserializedValue;
+    [CustomWidgetName.countBarChart]: CountBarChartWidgetDeserializedValue;
+    [CustomWidgetName.history]: HistoryWidgetValuetDeserializedValue;
+    [CustomWidgetName.imagePreview]: ImagePreviewWidgetDeserializedValue;
+    [CustomWidgetName.jsonInput]: JsonInputWidgetDeserializedValue;
+    [CustomWidgetName.messenger]: MessengerWidgetDeserializedValue;
+    [CustomWidgetName.rollViewer]: RollViewerWidgetDeserializedValue;
+    [CustomWidgetName.tabBarChart]: TabBarChartWidgetDeserializedValue;
+    [CustomWidgetName.tree]: TreeWidgetValueDeserializedValue;
+    [CustomWidgetName.upload]: UploadWidgetDeserializedValue;
+}[Name];
 export type CustomWidgetOptions = BooleanViewerWidgetOptions | CardWidgetOptions | CardsWithChipWidgetOptions | ChatWidgetOptions | ChipWidgetOptions | CodeWidgetOptions | CompareWidgetOptions | ControlPanelWidgetOptions | CountBarChartWidgetOptions | HistoryWidgetOptions | ImagePreviewWidgetOptions | JsonInputWidgetOptions | MessengerWidgetOptions | RollViewerWidgetOptions | TabBarChartWidgetOptions | TreeWidgetOptions | UploadWidgetOptions;
+export type CustomWidgetOptionsCallbacks = BooleanViewerWidgetOptionsCallback | CardWidgetOptionsCallback | ChatWidgetOptionsCallback | ChipWidgetOptionsCallback | CodeWidgetOptionsCallback | CompareWidgetOptionsCallback | ControlPanelWidgetOptionsCallback | HistoryWidgetOptionsCallback | ImagePreviewWidgetOptionsCallback | JsonInputWidgetOptionsCallback | MessengerWidgetOptionsCallback | RollViewerWidgetOptionsCallback | TabBarChartWidgetOptionsCallback | TreeWidgetOptionsCallback | UploadWidgetOptionsCallback;
+export type CustomWidgetOptionsCallbacksMap<Name extends CustomWidgetName> = {
+    [CustomWidgetName.booleanViewer]: BooleanViewerWidgetOptionsCallback;
+    [CustomWidgetName.card]: CardWidgetOptionsCallback;
+    [CustomWidgetName.cardsWithChip]: CardsWithChipWidgetOptionsCallback;
+    [CustomWidgetName.chat]: ChatWidgetOptionsCallback;
+    [CustomWidgetName.chip]: ChipWidgetOptionsCallback;
+    [CustomWidgetName.code]: CodeWidgetOptionsCallback;
+    [CustomWidgetName.compare]: CompareWidgetOptionsCallback;
+    [CustomWidgetName.controlPanel]: ControlPanelWidgetOptionsCallback;
+    [CustomWidgetName.countBarChart]: CountBarChartWidgetOptionsCallback;
+    [CustomWidgetName.history]: HistoryWidgetOptionsCallback;
+    [CustomWidgetName.imagePreview]: ImagePreviewWidgetOptionsCallback;
+    [CustomWidgetName.jsonInput]: JsonInputWidgetOptionsCallback;
+    [CustomWidgetName.messenger]: MessengerWidgetOptionsCallback;
+    [CustomWidgetName.rollViewer]: RollViewerWidgetOptionsCallback;
+    [CustomWidgetName.tabBarChart]: TabBarChartWidgetOptionsCallback;
+    [CustomWidgetName.tree]: TreeWidgetOptionsCallback;
+    [CustomWidgetName.upload]: UploadWidgetOptionsCallback;
+}[Name];
 export interface BooleanViewerWidget extends Widget {
     options: BooleanViewerWidgetOptions;
     type: [CustomWidgetName.booleanViewer];
 }
-export interface BooleanViewerWidgetOptions {
-    hideOnZoom: boolean;
-    getComp(): HTMLKulTextfieldElement;
-    getValue(): BooleanViewerWidgetValue;
-    setValue(value: BooleanViewerWidgetValue): void;
+export interface BooleanViewerWidgetFactory extends BaseWidgetFactory<BooleanViewerWidgetOptions> {
+    options: BooleanViewerWidgetOptionsCallback;
 }
-export declare type BooleanViewerWidgetSetter = () => {
-    [CustomWidgetName.booleanViewer]: BaseWidgetCallback;
+export type BooleanViewerWidgetOptionsCallback = (textfield: HTMLKulTextfieldElement) => BooleanViewerWidgetOptions;
+export interface BooleanViewerWidgetOptions extends BaseWidgetOptions<BooleanViewerWidgetDeserializedValue> {
+    getComp(): HTMLKulTextfieldElement;
+}
+export type BooleanViewerWidgetSetter = () => {
+    [CustomWidgetName.booleanViewer]: BaseWidgetCallback<CustomWidgetName.booleanViewer>;
 };
-export type BooleanViewerWidgetValue = string;
+export type BooleanViewerWidgetDeserializedValue = string;
 export interface CardWidget extends Widget {
     options: CardWidgetOptions;
     type: [CustomWidgetName.card];
 }
-export interface CardWidgetOptions {
-    hideOnZoom: boolean;
+export interface CardWidgetFactory extends BaseWidgetFactory<CardWidgetOptions> {
+    options: CardWidgetOptionsCallback;
+}
+export type CardWidgetOptionsCallback = (grid: HTMLDivElement) => CardWidgetOptions;
+export interface CardWidgetOptions extends BaseWidgetOptions<CardWidgetDeserializedValue> {
     getComp(): HTMLKulCardElement[];
-    getValue(): CardWidgetValue;
-    setValue(value: CardWidgetValue): void;
 }
 export type CardWidgetSetter = () => {
-    [CustomWidgetName.card]: BaseWidgetCallback;
+    [CustomWidgetName.card]: BaseWidgetCallback<CustomWidgetName.card>;
 };
-export type CardWidgetValue = string;
 export type CardWidgetDeserializedValue = {
     propsArray: Partial<HTMLKulCardElement>[];
     template?: string;
@@ -101,19 +162,19 @@ export interface CardsWithChipWidget extends Widget {
     options: CardsWithChipWidgetOptions;
     type: [CustomWidgetName.cardsWithChip];
 }
-export interface CardsWithChipWidgetOptions {
-    hideOnZoom: boolean;
+export interface CardsWithChipWidgetFactory extends BaseWidgetFactory<CardsWithChipWidgetOptions> {
+    options: CardsWithChipWidgetOptionsCallback;
+}
+export type CardsWithChipWidgetOptionsCallback = (grid: HTMLDivElement) => CardsWithChipWidgetOptions;
+export interface CardsWithChipWidgetOptions extends BaseWidgetOptions<CardsWithChipWidgetDeserializedValue> {
     getComp(): {
         cards: HTMLKulCardElement[];
         chip: HTMLKulChipElement;
     };
-    getValue(): CardsWithChipWidgetValue;
-    setValue(value: CardsWithChipWidgetValue): void;
 }
 export type CardsWithChipWidgetSetter = () => {
-    [CustomWidgetName.cardsWithChip]: BaseWidgetCallback;
+    [CustomWidgetName.cardsWithChip]: BaseWidgetCallback<CustomWidgetName.cardsWithChip>;
 };
-export type CardsWithChipWidgetValue = string;
 export type CardsWithChipWidgetDeserializedValue = {
     cardPropsArray: Partial<HTMLKulCardElement>[];
     chipDataset: KulDataDataset;
@@ -122,106 +183,133 @@ export interface ChatWidget extends Widget {
     options: ChatWidgetOptions;
     type: [CustomWidgetName.chat];
 }
-export interface ChatWidgetOptions {
-    hideOnZoom: boolean;
+export interface ChatWidgetFactory extends BaseWidgetFactory<ChatWidgetOptions> {
+    options: ChatWidgetOptionsCallback;
+}
+export type ChatWidgetOptionsCallback = (chat: HTMLKulChatElement) => ChatWidgetOptions;
+export interface ChatWidgetOptions extends BaseWidgetOptions<ChatWidgetValueDeserializedValue> {
     getComp(): HTMLKulChatElement;
-    getValue(): void;
-    setValue(history: string): void;
 }
 export type ChatWidgetSetter = () => {
-    [CustomWidgetName.chat]: BaseWidgetCallback;
+    [CustomWidgetName.chat]: BaseWidgetCallback<CustomWidgetName.chat>;
 };
-export type ChatWidgetValue = string;
+export type ChatWidgetValueDeserializedValue = string;
 export interface ChipWidget extends Widget {
     options: ChipWidgetOptions;
     type: [CustomWidgetName.chip];
 }
-export interface ChipWidgetOptions {
-    hideOnZoom: boolean;
-    getComp(): HTMLKulChipElement;
-    getValue(): ChipWidgetValue;
-    setValue(value: ChipWidgetValue): void;
+export interface ChipWidgetFactory extends BaseWidgetFactory<ChipWidgetOptions> {
+    options: ChipWidgetOptionsCallback;
 }
-export declare type ChipWidgetSetter = () => {
-    [CustomWidgetName.chip]: BaseWidgetCallback;
+export type ChipWidgetOptionsCallback = (chip: HTMLKulChipElement) => ChipWidgetOptions;
+export interface ChipWidgetOptions extends BaseWidgetOptions<ChipWidgetValueDeserializedValue> {
+    getComp(): HTMLKulChipElement;
+}
+export type ChipWidgetSetter = () => {
+    [CustomWidgetName.chip]: BaseWidgetCallback<CustomWidgetName.chip>;
 };
-export type ChipWidgetValue = string;
+export type ChipWidgetValueDeserializedValue = string;
 export interface CodeWidget extends Widget {
     options: CodeWidgetOptions;
     type: [CustomWidgetName.code];
 }
-export interface CodeWidgetOptions {
-    hideOnZoom: boolean;
+export interface CodeWidgetFactory extends BaseWidgetFactory<CodeWidgetOptions> {
+    options: CodeWidgetOptionsCallback;
+}
+export type CodeWidgetOptionsCallback = (code: HTMLKulCodeElement) => CodeWidgetOptions;
+export interface CodeWidgetOptions extends BaseWidgetOptions<CodeWidgetValueDeserializedValue> {
     getComp(): HTMLKulCodeElement;
-    getValue(): CodeWidgetValue;
-    setValue(value: CodeWidgetValue): void;
 }
 export type CodeWidgetSetter = () => {
-    [CustomWidgetName.code]: BaseWidgetCallback;
+    [CustomWidgetName.code]: BaseWidgetCallback<CustomWidgetName.code>;
 };
-export type CodeWidgetValue = string;
+export type CodeWidgetValueDeserializedValue = string;
 export interface CompareWidget extends Widget {
     options: CompareWidgetOptions;
     type: [CustomWidgetName.compare];
 }
-export interface CompareWidgetOptions {
-    hideOnZoom: boolean;
+export interface CompareWidgetFactory extends BaseWidgetFactory<CompareWidgetOptions> {
+    options: CompareWidgetOptionsCallback;
+}
+export type CompareWidgetOptionsCallback = (compare: HTMLKulCompareElement) => CompareWidgetOptions;
+export interface CompareWidgetOptions extends BaseWidgetOptions<CompareWidgetValueDeserializedValue> {
     getComp(): HTMLKulCompareElement;
-    getValue(): CompareWidgetValue;
-    setValue(value: CompareWidgetValue): void;
 }
 export type CompareWidgetSetter = () => {
-    [CustomWidgetName.compare]: BaseWidgetCallback;
+    [CustomWidgetName.compare]: BaseWidgetCallback<CustomWidgetName.compare>;
 };
-export type CompareWidgetValue = string;
+export type CompareWidgetValueDeserializedValue = KulDataDataset;
 export interface ControlPanelWidget extends Widget {
     options: ControlPanelWidgetOptions;
     type: [CustomWidgetName.controlPanel];
 }
-export interface ControlPanelWidgetOptions {
-    getValue(): ControlPanelWidgetValue;
-    setValue(value: ControlPanelWidgetValue): void;
+export interface ControlPanelWidgetFactory extends BaseWidgetFactory<ControlPanelWidgetOptions> {
+    options: ControlPanelWidgetOptionsCallback;
+}
+export type ControlPanelWidgetOptionsCallback = () => ControlPanelWidgetOptions;
+export interface ControlPanelWidgetOptions extends BaseWidgetOptions<ControlPanelWidgetDeserializedValue> {
 }
 export type ControlPanelWidgetSetter = () => {
-    [CustomWidgetName.controlPanel]: BaseWidgetCallback;
+    [CustomWidgetName.controlPanel]: BaseWidgetCallback<CustomWidgetName.controlPanel>;
 };
 export type ControlPanelWidgetDeserializedValue = {
     backup: boolean;
     debug: boolean;
     themes: string;
 };
-export type ControlPanelWidgetValue = string;
+export interface CountBarChartWidget extends Widget {
+    options: CountBarChartWidgetOptions;
+    type: [CustomWidgetName.countBarChart];
+}
+export interface CountBarChartWidgetFactory extends BaseWidgetFactory<CountBarChartWidgetOptions> {
+    options: CountBarChartWidgetOptionsCallback;
+}
+export type CountBarChartWidgetOptionsCallback = (chart: HTMLKulChartElement, chip: HTMLKulChipElement, button: HTMLKulButtonElement) => CountBarChartWidgetOptions;
+export interface CountBarChartWidgetOptions extends BaseWidgetOptions<CountBarChartWidgetDeserializedValue> {
+    getComp(): {
+        chart: HTMLKulChartElement;
+        chip: HTMLKulChipElement;
+    };
+}
+export type CountBarChartWidgetSetter = () => {
+    [CustomWidgetName.countBarChart]: BaseWidgetCallback<CustomWidgetName.countBarChart>;
+};
+export type CountBarChartWidgetDeserializedValue = {
+    chartDataset: KulDataDataset;
+    chipDataset: KulDataDataset;
+};
 export interface HistoryWidget extends Widget {
     options: HistoryWidgetOptions;
     type: [CustomWidgetName.history];
 }
-export interface HistoryWidgetOptions {
-    hideOnZoom: boolean;
-    getComp(): HTMLKulListElement;
-    getValue(): HistoryWidgetValue;
-    setValue(value: HistoryWidgetValue): void;
+export interface HistoryWidgetFactory extends BaseWidgetFactory<HistoryWidgetOptions> {
+    options: HistoryWidgetOptionsCallback;
 }
-export declare type HistoryWidgetSetter = () => {
-    [CustomWidgetName.history]: BaseWidgetCallback;
+export type HistoryWidgetOptionsCallback = (list: HTMLKulListElement) => HistoryWidgetOptions;
+export interface HistoryWidgetOptions extends BaseWidgetOptions<HistoryWidgetValuetDeserializedValue> {
+    getComp(): HTMLKulListElement;
+}
+export type HistoryWidgetSetter = () => {
+    [CustomWidgetName.history]: BaseWidgetCallback<CustomWidgetName.history>;
 };
 export type HistoryWidgetValuetDeserializedValue = KulDataDataset;
-export type HistoryWidgetValue = string;
 export interface ImagePreviewWidget extends Widget {
     options: ImagePreviewWidgetOptions;
     type: [CustomWidgetName.imagePreview];
 }
-export interface ImagePreviewWidgetOptions {
-    hideOnZoom: boolean;
-    getValue(): ImagePreviewWidgetValue;
-    selectable: boolean;
-    setValue(value: ImagePreviewWidgetValue): void;
+export interface ImagePreviewWidgetFactory extends BaseWidgetFactory<ImagePreviewWidgetOptions> {
+    options: ImagePreviewWidgetOptionsCallback;
 }
-export declare type ImagePreviewWidgetSetter = () => {
-    [CustomWidgetName.imagePreview]: BaseWidgetCallback;
+export type ImagePreviewWidgetOptionsCallback = (domWidget: HTMLDivElement, selectable: boolean) => ImagePreviewWidgetOptions;
+export interface ImagePreviewWidgetOptions extends BaseWidgetOptions<ImagePreviewWidgetDeserializedValue> {
+    selectable: boolean;
+}
+export type ImagePreviewWidgetSetter = () => {
+    [CustomWidgetName.imagePreview]: BaseWidgetCallback<CustomWidgetName.imagePreview>;
 };
-export interface ImagePreviewWidgetValue {
-    fileNames: string[];
-    images: string[];
+export interface ImagePreviewWidgetDeserializedValue {
+    fileNames?: string[];
+    images?: string[];
     selectedIndex?: number;
     selectedName?: string;
 }
@@ -229,50 +317,31 @@ export interface JsonInputWidget extends Widget {
     options: JsonInputWidgetOptions;
     type: [CustomWidgetName.jsonInput];
 }
-export interface JsonInputWidgetOptions {
-    hideOnZoom: boolean;
-    getValue(): JsonInputWidgetValue;
-    setValue(value: JsonInputWidgetValue): void;
+export interface JsonInputWidgetFactory extends BaseWidgetFactory<JsonInputWidgetOptions> {
+    options: JsonInputWidgetOptionsCallback;
 }
-export declare type JsonInputWidgetSetter = () => {
-    [CustomWidgetName.jsonInput]: BaseWidgetCallback;
+export type JsonInputWidgetOptionsCallback = (textarea: HTMLTextAreaElement) => JsonInputWidgetOptions;
+export interface JsonInputWidgetOptions extends BaseWidgetOptions<JsonInputWidgetDeserializedValue> {
+}
+export type JsonInputWidgetSetter = () => {
+    [CustomWidgetName.jsonInput]: BaseWidgetCallback<CustomWidgetName.jsonInput>;
 };
 export type JsonInputWidgetDeserializedValue = Record<string, unknown>;
-export type JsonInputWidgetValue = string;
-export interface CountBarChartWidget extends Widget {
-    options: CountBarChartWidgetOptions;
-    type: [CustomWidgetName.countBarChart];
-}
-export interface CountBarChartWidgetOptions {
-    hideOnZoom: boolean;
-    getComp(): {
-        chart: HTMLKulChartElement;
-        chip: HTMLKulChipElement;
-    };
-    getValue(): CountBarChartWidgetValue;
-    setValue(value: CountBarChartWidgetValue): void;
-}
-export type CountBarChartWidgetSetter = () => {
-    [CustomWidgetName.countBarChart]: BaseWidgetCallback;
-};
-export type CountBarChartWidgetValue = string | {
-    chartDataset: KulDataDataset;
-    chipDataset: KulDataDataset;
-};
 export interface MessengerWidget extends Widget {
     options: MessengerWidgetOptions;
     type: [CustomWidgetName.messenger];
 }
-export interface MessengerWidgetOptions {
-    hideOnZoom: boolean;
+export interface MessengerWidgetFactory extends BaseWidgetFactory<MessengerWidgetOptions> {
+    options: MessengerWidgetOptionsCallback;
+}
+export type MessengerWidgetOptionsCallback = (messenger: HTMLKulMessengerElement, placeholder: HTMLDivElement) => MessengerWidgetOptions;
+export interface MessengerWidgetOptions extends BaseWidgetOptions<MessengerWidgetDeserializedValue> {
     getComp(): HTMLKulMessengerElement;
-    getValue(): MessengerWidgetValue;
-    setValue(value: MessengerWidgetValue): void;
 }
 export type MessengerWidgetSetter = () => {
-    [CustomWidgetName.messenger]: BaseWidgetCallback;
+    [CustomWidgetName.messenger]: BaseWidgetCallback<CustomWidgetName.messenger>;
 };
-export type MessengerWidgetValue = string | {
+export type MessengerWidgetDeserializedValue = {
     dataset: KulMessengerDataset;
     config: KulMessengerConfig;
 };
@@ -280,64 +349,70 @@ export interface RollViewerWidget extends Widget {
     options: RollViewerWidgetOptions;
     type: [CustomWidgetName.rollViewer];
 }
-export interface RollViewerWidgetOptions {
-    hideOnZoom: boolean;
-    getComp(): HTMLKulProgressbarElement;
-    getValue(): RollViewerWidgetValue;
-    setValue(value: RollViewerWidgetValue): void;
+export interface RollViewerWidgetFactory extends BaseWidgetFactory<RollViewerWidgetOptions> {
+    options: RollViewerWidgetOptionsCallback;
 }
-export declare type RollViewerWidgetSetter = () => {
-    [CustomWidgetName.rollViewer]: BaseWidgetCallback;
+export type RollViewerWidgetOptionsCallback = (progressbar: HTMLKulProgressbarElement, nodeType: NodeType) => RollViewerWidgetOptions;
+export interface RollViewerWidgetOptions extends BaseWidgetOptions<RollViewerWidgetDeserializedValue> {
+    getComp(): HTMLKulProgressbarElement;
+}
+export type RollViewerWidgetSetter = () => {
+    [CustomWidgetName.rollViewer]: BaseWidgetCallback<CustomWidgetName.rollViewer>;
 };
 export type RollViewerWidgetDeserializedValue = {
     bool: boolean;
     roll: number;
 };
-export type RollViewerWidgetValue = string;
 export interface TabBarChartWidget extends Widget {
     options: TabBarChartWidgetOptions;
     type: [CustomWidgetName.tabBarChart];
 }
-export interface TabBarChartWidgetOptions {
-    hideOnZoom: boolean;
+export interface TabBarChartWidgetFactory extends BaseWidgetFactory<TabBarChartWidgetOptions> {
+    options: TabBarChartWidgetOptionsCallback;
+}
+export type TabBarChartWidgetOptionsCallback = (chart: HTMLKulChartElement, tabbar: HTMLKulTabbarElement, textfield: HTMLKulTextfieldElement, node: NodeName) => TabBarChartWidgetOptions;
+export interface TabBarChartWidgetOptions extends BaseWidgetOptions<TabBarChartWidgetDeserializedValue> {
     getComp(): {
         chart: HTMLKulChartElement;
         tabbar: HTMLKulTabbarElement;
     };
-    getValue(): TabBarChartWidgetValue;
     refresh(type: AnalyticsType): void;
-    setValue(value: TabBarChartWidgetValue): void;
 }
 export type TabBarChartWidgetSetter = () => {
-    [CustomWidgetName.tabBarChart]: BaseWidgetCallback;
+    [CustomWidgetName.tabBarChart]: BaseWidgetCallback<CustomWidgetName.tabBarChart>;
 };
-export type TabBarChartWidgetDeserializedValue = Record<string, KulDataDataset>;
-export type TabBarChartWidgetValue = string;
+export type TabBarChartWidgetDeserializedValue = {
+    directory?: string;
+} & {
+    [index: string]: KulDataDataset;
+};
 export interface TreeWidget extends Widget {
     options: TreeWidgetOptions;
     type: [CustomWidgetName.tree];
 }
-export interface TreeWidgetOptions {
-    hideOnZoom: boolean;
-    getComp(): HTMLKulTreeElement;
-    getValue(): TreeWidgetValue;
-    setValue(value: TreeWidgetValue): void;
+export interface TreeWidgetFactory extends BaseWidgetFactory<TreeWidgetOptions> {
+    options: TreeWidgetOptionsCallback;
 }
-export declare type TreeWidgetSetter = () => {
-    [CustomWidgetName.tree]: BaseWidgetCallback;
+export type TreeWidgetOptionsCallback = (tree: HTMLKulTreeElement) => TreeWidgetOptions;
+export interface TreeWidgetOptions extends BaseWidgetOptions<TreeWidgetValueDeserializedValue> {
+    getComp(): HTMLKulTreeElement;
+}
+export type TreeWidgetSetter = () => {
+    [CustomWidgetName.tree]: BaseWidgetCallback<CustomWidgetName.tree>;
 };
-export type TreeWidgetValue = string | KulDataDataset;
+export type TreeWidgetValueDeserializedValue = KulDataDataset;
 export interface UploadWidget extends Widget {
     options: UploadWidgetOptions;
     type: [CustomWidgetName.upload];
 }
-export interface UploadWidgetOptions {
-    hideOnZoom: boolean;
-    getComp(): HTMLKulUploadElement;
-    getValue(): UploadWidgetValue;
-    setValue(value: UploadWidgetValue): void;
+export interface UploadWidgetFactory extends BaseWidgetFactory<UploadWidgetOptions> {
+    options: UploadWidgetOptionsCallback;
 }
-export declare type UploadWidgetSetter = () => {
-    [CustomWidgetName.upload]: BaseWidgetCallback;
+export type UploadWidgetOptionsCallback = (upload: HTMLKulUploadElement) => UploadWidgetOptions;
+export interface UploadWidgetOptions extends BaseWidgetOptions<UploadWidgetDeserializedValue> {
+    getComp(): HTMLKulUploadElement;
+}
+export type UploadWidgetSetter = () => {
+    [CustomWidgetName.upload]: BaseWidgetCallback<CustomWidgetName.upload>;
 };
-export type UploadWidgetValue = string;
+export type UploadWidgetDeserializedValue = string;

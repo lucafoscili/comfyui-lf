@@ -100,7 +100,7 @@ export class LFWidgets {
             },
         };
         this.option = {
-            [CustomWidgetName.booleanViewer]: (booleanViewer) => booleanViewerFactory.options(booleanViewer),
+            [CustomWidgetName.booleanViewer]: (textfield) => booleanViewerFactory.options(textfield),
             [CustomWidgetName.card]: (grid) => cardFactory.options(grid),
             [CustomWidgetName.cardsWithChip]: (grid) => cardsWithChipFactory.options(grid),
             [CustomWidgetName.chat]: (chat) => chatFactory.options(chat),

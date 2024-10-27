@@ -1,6 +1,6 @@
 import { CivitAIMetadataSetupPayload } from '../types/events';
-import { type BaseWidgetCallback, type CodeWidgetSetter } from '../types/widgets';
+import { CustomWidgetName, type BaseWidgetCallback, type CodeWidgetSetter } from '../types/widgets';
 export declare const civitaiMetadataSetupFactory: {
-    eventHandler: (event: CustomEvent<CivitAIMetadataSetupPayload>, addW: BaseWidgetCallback) => void;
-    register: (setW: CodeWidgetSetter, addW: BaseWidgetCallback) => void;
+    eventHandler: (event: CustomEvent<CivitAIMetadataSetupPayload>, addW: BaseWidgetCallback<CustomWidgetName.code>) => void;
+    register: (setW: CodeWidgetSetter, addW: BaseWidgetCallback<CustomWidgetName.code>) => void;
 };

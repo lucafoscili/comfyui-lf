@@ -1,42 +1,47 @@
 import { LogSeverity } from '../types/manager';
 import { NodeName } from '../types/nodes';
-import { CustomWidgetName, JsonInputWidgetOptions } from '../types/widgets';
-import { createDOMWidget, findWidget, getLFManager, deserializeValue } from '../utils/common';
+import {
+  CustomWidgetDeserializedValuesMap,
+  CustomWidgetName,
+  JsonInputWidgetDeserializedValue,
+  JsonInputWidgetFactory,
+  NormalizeValueCallback,
+} from '../types/widgets';
+import { createDOMWidget, findWidget, getLFManager, normalizeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-jsoninput';
 const TYPE = CustomWidgetName.jsonInput;
 let VALIDATION_TIMEOUT: NodeJS.Timeout;
 
-export const jsonInputFactory = {
+export const jsonInputFactory: JsonInputWidgetFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
     widget: `${BASE_CSS_CLASS}__widget`,
     widgetError: `${BASE_CSS_CLASS}__widget--error`,
   },
-  options: (jsonInput: HTMLTextAreaElement) => {
+  options: (textarea) => {
     return {
       hideOnZoom: false,
       getValue() {
-        return jsonInput?.value;
-      },
-      setValue(value) {
-        if (jsonInput) {
-          try {
-            const { unescapedStr, validJson, parsedJson } = deserializeValue(value);
-            const parsedValue = validJson ? parsedJson : JSON.parse(unescapedStr);
-            jsonInput.value = JSON.stringify(parsedValue, null, 2);
-          } catch (error) {
-            getLFManager().log(
-              'Error setting WriteJSON value',
-              { error, value },
-              LogSeverity.Warning,
-            );
-          }
+        try {
+          return JSON.parse(textarea?.value || '{}') || {};
+        } catch (error) {
+          return { invalid_json: error };
         }
       },
-    } as JsonInputWidgetOptions;
+      setValue(value) {
+        const callback: NormalizeValueCallback<
+          CustomWidgetDeserializedValuesMap<typeof TYPE> | string
+        > = (_, u) => {
+          const parsedJson = u.parsedJson as JsonInputWidgetDeserializedValue;
+          textarea.value = JSON.stringify(parsedJson, null, 2) || '{}';
+        };
+
+        normalizeValue(value, callback, TYPE);
+      },
+    };
   },
-  render: (node: NodeType, name: CustomWidgetName) => {
+  render: (node, name) => {
     const w = findWidget(node, TYPE);
     if (findWidget(node, TYPE) && node.comfyClass === NodeName.writeJson) {
       return w.element;

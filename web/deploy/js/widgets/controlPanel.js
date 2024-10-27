@@ -1,5 +1,5 @@
 import { CustomWidgetName, } from '../types/widgets.js';
-import { createDOMWidget, deserializeValue, getApiRoutes, getKulManager, getLFManager, serializeValue, } from '../utils/common.js';
+import { createDOMWidget, getApiRoutes, getKulManager, getLFManager, normalizeValue, } from '../utils/common.js';
 import { handleKulEvent, sectionsFactory } from '../helpers/control-panel.js';
 const BASE_CSS_CLASS = 'lf-controlpanel';
 const TYPE = CustomWidgetName.controlPanel;
@@ -11,39 +11,41 @@ export const controlPanelFactory = {
     },
     options: () => {
         return {
+            hideOnZoom: false,
             getValue() {
-                return serializeValue({
-                    backup: getLFManager()?.isBackupEnabled(),
-                    debug: getLFManager()?.isDebug(),
-                    themes: getKulManager()?.theme.name,
-                });
+                return {
+                    backup: getLFManager().isBackupEnabled() || false,
+                    debug: getLFManager().isDebug() || false,
+                    themes: getKulManager()?.theme?.name || '',
+                };
             },
             setValue(value) {
-                const { backup, debug, themes } = deserializeValue(value)
-                    .parsedJson;
-                const set = () => {
-                    if (backup === true || backup === false) {
-                        getLFManager().toggleBackup(backup);
-                    }
-                    if (debug === true || debug === false) {
-                        getLFManager().toggleDebug(debug);
-                    }
-                    if (themes) {
-                        getKulManager().theme.set(themes);
-                    }
-                    return value;
-                };
-                const kulManager = getKulManager();
-                if (kulManager) {
-                    set();
-                }
-                else {
-                    const managerCb = () => {
-                        set();
-                        document.removeEventListener('kul-manager-ready', managerCb);
+                const callback = (_, u) => {
+                    const { backup, debug, themes } = u.parsedJson;
+                    const set = () => {
+                        if (backup === true || backup === false) {
+                            getLFManager().toggleBackup(backup);
+                        }
+                        if (debug === true || debug === false) {
+                            getLFManager().toggleDebug(debug);
+                        }
+                        if (themes) {
+                            getKulManager().theme.set(themes);
+                        }
+                        return value;
                     };
-                    document.addEventListener('kul-manager-ready', managerCb);
-                }
+                    if (getKulManager()) {
+                        set();
+                    }
+                    else {
+                        const managerCb = () => {
+                            set();
+                            document.removeEventListener('kul-manager-ready', managerCb);
+                        };
+                        document.addEventListener('kul-manager-ready', managerCb);
+                    }
+                };
+                normalizeValue(value, callback, TYPE);
             },
         };
     },

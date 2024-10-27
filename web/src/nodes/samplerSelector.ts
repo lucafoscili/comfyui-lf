@@ -8,7 +8,10 @@ import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 const NAME = NodeName.samplerSelector;
 
 export const samplerSelectorFactory = {
-  eventHandler: (event: CustomEvent<SamplerSelectorPayload>, addW: BaseWidgetCallback) => {
+  eventHandler: (
+    event: CustomEvent<SamplerSelectorPayload>,
+    addW: BaseWidgetCallback<CustomWidgetName.history>,
+  ) => {
     const name = EventName.samplerSelector;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
@@ -45,7 +48,7 @@ export const samplerSelectorFactory = {
       getApiRoutes().redraw();
     }
   },
-  register: (setW: HistoryWidgetSetter, addW: BaseWidgetCallback) => {
+  register: (setW: HistoryWidgetSetter, addW: BaseWidgetCallback<CustomWidgetName.history>) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

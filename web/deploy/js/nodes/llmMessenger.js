@@ -1,7 +1,7 @@
 import { LogSeverity } from '../types/manager.js';
 import { NodeName } from '../types/nodes.js';
 import { ComfyWidgetName, CustomWidgetName } from '../types/widgets.js';
-import { areJSONEqual, getApiRoutes, getCustomWidget, getInput, getLFManager, isValidJSON, deserializeValue, } from '../utils/common.js';
+import { areJSONEqual, getApiRoutes, getCustomWidget, getInput, getLFManager, isValidJSON, unescapeJson, } from '../utils/common.js';
 import { messengerFactory } from '../widgets/messenger.js';
 const NAME = NodeName.llmMessenger;
 export const llmMessengerFactory = {
@@ -28,7 +28,7 @@ export const llmMessengerFactory = {
                         const dataset = datasetW.options.getValue();
                         const messenger = messengerW.options.getComp();
                         try {
-                            const newData = deserializeValue(dataset).parsedJson;
+                            const newData = unescapeJson(dataset).parsedJson;
                             if (isValidJSON(newData) && isValidJSON(messenger.kulData)) {
                                 if (!areJSONEqual(newData, messenger.kulData)) {
                                     messenger.kulData = newData;

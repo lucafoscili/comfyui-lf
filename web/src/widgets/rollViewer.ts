@@ -1,91 +1,86 @@
-import { LogSeverity } from '../types/manager';
 import { NodeName } from '../types/nodes';
 import {
+  CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
+  NormalizeValueCallback,
   RollViewerWidgetDeserializedValue,
-  RollViewerWidgetOptions,
-  RollViewerWidgetValue,
+  RollViewerWidgetFactory,
 } from '../types/widgets';
-import { createDOMWidget, deserializeValue, getLFManager } from '../utils/common';
+import { createDOMWidget, normalizeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-rollviewer';
 const TYPE = CustomWidgetName.rollViewer;
 
-export const rollViewerFactory = {
+export const rollViewerFactory: RollViewerWidgetFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
   },
-  options: (rollViewer: HTMLKulProgressbarElement, nodeType: NodeType) => {
+  options: (progressbar: HTMLKulProgressbarElement, nodeType: NodeType) => {
     return {
-      hideOnZoom: true,
+      hideOnZoom: false,
       getComp() {
-        return rollViewer;
+        return progressbar;
       },
       getValue() {
-        const value = {
-          bool: rollViewer.kulLabel === 'true' ? true : false,
-          roll: rollViewer.kulValue,
+        return {
+          bool: progressbar.kulLabel === 'true' ? true : false,
+          roll: progressbar.kulValue || 0,
         };
-        return JSON.stringify(value);
       },
       setValue(value) {
-        try {
-          const parsedJson = deserializeValue(value)
-            .parsedJson as RollViewerWidgetDeserializedValue;
-          const { bool, roll } = parsedJson;
+        const callback: NormalizeValueCallback<
+          CustomWidgetDeserializedValuesMap<typeof TYPE> | string
+        > = (_, u) => {
+          const { bool, roll } = u.parsedJson as RollViewerWidgetDeserializedValue;
 
           const isFalse = !!(bool === false);
           const isTrue = !!(bool === true);
 
           switch (nodeType.comfyClass) {
             case NodeName.resolutionSwitcher:
-              rollViewer.kulLabel = '!';
+              progressbar.kulLabel = '!';
               if (isTrue) {
-                rollViewer.kulIcon = 'landscape';
+                progressbar.kulIcon = 'landscape';
               } else if (isFalse) {
-                rollViewer.kulIcon = 'portrait';
+                progressbar.kulIcon = 'portrait';
               } else {
-                rollViewer.kulLabel = 'Roll!';
+                progressbar.kulLabel = 'Roll!';
               }
               break;
             default:
-              rollViewer.classList.remove('kul-success');
-              rollViewer.classList.remove('kul-danger');
+              progressbar.classList.remove('kul-success');
+              progressbar.classList.remove('kul-danger');
               if (isTrue) {
-                rollViewer.classList.add('kul-success');
-                rollViewer.kulLabel = 'true';
+                progressbar.classList.add('kul-success');
+                progressbar.kulLabel = 'true';
               } else if (isFalse) {
-                rollViewer.classList.add('kul-danger');
-                rollViewer.kulLabel = 'false';
+                progressbar.classList.add('kul-danger');
+                progressbar.kulLabel = 'false';
               } else {
-                rollViewer.kulLabel = 'Roll!';
+                progressbar.kulLabel = 'Roll!';
               }
               break;
           }
 
-          rollViewer.title = 'Actual roll: ' + roll.toString();
-          rollViewer.kulValue = roll;
-        } catch (error) {
-          getLFManager().log(
-            'Error setting RollViewer value',
-            { error, value },
-            LogSeverity.Warning,
-          );
-        }
+          progressbar.title = 'Actual roll: ' + roll.toString();
+          progressbar.kulValue = roll;
+        };
+
+        normalizeValue(value, callback, TYPE);
       },
-    } as RollViewerWidgetOptions;
+    };
   },
-  render: (node: NodeType, name: CustomWidgetName) => {
+  render: (node, name) => {
     const wrapper = document.createElement('div');
     const content = document.createElement('div');
-    const rollViewer = document.createElement('kul-progressbar');
-    const options = rollViewerFactory.options(rollViewer, node);
+    const progressbar = document.createElement('kul-progressbar');
+    const options = rollViewerFactory.options(progressbar, node);
 
     content.classList.add(rollViewerFactory.cssClasses.content);
-    rollViewer.kulIsRadial = true;
-    rollViewer.kulLabel = 'Roll!';
+    progressbar.kulIsRadial = true;
+    progressbar.kulLabel = 'Roll!';
 
-    content.appendChild(rollViewer);
+    content.appendChild(progressbar);
     wrapper.appendChild(content);
 
     return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };

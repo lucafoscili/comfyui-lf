@@ -377,6 +377,13 @@ export class LFManager {
             nodes.eventHandlers.LF_Boolean(e, widgets.adders.KUL_HISTORY);
         });
         /*-------------------------------------------------------------------*/
+        /*         I n i t   C h a r a c t e r I m p e r s o n a t o r       */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_CharacterImpersonator(widgets.setters.KUL_CODE, widgets.adders.KUL_CODE);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.characterImpersonator, (e) => {
+            nodes.eventHandlers.LF_CharacterImpersonator(e, widgets.adders.KUL_CODE);
+        });
+        /*-------------------------------------------------------------------*/
         /*            I n i t   C h e c k p o i n t S e l e c t o r          */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_CheckpointSelector(widgets.setters.KUL_CARD, widgets.adders.KUL_CARD);
@@ -396,6 +403,13 @@ export class LFManager {
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_ClarityEffect(widgets.setters.KUL_COMPARE, widgets.adders.KUL_COMPARE);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.clarityEffect, (e) => {
             nodes.eventHandlers.LF_ClarityEffect(e, widgets.adders.KUL_COMPARE);
+        });
+        /*-------------------------------------------------------------------*/
+        /*               I n i t   C o m p a r e I m a g e s                 */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_CompareImages(widgets.setters.KUL_COMPARE, widgets.adders.KUL_COMPARE);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.compareImages, (e) => {
+            nodes.eventHandlers.LF_CompareImages(e, widgets.adders.KUL_COMPARE);
         });
         /*-------------------------------------------------------------------*/
         /*               I n i t   C o n t r o l   P a n e l                 */
@@ -465,6 +479,13 @@ export class LFManager {
             nodes.eventHandlers.LF_Float(e, widgets.adders.KUL_HISTORY);
         });
         /*-------------------------------------------------------------------*/
+        /*               I n i t   I m a g e C l a s s i f i e r             */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_ImageClassifier(widgets.setters.KUL_CODE, widgets.adders.KUL_CODE);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.imageClassifier, (e) => {
+            nodes.eventHandlers.LF_ImageClassifier(e, widgets.adders.KUL_CODE);
+        });
+        /*-------------------------------------------------------------------*/
         /*            I n i t   I m a g e L i s t F r o m J S O N            */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_ImageListFromJSON(widgets.setters.KUL_IMAGE_PREVIEW_B64);
@@ -491,6 +512,13 @@ export class LFManager {
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_Integer(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.integer, (e) => {
             nodes.eventHandlers.LF_Integer(e, widgets.adders.KUL_HISTORY);
+        });
+        /*-------------------------------------------------------------------*/
+        /*                   I n i t   I s L a n d s c a p e                 */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_IsLandscape(widgets.setters.KUL_TREE, widgets.adders.KUL_TREE);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.isLandscape, (e) => {
+            nodes.eventHandlers.LF_IsLandscape(e, widgets.adders.KUL_TREE);
         });
         /*-------------------------------------------------------------------*/
         /*               I n i t   K e y w o r d C o u n t e r               */
@@ -542,6 +570,20 @@ export class LFManager {
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_LoraAndEmbeddingSelector(widgets.setters.KUL_CARD, widgets.adders.KUL_CARD);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.loraAndEmbeddingSelector, (e) => {
             nodes.eventHandlers.LF_LoraAndEmbeddingSelector(e, widgets.adders.KUL_CARD);
+        });
+        /*-------------------------------------------------------------------*/
+        /*                  I n i t   L o r a 2 P r o m p t                  */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_Lora2Prompt(widgets.setters.KUL_CODE, widgets.adders.KUL_CODE);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.lora2Prompt, (e) => {
+            nodes.eventHandlers.LF_Lora2Prompt(e, widgets.adders.KUL_CODE);
+        });
+        /*-------------------------------------------------------------------*/
+        /*              I n i t   L o r a T a g 2 P r o m p t                */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_LoraTag2Prompt(widgets.setters.KUL_CODE, widgets.adders.KUL_CODE);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.loraTag2Prompt, (e) => {
+            nodes.eventHandlers.LF_LoraTag2Prompt(e, widgets.adders.KUL_CODE);
         });
         /*-------------------------------------------------------------------*/
         /*               I n i t   M a t h O p e r a t i o n                 */
@@ -614,6 +656,13 @@ export class LFManager {
             nodes.eventHandlers.LF_SaveImageForCivitAI(e, widgets.adders.KUL_IMAGE_PREVIEW_B64);
         });
         /*-------------------------------------------------------------------*/
+        /*                    I n i t   S a v e J S O N                      */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_SaveJSON(widgets.setters.KUL_TREE, widgets.adders.KUL_TREE);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.saveJson, (e) => {
+            nodes.eventHandlers.LF_SaveJSON(e, widgets.adders.KUL_TREE);
+        });
+        /*-------------------------------------------------------------------*/
         /*           I n i t   S c h e d u l e r S e l e c t o r             */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_SchedulerSelector(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
@@ -621,11 +670,32 @@ export class LFManager {
             nodes.eventHandlers.LF_SchedulerSelector(e, widgets.adders.KUL_HISTORY);
         });
         /*-------------------------------------------------------------------*/
+        /*     I n i t   S e q u e n t i a l S e e d s G e n e r a t o r     */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_SequentialSeedsGenerator(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.sequentialSeedsGenerator, (e) => {
+            nodes.eventHandlers.LF_SequentialSeedsGenerator(e, widgets.adders.KUL_HISTORY);
+        });
+        /*-------------------------------------------------------------------*/
         /*              I n i t   S h u f f l e J S O N K e y s              */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_ShuffleJSONKeys(widgets.setters.KUL_CODE, widgets.adders.KUL_CODE);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.shuffleJsonKeys, (e) => {
             nodes.eventHandlers.LF_ShuffleJSONKeys(e, widgets.adders.KUL_CODE);
+        });
+        /*-------------------------------------------------------------------*/
+        /*             I n i t   S o m e t h i n g 2 N u m b e r             */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_Something2Number(widgets.setters.KUL_CODE, widgets.adders.KUL_CODE);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.something2Number, (e) => {
+            nodes.eventHandlers.LF_Something2Number(e, widgets.adders.KUL_CODE);
+        });
+        /*-------------------------------------------------------------------*/
+        /*             I n i t   S o m e t h i n g 2 S t r i n g             */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_Something2String(widgets.setters.KUL_CODE, widgets.adders.KUL_CODE);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.something2String, (e) => {
+            nodes.eventHandlers.LF_Something2String(e, widgets.adders.KUL_CODE);
         });
         /*-------------------------------------------------------------------*/
         /*                 I n i t   S o r t J S O N K e y s                 */

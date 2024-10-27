@@ -7,16 +7,18 @@ import {
 import { AnalyticsType, LogSeverity } from '../types/manager';
 import { NodeName } from '../types/nodes';
 import {
-  TabBarChartWidgetOptions,
+  CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
+  NormalizeValueCallback,
   TabBarChartWidgetDeserializedValue,
+  TabBarChartWidgetFactory,
 } from '../types/widgets';
-import { createDOMWidget, deserializeValue, getLFManager } from '../utils/common';
+import { createDOMWidget, getLFManager, normalizeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-tabbarchart';
 const TYPE = CustomWidgetName.tabBarChart;
 
-export const tabBarChartFactory = {
+export const tabBarChartFactory: TabBarChartWidgetFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
     directory: `${BASE_CSS_CLASS}__directory`,
@@ -24,49 +26,52 @@ export const tabBarChartFactory = {
     grid: `${BASE_CSS_CLASS}__grid`,
     gridNoDirectory: `${BASE_CSS_CLASS}__grid--no-directory`,
     spinner: `${BASE_CSS_CLASS}__spinner`,
+    tabbar: `${BASE_CSS_CLASS}__tabbar`,
   },
-  options: (
-    chart: HTMLKulChartElement,
-    tabbar: HTMLKulTabbarElement,
-    textfield: HTMLKulTextfieldElement,
-    node: NodeName,
-  ) => {
+  options: (chart, tabbar, textfield, node) => {
     return {
-      hideOnZoom: true,
+      hideOnZoom: false,
       getComp() {
         return { chart, tabbar };
       },
       getValue: () => {
-        return chart.dataset.directory;
+        switch (node) {
+          case NodeName.usageStatistics:
+            return { directory: chart.dataset.directory || '' };
+          default:
+          case NodeName.imageHistogram:
+            return {};
+        }
       },
       setValue: (value) => {
-        if (value) {
+        const callback: NormalizeValueCallback<
+          CustomWidgetDeserializedValuesMap<typeof TYPE> | string
+        > = (_, u) => {
+          const parsedValue = u.parsedJson as TabBarChartWidgetDeserializedValue;
+
           switch (node) {
             case NodeName.imageHistogram:
-              const parsedValue = deserializeValue(value)
-                .parsedJson as TabBarChartWidgetDeserializedValue;
               for (const key in parsedValue) {
                 if (Object.prototype.hasOwnProperty.call(parsedValue, key)) {
                   const dataset = parsedValue[key];
-                  chart.kulData = dataset;
-                  tabbar.kulData = prepareTabbarDataset(parsedValue);
+                  chart.kulData = dataset || {};
+                  tabbar.kulData = prepareTabbarDataset(parsedValue) || {};
                   requestAnimationFrame(() => tabbar.setValue(0));
                 }
               }
-
               break;
             case NodeName.usageStatistics:
               getLFManager()
                 .getApiRoutes()
-                .analytics.get(value, 'usage')
+                .analytics.get(parsedValue.directory, 'usage')
                 .then((r) => {
                   if (r.status === 'success') {
                     if (r?.data && Object.entries(r.data).length > 0) {
                       const firstKey = Object.keys(r.data)[0];
-                      chart.dataset.directory = value;
-                      chart.kulData = r.data[firstKey];
-                      tabbar.kulData = prepareTabbarDataset(r.data);
-                      textfield.setValue(value);
+                      chart.dataset.directory = parsedValue.directory || '';
+                      chart.kulData = r.data[firstKey] || {};
+                      tabbar.kulData = prepareTabbarDataset(r.data) || {};
+                      textfield.setValue(parsedValue.directory);
                       requestAnimationFrame(() => tabbar.setValue(0));
                     } else {
                       getLFManager().log('Analytics not found.', { r }, LogSeverity.Info);
@@ -75,7 +80,9 @@ export const tabBarChartFactory = {
                 });
               break;
           }
-        }
+        };
+
+        normalizeValue(value, callback, TYPE);
       },
       refresh: async () => {
         const currentTab = (await tabbar?.getValue())?.node?.id;
@@ -96,9 +103,9 @@ export const tabBarChartFactory = {
             }
           });
       },
-    } as TabBarChartWidgetOptions;
+    };
   },
-  render: (node: NodeType, name: CustomWidgetName) => {
+  render: (node, name) => {
     const wrapper = document.createElement('div');
     const grid = document.createElement('div');
     const textfield = document.createElement('kul-textfield');
@@ -134,6 +141,7 @@ export const tabBarChartFactory = {
       tabbarEventHandler.bind(tabbarEventHandler, chart, node.comfyClass),
     );
     tabbar.kulValue = null;
+    tabbar.classList.add(tabBarChartFactory.cssClasses.tabbar);
 
     textfield.classList.add(tabBarChartFactory.cssClasses.directory);
     textfield.kulIcon = 'folder';

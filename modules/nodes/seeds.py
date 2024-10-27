@@ -6,27 +6,42 @@ from datetime import datetime
 
 from server import PromptServer
 
-category = "✨ LF Nodes/Seed generation"
+from ..utils.constants import *
+from ..utils.helpers import *
+
+CATEGORY = f"{CATEGORY_PREFIX}/Seed generation"
     
+# region LF_SequentialSeedsGenerator
 class LF_SequentialSeedsGenerator:
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "global_seed": ("INT", {"default": 0, "tooltip": "Seed value from which the other seeds will be progressively increased."}),
+                "seed": ("INT", {"default": 0, "max": INT_MAX, "tooltip": "Seed value from which the other seeds will be progressively increased."}),
+                "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the random seeds at execution time."}),
+            },
+            "hidden": {
+                "node_id": "UNIQUE_ID"
             }
         }
     
-    CATEGORY = category
-    FUNCTION = "on_exec"
-    OUTPUT_NODE = True
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
     RETURN_NAMES = ("seed",) * 20
     RETURN_TYPES = ("INT",) * 20
 
-    def on_exec(self, global_seed: int):
-        seeds = [global_seed + i for i in range(20)] 
+    def on_exec(self, node_id: str, seed: int, enable_history: bool):
+        seeds = [seed + i for i in range(20)] 
+
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}sequentialseedsgenerator", {
+            "node": node_id, 
+            "isHistoryEnabled": enable_history,
+            "value": seed,
+        })        
+
         return seeds
-    
+# endregion
+# region LF_UrandomSeedGenerator
 class LF_UrandomSeedGenerator:
     @classmethod
     def INPUT_TYPES(cls):
@@ -38,21 +53,22 @@ class LF_UrandomSeedGenerator:
             "optional": {
                 "fixed_seeds": ("JSON", {"default": {}, "tooltip": "A Ketchup Lite-compatible dataset containing 20 previously generated seeds."}),
             },
-            "hidden": { "node_id": "UNIQUE_ID" }
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
         }
 
-    CATEGORY = category
-    FUNCTION = "on_exec"
-    OUTPUT_NODE = True
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
     RETURN_NAMES = tuple(["fixed_seeds_dataset"] + ["seed"] * 20)
     RETURN_TYPES = tuple(["JSON"] + ["INT"] * 20)
-    
-    def on_exec(self, node_id, enable_history: bool, regen_each_run, fixed_seeds=None):
+
+    def on_exec(self, node_id: str, enable_history: bool, regen_each_run: bool, fixed_seeds: dict = None):
+        json_data = normalize_json_input(fixed_seeds)
         existing_seeds = [None] * 20
-        if fixed_seeds:
+
+        if json_data:
             try:
-                json_string = json.dumps(fixed_seeds)
-                json_data = json.loads(json_string)
                 for node in json_data.get("nodes", []):
                     children = node.get("children", [])
                     for child in children:
@@ -66,12 +82,22 @@ class LF_UrandomSeedGenerator:
                 print("Invalid JSON input. Generating all random seeds.")
 
         current_timestamp = int(datetime.now().timestamp())
-
+        
         for i in range(20):
+            # Generate urandom seed
+            urandom_seed = int.from_bytes(os.urandom(4), 'big')
+            
+            # Only XOR with timestamp if the current seconds meet certain criteria
+            current_seconds = datetime.now().second
+            if current_seconds % 2 == 0:  # XOR only if seconds are even
+                urandom_seed ^= current_timestamp
+            
+            # Set seed if it was not provided in the input
             if existing_seeds[i] is None:
-                urandom_seed = int.from_bytes(os.urandom(4), 'big')
-                existing_seeds[i] = urandom_seed ^ current_timestamp
-                time.sleep(0.1)  # Add a tiny delay to let system entropy pool refresh
+                existing_seeds[i] = urandom_seed
+            
+            # Slight delay to refresh system entropy pool
+            time.sleep(0.01)
 
         execution_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         json_dataset = {
@@ -87,7 +113,7 @@ class LF_UrandomSeedGenerator:
             ]
         }
 
-        PromptServer.instance.send_sync("lf-urandomseedgenerator", {
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}urandomseedgenerator", {
             "node": node_id, 
             "dataset": json_dataset,
             "isHistoryEnabled": enable_history,
@@ -101,7 +127,8 @@ class LF_UrandomSeedGenerator:
         regen_each_run = kwargs.get('regen_each_run', False)
         if regen_each_run:
             return float("NaN")
-    
+# endregion
+# region Mappings
 NODE_CLASS_MAPPINGS = {
     "LF_SequentialSeedsGenerator": LF_SequentialSeedsGenerator,
     "LF_UrandomSeedGenerator": LF_UrandomSeedGenerator,
@@ -110,3 +137,4 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_SequentialSeedsGenerator": "Generate sequential seeds",
     "LF_UrandomSeedGenerator": "Urandom Seed Generator",
 }
+# endregion

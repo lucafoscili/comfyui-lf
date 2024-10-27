@@ -1,29 +1,42 @@
 import { KulDataDataset } from '../types/ketchup-lite/components';
 import { NodeName } from '../types/nodes';
-import { CompareWidgetOptions, CustomWidgetName } from '../types/widgets';
-import { createDOMWidget, deserializeValue } from '../utils/common';
+import {
+  CompareWidgetFactory,
+  CustomWidgetDeserializedValuesMap,
+  CustomWidgetName,
+  NormalizeValueCallback,
+} from '../types/widgets';
+import { createDOMWidget, normalizeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-compare';
 const TYPE = CustomWidgetName.compare;
 
-export const compareFactory = {
+export const compareFactory: CompareWidgetFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
     compare: `${BASE_CSS_CLASS}__widget`,
   },
-  options: (compare: HTMLKulCompareElement) => {
+  options: (compare) => {
     return {
       hideOnZoom: false,
       getComp() {
         return compare;
       },
-      getValue() {},
-      setValue(value) {
-        compare.kulData = deserializeValue(value).parsedJson as KulDataDataset;
+      getValue() {
+        return {};
       },
-    } as CompareWidgetOptions;
+      setValue(value) {
+        const callback: NormalizeValueCallback<
+          CustomWidgetDeserializedValuesMap<typeof TYPE> | string
+        > = (_, u) => {
+          compare.kulData = (u.parsedJson as KulDataDataset) || {};
+        };
+
+        normalizeValue(value, callback, TYPE);
+      },
+    };
   },
-  render: (node: NodeType, name: CustomWidgetName) => {
+  render: (node, name) => {
     const wrapper = document.createElement('div');
     const content = document.createElement('div');
     const compare = document.createElement('kul-compare');

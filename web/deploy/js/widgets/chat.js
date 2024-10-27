@@ -1,7 +1,7 @@
 import { LogSeverity } from '../types/manager.js';
 import { NodeName } from '../types/nodes.js';
-import { CustomWidgetName } from '../types/widgets.js';
-import { createDOMWidget, findWidget, getLFManager } from '../utils/common.js';
+import { CustomWidgetName, } from '../types/widgets.js';
+import { createDOMWidget, findWidget, getLFManager, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-chat';
 const TYPE = CustomWidgetName.chat;
 export const chatFactory = {
@@ -16,10 +16,13 @@ export const chatFactory = {
                 return chat;
             },
             getValue() {
-                return chat?.dataset.history;
+                return chat?.dataset.history || '';
             },
-            setValue(history) {
-                chat.setHistory(history);
+            setValue(value) {
+                const callback = (v) => {
+                    chat.setHistory(v);
+                };
+                normalizeValue(value, callback, TYPE);
             },
         };
     },

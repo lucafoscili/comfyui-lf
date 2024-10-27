@@ -1,7 +1,7 @@
 import { KulCardEventPayload } from '../types/ketchup-lite/components';
 import { KulCard } from '../types/ketchup-lite/components/kul-card/kul-card';
 import { LogSeverity, TooltipUploadCallback } from '../types/manager';
-import { getLFManager, deserializeValue, getApiRoutes } from '../utils/common';
+import { getLFManager, getApiRoutes, unescapeJson } from '../utils/common';
 
 export const CARD_PROPS_TO_SERIALIZE = ['kulData', 'kulStyle'];
 
@@ -26,7 +26,7 @@ export const cardHandler = (
           if (key === 'kulData') {
             try {
               if (typeof prop === 'string') {
-                card.kulData = deserializeValue(prop).parsedJson;
+                card.kulData = unescapeJson(prop).parsedJson;
               } else {
                 card.kulData = prop;
               }
@@ -109,7 +109,7 @@ export const contextMenuHandler = (card: HTMLKulCardElement, e: MouseEvent) => {
       const code = node?.cells?.kulCode;
       if (code) {
         try {
-          const path = JSON.parse(code.value).path;
+          const path = JSON.parse(JSON.stringify(code.value)).path;
           lfManager.log(
             `Updating cover for model with path: ${path}`,
             { b64image },

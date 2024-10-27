@@ -8,7 +8,10 @@ import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 const NAME = NodeName.loadFileOnce;
 
 export const loadFileOnceFactory = {
-  eventHandler: (event: CustomEvent<LoadFileOncePayload>, addW: BaseWidgetCallback) => {
+  eventHandler: (
+    event: CustomEvent<LoadFileOncePayload>,
+    addW: BaseWidgetCallback<CustomWidgetName.history>,
+  ) => {
     const name = EventName.string;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
@@ -28,7 +31,7 @@ export const loadFileOnceFactory = {
             description: 'Execution date: ' + new Date().toLocaleString() + '.',
             value,
           };
-          if (dataset) {
+          if (dataset?.nodes?.length) {
             const existingNode = dataset?.nodes?.find((n) => n.id === value);
             if (existingNode) {
               existingNode.description = newNode.description;

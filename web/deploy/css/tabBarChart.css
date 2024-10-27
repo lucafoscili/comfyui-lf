@@ -17,5 +17,8 @@
 .lf-tabbarchart__directory--hidden {
   display: none;
 }
+.lf-tabbarchart__tabbar {
+  overflow: auto;
+}
 
 /*# sourceMappingURL=tabBarChart.css.map */

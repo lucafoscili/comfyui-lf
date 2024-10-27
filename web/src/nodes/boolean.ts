@@ -8,7 +8,10 @@ import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 const NAME = NodeName.boolean;
 
 export const booleanFactory = {
-  eventHandler: (event: CustomEvent<BooleanPayload>, addW: BaseWidgetCallback) => {
+  eventHandler: (
+    event: CustomEvent<BooleanPayload>,
+    addW: BaseWidgetCallback<CustomWidgetName.history>,
+  ) => {
     const name = EventName.boolean;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
@@ -46,7 +49,7 @@ export const booleanFactory = {
       getApiRoutes().redraw();
     }
   },
-  register: (setW: HistoryWidgetSetter, addW: BaseWidgetCallback) => {
+  register: (setW: HistoryWidgetSetter, addW: BaseWidgetCallback<CustomWidgetName.history>) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

@@ -7,7 +7,10 @@ import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 const NAME = NodeName.urandomSeedGenerator;
 
 export const uRandomSeedGeneratorFactory = {
-  eventHandler: (event: CustomEvent<UrandomSeedGeneratorPayload>, addW: BaseWidgetCallback) => {
+  eventHandler: (
+    event: CustomEvent<UrandomSeedGeneratorPayload>,
+    addW: BaseWidgetCallback<CustomWidgetName.tree>,
+  ) => {
     const name = EventName.urandomSeedGenerator;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
@@ -16,14 +19,11 @@ export const uRandomSeedGeneratorFactory = {
     const node = getApiRoutes().getNodeById(payload.id);
     if (isHistoryEnabled && node) {
       const widget = getCustomWidget(node, CustomWidgetName.tree, addW);
-      const comp = widget.options.getComp();
-      comp.kulAccordionLayout = true;
-      comp.kulSelectable = false;
-      widget.options.setValue(event.detail.dataset);
+      widget.options.setValue(JSON.stringify(event.detail.dataset));
       getApiRoutes().redraw();
     }
   },
-  register: (setW: TreeWidgetSetter, addW: BaseWidgetCallback) => {
+  register: (setW: TreeWidgetSetter, addW: BaseWidgetCallback<CustomWidgetName.tree>) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

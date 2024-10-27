@@ -11,7 +11,10 @@ import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 const NAME = NodeName.resolutionSwitcher;
 
 export const resolutionSwitcherFactory = {
-  eventHandler: (event: CustomEvent<ResolutionSwitcherPayload>, addW: BaseWidgetCallback) => {
+  eventHandler: (
+    event: CustomEvent<ResolutionSwitcherPayload>,
+    addW: BaseWidgetCallback<CustomWidgetName.rollViewer>,
+  ) => {
     const name = EventName.randomBoolean;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
@@ -23,7 +26,10 @@ export const resolutionSwitcherFactory = {
       getApiRoutes().redraw();
     }
   },
-  register: (setW: RollViewerWidgetSetter, addW: BaseWidgetCallback) => {
+  register: (
+    setW: RollViewerWidgetSetter,
+    addW: BaseWidgetCallback<CustomWidgetName.rollViewer>,
+  ) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

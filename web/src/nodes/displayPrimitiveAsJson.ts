@@ -7,7 +7,10 @@ import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 const NAME = NodeName.displayPrimitiveAsJson;
 
 export const displayPrimitiveAsJsonFactory = {
-  eventHandler: (event: CustomEvent<DisplayPrimitiveAsJSONPayload>, addW: BaseWidgetCallback) => {
+  eventHandler: (
+    event: CustomEvent<DisplayPrimitiveAsJSONPayload>,
+    addW: BaseWidgetCallback<CustomWidgetName.code>,
+  ) => {
     const name = EventName.displayPrimitiveAsJson;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 

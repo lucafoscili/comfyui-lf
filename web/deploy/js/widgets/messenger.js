@@ -1,6 +1,5 @@
-import { LogSeverity } from '../types/manager.js';
-import { CustomWidgetName } from '../types/widgets.js';
-import { createDOMWidget, getLFManager, isValidJSON, deserializeValue } from '../utils/common.js';
+import { CustomWidgetName, } from '../types/widgets.js';
+import { createDOMWidget, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-messenger';
 const TYPE = CustomWidgetName.messenger;
 export const messengerFactory = {
@@ -17,50 +16,25 @@ export const messengerFactory = {
                 return messenger;
             },
             getValue() {
-                const dataset = messenger.kulData ?? JSON.stringify(messenger.kulData);
-                const config = messenger.dataset.config ?? JSON.stringify(messenger.dataset.config);
-                return JSON.stringify({ dataset, config });
+                return {
+                    dataset: messenger.kulData || {},
+                    config: messenger.dataset.config ? JSON.parse(messenger.dataset.config) : {},
+                };
             },
             setValue(value) {
-                try {
-                    if (typeof value === 'string') {
-                        const parsed = deserializeValue(value).parsedJson;
-                        const dataset = parsed['dataset'];
-                        const config = parsed['config'];
-                        messenger.kulData = dataset;
-                        if (config) {
-                            if (typeof config === 'string') {
-                                const unescapeConfig = deserializeValue(config);
-                                messenger.dataset.config = unescapeConfig.unescapedStr;
-                                messenger.kulValue = deserializeValue(config)
-                                    .parsedJson;
-                            }
-                            else if (isValidJSON(config)) {
-                                messenger.dataset.config = JSON.stringify(config);
-                            }
-                        }
+                const callback = (_, u) => {
+                    const { config, dataset } = u.parsedJson;
+                    messenger.kulData = dataset;
+                    if (config && typeof config === 'object') {
+                        messenger.dataset.config = JSON.stringify(config);
+                        messenger.kulValue = config;
                     }
-                    else {
-                        const { dataset, config } = value;
-                        if (dataset) {
-                            messenger.kulData = dataset;
-                        }
-                        if (config) {
-                            messenger.kulValue = config;
-                            messenger.dataset.config = JSON.stringify(config);
-                        }
-                    }
-                    if (messenger.kulData?.nodes?.[0]) {
-                        placeholder.classList.add(messengerFactory.cssClasses.placeholderHidden);
-                    }
-                }
-                catch (error) {
-                    getLFManager().log('Error when setting value!', { error, messenger }, LogSeverity.Error);
-                    if (value === undefined || value === '') {
-                        messenger.kulData = undefined;
-                        placeholder.classList.remove(messengerFactory.cssClasses.placeholderHidden);
-                    }
-                }
+                    placeholder.classList.add(messengerFactory.cssClasses.placeholderHidden);
+                };
+                const onException = () => {
+                    placeholder.classList.remove(messengerFactory.cssClasses.placeholderHidden);
+                };
+                normalizeValue(value, callback, TYPE, onException);
             },
         };
     },
@@ -80,7 +54,9 @@ to connect as input a valid JSON dataset. Check the repository's workflows to se
             const { eventType, config } = e.detail;
             switch (eventType) {
                 case 'save':
-                    messenger.dataset.config = JSON.stringify(config);
+                    if (config && typeof config === 'object') {
+                        messenger.dataset.config = JSON.stringify(config);
+                    }
                     break;
             }
         });

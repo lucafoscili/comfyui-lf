@@ -7,7 +7,10 @@ import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 const NAME = NodeName.displayInteger;
 
 export const displayIntegerFactory = {
-  eventHandler: (event: CustomEvent<DisplayIntegerPayload>, addW: BaseWidgetCallback) => {
+  eventHandler: (
+    event: CustomEvent<DisplayIntegerPayload>,
+    addW: BaseWidgetCallback<CustomWidgetName.code>,
+  ) => {
     const name = EventName.displayInteger;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
@@ -19,7 +22,7 @@ export const displayIntegerFactory = {
       getApiRoutes().redraw();
     }
   },
-  register: (setW: CodeWidgetSetter, addW: BaseWidgetCallback) => {
+  register: (setW: CodeWidgetSetter, addW: BaseWidgetCallback<CustomWidgetName.code>) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

@@ -1,6 +1,6 @@
 import { NodeName } from '../types/nodes.js';
-import { CustomWidgetName } from '../types/widgets.js';
-import { createDOMWidget, getKulManager } from '../utils/common.js';
+import { CustomWidgetName, } from '../types/widgets.js';
+import { createDOMWidget, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-chip';
 const TYPE = CustomWidgetName.chip;
 export const chipFactory = {
@@ -15,23 +15,14 @@ export const chipFactory = {
                 return chip;
             },
             getValue() {
-                return chip?.dataset.selectedChips;
+                return chip?.dataset.selectedChips || '';
             },
             setValue(value) {
-                if (value) {
-                    const kulManager = getKulManager();
-                    chip.dataset.selectedChips = value;
-                    if (kulManager) {
-                        chip.setSelectedNodes(value.split(', '));
-                    }
-                    else {
-                        const managerCb = () => {
-                            chip.setSelectedNodes(value.split(', '));
-                            document.removeEventListener('kul-manager-ready', managerCb);
-                        };
-                        document.addEventListener('kul-manager-ready', managerCb);
-                    }
-                }
+                const callback = (v) => {
+                    chip.dataset.selectedChips = v;
+                    chip.setSelectedNodes(v.split(', '));
+                };
+                normalizeValue(value, callback, TYPE);
             },
         };
     },

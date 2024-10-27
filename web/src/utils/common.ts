@@ -3,9 +3,13 @@ import {
   BaseWidgetCallback,
   ComfyWidgetMap,
   ComfyWidgetName,
+  CustomWidgetDeserializedValues,
+  CustomWidgetDeserializedValuesMap,
   CustomWidgetMap,
   CustomWidgetName,
   CustomWidgetOptions,
+  NormalizeValueCallback,
+  UnescapeJSONPayload,
 } from '../types/widgets';
 import { LogSeverity } from '../types/manager';
 import { KulButton } from '../types/ketchup-lite/components/kul-button/kul-button';
@@ -43,47 +47,6 @@ export const createDOMWidget = (
   return node.addDOMWidget(name, type, element, options);
 };
 
-export const deserializeValue = (
-  input: any, // Accept any type
-): {
-  validJson: boolean;
-  parsedJson?: {};
-  unescapedStr: string;
-} => {
-  let validJson = false;
-  let parsedJson: Record<string, unknown> | undefined = undefined;
-  let unescapedStr = input;
-
-  const recursiveUnescape = (inputStr: string): string => {
-    let newStr = inputStr.replace(/\\(.)/g, '$1');
-    while (newStr !== inputStr) {
-      inputStr = newStr;
-      newStr = inputStr.replace(/\\(.)/g, '$1');
-    }
-    return newStr;
-  };
-
-  try {
-    parsedJson = JSON.parse(input);
-    validJson = true;
-    unescapedStr = JSON.stringify(parsedJson, null, 2);
-  } catch (error) {
-    if (typeof input === 'object' && input !== null) {
-      try {
-        unescapedStr = JSON.stringify(input, null, 2);
-        validJson = true;
-        parsedJson = input;
-      } catch (stringifyError) {
-        unescapedStr = recursiveUnescape(input.toString());
-      }
-    } else {
-      unescapedStr = recursiveUnescape(input.toString());
-    }
-  }
-
-  return { validJson, parsedJson, unescapedStr };
-};
-
 export const findWidget = <T extends CustomWidgetName>(
   node: NodeType,
   type: T,
@@ -98,7 +61,7 @@ export const getApiRoutes = () => {
 export const getCustomWidget = <T extends CustomWidgetName>(
   node: NodeType,
   type: T,
-  addW?: BaseWidgetCallback,
+  addW?: BaseWidgetCallback<T>,
 ): CustomWidgetMap[T] => {
   return (
     (node?.widgets?.find(
@@ -179,6 +142,25 @@ export const log = () => {
   return WINDOW.lfManager.log;
 };
 
+export const normalizeValue = <
+  W extends CustomWidgetName,
+  V extends CustomWidgetDeserializedValuesMap<W>,
+>(
+  value: V | string,
+  callback: NormalizeValueCallback<V | string>,
+  widget: W,
+  onException?: () => void,
+) => {
+  try {
+    callback(value, unescapeJson(value));
+  } catch (error) {
+    if (onException) {
+      onException();
+    }
+    getLFManager().log(`Normalization error!`, { error, widget }, LogSeverity.Error);
+  }
+};
+
 export const refreshChart = (node: NodeType) => {
   try {
     const domWidget =
@@ -202,15 +184,6 @@ export const refreshChart = (node: NodeType) => {
   }
 };
 
-export const serializeValue = <T extends {}>(value: T) => {
-  try {
-    return JSON.stringify(value);
-  } catch (error) {
-    getLFManager().log(`Error deserializing value`, { value }, LogSeverity.Error);
-    return '';
-  }
-};
-
 export const splitByLastSpaceBeforeAnyBracket = (input: string) => {
   const match = input.match(/\s+(.+)\[.*?\]/);
 
@@ -219,4 +192,58 @@ export const splitByLastSpaceBeforeAnyBracket = (input: string) => {
   }
 
   return input;
+};
+
+export const unescapeJson = (input: any): UnescapeJSONPayload => {
+  let validJson = false;
+  let parsedJson: Record<string, unknown> | undefined = undefined;
+  let unescapedStr = input;
+
+  const recursiveUnescape = (inputStr: string): string => {
+    let newStr = inputStr.replace(/\\(.)/g, '$1');
+    while (newStr !== inputStr) {
+      inputStr = newStr;
+      newStr = inputStr.replace(/\\(.)/g, '$1');
+    }
+    return newStr;
+  };
+
+  const deepParse = (data: any) => {
+    if (typeof data === 'string') {
+      try {
+        const innerJson = JSON.parse(data);
+        if (typeof innerJson === 'object' && innerJson !== null) {
+          return deepParse(innerJson);
+        }
+      } catch (e) {
+        return data;
+      }
+    } else if (typeof data === 'object' && data !== null) {
+      Object.keys(data).forEach((key) => {
+        data[key] = deepParse(data[key]);
+      });
+    }
+    return data;
+  };
+
+  try {
+    parsedJson = JSON.parse(input);
+    validJson = true;
+    parsedJson = deepParse(parsedJson); // Parse nested JSON if found
+    unescapedStr = JSON.stringify(parsedJson, null, 2);
+  } catch (error) {
+    if (typeof input === 'object' && input !== null) {
+      try {
+        unescapedStr = JSON.stringify(input, null, 2);
+        validJson = true;
+        parsedJson = input;
+      } catch (stringifyError) {
+        unescapedStr = recursiveUnescape(input.toString());
+      }
+    } else {
+      unescapedStr = recursiveUnescape(input.toString());
+    }
+  }
+
+  return { validJson, parsedJson, unescapedStr };
 };

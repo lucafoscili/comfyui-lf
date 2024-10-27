@@ -11,7 +11,10 @@ import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 const NAME = NodeName.saveImageForCivitai;
 
 export const saveImageForCivitaiFactory = {
-  eventHandler: (event: CustomEvent<SaveImageForCivitAIPayload>, addW: BaseWidgetCallback) => {
+  eventHandler: (
+    event: CustomEvent<SaveImageForCivitAIPayload>,
+    addW: BaseWidgetCallback<CustomWidgetName.imagePreview>,
+  ) => {
     const name = EventName.saveImageForCivitAI;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
@@ -19,11 +22,14 @@ export const saveImageForCivitaiFactory = {
     const node = getApiRoutes().getNodeById(payload.id);
     if (node) {
       const widget = getCustomWidget(node, CustomWidgetName.imagePreview, addW);
-      widget.options.setValue(payload);
+      widget.options.setValue(JSON.stringify(payload));
       getApiRoutes().redraw();
     }
   },
-  register: (setW: ImagePreviewWidgetSetter, addW: BaseWidgetCallback) => {
+  register: (
+    setW: ImagePreviewWidgetSetter,
+    addW: BaseWidgetCallback<CustomWidgetName.imagePreview>,
+  ) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {

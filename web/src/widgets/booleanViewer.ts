@@ -1,50 +1,62 @@
-import { BooleanViewerWidgetOptions, CustomWidgetName } from '../types/widgets';
-import { createDOMWidget } from '../utils/common';
+import {
+  BooleanViewerWidgetFactory,
+  CustomWidgetDeserializedValuesMap,
+  CustomWidgetName,
+  NormalizeValueCallback,
+} from '../types/widgets';
+import { createDOMWidget, normalizeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-booleanviewer';
 const LABEL = 'True or False?';
 const TYPE = CustomWidgetName.booleanViewer;
 
-export const booleanViewerFactory = {
+export const booleanViewerFactory: BooleanViewerWidgetFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
   },
-  options: (booleanViewer: HTMLKulTextfieldElement) => {
+  options: (textfield) => {
     return {
       hideOnZoom: false,
       getComp() {
-        return booleanViewer;
+        return textfield;
       },
       getValue() {
-        return booleanViewer?.kulLabel;
+        return textfield?.kulLabel || '';
       },
       setValue(value) {
-        const isFalse = value?.toLowerCase()?.includes('false');
-        const isTrue = value?.toLowerCase()?.includes('true');
-        if (isTrue) {
-          booleanViewer.kulIcon = 'check';
-          booleanViewer.kulLabel = 'True!';
-        } else if (isFalse) {
-          booleanViewer.kulIcon = 'clear';
-          booleanViewer.kulLabel = 'False!';
-        } else {
-          booleanViewer.kulIcon = '';
-          booleanViewer.kulLabel = LABEL;
-        }
+        const callback: NormalizeValueCallback<CustomWidgetDeserializedValuesMap<typeof TYPE>> = (
+          v,
+        ) => {
+          const isFalse = v.toLowerCase().includes('false');
+          const isTrue = v.toLowerCase().includes('true');
+
+          if (isTrue) {
+            textfield.kulIcon = 'check';
+            textfield.kulLabel = 'True!';
+          } else if (isFalse) {
+            textfield.kulIcon = 'clear';
+            textfield.kulLabel = 'False!';
+          } else {
+            textfield.kulIcon = '';
+            textfield.kulLabel = LABEL;
+          }
+        };
+
+        normalizeValue(value, callback, TYPE);
       },
-    } as BooleanViewerWidgetOptions;
+    };
   },
-  render: (node: NodeType, name: CustomWidgetName) => {
+  render: (node, name) => {
     const wrapper = document.createElement('div');
     const content = document.createElement('div');
-    const booleanViewer = document.createElement('kul-textfield');
-    const options = booleanViewerFactory.options(booleanViewer);
+    const textfield = document.createElement('kul-textfield');
+    const options = booleanViewerFactory.options(textfield);
 
     content.classList.add(booleanViewerFactory.cssClasses.content);
-    booleanViewer.kulDisabled = true;
-    booleanViewer.kulLabel = LABEL;
+    textfield.kulDisabled = true;
+    textfield.kulLabel = LABEL;
 
-    content.appendChild(booleanViewer);
+    content.appendChild(textfield);
     wrapper.appendChild(content);
 
     return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };

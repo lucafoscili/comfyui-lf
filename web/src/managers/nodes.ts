@@ -53,6 +53,16 @@ import { mathOperationFactory } from '../nodes/mathOperation';
 import { sortJsonKeysFactory } from '../nodes/sortJsonKeys';
 import { shuffleJsonKeysFactory } from '../nodes/shuffleJsonKeys';
 import { clarityEffectFactory } from '../nodes/clarityEffect';
+import { compareImagesFactory } from '../nodes/compareImages';
+import { isLandscapeFactory } from '../nodes/isLandscape';
+import { something2NumberFactory } from '../nodes/something2Number';
+import { something2StringFactory } from '../nodes/something2String';
+import { loraTag2PromptFactory } from '../nodes/loraTag2Prompt';
+import { lora2PromptFactory } from '../nodes/lora2Prompt';
+import { saveJsonFactory } from '../nodes/saveJson';
+import { characterImpersonatorFactory } from '../nodes/characterImpersonator';
+import { imageClassifierFactory } from '../nodes/imageClassifier';
+import { sequentialSeedsGeneratorFactory } from '../nodes/sequentialSeedsGenerator';
 
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
@@ -62,9 +72,11 @@ export class LFNodes {
   eventHandler = {
     [NodeName.blurImages]: blurImagesFactory.eventHandler,
     [NodeName.boolean]: booleanFactory.eventHandler,
+    [NodeName.characterImpersonator]: characterImpersonatorFactory.eventHandler,
     [NodeName.checkpointSelector]: checkpointSelectorFactory.eventHandler,
     [NodeName.civitaiMetadataSetup]: civitaiMetadataSetupFactory.eventHandler,
     [NodeName.clarityEffect]: clarityEffectFactory.eventHandler,
+    [NodeName.compareImages]: compareImagesFactory.eventHandler,
     [NodeName.displayBoolean]: displayBooleanFactory.eventHandler,
     [NodeName.displayFloat]: displayFloatFactory.eventHandler,
     [NodeName.displayInteger]: displayIntegerFactory.eventHandler,
@@ -74,15 +86,19 @@ export class LFNodes {
     [NodeName.embeddingSelector]: embeddingSelectorFactory.eventHandler,
     [NodeName.extractor]: extractorFactory.eventHandler,
     [NodeName.float]: floatFactory.eventHandler,
+    [NodeName.imageClassifier]: imageClassifierFactory.eventHandler,
     [NodeName.imageHistogram]: imageHistogramFactory.eventHandler,
     [NodeName.imageListFromJSON]: imageListFromJsonFactory.eventHandler,
     [NodeName.integer]: integerFactory.eventHandler,
+    [NodeName.isLandscape]: isLandscapeFactory.eventHandler,
     [NodeName.keywordCounter]: keywordCounterFactory.eventHandler,
     [NodeName.loadFileOnce]: loadFileOnceFactory.eventHandler,
     [NodeName.loadImages]: loadImagesFactory.eventHandler,
     [NodeName.loadLoraTags]: loadLoraTagsFactory.eventHandler,
     [NodeName.loraAndEmbeddingSelector]: loraAndEmbeddingSelectorFactory.eventHandler,
     [NodeName.loraSelector]: loraSelectorFactory.eventHandler,
+    [NodeName.lora2Prompt]: lora2PromptFactory.eventHandler,
+    [NodeName.loraTag2Prompt]: loraTag2PromptFactory.eventHandler,
     [NodeName.mathOperation]: mathOperationFactory.eventHandler,
     [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.eventHandler,
     [NodeName.notify]: notifyFactory.eventHandler,
@@ -93,8 +109,12 @@ export class LFNodes {
     [NodeName.resolutionSwitcher]: resolutionSwitcherFactory.eventHandler,
     [NodeName.samplerSelector]: samplerSelectorFactory.eventHandler,
     [NodeName.saveImageForCivitai]: saveImageForCivitaiFactory.eventHandler,
+    [NodeName.saveJson]: saveJsonFactory.eventHandler,
     [NodeName.schedulerSelector]: schedulerSelectorFactory.eventHandler,
+    [NodeName.sequentialSeedsGenerator]: sequentialSeedsGeneratorFactory.eventHandler,
     [NodeName.shuffleJsonKeys]: shuffleJsonKeysFactory.eventHandler,
+    [NodeName.something2Number]: something2NumberFactory.eventHandler,
+    [NodeName.something2String]: something2StringFactory.eventHandler,
     [NodeName.sortJsonKeys]: sortJsonKeysFactory.eventHandler,
     [NodeName.string]: stringFactory.eventHandler,
     [NodeName.switchFloat]: switchFloatFactory.eventHandler,
@@ -113,9 +133,11 @@ export class LFNodes {
   register = {
     [NodeName.blurImages]: blurImagesFactory.register,
     [NodeName.boolean]: booleanFactory.register,
+    [NodeName.characterImpersonator]: characterImpersonatorFactory.register,
     [NodeName.checkpointSelector]: checkpointSelectorFactory.register,
     [NodeName.civitaiMetadataSetup]: civitaiMetadataSetupFactory.register,
     [NodeName.clarityEffect]: clarityEffectFactory.register,
+    [NodeName.compareImages]: compareImagesFactory.register,
     [NodeName.controlPanel]: controlPanelFactory.register,
     [NodeName.displayBoolean]: displayBooleanFactory.register,
     [NodeName.displayFloat]: displayFloatFactory.register,
@@ -126,9 +148,11 @@ export class LFNodes {
     [NodeName.embeddingSelector]: embeddingSelectorFactory.register,
     [NodeName.extractor]: extractorFactory.register,
     [NodeName.float]: floatFactory.register,
+    [NodeName.imageClassifier]: imageClassifierFactory.register,
     [NodeName.imageHistogram]: imageHistogramFactory.register,
     [NodeName.imageListFromJSON]: imageListFromJsonFactory.register,
     [NodeName.integer]: integerFactory.register,
+    [NodeName.isLandscape]: isLandscapeFactory.register,
     [NodeName.keywordCounter]: keywordCounterFactory.register,
     [NodeName.keywordToggleFromJson]: keywordToggleFromJsonFactory.register,
     [NodeName.llmChat]: llmChatFactory.register,
@@ -139,6 +163,8 @@ export class LFNodes {
     [NodeName.loraAndEmbeddingSelector]: loraAndEmbeddingSelectorFactory.register,
     [NodeName.loadMetadata]: loadMetadataFactory.register,
     [NodeName.loraSelector]: loraSelectorFactory.register,
+    [NodeName.lora2Prompt]: lora2PromptFactory.register,
+    [NodeName.loraTag2Prompt]: loraTag2PromptFactory.register,
     [NodeName.mathOperation]: mathOperationFactory.register,
     [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.register,
     [NodeName.notify]: notifyFactory.register,
@@ -149,8 +175,12 @@ export class LFNodes {
     [NodeName.resolutionSwitcher]: resolutionSwitcherFactory.register,
     [NodeName.samplerSelector]: samplerSelectorFactory.register,
     [NodeName.saveImageForCivitai]: saveImageForCivitaiFactory.register,
+    [NodeName.saveJson]: saveJsonFactory.register,
     [NodeName.schedulerSelector]: schedulerSelectorFactory.register,
+    [NodeName.sequentialSeedsGenerator]: sequentialSeedsGeneratorFactory.register,
     [NodeName.shuffleJsonKeys]: shuffleJsonKeysFactory.register,
+    [NodeName.something2Number]: something2NumberFactory.register,
+    [NodeName.something2String]: something2StringFactory.register,
     [NodeName.sortJsonKeys]: sortJsonKeysFactory.register,
     [NodeName.string]: stringFactory.register,
     [NodeName.switchFloat]: switchFloatFactory.register,

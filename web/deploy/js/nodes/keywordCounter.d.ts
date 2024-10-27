@@ -1,6 +1,6 @@
 import { KeywordCounterPayload } from '../types/events';
-import { type BaseWidgetCallback, type CountBarChartWidgetSetter } from '../types/widgets';
+import { CustomWidgetName, type BaseWidgetCallback, type CountBarChartWidgetSetter } from '../types/widgets';
 export declare const keywordCounterFactory: {
-    eventHandler: (event: CustomEvent<KeywordCounterPayload>, addW: BaseWidgetCallback) => void;
-    register: (setW: CountBarChartWidgetSetter, addW: BaseWidgetCallback) => void;
+    eventHandler: (event: CustomEvent<KeywordCounterPayload>, addW: BaseWidgetCallback<CustomWidgetName.countBarChart>) => void;
+    register: (setW: CountBarChartWidgetSetter, addW: BaseWidgetCallback<CustomWidgetName.countBarChart>) => void;
 };
