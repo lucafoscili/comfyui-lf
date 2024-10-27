@@ -1,6 +1,6 @@
 {
   "name": "comfyui-lf",
-  "version": "4.1.2",
+  "version": "5.0.0",
   "private": false,
   "scripts": {
     "clean": "rimraf web/deploy",
