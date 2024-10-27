@@ -497,7 +497,9 @@ class LF_Something2String:
     @classmethod
     def INPUT_TYPES(cls):
         return {
-            "required": {},
+            "required": {
+                "separator": ("STRING", {"default": ", ", "tooltip": "Character(s) separating each string apart."}),
+            },
             "optional": {
                 "json": ("JSON", {"tooltip": "JSON value to convert to string."}),
                 "boolean": ("BOOLEAN", {"tooltip": "Boolean value to convert to string."}),
@@ -512,6 +514,7 @@ class LF_Something2String:
     input_keys = ["json", "boolean", "float", "integer"]
     combinations_list = []
 
+    # Generate all combinations of input keys
     for r in range(1, len(input_keys) + 1):
         for combo in combinations(input_keys, r):
             combo_name = "_".join(combo)
@@ -523,6 +526,7 @@ class LF_Something2String:
 
     def on_exec(self, **kwargs: dict):
         def flatten_input(input_item):
+            """Flattens nested lists and stringifies each item."""
             if isinstance(input_item, list):
                 return [str(sub_item) for item in input_item for sub_item in flatten_input(item)]
             elif isinstance(input_item, (dict, bool, float, int)):
@@ -531,20 +535,19 @@ class LF_Something2String:
                 return [str(input_item)]
             return []
 
+        separator = kwargs.get("separator", ", ")
+
         results = []
 
-        # Process each combination
         for combo_name in self.RETURN_NAMES:
             items = combo_name.split("_")
             flattened_combo = []
 
-            # Collect and flatten items in the current combination
             for item in items:
                 if item in kwargs:
                     flattened_combo.extend(flatten_input(kwargs[item]))
 
-            # Join all flattened items to form a single output string for this combination
-            results.append("".join(flattened_combo))
+            results.append(separator.join(flattened_combo))
 
         return tuple(results)
 # endregion
