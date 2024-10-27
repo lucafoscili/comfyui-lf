@@ -57,6 +57,7 @@ import { compareImagesFactory } from '../nodes/compareImages';
 import { isLandscapeFactory } from '../nodes/isLandscape';
 import { something2NumberFactory } from '../nodes/something2Number';
 import { something2StringFactory } from '../nodes/something2String';
+import { loraTag2PromptFactory } from '../nodes/loraTag2Prompt';
 
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
@@ -89,6 +90,7 @@ export class LFNodes {
     [NodeName.loadLoraTags]: loadLoraTagsFactory.eventHandler,
     [NodeName.loraAndEmbeddingSelector]: loraAndEmbeddingSelectorFactory.eventHandler,
     [NodeName.loraSelector]: loraSelectorFactory.eventHandler,
+    [NodeName.loraTag2Prompt]: loraTag2PromptFactory.eventHandler,
     [NodeName.mathOperation]: mathOperationFactory.eventHandler,
     [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.eventHandler,
     [NodeName.notify]: notifyFactory.eventHandler,
@@ -149,6 +151,7 @@ export class LFNodes {
     [NodeName.loraAndEmbeddingSelector]: loraAndEmbeddingSelectorFactory.register,
     [NodeName.loadMetadata]: loadMetadataFactory.register,
     [NodeName.loraSelector]: loraSelectorFactory.register,
+    [NodeName.loraTag2Prompt]: loraTag2PromptFactory.register,
     [NodeName.mathOperation]: mathOperationFactory.register,
     [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.register,
     [NodeName.notify]: notifyFactory.register,

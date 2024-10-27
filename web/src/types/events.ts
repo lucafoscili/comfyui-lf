@@ -36,6 +36,7 @@ export enum EventName {
   loadLoraTags = 'lf-loadloratags',
   loraAndEmbeddingSelector = 'lf-loraandembeddingselector',
   loraSelector = 'lf-loraselector',
+  loraTag2Prompt = 'lf-loratag2prompt',
   mathOperation = 'lf-mathoperation',
   multipleImageResizeForWeb = 'lf-multipleimageresizeforweb',
   notify = 'lf-notify',
@@ -83,6 +84,7 @@ export type EventPayload =
   | LoadImagesPayload
   | LoraAndEmbeddingSelectorPayload
   | LoraSelectorPayload
+  | LoraTag2PromptPayload
   | LoadLoraTagsPayload
   | MathOperationPayload
   | MultipleImageResizeForWebPayload
@@ -312,6 +314,14 @@ export interface LoadLoraTagsPayload extends BaseEventPayload {
   hashes: string[];
   paths: string[];
   chipDataset: KulDataDataset;
+}
+
+/*-------------------------------------------------------------------*/
+/*      L o r a T a g 2 P r o m p t   D e c l a r a t i o n s        */
+/*-------------------------------------------------------------------*/
+
+export interface LoraTag2PromptPayload extends BaseEventPayload {
+  log: string;
 }
 
 /*-------------------------------------------------------------------*/

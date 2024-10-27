@@ -26,6 +26,7 @@ export var EventName;
     EventName["loadLoraTags"] = "lf-loadloratags";
     EventName["loraAndEmbeddingSelector"] = "lf-loraandembeddingselector";
     EventName["loraSelector"] = "lf-loraselector";
+    EventName["loraTag2Prompt"] = "lf-loratag2prompt";
     EventName["mathOperation"] = "lf-mathoperation";
     EventName["multipleImageResizeForWeb"] = "lf-multipleimageresizeforweb";
     EventName["notify"] = "lf-notify";

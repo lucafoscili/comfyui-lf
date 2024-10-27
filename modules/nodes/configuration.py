@@ -8,7 +8,7 @@ import comfy.sd
 import comfy.utils
 
 from ..utils.constants import ANY, BASE64_PNG_PREFIX, CATEGORY_PREFIX, CHECKPOINTS, EVENT_PREFIX, FUNCTION, INT_MAX, LORAS, NOTIFY_COMBO, SAMPLERS, SCHEDULERS, UPSCALERS, VAES
-from ..utils.helpers import count_words_in_comma_separated_string, get_embedding_hashes, get_lora_hashes, get_sha256, normalize_input_image, normalize_list_to_value, cleanse_lora_tag, prepare_model_dataset, process_model, send_multi_selector_message, tensor_to_base64
+from ..utils.helpers import count_words_in_comma_separated_string, get_embedding_hashes, get_lora_hashes, get_sha256, normalize_input_image, normalize_input_list, normalize_list_to_value, cleanse_lora_tag, prepare_model_dataset, process_model, send_multi_selector_message, tensor_to_base64
 
 from server import PromptServer
 
@@ -320,17 +320,53 @@ class LF_LoraTag2Prompt:
 
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
-    RETURN_NAMES = ("keywords", "nr_keywords")
-    RETURN_TYPES = ("STRING", "INT")
+    RETURN_NAMES = ("keywords", "keywords_count", "keywords_list", "keywords_count_list")
+    RETURN_TYPES = ("STRING", "INT", "STRING", "INT")
 
     def on_exec(self, node_id: str, tag: str, separator: str):
-        tag = normalize_list_to_value(tag)
+        tag_list = normalize_input_list(tag)
         separator = normalize_list_to_value(separator)
 
-        clean_lora = cleanse_lora_tag(tag, separator)   
-        keywords_count = count_words_in_comma_separated_string(clean_lora) 
+        clean_loras = []
+        keyword_counts = []
+        log_entries = []
 
-        return (clean_lora, keywords_count)
+        tag_split_regex = r"<lora:[^>]+>"
+
+        for tag_entry in tag_list:
+            tags_in_entry = re.findall(tag_split_regex, tag_entry)
+
+            for t in tags_in_entry:
+                clean_lora = cleanse_lora_tag(t, separator)   
+                keywords_count = count_words_in_comma_separated_string(clean_lora)
+                clean_loras.append(clean_lora)
+                keyword_counts.append(keywords_count)
+
+                log_entries.append(f"""
+### LoRA Tag Entry:
+- **Original Tag**: {t}
+- **Cleaned LoRA Tag**: {clean_lora}
+- **Number of Keywords**: {keywords_count}
+- **Keywords Extracted**: {clean_lora.split(', ') if clean_lora else '*No keywords extracted*'}
+                """)
+
+        log = f"""
+## LF_LoraTag2Prompt Execution Log
+
+### Input Details:
+- **Original Tags**: {tag_list}
+- **Separator Used**: '{separator}'
+
+### Processing Summary:
+{''.join(log_entries)}
+        """
+
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}loratag2prompt", {
+            "node": node_id, 
+            "log": log
+        })
+
+        return (clean_loras, keyword_counts, clean_loras, keyword_counts)
 # endregion
 # region LF_Notify
 class LF_Notify:
