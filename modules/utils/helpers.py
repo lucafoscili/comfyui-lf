@@ -467,25 +467,36 @@ def normalize_json_input(input):
     [{'key1': 'value1'}, {'key2': 'value2'}]
     
     """
+    def convert_python_to_json(input_str):
+        """Convert single quotes in Python-style strings to JSON-compatible double quotes."""
+        return re.sub(r"(?<!\")'([^']*)'(?!\")", r'"\1"', input_str)
+    
     if isinstance(input, dict) or input is None:
         return input
     
     elif isinstance(input, str):
-        return json.loads(input)
+        try:
+            return json.loads(input)
+        except json.JSONDecodeError:
+            return json.loads(convert_python_to_json(input))
     
     elif isinstance(input, list):
         if all(isinstance(i, dict) for i in input):
-            # List of dictionaries, return as-is
             return input
         elif len(input) == 1 and isinstance(input[0], str):
-            # Single-item list containing a JSON string, parse the only item
-            return json.loads(input[0])
+            try:
+                return json.loads(input[0])
+            except json.JSONDecodeError:
+                return json.loads(convert_python_to_json(input[0]))
         else:
-            # Multi-item list of JSON strings, parse each item individually
-            return [json.loads(s) if isinstance(s, str) else s for s in input]
+            # Process multi-item lists by converting each element if necessary
+            return [
+                json.loads(convert_python_to_json(s)) if isinstance(s, str) else s 
+                for s in input
+            ]
     
     else:
-        raise TypeError(f"Unsupported input type: {type(input)}")
+        raise TypeError(f"Unsupported input type: {type(input)}") 
     
 def normalize_input_list(input):
     """
