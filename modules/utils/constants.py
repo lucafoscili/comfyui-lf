@@ -9,6 +9,7 @@ class AnyType(str):
 
 ANY = AnyType("*")
 INT_MAX = 0xffffffffffffffff
+LORA_TAG_REGEX = r'<lora:[^<>]+>'
 
 NOTIFY_COMBO = ["None", "Focus tab", "Interrupt", "Interrupt and queue", "Queue prompt"]
 

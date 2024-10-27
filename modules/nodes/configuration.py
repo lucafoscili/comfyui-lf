@@ -7,7 +7,7 @@ from pathlib import Path
 import comfy.sd
 import comfy.utils
 
-from ..utils.constants import ANY, BASE64_PNG_PREFIX, CATEGORY_PREFIX, CHECKPOINTS, EVENT_PREFIX, FUNCTION, INT_MAX, LORAS, NOTIFY_COMBO, SAMPLERS, SCHEDULERS, UPSCALERS, VAES
+from ..utils.constants import ANY, BASE64_PNG_PREFIX, CATEGORY_PREFIX, CHECKPOINTS, EVENT_PREFIX, FUNCTION, INT_MAX, LORA_TAG_REGEX, LORAS, NOTIFY_COMBO, SAMPLERS, SCHEDULERS, UPSCALERS, VAES
 from ..utils.helpers import count_words_in_comma_separated_string, get_embedding_hashes, get_lora_hashes, get_sha256, normalize_input_image, normalize_input_list, normalize_list_to_value, cleanse_lora_tag, prepare_model_dataset, process_model, send_multi_selector_message, tensor_to_base64
 
 from server import PromptServer
@@ -287,10 +287,8 @@ class LF_Lora2Prompt:
         separator = normalize_list_to_value(separator)
         weight = normalize_list_to_value(weight)
         weight_placeholder = normalize_list_to_value(weight_placeholder)
-
-        lora_pattern = r'<lora:[^<>]+>'
         
-        loras = re.findall(lora_pattern, text)
+        loras = re.findall(LORA_TAG_REGEX, text)
         
         lora_keyword_map = {}
         for lora in loras:
@@ -299,9 +297,33 @@ class LF_Lora2Prompt:
         for lora_tag, keywords in lora_keyword_map.items():
             text = text.replace(lora_tag, keywords)
         
-        loras = [lora.replace(weight_placeholder, str(weight)) for lora in loras]
-        loras_string = "".join(loras)
+        loras_weighted = [lora.replace(weight_placeholder, str(weight)) for lora in loras]
+        loras_string = "".join(loras_weighted)
+
+        log_entries = [f"## Breakdown\n"]
+        log_entries.append(f"**Original Text**: {text}")
+        log_entries.append(f"**Separator Used**: '{separator}'")
+        log_entries.append(f"**Weight Placeholder**: '{weight_placeholder}', Weight Value: {weight}")
         
+        log_entries.append("\n### Extracted LoRA Tags:\n")
+        for lora_tag in loras:
+            log_entries.append(f"- **LoRA Tag**: {lora_tag}")
+
+        log_entries.append("\n### Keyword Mapping:\n")
+        for lora_tag, keywords in lora_keyword_map.items():
+            log_entries.append(f"- **Original Tag**: {lora_tag}")
+            log_entries.append(f"  - **Cleansed Keywords**: {keywords}")
+
+        log_entries.append("\n### Final Prompt Substitution:\n")
+        log_entries.append(f"**Modified Text**: {text}")
+        
+        log = "\n".join(log_entries)
+
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}lora2prompt", {
+            "node": node_id, 
+            "log": log
+        })
+
         return (text, loras_string)
 # endregion
 # region LF_LoraTag2Prompt
@@ -331,10 +353,8 @@ class LF_LoraTag2Prompt:
         keyword_counts = []
         log_entries = []
 
-        tag_split_regex = r"<lora:[^>]+>"
-
         for tag_entry in tag_list:
-            tags_in_entry = re.findall(tag_split_regex, tag_entry)
+            tags_in_entry = re.findall(LORA_TAG_REGEX, tag_entry)
 
             for t in tags_in_entry:
                 clean_lora = cleanse_lora_tag(t, separator)   
@@ -344,20 +364,20 @@ class LF_LoraTag2Prompt:
 
                 log_entries.append(f"""
 ### LoRA Tag Entry:
+                                   
 - **Original Tag**: {t}
 - **Cleaned LoRA Tag**: {clean_lora}
 - **Number of Keywords**: {keywords_count}
 - **Keywords Extracted**: {clean_lora.split(', ') if clean_lora else '*No keywords extracted*'}
                 """)
 
-        log = f"""
-## LF_LoraTag2Prompt Execution Log
+        log = f"""## Breakdown
 
 ### Input Details:
+
 - **Original Tags**: {tag_list}
 - **Separator Used**: '{separator}'
 
-### Processing Summary:
 {''.join(log_entries)}
         """
 

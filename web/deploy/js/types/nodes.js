@@ -31,6 +31,7 @@ export var NodeName;
     NodeName["loadImages"] = "LF_LoadImages";
     NodeName["loadLoraTags"] = "LF_LoadLoraTags";
     NodeName["loadMetadata"] = "LF_LoadMetadata";
+    NodeName["lora2Prompt"] = "LF_Lora2Prompt";
     NodeName["loraTag2Prompt"] = "LF_LoraTag2Prompt";
     NodeName["loraAndEmbeddingSelector"] = "LF_LoraAndEmbeddingSelector";
     NodeName["loraSelector"] = "LF_LoraSelector";

@@ -31,6 +31,7 @@ export declare enum EventName {
     loadLoraTags = "lf-loadloratags",
     loraAndEmbeddingSelector = "lf-loraandembeddingselector",
     loraSelector = "lf-loraselector",
+    lora2Prompt = "lf-lora2prompt",
     loraTag2Prompt = "lf-loratag2prompt",
     mathOperation = "lf-mathoperation",
     multipleImageResizeForWeb = "lf-multipleimageresizeforweb",
@@ -59,7 +60,7 @@ export declare enum EventName {
     vaeSelector = "lf-vaeselector",
     writeJson = "lf-writejson"
 }
-export type EventPayload = BlurImagesPayload | BooleanPayload | CheckpointSelectorPayload | CivitAIMetadataSetupPayload | ClarityEffectPayload | CompareImagesPayload | DisplayBooleanPayload | DisplayJSONPayload | EmbeddingSelectorPayload | ExtractorPayload | FloatPayload | ImageListFromJSONPayload | ImageHistogramPayload | IntegerPayload | IsLandscapePayload | KeywordCounterPayload | LoadImagesPayload | LoraAndEmbeddingSelectorPayload | LoraSelectorPayload | LoraTag2PromptPayload | LoadLoraTagsPayload | MathOperationPayload | MultipleImageResizeForWebPayload | NotifyPayload | RandomBooleanPayload | ResizeImageByEdgePayload | ResizeImageToDimensionPayload | ResizeImageToSquarePayload | ResolutionSwitcherPayload | SamplerSelectorPayload | SaveImageForCivitAIPayload | SchedulerSelectorPayload | ShuffleJSONKeysPayload | Something2NumberPayload | Something2StringPayload | SortJSONKeysPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | UpdateUsageStatisticsPayload | UpscaleModelSelectorPayload | UrandomSeedGeneratorPayload | VAESelectorPayload | WriteJSONPayload;
+export type EventPayload = BlurImagesPayload | BooleanPayload | CheckpointSelectorPayload | CivitAIMetadataSetupPayload | ClarityEffectPayload | CompareImagesPayload | DisplayBooleanPayload | DisplayJSONPayload | EmbeddingSelectorPayload | ExtractorPayload | FloatPayload | ImageListFromJSONPayload | ImageHistogramPayload | IntegerPayload | IsLandscapePayload | KeywordCounterPayload | LoadImagesPayload | LoraAndEmbeddingSelectorPayload | LoraSelectorPayload | Lora2PromptPayload | LoraTag2PromptPayload | LoadLoraTagsPayload | MathOperationPayload | MultipleImageResizeForWebPayload | NotifyPayload | RandomBooleanPayload | ResizeImageByEdgePayload | ResizeImageToDimensionPayload | ResizeImageToSquarePayload | ResolutionSwitcherPayload | SamplerSelectorPayload | SaveImageForCivitAIPayload | SchedulerSelectorPayload | ShuffleJSONKeysPayload | Something2NumberPayload | Something2StringPayload | SortJSONKeysPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | UpdateUsageStatisticsPayload | UpscaleModelSelectorPayload | UrandomSeedGeneratorPayload | VAESelectorPayload | WriteJSONPayload;
 export interface BlurImagesPayload extends BaseEventPayload {
     fileNames: Array<string>;
     images: Array<string>;
@@ -148,6 +149,9 @@ export interface LoadLoraTagsPayload extends BaseEventPayload {
     hashes: string[];
     paths: string[];
     chipDataset: KulDataDataset;
+}
+export interface Lora2PromptPayload extends BaseEventPayload {
+    log: string;
 }
 export interface LoraTag2PromptPayload extends BaseEventPayload {
     log: string;

@@ -470,8 +470,7 @@ class LF_Something2Number:
         int_log = "\n".join([str(val) for val in integer_values]) if integer_values else empty
         breakdown_log = "\n".join([f"{i+1}. {val}" for i, val in enumerate(breakdown)]) if breakdown else empty
 
-        log = f"""
-## Result:
+        log = f"""## Result:
   **Float sum: {str(float_sum)}**
   **Integer sum: {str(integer_sum)}**
 
@@ -558,8 +557,7 @@ class LF_Something2String:
         flattened_log = "\n".join([f"{i+1}. {val}" for i, val in enumerate(breakdown)]) if breakdown else "*Empty*"
         combinations_log = "\n".join([f"{i+1}. {val}" for i, val in enumerate(combination_logs)]) if combination_logs else "*Empty*"
 
-        log = f"""
-## Breakdown of Flattened Inputs:
+        log = f"""## Breakdown
 {flattened_log}
 
 ## Combination Results:

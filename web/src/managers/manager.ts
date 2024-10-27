@@ -67,6 +67,7 @@ import {
   Something2NumberPayload,
   Something2StringPayload,
   LoraTag2PromptPayload,
+  Lora2PromptPayload,
 } from '../types/events.js';
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
 import { LFTooltip } from './tooltip';
@@ -730,6 +731,13 @@ export class LFManager {
         nodes.eventHandlers.LF_LoraAndEmbeddingSelector(e, widgets.adders.KUL_CARD);
       },
     );
+    /*-------------------------------------------------------------------*/
+    /*                  I n i t   L o r a 2 P r o m p t                  */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_Lora2Prompt(widgets.setters.KUL_CODE, widgets.adders.KUL_CODE);
+    this.#APIS.event(EventName.lora2Prompt, (e: CustomEvent<Lora2PromptPayload>) => {
+      nodes.eventHandlers.LF_Lora2Prompt(e, widgets.adders.KUL_CODE);
+    });
     /*-------------------------------------------------------------------*/
     /*              I n i t   L o r a T a g 2 P r o m p t                */
     /*-------------------------------------------------------------------*/

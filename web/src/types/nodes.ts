@@ -33,6 +33,7 @@ export enum NodeName {
   loadImages = 'LF_LoadImages',
   loadLoraTags = 'LF_LoadLoraTags',
   loadMetadata = 'LF_LoadMetadata',
+  lora2Prompt = 'LF_Lora2Prompt',
   loraTag2Prompt = 'LF_LoraTag2Prompt',
   loraAndEmbeddingSelector = 'LF_LoraAndEmbeddingSelector',
   loraSelector = 'LF_LoraSelector',

@@ -141,10 +141,10 @@ class LF_ResolutionSwitcher:
         return {
             "required": {
                 "chance_landscape": ("FLOAT", {"default": 20.0, "step": 5, "min": 0, "max": 100, "tooltip": "Percentage chance for landscape output, 0-100."}),
-                "portrait_width": ("INT", {"default": 832, "min": 1, "step": 1}),
-                "portrait_height": ("INT", {"default": 1216, "min": 1, "step": 1}),
-                "landscape_width": ("INT", {"default": 1216, "min": 1, "step": 1}),
-                "landscape_height": ("INT", {"default": 832, "min": 1, "step": 1}),
+                "portrait_width": ("INT", {"default": 832, "min": 1, "step": 1, "tooltip": "Width when the image is portrait-oriented."}),
+                "portrait_height": ("INT", {"default": 1216, "min": 1, "step": 1, "tooltip": "Height when the image is portrait-oriented."}),
+                "landscape_width": ("INT", {"default": 1216, "min": 1, "step": 1, "tooltip": "Width when the image is landscape-oriented."}),
+                "landscape_height": ("INT", {"default": 832, "min": 1, "step": 1, "tooltip": "Height when the image is landscape-oriented."}),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"

@@ -26,6 +26,7 @@ export declare class LFNodes {
         LF_LoadLoraTags: (event: CustomEvent<import("../types/events").LoadLoraTagsPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.cardsWithChip>) => void;
         LF_LoraAndEmbeddingSelector: (event: CustomEvent<import("../types/events").LoraAndEmbeddingSelectorPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.card>) => void;
         LF_LoraSelector: (event: CustomEvent<import("../types/events").LoraSelectorPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.card>) => void;
+        LF_Lora2Prompt: (event: CustomEvent<import("../types/events").Lora2PromptPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
         LF_LoraTag2Prompt: (event: CustomEvent<import("../types/events").LoraTag2PromptPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
         LF_MathOperation: (event: CustomEvent<import("../types/events").MathOperationPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
         LF_MultipleImageResizeForWeb: (event: CustomEvent<import("../types/events").MultipleImageResizeForWebPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;
@@ -86,6 +87,7 @@ export declare class LFNodes {
         LF_LoraAndEmbeddingSelector: (setW: import("../types/widgets").CardWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.card>) => void;
         LF_LoadMetadata: (setW: import("../types/widgets").UploadWidgetSetter) => void;
         LF_LoraSelector: (setW: import("../types/widgets").CardWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.card>) => void;
+        LF_Lora2Prompt: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
         LF_LoraTag2Prompt: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
         LF_MathOperation: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
         LF_MultipleImageResizeForWeb: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;
@@ -142,6 +144,7 @@ export declare class LFNodes {
             LF_LoadLoraTags: (event: CustomEvent<import("../types/events").LoadLoraTagsPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.cardsWithChip>) => void;
             LF_LoraAndEmbeddingSelector: (event: CustomEvent<import("../types/events").LoraAndEmbeddingSelectorPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.card>) => void;
             LF_LoraSelector: (event: CustomEvent<import("../types/events").LoraSelectorPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.card>) => void;
+            LF_Lora2Prompt: (event: CustomEvent<import("../types/events").Lora2PromptPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
             LF_LoraTag2Prompt: (event: CustomEvent<import("../types/events").LoraTag2PromptPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
             LF_MathOperation: (event: CustomEvent<import("../types/events").MathOperationPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
             LF_MultipleImageResizeForWeb: (event: CustomEvent<import("../types/events").MultipleImageResizeForWebPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;
@@ -202,6 +205,7 @@ export declare class LFNodes {
             LF_LoraAndEmbeddingSelector: (setW: import("../types/widgets").CardWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.card>) => void;
             LF_LoadMetadata: (setW: import("../types/widgets").UploadWidgetSetter) => void;
             LF_LoraSelector: (setW: import("../types/widgets").CardWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.card>) => void;
+            LF_Lora2Prompt: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
             LF_LoraTag2Prompt: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
             LF_MathOperation: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
             LF_MultipleImageResizeForWeb: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;

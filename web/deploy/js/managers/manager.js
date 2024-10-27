@@ -558,6 +558,13 @@ export class LFManager {
             nodes.eventHandlers.LF_LoraAndEmbeddingSelector(e, widgets.adders.KUL_CARD);
         });
         /*-------------------------------------------------------------------*/
+        /*                  I n i t   L o r a 2 P r o m p t                  */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_Lora2Prompt(widgets.setters.KUL_CODE, widgets.adders.KUL_CODE);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.lora2Prompt, (e) => {
+            nodes.eventHandlers.LF_Lora2Prompt(e, widgets.adders.KUL_CODE);
+        });
+        /*-------------------------------------------------------------------*/
         /*              I n i t   L o r a T a g 2 P r o m p t                */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_LoraTag2Prompt(widgets.setters.KUL_CODE, widgets.adders.KUL_CODE);
