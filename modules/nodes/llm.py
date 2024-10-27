@@ -184,7 +184,7 @@ class LF_LLMChat:
         last_user_message = next((message.get("content") for message in reversed(json_input) if message["role"] == "user"), "")
         last_llm_message = next((message.get("content") for message in reversed(json_input) if message["role"] == "assistant"), "")
 
-        return (json_input, last_message, last_user_message, last_llm_message, json.dumps(all_messages))
+        return (json_input, last_message, last_user_message, last_llm_message, all_messages)
 # endregion
 # region LF_LLMMessenger
 class LF_LLMMessenger:
