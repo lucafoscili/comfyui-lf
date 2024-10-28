@@ -38,7 +38,10 @@ export const sequentialSeedsGeneratorFactory = {
               existingNode.description = newNode.description;
               comp.refresh();
             } else {
-              comp.kulData = { columns: dataset.columns, nodes: [...dataset.nodes, newNode] };
+              comp.kulData = {
+                columns: dataset.columns,
+                nodes: dataset?.nodes ? [...dataset?.nodes, newNode] : [newNode],
+              };
             }
           } else {
             comp.kulData = { nodes: [newNode] };
