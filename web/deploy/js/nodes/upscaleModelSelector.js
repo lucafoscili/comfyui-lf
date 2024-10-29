@@ -9,53 +9,18 @@ export const upscaleModelSelectorFactory = {
         const name = EventName.upscaleModelSelector;
         getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
         const payload = event.detail;
-        const isHistoryEnabled = payload.isHistoryEnabled;
         const node = getApiRoutes().getNodeById(payload.id);
-        if (isHistoryEnabled && node) {
+        if (node) {
             const list = getCustomWidget(node, CustomWidgetName.history, addW);
             if (list) {
-                const value = payload.value;
-                const comp = list.options.getComp();
-                const dataset = comp.kulData;
-                if (value) {
-                    const newNode = {
-                        icon: 'history',
-                        id: value,
-                        description: 'Execution date: ' + new Date().toLocaleString() + '.',
-                        value,
-                    };
-                    if (dataset) {
-                        const existingNode = dataset?.nodes?.find((n) => n.id === value);
-                        if (existingNode) {
-                            existingNode.description = newNode.description;
-                            comp.refresh();
-                        }
-                        else {
-                            comp.kulData = { columns: dataset.columns, nodes: [...dataset.nodes, newNode] };
-                        }
-                    }
-                    else {
-                        comp.kulData = { nodes: [newNode] };
-                    }
-                }
+                list.options.setValue(JSON.stringify(payload.dataset));
             }
             getApiRoutes().redraw();
         }
     },
-    register: (setW, addW) => {
+    register: (setW) => {
         const extension = {
             name: 'LFExt_' + NAME,
-            beforeRegisterNodeDef: async (nodeType) => {
-                if (nodeType.comfyClass === NAME) {
-                    const onNodeCreated = nodeType.prototype.onNodeCreated;
-                    nodeType.prototype.onNodeCreated = function () {
-                        const r = onNodeCreated?.apply(this, arguments);
-                        const node = this;
-                        addW(node, CustomWidgetName.history);
-                        return r;
-                    };
-                }
-            },
             getCustomWidgets: setW,
         };
         getApiRoutes().register(extension);

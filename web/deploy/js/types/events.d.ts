@@ -47,7 +47,7 @@ export declare enum EventName {
     saveImageForCivitAI = "lf-saveimageforcivitai",
     saveJson = "lf-savejson",
     schedulerSelector = "lf-schedulerselector",
-    sequentialSeedsGenerator = "lf_sequentialseedsgenerator",
+    sequentialSeedsGenerator = "lf-sequentialseedsgenerator",
     shuffleJsonKeys = "lf-shufflejsonkeys",
     something2Number = "lf-something2number",
     something2String = "lf-something2string",
@@ -117,8 +117,7 @@ export interface ExtractorPayload extends BaseEventPayload {
     result: string;
 }
 export interface FloatPayload extends BaseEventPayload {
-    isHistoryEnabled: boolean;
-    value: number;
+    dataset: KulDataDataset;
 }
 export interface ImageClassifierPayload extends BaseEventPayload {
     value: string;
@@ -130,8 +129,7 @@ export interface ImageHistogramPayload extends BaseEventPayload {
     datasets: TabBarChartWidgetDeserializedValue;
 }
 export interface IntegerPayload extends BaseEventPayload {
-    isHistoryEnabled: boolean;
-    value: number;
+    dataset: KulDataDataset;
 }
 export interface IsLandscapePayload extends BaseEventPayload {
     dataset: KulDataDataset;
@@ -141,8 +139,7 @@ export interface KeywordCounterPayload extends BaseEventPayload {
     chipDataset: KulDataDataset;
 }
 export interface LoadFileOncePayload extends BaseEventPayload {
-    isHistoryEnabled: boolean;
-    value: string;
+    dataset: KulDataDataset;
 }
 export interface LoadImagesPayload extends BaseEventPayload {
     dataset: KulDataDataset;
@@ -206,8 +203,7 @@ export interface ResolutionSwitcherPayload extends BaseEventPayload {
     roll: number;
 }
 export interface SamplerSelectorPayload extends BaseEventPayload {
-    isHistoryEnabled: boolean;
-    value: string;
+    dataset: KulDataDataset;
 }
 export interface SaveJSONPayload extends BaseEventPayload {
     dataset: KulDataDataset;
@@ -216,12 +212,10 @@ export interface SaveImageForCivitAIPayload extends BaseEventPayload {
     dataset: KulDataDataset;
 }
 export interface SchedulerSelectorPayload extends BaseEventPayload {
-    isHistoryEnabled: boolean;
-    value: string;
+    dataset: KulDataDataset;
 }
 export interface SequentialSeedsGeneratorPayload extends BaseEventPayload {
-    isHistoryEnabled: boolean;
-    value: number;
+    dataset: KulDataDataset;
 }
 export interface ShuffleJSONKeysPayload extends BaseEventPayload {
     json: Record<string, unknown>;
@@ -236,8 +230,7 @@ export interface SortJSONKeysPayload extends BaseEventPayload {
     json: Record<string, unknown>;
 }
 export interface StringPayload extends BaseEventPayload {
-    isHistoryEnabled: boolean;
-    value: string;
+    dataset: KulDataDataset;
 }
 export interface SwitchFloatPayload extends BaseEventPayload {
     bool: boolean;
@@ -258,16 +251,14 @@ export interface UpdateUsageStatisticsPayload extends BaseEventPayload {
     log: string;
 }
 export interface UpscaleModelSelectorPayload extends BaseEventPayload {
-    isHistoryEnabled: boolean;
-    value: string;
+    dataset: KulDataDataset;
 }
 export interface UrandomSeedGeneratorPayload extends BaseEventPayload {
     dataset: KulDataDataset;
     isHistoryEnabled: boolean;
 }
 export interface VAESelectorPayload extends BaseEventPayload {
-    isHistoryEnabled: boolean;
-    value: string;
+    dataset: KulDataDataset;
 }
 export interface WriteJSONPayload extends BaseEventPayload {
     error: string;

@@ -1,3 +1,4 @@
+import datetime
 import json
 import os
 import time
@@ -6,8 +7,8 @@ from datetime import datetime
 
 from server import PromptServer
 
-from ..utils.constants import *
-from ..utils.helpers import *
+from ..utils.constants import CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, INT_MAX
+from ..utils.helpers import create_history_node, normalize_json_input, normalize_list_to_value
 
 CATEGORY = f"{CATEGORY_PREFIX}/Seed generation"
     
@@ -20,6 +21,9 @@ class LF_SequentialSeedsGenerator:
                 "seed": ("INT", {"default": 0, "max": INT_MAX, "tooltip": "Seed value from which the other seeds will be progressively increased."}),
                 "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the random seeds at execution time."}),
             },
+            "optional": {
+                "json_input": ("KUL_HISTORY", {"default": {}}),
+            },
             "hidden": {
                 "node_id": "UNIQUE_ID"
             }
@@ -30,13 +34,22 @@ class LF_SequentialSeedsGenerator:
     RETURN_NAMES = ("seed",) * 20
     RETURN_TYPES = ("INT",) * 20
 
-    def on_exec(self, node_id: str, seed: int, enable_history: bool):
+    def on_exec(self, node_id: str, seed: int, enable_history: bool, json_input: dict = {}):
         seeds = [seed + i for i in range(20)] 
+        enable_history = normalize_list_to_value(enable_history)
+        json_input = normalize_json_input(json_input)
+
+        nodes = json_input.get("nodes", [])
+        dataset = {
+            "nodes": nodes
+        }
+
+        if enable_history:
+            create_history_node(str(seed), nodes)
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}sequentialseedsgenerator", {
             "node": node_id, 
-            "isHistoryEnabled": enable_history,
-            "value": seed,
+            "dataset": dataset,
         })        
 
         return seeds
@@ -84,19 +97,15 @@ class LF_UrandomSeedGenerator:
         current_timestamp = int(datetime.now().timestamp())
         
         for i in range(20):
-            # Generate urandom seed
             urandom_seed = int.from_bytes(os.urandom(4), 'big')
             
-            # Only XOR with timestamp if the current seconds meet certain criteria
             current_seconds = datetime.now().second
-            if current_seconds % 2 == 0:  # XOR only if seconds are even
+            if current_seconds % 2 == 0:
                 urandom_seed ^= current_timestamp
             
-            # Set seed if it was not provided in the input
             if existing_seeds[i] is None:
                 existing_seeds[i] = urandom_seed
             
-            # Slight delay to refresh system entropy pool
             time.sleep(0.01)
 
         execution_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")

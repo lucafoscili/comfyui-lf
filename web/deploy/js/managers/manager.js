@@ -483,7 +483,7 @@ export class LFManager {
         /*-------------------------------------------------------------------*/
         /*                        I n i t   F l o a t                        */
         /*-------------------------------------------------------------------*/
-        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_Float(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_Float(widgets.setters.KUL_HISTORY);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.float, (e) => {
             nodes.eventHandlers.LF_Float(e, widgets.adders.KUL_HISTORY);
         });
@@ -518,7 +518,7 @@ export class LFManager {
         /*-------------------------------------------------------------------*/
         /*                      I n i t   I n t e g e r                      */
         /*-------------------------------------------------------------------*/
-        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_Integer(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_Integer(widgets.setters.KUL_HISTORY);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.integer, (e) => {
             nodes.eventHandlers.LF_Integer(e, widgets.adders.KUL_HISTORY);
         });
@@ -653,7 +653,7 @@ export class LFManager {
         /*-------------------------------------------------------------------*/
         /*               I n i t   S a m p l e r S e l e c t o r             */
         /*-------------------------------------------------------------------*/
-        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_SamplerSelector(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_SamplerSelector(widgets.setters.KUL_HISTORY);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.samplerSelector, (e) => {
             nodes.eventHandlers.LF_SamplerSelector(e, widgets.adders.KUL_HISTORY);
         });
@@ -674,14 +674,14 @@ export class LFManager {
         /*-------------------------------------------------------------------*/
         /*           I n i t   S c h e d u l e r S e l e c t o r             */
         /*-------------------------------------------------------------------*/
-        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_SchedulerSelector(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_SchedulerSelector(widgets.setters.KUL_HISTORY);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.schedulerSelector, (e) => {
             nodes.eventHandlers.LF_SchedulerSelector(e, widgets.adders.KUL_HISTORY);
         });
         /*-------------------------------------------------------------------*/
         /*     I n i t   S e q u e n t i a l S e e d s G e n e r a t o r     */
         /*-------------------------------------------------------------------*/
-        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_SequentialSeedsGenerator(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_SequentialSeedsGenerator(widgets.setters.KUL_HISTORY);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.sequentialSeedsGenerator, (e) => {
             nodes.eventHandlers.LF_SequentialSeedsGenerator(e, widgets.adders.KUL_HISTORY);
         });
@@ -716,7 +716,7 @@ export class LFManager {
         /*-------------------------------------------------------------------*/
         /*                      I n i t   S t r i n g                        */
         /*-------------------------------------------------------------------*/
-        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_String(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_String(widgets.setters.KUL_HISTORY);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.string, (e) => {
             nodes.eventHandlers.LF_String(e, widgets.adders.KUL_HISTORY);
         });
@@ -765,7 +765,7 @@ export class LFManager {
         /*-------------------------------------------------------------------*/
         /*         I n i t   U p s c a l e M o d e l S e l e c t o r         */
         /*-------------------------------------------------------------------*/
-        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_UpscaleModelSelector(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_UpscaleModelSelector(widgets.setters.KUL_HISTORY);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.upscaleModelSelector, (e) => {
             nodes.eventHandlers.LF_UpscaleModelSelector(e, widgets.adders.KUL_HISTORY);
         });
@@ -786,7 +786,7 @@ export class LFManager {
         /*-------------------------------------------------------------------*/
         /*                  I n i t   V A E S e l e c t o r                  */
         /*-------------------------------------------------------------------*/
-        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_VAESelector(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_VAESelector(widgets.setters.KUL_HISTORY);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.vaeSelector, (e) => {
             nodes.eventHandlers.LF_VAESelector(e, widgets.adders.KUL_HISTORY);
         });

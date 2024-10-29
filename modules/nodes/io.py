@@ -12,7 +12,7 @@ from PIL.PngImagePlugin import PngInfo
 from server import PromptServer
 
 from ..utils.constants import BASE_OUTPUT_PATH, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, BASE_INPUT_PATH, USER_FOLDER
-from ..utils.helpers import create_dummy_image_tensor, create_masonry_node, extract_jpeg_metadata, extract_png_metadata, get_resource_url, normalize_input_image, normalize_input_list, normalize_json_input, normalize_list_to_value, normalize_output_image, pil_to_tensor, resolve_filepath, tensor_to_numpy
+from ..utils.helpers import create_dummy_image_tensor, create_history_node, create_masonry_node, extract_jpeg_metadata, extract_png_metadata, get_resource_url, normalize_input_image, normalize_input_list, normalize_json_input, normalize_list_to_value, normalize_output_image, pil_to_tensor, resolve_filepath, tensor_to_numpy
 
 CATEGORY = f"{CATEGORY_PREFIX}/IO Operations"
  
@@ -26,7 +26,9 @@ class LF_LoadFileOnce:
                 "subdir": ("BOOLEAN", {"default": False, "label": "Load from subdir", "tooltip": "Indicates whether to also load images from subdirectories."}),
                 "strip_ext": ("BOOLEAN", {"default": True, "label": "Strip extension from name", "tooltip": "Whether to remove file extensions from filenames."}),
                 "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget to prevent the same filename to be loaded twice."}),
-                "history": ("KUL_HISTORY", {}),
+            },
+            "optional": {
+                "json_input": ("KUL_HISTORY", {"default": {}}),
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID",
@@ -39,36 +41,40 @@ class LF_LoadFileOnce:
     RETURN_NAMES = ("file", "name", "file_list", "name_list")
     RETURN_TYPES = ("*", "STRING", "*", "STRING")
 
-    def on_exec(self, node_id: str , dir: str, subdir: str, strip_ext: bool, enable_history: bool, history: str):
+    def on_exec(self, node_id: str, dir: str, subdir: str, strip_ext: bool, enable_history: bool, json_input: dict = {}):
         dir = normalize_list_to_value(dir)
         subdir = normalize_list_to_value(subdir)
         strip_ext = normalize_list_to_value(strip_ext)
         enable_history = normalize_list_to_value(enable_history)
-        history = normalize_json_input(history)
+        json_input = normalize_json_input(json_input)
 
-        previous_files = set()
-        if history:
-            previous_files = {entry['value'] for entry in history.get('nodes', [])}
+        nodes = json_input.get("nodes", [])
+        previous_files = {node['value'] for node in nodes} if nodes else set()
 
+        file, file_name = None, None
         for root, dirs, filenames in os.walk(dir):
             if not subdir:
                 dirs[:] = []
             for filename in filenames:
                 file_name_stripped = os.path.splitext(filename)[0] if strip_ext else filename
-                
+
                 if file_name_stripped in previous_files:
                     continue
 
                 file_path = os.path.join(root, filename)
                 with open(file_path, 'rb') as f:
-                    file_data = f.read()
-                    file = file_data
+                    file = f.read()
                     file_name = file_name_stripped
+
+                if enable_history:
+                    create_history_node(file_name_stripped, nodes)
+                break
+
+        dataset = {"nodes": nodes}
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}loadfileonce", {
             "node": node_id,
-            "isHistoryEnabled": enable_history,
-            "value": file_name,
+            "dataset": dataset
         })
 
         return (file, file_name, file, file_name)

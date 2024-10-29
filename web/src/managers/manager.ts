@@ -640,7 +640,7 @@ export class LFManager {
     /*-------------------------------------------------------------------*/
     /*                        I n i t   F l o a t                        */
     /*-------------------------------------------------------------------*/
-    this.#MANAGERS.nodes.register.LF_Float(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
+    this.#MANAGERS.nodes.register.LF_Float(widgets.setters.KUL_HISTORY);
     this.#APIS.event(EventName.float, (e: CustomEvent<FloatPayload>) => {
       nodes.eventHandlers.LF_Float(e, widgets.adders.KUL_HISTORY);
     });
@@ -681,10 +681,7 @@ export class LFManager {
     /*-------------------------------------------------------------------*/
     /*                      I n i t   I n t e g e r                      */
     /*-------------------------------------------------------------------*/
-    this.#MANAGERS.nodes.register.LF_Integer(
-      widgets.setters.KUL_HISTORY,
-      widgets.adders.KUL_HISTORY,
-    );
+    this.#MANAGERS.nodes.register.LF_Integer(widgets.setters.KUL_HISTORY);
     this.#APIS.event(EventName.integer, (e: CustomEvent<IntegerPayload>) => {
       nodes.eventHandlers.LF_Integer(e, widgets.adders.KUL_HISTORY);
     });
@@ -867,10 +864,7 @@ export class LFManager {
     /*-------------------------------------------------------------------*/
     /*               I n i t   S a m p l e r S e l e c t o r             */
     /*-------------------------------------------------------------------*/
-    this.#MANAGERS.nodes.register.LF_SamplerSelector(
-      widgets.setters.KUL_HISTORY,
-      widgets.adders.KUL_HISTORY,
-    );
+    this.#MANAGERS.nodes.register.LF_SamplerSelector(widgets.setters.KUL_HISTORY);
     this.#APIS.event(EventName.samplerSelector, (e: CustomEvent<SamplerSelectorPayload>) => {
       nodes.eventHandlers.LF_SamplerSelector(e, widgets.adders.KUL_HISTORY);
     });
@@ -897,20 +891,14 @@ export class LFManager {
     /*-------------------------------------------------------------------*/
     /*           I n i t   S c h e d u l e r S e l e c t o r             */
     /*-------------------------------------------------------------------*/
-    this.#MANAGERS.nodes.register.LF_SchedulerSelector(
-      widgets.setters.KUL_HISTORY,
-      widgets.adders.KUL_HISTORY,
-    );
+    this.#MANAGERS.nodes.register.LF_SchedulerSelector(widgets.setters.KUL_HISTORY);
     this.#APIS.event(EventName.schedulerSelector, (e: CustomEvent<SchedulerSelectorPayload>) => {
       nodes.eventHandlers.LF_SchedulerSelector(e, widgets.adders.KUL_HISTORY);
     });
     /*-------------------------------------------------------------------*/
     /*     I n i t   S e q u e n t i a l S e e d s G e n e r a t o r     */
     /*-------------------------------------------------------------------*/
-    this.#MANAGERS.nodes.register.LF_SequentialSeedsGenerator(
-      widgets.setters.KUL_HISTORY,
-      widgets.adders.KUL_HISTORY,
-    );
+    this.#MANAGERS.nodes.register.LF_SequentialSeedsGenerator(widgets.setters.KUL_HISTORY);
     this.#APIS.event(
       EventName.sequentialSeedsGenerator,
       (e: CustomEvent<SequentialSeedsGeneratorPayload>) => {
@@ -960,10 +948,7 @@ export class LFManager {
     /*-------------------------------------------------------------------*/
     /*                      I n i t   S t r i n g                        */
     /*-------------------------------------------------------------------*/
-    this.#MANAGERS.nodes.register.LF_String(
-      widgets.setters.KUL_HISTORY,
-      widgets.adders.KUL_HISTORY,
-    );
+    this.#MANAGERS.nodes.register.LF_String(widgets.setters.KUL_HISTORY);
     this.#APIS.event(EventName.string, (e: CustomEvent<StringPayload>) => {
       nodes.eventHandlers.LF_String(e, widgets.adders.KUL_HISTORY);
     });
@@ -1033,10 +1018,7 @@ export class LFManager {
     /*-------------------------------------------------------------------*/
     /*         I n i t   U p s c a l e M o d e l S e l e c t o r         */
     /*-------------------------------------------------------------------*/
-    this.#MANAGERS.nodes.register.LF_UpscaleModelSelector(
-      widgets.setters.KUL_HISTORY,
-      widgets.adders.KUL_HISTORY,
-    );
+    this.#MANAGERS.nodes.register.LF_UpscaleModelSelector(widgets.setters.KUL_HISTORY);
     this.#APIS.event(
       EventName.upscaleModelSelector,
       (e: CustomEvent<UpscaleModelSelectorPayload>) => {
@@ -1072,10 +1054,7 @@ export class LFManager {
     /*-------------------------------------------------------------------*/
     /*                  I n i t   V A E S e l e c t o r                  */
     /*-------------------------------------------------------------------*/
-    this.#MANAGERS.nodes.register.LF_VAESelector(
-      widgets.setters.KUL_HISTORY,
-      widgets.adders.KUL_HISTORY,
-    );
+    this.#MANAGERS.nodes.register.LF_VAESelector(widgets.setters.KUL_HISTORY);
     this.#APIS.event(EventName.vaeSelector, (e: CustomEvent<VAESelectorPayload>) => {
       nodes.eventHandlers.LF_VAESelector(e, widgets.adders.KUL_HISTORY);
     });
