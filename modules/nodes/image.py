@@ -186,7 +186,7 @@ class LF_CompareImages:
 
             if image_opt is not None:
                 output_file_t, subfolder_t, filename_t = resolve_filepath(f"{USER_FOLDER}", BASE_TEMP_PATH, index, False, f"compare_t", "PNG", True)
-                pil_image = tensor_to_pil(image_opt[index])
+                pil_image = tensor_to_pil(image_list_2[index])
                 pil_image.save(output_file_t, format="PNG")
                 filename_t = get_resource_url(subfolder_t, filename_t, "temp")
             else:
