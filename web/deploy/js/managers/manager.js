@@ -381,7 +381,7 @@ export class LFManager {
         /*-------------------------------------------------------------------*/
         /*                      I n i t   B o o l e a n                      */
         /*-------------------------------------------------------------------*/
-        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_Boolean(widgets.setters.KUL_HISTORY, widgets.adders.KUL_HISTORY);
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_Boolean(widgets.setters.KUL_HISTORY);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.boolean, (e) => {
             nodes.eventHandlers.LF_Boolean(e, widgets.adders.KUL_HISTORY);
         });

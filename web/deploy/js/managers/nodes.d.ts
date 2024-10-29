@@ -62,7 +62,7 @@ export declare class LFNodes {
     };
     register: {
         LF_BlurImages: (setW: import("../types/widgets").MasonryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.masonry>) => void;
-        LF_Boolean: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
+        LF_Boolean: (setW: import("../types/widgets").HistoryWidgetSetter) => void;
         LF_CharacterImpersonator: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
         LF_CheckpointSelector: (setW: import("../types/widgets").CardWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.card>) => void;
         LF_CivitAIMetadataSetup: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
@@ -188,7 +188,7 @@ export declare class LFNodes {
         };
         registrations: {
             LF_BlurImages: (setW: import("../types/widgets").MasonryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.masonry>) => void;
-            LF_Boolean: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
+            LF_Boolean: (setW: import("../types/widgets").HistoryWidgetSetter) => void;
             LF_CharacterImpersonator: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
             LF_CheckpointSelector: (setW: import("../types/widgets").CardWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.card>) => void;
             LF_CivitAIMetadataSetup: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;

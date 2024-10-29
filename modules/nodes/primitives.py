@@ -1,3 +1,4 @@
+import datetime
 import json
 import random
 
@@ -6,11 +7,13 @@ from itertools import combinations
 from server import PromptServer
 
 from ..utils.constants import CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, INT_MAX
-from ..utils.helpers import convert_to_boolean, convert_to_float, convert_to_int, convert_to_json, normalize_input_list, normalize_list_to_value
+from ..utils.helpers import convert_to_boolean, convert_to_float, convert_to_int, convert_to_json, normalize_input_list, normalize_json_input, normalize_list_to_value
 
 CATEGORY = f"{CATEGORY_PREFIX}/Primitives"
     
 # region LF_Boolean
+import datetime
+
 class LF_Boolean:
     @classmethod 
     def INPUT_TYPES(cls):
@@ -18,6 +21,9 @@ class LF_Boolean:
             "required": {
                 "boolean": ("BOOLEAN", {"default": False, "tooltip": "Boolean value."}),
                 "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
+            },
+            "optional": {
+                "json_input": ("KUL_HISTORY", {"default": {}}),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -29,14 +35,34 @@ class LF_Boolean:
     RETURN_NAMES = ("boolean",)
     RETURN_TYPES = ("BOOLEAN",)
 
-    def on_exec(self, node_id: str, boolean: bool, enable_history: bool):
+    def on_exec(self, node_id: str, boolean: bool, enable_history: bool, json_input: dict = {}):
         boolean = normalize_list_to_value(boolean)
         enable_history = normalize_list_to_value(enable_history)
+        json_input = normalize_json_input(json_input)
 
+        nodes = json_input.get("nodes", [])
+        dataset = {
+            "nodes": nodes
+        }
+
+        if enable_history:
+            value = str(boolean)
+            new_node = {
+                "icon": "history",
+                "id": value,
+                "description": f"Execution date: {datetime.datetime.now().strftime('%d/%m/%Y, %H:%M:%S')}.",
+                "value": value,
+            }
+
+            existing_node = next((n for n in nodes if n["id"] == value), None)
+            if existing_node:
+                existing_node["description"] = new_node["description"]
+            else:
+                nodes.append(new_node)
+            
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}boolean", {
             "node": node_id, 
-            "isHistoryEnabled": enable_history,
-            "value": boolean,
+            "dataset": dataset
         })
 
         return (boolean,)

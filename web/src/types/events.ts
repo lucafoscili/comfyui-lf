@@ -135,8 +135,7 @@ export interface BlurImagesPayload extends BaseEventPayload {
 /*-------------------------------------------------------------------*/
 
 export interface BooleanPayload extends BaseEventPayload {
-  isHistoryEnabled: boolean;
-  value: boolean;
+  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/

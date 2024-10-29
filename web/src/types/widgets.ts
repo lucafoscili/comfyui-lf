@@ -43,6 +43,7 @@ export type ComfyWidgetMap = {
   [ComfyWidgetName.number]: Widget;
   [ComfyWidgetName.seed]: Widget;
   [ComfyWidgetName.string]: Widget;
+  [ComfyWidgetName.toggle]: Widget;
 };
 export enum ComfyWidgetName {
   boolean = 'BOOLEAN',
@@ -54,6 +55,7 @@ export enum ComfyWidgetName {
   number = 'NUMBER',
   seed = 'SEED',
   string = 'STRING',
+  toggle = 'TOGGLE',
 }
 export type CustomWidgetMap = {
   [CustomWidgetName.booleanViewer]: BooleanViewerWidget;

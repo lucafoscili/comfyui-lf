@@ -496,10 +496,7 @@ export class LFManager {
     /*-------------------------------------------------------------------*/
     /*                      I n i t   B o o l e a n                      */
     /*-------------------------------------------------------------------*/
-    this.#MANAGERS.nodes.register.LF_Boolean(
-      widgets.setters.KUL_HISTORY,
-      widgets.adders.KUL_HISTORY,
-    );
+    this.#MANAGERS.nodes.register.LF_Boolean(widgets.setters.KUL_HISTORY);
     this.#APIS.event(EventName.boolean, (e: CustomEvent<BooleanPayload>) => {
       nodes.eventHandlers.LF_Boolean(e, widgets.adders.KUL_HISTORY);
     });
