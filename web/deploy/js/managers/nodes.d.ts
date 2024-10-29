@@ -88,7 +88,7 @@ export declare class LFNodes {
         LF_LLMChat: (setW: import("../types/widgets").ChatWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.chat>) => void;
         LF_LLMMessenger: (setW: import("../types/widgets").MessengerWidgetSetter) => void;
         LF_LoadFileOnce: (setW: import("../types/widgets").HistoryWidgetSetter) => void;
-        LF_LoadImages: (setW: import("../types/widgets").MasonryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.masonry>) => void;
+        LF_LoadImages: (setW: import("../types/widgets").MasonryWidgetSetter) => void;
         LF_LoadLoraTags: (setW: import("../types/widgets").CardsWithChipWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.cardsWithChip>) => void;
         LF_LoraAndEmbeddingSelector: (setW: import("../types/widgets").CardWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.card>) => void;
         LF_LoadMetadata: (setW: import("../types/widgets").UploadWidgetSetter) => void;
@@ -214,7 +214,7 @@ export declare class LFNodes {
             LF_LLMChat: (setW: import("../types/widgets").ChatWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.chat>) => void;
             LF_LLMMessenger: (setW: import("../types/widgets").MessengerWidgetSetter) => void;
             LF_LoadFileOnce: (setW: import("../types/widgets").HistoryWidgetSetter) => void;
-            LF_LoadImages: (setW: import("../types/widgets").MasonryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.masonry>) => void;
+            LF_LoadImages: (setW: import("../types/widgets").MasonryWidgetSetter) => void;
             LF_LoadLoraTags: (setW: import("../types/widgets").CardsWithChipWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.cardsWithChip>) => void;
             LF_LoraAndEmbeddingSelector: (setW: import("../types/widgets").CardWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.card>) => void;
             LF_LoadMetadata: (setW: import("../types/widgets").UploadWidgetSetter) => void;

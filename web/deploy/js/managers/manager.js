@@ -511,7 +511,7 @@ export class LFManager {
         /*-------------------------------------------------------------------*/
         /*                I n i t   I m a g e s L o a d e r                  */
         /*-------------------------------------------------------------------*/
-        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_LoadImages(widgets.setters.KUL_MASONRY, widgets.adders.KUL_MASONRY);
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_LoadImages(widgets.setters.KUL_MASONRY);
         __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.loadImages, (e) => {
             nodes.eventHandlers.LF_LoadImages(e, widgets.adders.KUL_MASONRY);
         });

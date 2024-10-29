@@ -133,6 +133,10 @@ export const isValidJSON = (value: unknown) => {
   }
 };
 
+export const isValidNumber = (n: number) => {
+  return !isNaN(n) && typeof n === 'number';
+};
+
 export const kulManagerExists = () => {
   return !!DOM.ketchupLite;
 };

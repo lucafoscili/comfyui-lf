@@ -4,8 +4,8 @@ import random
 
 from PIL import Image
 
-from ..utils.constants import CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, INT_MAX
-from ..utils.helpers import normalize_input_list, normalize_output_image, numpy_to_tensor, pil_to_tensor, tensor_to_base64, normalize_list_to_value, normalize_json_input
+from ..utils.constants import BASE_TEMP_PATH, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, INT_MAX, USER_FOLDER
+from ..utils.helpers import create_masonry_node, get_resource_url, normalize_input_list, normalize_output_image, numpy_to_tensor, normalize_list_to_value, normalize_json_input, resolve_filepath, tensor_to_pil
 
 from server import PromptServer
 
@@ -142,7 +142,7 @@ class LF_ImageListFromJSON:
                 "width": ("INT", {"default": 1024, "tooltip": "Width of the images."}),
                 "height": ("INT", {"default": 1024, "tooltip": "Height of the images."}),
                 "seed": ("INT", {"default": 42, "tooltip": "Seed for generating random noise."}),
-                "previews": ("KUL_IMAGE_PREVIEW_B64", {}),
+                "previews": ("KUL_MASONRY", {}),
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
@@ -163,29 +163,37 @@ class LF_ImageListFromJSON:
         height: int = normalize_list_to_value(kwargs.get("height"))
         seed: int = normalize_list_to_value(kwargs.get("seed"))
 
+        nodes = []
+        dataset = { "nodes": nodes }
+
         keys = list(json_input.keys())
         num_images = len(keys)
 
         np.random.seed(seed)
 
-        tensor_list = []
-        for _ in range(num_images):
+        image = []
+        for index in range(num_images):
+            output_file, subfolder, filename = resolve_filepath(f"{USER_FOLDER}", BASE_TEMP_PATH, index, False, "jsonimage_", "PNG", False)
+            url = get_resource_url(subfolder, filename, "temp")
+
             if add_noise:
-                image_tensor = numpy_to_tensor(np.random.randint(0, 256, (height, width, 3), dtype=np.uint8))
+                img = numpy_to_tensor(np.random.randint(0, 256, (height, width, 3), dtype=np.uint8))
             else:
-                image_tensor = numpy_to_tensor(np.full((height, width, 3), 255, dtype=np.uint8))
+                img = numpy_to_tensor(np.full((height, width, 3), 255, dtype=np.uint8))
 
-            tensor_list.append(image_tensor)
+            pil_img = tensor_to_pil(img)
+            pil_img.save(output_file, format="PNG")
+            image.append(img)
+            
+            nodes.append(create_masonry_node(filename, url, index))
 
-        images_base64 = [tensor_to_base64(img) for img in tensor_list]
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}imagelistfromjson", {
             "node": node_id,
-            "fileNames": keys,
-            "images": images_base64
+            "dataset": dataset
         })
 
-        image_batch, image_list = normalize_output_image(tensor_list)
+        image_batch, image_list = normalize_output_image(image)
 
         return (image_batch[0], image_list, keys, num_images, width, height)
 

@@ -125,8 +125,7 @@ export interface ImageClassifierPayload extends BaseEventPayload {
     value: string;
 }
 export interface ImageListFromJSONPayload extends BaseEventPayload {
-    fileNames: Array<string>;
-    images: Array<string>;
+    dataset: KulDataDataset;
 }
 export interface ImageHistogramPayload extends BaseEventPayload {
     datasets: TabBarChartWidgetDeserializedValue;
@@ -147,10 +146,9 @@ export interface LoadFileOncePayload extends BaseEventPayload {
     value: string;
 }
 export interface LoadImagesPayload extends BaseEventPayload {
-    fileNames: Array<string>;
-    images: Array<string>;
-    selectedIndex: number;
-    selectedName: string;
+    dataset: KulDataDataset;
+    index: number;
+    name: string;
 }
 export interface LoadLoraTagsPayload extends BaseEventPayload {
     datasets: KulDataDataset[];
@@ -197,10 +195,6 @@ export interface RandomBooleanPayload extends BaseEventPayload {
 }
 export interface ResizeImageByEdgePayload extends BaseEventPayload {
     dataset: KulDataDataset;
-    heights: number[];
-    original_heights: number[];
-    original_widths: number[];
-    widths: number[];
 }
 export interface ResizeImageToDimensionPayload extends BaseEventPayload {
     dataset: KulDataDataset;

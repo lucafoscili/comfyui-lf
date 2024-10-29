@@ -1,16 +1,14 @@
-import {
-  KulDataDataset,
-  KulImageEventPayload,
-  KulMasonryEventPayload,
-} from '../types/ketchup-lite/components';
+import { KulImageEventPayload, KulMasonryEventPayload } from '../types/ketchup-lite/components';
+import { KulDataCell } from '../types/ketchup-lite/managers/kul-data/kul-data-declarations';
 import { NodeName } from '../types/nodes';
 import {
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
+  MasonryWidgetDeserializedValue,
   MasonryWidgetFactory,
   NormalizeValueCallback,
 } from '../types/widgets';
-import { createDOMWidget, normalizeValue } from '../utils/common';
+import { createDOMWidget, isValidNumber, normalizeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-masonry';
 const TYPE = CustomWidgetName.masonry;
@@ -27,17 +25,30 @@ export const masonryFactory: MasonryWidgetFactory = {
         return masonry;
       },
       getValue() {
+        const index = parseInt(masonry?.dataset.index);
         return {
           dataset: masonry?.kulData || {},
-          index: parseInt(masonry?.dataset.index) || 0,
+          index: isValidNumber(index) ? index : NaN,
           name: masonry?.dataset.name || '',
+          view: masonry?.kulView || 'masonry',
         };
       },
       setValue(value) {
         const callback: NormalizeValueCallback<
           CustomWidgetDeserializedValuesMap<typeof TYPE> | string
         > = (_, u) => {
-          masonry.kulData = (u.parsedJson as KulDataDataset) || {};
+          const { dataset, index, name, view } = u.parsedJson as MasonryWidgetDeserializedValue;
+          if (dataset) {
+            masonry.kulData = dataset || {};
+          }
+          if (view) {
+            masonry.kulView = view;
+          }
+          if (isValidNumber(index)) {
+            masonry.dataset.index = index.toString() || '';
+            masonry.dataset.name = name || '';
+            masonry.setSelectedShape(index);
+          }
         };
 
         normalizeValue(value, callback, TYPE);
@@ -76,8 +87,12 @@ const masonryEventHandler = (e: CustomEvent<KulMasonryEventPayload>) => {
       const { eventType } = (originalEvent as CustomEvent<KulImageEventPayload>).detail;
       switch (eventType) {
         case 'click':
-          masonry.dataset.index = selectedShape.index.toString();
-          masonry.dataset.value = String(selectedShape.shape?.value)?.valueOf() || '';
+          const v =
+            selectedShape.shape?.value || (selectedShape.shape as KulDataCell<'image'>)?.kulValue;
+          masonry.dataset.index = isValidNumber(selectedShape.index)
+            ? selectedShape.index.toString()
+            : '';
+          masonry.dataset.name = v ? String(v).valueOf() : '';
           break;
       }
       break;

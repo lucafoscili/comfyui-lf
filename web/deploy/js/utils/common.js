@@ -75,6 +75,9 @@ export const isValidJSON = (value) => {
         return false;
     }
 };
+export const isValidNumber = (n) => {
+    return !isNaN(n) && typeof n === 'number';
+};
 export const kulManagerExists = () => {
     return !!DOM.ketchupLite;
 };

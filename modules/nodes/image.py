@@ -4,8 +4,8 @@ import torch
 from PIL import Image, ImageFilter
 from server import PromptServer
 
-from ..utils.constants import BASE_TEMP_PATH, BASE64_PNG_PREFIX, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, RESAMPLERS, USER_FOLDER
-from ..utils.helpers import clarity_effect, create_compare_node, create_masonry_node, get_resource_url, normalize_input_image, normalize_input_list, normalize_list_to_value, normalize_output_image, pil_to_tensor, resize_and_crop_image, resize_image, resize_to_square, resolve_filepath, tensor_to_base64, tensor_to_pil
+from ..utils.constants import BASE_TEMP_PATH, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, RESAMPLERS, USER_FOLDER
+from ..utils.helpers import clarity_effect, create_compare_node, create_masonry_node, create_resize_node, get_resource_url, normalize_input_image, normalize_input_list, normalize_list_to_value, normalize_output_image, pil_to_tensor, resize_and_crop_image, resize_image, resize_to_square, resolve_filepath, tensor_to_pil
 
 CATEGORY = f"{CATEGORY_PREFIX}/Image"
 
@@ -348,7 +348,7 @@ class LF_ResizeImageByEdge:
 
         resized_images = []
 
-        for idx, img in enumerate(image):
+        for index, img in enumerate(image):
             original_height, original_width = img.shape[1], img.shape[2]
             original_heights.append(original_height)
             original_widths.append(original_width)
@@ -360,8 +360,7 @@ class LF_ResizeImageByEdge:
             heights.append(new_height)
             widths.append(new_width)
 
-            log_str = f"[{idx}] From {original_height}x{original_width} to {new_height}x{new_width}"
-            nodes.append({ "id": log_str, "value": log_str })
+            nodes.append(create_resize_node(original_height, original_width, new_height, new_width, index))
             
         num_resized = len(resized_images)
         summary_message = f"Resized {num_resized} {'image' if num_resized == 1 else 'images'}"
@@ -421,7 +420,7 @@ class LF_ResizeImageToDimension:
 
         resized_images = []
 
-        for idx, img in enumerate(image):
+        for index, img in enumerate(image):
             original_height, original_width = img.shape[1], img.shape[2]
             original_heights.append(original_height)
             original_widths.append(original_width)
@@ -433,8 +432,7 @@ class LF_ResizeImageToDimension:
             heights.append(new_height)
             widths.append(new_width)
 
-            log_str = f"[{idx}] From {original_height}x{original_width} to {new_height}x{new_width}"
-            nodes.append({ "id": log_str, "value": log_str })
+            nodes.append(create_resize_node(original_height, original_width, new_height, new_width, index))
         
         num_resized = len(resized_images)
         summary_message = f"Resized {num_resized} {'image' if num_resized == 1 else 'images'}"
@@ -490,7 +488,7 @@ class LF_ResizeImageToSquare:
 
         resized_images = []
 
-        for idx, img in enumerate(image):
+        for index, img in enumerate(image):
             original_height, original_width = img.shape[1], img.shape[2]
             original_heights.append(original_height)
             original_widths.append(original_width)
@@ -502,8 +500,7 @@ class LF_ResizeImageToSquare:
             heights.append(new_height)
             widths.append(new_width)
 
-            log_str = f"[{idx}] From {original_height}x{original_width} to {new_height}x{new_width}"
-            nodes.append({ "id": log_str, "value": log_str })
+            nodes.append(create_resize_node(original_height, original_width, new_height, new_width, index))
 
         num_resized = len(resized_images)
         summary_message = f"Resized {num_resized} {'image' if num_resized == 1 else 'images'}"

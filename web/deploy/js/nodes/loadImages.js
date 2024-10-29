@@ -16,20 +16,9 @@ export const loadImagesFactory = {
             getApiRoutes().redraw();
         }
     },
-    register: (setW, addW) => {
+    register: (setW) => {
         const extension = {
             name: 'LFExt_' + NAME,
-            beforeRegisterNodeDef: async (nodeType) => {
-                if (nodeType.comfyClass === NAME) {
-                    const onNodeCreated = nodeType.prototype.onNodeCreated;
-                    nodeType.prototype.onNodeCreated = function () {
-                        const r = onNodeCreated?.apply(this, arguments);
-                        const node = this;
-                        addW(node, CustomWidgetName.masonry);
-                        return r;
-                    };
-                }
-            },
             getCustomWidgets: setW,
         };
         getApiRoutes().register(extension);

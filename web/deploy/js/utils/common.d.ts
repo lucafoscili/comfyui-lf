@@ -23,6 +23,7 @@ export declare const isChart: (comp: KulComponent<KulComponentName>) => comp is 
 export declare const isList: (comp: KulComponent<KulComponentName>) => comp is KulList;
 export declare const isSwitch: (comp: KulComponent<KulComponentName>) => comp is KulSwitch;
 export declare const isValidJSON: (value: unknown) => boolean;
+export declare const isValidNumber: (n: number) => boolean;
 export declare const kulManagerExists: () => boolean;
 export declare const log: () => (message: string, args?: Record<string, unknown>, severity?: LogSeverity) => void;
 export declare const normalizeValue: <W extends CustomWidgetName, V extends CustomWidgetDeserializedValuesMap<W>>(value: V | string, callback: NormalizeValueCallback<V | string>, widget: W, onException?: () => void) => void;

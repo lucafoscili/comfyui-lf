@@ -1,6 +1,6 @@
 import { NodeName } from '../types/nodes.js';
 import { CustomWidgetName, } from '../types/widgets.js';
-import { createDOMWidget, normalizeValue } from '../utils/common.js';
+import { createDOMWidget, isValidNumber, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-masonry';
 const TYPE = CustomWidgetName.masonry;
 export const masonryFactory = {
@@ -15,15 +15,28 @@ export const masonryFactory = {
                 return masonry;
             },
             getValue() {
+                const index = parseInt(masonry?.dataset.index);
                 return {
                     dataset: masonry?.kulData || {},
-                    index: parseInt(masonry?.dataset.index) || 0,
+                    index: isValidNumber(index) ? index : NaN,
                     name: masonry?.dataset.name || '',
+                    view: masonry?.kulView || 'masonry',
                 };
             },
             setValue(value) {
                 const callback = (_, u) => {
-                    masonry.kulData = u.parsedJson || {};
+                    const { dataset, index, name, view } = u.parsedJson;
+                    if (dataset) {
+                        masonry.kulData = dataset || {};
+                    }
+                    if (view) {
+                        masonry.kulView = view;
+                    }
+                    if (isValidNumber(index)) {
+                        masonry.dataset.index = index.toString() || '';
+                        masonry.dataset.name = name || '';
+                        masonry.setSelectedShape(index);
+                    }
                 };
                 normalizeValue(value, callback, TYPE);
             },
@@ -55,8 +68,11 @@ const masonryEventHandler = (e) => {
             const { eventType } = originalEvent.detail;
             switch (eventType) {
                 case 'click':
-                    masonry.dataset.index = selectedShape.index.toString();
-                    masonry.dataset.value = String(selectedShape.shape?.value)?.valueOf() || '';
+                    const v = selectedShape.shape?.value || selectedShape.shape?.kulValue;
+                    masonry.dataset.index = isValidNumber(selectedShape.index)
+                        ? selectedShape.index.toString()
+                        : '';
+                    masonry.dataset.name = v ? String(v).valueOf() : '';
                     break;
             }
             break;

@@ -1,4 +1,5 @@
 import { KulDataDataset, KulMessengerConfig, KulMessengerDataset } from './ketchup-lite/components';
+import { KulMasonry } from './ketchup-lite/components/kul-masonry/kul-masonry';
 import { AnalyticsType } from './manager';
 import { NodeName } from './nodes';
 
@@ -449,8 +450,9 @@ export type MasonryWidgetSetter = () => {
 };
 export interface MasonryWidgetDeserializedValue {
   dataset: KulDataDataset;
-  index: number;
-  name: string;
+  index?: number;
+  name?: string;
+  view?: KulMasonry['kulView'];
 }
 
 /*-------------------------------------------------------------------*/

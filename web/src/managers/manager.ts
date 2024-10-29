@@ -677,10 +677,7 @@ export class LFManager {
     /*-------------------------------------------------------------------*/
     /*                I n i t   I m a g e s L o a d e r                  */
     /*-------------------------------------------------------------------*/
-    this.#MANAGERS.nodes.register.LF_LoadImages(
-      widgets.setters.KUL_MASONRY,
-      widgets.adders.KUL_MASONRY,
-    );
+    this.#MANAGERS.nodes.register.LF_LoadImages(widgets.setters.KUL_MASONRY);
     this.#APIS.event(EventName.loadImages, (e: CustomEvent<LoadImagesPayload>) => {
       nodes.eventHandlers.LF_LoadImages(e, widgets.adders.KUL_MASONRY);
     });

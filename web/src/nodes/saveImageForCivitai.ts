@@ -22,7 +22,7 @@ export const saveImageForCivitaiFactory = {
     const node = getApiRoutes().getNodeById(payload.id);
     if (node) {
       const widget = getCustomWidget(node, CustomWidgetName.masonry, addW);
-      widget.options.setValue(JSON.stringify(payload.dataset));
+      widget.options.setValue(JSON.stringify(payload));
       getApiRoutes().redraw();
     }
   },

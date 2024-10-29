@@ -271,8 +271,7 @@ export interface ImageClassifierPayload extends BaseEventPayload {
 /*-------------------------------------------------------------------*/
 
 export interface ImageListFromJSONPayload extends BaseEventPayload {
-  fileNames: Array<string>;
-  images: Array<string>;
+  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/
@@ -323,10 +322,9 @@ export interface LoadFileOncePayload extends BaseEventPayload {
 /*-------------------------------------------------------------------*/
 
 export interface LoadImagesPayload extends BaseEventPayload {
-  fileNames: Array<string>;
-  images: Array<string>;
-  selectedIndex: number;
-  selectedName: string;
+  dataset: KulDataDataset;
+  index: number;
+  name: string;
 }
 
 /*-------------------------------------------------------------------*/
@@ -423,10 +421,6 @@ export interface RandomBooleanPayload extends BaseEventPayload {
 
 export interface ResizeImageByEdgePayload extends BaseEventPayload {
   dataset: KulDataDataset;
-  heights: number[];
-  original_heights: number[];
-  original_widths: number[];
-  widths: number[];
 }
 
 /*-------------------------------------------------------------------*/
