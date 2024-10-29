@@ -2,7 +2,7 @@ import { app } from '/scripts/app.js';
 import { controlPanelFactory } from '../widgets/controlPanel.js';
 import { codeFactory } from '../widgets/code.js';
 import { CustomWidgetName, CustomWidgetOptionsCallbacksMap } from '../types/widgets.js';
-import { imagePreviewFactory } from '../widgets/imagePreview.js';
+import { masonryFactory } from '../widgets/masonry.js';
 import { booleanViewerFactory } from '../widgets/booleanViewer.js';
 import { jsonInputFactory } from '../widgets/jsonInput.js';
 import { treeFactory } from '../widgets/tree.js';
@@ -97,17 +97,17 @@ export class LFWidgets {
       ).widget;
       return widget;
     },
-    [CustomWidgetName.imagePreview]: (nodeType: NodeType) => {
-      const widget = app.widgets[CustomWidgetName.imagePreview](
-        nodeType,
-        CustomWidgetName.imagePreview,
-      ).widget;
-      return widget;
-    },
     [CustomWidgetName.jsonInput]: (nodeType: NodeType) => {
       const widget = app.widgets[CustomWidgetName.jsonInput](
         nodeType,
         CustomWidgetName.jsonInput,
+      ).widget;
+      return widget;
+    },
+    [CustomWidgetName.masonry]: (nodeType: NodeType) => {
+      const widget = app.widgets[CustomWidgetName.masonry](
+        nodeType,
+        CustomWidgetName.masonry,
       ).widget;
       return widget;
     },
@@ -159,8 +159,7 @@ export class LFWidgets {
     [CustomWidgetName.history]: (history: HTMLKulListElement) => historyFactory.options(history),
     [CustomWidgetName.jsonInput]: (content: HTMLTextAreaElement) =>
       jsonInputFactory.options(content),
-    [CustomWidgetName.imagePreview]: (content: HTMLDivElement, isSelectable: boolean) =>
-      imagePreviewFactory.options(content, isSelectable),
+    [CustomWidgetName.masonry]: (masonry: HTMLKulMasonryElement) => masonryFactory.options(masonry),
     [CustomWidgetName.messenger]: (
       messenger: HTMLKulMessengerElement,
       placeholder: HTMLDivElement,
@@ -255,10 +254,10 @@ export class LFWidgets {
         },
       };
     },
-    [CustomWidgetName.imagePreview]: () => {
+    [CustomWidgetName.masonry]: () => {
       return {
-        [CustomWidgetName.imagePreview]: (nodeType: NodeType, name: CustomWidgetName) => {
-          return imagePreviewFactory.render(nodeType, name);
+        [CustomWidgetName.masonry]: (nodeType: NodeType, name: CustomWidgetName) => {
+          return masonryFactory.render(nodeType, name);
         },
       };
     },

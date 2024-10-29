@@ -3,9 +3,8 @@ import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import {
   CustomWidgetName,
-  ImagePreviewWidgetDeserializedValue,
   type BaseWidgetCallback,
-  type ImagePreviewWidgetSetter,
+  type MasonryWidgetSetter,
 } from '../types/widgets';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 
@@ -14,7 +13,7 @@ const NAME = NodeName.imageListFromJSON;
 export const imageListFromJsonFactory = {
   eventHandler: (
     event: CustomEvent<ImageListFromJSONPayload>,
-    addW: BaseWidgetCallback<CustomWidgetName.imagePreview>,
+    addW: BaseWidgetCallback<CustomWidgetName.masonry>,
   ) => {
     const name = EventName.blurImages;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
@@ -22,17 +21,12 @@ export const imageListFromJsonFactory = {
     const payload = event.detail;
     const node = getApiRoutes().getNodeById(payload.id);
     if (node) {
-      const widget = getCustomWidget(node, CustomWidgetName.imagePreview, addW);
-      const value: ImagePreviewWidgetDeserializedValue = {
-        ...payload,
-        selectedIndex: undefined,
-        selectedName: undefined,
-      };
-      widget.options.setValue(JSON.stringify(value));
+      const widget = getCustomWidget(node, CustomWidgetName.masonry, addW);
+      widget.options.setValue(JSON.stringify(payload));
       getApiRoutes().redraw();
     }
   },
-  register: (setW: ImagePreviewWidgetSetter) => {
+  register: (setW: MasonryWidgetSetter) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       getCustomWidgets: setW,

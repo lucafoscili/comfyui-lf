@@ -52,7 +52,7 @@ export enum EventName {
   saveImageForCivitAI = 'lf-saveimageforcivitai',
   saveJson = 'lf-savejson',
   schedulerSelector = 'lf-schedulerselector',
-  sequentialSeedsGenerator = 'lf_sequentialseedsgenerator',
+  sequentialSeedsGenerator = 'lf-sequentialseedsgenerator',
   shuffleJsonKeys = 'lf-shufflejsonkeys',
   something2Number = 'lf-something2number',
   something2String = 'lf-something2string',
@@ -127,8 +127,7 @@ export type EventPayload =
 /*-------------------------------------------------------------------*/
 
 export interface BlurImagesPayload extends BaseEventPayload {
-  fileNames: Array<string>;
-  images: Array<string>;
+  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/
@@ -136,8 +135,7 @@ export interface BlurImagesPayload extends BaseEventPayload {
 /*-------------------------------------------------------------------*/
 
 export interface BooleanPayload extends BaseEventPayload {
-  isHistoryEnabled: boolean;
-  value: boolean;
+  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/
@@ -255,8 +253,7 @@ export interface ExtractorPayload extends BaseEventPayload {
 /*-------------------------------------------------------------------*/
 
 export interface FloatPayload extends BaseEventPayload {
-  isHistoryEnabled: boolean;
-  value: number;
+  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/
@@ -272,8 +269,7 @@ export interface ImageClassifierPayload extends BaseEventPayload {
 /*-------------------------------------------------------------------*/
 
 export interface ImageListFromJSONPayload extends BaseEventPayload {
-  fileNames: Array<string>;
-  images: Array<string>;
+  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/
@@ -289,8 +285,7 @@ export interface ImageHistogramPayload extends BaseEventPayload {
 /*-------------------------------------------------------------------*/
 
 export interface IntegerPayload extends BaseEventPayload {
-  isHistoryEnabled: boolean;
-  value: number;
+  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/
@@ -311,12 +306,11 @@ export interface KeywordCounterPayload extends BaseEventPayload {
 }
 
 /*-------------------------------------------------------------------*/
-/*          L o a d   F i l e s   D e c l a r a t i o n s            */
+/*          L o a d F i l e O n c e   D e c l a r a t i o n s        */
 /*-------------------------------------------------------------------*/
 
 export interface LoadFileOncePayload extends BaseEventPayload {
-  isHistoryEnabled: boolean;
-  value: string;
+  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/
@@ -324,10 +318,9 @@ export interface LoadFileOncePayload extends BaseEventPayload {
 /*-------------------------------------------------------------------*/
 
 export interface LoadImagesPayload extends BaseEventPayload {
-  fileNames: Array<string>;
-  images: Array<string>;
-  selectedIndex: number;
-  selectedName: string;
+  dataset: KulDataDataset;
+  index: number;
+  name: string;
 }
 
 /*-------------------------------------------------------------------*/
@@ -424,10 +417,6 @@ export interface RandomBooleanPayload extends BaseEventPayload {
 
 export interface ResizeImageByEdgePayload extends BaseEventPayload {
   dataset: KulDataDataset;
-  heights: number[];
-  original_heights: number[];
-  original_widths: number[];
-  widths: number[];
 }
 
 /*-------------------------------------------------------------------*/
@@ -460,8 +449,7 @@ export interface ResolutionSwitcherPayload extends BaseEventPayload {
 /*-------------------------------------------------------------------*/
 
 export interface SamplerSelectorPayload extends BaseEventPayload {
-  isHistoryEnabled: boolean;
-  value: string;
+  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/
@@ -477,8 +465,7 @@ export interface SaveJSONPayload extends BaseEventPayload {
 /*-------------------------------------------------------------------*/
 
 export interface SaveImageForCivitAIPayload extends BaseEventPayload {
-  fileNames: Array<string>;
-  images: Array<string>;
+  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/
@@ -486,8 +473,7 @@ export interface SaveImageForCivitAIPayload extends BaseEventPayload {
 /*-------------------------------------------------------------------*/
 
 export interface SchedulerSelectorPayload extends BaseEventPayload {
-  isHistoryEnabled: boolean;
-  value: string;
+  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/
@@ -495,8 +481,7 @@ export interface SchedulerSelectorPayload extends BaseEventPayload {
 /*-------------------------------------------------------------------*/
 
 export interface SequentialSeedsGeneratorPayload extends BaseEventPayload {
-  isHistoryEnabled: boolean;
-  value: number;
+  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/
@@ -536,8 +521,7 @@ export interface SortJSONKeysPayload extends BaseEventPayload {
 /*-------------------------------------------------------------------*/
 
 export interface StringPayload extends BaseEventPayload {
-  isHistoryEnabled: boolean;
-  value: string;
+  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/
@@ -593,8 +577,7 @@ export interface UpdateUsageStatisticsPayload extends BaseEventPayload {
 /*-------------------------------------------------------------------*/
 
 export interface UpscaleModelSelectorPayload extends BaseEventPayload {
-  isHistoryEnabled: boolean;
-  value: string;
+  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/
@@ -611,8 +594,7 @@ export interface UrandomSeedGeneratorPayload extends BaseEventPayload {
 /*-------------------------------------------------------------------*/
 
 export interface VAESelectorPayload extends BaseEventPayload {
-  isHistoryEnabled: boolean;
-  value: string;
+  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/

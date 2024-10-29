@@ -1,6 +1,6 @@
 {
   "name": "comfyui-lf",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "private": false,
   "scripts": {
     "clean": "rimraf web/deploy",
@@ -12,11 +12,11 @@
     "postbuild": "node ./web/src/scripts/fix-imports.js"
   },
   "devDependencies": {
-    "@types/node": "^22.5.0",
+    "@types/node": "^22.8.4",
     "fs-extra": "^11.2.0",
-    "ketchup-lite": "1.5.11",
-    "rimraf": "^6.0.0",
-    "sass": "^1.77.8",
-    "typescript": "5.5.4"
+    "ketchup-lite": "1.5.13",
+    "rimraf": "^6.0.1",
+    "sass": "^1.80.4",
+    "typescript": "5.6.3"
   }
 }

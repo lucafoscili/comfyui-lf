@@ -8,7 +8,7 @@ import { app } from '/scripts/app.js';
 import { controlPanelFactory } from '../widgets/controlPanel.js';
 import { codeFactory } from '../widgets/code.js';
 import { CustomWidgetName } from '../types/widgets.js';
-import { imagePreviewFactory } from '../widgets/imagePreview.js';
+import { masonryFactory } from '../widgets/masonry.js';
 import { booleanViewerFactory } from '../widgets/booleanViewer.js';
 import { jsonInputFactory } from '../widgets/jsonInput.js';
 import { treeFactory } from '../widgets/tree.js';
@@ -70,12 +70,12 @@ export class LFWidgets {
                 const widget = app.widgets[CustomWidgetName.history](nodeType, CustomWidgetName.history).widget;
                 return widget;
             },
-            [CustomWidgetName.imagePreview]: (nodeType) => {
-                const widget = app.widgets[CustomWidgetName.imagePreview](nodeType, CustomWidgetName.imagePreview).widget;
-                return widget;
-            },
             [CustomWidgetName.jsonInput]: (nodeType) => {
                 const widget = app.widgets[CustomWidgetName.jsonInput](nodeType, CustomWidgetName.jsonInput).widget;
+                return widget;
+            },
+            [CustomWidgetName.masonry]: (nodeType) => {
+                const widget = app.widgets[CustomWidgetName.masonry](nodeType, CustomWidgetName.masonry).widget;
                 return widget;
             },
             [CustomWidgetName.messenger]: (nodeType) => {
@@ -111,7 +111,7 @@ export class LFWidgets {
             [CustomWidgetName.countBarChart]: (chart, chip, button) => countBarChartFactory.options(chart, chip, button),
             [CustomWidgetName.history]: (history) => historyFactory.options(history),
             [CustomWidgetName.jsonInput]: (content) => jsonInputFactory.options(content),
-            [CustomWidgetName.imagePreview]: (content, isSelectable) => imagePreviewFactory.options(content, isSelectable),
+            [CustomWidgetName.masonry]: (masonry) => masonryFactory.options(masonry),
             [CustomWidgetName.messenger]: (messenger, placeholder) => messengerFactory.options(messenger, placeholder),
             [CustomWidgetName.rollViewer]: (rollViewer, nodeType) => rollViewerFactory.options(rollViewer, nodeType),
             [CustomWidgetName.tabBarChart]: (chart, tabbar, textfield, node) => tabBarChartFactory.options(chart, tabbar, textfield, node),
@@ -196,10 +196,10 @@ export class LFWidgets {
                     },
                 };
             },
-            [CustomWidgetName.imagePreview]: () => {
+            [CustomWidgetName.masonry]: () => {
                 return {
-                    [CustomWidgetName.imagePreview]: (nodeType, name) => {
-                        return imagePreviewFactory.render(nodeType, name);
+                    [CustomWidgetName.masonry]: (nodeType, name) => {
+                        return masonryFactory.render(nodeType, name);
                     },
                 };
             },

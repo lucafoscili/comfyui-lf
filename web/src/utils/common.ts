@@ -3,7 +3,6 @@ import {
   BaseWidgetCallback,
   ComfyWidgetMap,
   ComfyWidgetName,
-  CustomWidgetDeserializedValues,
   CustomWidgetDeserializedValuesMap,
   CustomWidgetMap,
   CustomWidgetName,
@@ -132,6 +131,10 @@ export const isValidJSON = (value: unknown) => {
   } catch (error) {
     return false;
   }
+};
+
+export const isValidNumber = (n: number) => {
+  return !isNaN(n) && typeof n === 'number';
 };
 
 export const kulManagerExists = () => {

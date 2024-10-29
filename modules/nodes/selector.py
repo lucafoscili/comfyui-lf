@@ -3,7 +3,7 @@ import random
 from server import PromptServer
 
 from ..utils.constants import CATEGORY_PREFIX, CHECKPOINTS, EMBEDDINGS, EVENT_PREFIX, FUNCTION, INT_MAX, LORAS, SAMPLERS, SCHEDULERS, UPSCALERS, VAES
-from ..utils.helpers import filter_list, prepare_model_dataset, process_model, send_multi_selector_message, send_single_selector_message
+from ..utils.helpers import create_history_node, filter_list, normalize_json_input, prepare_model_dataset, process_model, send_multi_selector_message, send_single_selector_message
 
 CATEGORY = f"{CATEGORY_PREFIX}/Selectors"
 
@@ -327,6 +327,7 @@ class LF_SamplerSelector:
                 "seed": ("INT", {"default": 42, "min": 0, "max": INT_MAX, "tooltip": "Seed value for when randomization is active."}),
             },
             "optional": {
+                "json_input": ("KUL_HISTORY", {"default": {}}),
                 "sampler": (["None"] + SAMPLERS, {"default": "None", "tooltip": "Sampler used to generate the image."}),
             },
             "hidden": {
@@ -340,8 +341,15 @@ class LF_SamplerSelector:
     RETURN_TYPES = (SAMPLERS, "STRING")
 
     def on_exec(self, node_id: str, sampler: str, enable_history: bool,
-                randomize: bool, seed: int, filter: str):
+                randomize: bool, seed: int, filter: str, json_input: dict = {}):
+        json_input = normalize_json_input(json_input)
+        
         samplers = SAMPLERS
+
+        nodes = json_input.get("nodes", [])
+        dataset = {
+            "nodes": nodes
+        }
 
         if filter:
             samplers = filter_list(filter, samplers)
@@ -351,11 +359,13 @@ class LF_SamplerSelector:
         if randomize:
             random.seed(seed)
             sampler = random.choice(samplers)
+        
+        if enable_history:
+            create_history_node(sampler, nodes)
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}samplerselector", {
             "node": node_id, 
-            "isHistoryEnabled": enable_history,
-            "value": sampler,
+            "dataset": dataset,
         })
 
         return (sampler, sampler)
@@ -372,6 +382,7 @@ class LF_SchedulerSelector:
                 "seed": ("INT", {"default": 42, "min": 0, "max": INT_MAX, "tooltip": "Seed value for when randomization is active."}),
             },
             "optional": {
+                "json_input": ("KUL_HISTORY", {"default": {}}),
                 "scheduler": (["None"] + SCHEDULERS, {"default": "None", "tooltip": "Scheduler used to generate the image."}),
             },
             "hidden": {"node_id": "UNIQUE_ID"}
@@ -383,8 +394,13 @@ class LF_SchedulerSelector:
     RETURN_TYPES = (SCHEDULERS, "STRING")
 
     def on_exec(self, node_id: str, scheduler: str, enable_history: bool,
-                randomize: bool, seed: int, filter: str):
+                randomize: bool, seed: int, filter: str, json_input: dict = {}):
         schedulers = SCHEDULERS
+
+        nodes = json_input.get("nodes", [])
+        dataset = {
+            "nodes": nodes
+        }
 
         if filter:
             schedulers = filter_list(filter, schedulers)
@@ -394,11 +410,13 @@ class LF_SchedulerSelector:
         if randomize:
             random.seed(seed)
             scheduler = random.choice(schedulers)
+        
+        if enable_history:
+            create_history_node(scheduler, nodes)
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}schedulerselector", {
             "node": node_id, 
-            "isHistoryEnabled": enable_history,
-            "value": scheduler,
+            "dataset": dataset,
         })
 
         return (scheduler, scheduler)
@@ -415,6 +433,7 @@ class LF_UpscaleModelSelector:
                 "seed": ("INT", {"default": 42, "min": 0, "max": INT_MAX, "tooltip": "Seed value for when randomization is active."}),
             },
             "optional": {
+                "json_input": ("KUL_HISTORY", {"default": {}}),
                 "upscale_model": (["None"] + UPSCALERS, {"default": "None", "tooltip": "Upscale model used to upscale the image."}),
             },
             "hidden": {"node_id": "UNIQUE_ID"}
@@ -426,8 +445,13 @@ class LF_UpscaleModelSelector:
     RETURN_TYPES = (UPSCALERS, "STRING")
 
     def on_exec(self, node_id: str, upscale_model: str, enable_history: bool,
-                randomize: bool, seed: int, filter: str):
+                randomize: bool, seed: int, filter: str, json_input: dict = {}):
         upscalers = UPSCALERS
+
+        nodes = json_input.get("nodes", [])
+        dataset = {
+            "nodes": nodes
+        }
 
         if filter:
             upscalers = filter_list(filter, upscalers)
@@ -437,11 +461,13 @@ class LF_UpscaleModelSelector:
         if randomize:
             random.seed(seed)
             upscale_model = random.choice(upscalers)
+        
+        if enable_history:
+            create_history_node(upscale_model, nodes)
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}upscalemodelselector", {
             "node": node_id, 
-            "isHistoryEnabled": enable_history,
-            "value": upscale_model,
+            "dataset": dataset,
         })
 
         return (upscale_model, upscale_model)
@@ -458,6 +484,7 @@ class LF_VAESelector:
                 "seed": ("INT", {"default": 42, "min": 0, "max": INT_MAX, "tooltip": "Seed value for when randomization is active."}),
             },
             "optional":{
+                "json_input": ("KUL_HISTORY", {"default": {}}),
                 "vae": (["None"] + VAES, {"default": "None", "tooltip": "VAE used to generate the image."}),
             },
             "hidden": {"node_id": "UNIQUE_ID"}
@@ -468,8 +495,14 @@ class LF_VAESelector:
     RETURN_NAMES = ("combo", "string")
     RETURN_TYPES = (VAES, "STRING")
 
-    def on_exec(self, node_id: str, vae: str, enable_history: bool, randomize: bool, seed: int, filter: str):
+    def on_exec(self, node_id: str, vae: str, enable_history: bool,
+                randomize: bool, seed: int, filter: str, json_input: dict = {}):
         vaes = VAES
+
+        nodes = json_input.get("nodes", [])
+        dataset = {
+            "nodes": nodes
+        }
 
         if filter:
             vaes = filter_list(filter, vaes)
@@ -479,11 +512,13 @@ class LF_VAESelector:
         if randomize:
             random.seed(seed)
             vae = random.choice(vaes)
+        
+        if enable_history:
+            create_history_node(vae, nodes)
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}vaeselector", {
             "node": node_id, 
-            "isHistoryEnabled": enable_history,
-            "value": vae,
+            "dataset": dataset,
         })
 
         return (vae, vae)

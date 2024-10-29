@@ -9,6 +9,7 @@ export var ComfyWidgetName;
     ComfyWidgetName["number"] = "NUMBER";
     ComfyWidgetName["seed"] = "SEED";
     ComfyWidgetName["string"] = "STRING";
+    ComfyWidgetName["toggle"] = "TOGGLE";
 })(ComfyWidgetName || (ComfyWidgetName = {}));
 export var CustomWidgetName;
 (function (CustomWidgetName) {
@@ -22,8 +23,8 @@ export var CustomWidgetName;
     CustomWidgetName["controlPanel"] = "KUL_CONTROL_PANEL";
     CustomWidgetName["countBarChart"] = "KUL_COUNT_BAR_CHART";
     CustomWidgetName["history"] = "KUL_HISTORY";
-    CustomWidgetName["imagePreview"] = "KUL_IMAGE_PREVIEW_B64";
     CustomWidgetName["jsonInput"] = "KUL_JSON_INPUT";
+    CustomWidgetName["masonry"] = "KUL_MASONRY";
     CustomWidgetName["messenger"] = "KUL_MESSENGER";
     CustomWidgetName["rollViewer"] = "KUL_ROLL_VIEWER";
     CustomWidgetName["tabBarChart"] = "KUL_TAB_BAR_CHART";

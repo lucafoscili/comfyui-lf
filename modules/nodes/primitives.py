@@ -6,7 +6,7 @@ from itertools import combinations
 from server import PromptServer
 
 from ..utils.constants import CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, INT_MAX
-from ..utils.helpers import convert_to_boolean, convert_to_float, convert_to_int, convert_to_json, normalize_input_list, normalize_list_to_value
+from ..utils.helpers import convert_to_boolean, convert_to_float, convert_to_int, convert_to_json, create_history_node, normalize_input_list, normalize_json_input, normalize_list_to_value
 
 CATEGORY = f"{CATEGORY_PREFIX}/Primitives"
     
@@ -19,6 +19,9 @@ class LF_Boolean:
                 "boolean": ("BOOLEAN", {"default": False, "tooltip": "Boolean value."}),
                 "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
             },
+            "optional": {
+                "json_input": ("KUL_HISTORY", {"default": {}}),
+            },
             "hidden": {
                 "node_id": "UNIQUE_ID"
             }
@@ -29,14 +32,22 @@ class LF_Boolean:
     RETURN_NAMES = ("boolean",)
     RETURN_TYPES = ("BOOLEAN",)
 
-    def on_exec(self, node_id: str, boolean: bool, enable_history: bool):
+    def on_exec(self, node_id: str, boolean: bool, enable_history: bool, json_input: dict = {}):
         boolean = normalize_list_to_value(boolean)
         enable_history = normalize_list_to_value(enable_history)
+        json_input = normalize_json_input(json_input)
 
+        nodes = json_input.get("nodes", [])
+        dataset = {
+            "nodes": nodes
+        }
+
+        if enable_history:
+            create_history_node(str(boolean), nodes)
+            
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}boolean", {
             "node": node_id, 
-            "isHistoryEnabled": enable_history,
-            "value": boolean,
+            "dataset": dataset
         })
 
         return (boolean,)
@@ -310,6 +321,9 @@ class LF_Float:
                 "float": ("FLOAT", {"default": 0, "step": 0.1, "tooltip": "Float value."}),
                 "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
             },
+            "optional": {
+                "json_input": ("KUL_HISTORY", {"default": {}}),
+            },
             "hidden": {
                 "node_id": "UNIQUE_ID"
             }
@@ -320,14 +334,22 @@ class LF_Float:
     RETURN_NAMES = ("float",)
     RETURN_TYPES = ("FLOAT",)
 
-    def on_exec(self, node_id: str, float: float, enable_history: bool):
+    def on_exec(self, node_id: str, float: float, enable_history: bool, json_input: dict = {}):
         float = normalize_list_to_value(float)
         enable_history = normalize_list_to_value(enable_history)
+        json_input = normalize_json_input(json_input)
 
+        nodes = json_input.get("nodes", [])
+        dataset = {
+            "nodes": nodes
+        }
+
+        if enable_history:
+            create_history_node(str(float), nodes)
+                
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}float", {
             "node": node_id, 
-            "isHistoryEnabled": enable_history,
-            "value": float,
+            "dataset": dataset,
         })
 
         return (float,)
@@ -341,6 +363,9 @@ class LF_Integer:
                 "integer": ("INT", {"default": 0, "max": INT_MAX, "tooltip": "Integer value."}),
                 "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
             },
+            "optional": {
+                "json_input": ("KUL_HISTORY", {"default": {}}),
+            },
             "hidden": {
                 "node_id": "UNIQUE_ID"
             }
@@ -351,14 +376,22 @@ class LF_Integer:
     RETURN_NAMES = ("int",)
     RETURN_TYPES = ("INT",)
 
-    def on_exec(self, node_id: str, integer: int, enable_history: bool):
+    def on_exec(self, node_id: str, integer: int, enable_history: bool, json_input: dict = {}):
         integer = normalize_list_to_value(integer)
         enable_history = normalize_list_to_value(enable_history)
+        json_input = normalize_json_input(json_input)
+
+        nodes = json_input.get("nodes", [])
+        dataset = {
+            "nodes": nodes
+        }
+
+        if enable_history:
+            create_history_node(str(integer), nodes)
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}integer", {
             "node": node_id, 
-            "isHistoryEnabled": enable_history,
-            "value": integer,
+            "dataset": dataset
         })
 
         return (integer,)
@@ -582,6 +615,9 @@ class LF_String:
                 "string": ("STRING", {"default": "", "multiline": True, "tooltip": "String value."}),
                 "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
             },
+            "optional": {
+                "json_input": ("KUL_HISTORY", {"default": {}}),
+            },
             "hidden": {
                 "node_id": "UNIQUE_ID"
             }
@@ -592,14 +628,22 @@ class LF_String:
     RETURN_NAMES = ("string",)
     RETURN_TYPES = ("STRING",)
 
-    def on_exec(self, node_id: str, string: str, enable_history: bool):
+    def on_exec(self, node_id: str, string: str, enable_history: bool, json_input: dict = {}):
         string = normalize_list_to_value(string)
         enable_history = normalize_list_to_value(enable_history)
+        json_input = normalize_json_input(json_input)
+
+        nodes = json_input.get("nodes", [])
+        dataset = {
+            "nodes": nodes
+        }
+
+        if enable_history:
+            create_history_node(string, nodes)
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}string", {
             "node": node_id, 
-            "isHistoryEnabled": enable_history,
-            "value": string,
+            "dataset": dataset,
         })
 
         return (string,)

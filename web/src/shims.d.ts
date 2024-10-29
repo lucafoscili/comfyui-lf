@@ -225,3 +225,5 @@ interface ConnectionChangePayload {
   target_slot?: number;
   type?: string;
 }
+
+type ComfyFolderTypes = 'input' | 'output' | 'temp';

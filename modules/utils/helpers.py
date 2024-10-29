@@ -8,14 +8,18 @@ import json
 import numpy as np
 import os
 import piexif
+import random
 import re
+import string
 import torch
+import urllib
 
+from datetime import datetime
+from folder_paths import get_save_image_path
 from PIL import Image
 from PIL.ExifTags import TAGS
 from torchvision.transforms import InterpolationMode, functional
 
-from datetime import datetime
 
 from server import PromptServer
 
@@ -31,26 +35,20 @@ def base64_to_tensor(base64_str):
     Returns:
         torch.Tensor: A PyTorch tensor with shape [B, H, W, C], where B is the batch size.
     """
-    # Decode the base64 string back to binary image data
     image_data = base64.b64decode(base64_str)
     
-    # Create a BytesIO buffer and load it as an image
     buffer = io.BytesIO(image_data)
     pil_img = Image.open(buffer)
 
-    # Convert the PIL image to a numpy array (scale values between 0 and 1)
     img_array = np.asarray(pil_img) / 255.0
 
-    # Convert the numpy array to a PyTorch tensor (H, W, C format)
     img_tensor = torch.from_numpy(img_array).float()
 
-    # If the image is grayscale, expand it to 3 channels to match RGB format
-    if img_tensor.ndim == 2:  # If the image has no color channels
-        img_tensor = img_tensor.unsqueeze(-1).repeat(1, 1, 3)  # Add channel dimension and repeat to get 3 channels
-    elif img_tensor.shape[-1] == 1:  # If it has a single color channel
-        img_tensor = img_tensor.repeat(1, 1, 3)  # Repeat the channel dimension 3 times
+    if img_tensor.ndim == 2:
+        img_tensor = img_tensor.unsqueeze(-1).repeat(1, 1, 3)
+    elif img_tensor.shape[-1] == 1:
+        img_tensor = img_tensor.repeat(1, 1, 3)
 
-    # Add batch dimension at the start: [B=1, H, W, C]
     img_tensor = img_tensor.unsqueeze(0)
     
     return img_tensor
@@ -123,30 +121,23 @@ def cleanse_lora_tag(lora_tag: str, separator: str):
     Returns:
         str: The cleaned-up string with extracted keywords.
     """
-    # Remove the <lora: and last '>': part to get the safetensors file name and weight
     safetensors_info = lora_tag[len('<lora:'):][:-1]
     
-    # Split the safetensors_info by ':' to separate the file name and weight (if any)
     file_name_with_weight = safetensors_info.split(':')
     
-    # Handle cases with or without weight information
-    file_name = file_name_with_weight[0]  # Always take the first part as the file name
+    file_name = file_name_with_weight[0]
     
-    # Split the file name by '\\' to separate the file name and the folder containing it
     file_name_with_folder = file_name.split('\\')
-    file_name = file_name_with_folder[-1]  # Always take the last part as the file name
+    file_name = file_name_with_folder[-1]
     
-    # Split the file name by '.safetensors' to separate the file name and the extension
     file_name_with_extension = file_name.split('.safetensors')
-    file_name = file_name_with_extension[0]  # Take the part before '.safetensors'
+    file_name = file_name_with_extension[0]
     
-    # Extract keywords from the file name
     if separator in file_name:
         keywords = ', '.join(file_name.split(separator))
     else:
         keywords = file_name
     
-    # Join keywords into a string to replace the lora tag
     if isinstance(keywords, str):
         keyword_str = keywords
     elif isinstance(keywords, list):
@@ -157,6 +148,15 @@ def cleanse_lora_tag(lora_tag: str, separator: str):
     return keyword_str
 
 def clean_prompt(prompt: str):
+    """
+    Cleans the given prompt by removing specific suffixes and leading components.
+
+    Args:
+        prompt (str): The input prompt string.
+
+    Returns:
+        str: The cleaned prompt string with suffix removed.
+    """
     return re.sub(r'(embedding:)?(.*?)(\.pt|\.pth|\.sft|\.safetensors)?', r'\2', prompt).strip()
 
 def count_words_in_comma_separated_string(input_string: str):
@@ -174,6 +174,17 @@ def count_words_in_comma_separated_string(input_string: str):
     return word_count
 
 def convert_to_boolean(text):
+    """
+    Convert a string to a boolean.
+
+    Args:
+        text (str): The input string to convert, typically representing a boolean value.
+
+    Returns:
+        bool or None: Returns True if the input string is 'true' or 'yes' (case-insensitive),
+                      False if it is 'false', 'no', or an empty string.
+                      Returns None if the input does not match any of those options.
+    """
     text_lower = text.strip().lower()
     if text_lower in ['true', 'yes']:
         return True
@@ -182,22 +193,71 @@ def convert_to_boolean(text):
     return None
 
 def convert_to_float(text):
+    """
+    Convert a given text to a float.
+
+    Args:
+        text (str): The text to be converted to a float.
+
+    Returns:
+        float or None: The converted float if successful, otherwise None if conversion fails.
+    """
     try:
         return float(text)
     except ValueError:
         return None
-    
+
 def convert_to_int(text):
+    """
+    Convert a given text to an integer.
+
+    Args:
+        text (str): The text to be converted to an integer.
+
+    Returns:
+        int or None: The converted integer if successful, otherwise None if conversion fails.
+    """
     try:
         return int(text)
     except ValueError:
         return None
-    
+
 def convert_to_json(text):
+    """
+    Convert a given text to a JSON object.
+
+    Args:
+        text (str): The text to be parsed as JSON.
+
+    Returns:
+        dict or None: The parsed JSON object if successful, otherwise None if conversion fails.
+    """
     try:
         return json.loads(text)
     except (json.JSONDecodeError, TypeError):
         return None
+
+def create_compare_node(source: str, target: str, index: int):
+    """
+    Create a comparison node dictionary using source, target images, and index.
+
+    Args:
+        source (str): Source image value.
+        target (str): Target image value.
+        index (int): Index value for the node.
+
+    Returns:
+        dict: A dictionary representing the comparison node.
+    """
+    node = {
+        "cells": {
+            "kulImage": {"shape": "image", "kulValue": f"{source}", "value": ''},
+            "kulImage_after": {"shape": "image", "kulValue": f"{target}", "value": ''}
+        },
+        "id": f"image_{index+1}",
+        "value": f"Comparison {index+1}"
+    }
+    return node
 
 def create_dummy_image_tensor():
     """
@@ -216,9 +276,85 @@ def create_dummy_image_tensor():
     
     return img_tensor.unsqueeze(0)
 
+def create_history_node(value: str, nodes: list[dict]):
+    """
+    Create a history node and append it to the list of nodes if it doesn't exist.
+    If the node exists, update its description.
+
+    Args:
+        value (str): The unique identifier for the node.
+        date (str): The date of execution, formatted as a string.
+        nodes (list[dict]): A list of existing nodes to which the history node will be added.
+
+    Returns:
+        None
+    """
+    date = datetime.now().strftime('%d/%m/%Y, %H:%M:%S')
+    node = {
+                "icon": "history",
+                "id": value,
+                "description": f"Execution date: {date}.",
+                "value": value,
+            }
+
+    existing_node = next((n for n in nodes if n["id"] == value), None)
+    if existing_node:
+        existing_node["description"] = node["description"]
+    else:
+        nodes.append(node)
+
+    return
+
+def create_masonry_node(filename: str, url: str, index: int):
+    """
+    Create a masonry node representation for images.
+
+    Args:
+        filename (str): The filename to use for the image's identifier and title.
+        url (str): The URL path to the image resource.
+        index (int): The index to generate a unique node ID.
+
+    Returns:
+        dict: A dictionary containing image node details.
+    """
+    node = {
+        "cells": {
+            "kulImage": {"htmlProps":{"id": filename, "title": filename}, "shape": "image", "kulValue": f"{url}", "value": ''}
+        },
+        "id": f"{index+1}",
+        "value": f"{index+1}"
+    }
+    return node
+
+def create_resize_node(height_s: int, width_s: int, height_t: int, width_t: int, index: int):
+    """
+    Create a resize node containing image dimension change information.
+
+    Args:
+        height_s (int): Source image height.
+        width_s (int): Source image width.
+        height_t (int): Target image height after resizing.
+        width_t (int): Target image width after resizing.
+        index (int): The index identifier for the node.
+
+    Returns:
+        dict: A dictionary representing the resize operation for an image.
+    """
+    node = {
+        "id": f"{index}", "value": f"[{index}] From {height_s}x{width_s} to {height_t}x{width_t}"
+    }
+    return node
+
 def extract_jpeg_metadata(pil_image, file_name):
     """
-    Extract EXIF metadata from a JPEG image.
+    Extracts EXIF metadata from a JPEG image using a PIL Image object.
+
+    Args:
+        pil_image (PIL.Image): The PIL image object containing the JPEG image data.
+        file_name (str): The filename of the JPEG image for error reporting.
+
+    Returns:
+        dict: A dictionary containing EXIF metadata if found, error message otherwise.
     """
     try:
         exif_bytes = pil_image.info.get('exif', None)
@@ -226,15 +362,15 @@ def extract_jpeg_metadata(pil_image, file_name):
             return {"error": f"No EXIF metadata found in {file_name}"}
 
         exif_data = piexif.load(exif_bytes)
-        
+
         if isinstance(exif_data, bytes):
             return {"format": "JPEG", "metadata": {}}
-        
+
         if not exif_data:
             return {"error": f"Failed to load EXIF data from {file_name}"}
 
         exif_json = {}
-        
+
         def safe_convert_value(v):
             if isinstance(v, bytes):
                 return v.decode('utf-8', errors='ignore')
@@ -242,13 +378,13 @@ def extract_jpeg_metadata(pil_image, file_name):
                 return [safe_convert_value(i) for i in v]
             else:
                 return v
-        
+
         for item in exif_data.values():
             if hasattr(item, 'items'):
                 for tag, value in item.items():
                     tag_name = TAGS.get(tag, tag)
                     exif_json[tag_name] = safe_convert_value(value)
-        
+
         try:
             json.dumps(exif_json)
         except TypeError as e:
@@ -257,28 +393,43 @@ def extract_jpeg_metadata(pil_image, file_name):
                     json.dumps({k: v})
                 except TypeError:
                     del exif_json[k]
-        
+
         return  exif_json
-    
+
     except Exception as e:
         return {"error": f"An unexpected error occurred while extracting EXIF data from {file_name}: {str(e)}"}
 
 def extract_png_metadata(pil_image):
     """
-    Extract metadata from PNG text chunks.
+    Extract metadata from a PNG image using a PIL Image object.
+
+    Args:
+        pil_image (PIL.Image): The PIL image object containing the PNG image data.
+
+    Returns:
+        dict: A dictionary containing PNG metadata as key-value pairs.
     """
     png_info = pil_image.info
     metadata = {}
-    
+
     for key, value in png_info.items():
         if isinstance(value, str):
             metadata[key] = value
-    
+
     return metadata
 
 def find_checkpoint_image(checkpoint_path):
+    """
+    Locate an image file associated with a checkpoint by trying multiple common file extensions.
+
+    Args:
+        checkpoint_path (str): The file path of the checkpoint, without extension.
+
+    Returns:
+        str or None: The path of the found image file; None if not found.
+    """
     extensions = ["jpg", "jpeg", "JPEG", "png", "webp", "WEBP"]
-    
+
     for ext in extensions:
         image_path = f"{os.path.splitext(checkpoint_path)[0]}.{ext}"
         if os.path.exists(image_path):
@@ -286,10 +437,30 @@ def find_checkpoint_image(checkpoint_path):
     return None
 
 def filter_list(filter, list):
+    """
+    Filter a list of strings by applying a filter pattern.
+
+    Args:
+        filter (str): The filter pattern, supporting wildcards.
+        list (List[str]): The list of strings to be filtered.
+
+    Returns:
+        List[str]: A filtered list of strings matching the pattern.
+    """
     normalized_filter = filter.replace('\\', '/')
     return [model for model in list if fnmatch.fnmatch(model.replace('\\', '/'), normalized_filter)]
 
 def get_embedding_hashes(embeddings: str, analytics_dataset: dict):
+    """
+    Retrieve SHA256 hashes for the given embeddings.
+
+    Args:
+        embeddings (str): A comma-separated string of embedding names.
+        analytics_dataset (dict): A dataset to which nodes can be appended.
+
+    Returns:
+        List[str]: A list containing the name and hash of each embedding.
+    """
     children = []
     emb_hashes = []
     emb_entries = [emb.strip() for emb in embeddings.split(',')]
@@ -314,6 +485,16 @@ def get_embedding_hashes(embeddings: str, analytics_dataset: dict):
     return emb_hashes
 
 def get_lora_hashes(lora_tags: str, analytics_dataset: dict):
+    """
+    Retrieve SHA256 hashes for Lora tags.
+
+    Args:
+        lora_tags (str): A string of Lora tags.
+        analytics_dataset (dict): A dataset to which nodes can be appended.
+
+    Returns:
+        List[str]: A list containing the name and hash of each Lora tag.
+    """
     children = []
     lora_hashes = []
     lora_tags = lora_tags.replace("><", ">,<")
@@ -336,13 +517,58 @@ def get_lora_hashes(lora_tags: str, analytics_dataset: dict):
                 lora_hashes.append(f"{lora_name}: Unknown")
     return lora_hashes
 
-def get_sha256(file_path: str):
-    hash_file_path = f"{os.path.splitext(file_path)[0]}.sha256"
+def get_random_parameter(length: int = 8) -> str:
+    """
+    Generate a random parameter string.
+
+    Args:
+        length (int): The length of the random string. Defaults to 8.
+
+    Returns:
+        str: A random alphanumeric string prefixed with '?'.
+    """
+    return '?' + ''.join(random.choices(string.ascii_letters + string.digits, k=length))
+
+def get_resource_url(subfolder: str, filename: str, resource_type: str = 'output'):
+    """
+    Generate a URL for accessing resources within the application.
+
+    Args:
+        subfolder (str): The subfolder where the resource is located.
+        filename (str): The name of the resource file.
+        resource_type (str): The type of resource. Defaults to 'output'.
+
+    Returns:
+        str: A formatted URL string for accessing the resource.
+    """
+    params = [
+        f"filename={urllib.parse.quote(filename)}",
+        f"type={resource_type}",
+        f"subfolder={subfolder}",
+        f"&{get_random_parameter()}"
+    ]
     
+    return f"/view?{'&'.join(params)}"
+
+def get_sha256(file_path: str):
+    """
+    Calculate or retrieve the SHA-256 hash of a file.
+
+    If a precomputed hash file exists, this function returns that value.
+    Otherwise, it computes the hash, saves it to a file, and returns the result.
+
+    Args:
+        file_path (str): The path to the file whose SHA-256 hash is needed.
+
+    Returns:
+        str: The SHA-256 hash of the file.
+    """
+    hash_file_path = f"{os.path.splitext(file_path)[0]}.sha256"
+
     if os.path.exists(hash_file_path):
         with open(hash_file_path, "r") as hash_file:
             return hash_file.read().strip()
-    
+
     sha256_value = hashlib.sha256()
 
     with open(file_path, "rb") as file:
@@ -365,7 +591,6 @@ def handle_response(response: dict, method: str = "GET"):
     Returns:
     - tuple: A tuple containing the status code, method, and the content of the response.
     """
-    # Check for common error status codes
     if response.status_code == 400:
         return response.status_code, method, "Bad Request"
     elif response.status_code == 401:
@@ -377,7 +602,6 @@ def handle_response(response: dict, method: str = "GET"):
     elif response.status_code == 500:
         return response.status_code, method, "Internal Server Error"
     else:
-        # Process successful responses
         if response.status_code == 200:
             llm_result = response.json()
             if 'choices' in llm_result and len(llm_result['choices']) > 0:
@@ -417,9 +641,8 @@ def normalize_input_image(image: list[torch.Tensor] | torch.Tensor):
             raise ValueError("Input tensor must be either 3D or 4D.")
     elif isinstance(image, list):
         if len(image) == 1 and isinstance(image[0], torch.Tensor):
-            # Handle single element list as a single image or batch
             return normalize_input_image(image[0])
-        return image  # Return the list as-is if it has multiple elements
+        return image
     else:
         raise TypeError("Input must be a torch.Tensor or list.")
     
@@ -489,7 +712,6 @@ def normalize_json_input(input):
             except json.JSONDecodeError:
                 return json.loads(convert_python_to_json(input[0]))
         else:
-            # Process multi-item lists by converting each element if necessary
             return [
                 json.loads(convert_python_to_json(s)) if isinstance(s, str) else s 
                 for s in input
@@ -561,37 +783,35 @@ def normalize_output_image(image_input):
         image_list = []
         for img in image_input:
             if isinstance(img, torch.Tensor):
-                if len(img.shape) == 4:  # Handle batch format [B, H, W, C]
+                if len(img.shape) == 4:
                     image_list.extend([i.unsqueeze(0) if len(i.shape) == 3 else i for i in img])
-                elif len(img.shape) == 3:  # Single image case, add batch dimension
-                    image_list.append(img.unsqueeze(0))  # Convert to [1, H, W, C]
+                elif len(img.shape) == 3:
+                    image_list.append(img.unsqueeze(0))
             else:
                 raise TypeError("Unsupported image format in list.")
     elif isinstance(image_input, torch.Tensor):
-        if len(image_input.shape) == 4:  # Input is already a batch [B, H, W, C]
+        if len(image_input.shape) == 4:
             image_list = [img.unsqueeze(0) if len(img.shape) == 3 else img for img in image_input]
-        elif len(image_input.shape) == 3:  # Single image [H, W, C], convert to [1, H, W, C]
+        elif len(image_input.shape) == 3:
             image_list = [image_input.unsqueeze(0)]
         else:
             raise ValueError("Unsupported tensor shape.")
     else:
         raise TypeError("Unsupported input type for image normalization.")
 
-    # Group images by resolution
     resolution_groups = {}
     for img in image_list:
-        h, w = img.shape[1:3]  # Extract height and width
+        h, w = img.shape[1:3]
         if (h, w) not in resolution_groups:
             resolution_groups[(h, w)] = []
         resolution_groups[(h, w)].append(img)
 
-    # Create separate batch tensors for each unique resolution
     batch_list = []
     for _, imgs in resolution_groups.items():
         if len(imgs) > 1:
-            batch_list.append(torch.cat(imgs, dim=0))  # Create batch [B, H, W, C]
+            batch_list.append(torch.cat(imgs, dim=0))
         else:
-            batch_list.append(imgs[0])  # Single image in this resolution, keep as is
+            batch_list.append(imgs[0])
 
     return batch_list, image_list
 
@@ -654,15 +874,25 @@ def pil_to_tensor(image):
         - The tensor is reordered from [H, W, C] to [C, H, W] format.
         - An extra dimension is added at the beginning to represent the batch size (1).
     """
-    # Convert the PIL image to a NumPy array
     np_image = np.array(image).astype("float32") / 255.0
     
-    # Convert the NumPy array to a tensor and reorder to [C, H, W]
     tensor = torch.tensor(np_image).permute(0, 1, 2).unsqueeze(0)
     
     return tensor
 
 def prepare_model_dataset (model_name, model_hash, model_base64, model_path):
+    """
+    Prepare a structured dataset for a model including metadata and configurations.
+
+    Args:
+        model_name (str): The name of the model.
+        model_hash (str): The hash value of the model.
+        model_base64 (str): Base64 encoded representation of the model image.
+        model_path (str): The file path where the model is located.
+
+    Returns:
+        dict: A dataset containing nodes with structured metadata and configurations for the model.
+    """
     dataset = {
                 "nodes": [
                     {
@@ -675,11 +905,11 @@ def prepare_model_dataset (model_name, model_hash, model_base64, model_path):
                             },
                             "text3": {
                                 "value": "Selected checkpoint cover, hash and name." +
-                                         ("" if model_path 
+                                         ("" if model_path
                                              else "Note: to set the cover, create an image with the same name of the checkpoint in its folder.")
                             },
-                            "kulCode": { 
-                                'shape': 'code', 
+                            "kulCode": {
+                                'shape': 'code',
                                 'value': json.dumps({'hash': model_hash, 'path': model_path})
                             },
                             "kulImage": {
@@ -692,10 +922,21 @@ def prepare_model_dataset (model_name, model_hash, model_base64, model_path):
                     }
                 ]
             }
-    
+
     return dataset
 
 def process_model(model_type, model_name, folder):
+    """
+    Processes a model by gathering its path, hash, cover, and saved information.
+
+    Args:
+        model_type (str): The type of the model.
+        model_name (str): The name of the model.
+        folder (str): The folder where the model is located.
+
+    Returns:
+        dict: A dictionary containing the model's path, name, hash, cover, base64 representation, and saved info.
+    """
     model_path = folder_paths.get_full_path(folder, model_name)
     model_info_path = os.path.splitext(model_path)[0] + ".info"
 
@@ -798,10 +1039,10 @@ def resize_and_crop_image(image_tensor: torch.Tensor, resize_method: str, target
     else:
         pad_color = tuple(int(pad_color.lstrip('#')[i:i+2], 16) for i in (0, 2, 4))
         channels = [functional.pad(resized_image[:, i, :, :], (
-            (target_width - new_w) // 2,  # Left padding
-            (target_height - new_h) // 2,  # Top padding
-            (target_width - new_w + 1) // 2,  # Right padding
-            (target_height - new_h + 1) // 2   # Bottom padding
+            (target_width - new_w) // 2,
+            (target_height - new_h) // 2,
+            (target_width - new_w + 1) // 2,
+            (target_height - new_h + 1) // 2
         ), fill=pad_color[i]) for i in range(3)]
         output_image = torch.stack(channels, dim=1)
 
@@ -829,24 +1070,21 @@ def resize_image(image_tensor: torch.Tensor, resize_method: str, longest_side: b
         if h >= w:
             new_h = size
             new_w = round(w * new_h / h)
-        else:  # h < w
+        else:
             new_w = size
             new_h = round(h * new_w / w)
     else:
         if h <= w:
             new_h = size
             new_w = round(w * new_h / h)
-        else:  # h > w
+        else:
             new_w = size
             new_h = round(h * new_w / w)
 
-    # Permute tensor dimensions from (batch, height, width, channels) to (batch, channels, height, width)
     image_tensor = image_tensor.permute(0, 3, 1, 2)
     
-    # Resize the image using the calculated dimensions
     resized_image = functional.resize(image_tensor, (new_h, new_w), interpolation=interpolation_mode, antialias=True)
     
-    # Permute back to (batch, height, width, channels)
     resized_image = resized_image.permute(0, 2, 3, 1)
 
     return resized_image
@@ -886,61 +1124,63 @@ def resize_to_square(image_tensor: torch.Tensor, square_size: int, resample_meth
 
     return cropped_img
 
-def resolve_filepath(filepath:str , base_output_path:str , count:bool = 0, add_timestamp:bool = False, default_filename:str = "output", extension:str = "json"):
+def resolve_filepath(filepath: str, base_output_path: str, count: int = 0, add_timestamp: bool = False, default_filename: str = "ComfyUI", extension: str = "json", add_counter: bool = True) -> str:
     """
-    Resolves and constructs a full file path, handling cases where the provided filepath may be a list or a single string, 
-    and optionally appends a timestamp to the filename. Ensures the specified directory structure exists before returning 
-    the path.
-
+    Simplified helper function using ComfyUI's core image-saving logic, ensuring folder and filename separation.
+    
     Parameters:
-        filepath (str or list): The file path as a string or list of paths. If provided as a list and the count exceeds 
-                                its length, the first item is used as a fallback.
-        base_output_path (str): The base directory path to be prepended if the directory is not specified in the filepath.
-        count (int): The index in filepath (if it's a list) for the current path. Defaults to 0.
-        add_timestamp (bool): If True, appends the current timestamp to the filename as a suffix. Defaults to False.
-        default_filename (str): The default filename to use if the filepath does not contain a valid filename. Defaults to "output".
+        filepath (str or list): Target file path or list of paths. Uses filepath[count] or defaults to the first item if it's a list.
+        base_output_path (str): Base directory path to prepend if not specified in filepath.
+        count (int): Index for filepath when it's a list. Defaults to 0.
+        add_timestamp (bool): Appends a timestamp to the filename if True. Defaults to False.
+        default_filename (str): Default filename if filepath lacks one. Defaults to "output".
+        extension (str): File extension, such as 'png' or 'jpeg'. Defaults to 'json'.
+        add_counter (bool): Adds counter as a suffix.
 
     Returns:
-        str: The fully resolved file path, including the directory structure and filename, with timestamp if specified.
-
-    Behavior:
-        - If `filepath` is a list, the function attempts to use `filepath[count]`. If `count` exceeds the list length 
-          or the item is None, it falls back to `filepath[0]`.
-        - Splits `filepath` into directory and filename components. If directory is not specified, `base_output_path` 
-          is used as the root directory.
-        - Ensures the specified directory exists, creating it if necessary.
-        - If `add_timestamp` is True, appends a timestamp in the format "YYYYMMDD-HHMMSS" to the filename.
-        - Returns the final file path, ensuring it ends with `.json` if no extension is specified.
+        str: Fully resolved file path with subfolders, filename, and extension.
     """
-    path_base = filepath[count] if isinstance(filepath, list) and count < len(filepath) and filepath[count] else filepath[0] if isinstance(filepath, list) else filepath 
-    directory, filename = os.path.split(path_base)
+    path_base = filepath[count] if isinstance(filepath, list) and count < len(filepath) else filepath[0] if isinstance(filepath, list) else filepath
 
-    if not directory or directory == "/":
-        directory = base_output_path
+    if os.path.splitext(os.path.basename(path_base))[1] == "":
+        filename_prefix = os.path.join(path_base, default_filename)
     else:
-        directory = os.path.join(base_output_path, directory)
+        filename_prefix = path_base
 
-    if not filename:
-        filename = default_filename
+    output_folder, filename, counter, subfolder, _ = get_save_image_path(
+        filename_prefix=filename_prefix,
+        output_dir=base_output_path
+    )
 
     if add_timestamp:
         timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
         filename = f"{filename}_{timestamp}"
 
-    if not filename.endswith(f".{extension}"):
-        filename = f"{filename}.{extension}"
+    if add_counter:
+        filename = f"{filename}_{counter}.{extension}"
+    else:
+        filename = f"{filename}.{extension}" 
 
-    output_file = os.path.join(directory, filename)
+    output_file = os.path.join(output_folder, filename)
+    
+    os.makedirs(output_folder, exist_ok=True)
 
-    if not os.path.exists(directory):
-        os.makedirs(directory, exist_ok=True)
-
-    return output_file
+    return output_file, subfolder, filename
 
 def send_single_selector_message(node_id, dataset, model_hash, get_civitai_info, model_path, event_name):
+    """
+    Send a synchronous message to the server with a single selector.
 
+    Args:
+        node_id: The identifier for the node.
+        dataset: The dataset associated with the selectors.
+        model_hash: The hash value of the model.
+        get_civitai_info: Flag to indicate if civitai information should be retrieved.
+        model_path: The file path of the model.
+        event_name: The event name for the message.
+    """
     PromptServer.instance.send_sync(event_name, {
-        "node": node_id, 
+        "node": node_id,
         "dataset": dataset,
         "hash": model_hash,
         "apiFlag": get_civitai_info,
@@ -950,9 +1190,20 @@ def send_single_selector_message(node_id, dataset, model_hash, get_civitai_info,
     return
 
 def send_multi_selector_message(node_id, datasets, model_hashes, get_civitai_info, model_paths, event_name, chip_dataset=None):
+    """
+    Send a synchronous message to the server with multiple selectors.
 
+    Args:
+        node_id: The identifier for the node.
+        datasets: A list of datasets associated with the selectors.
+        model_hashes: A list of hash values of the models.
+        get_civitai_info: Flags for whether to retrieve civitai info for each model.
+        model_paths: A list of file paths of the models.
+        event_name: The event name for the message.
+        chip_dataset: Optional chip dataset information.
+    """
     PromptServer.instance.send_sync(event_name, {
-        "node": node_id, 
+        "node": node_id,
         "datasets": datasets,
         "hashes": model_hashes,
         "apiFlags": get_civitai_info,

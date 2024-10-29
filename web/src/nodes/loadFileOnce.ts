@@ -1,5 +1,4 @@
 import { EventName, LoadFileOncePayload } from '../types/events';
-import { KulDataNode } from '../types/ketchup-lite/components';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import { CustomWidgetName, HistoryWidgetSetter, type BaseWidgetCallback } from '../types/widgets';
@@ -16,33 +15,11 @@ export const loadFileOnceFactory = {
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
     const payload = event.detail;
-    const isHistoryEnabled = payload.isHistoryEnabled;
     const node = getApiRoutes().getNodeById(payload.id);
-    if (isHistoryEnabled && node) {
+    if (node) {
       const list = getCustomWidget(node, CustomWidgetName.history, addW);
       if (list) {
-        const value = payload.value;
-        const comp = list.options.getComp();
-        const dataset = comp.kulData;
-        if (value) {
-          const newNode: KulDataNode = {
-            icon: 'history',
-            id: value,
-            description: 'Execution date: ' + new Date().toLocaleString() + '.',
-            value,
-          };
-          if (dataset?.nodes?.length) {
-            const existingNode = dataset?.nodes?.find((n) => n.id === value);
-            if (existingNode) {
-              existingNode.description = newNode.description;
-              comp.refresh();
-            } else {
-              comp.kulData = { columns: dataset.columns, nodes: [...dataset.nodes, newNode] };
-            }
-          } else {
-            comp.kulData = { nodes: [newNode] };
-          }
-        }
+        list.options.setValue(JSON.stringify(payload.dataset));
       }
 
       getApiRoutes().redraw();

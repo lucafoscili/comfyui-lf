@@ -1,5 +1,5 @@
 import { h, a as getAssetPath, r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, H as Host } from './index-4d533537.js';
-import { k as kulManagerInstance, a as KulLanguageSearch, b as KulLanguageGeneric } from './kul-manager-8d12091b.js';
+import { k as kulManagerInstance, a as KulLanguageSearch, b as KulLanguageGeneric } from './kul-manager-26d0782a.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 import { a as KulDataCyAttributes, K as KUL_WRAPPER_ID, c as KUL_STYLE_ID } from './GenericVariables-f3380974.js';
 
@@ -293,7 +293,7 @@ const KulTree = class {
     render() {
         const isEmpty = !!!this.kulData?.nodes?.length;
         this.#rippleSurface = {};
-        return (h(Host, { key: 'f2ade58dc3fb2e0521b3443dac1a400d77591bcd' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '82559ec41d2b14b6f5a311090510f7120a4fe6e2', id: KUL_WRAPPER_ID }, h("div", { key: '4c78a5c1e376f645bc2a39a6ce8fa8b104c3b10f', class: "tree" }, this.kulFilter ? (h("kul-textfield", { kulIcon: "magnify", kulFullWidth: true, kulLabel: this.#kulManager.language.translate(KulLanguageSearch.SEARCH), kulStyling: "flat", "onKul-textfield-event": (e) => {
+        return (h(Host, { key: '8a156bc01061ae3cc0f6f43bef7e62d48d7ddead' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '1dda0d6d92b1294c8dc207d54b623e8de8c1e6f1', id: KUL_WRAPPER_ID }, h("div", { key: '4dcd4a1ccb274f2b07af108a0b8a894fbb2f09e4', class: "tree" }, this.kulFilter ? (h("kul-textfield", { kulIcon: "magnify", kulFullWidth: true, kulLabel: this.#kulManager.language.translate(KulLanguageSearch.SEARCH), kulStyling: "flat", "onKul-textfield-event": (e) => {
                 this.onKulEvent(e, 'kul-event');
                 if (e.detail.eventType === 'input') {
                     this.#filter(e);

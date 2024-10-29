@@ -1,4 +1,5 @@
 import { KulDataDataset, KulMessengerConfig, KulMessengerDataset } from './ketchup-lite/components';
+import { KulMasonry } from './ketchup-lite/components/kul-masonry/kul-masonry';
 import { AnalyticsType } from './manager';
 import { NodeName } from './nodes';
 
@@ -42,6 +43,7 @@ export type ComfyWidgetMap = {
   [ComfyWidgetName.number]: Widget;
   [ComfyWidgetName.seed]: Widget;
   [ComfyWidgetName.string]: Widget;
+  [ComfyWidgetName.toggle]: Widget;
 };
 export enum ComfyWidgetName {
   boolean = 'BOOLEAN',
@@ -53,6 +55,7 @@ export enum ComfyWidgetName {
   number = 'NUMBER',
   seed = 'SEED',
   string = 'STRING',
+  toggle = 'TOGGLE',
 }
 export type CustomWidgetMap = {
   [CustomWidgetName.booleanViewer]: BooleanViewerWidget;
@@ -65,8 +68,8 @@ export type CustomWidgetMap = {
   [CustomWidgetName.controlPanel]: ControlPanelWidget;
   [CustomWidgetName.countBarChart]: CountBarChartWidget;
   [CustomWidgetName.history]: HistoryWidget;
-  [CustomWidgetName.imagePreview]: ImagePreviewWidget;
   [CustomWidgetName.jsonInput]: JsonInputWidget;
+  [CustomWidgetName.masonry]: MasonryWidget;
   [CustomWidgetName.messenger]: MessengerWidget;
   [CustomWidgetName.rollViewer]: RollViewerWidget;
   [CustomWidgetName.tabBarChart]: TabBarChartWidget;
@@ -84,8 +87,8 @@ export enum CustomWidgetName {
   controlPanel = 'KUL_CONTROL_PANEL',
   countBarChart = 'KUL_COUNT_BAR_CHART',
   history = 'KUL_HISTORY',
-  imagePreview = 'KUL_IMAGE_PREVIEW_B64',
   jsonInput = 'KUL_JSON_INPUT',
+  masonry = 'KUL_MASONRY',
   messenger = 'KUL_MESSENGER',
   rollViewer = 'KUL_ROLL_VIEWER',
   tabBarChart = 'KUL_TAB_BAR_CHART',
@@ -103,8 +106,8 @@ export type CustomWidgetDeserializedValues =
   | ControlPanelWidgetDeserializedValue
   | CountBarChartWidgetDeserializedValue
   | HistoryWidgetValuetDeserializedValue
-  | ImagePreviewWidgetDeserializedValue
   | JsonInputWidgetDeserializedValue
+  | MasonryWidgetDeserializedValue
   | MessengerWidgetDeserializedValue
   | RollViewerWidgetDeserializedValue
   | TabBarChartWidgetDeserializedValue
@@ -121,8 +124,8 @@ export type CustomWidgetDeserializedValuesMap<Name extends CustomWidgetName> = {
   [CustomWidgetName.controlPanel]: ControlPanelWidgetDeserializedValue;
   [CustomWidgetName.countBarChart]: CountBarChartWidgetDeserializedValue;
   [CustomWidgetName.history]: HistoryWidgetValuetDeserializedValue;
-  [CustomWidgetName.imagePreview]: ImagePreviewWidgetDeserializedValue;
   [CustomWidgetName.jsonInput]: JsonInputWidgetDeserializedValue;
+  [CustomWidgetName.masonry]: MasonryWidgetDeserializedValue;
   [CustomWidgetName.messenger]: MessengerWidgetDeserializedValue;
   [CustomWidgetName.rollViewer]: RollViewerWidgetDeserializedValue;
   [CustomWidgetName.tabBarChart]: TabBarChartWidgetDeserializedValue;
@@ -140,8 +143,8 @@ export type CustomWidgetOptions =
   | ControlPanelWidgetOptions
   | CountBarChartWidgetOptions
   | HistoryWidgetOptions
-  | ImagePreviewWidgetOptions
   | JsonInputWidgetOptions
+  | MasonryWidgetOptions
   | MessengerWidgetOptions
   | RollViewerWidgetOptions
   | TabBarChartWidgetOptions
@@ -156,8 +159,8 @@ export type CustomWidgetOptionsCallbacks =
   | CompareWidgetOptionsCallback
   | ControlPanelWidgetOptionsCallback
   | HistoryWidgetOptionsCallback
-  | ImagePreviewWidgetOptionsCallback
   | JsonInputWidgetOptionsCallback
+  | MasonryWidgetOptionsCallback
   | MessengerWidgetOptionsCallback
   | RollViewerWidgetOptionsCallback
   | TabBarChartWidgetOptionsCallback
@@ -174,8 +177,8 @@ export type CustomWidgetOptionsCallbacksMap<Name extends CustomWidgetName> = {
   [CustomWidgetName.controlPanel]: ControlPanelWidgetOptionsCallback;
   [CustomWidgetName.countBarChart]: CountBarChartWidgetOptionsCallback;
   [CustomWidgetName.history]: HistoryWidgetOptionsCallback;
-  [CustomWidgetName.imagePreview]: ImagePreviewWidgetOptionsCallback;
   [CustomWidgetName.jsonInput]: JsonInputWidgetOptionsCallback;
+  [CustomWidgetName.masonry]: MasonryWidgetOptionsCallback;
   [CustomWidgetName.messenger]: MessengerWidgetOptionsCallback;
   [CustomWidgetName.rollViewer]: RollViewerWidgetOptionsCallback;
   [CustomWidgetName.tabBarChart]: TabBarChartWidgetOptionsCallback;
@@ -409,35 +412,6 @@ export type HistoryWidgetSetter = () => {
 export type HistoryWidgetValuetDeserializedValue = KulDataDataset;
 
 /*-------------------------------------------------------------------*/
-/*        I m a g e   P r e v i e w   D e c l a r a t i o n s        */
-/*-------------------------------------------------------------------*/
-
-export interface ImagePreviewWidget extends Widget {
-  options: ImagePreviewWidgetOptions;
-  type: [CustomWidgetName.imagePreview];
-}
-export interface ImagePreviewWidgetFactory extends BaseWidgetFactory<ImagePreviewWidgetOptions> {
-  options: ImagePreviewWidgetOptionsCallback;
-}
-export type ImagePreviewWidgetOptionsCallback = (
-  domWidget: HTMLDivElement,
-  selectable: boolean,
-) => ImagePreviewWidgetOptions;
-export interface ImagePreviewWidgetOptions
-  extends BaseWidgetOptions<ImagePreviewWidgetDeserializedValue> {
-  selectable: boolean;
-}
-export type ImagePreviewWidgetSetter = () => {
-  [CustomWidgetName.imagePreview]: BaseWidgetCallback<CustomWidgetName.imagePreview>;
-};
-export interface ImagePreviewWidgetDeserializedValue {
-  fileNames?: string[];
-  images?: string[];
-  selectedIndex?: number;
-  selectedName?: string;
-}
-
-/*-------------------------------------------------------------------*/
 /*           J s o n   I n p u t   D e c l a r a t i o n s           */
 /*-------------------------------------------------------------------*/
 
@@ -457,6 +431,31 @@ export type JsonInputWidgetSetter = () => {
   [CustomWidgetName.jsonInput]: BaseWidgetCallback<CustomWidgetName.jsonInput>;
 };
 export type JsonInputWidgetDeserializedValue = Record<string, unknown>;
+
+/*-------------------------------------------------------------------*/
+/*               M a s o n r y   D e c l a r a t i o n s             */
+/*-------------------------------------------------------------------*/
+
+export interface MasonryWidget extends Widget {
+  options: MasonryWidgetOptions;
+  type: [CustomWidgetName.masonry];
+}
+export interface MasonryWidgetFactory extends BaseWidgetFactory<MasonryWidgetOptions> {
+  options: MasonryWidgetOptionsCallback;
+}
+export type MasonryWidgetOptionsCallback = (masonry: HTMLKulMasonryElement) => MasonryWidgetOptions;
+export interface MasonryWidgetOptions extends BaseWidgetOptions<MasonryWidgetDeserializedValue> {
+  getComp(): HTMLKulMasonryElement;
+}
+export type MasonryWidgetSetter = () => {
+  [CustomWidgetName.masonry]: BaseWidgetCallback<CustomWidgetName.masonry>;
+};
+export interface MasonryWidgetDeserializedValue {
+  dataset: KulDataDataset;
+  index?: number;
+  name?: string;
+  view?: KulMasonry['kulView'];
+}
 
 /*-------------------------------------------------------------------*/
 /*            M e s s e n g e r   D e c l a r a t i o n s            */

@@ -4,8 +4,8 @@ import torch
 from PIL import Image, ImageFilter
 from server import PromptServer
 
-from ..utils.constants import BASE64_PNG_PREFIX, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, RESAMPLERS
-from ..utils.helpers import clarity_effect, normalize_input_image, normalize_input_list, normalize_list_to_value, normalize_output_image, pil_to_tensor, resize_and_crop_image, resize_image, resize_to_square, tensor_to_base64, tensor_to_pil
+from ..utils.constants import BASE_TEMP_PATH, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, RESAMPLERS, USER_FOLDER
+from ..utils.helpers import clarity_effect, create_compare_node, create_masonry_node, create_resize_node, get_resource_url, normalize_input_image, normalize_input_list, normalize_list_to_value, normalize_output_image, pil_to_tensor, resize_and_crop_image, resize_image, resize_to_square, resolve_filepath, tensor_to_pil
 
 CATEGORY = f"{CATEGORY_PREFIX}/Image"
 
@@ -33,46 +33,49 @@ class LF_BlurImages:
     RETURN_NAMES = ("image", "image_list", "file_name", "count")
     RETURN_TYPES = ("IMAGE", "IMAGE", "STRING", "INT")
 
-    def on_exec(self, node_id: str, image: torch.Tensor|list[torch.Tensor], file_name: list[str], blur_percentage: float):
+    def on_exec(self, node_id: str, image: torch.Tensor|list[torch.Tensor], blur_percentage: float, file_name: list[str] = None):
         blur_percentage = normalize_list_to_value(blur_percentage)
         file_name = normalize_input_list(file_name)
         image = normalize_input_image(image)
 
         blurred_images = []
         blurred_file_names = []
-        b64_images = []
+
+        nodes = []
+        dataset = { "nodes": nodes }
 
         for index, img in enumerate(image):
-            f_name = file_name[index]
-            split_name = f_name.rsplit('.', 1)
-            if len(split_name) == 2:
-                base_name, original_extension = split_name
+            if file_name:
+                split_name = file_name[index].rsplit('.', 1)
+                if len(split_name) == 2:
+                    base_name, _ = split_name
+                else:
+                    base_name = split_name[0]
             else:
-                base_name = split_name[0]
-                original_extension = ""
-
+                base_name = ""
+                
+            output_file, subfolder, filename = resolve_filepath(f"{USER_FOLDER}", BASE_TEMP_PATH, index, False, f"{base_name}_Blur", "PNG", False)
+            
             pil_image = tensor_to_pil(img)
             
             width, height = pil_image.size
             min_dimension = min(width, height)
-            adjusted_blur_radius:float = blur_percentage * (min_dimension / 10)
+            adjusted_blur_radius: float = blur_percentage * (min_dimension / 10)
             
             blurred_image = pil_image.filter(ImageFilter.GaussianBlur(adjusted_blur_radius))
+            blurred_image.save(output_file, format="PNG")
+            url = get_resource_url(subfolder, filename, "temp")
             
             blurred_tensor = pil_to_tensor(blurred_image)
             blurred_images.append(blurred_tensor)
 
-            b64_image = tensor_to_base64(blurred_tensor)
-            b64_images.append(b64_image)
-            
-            new_file_name = f"{base_name}_Blur{'.' + original_extension if original_extension else ''}"
-            blurred_file_names.append(new_file_name)
+            blurred_file_names.append(filename)
 
+            nodes.append(create_masonry_node(filename, url, index))
         
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}blurimages", {
             "node": node_id,
-            "fileNames": blurred_file_names,
-            "images": b64_images,
+            "dataset": dataset
         })
 
         image_batch, image_list = normalize_output_image(blurred_images)
@@ -112,20 +115,24 @@ class LF_ClarityEffect:
         nodes = []
         dataset = { "nodes": nodes }
         
-        processed_images = [clarity_effect(img, clarity_strength, sharpen_amount, blur_kernel_size) for img in image]
+        processed_images = []
 
-        for i, img in enumerate(image):
-            b64_source = tensor_to_base64(img)
-            b64_target = tensor_to_base64(processed_images[i])
+        for index, img in enumerate(image):
+            output_file_s, subfolder_s, filename_s = resolve_filepath(f"{USER_FOLDER}", BASE_TEMP_PATH, index, False, f"clarity_s", "PNG")
+            output_file_t, subfolder_t, filename_t = resolve_filepath(f"{USER_FOLDER}", BASE_TEMP_PATH, index, False, f"clarity_t", "PNG")
+            
+            pil_image = tensor_to_pil(img)
+            pil_image.save(output_file_s, format="PNG")
+            filename_s = get_resource_url(subfolder_s, filename_s, "temp")
 
-            nodes.append({
-                "cells": {
-                    "kulImage": {"shape": "image", "kulValue": f"{BASE64_PNG_PREFIX}{b64_source}", "value": ''},
-                    "kulImage_after": {"shape": "image", "kulValue": f"{BASE64_PNG_PREFIX}{b64_target}", "value": ''}
-                },
-                "id": f"image_{i+1}",
-                "value": f"Comparison {i+1}"
-            })
+            processed = clarity_effect(img, clarity_strength, sharpen_amount, blur_kernel_size)
+
+            pil_image = tensor_to_pil(processed)
+            pil_image.save(output_file_t, format="PNG")
+            filename_t = get_resource_url(subfolder_t, filename_t, "temp")
+
+            nodes.append(create_compare_node(filename_s, filename_t, index))
+            processed_images.append(processed)
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}clarityeffect", {
             "node": node_id,
@@ -170,21 +177,22 @@ class LF_CompareImages:
         if len(image_list_1) != len(image_list_2):
             raise ValueError("Image lists must have the same length if both inputs are provided.")
         
-        for i, img1 in enumerate(image_list_1):
-            b64_img1 = tensor_to_base64(img1)
-            dataset_entry = {
-                "cells": {
-                    "kulImage_1": {"shape": "image", "kulValue": f"{BASE64_PNG_PREFIX}{b64_img1}", "value": ''}
-                },
-                "id": f"comparison_{i+1}",
-                "value": f"Comparison {i+1}"
-            }
+        for index, img in enumerate(image_list_1):
+            output_file_s, subfolder_s, filename_s = resolve_filepath(f"{USER_FOLDER}", BASE_TEMP_PATH, index, False, f"compare_s", "PNG", True)
+            
+            pil_image = tensor_to_pil(img)
+            pil_image.save(output_file_s, format="PNG")
+            filename_s = get_resource_url(subfolder_s, filename_s, "temp")
 
             if image_opt is not None:
-                b64_img2 = tensor_to_base64(image_list_2[i])
-                dataset_entry["cells"]["kulImage_2"] = {"shape": "image", "kulValue": f"{BASE64_PNG_PREFIX}{b64_img2}", "value": ''}
+                output_file_t, subfolder_t, filename_t = resolve_filepath(f"{USER_FOLDER}", BASE_TEMP_PATH, index, False, f"compare_t", "PNG", True)
+                pil_image = tensor_to_pil(image_list_2[index])
+                pil_image.save(output_file_t, format="PNG")
+                filename_t = get_resource_url(subfolder_t, filename_t, "temp")
+            else:
+                filename_t = get_resource_url(subfolder_s, filename_s, "temp")
 
-            nodes.append(dataset_entry)
+            nodes.append(create_compare_node(filename_s, filename_t, index))
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}compareimages", {
             "node": node_id,
@@ -340,7 +348,7 @@ class LF_ResizeImageByEdge:
 
         resized_images = []
 
-        for idx, img in enumerate(image):
+        for index, img in enumerate(image):
             original_height, original_width = img.shape[1], img.shape[2]
             original_heights.append(original_height)
             original_widths.append(original_width)
@@ -352,8 +360,7 @@ class LF_ResizeImageByEdge:
             heights.append(new_height)
             widths.append(new_width)
 
-            log_str = f"[{idx}] From {original_height}x{original_width} to {new_height}x{new_width}"
-            nodes.append({ "id": log_str, "value": log_str })
+            nodes.append(create_resize_node(original_height, original_width, new_height, new_width, index))
             
         num_resized = len(resized_images)
         summary_message = f"Resized {num_resized} {'image' if num_resized == 1 else 'images'}"
@@ -413,7 +420,7 @@ class LF_ResizeImageToDimension:
 
         resized_images = []
 
-        for idx, img in enumerate(image):
+        for index, img in enumerate(image):
             original_height, original_width = img.shape[1], img.shape[2]
             original_heights.append(original_height)
             original_widths.append(original_width)
@@ -425,8 +432,7 @@ class LF_ResizeImageToDimension:
             heights.append(new_height)
             widths.append(new_width)
 
-            log_str = f"[{idx}] From {original_height}x{original_width} to {new_height}x{new_width}"
-            nodes.append({ "id": log_str, "value": log_str })
+            nodes.append(create_resize_node(original_height, original_width, new_height, new_width, index))
         
         num_resized = len(resized_images)
         summary_message = f"Resized {num_resized} {'image' if num_resized == 1 else 'images'}"
@@ -482,7 +488,7 @@ class LF_ResizeImageToSquare:
 
         resized_images = []
 
-        for idx, img in enumerate(image):
+        for index, img in enumerate(image):
             original_height, original_width = img.shape[1], img.shape[2]
             original_heights.append(original_height)
             original_widths.append(original_width)
@@ -494,8 +500,7 @@ class LF_ResizeImageToSquare:
             heights.append(new_height)
             widths.append(new_width)
 
-            log_str = f"[{idx}] From {original_height}x{original_width} to {new_height}x{new_width}"
-            nodes.append({ "id": log_str, "value": log_str })
+            nodes.append(create_resize_node(original_height, original_width, new_height, new_width, index))
 
         num_resized = len(resized_images)
         summary_message = f"Resized {num_resized} {'image' if num_resized == 1 else 'images'}"

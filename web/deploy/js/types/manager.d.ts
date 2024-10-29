@@ -13,6 +13,7 @@ export interface ComfyAPIs {
     queuePrompt: () => Promise<void>;
     redraw: () => void;
     register: (extension: Extension) => void;
+    getResourceUrl: (subfolder: string, filename: string, type?: ComfyFolderTypes) => string;
 }
 export interface AnalyticsAPIs {
     clear: (type: AnalyticsType) => Promise<BaseAPIPayload>;

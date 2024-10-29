@@ -11,13 +11,8 @@ export const imageListFromJsonFactory = {
         const payload = event.detail;
         const node = getApiRoutes().getNodeById(payload.id);
         if (node) {
-            const widget = getCustomWidget(node, CustomWidgetName.imagePreview, addW);
-            const value = {
-                ...payload,
-                selectedIndex: undefined,
-                selectedName: undefined,
-            };
-            widget.options.setValue(JSON.stringify(value));
+            const widget = getCustomWidget(node, CustomWidgetName.masonry, addW);
+            widget.options.setValue(JSON.stringify(payload));
             getApiRoutes().redraw();
         }
     },
