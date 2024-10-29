@@ -1,5 +1,5 @@
 import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, F as Fragment, H as Host } from './index-4d533537.js';
-import { k as kulManagerInstance } from './kul-manager-8d12091b.js';
+import { k as kulManagerInstance } from './kul-manager-5dda66e6.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 import { K as KUL_WRAPPER_ID, c as KUL_STYLE_ID } from './GenericVariables-f3380974.js';
 
@@ -249,7 +249,7 @@ const KulCompare = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: '1455b1b604369f5d058a86b5c4e21b9cf5ff4558' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '79ab9200c25a1eb872fa5d6dc439c3a4b15c456f', id: KUL_WRAPPER_ID }, h("div", { key: '7e49fe090ea6706b2797dd451307d6d6973fb2ec', class: "compare" }, this.#prepCompare()))));
+        return (h(Host, { key: '0bf34c7ead5ac545cb3f788a38f41b7b8b3ad985' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'b7fc79025f7cde2f4d427ed11d996a4c7be9f520', id: KUL_WRAPPER_ID }, h("div", { key: '9a376cd2fec057779237f1b835b546d6823865d2', class: "compare" }, this.#prepCompare()))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

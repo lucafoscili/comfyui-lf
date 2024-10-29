@@ -1,5 +1,5 @@
 import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, a as getAssetPath, h, H as Host } from './index-4d533537.js';
-import { c as commonjsGlobal, k as kulManagerInstance } from './kul-manager-8d12091b.js';
+import { c as commonjsGlobal, k as kulManagerInstance } from './kul-manager-5dda66e6.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 import { K as KUL_WRAPPER_ID, c as KUL_STYLE_ID } from './GenericVariables-f3380974.js';
 
