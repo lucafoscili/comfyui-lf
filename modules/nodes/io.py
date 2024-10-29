@@ -14,7 +14,7 @@ from PIL.PngImagePlugin import PngInfo
 from server import PromptServer
 
 from ..utils.constants import BASE_OUTPUT_PATH, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, BASE_INPUT_PATH
-from ..utils.helpers import create_dummy_image_tensor, extract_jpeg_metadata, extract_png_metadata, get_resource_url, normalize_input_image, normalize_input_list, normalize_json_input, normalize_list_to_value, normalize_output_image, pil_to_tensor, resize_image, resolve_filepath, tensor_to_base64, tensor_to_numpy, numpy_to_tensor, tensor_to_pil
+from ..utils.helpers import create_dummy_image_tensor, create_masonry_node, extract_jpeg_metadata, extract_png_metadata, get_resource_url, normalize_input_image, normalize_input_list, normalize_json_input, normalize_list_to_value, normalize_output_image, pil_to_tensor, resize_image, resolve_filepath, tensor_to_base64, tensor_to_numpy, numpy_to_tensor, tensor_to_pil
 
 CATEGORY = f"{CATEGORY_PREFIX}/IO Operations"
  
@@ -338,15 +338,8 @@ class LF_SaveImageForCivitAI:
                     piexif.insert(exif_bytes, output_file)
             else:
                 pil_img.save(output_file, format=extension.upper(), quality=quality)
-                
-            nodes.append({
-                "cells": {
-                    "kulImage": {"htmlProps":{"id": filename, "title": filename}, "shape": "image", "kulValue": f"{url}", "value": ''}
-                },
-                "id": f"{index+1}",
-                "value": f"{index+1}"
-            })
-        
+
+            nodes.append(create_masonry_node(filename, url, index))
             file_names.append(filename)
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}saveimageforcivitai", {

@@ -204,6 +204,17 @@ def convert_to_json(text):
     except (json.JSONDecodeError, TypeError):
         return None
 
+def create_compare_node(source: str, target: str, index: int):
+    node = {
+                "cells": {
+                    "kulImage": {"shape": "image", "kulValue": f"{source}", "value": ''},
+                    "kulImage_after": {"shape": "image", "kulValue": f"{target}", "value": ''}
+                },
+                "id": f"image_{index+1}",
+                "value": f"Comparison {index+1}"
+    }
+    return node
+
 def create_dummy_image_tensor():
     """
     Creates a dummy image tensor, typically used when there are no real images to process.
@@ -220,6 +231,16 @@ def create_dummy_image_tensor():
     img_tensor = torch.from_numpy(np.array(img)).float() / 255.0
     
     return img_tensor.unsqueeze(0)
+
+def create_masonry_node(filename: str, url: str, index: int):
+    node = {
+                "cells": {
+                    "kulImage": {"htmlProps":{"id": filename, "title": filename}, "shape": "image", "kulValue": f"{url}", "value": ''}
+                },
+                "id": f"{index+1}",
+                "value": f"{index+1}"
+    }
+    return node
 
 def extract_jpeg_metadata(pil_image, file_name):
     """
