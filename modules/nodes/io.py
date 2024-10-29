@@ -375,7 +375,7 @@ class LF_SaveJSON:
         add_timestamp = normalize_list_to_value(add_timestamp)
 
         try:
-            output_file = resolve_filepath(filepath, BASE_OUTPUT_PATH, add_timestamp=add_timestamp)
+            output_file, _, _ = resolve_filepath(filepath, BASE_OUTPUT_PATH, 0, add_timestamp=add_timestamp)
 
             with open(output_file, 'w', encoding='utf-8') as json_file:
                 json.dump(json_data, json_file, ensure_ascii=False, indent=4)
