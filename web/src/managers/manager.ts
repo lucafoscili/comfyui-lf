@@ -400,6 +400,15 @@ export class LFManager {
     getNodeById: (id: string) => {
       return app.graph.getNodeById(+(id || app.runningNodeId));
     },
+    getResourceUrl: (subfolder, filename, type = 'output') => {
+      const params = [
+        'filename=' + encodeURIComponent(filename),
+        'type=' + type,
+        'subfolder=' + subfolder,
+        app.getRandParam().substring(1),
+      ].join('&');
+      return `/view?${params}`;
+    },
     interrupt: () => {
       return api.interrupt();
     },
@@ -478,11 +487,11 @@ export class LFManager {
     /*                    I n i t   B l u r I m a g e s                  */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_BlurImages(
-      widgets.setters.KUL_IMAGE_PREVIEW_B64,
-      widgets.adders.KUL_IMAGE_PREVIEW_B64,
+      widgets.setters.KUL_MASONRY,
+      widgets.adders.KUL_MASONRY,
     );
     this.#APIS.event(EventName.blurImages, (e: CustomEvent<BlurImagesPayload>) => {
-      nodes.eventHandlers.LF_BlurImages(e, widgets.adders.KUL_IMAGE_PREVIEW_B64);
+      nodes.eventHandlers.LF_BlurImages(e, widgets.adders.KUL_MASONRY);
     });
     /*-------------------------------------------------------------------*/
     /*                      I n i t   B o o l e a n                      */
@@ -651,9 +660,9 @@ export class LFManager {
     /*-------------------------------------------------------------------*/
     /*            I n i t   I m a g e L i s t F r o m J S O N            */
     /*-------------------------------------------------------------------*/
-    this.#MANAGERS.nodes.register.LF_ImageListFromJSON(widgets.setters.KUL_IMAGE_PREVIEW_B64);
+    this.#MANAGERS.nodes.register.LF_ImageListFromJSON(widgets.setters.KUL_MASONRY);
     this.#APIS.event(EventName.imageListFromJSON, (e: CustomEvent<ImageListFromJSONPayload>) => {
-      nodes.eventHandlers.LF_ImageListFromJSON(e, widgets.adders.KUL_IMAGE_PREVIEW_B64);
+      nodes.eventHandlers.LF_ImageListFromJSON(e, widgets.adders.KUL_MASONRY);
     });
     /*-------------------------------------------------------------------*/
     /*               I n i t   I m a g e H i s t o g r a m               */
@@ -669,11 +678,11 @@ export class LFManager {
     /*                I n i t   I m a g e s L o a d e r                  */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_LoadImages(
-      widgets.setters.KUL_IMAGE_PREVIEW_B64,
-      widgets.adders.KUL_IMAGE_PREVIEW_B64,
+      widgets.setters.KUL_MASONRY,
+      widgets.adders.KUL_MASONRY,
     );
     this.#APIS.event(EventName.loadImages, (e: CustomEvent<LoadImagesPayload>) => {
-      nodes.eventHandlers.LF_LoadImages(e, widgets.adders.KUL_IMAGE_PREVIEW_B64);
+      nodes.eventHandlers.LF_LoadImages(e, widgets.adders.KUL_MASONRY);
     });
     /*-------------------------------------------------------------------*/
     /*                      I n i t   I n t e g e r                      */
@@ -875,13 +884,13 @@ export class LFManager {
     /*          I n i t   S a v e I m a g e F o r C i v i t A I          */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_SaveImageForCivitAI(
-      widgets.setters.KUL_IMAGE_PREVIEW_B64,
-      widgets.adders.KUL_IMAGE_PREVIEW_B64,
+      widgets.setters.KUL_MASONRY,
+      widgets.adders.KUL_MASONRY,
     );
     this.#APIS.event(
       EventName.saveImageForCivitAI,
       (e: CustomEvent<SaveImageForCivitAIPayload>) => {
-        nodes.eventHandlers.LF_SaveImageForCivitAI(e, widgets.adders.KUL_IMAGE_PREVIEW_B64);
+        nodes.eventHandlers.LF_SaveImageForCivitAI(e, widgets.adders.KUL_MASONRY);
       },
     );
     /*-------------------------------------------------------------------*/

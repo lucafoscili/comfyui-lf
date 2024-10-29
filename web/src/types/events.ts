@@ -127,8 +127,7 @@ export type EventPayload =
 /*-------------------------------------------------------------------*/
 
 export interface BlurImagesPayload extends BaseEventPayload {
-  fileNames: Array<string>;
-  images: Array<string>;
+  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/
@@ -477,8 +476,7 @@ export interface SaveJSONPayload extends BaseEventPayload {
 /*-------------------------------------------------------------------*/
 
 export interface SaveImageForCivitAIPayload extends BaseEventPayload {
-  fileNames: Array<string>;
-  images: Array<string>;
+  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/

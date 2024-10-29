@@ -11,8 +11,8 @@ export const saveImageForCivitaiFactory = {
         const payload = event.detail;
         const node = getApiRoutes().getNodeById(payload.id);
         if (node) {
-            const widget = getCustomWidget(node, CustomWidgetName.imagePreview, addW);
-            widget.options.setValue(JSON.stringify(payload));
+            const widget = getCustomWidget(node, CustomWidgetName.masonry, addW);
+            widget.options.setValue(JSON.stringify(payload.dataset));
             getApiRoutes().redraw();
         }
     },
@@ -25,7 +25,7 @@ export const saveImageForCivitaiFactory = {
                     nodeType.prototype.onNodeCreated = function () {
                         const r = onNodeCreated?.apply(this, arguments);
                         const node = this;
-                        addW(node, CustomWidgetName.imagePreview);
+                        addW(node, CustomWidgetName.masonry);
                         return r;
                     };
                 }

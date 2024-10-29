@@ -13,8 +13,8 @@ export declare class LFWidgets {
         KUL_CONTROL_PANEL: (nodeType: NodeType) => any;
         KUL_COUNT_BAR_CHART: (nodeType: NodeType) => any;
         KUL_HISTORY: (nodeType: NodeType) => any;
-        KUL_IMAGE_PREVIEW_B64: (nodeType: NodeType) => any;
         KUL_JSON_INPUT: (nodeType: NodeType) => any;
+        KUL_MASONRY: (nodeType: NodeType) => any;
         KUL_MESSENGER: (nodeType: NodeType) => any;
         KUL_ROLL_VIEWER: (nodeType: NodeType) => any;
         KUL_TAB_BAR_CHART: (nodeType: NodeType) => any;
@@ -80,8 +80,8 @@ export declare class LFWidgets {
                 widget: Widget;
             };
         };
-        KUL_IMAGE_PREVIEW_B64: () => {
-            KUL_IMAGE_PREVIEW_B64: (nodeType: NodeType, name: CustomWidgetName) => {
+        KUL_MASONRY: () => {
+            KUL_MASONRY: (nodeType: NodeType, name: CustomWidgetName) => {
                 widget: Widget;
             };
         };
@@ -123,8 +123,8 @@ export declare class LFWidgets {
             KUL_CONTROL_PANEL: (nodeType: NodeType) => any;
             KUL_COUNT_BAR_CHART: (nodeType: NodeType) => any;
             KUL_HISTORY: (nodeType: NodeType) => any;
-            KUL_IMAGE_PREVIEW_B64: (nodeType: NodeType) => any;
             KUL_JSON_INPUT: (nodeType: NodeType) => any;
+            KUL_MASONRY: (nodeType: NodeType) => any;
             KUL_MESSENGER: (nodeType: NodeType) => any;
             KUL_ROLL_VIEWER: (nodeType: NodeType) => any;
             KUL_TAB_BAR_CHART: (nodeType: NodeType) => any;
@@ -142,8 +142,8 @@ export declare class LFWidgets {
             KUL_CONTROL_PANEL: import("../types/widgets.js").ControlPanelWidgetOptionsCallback;
             KUL_COUNT_BAR_CHART: import("../types/widgets.js").CountBarChartWidgetOptionsCallback;
             KUL_HISTORY: import("../types/widgets.js").HistoryWidgetOptionsCallback;
-            KUL_IMAGE_PREVIEW_B64: import("../types/widgets.js").ImagePreviewWidgetOptionsCallback;
             KUL_JSON_INPUT: import("../types/widgets.js").JsonInputWidgetOptionsCallback;
+            KUL_MASONRY: import("../types/widgets.js").MasonryWidgetOptionsCallback;
             KUL_MESSENGER: import("../types/widgets.js").MessengerWidgetOptionsCallback;
             KUL_ROLL_VIEWER: import("../types/widgets.js").RollViewerWidgetOptionsCallback;
             KUL_TAB_BAR_CHART: import("../types/widgets.js").TabBarChartWidgetOptionsCallback;
@@ -206,8 +206,8 @@ export declare class LFWidgets {
                     widget: Widget;
                 };
             };
-            KUL_IMAGE_PREVIEW_B64: () => {
-                KUL_IMAGE_PREVIEW_B64: (nodeType: NodeType, name: CustomWidgetName) => {
+            KUL_MASONRY: () => {
+                KUL_MASONRY: (nodeType: NodeType, name: CustomWidgetName) => {
                     widget: Widget;
                 };
             };

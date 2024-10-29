@@ -57,8 +57,8 @@ export type CustomWidgetMap = {
     [CustomWidgetName.controlPanel]: ControlPanelWidget;
     [CustomWidgetName.countBarChart]: CountBarChartWidget;
     [CustomWidgetName.history]: HistoryWidget;
-    [CustomWidgetName.imagePreview]: ImagePreviewWidget;
     [CustomWidgetName.jsonInput]: JsonInputWidget;
+    [CustomWidgetName.masonry]: MasonryWidget;
     [CustomWidgetName.messenger]: MessengerWidget;
     [CustomWidgetName.rollViewer]: RollViewerWidget;
     [CustomWidgetName.tabBarChart]: TabBarChartWidget;
@@ -76,15 +76,15 @@ export declare enum CustomWidgetName {
     controlPanel = "KUL_CONTROL_PANEL",
     countBarChart = "KUL_COUNT_BAR_CHART",
     history = "KUL_HISTORY",
-    imagePreview = "KUL_IMAGE_PREVIEW_B64",
     jsonInput = "KUL_JSON_INPUT",
+    masonry = "KUL_MASONRY",
     messenger = "KUL_MESSENGER",
     rollViewer = "KUL_ROLL_VIEWER",
     tabBarChart = "KUL_TAB_BAR_CHART",
     tree = "KUL_TREE",
     upload = "KUL_UPLOAD"
 }
-export type CustomWidgetDeserializedValues = BooleanViewerWidgetDeserializedValue | CardWidgetDeserializedValue | CardsWithChipWidgetDeserializedValue | ChatWidgetValueDeserializedValue | ChipWidgetValueDeserializedValue | CodeWidgetValueDeserializedValue | CompareWidgetValueDeserializedValue | ControlPanelWidgetDeserializedValue | CountBarChartWidgetDeserializedValue | HistoryWidgetValuetDeserializedValue | ImagePreviewWidgetDeserializedValue | JsonInputWidgetDeserializedValue | MessengerWidgetDeserializedValue | RollViewerWidgetDeserializedValue | TabBarChartWidgetDeserializedValue | TreeWidgetValueDeserializedValue | UploadWidgetDeserializedValue;
+export type CustomWidgetDeserializedValues = BooleanViewerWidgetDeserializedValue | CardWidgetDeserializedValue | CardsWithChipWidgetDeserializedValue | ChatWidgetValueDeserializedValue | ChipWidgetValueDeserializedValue | CodeWidgetValueDeserializedValue | CompareWidgetValueDeserializedValue | ControlPanelWidgetDeserializedValue | CountBarChartWidgetDeserializedValue | HistoryWidgetValuetDeserializedValue | JsonInputWidgetDeserializedValue | MasonryWidgetDeserializedValue | MessengerWidgetDeserializedValue | RollViewerWidgetDeserializedValue | TabBarChartWidgetDeserializedValue | TreeWidgetValueDeserializedValue | UploadWidgetDeserializedValue;
 export type CustomWidgetDeserializedValuesMap<Name extends CustomWidgetName> = {
     [CustomWidgetName.booleanViewer]: BooleanViewerWidgetDeserializedValue;
     [CustomWidgetName.card]: CardWidgetDeserializedValue;
@@ -96,16 +96,16 @@ export type CustomWidgetDeserializedValuesMap<Name extends CustomWidgetName> = {
     [CustomWidgetName.controlPanel]: ControlPanelWidgetDeserializedValue;
     [CustomWidgetName.countBarChart]: CountBarChartWidgetDeserializedValue;
     [CustomWidgetName.history]: HistoryWidgetValuetDeserializedValue;
-    [CustomWidgetName.imagePreview]: ImagePreviewWidgetDeserializedValue;
     [CustomWidgetName.jsonInput]: JsonInputWidgetDeserializedValue;
+    [CustomWidgetName.masonry]: MasonryWidgetDeserializedValue;
     [CustomWidgetName.messenger]: MessengerWidgetDeserializedValue;
     [CustomWidgetName.rollViewer]: RollViewerWidgetDeserializedValue;
     [CustomWidgetName.tabBarChart]: TabBarChartWidgetDeserializedValue;
     [CustomWidgetName.tree]: TreeWidgetValueDeserializedValue;
     [CustomWidgetName.upload]: UploadWidgetDeserializedValue;
 }[Name];
-export type CustomWidgetOptions = BooleanViewerWidgetOptions | CardWidgetOptions | CardsWithChipWidgetOptions | ChatWidgetOptions | ChipWidgetOptions | CodeWidgetOptions | CompareWidgetOptions | ControlPanelWidgetOptions | CountBarChartWidgetOptions | HistoryWidgetOptions | ImagePreviewWidgetOptions | JsonInputWidgetOptions | MessengerWidgetOptions | RollViewerWidgetOptions | TabBarChartWidgetOptions | TreeWidgetOptions | UploadWidgetOptions;
-export type CustomWidgetOptionsCallbacks = BooleanViewerWidgetOptionsCallback | CardWidgetOptionsCallback | ChatWidgetOptionsCallback | ChipWidgetOptionsCallback | CodeWidgetOptionsCallback | CompareWidgetOptionsCallback | ControlPanelWidgetOptionsCallback | HistoryWidgetOptionsCallback | ImagePreviewWidgetOptionsCallback | JsonInputWidgetOptionsCallback | MessengerWidgetOptionsCallback | RollViewerWidgetOptionsCallback | TabBarChartWidgetOptionsCallback | TreeWidgetOptionsCallback | UploadWidgetOptionsCallback;
+export type CustomWidgetOptions = BooleanViewerWidgetOptions | CardWidgetOptions | CardsWithChipWidgetOptions | ChatWidgetOptions | ChipWidgetOptions | CodeWidgetOptions | CompareWidgetOptions | ControlPanelWidgetOptions | CountBarChartWidgetOptions | HistoryWidgetOptions | JsonInputWidgetOptions | MasonryWidgetOptions | MessengerWidgetOptions | RollViewerWidgetOptions | TabBarChartWidgetOptions | TreeWidgetOptions | UploadWidgetOptions;
+export type CustomWidgetOptionsCallbacks = BooleanViewerWidgetOptionsCallback | CardWidgetOptionsCallback | ChatWidgetOptionsCallback | ChipWidgetOptionsCallback | CodeWidgetOptionsCallback | CompareWidgetOptionsCallback | ControlPanelWidgetOptionsCallback | HistoryWidgetOptionsCallback | JsonInputWidgetOptionsCallback | MasonryWidgetOptionsCallback | MessengerWidgetOptionsCallback | RollViewerWidgetOptionsCallback | TabBarChartWidgetOptionsCallback | TreeWidgetOptionsCallback | UploadWidgetOptionsCallback;
 export type CustomWidgetOptionsCallbacksMap<Name extends CustomWidgetName> = {
     [CustomWidgetName.booleanViewer]: BooleanViewerWidgetOptionsCallback;
     [CustomWidgetName.card]: CardWidgetOptionsCallback;
@@ -117,8 +117,8 @@ export type CustomWidgetOptionsCallbacksMap<Name extends CustomWidgetName> = {
     [CustomWidgetName.controlPanel]: ControlPanelWidgetOptionsCallback;
     [CustomWidgetName.countBarChart]: CountBarChartWidgetOptionsCallback;
     [CustomWidgetName.history]: HistoryWidgetOptionsCallback;
-    [CustomWidgetName.imagePreview]: ImagePreviewWidgetOptionsCallback;
     [CustomWidgetName.jsonInput]: JsonInputWidgetOptionsCallback;
+    [CustomWidgetName.masonry]: MasonryWidgetOptionsCallback;
     [CustomWidgetName.messenger]: MessengerWidgetOptionsCallback;
     [CustomWidgetName.rollViewer]: RollViewerWidgetOptionsCallback;
     [CustomWidgetName.tabBarChart]: TabBarChartWidgetOptionsCallback;
@@ -293,26 +293,6 @@ export type HistoryWidgetSetter = () => {
     [CustomWidgetName.history]: BaseWidgetCallback<CustomWidgetName.history>;
 };
 export type HistoryWidgetValuetDeserializedValue = KulDataDataset;
-export interface ImagePreviewWidget extends Widget {
-    options: ImagePreviewWidgetOptions;
-    type: [CustomWidgetName.imagePreview];
-}
-export interface ImagePreviewWidgetFactory extends BaseWidgetFactory<ImagePreviewWidgetOptions> {
-    options: ImagePreviewWidgetOptionsCallback;
-}
-export type ImagePreviewWidgetOptionsCallback = (domWidget: HTMLDivElement, selectable: boolean) => ImagePreviewWidgetOptions;
-export interface ImagePreviewWidgetOptions extends BaseWidgetOptions<ImagePreviewWidgetDeserializedValue> {
-    selectable: boolean;
-}
-export type ImagePreviewWidgetSetter = () => {
-    [CustomWidgetName.imagePreview]: BaseWidgetCallback<CustomWidgetName.imagePreview>;
-};
-export interface ImagePreviewWidgetDeserializedValue {
-    fileNames?: string[];
-    images?: string[];
-    selectedIndex?: number;
-    selectedName?: string;
-}
 export interface JsonInputWidget extends Widget {
     options: JsonInputWidgetOptions;
     type: [CustomWidgetName.jsonInput];
@@ -327,6 +307,25 @@ export type JsonInputWidgetSetter = () => {
     [CustomWidgetName.jsonInput]: BaseWidgetCallback<CustomWidgetName.jsonInput>;
 };
 export type JsonInputWidgetDeserializedValue = Record<string, unknown>;
+export interface MasonryWidget extends Widget {
+    options: MasonryWidgetOptions;
+    type: [CustomWidgetName.masonry];
+}
+export interface MasonryWidgetFactory extends BaseWidgetFactory<MasonryWidgetOptions> {
+    options: MasonryWidgetOptionsCallback;
+}
+export type MasonryWidgetOptionsCallback = (masonry: HTMLKulMasonryElement) => MasonryWidgetOptions;
+export interface MasonryWidgetOptions extends BaseWidgetOptions<MasonryWidgetDeserializedValue> {
+    getComp(): HTMLKulMasonryElement;
+}
+export type MasonryWidgetSetter = () => {
+    [CustomWidgetName.masonry]: BaseWidgetCallback<CustomWidgetName.masonry>;
+};
+export interface MasonryWidgetDeserializedValue {
+    dataset: KulDataDataset;
+    index: number;
+    name: string;
+}
 export interface MessengerWidget extends Widget {
     options: MessengerWidgetOptions;
     type: [CustomWidgetName.messenger];

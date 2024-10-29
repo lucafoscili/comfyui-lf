@@ -1,6 +1,6 @@
 import os
 
-from folder_paths import get_filename_list, input_directory, output_directory, user_directory
+from folder_paths import get_filename_list, input_directory, output_directory, temp_directory, user_directory
 from comfy.samplers import KSampler
 
 class AnyType(str):
@@ -24,6 +24,7 @@ USER_FOLDER = "LF_Nodes"
 
 BASE_INPUT_PATH = input_directory
 BASE_OUTPUT_PATH = output_directory
+BASE_TEMP_PATH = temp_directory
 BASE_PATH = os.path.join(user_directory, USER_FOLDER)
 BACKUP_PATH = os.path.join(BASE_PATH, BACKUP_FOLDER)
 

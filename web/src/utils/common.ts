@@ -3,7 +3,6 @@ import {
   BaseWidgetCallback,
   ComfyWidgetMap,
   ComfyWidgetName,
-  CustomWidgetDeserializedValues,
   CustomWidgetDeserializedValuesMap,
   CustomWidgetMap,
   CustomWidgetName,

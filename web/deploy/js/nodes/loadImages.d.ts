@@ -1,6 +1,6 @@
 import { LoadImagesPayload } from '../types/events';
-import { CustomWidgetName, type BaseWidgetCallback, type ImagePreviewWidgetSetter } from '../types/widgets';
+import { CustomWidgetName, type BaseWidgetCallback, type MasonryWidgetSetter } from '../types/widgets';
 export declare const loadImagesFactory: {
-    eventHandler: (event: CustomEvent<LoadImagesPayload>, addW: BaseWidgetCallback<CustomWidgetName.imagePreview>) => void;
-    register: (setW: ImagePreviewWidgetSetter, addW: BaseWidgetCallback<CustomWidgetName.imagePreview>) => void;
+    eventHandler: (event: CustomEvent<LoadImagesPayload>, addW: BaseWidgetCallback<CustomWidgetName.masonry>) => void;
+    register: (setW: MasonryWidgetSetter, addW: BaseWidgetCallback<CustomWidgetName.masonry>) => void;
 };

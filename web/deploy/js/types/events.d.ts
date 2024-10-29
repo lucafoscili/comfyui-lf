@@ -66,8 +66,7 @@ export declare enum EventName {
 }
 export type EventPayload = BlurImagesPayload | BooleanPayload | CharacterImpersonatorPayload | CheckpointSelectorPayload | CivitAIMetadataSetupPayload | ClarityEffectPayload | CompareImagesPayload | DisplayBooleanPayload | DisplayJSONPayload | EmbeddingSelectorPayload | ExtractorPayload | FloatPayload | ImageClassifierPayload | ImageListFromJSONPayload | ImageHistogramPayload | IntegerPayload | IsLandscapePayload | KeywordCounterPayload | LoadImagesPayload | LoraAndEmbeddingSelectorPayload | LoraSelectorPayload | Lora2PromptPayload | LoraTag2PromptPayload | LoadLoraTagsPayload | MathOperationPayload | MultipleImageResizeForWebPayload | NotifyPayload | RandomBooleanPayload | ResizeImageByEdgePayload | ResizeImageToDimensionPayload | ResizeImageToSquarePayload | ResolutionSwitcherPayload | SamplerSelectorPayload | SaveImageForCivitAIPayload | SaveJSONPayload | SchedulerSelectorPayload | SequentialSeedsGeneratorPayload | ShuffleJSONKeysPayload | Something2NumberPayload | Something2StringPayload | SortJSONKeysPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | UpdateUsageStatisticsPayload | UpscaleModelSelectorPayload | UrandomSeedGeneratorPayload | VAESelectorPayload | WriteJSONPayload;
 export interface BlurImagesPayload extends BaseEventPayload {
-    fileNames: Array<string>;
-    images: Array<string>;
+    dataset: KulDataDataset;
 }
 export interface BooleanPayload extends BaseEventPayload {
     isHistoryEnabled: boolean;
@@ -221,8 +220,7 @@ export interface SaveJSONPayload extends BaseEventPayload {
     dataset: KulDataDataset;
 }
 export interface SaveImageForCivitAIPayload extends BaseEventPayload {
-    fileNames: Array<string>;
-    images: Array<string>;
+    dataset: KulDataDataset;
 }
 export interface SchedulerSelectorPayload extends BaseEventPayload {
     isHistoryEnabled: boolean;

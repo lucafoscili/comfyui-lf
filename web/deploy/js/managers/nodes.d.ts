@@ -1,7 +1,7 @@
 import { BaseWidgetCallback } from '../types/widgets';
 export declare class LFNodes {
     eventHandler: {
-        LF_BlurImages: (event: CustomEvent<import("../types/events").BlurImagesPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.imagePreview>) => void;
+        LF_BlurImages: (event: CustomEvent<import("../types/events").BlurImagesPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.masonry>) => void;
         LF_Boolean: (event: CustomEvent<import("../types/events").BooleanPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
         LF_CharacterImpersonator: (event: CustomEvent<import("../types/events").CharacterImpersonatorPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
         LF_CheckpointSelector: (event: CustomEvent<import("../types/events").CheckpointSelectorPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.card>) => void;
@@ -19,12 +19,12 @@ export declare class LFNodes {
         LF_Float: (event: CustomEvent<import("../types/events").FloatPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
         LF_ImageClassifier: (event: CustomEvent<import("../types/events").ImageClassifierPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
         LF_ImageHistogram: (event: CustomEvent<import("../types/events").ImageHistogramPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tabBarChart>) => void;
-        LF_ImageListFromJSON: (event: CustomEvent<import("../types/events").ImageListFromJSONPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.imagePreview>) => void;
+        LF_ImageListFromJSON: (event: CustomEvent<import("../types/events").ImageListFromJSONPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.masonry>) => void;
         LF_Integer: (event: CustomEvent<import("../types/events").IntegerPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
         LF_IsLandscape: (event: CustomEvent<import("../types/events").IsLandscapePayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;
         LF_KeywordCounter: (event: CustomEvent<import("../types/events").KeywordCounterPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.countBarChart>) => void;
         LF_LoadFileOnce: (event: CustomEvent<import("../types/events").LoadFileOncePayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
-        LF_LoadImages: (event: CustomEvent<import("../types/events").LoadImagesPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.imagePreview>) => void;
+        LF_LoadImages: (event: CustomEvent<import("../types/events").LoadImagesPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.masonry>) => void;
         LF_LoadLoraTags: (event: CustomEvent<import("../types/events").LoadLoraTagsPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.cardsWithChip>) => void;
         LF_LoraAndEmbeddingSelector: (event: CustomEvent<import("../types/events").LoraAndEmbeddingSelectorPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.card>) => void;
         LF_LoraSelector: (event: CustomEvent<import("../types/events").LoraSelectorPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.card>) => void;
@@ -39,7 +39,7 @@ export declare class LFNodes {
         LF_ResizeImageToSquare: (event: CustomEvent<import("../types/events").ResizeImageToSquarePayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;
         LF_ResolutionSwitcher: (event: CustomEvent<import("../types/events").ResolutionSwitcherPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.rollViewer>) => void;
         LF_SamplerSelector: (event: CustomEvent<import("../types/events").SamplerSelectorPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
-        LF_SaveImageForCivitAI: (event: CustomEvent<import("../types/events").SaveImageForCivitAIPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.imagePreview>) => void;
+        LF_SaveImageForCivitAI: (event: CustomEvent<import("../types/events").SaveImageForCivitAIPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.masonry>) => void;
         LF_SaveJSON: (event: CustomEvent<import("../types/events").SaveJSONPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;
         LF_SchedulerSelector: (event: CustomEvent<import("../types/events").SchedulerSelectorPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
         LF_SequentialSeedsGenerator: (event: CustomEvent<import("../types/events").SequentialSeedsGeneratorPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
@@ -61,7 +61,7 @@ export declare class LFNodes {
         LF_WriteJSON: (event: CustomEvent<import("../types/events").WriteJSONPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.jsonInput>) => void;
     };
     register: {
-        LF_BlurImages: (setW: import("../types/widgets").ImagePreviewWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.imagePreview>) => void;
+        LF_BlurImages: (setW: import("../types/widgets").MasonryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.masonry>) => void;
         LF_Boolean: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
         LF_CharacterImpersonator: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
         LF_CheckpointSelector: (setW: import("../types/widgets").CardWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.card>) => void;
@@ -80,7 +80,7 @@ export declare class LFNodes {
         LF_Float: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
         LF_ImageClassifier: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
         LF_ImageHistogram: (setW: import("../types/widgets").TabBarChartWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tabBarChart>) => void;
-        LF_ImageListFromJSON: (setW: import("../types/widgets").ImagePreviewWidgetSetter) => void;
+        LF_ImageListFromJSON: (setW: import("../types/widgets").MasonryWidgetSetter) => void;
         LF_Integer: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
         LF_IsLandscape: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;
         LF_KeywordCounter: (setW: import("../types/widgets").CountBarChartWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.countBarChart>) => void;
@@ -88,7 +88,7 @@ export declare class LFNodes {
         LF_LLMChat: (setW: import("../types/widgets").ChatWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.chat>) => void;
         LF_LLMMessenger: (setW: import("../types/widgets").MessengerWidgetSetter) => void;
         LF_LoadFileOnce: (setW: import("../types/widgets").HistoryWidgetSetter) => void;
-        LF_LoadImages: (setW: import("../types/widgets").ImagePreviewWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.imagePreview>) => void;
+        LF_LoadImages: (setW: import("../types/widgets").MasonryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.masonry>) => void;
         LF_LoadLoraTags: (setW: import("../types/widgets").CardsWithChipWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.cardsWithChip>) => void;
         LF_LoraAndEmbeddingSelector: (setW: import("../types/widgets").CardWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.card>) => void;
         LF_LoadMetadata: (setW: import("../types/widgets").UploadWidgetSetter) => void;
@@ -104,7 +104,7 @@ export declare class LFNodes {
         LF_ResizeImageToSquare: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;
         LF_ResolutionSwitcher: (setW: import("../types/widgets").RollViewerWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.rollViewer>) => void;
         LF_SamplerSelector: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
-        LF_SaveImageForCivitAI: (setW: import("../types/widgets").ImagePreviewWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.imagePreview>) => void;
+        LF_SaveImageForCivitAI: (setW: import("../types/widgets").MasonryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.masonry>) => void;
         LF_SaveJSON: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;
         LF_SchedulerSelector: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
         LF_SequentialSeedsGenerator: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
@@ -127,7 +127,7 @@ export declare class LFNodes {
     };
     get: {
         eventHandlers: {
-            LF_BlurImages: (event: CustomEvent<import("../types/events").BlurImagesPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.imagePreview>) => void;
+            LF_BlurImages: (event: CustomEvent<import("../types/events").BlurImagesPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.masonry>) => void;
             LF_Boolean: (event: CustomEvent<import("../types/events").BooleanPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
             LF_CharacterImpersonator: (event: CustomEvent<import("../types/events").CharacterImpersonatorPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
             LF_CheckpointSelector: (event: CustomEvent<import("../types/events").CheckpointSelectorPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.card>) => void;
@@ -145,12 +145,12 @@ export declare class LFNodes {
             LF_Float: (event: CustomEvent<import("../types/events").FloatPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
             LF_ImageClassifier: (event: CustomEvent<import("../types/events").ImageClassifierPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
             LF_ImageHistogram: (event: CustomEvent<import("../types/events").ImageHistogramPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tabBarChart>) => void;
-            LF_ImageListFromJSON: (event: CustomEvent<import("../types/events").ImageListFromJSONPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.imagePreview>) => void;
+            LF_ImageListFromJSON: (event: CustomEvent<import("../types/events").ImageListFromJSONPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.masonry>) => void;
             LF_Integer: (event: CustomEvent<import("../types/events").IntegerPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
             LF_IsLandscape: (event: CustomEvent<import("../types/events").IsLandscapePayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;
             LF_KeywordCounter: (event: CustomEvent<import("../types/events").KeywordCounterPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.countBarChart>) => void;
             LF_LoadFileOnce: (event: CustomEvent<import("../types/events").LoadFileOncePayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
-            LF_LoadImages: (event: CustomEvent<import("../types/events").LoadImagesPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.imagePreview>) => void;
+            LF_LoadImages: (event: CustomEvent<import("../types/events").LoadImagesPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.masonry>) => void;
             LF_LoadLoraTags: (event: CustomEvent<import("../types/events").LoadLoraTagsPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.cardsWithChip>) => void;
             LF_LoraAndEmbeddingSelector: (event: CustomEvent<import("../types/events").LoraAndEmbeddingSelectorPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.card>) => void;
             LF_LoraSelector: (event: CustomEvent<import("../types/events").LoraSelectorPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.card>) => void;
@@ -165,7 +165,7 @@ export declare class LFNodes {
             LF_ResizeImageToSquare: (event: CustomEvent<import("../types/events").ResizeImageToSquarePayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;
             LF_ResolutionSwitcher: (event: CustomEvent<import("../types/events").ResolutionSwitcherPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.rollViewer>) => void;
             LF_SamplerSelector: (event: CustomEvent<import("../types/events").SamplerSelectorPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
-            LF_SaveImageForCivitAI: (event: CustomEvent<import("../types/events").SaveImageForCivitAIPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.imagePreview>) => void;
+            LF_SaveImageForCivitAI: (event: CustomEvent<import("../types/events").SaveImageForCivitAIPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.masonry>) => void;
             LF_SaveJSON: (event: CustomEvent<import("../types/events").SaveJSONPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;
             LF_SchedulerSelector: (event: CustomEvent<import("../types/events").SchedulerSelectorPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
             LF_SequentialSeedsGenerator: (event: CustomEvent<import("../types/events").SequentialSeedsGeneratorPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
@@ -187,7 +187,7 @@ export declare class LFNodes {
             LF_WriteJSON: (event: CustomEvent<import("../types/events").WriteJSONPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.jsonInput>) => void;
         };
         registrations: {
-            LF_BlurImages: (setW: import("../types/widgets").ImagePreviewWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.imagePreview>) => void;
+            LF_BlurImages: (setW: import("../types/widgets").MasonryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.masonry>) => void;
             LF_Boolean: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
             LF_CharacterImpersonator: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
             LF_CheckpointSelector: (setW: import("../types/widgets").CardWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.card>) => void;
@@ -206,7 +206,7 @@ export declare class LFNodes {
             LF_Float: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
             LF_ImageClassifier: (setW: import("../types/widgets").CodeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.code>) => void;
             LF_ImageHistogram: (setW: import("../types/widgets").TabBarChartWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tabBarChart>) => void;
-            LF_ImageListFromJSON: (setW: import("../types/widgets").ImagePreviewWidgetSetter) => void;
+            LF_ImageListFromJSON: (setW: import("../types/widgets").MasonryWidgetSetter) => void;
             LF_Integer: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
             LF_IsLandscape: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;
             LF_KeywordCounter: (setW: import("../types/widgets").CountBarChartWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.countBarChart>) => void;
@@ -214,7 +214,7 @@ export declare class LFNodes {
             LF_LLMChat: (setW: import("../types/widgets").ChatWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.chat>) => void;
             LF_LLMMessenger: (setW: import("../types/widgets").MessengerWidgetSetter) => void;
             LF_LoadFileOnce: (setW: import("../types/widgets").HistoryWidgetSetter) => void;
-            LF_LoadImages: (setW: import("../types/widgets").ImagePreviewWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.imagePreview>) => void;
+            LF_LoadImages: (setW: import("../types/widgets").MasonryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.masonry>) => void;
             LF_LoadLoraTags: (setW: import("../types/widgets").CardsWithChipWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.cardsWithChip>) => void;
             LF_LoraAndEmbeddingSelector: (setW: import("../types/widgets").CardWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.card>) => void;
             LF_LoadMetadata: (setW: import("../types/widgets").UploadWidgetSetter) => void;
@@ -230,7 +230,7 @@ export declare class LFNodes {
             LF_ResizeImageToSquare: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;
             LF_ResolutionSwitcher: (setW: import("../types/widgets").RollViewerWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.rollViewer>) => void;
             LF_SamplerSelector: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
-            LF_SaveImageForCivitAI: (setW: import("../types/widgets").ImagePreviewWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.imagePreview>) => void;
+            LF_SaveImageForCivitAI: (setW: import("../types/widgets").MasonryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.masonry>) => void;
             LF_SaveJSON: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;
             LF_SchedulerSelector: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
             LF_SequentialSeedsGenerator: (setW: import("../types/widgets").HistoryWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;

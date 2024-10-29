@@ -1,6 +1,8 @@
 import base64
 import cv2
 import fnmatch
+
+import urllib
 import folder_paths
 import hashlib
 import io
@@ -8,9 +10,12 @@ import json
 import numpy as np
 import os
 import piexif
+import random
 import re
+import string
 import torch
 
+from folder_paths import get_save_image_path
 from PIL import Image
 from PIL.ExifTags import TAGS
 from torchvision.transforms import InterpolationMode, functional
@@ -335,6 +340,39 @@ def get_lora_hashes(lora_tags: str, analytics_dataset: dict):
             except Exception:
                 lora_hashes.append(f"{lora_name}: Unknown")
     return lora_hashes
+
+def get_random_parameter(length: int = 8) -> str:
+    """
+    Generate a random parameter string.
+
+    Args:
+        length (int): The length of the random string. Defaults to 8.
+
+    Returns:
+        str: A random alphanumeric string prefixed with '?'.
+    """
+    return '?' + ''.join(random.choices(string.ascii_letters + string.digits, k=length))
+
+def get_resource_url(subfolder: str, filename: str, resource_type: str = 'output'):
+    """
+    Generate a URL for accessing resources within the application.
+
+    Args:
+        subfolder (str): The subfolder where the resource is located.
+        filename (str): The name of the resource file.
+        resource_type (str): The type of resource. Defaults to 'output'.
+
+    Returns:
+        str: A formatted URL string for accessing the resource.
+    """
+    params = [
+        f"filename={urllib.parse.quote(filename)}",
+        f"type={resource_type}",
+        f"subfolder={subfolder}",
+        f"&{get_random_parameter()}"
+    ]
+    
+    return f"/view?{'&'.join(params)}"
 
 def get_sha256(file_path: str):
     hash_file_path = f"{os.path.splitext(file_path)[0]}.sha256"
@@ -886,56 +924,48 @@ def resize_to_square(image_tensor: torch.Tensor, square_size: int, resample_meth
 
     return cropped_img
 
-def resolve_filepath(filepath:str , base_output_path:str , count:bool = 0, add_timestamp:bool = False, default_filename:str = "output", extension:str = "json"):
+def resolve_filepath(filepath: str, base_output_path: str, count: int = 0, add_timestamp: bool = False, default_filename: str = "ComfyUI", extension: str = "json", add_counter: bool = True) -> str:
     """
-    Resolves and constructs a full file path, handling cases where the provided filepath may be a list or a single string, 
-    and optionally appends a timestamp to the filename. Ensures the specified directory structure exists before returning 
-    the path.
-
+    Simplified helper function using ComfyUI's core image-saving logic, ensuring folder and filename separation.
+    
     Parameters:
-        filepath (str or list): The file path as a string or list of paths. If provided as a list and the count exceeds 
-                                its length, the first item is used as a fallback.
-        base_output_path (str): The base directory path to be prepended if the directory is not specified in the filepath.
-        count (int): The index in filepath (if it's a list) for the current path. Defaults to 0.
-        add_timestamp (bool): If True, appends the current timestamp to the filename as a suffix. Defaults to False.
-        default_filename (str): The default filename to use if the filepath does not contain a valid filename. Defaults to "output".
+        filepath (str or list): Target file path or list of paths. Uses filepath[count] or defaults to the first item if it's a list.
+        base_output_path (str): Base directory path to prepend if not specified in filepath.
+        count (int): Index for filepath when it's a list. Defaults to 0.
+        add_timestamp (bool): Appends a timestamp to the filename if True. Defaults to False.
+        default_filename (str): Default filename if filepath lacks one. Defaults to "output".
+        extension (str): File extension, such as 'png' or 'jpeg'. Defaults to 'json'.
+        add_counter (bool): Adds counter as a suffix.
 
     Returns:
-        str: The fully resolved file path, including the directory structure and filename, with timestamp if specified.
-
-    Behavior:
-        - If `filepath` is a list, the function attempts to use `filepath[count]`. If `count` exceeds the list length 
-          or the item is None, it falls back to `filepath[0]`.
-        - Splits `filepath` into directory and filename components. If directory is not specified, `base_output_path` 
-          is used as the root directory.
-        - Ensures the specified directory exists, creating it if necessary.
-        - If `add_timestamp` is True, appends a timestamp in the format "YYYYMMDD-HHMMSS" to the filename.
-        - Returns the final file path, ensuring it ends with `.json` if no extension is specified.
+        str: Fully resolved file path with subfolders, filename, and extension.
     """
-    path_base = filepath[count] if isinstance(filepath, list) and count < len(filepath) and filepath[count] else filepath[0] if isinstance(filepath, list) else filepath 
-    directory, filename = os.path.split(path_base)
+    path_base = filepath[count] if isinstance(filepath, list) and count < len(filepath) else filepath[0] if isinstance(filepath, list) else filepath
 
-    if not directory or directory == "/":
-        directory = base_output_path
+    if os.path.splitext(os.path.basename(path_base))[1] == "":
+        filename_prefix = os.path.join(path_base, default_filename)
     else:
-        directory = os.path.join(base_output_path, directory)
+        filename_prefix = path_base
 
-    if not filename:
-        filename = default_filename
+    output_folder, filename, counter, subfolder, _ = get_save_image_path(
+        filename_prefix=filename_prefix,
+        output_dir=base_output_path
+    )
 
     if add_timestamp:
         timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
         filename = f"{filename}_{timestamp}"
 
-    if not filename.endswith(f".{extension}"):
-        filename = f"{filename}.{extension}"
+    if add_counter:
+        filename = f"{filename}_{counter}.{extension}"
+    else:
+        filename = f"{filename}.{extension}" 
 
-    output_file = os.path.join(directory, filename)
+    output_file = os.path.join(output_folder, filename)
+    
+    os.makedirs(output_folder, exist_ok=True)
 
-    if not os.path.exists(directory):
-        os.makedirs(directory, exist_ok=True)
-
-    return output_file
+    return output_file, subfolder, filename
 
 def send_single_selector_message(node_id, dataset, model_hash, get_civitai_info, model_path, event_name):
 

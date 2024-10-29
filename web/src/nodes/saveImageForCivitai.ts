@@ -4,7 +4,7 @@ import { NodeName, type Extension } from '../types/nodes';
 import {
   CustomWidgetName,
   type BaseWidgetCallback,
-  type ImagePreviewWidgetSetter,
+  type MasonryWidgetSetter,
 } from '../types/widgets';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 
@@ -13,7 +13,7 @@ const NAME = NodeName.saveImageForCivitai;
 export const saveImageForCivitaiFactory = {
   eventHandler: (
     event: CustomEvent<SaveImageForCivitAIPayload>,
-    addW: BaseWidgetCallback<CustomWidgetName.imagePreview>,
+    addW: BaseWidgetCallback<CustomWidgetName.masonry>,
   ) => {
     const name = EventName.saveImageForCivitAI;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
@@ -21,15 +21,12 @@ export const saveImageForCivitaiFactory = {
     const payload = event.detail;
     const node = getApiRoutes().getNodeById(payload.id);
     if (node) {
-      const widget = getCustomWidget(node, CustomWidgetName.imagePreview, addW);
-      widget.options.setValue(JSON.stringify(payload));
+      const widget = getCustomWidget(node, CustomWidgetName.masonry, addW);
+      widget.options.setValue(JSON.stringify(payload.dataset));
       getApiRoutes().redraw();
     }
   },
-  register: (
-    setW: ImagePreviewWidgetSetter,
-    addW: BaseWidgetCallback<CustomWidgetName.imagePreview>,
-  ) => {
+  register: (setW: MasonryWidgetSetter, addW: BaseWidgetCallback<CustomWidgetName.masonry>) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {
@@ -38,7 +35,7 @@ export const saveImageForCivitaiFactory = {
           nodeType.prototype.onNodeCreated = function () {
             const r = onNodeCreated?.apply(this, arguments);
             const node = this;
-            addW(node, CustomWidgetName.imagePreview);
+            addW(node, CustomWidgetName.masonry);
             return r;
           };
         }

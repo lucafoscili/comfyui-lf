@@ -3,9 +3,8 @@ import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import {
   CustomWidgetName,
-  ImagePreviewWidgetDeserializedValue,
   type BaseWidgetCallback,
-  type ImagePreviewWidgetSetter,
+  type MasonryWidgetSetter,
 } from '../types/widgets';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
 
@@ -14,7 +13,7 @@ const NAME = NodeName.blurImages;
 export const blurImagesFactory = {
   eventHandler: (
     event: CustomEvent<BlurImagesPayload>,
-    addW: BaseWidgetCallback<CustomWidgetName.imagePreview>,
+    addW: BaseWidgetCallback<CustomWidgetName.masonry>,
   ) => {
     const name = EventName.blurImages;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
@@ -22,20 +21,12 @@ export const blurImagesFactory = {
     const payload = event.detail;
     const node = getApiRoutes().getNodeById(payload.id);
     if (node) {
-      const widget = getCustomWidget(node, CustomWidgetName.imagePreview, addW);
-      const value: ImagePreviewWidgetDeserializedValue = {
-        ...payload,
-        selectedIndex: undefined,
-        selectedName: undefined,
-      };
-      widget.options.setValue(JSON.stringify(value));
+      const widget = getCustomWidget(node, CustomWidgetName.masonry, addW);
+      widget.options.setValue(JSON.stringify(payload.dataset));
       getApiRoutes().redraw();
     }
   },
-  register: (
-    setW: ImagePreviewWidgetSetter,
-    addW: BaseWidgetCallback<CustomWidgetName.imagePreview>,
-  ) => {
+  register: (setW: MasonryWidgetSetter, addW: BaseWidgetCallback<CustomWidgetName.masonry>) => {
     const extension: Extension = {
       name: 'LFExt_' + NAME,
       beforeRegisterNodeDef: async (nodeType) => {
@@ -44,7 +35,7 @@ export const blurImagesFactory = {
           nodeType.prototype.onNodeCreated = function () {
             const r = onNodeCreated?.apply(this, arguments);
             const node = this;
-            addW(node, CustomWidgetName.imagePreview);
+            addW(node, CustomWidgetName.masonry);
             return r;
           };
         }

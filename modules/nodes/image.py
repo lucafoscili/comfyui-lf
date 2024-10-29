@@ -4,8 +4,8 @@ import torch
 from PIL import Image, ImageFilter
 from server import PromptServer
 
-from ..utils.constants import BASE64_PNG_PREFIX, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, RESAMPLERS
-from ..utils.helpers import clarity_effect, normalize_input_image, normalize_input_list, normalize_list_to_value, normalize_output_image, pil_to_tensor, resize_and_crop_image, resize_image, resize_to_square, tensor_to_base64, tensor_to_pil
+from ..utils.constants import BASE_TEMP_PATH, BASE64_PNG_PREFIX, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, RESAMPLERS, USER_FOLDER
+from ..utils.helpers import clarity_effect, get_resource_url, normalize_input_image, normalize_input_list, normalize_list_to_value, normalize_output_image, pil_to_tensor, resize_and_crop_image, resize_image, resize_to_square, resolve_filepath, tensor_to_base64, tensor_to_pil
 
 CATEGORY = f"{CATEGORY_PREFIX}/Image"
 
@@ -33,46 +33,55 @@ class LF_BlurImages:
     RETURN_NAMES = ("image", "image_list", "file_name", "count")
     RETURN_TYPES = ("IMAGE", "IMAGE", "STRING", "INT")
 
-    def on_exec(self, node_id: str, image: torch.Tensor|list[torch.Tensor], file_name: list[str], blur_percentage: float):
+    def on_exec(self, node_id: str, image: torch.Tensor|list[torch.Tensor], blur_percentage: float, file_name: list[str] = None):
         blur_percentage = normalize_list_to_value(blur_percentage)
         file_name = normalize_input_list(file_name)
         image = normalize_input_image(image)
 
         blurred_images = []
         blurred_file_names = []
-        b64_images = []
+
+        nodes = []
+        dataset = { "nodes": nodes }
 
         for index, img in enumerate(image):
-            f_name = file_name[index]
-            split_name = f_name.rsplit('.', 1)
-            if len(split_name) == 2:
-                base_name, original_extension = split_name
+            if file_name:
+                split_name = file_name[index].rsplit('.', 1)
+                if len(split_name) == 2:
+                    base_name, _ = split_name
+                else:
+                    base_name = split_name[0]
             else:
-                base_name = split_name[0]
-                original_extension = ""
-
+                base_name = ""
+                
+            output_file, subfolder, filename = resolve_filepath(f"{USER_FOLDER}", BASE_TEMP_PATH, index, False, f"{base_name}_Blur", "PNG", False)
+            
             pil_image = tensor_to_pil(img)
             
             width, height = pil_image.size
             min_dimension = min(width, height)
-            adjusted_blur_radius:float = blur_percentage * (min_dimension / 10)
+            adjusted_blur_radius: float = blur_percentage * (min_dimension / 10)
             
             blurred_image = pil_image.filter(ImageFilter.GaussianBlur(adjusted_blur_radius))
+            blurred_image.save(output_file, format="PNG")
+            url = get_resource_url(subfolder, filename, "temp")
             
             blurred_tensor = pil_to_tensor(blurred_image)
             blurred_images.append(blurred_tensor)
 
-            b64_image = tensor_to_base64(blurred_tensor)
-            b64_images.append(b64_image)
-            
-            new_file_name = f"{base_name}_Blur{'.' + original_extension if original_extension else ''}"
-            blurred_file_names.append(new_file_name)
+            blurred_file_names.append(filename)
 
+            nodes.append({
+                "cells": {
+                    "kulImage": {"htmlProps":{"id": filename, "title": filename}, "shape": "image", "kulValue": f"{url}", "value": ''}
+                },
+                "id": f"{index+1}",
+                "value": f"{index+1}"
+            })
         
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}blurimages", {
             "node": node_id,
-            "fileNames": blurred_file_names,
-            "images": b64_images,
+            "dataset": dataset
         })
 
         image_batch, image_list = normalize_output_image(blurred_images)
@@ -114,17 +123,25 @@ class LF_ClarityEffect:
         
         processed_images = [clarity_effect(img, clarity_strength, sharpen_amount, blur_kernel_size) for img in image]
 
-        for i, img in enumerate(image):
-            b64_source = tensor_to_base64(img)
-            b64_target = tensor_to_base64(processed_images[i])
+        for index, img in enumerate(image):
+            output_file_s, subfolder_s, filename_s = resolve_filepath(f"{USER_FOLDER}", BASE_TEMP_PATH, index, False, f"clarity_s", "PNG", True)
+            output_file_t, subfolder_t, filename_t = resolve_filepath(f"{USER_FOLDER}", BASE_TEMP_PATH, index, False, f"clarity_t", "PNG", True)
+            
+            pil_image = tensor_to_pil(img)
+            pil_image.save(output_file_s, format="PNG")
+            filename_s = get_resource_url(subfolder_s, filename_s, "temp")
+
+            pil_image = tensor_to_pil(img)
+            pil_image.save(output_file_t, format="PNG")
+            filename_t = get_resource_url(subfolder_t, filename_t, "temp")
 
             nodes.append({
                 "cells": {
-                    "kulImage": {"shape": "image", "kulValue": f"{BASE64_PNG_PREFIX}{b64_source}", "value": ''},
-                    "kulImage_after": {"shape": "image", "kulValue": f"{BASE64_PNG_PREFIX}{b64_target}", "value": ''}
+                    "kulImage": {"shape": "image", "kulValue": f"{filename_s}", "value": ''},
+                    "kulImage_after": {"shape": "image", "kulValue": f"{filename_t}", "value": ''}
                 },
-                "id": f"image_{i+1}",
-                "value": f"Comparison {i+1}"
+                "id": f"image_{index+1}",
+                "value": f"Comparison {index+1}"
             })
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}clarityeffect", {
