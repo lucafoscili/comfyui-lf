@@ -1,5 +1,5 @@
 import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, F as Fragment, H as Host } from './index-4d533537.js';
-import { k as kulManagerInstance } from './kul-manager-5dda66e6.js';
+import { k as kulManagerInstance } from './kul-manager-26d0782a.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 import { K as KUL_WRAPPER_ID, c as KUL_STYLE_ID } from './GenericVariables-f3380974.js';
 
@@ -16,7 +16,7 @@ var KulMasonryProps;
     KulMasonryProps["kulView"] = "Sets the type of view, either the actual masonry or a waterfall view.";
 })(KulMasonryProps || (KulMasonryProps = {}));
 
-const kulMasonryCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}:host{--kul_masonry_button_bottom:var(--kul-masonry-grid-gap, 30px);--kul_masonry_button_right:var(--kul-masonry-button-right, 30px);--kul_masonry_column_size:var(--kul-masonry-column-size, minmax(0px, 1fr));--kul_masonry_grid_gap:var(--kul-masonry-grid-gap, 8px);display:block;height:100%;width:100%}:host([kul-selectable]) kul-image{cursor:pointer;overflow:hidden}#kul-component{height:100%;width:100%}.masonry{display:flex;flex-direction:column;gap:var(--kul_masonry_grid_gap);height:100%;width:100%}.grid{align-items:start;column-gap:var(--kul_masonry_grid_gap);display:grid}.grid--masonry{grid-template-columns:repeat(var(--kul_masonry_columns), var(--kul_masonry_column_size))}.grid--waterfall{grid-template-columns:1fr}.grid__column{display:flex;flex:1;flex-direction:column;gap:var(--kul_masonry_grid_gap);width:100%}.grid__change-view{bottom:var(--kul_masonry_button_bottom);position:absolute;right:var(--kul_masonry_button_right);z-index:2}[data-selected=true]{border-radius:5px;box-shadow:0 4px 10px var(--kul-primary-color);outline:2px solid var(--kul-primary-color);outline-offset:4px;position:relative;transform:scale(1.05);transition:transform 0.3s ease, box-shadow 0.3s ease, outline-offset 0.3s ease;z-index:1}[data-selected=true]:after{border:4px solid var(--kul-primary-color);border-radius:8px;bottom:-4px;content:\"\";left:-4px;pointer-events:none;position:absolute;right:-4px;top:-4px}";
+const kulMasonryCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}:host{--kul_masonry_button_bottom:var(--kul-masonry-grid-gap, 16px);--kul_masonry_button_right:var(--kul-masonry-button-right, 16px);--kul_masonry_column_size:var(--kul-masonry-column-size, minmax(0px, 1fr));--kul_masonry_grid_items_alignment:var(\n    --kul-masonry-grid-items-alignment,\n    start\n  );--kul_masonry_grid_gap:var(--kul-masonry-grid-gap, 8px);--kul_masonry_padding:var(--kul-masonry-padding, 12px);--kul_masonry_selected_border:var(\n    --kul-masonry-selected-border,\n    var(--kul-primary-color)\n  );display:block;height:100%;width:100%}:host([kul-selectable]) kul-image{cursor:pointer;overflow:hidden;transition:filter 0.3 ease}:host([kul-selectable]) kul-image:hover{filter:brightness(125%)}#kul-component{height:100%;width:100%}.masonry{box-sizing:border-box;display:flex;flex-direction:column;gap:var(--kul_masonry_grid_gap);height:100%;padding:var(--kul_masonry_padding);width:100%}.grid{align-items:var(--kul_masonry_grid_items_alignment);column-gap:var(--kul_masonry_grid_gap);display:grid}.grid--masonry{grid-template-columns:repeat(var(--kul_masonry_columns), var(--kul_masonry_column_size))}.grid--waterfall{grid-template-columns:1fr}.grid__column{display:flex;flex:1;flex-direction:column;gap:var(--kul_masonry_grid_gap);width:100%}.grid__change-view{bottom:var(--kul_masonry_button_bottom);position:absolute;right:var(--kul_masonry_button_right);z-index:2}[data-selected=true]{border-radius:5px;box-shadow:0 4px 10px var(--kul_masonry_selected_border);outline:2px solid var(--kul_masonry_selected_border);outline-offset:4px;position:relative;transform:scale(1.05);transition:transform 0.3s ease, box-shadow 0.3s ease, outline-offset 0.3s ease;z-index:1}[data-selected=true]:after{border:4px solid var(--kul_masonry_selected_border);border-radius:8px;bottom:-4px;content:\"\";left:-4px;pointer-events:none;position:absolute;right:-4px;top:-4px}";
 const KulMasonryStyle0 = kulMasonryCss;
 
 const KulMasonry = class {
@@ -32,8 +32,7 @@ const KulMasonry = class {
         };
         this.selectedShape = {};
         this.shapes = {};
-        this.view = 'masonry';
-        this.kulColumns = 4;
+        this.kulColumns = 3;
         this.kulData = null;
         this.kulSelectable = false;
         this.kulShape = 'image';
@@ -114,10 +113,33 @@ const KulMasonry = class {
         return getProps(this, KulMasonryProps, descriptions);
     }
     /**
+     * Returns the selected shape.
+     * @returns {Promise<KulMasonrySelectedShape>} Selected shape.
+     */
+    async getSelectedShape() {
+        return this.selectedShape;
+    }
+    /**
      * This method is used to trigger a new render of the component.
      */
     async refresh() {
         forceUpdate(this);
+    }
+    /**
+     * Sets the selected shape by index.
+     */
+    async setSelectedShape(index) {
+        const shape = this.shapes?.[this.kulShape]?.[index];
+        if (shape) {
+            const newState = {
+                index,
+                shape,
+            };
+            this.selectedShape = newState;
+        }
+        else {
+            this.#kulManager.debug.logs.new(this, `Couldn't fix shape with index: ${index}`, 'warning');
+        }
     }
     /**
      * Initiates the unmount sequence, which removes the component from the DOM after a delay.
@@ -138,7 +160,7 @@ const KulMasonry = class {
                 dataset: { selected: '' },
             },
         }));
-        if (this.selectedShape.index) {
+        if (this.selectedShape.index !== undefined) {
             props[this.selectedShape.index] = {
                 htmlProps: {
                     dataset: { selected: 'true' },
@@ -157,7 +179,7 @@ const KulMasonry = class {
         return !!this.shapes?.[this.kulShape];
     }
     #isMasonry() {
-        return !!(this.view === 'masonry');
+        return !!(this.kulView === 'masonry');
     }
     #prepChangeView() {
         const icon = this.#isMasonry() ? 'view_day' : 'view_quilt';
@@ -166,7 +188,7 @@ const KulMasonry = class {
             const { eventType, value } = e.detail;
             switch (eventType) {
                 case 'click':
-                    this.view = value === 'on' ? 'masonry' : 'waterfall';
+                    this.kulView = value === 'on' ? 'masonry' : 'waterfall';
                     break;
             }
         };
@@ -183,7 +205,7 @@ const KulMasonry = class {
         if (this.#hasShapes()) {
             const shapes = this.shapes[this.kulShape];
             if (shapes?.length) {
-                return (h(Fragment, null, h("div", { class: `grid grid--${this.view}` }, this.#prepView()), this.#prepChangeView()));
+                return (h(Fragment, null, h("div", { class: `grid grid--${this.kulView}` }, this.#prepView()), this.#prepChangeView()));
             }
         }
     }
@@ -192,7 +214,6 @@ const KulMasonry = class {
     /*-------------------------------------------------*/
     componentWillLoad() {
         this.#kulManager.theme.register(this);
-        this.view = this.kulView;
         this.updateShapes();
     }
     componentDidLoad() {
@@ -209,7 +230,7 @@ const KulMasonry = class {
         const style = {
             ['--kul_masonry_columns']: this.kulColumns?.toString() || '4',
         };
-        return (h(Host, { key: '9a1f74575ff4afd85024d23ba57247f1c786b594' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '6b333804f13cc03902f0afb95cf82eb415deda9c', id: KUL_WRAPPER_ID, style: style }, h("div", { key: '2e442b0a6fd9442e826d688c7bc1e8c5a54cc5a0', class: "masonry" }, this.#prepMasonry()))));
+        return (h(Host, { key: '44d77b3d16e0493625b5ad8c2f2ce6c4d11602ef' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '7eeccbf24776e3a1d07243df41b93121b3d810f0', id: KUL_WRAPPER_ID, style: style }, h("div", { key: '35bcf127118458452ab150f7ae2db43700287ed1', class: "masonry" }, this.#prepMasonry()))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

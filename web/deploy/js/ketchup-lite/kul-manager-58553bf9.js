@@ -1231,7 +1231,7 @@ class KulDates {
     formatToLocaleSimple = (date) => dayjs(date).format('DD/MM/YYYY');
 }
 
-const dom$7 = document.documentElement;
+const dom$6 = document.documentElement;
 class KulDebug {
     #IS_ENABLED;
     #LOG_LIMIT;
@@ -1289,7 +1289,7 @@ class KulDebug {
             };
             if (this.#LOGS.length > this.#LOG_LIMIT) {
                 if (this.isEnabled()) {
-                    console.warn(dom$7.ketchupLite.dates.format(log.date, 'LLL:ms') +
+                    console.warn(dom$6.ketchupLite.dates.format(log.date, 'LLL:ms') +
                         ' kul-debug => ' +
                         'Too many logs (> ' +
                         this.#LOG_LIMIT +
@@ -1300,12 +1300,12 @@ class KulDebug {
             this.#LOGS.push(log);
             switch (category) {
                 case 'error':
-                    console.error(dom$7.ketchupLite.dates.format(log.date, 'LLL:ms') +
+                    console.error(dom$6.ketchupLite.dates.format(log.date, 'LLL:ms') +
                         log.id +
                         log.message, log.class);
                     break;
                 case 'warning':
-                    console.warn(dom$7.ketchupLite.dates.format(log.date, 'LLL:ms') +
+                    console.warn(dom$6.ketchupLite.dates.format(log.date, 'LLL:ms') +
                         log.id +
                         log.message, log.class);
                     break;
@@ -1325,7 +1325,7 @@ class KulDebug {
                 const log = this.#LOGS[index];
                 const printEntry = {
                     class: log.class,
-                    date: dom$7.ketchupLite.dates.format(log.date, 'LLL:ms'),
+                    date: dom$6.ketchupLite.dates.format(log.date, 'LLL:ms'),
                     message: log.id + log.message,
                 };
                 logsToPrint[log.type].push(printEntry);
@@ -1443,7 +1443,7 @@ var KulDynamicPositionPlacement;
     KulDynamicPositionPlacement["TOP_RIGHT"] = "tr";
 })(KulDynamicPositionPlacement || (KulDynamicPositionPlacement = {}));
 
-const dom$6 = document.documentElement;
+const dom$5 = document.documentElement;
 /**
  * This class is used to dynamically reposition HTML elements.
  * @module KulDynamicPosition
@@ -1513,7 +1513,7 @@ class KulDynamicPosition {
             const target = mutations[0].target;
             if (target.classList.contains(KUL_DROPDOWN_CLASS_VISIBLE)) {
                 requestAnimationFrame(function () {
-                    dom$6.ketchupLite.dynamicPosition.run(el);
+                    dom$5.ketchupLite.dynamicPosition.run(el);
                 });
             }
         });
@@ -1570,7 +1570,7 @@ class KulDynamicPosition {
      */
     run(el) {
         if (!el.isConnected) {
-            dom$6.ketchupLite.dynamicPosition.managedElements.delete(el);
+            dom$5.ketchupLite.dynamicPosition.managedElements.delete(el);
             cancelAnimationFrame(el.kulDynamicPosition.rAF);
             return;
         }
@@ -1678,7 +1678,7 @@ class KulDynamicPosition {
         // Recursive
         if (!el.kulDynamicPosition.detach) {
             el.kulDynamicPosition.rAF = requestAnimationFrame(function () {
-                dom$6.ketchupLite.dynamicPosition.run(el);
+                dom$5.ketchupLite.dynamicPosition.run(el);
             });
         }
         else {
@@ -2786,7 +2786,7 @@ const languagesJson = {
     },
 };
 
-const dom$5 = document.documentElement;
+const dom$4 = document.documentElement;
 /**
  * Handles the translation to different languages.
  * @module KulLanguage
@@ -2843,7 +2843,7 @@ class KulLanguage {
             return invalidKey(key);
         }
         function invalidKey(key) {
-            dom$5.ketchupLite.debug.logs.new(this, 'Invalid translation for key (' + key + ')!', 'warning');
+            dom$4.ketchupLite.debug.logs.new(this, 'Invalid translation for key (' + key + ')!', 'warning');
             return key;
         }
     }
@@ -2856,7 +2856,7 @@ class KulLanguage {
             language = language.toLowerCase();
         }
         else {
-            dom$5.ketchupLite.debug.logs.new(this, "Couldn't set language, invalid string received (" +
+            dom$4.ketchupLite.debug.logs.new(this, "Couldn't set language, invalid string received (" +
                 language +
                 ')!', 'warning');
             return;
@@ -2866,12 +2866,12 @@ class KulLanguage {
         const dVariant = decodedLanguage.variant;
         if (this.list[dLanguage]) {
             if (dVariant && !this.list[dLanguage].variants[dVariant]) {
-                dom$5.ketchupLite.debug.logs.new(this, 'Variant not found (' + dVariant + ')!', 'warning');
+                dom$4.ketchupLite.debug.logs.new(this, 'Variant not found (' + dVariant + ')!', 'warning');
                 return;
             }
         }
         else {
-            dom$5.ketchupLite.debug.logs.new(this, 'Language not found (' + dLanguage + ')!', 'warning');
+            dom$4.ketchupLite.debug.logs.new(this, 'Language not found (' + dLanguage + ')!', 'warning');
             return;
         }
         this.name = language;
@@ -4201,7 +4201,7 @@ var KulMathLocales;
     KulMathLocales["ru"] = "ru";
 })(KulMathLocales || (KulMathLocales = {}));
 
-const dom$4 = document.documentElement;
+const dom$3 = document.documentElement;
 /**
  * Takes a mathematical formula as string in input, with column names between brackets, and returns the result as a number.
  * @param {string} formula - Mathematical operation (i.e.: ([COL1] - [COL2]) * 100 / [COL3]).
@@ -4224,7 +4224,7 @@ function customFormula(formula, row) {
         return result;
     }
     catch (e) {
-        dom$4.ketchupLite.debug.logs.new(this, 'Error while evaluating the following formula!(' + formula + ')', 'warning');
+        dom$3.ketchupLite.debug.logs.new(this, 'Error while evaluating the following formula!(' + formula + ')', 'warning');
         return NaN;
     }
 }
@@ -4258,7 +4258,7 @@ function escapeRegExp(s) {
     return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 }
 
-const dom$3 = document.documentElement;
+const dom$2 = document.documentElement;
 /**
  * Handles mathematical operations and number formatting/conversion.
  * @module KulMath
@@ -4301,7 +4301,7 @@ class KulMath {
     setLocale(locale) {
         if (!Object.values(KulMathLocales).includes(locale)) {
             locale = KulMathLocales.en;
-            dom$3.ketchupLite.debug.logs.new(this, 'Invalid locale (' + locale + ')! Defaulting to english.', 'warning');
+            dom$2.ketchupLite.debug.logs.new(this, 'Invalid locale (' + locale + ')! Defaulting to english.', 'warning');
         }
         this.locale = locale;
         this.numeral.locale(locale);
@@ -4674,7 +4674,7 @@ var ScrollOnHoverDirection;
     ScrollOnHoverDirection["TOP"] = "top";
 })(ScrollOnHoverDirection || (ScrollOnHoverDirection = {}));
 
-const dom$2 = document.documentElement;
+const dom$1 = document.documentElement;
 /**
  * Lets the user scroll an element's overflow by hovering with the mouse on its left/right edge.
  * @module KulScrollOnHover
@@ -4830,7 +4830,7 @@ class KulScrollOnHover {
                     this.#timeout = setTimeout(() => {
                         el.scrollOnHover.active = true;
                         this.#rAF = requestAnimationFrame(function () {
-                            dom$2.ketchupLite.scrollOnHover.run(el, maxScrollLeft, percRight, percLeft, direction);
+                            dom$1.ketchupLite.scrollOnHover.run(el, maxScrollLeft, percRight, percLeft, direction);
                         });
                     }, this.delay);
                 }
@@ -4852,7 +4852,7 @@ class KulScrollOnHover {
                     this.#timeout = setTimeout(() => {
                         el.scrollOnHover.active = true;
                         this.#rAF = requestAnimationFrame(function () {
-                            dom$2.ketchupLite.scrollOnHover.run(el, maxScrollTop, percBottom, percTop, direction);
+                            dom$1.ketchupLite.scrollOnHover.run(el, maxScrollTop, percBottom, percTop, direction);
                         });
                     }, this.delay);
                 }
@@ -4983,7 +4983,7 @@ class KulScrollOnHover {
             arrow[i].classList.add('kul-animated');
         }
         this.#rAF = requestAnimationFrame(function () {
-            dom$2.ketchupLite.scrollOnHover.run(el, maxScrollLeft, percForward, percBack, direction);
+            dom$1.ketchupLite.scrollOnHover.run(el, maxScrollLeft, percForward, percBack, direction);
         });
     }
     /**
@@ -4997,13 +4997,6 @@ class KulScrollOnHover {
     }
 }
 
-/**
- * Variable used to fetch the MASTER customStyle (used in every component).
- */
-const masterCustomStyle = 'MASTER';
-/**
- * List of all colors.
- */
 var KulThemeColorValues;
 (function (KulThemeColorValues) {
     KulThemeColorValues["PRIMARY"] = "--kul-primary-color";
@@ -5034,9 +5027,22 @@ var KulThemeColorValues;
     KulThemeColorValues["CHART_3"] = "--kul-chart-color-3";
     KulThemeColorValues["CHART_4"] = "--kul-chart-color-4";
 })(KulThemeColorValues || (KulThemeColorValues = {}));
-/**
- * List of all icons.
- */
+var KulThemeFonts;
+(function (KulThemeFonts) {
+    KulThemeFonts["ABEL"] = "Abel";
+    KulThemeFonts["BLINKER"] = "Blinker";
+    KulThemeFonts["CRIMSON_TEXT"] = "CrimsonText";
+    KulThemeFonts["FIRA_CODE"] = "FiraCode";
+    KulThemeFonts["IBM_PLEX"] = "IBMPlexSans";
+    KulThemeFonts["INTER"] = "Inter";
+    KulThemeFonts["LATO"] = "Lato";
+    KulThemeFonts["MALI"] = "Mali";
+    KulThemeFonts["OPEN_SANS"] = "Open_Sans";
+    KulThemeFonts["OSWALD"] = "Oswald";
+    KulThemeFonts["PUBLIC_SANS"] = "PublicSans";
+    KulThemeFonts["RAJDHANI"] = "Rajdhani";
+    KulThemeFonts["UBUNTU"] = "Ubuntu";
+})(KulThemeFonts || (KulThemeFonts = {}));
 var KulThemeIconValues;
 (function (KulThemeIconValues) {
     KulThemeIconValues["ASCENDING"] = "--kul-ascending-icon";
@@ -5050,6 +5056,11 @@ var KulThemeIconValues;
     KulThemeIconValues["SEARCH"] = "--kul-search-icon";
     KulThemeIconValues["WARNING"] = "--kul-warning-icon";
 })(KulThemeIconValues || (KulThemeIconValues = {}));
+var KulThemeAttribute;
+(function (KulThemeAttribute) {
+    KulThemeAttribute["DARK"] = "kul-dark-theme";
+    KulThemeAttribute["LIGHT"] = "kul-light-theme";
+})(KulThemeAttribute || (KulThemeAttribute = {}));
 
 const themesJson = {
     bubbles: {
@@ -5085,7 +5096,6 @@ const themesJson = {
             '--kul-chart-color-2': '#e0a0a0',
             '--kul-chart-color-3': '#8e1010',
             '--kul-chart-color-4': '#f5f5dc',
-            '--kul-obj-cursor': 'inherit',
             '--kul-card-zindex': 900,
             '--kul-drawer-zindex': 900,
             '--kul-header-zindex': 900,
@@ -5102,11 +5112,112 @@ const themesJson = {
             '--kul-search-icon': 'search',
             '--kul-warning-icon': 'warning',
         },
+        font: [KulThemeFonts.LATO],
         isDark: false,
-        customStyles: {},
-        imports: [
-            "@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400&display=swap')",
-        ],
+    },
+    candy: {
+        cssVariables: {
+            '--kul-primary-color': '#ffffff',
+            '--kul-secondary-color': '#e0e0e0',
+            '--kul-background-color': '#f7f9fc',
+            '--kul-header-background-color': '#ffffff',
+            '--kul-header-color': '#333333',
+            '--kul-drawer-background-color': '#ffffff',
+            '--kul-drawer-color': '#333333',
+            '--kul-header-height': '64px',
+            '--kul-drawer-width': '300px',
+            '--kul-font-family': 'Inter, sans-serif',
+            '--kul-font-family-monospace': 'Fira Code, monospace',
+            '--kul-font-size': '16px',
+            '--kul-text-color': '#333333',
+            '--kul-text-on-primary-color': '#ffffff',
+            '--kul-text-on-secondary-color': '#333333',
+            '--kul-disabled-background-color': '#eaeaea',
+            '--kul-disabled-color': '#9c9c9c',
+            '--kul-title-background-color': '#ffffff',
+            '--kul-title-color': '#333333',
+            '--kul-icon-color': '#5a5a5a',
+            '--kul-border-color': '#d3d3d3',
+            '--kul-box-shadow': '0 8px 32px rgba(31, 38, 135, 0.2)',
+            '--kul-info-color': '#56ccf2',
+            '--kul-success-color': '#6fcf97',
+            '--kul-warning-color': '#f2c94c',
+            '--kul-danger-color': '#eb5757',
+            '--kul-spinner-color': '#8e8e8e',
+            '--kul-chart-color-1': '#56ccf2',
+            '--kul-chart-color-2': '#bb6bd9',
+            '--kul-chart-color-3': '#f2994a',
+            '--kul-chart-color-4': '#27ae60',
+            '--kul-card-zindex': 900,
+            '--kul-drawer-zindex': 900,
+            '--kul-header-zindex': 900,
+        },
+        icons: {
+            '--kul-ascending-icon': 'arrow_drop_up',
+            '--kul-descending-icon': 'arrow_drop_down',
+            '--kul-expanded-icon': 'arrow_drop_down',
+            '--kul-collapsed-icon': 'menu-right',
+            '--kul-dropdown-icon': 'arrow_drop_down',
+            '--kul-clear-icon': 'cancel',
+            '--kul-filter-remove-icon': 'filter-remove',
+            '--kul-key-icon': 'key-variant',
+            '--kul-search-icon': 'search',
+            '--kul-warning-icon': 'warning',
+        },
+        font: [KulThemeFonts.INTER, KulThemeFonts.FIRA_CODE],
+        isDark: false,
+    },
+    cinder: {
+        cssVariables: {
+            '--kul-primary-color': '#1e1e1e',
+            '--kul-secondary-color': '#333333',
+            '--kul-background-color': '#101010',
+            '--kul-header-background-color': '#1b1b1b',
+            '--kul-header-color': '#e0e0e0',
+            '--kul-drawer-background-color': '#1b1b1b',
+            '--kul-drawer-color': '#e0e0e0',
+            '--kul-header-height': '64px',
+            '--kul-drawer-width': '300px',
+            '--kul-font-family': 'Inter, sans-serif',
+            '--kul-font-family-monospace': 'Fira Code, monospace',
+            '--kul-font-size': '16px',
+            '--kul-text-color': '#e0e0e0',
+            '--kul-text-on-primary-color': '#1e1e1e',
+            '--kul-text-on-secondary-color': '#e0e0e0',
+            '--kul-disabled-background-color': '#333333',
+            '--kul-disabled-color': '#666666',
+            '--kul-title-background-color': '#2b2b2b',
+            '--kul-title-color': '#e0e0e0',
+            '--kul-icon-color': '#a1a1a1',
+            '--kul-border-color': '#444444',
+            '--kul-box-shadow': '0 8px 32px rgba(0, 0, 0, 0.4)',
+            '--kul-info-color': '#56ccf2',
+            '--kul-success-color': '#6fcf97',
+            '--kul-warning-color': '#f2c94c',
+            '--kul-danger-color': '#eb5757',
+            '--kul-spinner-color': '#56ccf2',
+            '--kul-chart-color-1': '#735DED',
+            '--kul-chart-color-2': '#00B2CB',
+            '--kul-chart-color-3': '#F2994A',
+            '--kul-chart-color-4': '#27ae60',
+            '--kul-card-zindex': 900,
+            '--kul-drawer-zindex': 900,
+            '--kul-header-zindex': 900,
+        },
+        icons: {
+            '--kul-ascending-icon': 'arrow_drop_up',
+            '--kul-descending-icon': 'arrow_drop_down',
+            '--kul-expanded-icon': 'arrow_drop_down',
+            '--kul-collapsed-icon': 'menu-right',
+            '--kul-dropdown-icon': 'arrow_drop_down',
+            '--kul-clear-icon': 'cancel',
+            '--kul-filter-remove-icon': 'filter-remove',
+            '--kul-key-icon': 'key-variant',
+            '--kul-search-icon': 'search',
+            '--kul-warning-icon': 'warning',
+        },
+        font: [KulThemeFonts.INTER, KulThemeFonts.FIRA_CODE],
+        isDark: true,
     },
     cobalt: {
         cssVariables: {
@@ -5141,7 +5252,6 @@ const themesJson = {
             '--kul-chart-color-2': '#5eb6d1',
             '--kul-chart-color-3': '#b1eafb',
             '--kul-chart-color-4': '#ffffff',
-            '--kul-obj-cursor': 'inherit',
             '--kul-card-zindex': 900,
             '--kul-drawer-zindex': 900,
             '--kul-header-zindex': 900,
@@ -5158,10 +5268,8 @@ const themesJson = {
             '--kul-search-icon': 'search',
             '--kul-warning-icon': 'warning',
         },
+        font: [KulThemeFonts.BLINKER],
         isDark: true,
-        imports: [
-            "url('https://fonts.googleapis.com/css2?family=Blinker:wght@200;300;600&display=swap')",
-        ],
     },
     night: {
         cssVariables: {
@@ -5196,7 +5304,6 @@ const themesJson = {
             '--kul-chart-color-2': '#e268d8',
             '--kul-chart-color-3': '#860bb5',
             '--kul-chart-color-4': '#1a83e4',
-            '--kul-obj-cursor': 'inherit',
             '--kul-card-zindex': 900,
             '--kul-drawer-zindex': 900,
             '--kul-header-zindex': 900,
@@ -5213,10 +5320,8 @@ const themesJson = {
             '--kul-search-icon': 'search',
             '--kul-warning-icon': 'warning',
         },
+        font: [KulThemeFonts.LATO],
         isDark: true,
-        imports: [
-            "@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400&display=swap')",
-        ],
     },
     flamingo: {
         cssVariables: {
@@ -5251,7 +5356,6 @@ const themesJson = {
             '--kul-chart-color-2': '#dc5584',
             '--kul-chart-color-3': '#c21350',
             '--kul-chart-color-4': '#c88da1',
-            '--kul-obj-cursor': 'inherit',
             '--kul-card-zindex': 900,
             '--kul-drawer-zindex': 900,
             '--kul-header-zindex': 900,
@@ -5268,10 +5372,8 @@ const themesJson = {
             '--kul-search-icon': 'search',
             '--kul-warning-icon': 'warning',
         },
+        font: [KulThemeFonts.MALI],
         isDark: true,
-        imports: [
-            "url('https://fonts.googleapis.com/css2?family=Mali:wght@300&display=swap')",
-        ],
     },
     graphite: {
         cssVariables: {
@@ -5312,7 +5414,6 @@ const themesJson = {
             '--kul-chart-color-8': 'magenta',
             '--kul-chart-color-9': 'grey',
             '--kul-chart-color-10': 'indigo',
-            '--kul-obj-cursor': 'inherit',
             '--kul-card-zindex': 900,
             '--kul-drawer-zindex': 900,
             '--kul-header-zindex': 900,
@@ -5320,7 +5421,6 @@ const themesJson = {
         customStyles: {
             'kul-BUTTON': '#kul-component button {\ntext-transform: unset;\n}\n\n',
         },
-        isDark: false,
         icons: {
             '--kul-ascending-icon': 'arrow_drop_up',
             '--kul-descending-icon': 'arrow_drop_down',
@@ -5333,6 +5433,7 @@ const themesJson = {
             '--kul-search-icon': 'search',
             '--kul-warning-icon': 'warning',
         },
+        isDark: false,
     },
     ketchup: {
         cssVariables: {
@@ -5367,12 +5468,10 @@ const themesJson = {
             '--kul-chart-color-2': '#e0a0a0',
             '--kul-chart-color-3': '#8e1010',
             '--kul-chart-color-4': '#f5f5dc',
-            '--kul-obj-cursor': 'inherit',
             '--kul-card-zindex': 900,
             '--kul-drawer-zindex': 900,
             '--kul-header-zindex': 900,
         },
-        isDark: false,
         icons: {
             '--kul-ascending-icon': 'sort-ascending',
             '--kul-descending-icon': 'sort-descending',
@@ -5385,55 +5484,52 @@ const themesJson = {
             '--kul-search-icon': 'search',
             '--kul-warning-icon': 'warning',
         },
-        imports: [
-            "url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;500&display=swap')",
-        ],
+        font: [KulThemeFonts.UBUNTU],
+        isDark: false,
     },
     obsidian: {
         cssVariables: {
-            '--kul-primary-color': '#a6192e',
-            '--kul-secondary-color': '#f5f4f4',
+            '--kul-primary-color': '#8b1a2e',
+            '--kul-secondary-color': '#8c8c8c',
             '--kul-background-color': '#ffffff',
-            '--kul-header-background-color': '#000000',
+            '--kul-header-background-color': '#1a1a1a',
             '--kul-header-color': '#ffffff',
-            '--kul-drawer-background-color': '#f5f4f4',
+            '--kul-drawer-background-color': '#f2f2f2',
+            '--kul-font-family': 'IBM Plex Sans, sans-serif',
+            '--kul-text-color': '#333333',
+            '--kul-icon-color': '#c1c1c1',
+            '--kul-border-color': '#bbbbbb',
+            '--kul-box-shadow': '0px 4px 12px rgba(0, 0, 0, 0.1)',
+            '--kul-chart-color-1': '#a35761',
+            '--kul-chart-color-2': '#63707e',
+            '--kul-chart-color-3': '#9e9e9e',
+            '--kul-chart-color-4': '#4a4a4a',
             '--kul-drawer-color': '#4c4c4d',
             '--kul-header-height': '64px',
             '--kul-drawer-width': '300px',
-            '--kul-font-family': 'Open Sans, arial, helvatica',
             '--kul-font-family-monospace': 'Courier New, Courier, monospace',
             '--kul-font-size': '13px',
-            '--kul-text-color': '#4c4c4d',
             '--kul-text-on-primary-color': '#ffffff',
             '--kul-text-on-secondary-color': '#a6192e',
             '--kul-disabled-background-color': '#ffffff',
             '--kul-disabled-color': '#4c4c4d',
             '--kul-title-background-color': '#068a9c',
             '--kul-title-color': '#ffffff',
-            '--kul-icon-color': '#9d9d9d',
-            '--kul-border-color': '#ededed',
-            '--kul-box-shadow': 'rgba(0, 0, 0, 0.2) 0px 5px 5px -3px, rgba(0, 0, 0, 0.14) 0px 8px 10px 1px, rgba(0, 0, 0, 0.12) 0px 3px 14px 2px',
             '--kul-info-color': '#2592df',
             '--kul-success-color': '#4d9f02',
             '--kul-warning-color': '#ffc107',
             '--kul-danger-color': '#A6192E',
             '--kul-spinner-color': '#a6192e',
-            '--kul-chart-color-1': '#735DED',
-            '--kul-chart-color-2': '#00B2CB',
-            '--kul-chart-color-3': '#EDC900',
-            '--kul-chart-color-4': 'green',
             '--kul-chart-color-5': 'yellow',
             '--kul-chart-color-6': 'cyan',
             '--kul-chart-color-7': 'brown',
             '--kul-chart-color-8': 'magenta',
             '--kul-chart-color-9': 'grey',
             '--kul-chart-color-10': 'indigo',
-            '--kul-obj-cursor': 'inherit',
             '--kul-card-zindex': 900,
             '--kul-drawer-zindex': 900,
             '--kul-header-zindex': 900,
         },
-        isDark: false,
         icons: {
             '--kul-ascending-icon': 'arrow_drop_up',
             '--kul-descending-icon': 'arrow_drop_down',
@@ -5446,119 +5542,45 @@ const themesJson = {
             '--kul-search-icon': 'search',
             '--kul-warning-icon': 'warning',
         },
-        imports: [
-            "url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400&display=swap')",
-        ],
+        font: [KulThemeFonts.IBM_PLEX],
+        isDark: false,
     },
     ocean: {
         cssVariables: {
-            '--kul-primary-color': '#0081c5',
-            '--kul-secondary-color': '#3a8ede',
-            '--kul-background-color': '#ffffff',
-            '--kul-header-background-color': '#001d3e',
+            '--kul-primary-color': '#0074b7',
+            '--kul-secondary-color': '#a2d5f2',
+            '--kul-background-color': '#f0f8ff',
+            '--kul-header-background-color': '#013a6b',
             '--kul-header-color': '#ffffff',
-            '--kul-drawer-background-color': '#e6f1ff',
+            '--kul-drawer-background-color': '#e1eff7',
+            '--kul-font-family': 'Public Sans, sans-serif',
+            '--kul-text-color': '#1e2a33',
+            '--kul-icon-color': '#5a7da0',
+            '--kul-border-color': '#b8d3e4',
+            '--kul-box-shadow': '0px 2px 8px rgba(0, 0, 0, 0.1)',
+            '--kul-chart-color-1': '#8fcfe3',
+            '--kul-chart-color-2': '#a2b7cf',
+            '--kul-chart-color-3': '#d9f1ff',
+            '--kul-chart-color-4': '#93b1c4',
             '--kul-drawer-color': '#1b1b1b',
             '--kul-header-height': '64px',
             '--kul-drawer-width': '300px',
-            '--kul-font-family': 'Open Sans Condensed, sans-serif',
             '--kul-font-family-monospace': 'Roboto Mono, consolas, monospace',
             '--kul-font-size': '16px',
-            '--kul-text-color': '#1b1b1b',
             '--kul-text-on-primary-color': '#ffffff',
             '--kul-text-on-secondary-color': '#ffffff',
             '--kul-disabled-background-color': '#eaeaea',
             '--kul-disabled-color': '#5c5c5c',
             '--kul-title-background-color': '#f1f3f4',
             '--kul-title-color': '#1b1b1b',
-            '--kul-icon-color': '#505050',
-            '--kul-border-color': '#e0e0e0',
-            '--kul-box-shadow': '0px 0px 7.5px 0px rgba(128, 128, 128, 0.5)',
             '--kul-info-color': '#2592df',
             '--kul-success-color': '#4d9f02',
             '--kul-warning-color': '#ffc107',
             '--kul-danger-color': '#d91e18',
             '--kul-spinner-color': '#6edeff',
-            '--kul-chart-color-1': '#60c3fc',
-            '--kul-chart-color-2': '#e268d8',
-            '--kul-chart-color-3': '#e48b47',
-            '--kul-chart-color-4': '#81e447',
-            '--kul-obj-cursor': 'inherit',
             '--kul-card-zindex': 900,
             '--kul-drawer-zindex': 900,
             '--kul-header-zindex': 900,
-        },
-        isDark: false,
-        icons: {
-            '--kul-ascending-icon': 'arrow_drop_up',
-            '--kul-descending-icon': 'arrow_drop_down',
-            '--kul-expanded-icon': 'arrow_drop_down',
-            '--kul-collapsed-icon': 'menu-right',
-            '--kul-dropdown-icon': 'arrow_drop_down',
-            '--kul-clear-icon': 'cancel',
-            '--kul-filter-remove-icon': 'filter-remove',
-            '--kul-key-icon': 'key-variant',
-            '--kul-search-icon': 'search',
-            '--kul-warning-icon': 'warning',
-        },
-        imports: [
-            "url('https://fonts.googleapis.com/css2?family=Open+Sans+Condensed:wght@300;700&display=swap')",
-        ],
-    },
-    print: {
-        cssVariables: {
-            '--kul-primary-color': '#000000',
-            '--kul-secondary-color': '#cccccc',
-            '--kul-background-color': '#ffffff',
-            '--kul-header-background-color': '#000000',
-            '--kul-header-color': '#ffffff',
-            '--kul-drawer-background-color': '#ffffff',
-            '--kul-drawer-color': '#000000',
-            '--kul-header-height': '64px',
-            '--kul-drawer-width': '300px',
-            '--kul-font-family': 'Arial, Helvetica, sans-serif',
-            '--kul-font-family-monospace': 'Courier New, Courier, monospace',
-            '--kul-font-size': '13px',
-            '--kul-text-color': '#000000',
-            '--kul-text-on-primary-color': '#ffffff',
-            '--kul-text-on-secondary-color': '#000000',
-            '--kul-disabled-background-color': '#ffffff',
-            '--kul-disabled-color': '#000000',
-            '--kul-title-background-color': '#f1f1f1',
-            '--kul-title-color': '#000000',
-            '--kul-icon-color': '#9d9d9d',
-            '--kul-border-color': '#ededed',
-            '--kul-box-shadow': 'rgba(0, 0, 0, 0.2) 0px 5px 5px -3px, rgba(0, 0, 0, 0.14) 0px 8px 10px 1px, rgba(0, 0, 0, 0.12) 0px 3px 14px 2px',
-            '--kul-info-color': '#2592df',
-            '--kul-success-color': '#4d9f02',
-            '--kul-warning-color': '#ffc107',
-            '--kul-danger-color': '#A6192E',
-            '--kul-spinner-color': '#eaa710',
-            '--kul-chart-color-1': '#735DED',
-            '--kul-chart-color-2': '#00B2CB',
-            '--kul-chart-color-3': '#EDC900',
-            '--kul-chart-color-4': 'green',
-            '--kul-chart-color-5': 'yellow',
-            '--kul-chart-color-6': 'cyan',
-            '--kul-chart-color-7': 'brown',
-            '--kul-chart-color-8': 'magenta',
-            '--kul-chart-color-9': 'grey',
-            '--kul-chart-color-10': 'indigo',
-            '--kul-obj-cursor': 'inherit',
-            '--kul-card-zindex': 900,
-            '--kul-drawer-zindex': 900,
-            '--kul-header-zindex': 900,
-        },
-        isDark: false,
-        customStyles: {
-            MASTER: '#kul-component #global-filter {\ndisplay: none;\n}\n\n',
-            'kul-BOX': '#kul-component #box-container .box-wrapper .box:hover {\nbox-shadow: none;\n}\n\n#kul-component #box-container .box-wrapper .box.selected {\nbackground-color: inherit;\n}',
-            'kul-BUTTON': ':host(:not(.printable)) {\ndisplay: none;\n}\n\n',
-            'kul-CARD': '',
-            'kul-DATA-TABLE': '#kul-component sticky-header {\ndisplay: none;\n}\n\n#kul-component kul-paginator {\ndisplay: none;\n}\n\n:host(.cross-selection) #kul-component table tr.selected td.selected, \n#kul-component table td.selected, #kul-component tr.selected td {\nbackground-color: inherit;\nbackground-image: none;\n}\n\n#kul-component table,\n#kul-component .below-wrapper {\noverflow: hidden !important;\n}\n\n:host(.cross-selection) #kul-component tr.selected td:first-of-type,\n:host(.cross-selection) #kul-component th.selected { \nbox-shadow: none !important;\n}\n\n:host(.cross-selection) #kul-component table td.selected,\n:host(.cross-selection) #kul-component table tr.selected td {\nbackground-color: inherit;\n}\n\n:host(.cross-selection) #kul-component table tr.selected td.fixed-column.selected,\n:host(.cross-selection) #kul-component table td.selected.fixed-column, \n:host(.cross-selection) #kul-component table td.selected.fixed-row,\n:host(.cross-selection) #kul-component table tr.selected td.fixed-column, \n:host(.cross-selection) #kul-component table tr.selected td.fixed-row {\nbackground-color: inherit;\nbackground-image: none;\n}\n\n',
-            'kul-FAMILY-TREE': '#kul-component .family-tree__item__expand {\ndisplay: none;\n}\n\n',
-            'kul-PROGRESS-BAR': '#kul-component .progress-bar {\nbackground: #e7e7e7;\n}\n\n#kul-component .progress-bar-percentage span {\ntext-shadow: 0px 0px 0px hsl(0deg 0% 100%);\n}\n\n',
-            'kul-TREE': '#kul-component .wrapper {\noverflow: hidden;\n}\n\n#kul-component tr.mdc-ripple-surface::before, \n#kul-component tr.mdc-ripple-surface::after,\n#kul-component td.mdc-ripple-surface::before, \n#kul-component td.mdc-ripple-surface::after,\n#kul-component .kul-tree__node--selected:not(.kul-tree__node--disabled) td {\nbackground-color: var(--kul-background-color);\n}',
         },
         icons: {
             '--kul-ascending-icon': 'arrow_drop_up',
@@ -5572,6 +5594,8 @@ const themesJson = {
             '--kul-search-icon': 'search',
             '--kul-warning-icon': 'warning',
         },
+        font: [KulThemeFonts.PUBLIC_SANS],
+        isDark: false,
     },
     raj: {
         cssVariables: {
@@ -5606,12 +5630,10 @@ const themesJson = {
             '--kul-chart-color-2': 'rgb(187, 198, 5)',
             '--kul-chart-color-3': '#ffe600',
             '--kul-chart-color-4': '#effd02',
-            '--kul-obj-cursor': 'inherit',
             '--kul-card-zindex': 900,
             '--kul-drawer-zindex': 900,
             '--kul-header-zindex': 900,
         },
-        isDark: true,
         icons: {
             '--kul-ascending-icon': 'sort-ascending',
             '--kul-descending-icon': 'sort-descending',
@@ -5624,9 +5646,8 @@ const themesJson = {
             '--kul-search-icon': 'search',
             '--kul-warning-icon': 'warning',
         },
-        imports: [
-            "url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@600&display=swap')",
-        ],
+        font: [KulThemeFonts.RAJDHANI],
+        isDark: true,
     },
     red: {
         cssVariables: {
@@ -5667,12 +5688,10 @@ const themesJson = {
             '--kul-chart-color-8': 'magenta',
             '--kul-chart-color-9': 'grey',
             '--kul-chart-color-10': 'indigo',
-            '--kul-obj-cursor': 'inherit',
             '--kul-card-zindex': 900,
             '--kul-drawer-zindex': 900,
             '--kul-header-zindex': 900,
         },
-        isDark: false,
         icons: {
             '--kul-ascending-icon': 'arrow_drop_up',
             '--kul-descending-icon': 'arrow_drop_down',
@@ -5685,10 +5704,8 @@ const themesJson = {
             '--kul-search-icon': 'search',
             '--kul-warning-icon': 'warning',
         },
-        customStyles: {},
-        imports: [
-            "url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400&display=swap')",
-        ],
+        font: [KulThemeFonts.OPEN_SANS],
+        isDark: false,
     },
     sapphire: {
         cssVariables: {
@@ -5729,12 +5746,10 @@ const themesJson = {
             '--kul-chart-color-8': 'magenta',
             '--kul-chart-color-9': 'grey',
             '--kul-chart-color-10': 'indigo',
-            '--kul-obj-cursor': 'inherit',
             '--kul-card-zindex': 900,
             '--kul-drawer-zindex': 900,
             '--kul-header-zindex': 900,
         },
-        isDark: false,
         icons: {
             '--kul-ascending-icon': 'arrow_drop_up',
             '--kul-descending-icon': 'arrow_drop_down',
@@ -5747,9 +5762,7 @@ const themesJson = {
             '--kul-search-icon': 'search',
             '--kul-warning-icon': 'warning',
         },
-        customStyles: {
-            'kul-DATA-TABLE': '#kul-component th { --kul_datatable_th_border: none; font-weight: normal; }',
-        },
+        isDark: false,
     },
     silver: {
         cssVariables: {
@@ -5787,12 +5800,10 @@ const themesJson = {
             '--kul-chart-color-5': '#b35454',
             '--kul-chart-color-6': '#59af57',
             '--kul-chart-color-7': '#aeaa5d',
-            '--kul-obj-cursor': 'inherit',
             '--kul-card-zindex': 900,
             '--kul-drawer-zindex': 900,
             '--kul-header-zindex': 900,
         },
-        isDark: true,
         icons: {
             '--kul-ascending-icon': 'arrow_drop_up',
             '--kul-descending-icon': 'arrow_drop_down',
@@ -5805,10 +5816,8 @@ const themesJson = {
             '--kul-search-icon': 'search',
             '--kul-warning-icon': 'warning',
         },
-        imports: [
-            "url('https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&family=Xanh+Mono&display=swap')",
-        ],
-        customStyles: {},
+        font: [KulThemeFonts.OSWALD],
+        isDark: true,
     },
     teal: {
         cssVariables: {
@@ -5849,12 +5858,10 @@ const themesJson = {
             '--kul-chart-color-8': '#640056',
             '--kul-chart-color-9': '#1C0056',
             '--kul-chart-color-10': '#000046',
-            '--kul-obj-cursor': 'inherit',
             '--kul-card-zindex': 900,
             '--kul-drawer-zindex': 900,
             '--kul-header-zindex': 900,
         },
-        isDark: false,
         icons: {
             '--kul-ascending-icon': 'arrow_drop_up',
             '--kul-descending-icon': 'arrow_drop_down',
@@ -5867,46 +5874,45 @@ const themesJson = {
             '--kul-search-icon': 'search',
             '--kul-warning-icon': 'warning',
         },
+        isDark: false,
     },
     wildlife: {
         cssVariables: {
-            '--kul-primary-color': '#0fa918',
-            '--kul-secondary-color': '#739f5a',
-            '--kul-background-color': '#ffffff',
-            '--kul-header-background-color': '#095a1f',
+            '--kul-primary-color': '#1a7340',
+            '--kul-secondary-color': '#826a4a',
+            '--kul-background-color': '#f9f9f5',
+            '--kul-header-background-color': '#12522e',
             '--kul-header-color': '#ffffff',
-            '--kul-drawer-background-color': '#dbfbd5',
+            '--kul-drawer-background-color': '#e7f2e1',
             '--kul-drawer-color': '#000000',
+            '--kul-font-family': 'Crimson Text, serif',
+            '--kul-font-family-monospace': 'Roboto Mono, consolas, monospace',
+            '--kul-text-color': '#1a1a1a',
+            '--kul-box-shadow': '0px 4px 10px rgba(0, 0, 0, 0.15)',
+            '--kul-icon-color': '#4e8c57',
+            '--kul-border-color': '#c4c4c4',
+            '--kul-chart-color-1': '#58a27f',
+            '--kul-chart-color-2': '#a9c1a1',
+            '--kul-chart-color-3': '#6e8d5e',
+            '--kul-chart-color-4': '#f0f2e7',
             '--kul-header-height': '64px',
             '--kul-drawer-width': '300px',
-            '--kul-font-family': 'Abel, sans-serif',
-            '--kul-font-family-monospace': 'Roboto Mono, consolas, monospace',
             '--kul-font-size': '16px',
-            '--kul-text-color': '#000000',
             '--kul-text-on-primary-color': '#ffffff',
             '--kul-text-on-secondary-color': '#ffffff',
             '--kul-disabled-background-color': '#eaeaea',
             '--kul-disabled-color': '#5c5c5c',
             '--kul-title-background-color': '#f1f3f4',
             '--kul-title-color': '#000000',
-            '--kul-icon-color': '#333333',
-            '--kul-border-color': '#e0e0e0',
-            '--kul-box-shadow': '0px 0px 7.5px 0px rgba(128, 128, 128, 0.5)',
             '--kul-info-color': '#2592df',
             '--kul-success-color': '#4d9f02',
             '--kul-warning-color': '#ffc107',
             '--kul-danger-color': '#d91e18',
             '--kul-spinner-color': '#44b383',
-            '--kul-chart-color-1': '#60c3fc',
-            '--kul-chart-color-2': '#e268d8',
-            '--kul-chart-color-3': '#e48b47',
-            '--kul-chart-color-4': '#81e447',
-            '--kul-obj-cursor': 'inherit',
             '--kul-card-zindex': 900,
             '--kul-drawer-zindex': 900,
             '--kul-header-zindex': 900,
         },
-        isDark: false,
         icons: {
             '--kul-ascending-icon': 'arrow_drop_up',
             '--kul-descending-icon': 'arrow_drop_down',
@@ -5919,88 +5925,74 @@ const themesJson = {
             '--kul-search-icon': 'search',
             '--kul-warning-icon': 'warning',
         },
-        imports: [
-            "url('https://fonts.googleapis.com/css2?family=Abel&display=swap')",
-        ],
+        font: [KulThemeFonts.CRIMSON_TEXT],
+        isDark: false,
     },
 };
 
-const dom$1 = document.documentElement;
-/**
- * Theme manager, handles everything about theming, kulStyles and color utilities.
- * @module KulTheme
- */
+const DOM = document.documentElement;
 class KulTheme {
+    #MASTER_CUSTOM_STYLE = 'MASTER';
     cssVars;
     isDarkTheme;
     list;
     managedComponents;
     name;
     styleTag;
-    /**
-     * Initializes KulTheme.
-     */
     constructor(list, name) {
         this.cssVars = {};
         this.list = list ? list : themesJson;
         this.managedComponents = new Set();
         this.name = name ? name : 'silver';
-        this.styleTag = dom$1
-            .querySelector('head')
-            .appendChild(document.createElement('style'));
+        this.styleTag = DOM.querySelector('head').appendChild(document.createElement('style'));
     }
-    /**
-     * Sets the CSS variables of the theme.
-     */
-    imports() {
-        const imports = this.list[this.name].imports
-            ? this.list[this.name].imports
-            : [];
+    #cssVariables = () => {
+        const theme = this.list[this.name];
+        const variables = theme.cssVariables;
         let css = '';
-        for (let index = 0; index < imports.length; index++) {
-            css += '@import ' + imports[index] + ';';
-        }
-        return css;
-    }
-    /**
-     * Sets the CSS variables of the theme.
-     */
-    cssVariables() {
-        const variables = this.list[this.name].cssVariables;
-        let css = '';
-        for (let key in variables) {
-            if (variables.hasOwnProperty(key)) {
-                const val = variables[key];
-                this.cssVars[key] = val;
-                css += key + ': ' + val + ';';
-                if (key.indexOf('color') > -1) {
-                    const computedColor = this.colorCheck(val);
-                    const rgbKey = key + '-rgb';
-                    const hKey = key + '-h';
-                    const sKey = key + '-s';
-                    const lKey = key + '-l';
-                    const rgbVal = computedColor.rgbValues;
-                    const hue = computedColor.hue;
-                    const saturation = computedColor.saturation;
-                    const lightness = computedColor.lightness;
-                    this.cssVars[rgbKey] = rgbVal;
-                    this.cssVars[hKey] = hue;
-                    this.cssVars[lKey] = lightness;
-                    this.cssVars[sKey] = saturation;
-                    css += rgbKey + ': ' + rgbVal + ';';
-                    css += hKey + ': ' + hue + ';';
-                    css += lKey + ': ' + lightness + ';';
-                    css += sKey + ': ' + saturation + ';';
-                }
+        Object.entries(variables).forEach(([key, val]) => {
+            this.cssVars[key] = val;
+            css += `${key}: ${val};`;
+            if (key.includes('color')) {
+                const { rgbValues, hue, saturation, lightness } = this.colorCheck(val);
+                const rgbKey = `${key}-rgb`;
+                const hKey = `${key}-h`;
+                const sKey = `${key}-s`;
+                const lKey = `${key}-l`;
+                this.cssVars[rgbKey] = rgbValues;
+                this.cssVars[hKey] = hue;
+                this.cssVars[lKey] = lightness;
+                this.cssVars[sKey] = saturation;
+                css += `${rgbKey}: ${rgbValues};`;
+                css += `${hKey}: ${hue};`;
+                css += `${lKey}: ${lightness};`;
+                css += `${sKey}: ${saturation};`;
             }
-        }
+        });
         return css;
-    }
-    /**
-     * Sets the icon variables of the theme.
-     */
-    icons() {
-        const icons = this.list[this.name].icons;
+    };
+    #customStyle = () => {
+        this.managedComponents.forEach(function (comp) {
+            if (comp?.rootElement?.isConnected) {
+                comp.refresh();
+            }
+        });
+    };
+    #font = () => {
+        let fonts = '';
+        const theme = this.list[this.name];
+        if (theme.font?.length) {
+            theme.font.forEach((f) => {
+                const fontPath = getAssetPath(`./assets/fonts/${f}-Regular`);
+                const fontFace = `@font-face{font-family:${f.split('-')[0].replace(/(?<!^)(?=[A-Z])/g, ' ')};src:url('${fontPath}.woff2')format('woff2'),url('${fontPath}.woff') format('woff');}`;
+                fonts += fontFace;
+            });
+        }
+        return fonts;
+    };
+    #icons = () => {
+        const theme = this.list[this.name];
+        const icons = theme.icons;
         let css = '';
         for (var key in icons) {
             if (icons.hasOwnProperty(key)) {
@@ -6010,60 +6002,41 @@ class KulTheme {
             }
         }
         return css;
-    }
-    /**
-     * Refreshed managed components to apply theme kulStyles.
-     */
-    customStyle() {
-        this.managedComponents.forEach(function (comp) {
-            if (comp?.rootElement?.isConnected) {
-                comp.refresh();
-            }
-        });
-    }
-    /**
-     * Sets the theme using this.name or the function's argument.
-     * @param {string} name - When present, this theme will be set.
-     */
-    set(name, list) {
+    };
+    set = (name, list) => {
         if (name) {
             this.name = name;
         }
         if (list) {
             this.list = list;
         }
-        dom$1.ketchupLite.debug.logs.new(this, 'Setting theme to: ' + this.name + '.');
-        if (!this.list[this.name]) {
-            dom$1.ketchupLite.debug.logs.new(this, 'Invalid theme name, falling back to default ("silver").');
+        DOM.ketchupLite.debug.logs.new(this, 'Setting theme to: ' + this.name + '.');
+        const theme = this.list?.[this.name];
+        if (!theme) {
+            DOM.ketchupLite.debug.logs.new(this, 'Invalid theme name, falling back to default ("silver").');
             this.name = 'silver';
         }
-        this.isDarkTheme = this.list[this.name].isDark;
+        this.isDarkTheme = theme.isDark;
         this.cssVars = {};
-        this.styleTag.innerText =
-            this.imports() +
-                ' :root[kul-theme="' +
-                this.name +
-                '"]{' +
-                this.cssVariables() +
-                this.icons() +
-                '}';
-        this.customStyle();
-        document.documentElement.setAttribute('kul-theme', this.name);
+        this.styleTag.innerText = `
+        ${this.#font()}
+        :root[kul-theme="${this.name}"] {
+        ${this.#cssVariables()}
+        ${this.#icons()}
+        }`;
+        this.#customStyle();
+        DOM.setAttribute('kul-theme', this.name);
         if (this.isDarkTheme) {
-            document.documentElement.removeAttribute('kul-light-theme');
-            document.documentElement.setAttribute('kul-dark-theme', '');
+            DOM.removeAttribute(KulThemeAttribute.LIGHT);
+            DOM.setAttribute(KulThemeAttribute.DARK, '');
         }
         else {
-            document.documentElement.removeAttribute('kul-dark-theme');
-            document.documentElement.setAttribute('kul-light-theme', '');
+            DOM.removeAttribute(KulThemeAttribute.DARK);
+            DOM.setAttribute(KulThemeAttribute.LIGHT, '');
         }
         document.dispatchEvent(new CustomEvent('kul-theme-change'));
-    }
-    /**
-     * Gets the name of available themes.
-     * @returns {Array<string>} Array of themes' names.
-     */
-    getThemes() {
+    };
+    getThemes = () => {
         const themes = [];
         for (var key in this.list) {
             if (this.list.hasOwnProperty(key)) {
@@ -6071,44 +6044,29 @@ class KulTheme {
             }
         }
         return themes;
-    }
-    /**
-     * This method will just refresh the current theme.
-     */
-    refresh() {
+    };
+    refresh = () => {
         try {
             this.styleTag.innerText =
                 ':root[kul-theme="' +
                     this.name +
                     '"]{' +
-                    this.cssVariables() +
-                    this.icons() +
+                    this.#cssVariables() +
+                    this.#icons() +
                     '}';
-            this.customStyle();
-            dom$1.ketchupLite.debug.logs.new(this, 'Theme ' + dom$1.getAttribute('kul-theme') + ' refreshed.');
+            this.#customStyle();
+            DOM.ketchupLite.debug.logs.new(this, 'Theme ' + DOM.getAttribute('kul-theme') + ' refreshed.');
             document.dispatchEvent(new CustomEvent('kul-theme-refresh'));
         }
         catch (error) {
-            dom$1.ketchupLite.debug.logs.new(this, 'Theme not refreshed.', 'warning');
+            DOM.ketchupLite.debug.logs.new(this, 'Theme not refreshed.', 'warning');
         }
-    }
-    /**
-     * Ripple effect utility for DOM elements. It allows the addition of the ripple effect on elements triggered by pointer events.
-     */
+    };
     ripple = {
-        /**
-         * Adds a ripple effect to the specified HTML element by adding a specific class.
-         * @param {HTMLElement} el - The element to which the ripple effect will be applied.
-         */
         setup: (el) => {
             el.classList.add(RIPPLE_SURFACE_CLASS);
             el.dataset.cy = 'ripple';
         },
-        /**
-         * Triggers the ripple effect on the specified element based on the location of a pointer event.
-         * @param {PointerEvent} e - The pointer event that triggers the ripple effect.
-         * @param {HTMLElement} el - The element on which the ripple effect is to be applied.
-         */
         trigger: (e, el) => {
             const rect = el.getBoundingClientRect();
             const parent = el.parentElement;
@@ -6130,30 +6088,17 @@ class KulTheme {
             }, 500);
         },
     };
-    /**
-     * Registers a KulComponent in KulTheme, in order to be properly refreshed whenever the theme changes.
-     * @param {KulComponent<KulComponentName>} comp - The component calling this function.
-     */
-    register(comp) {
+    register = (comp) => {
         this.managedComponents.add(comp);
-    }
-    /**
-     * Unregisters a KulComponent, so it won't be refreshed when the theme changes.
-     * @param {KulComponent<KulComponentName>} comp - The component calling this function.
-     */
-    unregister(comp) {
+    };
+    unregister = (comp) => {
         this.managedComponents?.delete(comp);
-    }
-    /**
-     * Combines global (style every component should have), theme's and component's customStyles, returning the result.
-     * @param comp - The component calling this function.
-     * @returns {string} Combined customStyle.
-     */
-    setKulStyle(comp) {
+    };
+    setKulStyle = (comp) => {
         const styles = this.list[this.name].customStyles;
         let completeStyle = '';
-        if (styles && styles[masterCustomStyle]) {
-            completeStyle += styles[masterCustomStyle];
+        if (styles && styles[this.#MASTER_CUSTOM_STYLE]) {
+            completeStyle += styles[this.#MASTER_CUSTOM_STYLE];
         }
         if (styles && styles[comp.rootElement.tagName]) {
             completeStyle += ' ' + styles[comp.rootElement.tagName];
@@ -6162,13 +6107,8 @@ class KulTheme {
             completeStyle += ' ' + comp.kulStyle;
         }
         return completeStyle ? completeStyle : null;
-    }
-    /**
-     * Checks whether on a given color the text should be white or black.
-     * @param {string} color - Color used to check the contrast.
-     * @returns {string} "white" or "black".
-     */
-    colorContrast(color) {
+    };
+    colorContrast = (color) => {
         color = this.colorCheck(color).rgbColor;
         const colorValues = color.replace(/[^\d,.]/g, '').split(',');
         const brightness = Math.round((parseInt(colorValues[0]) * 299 +
@@ -6176,13 +6116,8 @@ class KulTheme {
             parseInt(colorValues[2]) * 114) /
             1000);
         return brightness > 125 ? 'black' : 'white';
-    }
-    /**
-     * Generates a random HEX color.
-     * @param {number} brightness - Brightness of the color generated (0-255).
-     * @returns {string} Random HEX color.
-     */
-    randomColor(brightness) {
+    };
+    randomColor = (brightness) => {
         function randomChannel(brightness) {
             var r = 255 - brightness;
             var n = 0 | (Math.random() * r + brightness);
@@ -6193,11 +6128,8 @@ class KulTheme {
             randomChannel(brightness) +
             randomChannel(brightness) +
             randomChannel(brightness));
-    }
-    /**
-     * Sets a random theme between those specified in this.list (excludes "print" and "test") and different from the currently used one.
-     */
-    randomTheme() {
+    };
+    randomTheme = () => {
         let themes = [];
         for (var key in this.list) {
             if (this.list.hasOwnProperty(key)) {
@@ -6214,19 +6146,13 @@ class KulTheme {
             this.set(themes[index]);
         }
         else {
-            dom$1.ketchupLite.debug.logs.new(this, "Couldn't set a random theme: no themes available!", 'warning');
+            DOM.ketchupLite.debug.logs.new(this, "Couldn't set a random theme: no themes available!", 'warning');
         }
-    }
-    /**
-     * Returns HEX, RGB, HSL, HSL values and RGB values from a given color.
-     * @param {string} color - Input color.
-     * @returns {KulThemeColor} Object of color values: hexColor ("#ffffff"), hslColor ("hsl(255,100%,100%)"), hslValues ("255,100%,100%"), rgbColor ("rgb(255,255,255)") and rgbValues ("255,255,255").
-     */
-    colorCheck(color) {
-        //Testing whether the color is transparent, if it is a fall back value will be returned matching the background-color
+    };
+    colorCheck = (color) => {
         if (color === 'transparent') {
             color = this.cssVars['--kul-background-color'];
-            dom$1.ketchupLite.debug.logs.new(this, 'Received TRANSPARENT color, converted to ' +
+            DOM.ketchupLite.debug.logs.new(this, 'Received TRANSPARENT color, converted to ' +
                 color +
                 ' (theme background).');
         }
@@ -6239,18 +6165,16 @@ class KulTheme {
         let isHex = color.substring(0, 1) === '#';
         const isHsl = color.substring(0, 3).toLowerCase() === 'hsl';
         const isRgb = color.substring(0, 3).toLowerCase() === 'rgb';
-        //If true, supposedly it's a code word
         if (!isHex && !isHsl && !isRgb) {
             const oldColor = color;
             color = this.codeToHex(color);
             isHex = color.substring(0, 1) === '#' ? true : false;
-            dom$1.ketchupLite.debug.logs.new(this, 'Received CODE NAME color ' +
+            DOM.ketchupLite.debug.logs.new(this, 'Received CODE NAME color ' +
                 oldColor +
                 ', converted to ' +
                 color +
                 '.');
         }
-        //Testing whether the color is "hex" value or "hsl"
         let hexColor = null;
         let rgbColor = null;
         let hslColor = null;
@@ -6298,31 +6222,31 @@ class KulTheme {
                 else {
                     hexColor = this.rgbToHex(rgbColorObj.r, rgbColorObj.g, rgbColorObj.b);
                 }
-                dom$1.ketchupLite.debug.logs.new(this, 'Received HEX color ' +
+                DOM.ketchupLite.debug.logs.new(this, 'Received HEX color ' +
                     oldColor +
                     ', converted to ' +
                     color +
                     '.');
             }
             catch (error) {
-                dom$1.ketchupLite.debug.logs.new(this, 'Invalid color: ' + color + '.');
+                DOM.ketchupLite.debug.logs.new(this, 'Invalid color: ' + color + '.');
             }
         }
-        let rgbValues = null;
+        let rgbValues = '';
         const values = color.match(/rgba?\((\d{1,3}), ?(\d{1,3}), ?(\d{1,3})\)?(?:, ?(\d(?:\.\d?))\))?/);
         try {
             rgbValues = values[1] + ',' + values[2] + ',' + values[3];
             rgbColor = color;
         }
         catch (error) {
-            dom$1.ketchupLite.debug.logs.new(this, 'Color not converted to rgb values: ' + color + '.');
+            DOM.ketchupLite.debug.logs.new(this, 'Color not converted to rgb values: ' + color + '.');
         }
         if (!hexColor) {
             try {
                 hexColor = this.rgbToHex(parseInt(values[1]), parseInt(values[2]), parseInt(values[3]));
             }
             catch (error) {
-                dom$1.ketchupLite.debug.logs.new(this, 'Color not converted to hex value: ' + color + '.');
+                DOM.ketchupLite.debug.logs.new(this, 'Color not converted to hex value: ' + color + '.');
             }
         }
         if (!hslColor || !hslValues) {
@@ -6335,7 +6259,7 @@ class KulTheme {
                 hslColor = 'hsl(' + hsl.h + ',' + hsl.s + '%,' + hsl.l + '%)';
             }
             catch (error) {
-                dom$1.ketchupLite.debug.logs.new(this, 'Color not converted to hex value: ' + color + '.');
+                DOM.ketchupLite.debug.logs.new(this, 'Color not converted to hex value: ' + color + '.');
             }
         }
         return {
@@ -6348,13 +6272,8 @@ class KulTheme {
             rgbColor: rgbColor,
             rgbValues: rgbValues,
         };
-    }
-    /**
-     * Converts an HEX color to its RGB values.
-     * @param {string} hex - Hex code.
-     * @returns {KulThemeRGBValues} Object containing RGB values.
-     */
-    hexToRgb(hex) {
+    };
+    hexToRgb = (hex) => {
         var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
         return result
             ? {
@@ -6363,15 +6282,8 @@ class KulTheme {
                 b: parseInt(result[3], 16),
             }
             : null;
-    }
-    /**
-     * Converts an HSL color to its RGB values.
-     * @param {number} h - Hue (range [0, 360)).
-     * @param {number} s - Saturation (range [0, 1)).
-     * @param {number} l - Lightness (range [0, 1)).
-     * @returns {Array} RGB values.
-     */
-    hslToRgb(h, s, l) {
+    };
+    hslToRgb = (h, s, l) => {
         if (h == undefined) {
             return { r: 0, g: 0, b: 0 };
         }
@@ -6419,72 +6331,37 @@ class KulTheme {
             g: Math.round(green * 255),
             b: Math.round(blue * 255),
         };
-    }
-    /**
-     * Converts a color in RGB format to the corresponding HEX color.
-     * @param {number} r - Red channel value.
-     * @param {number} g - Green channel value.
-     * @param {number} b - Blue channel value.
-     * @returns {string} HEX color.
-     */
-    rgbToHex(r, g, b) {
+    };
+    rgbToHex = (r, g, b) => {
         return ('#' + this.valueToHex(r) + this.valueToHex(g) + this.valueToHex(b));
-    }
-    /**
-     * Converts a color in RGB format to the corresponding HSL color.
-     * @param {number} r - Red channel value.
-     * @param {number} g - Green channel value.
-     * @param {number} b - Blue channel value.
-     * @returns {KulThemeHSLValues} Object containing HSL values.
-     */
-    rgbToHsl(r, g, b) {
-        // Make r, g, and b fractions of 1
+    };
+    rgbToHsl = (r, g, b) => {
         r /= 255;
         g /= 255;
         b /= 255;
-        // Find greatest and smallest channel values
         const cmin = Math.min(r, g, b), cmax = Math.max(r, g, b), delta = cmax - cmin;
         let h = 0, s = 0, l = 0;
-        // Calculate hue
-        // No difference
         if (delta == 0)
             h = 0;
-        // Red is max
         else if (cmax == r)
             h = ((g - b) / delta) % 6;
-        // Green is max
         else if (cmax == g)
             h = (b - r) / delta + 2;
-        // Blue is max
         else
             h = (r - g) / delta + 4;
         h = Math.round(h * 60);
-        // Make negative hues positive behind 360°
         if (h < 0)
             h += 360;
-        // Calculate lightness
         l = (cmax + cmin) / 2;
-        // Calculate saturation
         s = delta == 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
-        // Multiply l and s by 100
         s = +(s * 100).toFixed(1);
         l = +(l * 100).toFixed(1);
         return { h: h, s: s, l: l };
-    }
-    /**
-     * Converts a single RGB value to the corresponding HEX value.
-     * @param {number} c - Color value.
-     * @returns {string} HEX value.
-     */
-    valueToHex(c) {
+    };
+    valueToHex = (c) => {
         const hex = c.toString(16);
         return hex.length == 1 ? '0' + hex : hex;
-    }
-    /**
-     * Converts a color code word to the corresponding HEX value.
-     * @param {string} color - Color code word.
-     * @returns {string} HEX value.
-     */
+    };
     codeToHex(color) {
         const colorCodes = {
             aliceblue: '#f0f8ff',
@@ -6640,7 +6517,7 @@ class KulTheme {
             return colorCodes[color.toLowerCase()];
         }
         else {
-            dom$1.ketchupLite.debug.logs.new(this, 'Could not decode color ' + color + '!');
+            DOM.ketchupLite.debug.logs.new(this, 'Could not decode color ' + color + '!');
             return color;
         }
     }
@@ -6852,4 +6729,4 @@ function kulManagerInstance() {
 
 export { KulThemeColorValues as K, KulLanguageSearch as a, KulLanguageGeneric as b, commonjsGlobal as c, KulDynamicPositionPlacement as d, kulManagerInstance as k };
 
-//# sourceMappingURL=kul-manager-5dda66e6.js.map
+//# sourceMappingURL=kul-manager-58553bf9.js.map

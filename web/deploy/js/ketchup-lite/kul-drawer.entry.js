@@ -1,5 +1,5 @@
 import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-4d533537.js';
-import { k as kulManagerInstance } from './kul-manager-5dda66e6.js';
+import { k as kulManagerInstance } from './kul-manager-26d0782a.js';
 import { K as KUL_WRAPPER_ID, c as KUL_STYLE_ID } from './GenericVariables-f3380974.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 
@@ -131,7 +131,7 @@ const KulDrawer = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: 'eb6d0c1ba6840e30d98ed47bab2e2b1f575df06c', "kul-opened": this.opened }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'e823a1978e8726673dfcc1a3e9bdc636ecd1ffa5', class: "backdrop", onClick: (e) => {
+        return (h(Host, { key: 'f27d53a35507d3de6cffe267a206ab66ab66e364', "kul-opened": this.opened }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '3c600234f88ea44d5acbf2cc9f78db0aa8715f8e', class: "backdrop", onClick: (e) => {
                 e.preventDefault();
                 e.stopPropagation();
             }, onPointerDown: (e) => {
@@ -141,7 +141,7 @@ const KulDrawer = class {
             }, onTouchStart: (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-            } }), h("div", { key: '9503210e84e73547095b56449056782984b91c3f', id: KUL_WRAPPER_ID }, h("div", { key: 'bbfc4c202d3db3f03d9f84d0b2c6148224722bc5', class: 'drawer' }, h("div", { key: '5bf61bb77832398a409c315cedd9af999a2f471f', class: `drawer__content` }, h("slot", { key: 'e98ac3547fff71fc2f838d8411410b7d69be4634' }))))));
+            } }), h("div", { key: '0a4936e295dc1f8c6f4e42deb04b61fcdc1ed08c', id: KUL_WRAPPER_ID }, h("div", { key: '6983cb168964a202c63e2745c3196b4ad4ceb178', class: 'drawer' }, h("div", { key: '2a0354dde09558cea73ec96acdbf15a1eec48f08', class: `drawer__content` }, h("slot", { key: '4efcfb2351cbc315ecfb55602ec03db42a406ddf' }))))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

@@ -1,5 +1,5 @@
 import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, F as Fragment, H as Host } from './index-4d533537.js';
-import { k as kulManagerInstance } from './kul-manager-5dda66e6.js';
+import { k as kulManagerInstance } from './kul-manager-26d0782a.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 import { K as KUL_WRAPPER_ID, c as KUL_STYLE_ID } from './GenericVariables-f3380974.js';
 
@@ -52,7 +52,6 @@ const KulCompare = class {
             startTime: performance.now(),
         };
         this.shapes = {};
-        this.view = 'overlay';
         this.isLeftPanelOpened = false;
         this.isRightPanelOpened = false;
         this.leftShape = undefined;
@@ -140,7 +139,7 @@ const KulCompare = class {
         return !!this.shapes?.[this.kulShape];
     }
     #isOverlay() {
-        return !!(this.view === 'overlay');
+        return !!(this.kulView === 'overlay');
     }
     #prepChangeView() {
         const ids = {
@@ -165,7 +164,7 @@ const KulCompare = class {
                                 value === 'on' ? true : false;
                             break;
                         case ids.view:
-                            this.view = value === 'on' ? 'split' : 'overlay';
+                            this.kulView = value === 'on' ? 'split' : 'overlay';
                             break;
                     }
                     break;
@@ -216,7 +215,7 @@ const KulCompare = class {
     #prepView() {
         const { left, right } = DEFAULTS(this.#isOverlay());
         const shapes = this.#kulManager.data.cell.shapes.decorate(this.kulShape, [this.leftShape, this.rightShape], async (e) => this.onKulEvent(e, 'kul-event'), [...left[this.kulShape](), ...right[this.kulShape]()]).element;
-        return (h(Fragment, null, h("div", { class: `view view--${this.view}` }, h("div", { class: "view__left" }, shapes[0]), this.isLeftPanelOpened ? this.#prepPanel('left') : null, this.isRightPanelOpened ? this.#prepPanel('right') : null, this.#isOverlay() ? (h("div", { class: "view__slider", onInput: this.#updateOverlayWidth.bind(this), onTouchStart: this.#updateOverlayWidth.bind(this) }, h("input", { class: "view__slider__input", type: "range", min: "0", max: "100", value: "50" }))) : null, h("div", { class: "view__right" }, shapes[1]))));
+        return (h(Fragment, null, h("div", { class: `view view--${this.kulView}` }, h("div", { class: "view__left" }, shapes[0]), this.isLeftPanelOpened ? this.#prepPanel('left') : null, this.isRightPanelOpened ? this.#prepPanel('right') : null, this.#isOverlay() ? (h("div", { class: "view__slider", onInput: this.#updateOverlayWidth.bind(this), onTouchStart: this.#updateOverlayWidth.bind(this) }, h("input", { class: "view__slider__input", type: "range", min: "0", max: "100", value: "50" }))) : null, h("div", { class: "view__right" }, shapes[1]))));
     }
     #prepCompare() {
         if (this.#hasShapes()) {
@@ -235,7 +234,6 @@ const KulCompare = class {
     /*-------------------------------------------------*/
     componentWillLoad() {
         this.#kulManager.theme.register(this);
-        this.view = this.kulView;
         this.updateShapes();
     }
     componentDidLoad() {
@@ -249,7 +247,7 @@ const KulCompare = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: '0bf34c7ead5ac545cb3f788a38f41b7b8b3ad985' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'b7fc79025f7cde2f4d427ed11d996a4c7be9f520', id: KUL_WRAPPER_ID }, h("div", { key: '9a376cd2fec057779237f1b835b546d6823865d2', class: "compare" }, this.#prepCompare()))));
+        return (h(Host, { key: 'd55e38c58e152adfcd56f4549706f68d4d55b134' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '1749140f84541b63f3dea10d058ee087c10ed37e', id: KUL_WRAPPER_ID }, h("div", { key: 'e4646da54f0e037927e9b3ca51187e7f5031531d', class: "compare" }, this.#prepCompare()))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);
