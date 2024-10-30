@@ -23,7 +23,7 @@ from torchvision.transforms import InterpolationMode, functional
 
 from server import PromptServer
 
-from ..utils.constants import BASE64_PNG_PREFIX
+from ..utils.constants import BASE64_PNG_PREFIX, BASE_TEMP_PATH, USER_FOLDER
 
 def base64_to_tensor(base64_str):
     """
@@ -1124,23 +1124,23 @@ def resize_to_square(image_tensor: torch.Tensor, square_size: int, resample_meth
 
     return cropped_img
 
-def resolve_filepath(filepath: str, base_output_path: str, count: int = 0, add_timestamp: bool = False, default_filename: str = "ComfyUI", extension: str = "json", add_counter: bool = True) -> str:
+def resolve_filepath(filepath: str = USER_FOLDER, base_output_path: str = BASE_TEMP_PATH, index: int = 0, add_timestamp: bool = False, default_filename: str = "ComfyUI", extension: str = "PNG", add_counter: bool = True) -> str:
     """
     Simplified helper function using ComfyUI's core image-saving logic, ensuring folder and filename separation.
     
     Parameters:
         filepath (str or list): Target file path or list of paths. Uses filepath[count] or defaults to the first item if it's a list.
         base_output_path (str): Base directory path to prepend if not specified in filepath.
-        count (int): Index for filepath when it's a list. Defaults to 0.
+        index (int): Index for filepath when it's a list. Defaults to 0.
         add_timestamp (bool): Appends a timestamp to the filename if True. Defaults to False.
-        default_filename (str): Default filename if filepath lacks one. Defaults to "output".
+        default_filename (str): Default filename if filepath lacks one. Defaults to "ComfyUI".
         extension (str): File extension, such as 'png' or 'jpeg'. Defaults to 'json'.
         add_counter (bool): Adds counter as a suffix.
 
     Returns:
         str: Fully resolved file path with subfolders, filename, and extension.
     """
-    path_base = filepath[count] if isinstance(filepath, list) and count < len(filepath) else filepath[0] if isinstance(filepath, list) else filepath
+    path_base = filepath[index] if isinstance(filepath, list) and index < len(filepath) else filepath[0] if isinstance(filepath, list) else filepath
 
     if os.path.splitext(os.path.basename(path_base))[1] == "":
         filename_prefix = os.path.join(path_base, default_filename)
@@ -1157,7 +1157,7 @@ def resolve_filepath(filepath: str, base_output_path: str, count: int = 0, add_t
         filename = f"{filename}_{timestamp}"
 
     if add_counter:
-        filename = f"{filename}_{counter}.{extension}"
+        filename = f"{filename}_{index if not_none(index) else counter}.{extension}"
     else:
         filename = f"{filename}.{extension}" 
 

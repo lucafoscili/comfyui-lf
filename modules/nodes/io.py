@@ -142,7 +142,12 @@ class LF_LoadImages:
 
                         file_names.append(file)  
 
-                        output_file, subfolder, filename = resolve_filepath(f"{USER_FOLDER}", BASE_INPUT_PATH, index, False, f, e, False)
+                        output_file, subfolder, filename = resolve_filepath(
+                            base_output_path=BASE_INPUT_PATH,
+                            index=index,
+                            default_filename=f,
+                            extension=e
+                        )
                         url = get_resource_url(subfolder, filename, "input")
               
                         file_creation_time = os.path.getctime(image_path)
@@ -391,7 +396,13 @@ class LF_SaveImageForCivitAI:
         dataset = { "nodes": nodes }
 
         for index, img in enumerate(image):
-            output_file, subfolder, filename = resolve_filepath(filepath, BASE_OUTPUT_PATH, index, add_timestamp, "output", extension)
+            output_file, subfolder, filename = resolve_filepath(
+                filepath=filepath,
+                base_output_path=BASE_OUTPUT_PATH,
+                index=index,
+                add_timestamp=add_timestamp,
+                extension=extension
+            )
 
             pil_img = Image.fromarray(tensor_to_numpy(img))
             url = get_resource_url(subfolder, filename, "output")
@@ -459,7 +470,13 @@ class LF_SaveJSON:
         add_timestamp = normalize_list_to_value(add_timestamp)
 
         try:
-            output_file, _, _ = resolve_filepath(filepath, BASE_OUTPUT_PATH, 0, add_timestamp=add_timestamp)
+            output_file, _, _ = resolve_filepath(
+                filepath=filepath,
+                base_output_path=BASE_OUTPUT_PATH,
+                add_timestamp=add_timestamp,
+                extension="json",
+                add_counter=False
+            )
 
             with open(output_file, 'w', encoding='utf-8') as json_file:
                 json.dump(json_data, json_file, ensure_ascii=False, indent=4)
