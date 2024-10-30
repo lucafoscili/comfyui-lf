@@ -1,4 +1,4 @@
-import { EventName, SequentialSeedsGeneratorPayload } from '../types/events';
+import { EventName, BaseDatasetPayload } from '../types/events';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import { CustomWidgetName, HistoryWidgetSetter, type BaseWidgetCallback } from '../types/widgets';
@@ -8,7 +8,7 @@ const NAME = NodeName.sequentialSeedsGenerator;
 
 export const sequentialSeedsGeneratorFactory = {
   eventHandler: (
-    event: CustomEvent<SequentialSeedsGeneratorPayload>,
+    event: CustomEvent<BaseDatasetPayload>,
     addW: BaseWidgetCallback<CustomWidgetName.history>,
   ) => {
     const name = EventName.sequentialSeedsGenerator;

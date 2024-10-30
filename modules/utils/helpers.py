@@ -23,8 +23,9 @@ from torchvision.transforms import InterpolationMode, functional
 
 from server import PromptServer
 
-from ..utils.constants import BASE64_PNG_PREFIX
+from ..utils.constants import BASE64_PNG_PREFIX, BASE_TEMP_PATH, USER_FOLDER
 
+# region base64_to_tensor
 def base64_to_tensor(base64_str):
     """
     Convert a base64-encoded image string to a PyTorch tensor in [B, H, W, C] format.
@@ -52,7 +53,8 @@ def base64_to_tensor(base64_str):
     img_tensor = img_tensor.unsqueeze(0)
     
     return img_tensor
-
+# endregion
+# region clarity_effect
 def clarity_effect(image_tensor:torch.Tensor, clarity_strength:float, sharpen_amount:float, blur_kernel_size:int):
     """
     Processes a single image tensor by applying clarity and sharpen effects.
@@ -109,7 +111,8 @@ def clarity_effect(image_tensor:torch.Tensor, clarity_strength:float, sharpen_am
     final_image = apply_sharpen(clarity_image, sharpen_amount)
 
     return numpy_to_tensor(final_image)
-
+# endregion
+# region cleanse_lora_tag
 def cleanse_lora_tag(lora_tag: str, separator: str):
     """
     Cleanse the lora tag by removing unnecessary parts and extracting keywords.
@@ -146,7 +149,8 @@ def cleanse_lora_tag(lora_tag: str, separator: str):
         raise ValueError("keywords must be a string or a list of strings")
     
     return keyword_str
-
+# endregion
+# region clean_prompt
 def clean_prompt(prompt: str):
     """
     Cleans the given prompt by removing specific suffixes and leading components.
@@ -158,7 +162,8 @@ def clean_prompt(prompt: str):
         str: The cleaned prompt string with suffix removed.
     """
     return re.sub(r'(embedding:)?(.*?)(\.pt|\.pth|\.sft|\.safetensors)?', r'\2', prompt).strip()
-
+# endregion
+# region count_words_in_comma_separated_string
 def count_words_in_comma_separated_string(input_string: str):
     """
     Count the number of words in a comma-separated string.
@@ -172,7 +177,8 @@ def count_words_in_comma_separated_string(input_string: str):
     words_list = input_string.split(',')
     word_count = len(words_list)
     return word_count
-
+# endregion
+# region convert_to_boolean
 def convert_to_boolean(text):
     """
     Convert a string to a boolean.
@@ -191,7 +197,8 @@ def convert_to_boolean(text):
     elif text_lower in ['false', 'no', '']:
         return False
     return None
-
+# endregion
+# region convert_to_float
 def convert_to_float(text):
     """
     Convert a given text to a float.
@@ -206,7 +213,8 @@ def convert_to_float(text):
         return float(text)
     except ValueError:
         return None
-
+# endregion
+# region convert_to_int
 def convert_to_int(text):
     """
     Convert a given text to an integer.
@@ -221,7 +229,8 @@ def convert_to_int(text):
         return int(text)
     except ValueError:
         return None
-
+# endregion
+# region convert_to_json
 def convert_to_json(text):
     """
     Convert a given text to a JSON object.
@@ -236,7 +245,8 @@ def convert_to_json(text):
         return json.loads(text)
     except (json.JSONDecodeError, TypeError):
         return None
-
+# endregion
+# region create_compare_node
 def create_compare_node(source: str, target: str, index: int):
     """
     Create a comparison node dictionary using source, target images, and index.
@@ -258,7 +268,8 @@ def create_compare_node(source: str, target: str, index: int):
         "value": f"Comparison {index+1}"
     }
     return node
-
+# endregion
+# region create_dummy_image_tensor
 def create_dummy_image_tensor():
     """
     Creates a dummy image tensor, typically used when there are no real images to process.
@@ -275,7 +286,8 @@ def create_dummy_image_tensor():
     img_tensor = torch.from_numpy(np.array(img)).float() / 255.0
     
     return img_tensor.unsqueeze(0)
-
+# endregion
+# region create_history_node
 def create_history_node(value: str, nodes: list[dict]):
     """
     Create a history node and append it to the list of nodes if it doesn't exist.
@@ -304,7 +316,8 @@ def create_history_node(value: str, nodes: list[dict]):
         nodes.append(node)
 
     return
-
+# endregion
+# region create_masonry_node
 def create_masonry_node(filename: str, url: str, index: int):
     """
     Create a masonry node representation for images.
@@ -325,7 +338,8 @@ def create_masonry_node(filename: str, url: str, index: int):
         "value": f"{index+1}"
     }
     return node
-
+# endregion
+# region create_resize_node
 def create_resize_node(height_s: int, width_s: int, height_t: int, width_t: int, index: int):
     """
     Create a resize node containing image dimension change information.
@@ -344,7 +358,8 @@ def create_resize_node(height_s: int, width_s: int, height_t: int, width_t: int,
         "id": f"{index}", "value": f"[{index}] From {height_s}x{width_s} to {height_t}x{width_t}"
     }
     return node
-
+# endregion
+# region extract_jpeg_metadata
 def extract_jpeg_metadata(pil_image, file_name):
     """
     Extracts EXIF metadata from a JPEG image using a PIL Image object.
@@ -398,7 +413,8 @@ def extract_jpeg_metadata(pil_image, file_name):
 
     except Exception as e:
         return {"error": f"An unexpected error occurred while extracting EXIF data from {file_name}: {str(e)}"}
-
+# endregion
+# region extract_png_metadata
 def extract_png_metadata(pil_image):
     """
     Extract metadata from a PNG image using a PIL Image object.
@@ -417,7 +433,8 @@ def extract_png_metadata(pil_image):
             metadata[key] = value
 
     return metadata
-
+# endregion
+# region find_checkpoint_image
 def find_checkpoint_image(checkpoint_path):
     """
     Locate an image file associated with a checkpoint by trying multiple common file extensions.
@@ -435,7 +452,8 @@ def find_checkpoint_image(checkpoint_path):
         if os.path.exists(image_path):
             return image_path
     return None
-
+# endregion
+# region filter_list
 def filter_list(filter, list):
     """
     Filter a list of strings by applying a filter pattern.
@@ -449,7 +467,8 @@ def filter_list(filter, list):
     """
     normalized_filter = filter.replace('\\', '/')
     return [model for model in list if fnmatch.fnmatch(model.replace('\\', '/'), normalized_filter)]
-
+# endregion
+# region get_embedding_hashes
 def get_embedding_hashes(embeddings: str, analytics_dataset: dict):
     """
     Retrieve SHA256 hashes for the given embeddings.
@@ -483,7 +502,8 @@ def get_embedding_hashes(embeddings: str, analytics_dataset: dict):
                 except Exception as e:
                     emb_hashes.append(f"{emb_name}: Unknown")
     return emb_hashes
-
+# endregion
+# region get_lora_hashes
 def get_lora_hashes(lora_tags: str, analytics_dataset: dict):
     """
     Retrieve SHA256 hashes for Lora tags.
@@ -516,7 +536,8 @@ def get_lora_hashes(lora_tags: str, analytics_dataset: dict):
             except Exception:
                 lora_hashes.append(f"{lora_name}: Unknown")
     return lora_hashes
-
+# endregion
+# region get_random_parameter
 def get_random_parameter(length: int = 8) -> str:
     """
     Generate a random parameter string.
@@ -528,7 +549,8 @@ def get_random_parameter(length: int = 8) -> str:
         str: A random alphanumeric string prefixed with '?'.
     """
     return '?' + ''.join(random.choices(string.ascii_letters + string.digits, k=length))
-
+# endregion
+# region get_resource_url
 def get_resource_url(subfolder: str, filename: str, resource_type: str = 'output'):
     """
     Generate a URL for accessing resources within the application.
@@ -549,7 +571,8 @@ def get_resource_url(subfolder: str, filename: str, resource_type: str = 'output
     ]
     
     return f"/view?{'&'.join(params)}"
-
+# endregion
+# region get_sha256
 def get_sha256(file_path: str):
     """
     Calculate or retrieve the SHA-256 hash of a file.
@@ -579,7 +602,8 @@ def get_sha256(file_path: str):
         hash_file.write(sha256_value.hexdigest())
 
     return sha256_value.hexdigest()
-
+# endregion
+# region handle_response
 def handle_response(response: dict, method: str = "GET"):
     """
     Handles the response from a Language Model (LLM) endpoint.
@@ -611,7 +635,8 @@ def handle_response(response: dict, method: str = "GET"):
                     return response.status_code, method, answer
                 
         return response.status_code, method, "Whoops! Something went wrong."
-
+# endregion
+# region normalize_input_image
 def normalize_input_image(image: list[torch.Tensor] | torch.Tensor):
     """
     Converts an input tensor or list of image tensors into a standardized list of individual image tensors.
@@ -645,7 +670,8 @@ def normalize_input_image(image: list[torch.Tensor] | torch.Tensor):
         return image
     else:
         raise TypeError("Input must be a torch.Tensor or list.")
-    
+# endregion
+# region normalize_json_input
 def normalize_json_input(input):
     """
     Normalize input JSON-like data into a standard Python object.
@@ -719,7 +745,8 @@ def normalize_json_input(input):
     
     else:
         raise TypeError(f"Unsupported input type: {type(input)}") 
-    
+# endregion
+# region normalize_input_list
 def normalize_input_list(input):
     """
     Standardizes the input into a list format if not already a list, handling edge cases 
@@ -739,8 +766,27 @@ def normalize_input_list(input):
             return [input]
         
     return None
+# endregion
+# region normalize_list_item
+def normalize_list_item(l: list, i: int):
+    """
+    Normalize the item at the specified index in a list.
 
+    This function checks if the input is a list and if the specified
+    index is within the bounds of the list. It returns the item at
+    the specified index if valid, otherwise, returns the first item.
 
+    Args:
+        l (list): The list from which the item is retrieved.
+        i (int): The index of the item to retrieve.
+
+    Returns:
+        any: The item at the specified index, or the first item if
+             the index is invalid or not a list.
+    """
+    return l[i] if isinstance(l, list) and i < len(l) else l[0]
+# endregion
+# region normalize_list_to_value
 def normalize_list_to_value(input):
     """
     Returns the first element of a list if it contains valid, non-null data, or the input itself otherwise.
@@ -758,7 +804,8 @@ def normalize_list_to_value(input):
     if isinstance(input, list) and not_none(input):
         return input[0]
     return input
-
+# endregion
+# region normalize_output_image
 def normalize_output_image(image_input):
     """
     Normalize the given image input into both batch and list formats.
@@ -814,7 +861,8 @@ def normalize_output_image(image_input):
             batch_list.append(imgs[0])
 
     return batch_list, image_list
-
+# endregion
+# region not_none
 def not_none(input):
     """
     Check if the input is neither None nor a string representation of "None".
@@ -829,7 +877,8 @@ def not_none(input):
     bool: True if input is not None or "None"; otherwise, False.
     """
     return bool(input != None and str(input) != "None")
-
+# endregion
+# region numpy_to_tensor
 def numpy_to_tensor(numpy_array):
     """
     Convert a NumPy array to a PyTorch tensor.
@@ -856,7 +905,8 @@ def numpy_to_tensor(numpy_array):
     except Exception as e:
         print(f"Error converting NumPy array to tensor: {e}")
         raise
-
+# endregion
+# region pil_to_tensor
 def pil_to_tensor(image):
     """
     Convert a PIL Image to a PyTorch tensor.
@@ -879,7 +929,8 @@ def pil_to_tensor(image):
     tensor = torch.tensor(np_image).permute(0, 1, 2).unsqueeze(0)
     
     return tensor
-
+# endregion
+# region prepare_model_dataset
 def prepare_model_dataset (model_name, model_hash, model_base64, model_path):
     """
     Prepare a structured dataset for a model including metadata and configurations.
@@ -924,7 +975,8 @@ def prepare_model_dataset (model_name, model_hash, model_base64, model_path):
             }
 
     return dataset
-
+# endregion
+# region process_model
 def process_model(model_type, model_name, folder):
     """
     Processes a model by gathering its path, hash, cover, and saved information.
@@ -993,7 +1045,8 @@ def process_model(model_type, model_name, folder):
         "model_base64": model_base64,
         "saved_info": saved_info
     }
-
+# endregion
+# region resize_and_crop_image
 def resize_and_crop_image(image_tensor: torch.Tensor, resize_method: str, target_height: int, target_width: int, resize_mode: str, pad_color: tuple):
     """
     Resize an image tensor to the target dimensions, with optional cropping or padding.
@@ -1047,7 +1100,8 @@ def resize_and_crop_image(image_tensor: torch.Tensor, resize_method: str, target
         output_image = torch.stack(channels, dim=1)
 
     return output_image.permute(0, 2, 3, 1)
-
+# endregion
+# region resize_image
 def resize_image(image_tensor: torch.Tensor, resize_method: str, longest_side: bool, size: int):
     """
     Resize an image tensor using PyTorch's interpolation methods.
@@ -1088,7 +1142,8 @@ def resize_image(image_tensor: torch.Tensor, resize_method: str, longest_side: b
     resized_image = resized_image.permute(0, 2, 3, 1)
 
     return resized_image
-
+# endregion
+# region resize_to_square
 def resize_to_square(image_tensor: torch.Tensor, square_size: int, resample_method: str, crop_position: str):
     """
     Resize an image tensor to a square and apply cropping based on the crop position.
@@ -1123,50 +1178,53 @@ def resize_to_square(image_tensor: torch.Tensor, square_size: int, resample_meth
         cropped_img = resized_img
 
     return cropped_img
-
-def resolve_filepath(filepath: str, base_output_path: str, count: int = 0, add_timestamp: bool = False, default_filename: str = "ComfyUI", extension: str = "json", add_counter: bool = True) -> str:
+# endregion
+# region resolve_filepath
+def resolve_filepath(filepath: str = USER_FOLDER, base_output_path: str = BASE_TEMP_PATH, index: int = 0, add_timestamp: bool = False, default_filename: str = "ComfyUI", extension: str = "PNG", add_counter: bool = True) -> str:
     """
     Simplified helper function using ComfyUI's core image-saving logic, ensuring folder and filename separation.
     
     Parameters:
         filepath (str or list): Target file path or list of paths. Uses filepath[count] or defaults to the first item if it's a list.
         base_output_path (str): Base directory path to prepend if not specified in filepath.
-        count (int): Index for filepath when it's a list. Defaults to 0.
+        index (int): Index for filepath when it's a list. Defaults to 0.
         add_timestamp (bool): Appends a timestamp to the filename if True. Defaults to False.
-        default_filename (str): Default filename if filepath lacks one. Defaults to "output".
+        default_filename (str): Default filename if filepath lacks one. Defaults to "ComfyUI".
         extension (str): File extension, such as 'png' or 'jpeg'. Defaults to 'json'.
         add_counter (bool): Adds counter as a suffix.
 
     Returns:
         str: Fully resolved file path with subfolders, filename, and extension.
     """
-    path_base = filepath[count] if isinstance(filepath, list) and count < len(filepath) else filepath[0] if isinstance(filepath, list) else filepath
+    path_base = filepath[index] if isinstance(filepath, list) and index < len(filepath) else filepath[0] if isinstance(filepath, list) else filepath
 
     if os.path.splitext(os.path.basename(path_base))[1] == "":
         filename_prefix = os.path.join(path_base, default_filename)
     else:
         filename_prefix = path_base
 
+    if add_timestamp:
+        filename_prefix = f"{filename_prefix}_%year%-%month%-%day%_%hour%-%minute%-%second%"
+
     output_folder, filename, counter, subfolder, _ = get_save_image_path(
         filename_prefix=filename_prefix,
         output_dir=base_output_path
     )
 
-    if add_timestamp:
-        timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-        filename = f"{filename}_{timestamp}"
-
     if add_counter:
+        while os.path.exists(os.path.join(output_folder, f"{filename}_{counter}.{extension}")):
+            counter += 1
         filename = f"{filename}_{counter}.{extension}"
     else:
-        filename = f"{filename}.{extension}" 
+        filename = f"{filename}.{extension}"
 
     output_file = os.path.join(output_folder, filename)
-    
+
     os.makedirs(output_folder, exist_ok=True)
 
     return output_file, subfolder, filename
-
+# endregion
+# region send_single_selector_message
 def send_single_selector_message(node_id, dataset, model_hash, get_civitai_info, model_path, event_name):
     """
     Send a synchronous message to the server with a single selector.
@@ -1188,7 +1246,8 @@ def send_single_selector_message(node_id, dataset, model_hash, get_civitai_info,
     })
 
     return
-
+# endregion
+# region send_multi_selector_message
 def send_multi_selector_message(node_id, datasets, model_hashes, get_civitai_info, model_paths, event_name, chip_dataset=None):
     """
     Send a synchronous message to the server with multiple selectors.
@@ -1212,7 +1271,8 @@ def send_multi_selector_message(node_id, datasets, model_hashes, get_civitai_inf
     })
 
     return
-
+# endregion
+# region tensor_to_base64
 def tensor_to_base64(tensors: list[torch.Tensor] | torch.Tensor):
     """
     Convert PyTorch tensor(s) to base64 encoding.
@@ -1239,7 +1299,8 @@ def tensor_to_base64(tensors: list[torch.Tensor] | torch.Tensor):
     if isinstance(tensors, list):
         return [convert_single_tensor(tensor) for tensor in tensors]
     return convert_single_tensor(tensors)
-
+# endregion
+# region tensor_to_bytes
 def tensor_to_bytes(tensor: torch.Tensor, format: str):
     """
     Convert a tensor to image bytes (JPEG or PNG).
@@ -1254,7 +1315,8 @@ def tensor_to_bytes(tensor: torch.Tensor, format: str):
     buffer = io.BytesIO()
     img.save(buffer, format)
     return buffer.getvalue()
-
+# endregion
+# region tensor_to_numpy
 def tensor_to_numpy(image: torch.Tensor, threeD: bool = False):
     """
     Convert a tensor to a NumPy array for OpenCV processing.
@@ -1278,7 +1340,8 @@ def tensor_to_numpy(image: torch.Tensor, threeD: bool = False):
     except Exception as e:
         print(f"Error converting tensor to NumPy array: {e}")
         raise
-
+# endregion
+# region tensor_to_pil
 def tensor_to_pil(tensor: torch.Tensor):
     """
     Convert a tensor to a PIL Image.

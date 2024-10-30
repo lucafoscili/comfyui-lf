@@ -1,4 +1,4 @@
-import { CharacterImpersonatorPayload, EventName } from '../types/events';
+import { CodePayload, EventName } from '../types/events';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import { CustomWidgetName, type BaseWidgetCallback, type CodeWidgetSetter } from '../types/widgets';
@@ -8,7 +8,7 @@ const NAME = NodeName.characterImpersonator;
 
 export const characterImpersonatorFactory = {
   eventHandler: (
-    event: CustomEvent<CharacterImpersonatorPayload>,
+    event: CustomEvent<CodePayload>,
     addW: BaseWidgetCallback<CustomWidgetName.code>,
   ) => {
     const name = EventName.characterImpersonator;

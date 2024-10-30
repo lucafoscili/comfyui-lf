@@ -1,4 +1,4 @@
-import { EventName, Something2StringPayload } from '../types/events';
+import { EventName, CodePayload } from '../types/events';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import { CustomWidgetName, type BaseWidgetCallback, type CodeWidgetSetter } from '../types/widgets';
@@ -8,7 +8,7 @@ const NAME = NodeName.something2String;
 
 export const something2StringFactory = {
   eventHandler: (
-    event: CustomEvent<Something2StringPayload>,
+    event: CustomEvent<CodePayload>,
     addW: BaseWidgetCallback<CustomWidgetName.code>,
   ) => {
     const name = EventName.something2String;
@@ -18,7 +18,7 @@ export const something2StringFactory = {
     const node = getApiRoutes().getNodeById(payload.id);
     if (node) {
       const widget = getCustomWidget(node, CustomWidgetName.code, addW);
-      widget.options.setValue(event.detail.log);
+      widget.options.setValue(event.detail.value);
       getApiRoutes().redraw();
     }
   },

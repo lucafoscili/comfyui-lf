@@ -4,8 +4,8 @@ import torch
 from PIL import Image, ImageFilter
 from server import PromptServer
 
-from ..utils.constants import BASE_TEMP_PATH, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, RESAMPLERS, USER_FOLDER
-from ..utils.helpers import clarity_effect, create_compare_node, create_masonry_node, create_resize_node, get_resource_url, normalize_input_image, normalize_input_list, normalize_list_to_value, normalize_output_image, pil_to_tensor, resize_and_crop_image, resize_image, resize_to_square, resolve_filepath, tensor_to_pil
+from ..utils.constants import CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, RESAMPLERS
+from ..utils.helpers import clarity_effect, create_compare_node, create_masonry_node, create_resize_node, get_resource_url, normalize_input_image, normalize_input_list, normalize_list_item, normalize_list_to_value, normalize_output_image, pil_to_tensor, resize_and_crop_image, resize_image, resize_to_square, resolve_filepath, tensor_to_pil
 
 CATEGORY = f"{CATEGORY_PREFIX}/Image"
 
@@ -54,7 +54,11 @@ class LF_BlurImages:
             else:
                 base_name = ""
                 
-            output_file, subfolder, filename = resolve_filepath(f"{USER_FOLDER}", BASE_TEMP_PATH, index, False, f"{base_name}_Blur", "PNG", False)
+            output_file, subfolder, filename = resolve_filepath(
+                    index=index,
+                    default_filename=f"{base_name}_Blur",
+                    add_counter=False
+            )
             
             pil_image = tensor_to_pil(img)
             
@@ -100,7 +104,6 @@ class LF_ClarityEffect:
 
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
-    INPUT_IS_LIST = (True, False, False, False, False)
     OUTPUT_IS_LIST = (False, True)
     OUTPUT_NODE = True
     RETURN_NAMES = ("image", "image_list")
@@ -118,8 +121,14 @@ class LF_ClarityEffect:
         processed_images = []
 
         for index, img in enumerate(image):
-            output_file_s, subfolder_s, filename_s = resolve_filepath(f"{USER_FOLDER}", BASE_TEMP_PATH, index, False, f"clarity_s", "PNG")
-            output_file_t, subfolder_t, filename_t = resolve_filepath(f"{USER_FOLDER}", BASE_TEMP_PATH, index, False, f"clarity_t", "PNG")
+            output_file_s, subfolder_s, filename_s = resolve_filepath(
+                    index=index,
+                    default_filename="clarity_s",
+            )
+            output_file_t, subfolder_t, filename_t = resolve_filepath(
+                    index=index,
+                    default_filename="clarity_t",
+            )
             
             pil_image = tensor_to_pil(img)
             pil_image.save(output_file_s, format="PNG")
@@ -178,14 +187,20 @@ class LF_CompareImages:
             raise ValueError("Image lists must have the same length if both inputs are provided.")
         
         for index, img in enumerate(image_list_1):
-            output_file_s, subfolder_s, filename_s = resolve_filepath(f"{USER_FOLDER}", BASE_TEMP_PATH, index, False, f"compare_s", "PNG", True)
+            output_file_s, subfolder_s, filename_s = resolve_filepath(
+                    index=index,
+                    default_filename="compare_s",
+            )
             
             pil_image = tensor_to_pil(img)
             pil_image.save(output_file_s, format="PNG")
             filename_s = get_resource_url(subfolder_s, filename_s, "temp")
 
             if image_opt is not None:
-                output_file_t, subfolder_t, filename_t = resolve_filepath(f"{USER_FOLDER}", BASE_TEMP_PATH, index, False, f"compare_t", "PNG", True)
+                output_file_t, subfolder_t, filename_t = resolve_filepath(
+                    index=index,
+                    default_filename="compare_t",
+                )
                 pil_image = tensor_to_pil(image_list_2[index])
                 pil_image.save(output_file_t, format="PNG")
                 filename_t = get_resource_url(subfolder_t, filename_t, "temp")
@@ -222,7 +237,7 @@ class LF_MultipleImageResizeForWeb:
 
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
-    INPUT_IS_LIST = (True, True, False)
+    INPUT_IS_LIST = (True, True)
     OUTPUT_IS_LIST = (False, True, False, True, True, False)
     RETURN_NAMES = ("image", "image_list", "name", "name_list", "names_with_dir", "dataset")
     RETURN_TYPES = ("IMAGE", "IMAGE", "STRING", "STRING", "STRING", "JSON")
@@ -326,7 +341,7 @@ class LF_ResizeImageByEdge:
 
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
-    INPUT_IS_LIST = (True, False, False, False, False)
+    INPUT_IS_LIST = (True, False, True, False, False)
     OUTPUT_IS_LIST = (False, True, False)
     RETURN_NAMES = ("image", "image_list", "count")
     RETURN_TYPES = ("IMAGE", "IMAGE", "INT")
@@ -334,7 +349,7 @@ class LF_ResizeImageByEdge:
     def on_exec(self, node_id:str, image:torch.Tensor|list[torch.Tensor], longest_edge: bool, new_size: int, resize_method: str):
         image = normalize_input_image(image)
         longest_edge = normalize_list_to_value(longest_edge)
-        new_size = normalize_list_to_value(new_size)
+        new_size = normalize_input_list(new_size)
         resize_method = normalize_list_to_value(resize_method)
 
         nodes = []
@@ -349,11 +364,13 @@ class LF_ResizeImageByEdge:
         resized_images = []
 
         for index, img in enumerate(image):
+            n_size = normalize_list_item(new_size, index)
+
             original_height, original_width = img.shape[1], img.shape[2]
             original_heights.append(original_height)
             original_widths.append(original_width)
 
-            resized_img = resize_image(img, resize_method, longest_edge, new_size)
+            resized_img = resize_image(img, resize_method, longest_edge, n_size)
             resized_images.append(resized_img)
 
             new_height, new_width = resized_img.shape[1], resized_img.shape[2]
@@ -396,15 +413,15 @@ class LF_ResizeImageToDimension:
 
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
-    INPUT_IS_LIST = (True, False, False, False, False, False, False)
+    INPUT_IS_LIST = (True, True, True, False, False, False, False)
     OUTPUT_IS_LIST = (False, True, False)
     RETURN_NAMES = ("image", "image_list", "count")
     RETURN_TYPES = ("IMAGE", "IMAGE", "INT")
 
     def on_exec(self, node_id:str, image:torch.Tensor|list[torch.Tensor], height: int, width: int, resize_method: str, resize_mode:str, pad_color:str):
         image = normalize_input_image(image)
-        height = normalize_list_to_value(height)
-        width = normalize_list_to_value(width)
+        height = normalize_input_list(height)
+        width = normalize_input_list(width)
         resize_method = normalize_list_to_value(resize_method)
         resize_mode = normalize_list_to_value(resize_mode)
         pad_color = normalize_list_to_value(pad_color)
@@ -421,11 +438,14 @@ class LF_ResizeImageToDimension:
         resized_images = []
 
         for index, img in enumerate(image):
+            h = normalize_list_item(height, index)
+            w = normalize_list_item(width, index)
+
             original_height, original_width = img.shape[1], img.shape[2]
             original_heights.append(original_height)
             original_widths.append(original_width)
 
-            resized_img = resize_and_crop_image(img, resize_method, height, width, resize_mode, pad_color)
+            resized_img = resize_and_crop_image(img, resize_method, h, w, resize_mode, pad_color)
             resized_images.append(resized_img)
 
             new_height, new_width = resized_img.shape[1], resized_img.shape[2]
@@ -516,7 +536,6 @@ class LF_ResizeImageToSquare:
 
         return (image_batch[0], image_list, num_resized)
 # endregion
-# region Mappings
 NODE_CLASS_MAPPINGS = {
     "LF_BlurImages": LF_BlurImages,
     "LF_ClarityEffect": LF_ClarityEffect,
@@ -535,4 +554,3 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_ResizeImageToSquare": "Resize image to square",
     "LF_ResizeImageByEdge": "Resize image by edge",
 }
-# endregion

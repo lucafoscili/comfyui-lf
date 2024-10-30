@@ -9,9 +9,8 @@ export const uRandomSeedGeneratorFactory = {
         const name = EventName.urandomSeedGenerator;
         getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
         const payload = event.detail;
-        const isHistoryEnabled = payload.isHistoryEnabled;
         const node = getApiRoutes().getNodeById(payload.id);
-        if (isHistoryEnabled && node) {
+        if (node) {
             const widget = getCustomWidget(node, CustomWidgetName.tree, addW);
             widget.options.setValue(JSON.stringify(event.detail.dataset));
             getApiRoutes().redraw();

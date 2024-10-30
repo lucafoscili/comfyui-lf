@@ -5,7 +5,7 @@ import torch
 
 from server import PromptServer
 
-from ..utils.constants import BASE_PATH, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, USER_FOLDER, get_usage_filename, get_usage_title
+from ..utils.constants import BASE_PATH, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, get_usage_filename, get_usage_title
 from ..utils.helpers import normalize_input_image, normalize_json_input, normalize_list_to_value, normalize_output_image
 
 CATEGORY = f"{CATEGORY_PREFIX}/Analytics"
@@ -262,7 +262,7 @@ class LF_UpdateUsageStatistics:
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}updateusagestatistics", {
             "node": node_id, 
-            "log": log_title + log if log else log_title + "\nThere were no updates this run!"
+            "value": log_title + log if log else log_title + "\nThere were no updates this run!"
         })
 
         return (actual_path, dataset)
@@ -282,7 +282,6 @@ class LF_UsageStatistics:
     def on_exec(self):
         return ()
 # endregion
-# region Mappings
 NODE_CLASS_MAPPINGS = {
     "LF_ImageHistogram": LF_ImageHistogram,
     "LF_KeywordCounter": LF_KeywordCounter,
@@ -296,4 +295,3 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_UpdateUsageStatistics": "Update usage statistics",
     "LF_UsageStatistics": "Usage statistics",
 }
-# endregion

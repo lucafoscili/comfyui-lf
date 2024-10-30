@@ -321,7 +321,7 @@ class LF_Lora2Prompt:
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}lora2prompt", {
             "node": node_id, 
-            "log": log
+            "value": log
         })
 
         return (text, loras_string)
@@ -383,7 +383,7 @@ class LF_LoraTag2Prompt:
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}loratag2prompt", {
             "node": node_id, 
-            "log": log
+            "value": log
         })
 
         return (clean_loras, keyword_counts, clean_loras, keyword_counts)
@@ -438,7 +438,6 @@ class LF_Notify:
 
         return (any, any)
 # endregion
-# region Mappings
 NODE_CLASS_MAPPINGS = {
     "LF_CivitAIMetadataSetup": LF_CivitAIMetadataSetup,
     "LF_ControlPanel": LF_ControlPanel,
@@ -456,4 +455,3 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_LoraTag2Prompt": "Convert LoRA tag to prompt",
     "LF_Notify": "Notify",
 }
-# endregion

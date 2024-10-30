@@ -1,4 +1,4 @@
-import { EventName, UrandomSeedGeneratorPayload } from '../types/events';
+import { EventName, BaseDatasetPayload } from '../types/events';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import { CustomWidgetName, TreeWidgetSetter, type BaseWidgetCallback } from '../types/widgets';
@@ -8,16 +8,15 @@ const NAME = NodeName.urandomSeedGenerator;
 
 export const uRandomSeedGeneratorFactory = {
   eventHandler: (
-    event: CustomEvent<UrandomSeedGeneratorPayload>,
+    event: CustomEvent<BaseDatasetPayload>,
     addW: BaseWidgetCallback<CustomWidgetName.tree>,
   ) => {
     const name = EventName.urandomSeedGenerator;
     getLFManager().log(`Event '${name}' received`, { event }, LogSeverity.Info);
 
     const payload = event.detail;
-    const isHistoryEnabled = payload.isHistoryEnabled;
     const node = getApiRoutes().getNodeById(payload.id);
-    if (isHistoryEnabled && node) {
+    if (node) {
       const widget = getCustomWidget(node, CustomWidgetName.tree, addW);
       widget.options.setValue(JSON.stringify(event.detail.dataset));
       getApiRoutes().redraw();

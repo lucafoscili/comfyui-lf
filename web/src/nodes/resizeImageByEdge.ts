@@ -1,4 +1,4 @@
-import { EventName, ResizeImageByEdgePayload } from '../types/events';
+import { EventName, BaseDatasetPayload } from '../types/events';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import { CustomWidgetName, TreeWidgetSetter, type BaseWidgetCallback } from '../types/widgets';
@@ -8,7 +8,7 @@ const NAME = NodeName.resizeImageByEdge;
 
 export const resizeImageByEdgeFactory = {
   eventHandler: (
-    event: CustomEvent<ResizeImageByEdgePayload>,
+    event: CustomEvent<BaseDatasetPayload>,
     addW: BaseWidgetCallback<CustomWidgetName.tree>,
   ) => {
     const name = EventName.resizeimageByEdge;

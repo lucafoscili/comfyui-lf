@@ -63,6 +63,7 @@ import { saveJsonFactory } from '../nodes/saveJson';
 import { characterImpersonatorFactory } from '../nodes/characterImpersonator';
 import { imageClassifierFactory } from '../nodes/imageClassifier';
 import { sequentialSeedsGeneratorFactory } from '../nodes/sequentialSeedsGenerator';
+import { regionExtractorFactory } from '../nodes/regionExtractor';
 
 /*-------------------------------------------------*/
 /*               N o d e s   C l a s s             */
@@ -103,6 +104,7 @@ export class LFNodes {
     [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.eventHandler,
     [NodeName.notify]: notifyFactory.eventHandler,
     [NodeName.randomBoolean]: randomBooleanFactory.eventHandler,
+    [NodeName.regionExtractor]: regionExtractorFactory.eventHandler,
     [NodeName.resizeImageByEdge]: resizeImageByEdgeFactory.eventHandler,
     [NodeName.resizeImageToDimension]: resizeImageToDimensionFactory.eventHandler,
     [NodeName.resizeImageToSquare]: resizeImageToSquareFactory.eventHandler,
@@ -169,6 +171,7 @@ export class LFNodes {
     [NodeName.multipleImageResizeForWeb]: multipleImageResizeForWebFactory.register,
     [NodeName.notify]: notifyFactory.register,
     [NodeName.randomBoolean]: randomBooleanFactory.register,
+    [NodeName.regionExtractor]: regionExtractorFactory.register,
     [NodeName.resizeImageByEdge]: resizeImageByEdgeFactory.register,
     [NodeName.resizeImageToDimension]: resizeImageToDimensionFactory.register,
     [NodeName.resizeImageToSquare]: resizeImageToSquareFactory.register,

@@ -1,4 +1,4 @@
-import { DisplayPrimitiveAsJSONPayload, EventName } from '../types/events';
+import { BaseDatasetPayload, EventName } from '../types/events';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import { CodeWidgetSetter, CustomWidgetName, type BaseWidgetCallback } from '../types/widgets';
@@ -8,7 +8,7 @@ const NAME = NodeName.displayPrimitiveAsJson;
 
 export const displayPrimitiveAsJsonFactory = {
   eventHandler: (
-    event: CustomEvent<DisplayPrimitiveAsJSONPayload>,
+    event: CustomEvent<BaseDatasetPayload>,
     addW: BaseWidgetCallback<CustomWidgetName.code>,
   ) => {
     const name = EventName.displayPrimitiveAsJson;

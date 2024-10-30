@@ -1,4 +1,4 @@
-import { EventName, ImageListFromJSONPayload } from '../types/events';
+import { EventName, BaseDatasetPayload } from '../types/events';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import {
@@ -12,7 +12,7 @@ const NAME = NodeName.imageListFromJSON;
 
 export const imageListFromJsonFactory = {
   eventHandler: (
-    event: CustomEvent<ImageListFromJSONPayload>,
+    event: CustomEvent<BaseDatasetPayload>,
     addW: BaseWidgetCallback<CustomWidgetName.masonry>,
   ) => {
     const name = EventName.blurImages;

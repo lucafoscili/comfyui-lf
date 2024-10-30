@@ -1,4 +1,4 @@
-import { EventName, SaveImageForCivitAIPayload } from '../types/events';
+import { EventName, BaseDatasetPayload } from '../types/events';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import {
@@ -12,7 +12,7 @@ const NAME = NodeName.saveImageForCivitai;
 
 export const saveImageForCivitaiFactory = {
   eventHandler: (
-    event: CustomEvent<SaveImageForCivitAIPayload>,
+    event: CustomEvent<BaseDatasetPayload>,
     addW: BaseWidgetCallback<CustomWidgetName.masonry>,
   ) => {
     const name = EventName.saveImageForCivitAI;

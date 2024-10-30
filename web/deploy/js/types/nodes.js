@@ -41,6 +41,7 @@ export var NodeName;
     NodeName["multipleImageResizeForWeb"] = "LF_MultipleImageResizeForWeb";
     NodeName["notify"] = "LF_Notify";
     NodeName["randomBoolean"] = "LF_RandomBoolean";
+    NodeName["regionExtractor"] = "LF_RegionExtractor";
     NodeName["resizeImageByEdge"] = "LF_ResizeImageByEdge";
     NodeName["resizeImageToDimension"] = "LF_ResizeImageToDimension";
     NodeName["resizeImageToSquare"] = "LF_ResizeImageToSquare";

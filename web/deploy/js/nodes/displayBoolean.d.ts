@@ -1,6 +1,6 @@
-import { DisplayBooleanPayload } from '../types/events';
+import { CodePayload } from '../types/events';
 import { CustomWidgetName, type BaseWidgetCallback, type CodeWidgetSetter } from '../types/widgets';
 export declare const displayBooleanFactory: {
-    eventHandler: (event: CustomEvent<DisplayBooleanPayload>, addW: BaseWidgetCallback<CustomWidgetName.code>) => void;
+    eventHandler: (event: CustomEvent<CodePayload>, addW: BaseWidgetCallback<CustomWidgetName.code>) => void;
     register: (setW: CodeWidgetSetter, addW: BaseWidgetCallback<CustomWidgetName.code>) => void;
 };

@@ -1,4 +1,4 @@
-import { EventName, UpdateUsageStatisticsPayload } from '../types/events';
+import { EventName, CodePayload } from '../types/events';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import {
@@ -12,7 +12,7 @@ const NAME = NodeName.usageStatistics;
 
 export const usageStatisticsFactory = {
   eventHandler: (
-    event: CustomEvent<UpdateUsageStatisticsPayload>,
+    event: CustomEvent<CodePayload>,
     addW: BaseWidgetCallback<CustomWidgetName.tabBarChart>,
   ) => {
     const name = EventName.updateUsageStatistics;

@@ -14,64 +14,30 @@ import {
 } from '../types/manager.js';
 import { Extension } from '../types/nodes.js';
 import {
-  BlurImagesPayload,
-  BooleanPayload,
+  BaseDatasetPayload,
+  CodePayload,
   CivitAIMetadataSetupPayload,
   DisplayJSONPayload,
-  DisplayPrimitiveAsJSONPayload,
   EventName,
-  FloatPayload,
-  ImageListFromJSONPayload,
   ImageHistogramPayload,
-  IntegerPayload,
   KeywordCounterPayload,
   LoadImagesPayload,
-  MultipleImageResizeForWebPayload,
   RandomBooleanPayload,
-  ResizeImageByEdgePayload,
-  ResizeImageToSquarePayload,
-  SaveImageForCivitAIPayload,
-  StringPayload,
-  SwitchFloatPayload,
   SwitchImagePayload,
-  SwitchIntegerPayload,
   SwitchJSONPayload,
-  SwitchStringPayload,
-  UrandomSeedGeneratorPayload,
   WriteJSONPayload,
-  LoadFileOncePayload,
-  ExtractorPayload,
   ResolutionSwitcherPayload,
-  DisplayBooleanPayload,
-  DisplayFloatPayload,
-  DisplayIntegerPayload,
-  DisplayStringPayload,
   CheckpointSelectorPayload,
   LoraSelectorPayload,
   EmbeddingSelectorPayload,
   LoraAndEmbeddingSelectorPayload,
   LoadLoraTagsPayload,
-  SamplerSelectorPayload,
-  SchedulerSelectorPayload,
   NotifyPayload,
-  UpscaleModelSelectorPayload,
-  VAESelectorPayload,
-  UpdateUsageStatisticsPayload,
-  ResizeImageToDimensionPayload,
-  MathOperationPayload,
   SortJSONKeysPayload,
   ShuffleJSONKeysPayload,
-  ClarityEffectPayload,
-  CompareImagesPayload,
-  IsLandscapePayload,
-  Something2NumberPayload,
-  Something2StringPayload,
-  LoraTag2PromptPayload,
-  Lora2PromptPayload,
-  SaveJSONPayload,
-  CharacterImpersonatorPayload,
-  ImageClassifierPayload,
-  SequentialSeedsGeneratorPayload,
+  SwitchFloatPayload,
+  SwitchIntegerPayload,
+  SwitchStringPayload,
 } from '../types/events.js';
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
 import { LFTooltip } from './tooltip';
@@ -490,14 +456,14 @@ export class LFManager {
       widgets.setters.KUL_MASONRY,
       widgets.adders.KUL_MASONRY,
     );
-    this.#APIS.event(EventName.blurImages, (e: CustomEvent<BlurImagesPayload>) => {
+    this.#APIS.event(EventName.blurImages, (e: CustomEvent<BaseDatasetPayload>) => {
       nodes.eventHandlers.LF_BlurImages(e, widgets.adders.KUL_MASONRY);
     });
     /*-------------------------------------------------------------------*/
     /*                      I n i t   B o o l e a n                      */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_Boolean(widgets.setters.KUL_HISTORY);
-    this.#APIS.event(EventName.boolean, (e: CustomEvent<BooleanPayload>) => {
+    this.#APIS.event(EventName.boolean, (e: CustomEvent<BaseDatasetPayload>) => {
       nodes.eventHandlers.LF_Boolean(e, widgets.adders.KUL_HISTORY);
     });
     /*-------------------------------------------------------------------*/
@@ -507,12 +473,9 @@ export class LFManager {
       widgets.setters.KUL_CODE,
       widgets.adders.KUL_CODE,
     );
-    this.#APIS.event(
-      EventName.characterImpersonator,
-      (e: CustomEvent<CharacterImpersonatorPayload>) => {
-        nodes.eventHandlers.LF_CharacterImpersonator(e, widgets.adders.KUL_CODE);
-      },
-    );
+    this.#APIS.event(EventName.characterImpersonator, (e: CustomEvent<CodePayload>) => {
+      nodes.eventHandlers.LF_CharacterImpersonator(e, widgets.adders.KUL_CODE);
+    });
     /*-------------------------------------------------------------------*/
     /*            I n i t   C h e c k p o i n t S e l e c t o r          */
     /*-------------------------------------------------------------------*/
@@ -543,7 +506,7 @@ export class LFManager {
       widgets.setters.KUL_COMPARE,
       widgets.adders.KUL_COMPARE,
     );
-    this.#APIS.event(EventName.clarityEffect, (e: CustomEvent<ClarityEffectPayload>) => {
+    this.#APIS.event(EventName.clarityEffect, (e: CustomEvent<BaseDatasetPayload>) => {
       nodes.eventHandlers.LF_ClarityEffect(e, widgets.adders.KUL_COMPARE);
     });
     /*-------------------------------------------------------------------*/
@@ -553,7 +516,7 @@ export class LFManager {
       widgets.setters.KUL_COMPARE,
       widgets.adders.KUL_COMPARE,
     );
-    this.#APIS.event(EventName.compareImages, (e: CustomEvent<CompareImagesPayload>) => {
+    this.#APIS.event(EventName.compareImages, (e: CustomEvent<BaseDatasetPayload>) => {
       nodes.eventHandlers.LF_CompareImages(e, widgets.adders.KUL_COMPARE);
     });
     /*-------------------------------------------------------------------*/
@@ -570,7 +533,7 @@ export class LFManager {
       widgets.setters.KUL_CODE,
       widgets.adders.KUL_CODE,
     );
-    this.#APIS.event(EventName.displayBoolean, (e: CustomEvent<DisplayBooleanPayload>) => {
+    this.#APIS.event(EventName.displayBoolean, (e: CustomEvent<CodePayload>) => {
       nodes.eventHandlers.LF_DisplayBoolean(e, widgets.adders.KUL_CODE);
     });
     /*-------------------------------------------------------------------*/
@@ -580,7 +543,7 @@ export class LFManager {
       widgets.setters.KUL_CODE,
       widgets.adders.KUL_CODE,
     );
-    this.#APIS.event(EventName.displayFloat, (e: CustomEvent<DisplayFloatPayload>) => {
+    this.#APIS.event(EventName.displayFloat, (e: CustomEvent<CodePayload>) => {
       nodes.eventHandlers.LF_DisplayFloat(e, widgets.adders.KUL_CODE);
     });
     /*-------------------------------------------------------------------*/
@@ -590,7 +553,7 @@ export class LFManager {
       widgets.setters.KUL_CODE,
       widgets.adders.KUL_CODE,
     );
-    this.#APIS.event(EventName.displayInteger, (e: CustomEvent<DisplayIntegerPayload>) => {
+    this.#APIS.event(EventName.displayInteger, (e: CustomEvent<CodePayload>) => {
       nodes.eventHandlers.LF_DisplayInteger(e, widgets.adders.KUL_CODE);
     });
     /*-------------------------------------------------------------------*/
@@ -604,12 +567,9 @@ export class LFManager {
     /*       I n i t   D i s p l a y P r i m i t i v e A s J S O N       */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_DisplayPrimitiveAsJSON(widgets.setters.KUL_CODE);
-    this.#APIS.event(
-      EventName.displayPrimitiveAsJson,
-      (e: CustomEvent<DisplayPrimitiveAsJSONPayload>) => {
-        nodes.eventHandlers.LF_DisplayPrimitiveAsJSON(e, widgets.adders.KUL_CODE);
-      },
-    );
+    this.#APIS.event(EventName.displayPrimitiveAsJson, (e: CustomEvent<BaseDatasetPayload>) => {
+      nodes.eventHandlers.LF_DisplayPrimitiveAsJSON(e, widgets.adders.KUL_CODE);
+    });
     /*-------------------------------------------------------------------*/
     /*                I n i t   D i s p l a y S t r i n g                */
     /*-------------------------------------------------------------------*/
@@ -617,7 +577,7 @@ export class LFManager {
       widgets.setters.KUL_CODE,
       widgets.adders.KUL_CODE,
     );
-    this.#APIS.event(EventName.displayString, (e: CustomEvent<DisplayStringPayload>) => {
+    this.#APIS.event(EventName.displayString, (e: CustomEvent<CodePayload>) => {
       nodes.eventHandlers.LF_DisplayString(e, widgets.adders.KUL_CODE);
     });
     /*-------------------------------------------------------------------*/
@@ -634,14 +594,14 @@ export class LFManager {
     /*                     I n i t   E x t r a c t o r                   */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_Extractor(widgets.setters.KUL_CODE);
-    this.#APIS.event(EventName.extractor, (e: CustomEvent<ExtractorPayload>) => {
+    this.#APIS.event(EventName.extractor, (e: CustomEvent<CodePayload>) => {
       nodes.eventHandlers.LF_Extractor(e, widgets.adders.KUL_CODE);
     });
     /*-------------------------------------------------------------------*/
     /*                        I n i t   F l o a t                        */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_Float(widgets.setters.KUL_HISTORY);
-    this.#APIS.event(EventName.float, (e: CustomEvent<FloatPayload>) => {
+    this.#APIS.event(EventName.float, (e: CustomEvent<BaseDatasetPayload>) => {
       nodes.eventHandlers.LF_Float(e, widgets.adders.KUL_HISTORY);
     });
     /*-------------------------------------------------------------------*/
@@ -651,14 +611,14 @@ export class LFManager {
       widgets.setters.KUL_CODE,
       widgets.adders.KUL_CODE,
     );
-    this.#APIS.event(EventName.imageClassifier, (e: CustomEvent<ImageClassifierPayload>) => {
+    this.#APIS.event(EventName.imageClassifier, (e: CustomEvent<CodePayload>) => {
       nodes.eventHandlers.LF_ImageClassifier(e, widgets.adders.KUL_CODE);
     });
     /*-------------------------------------------------------------------*/
     /*            I n i t   I m a g e L i s t F r o m J S O N            */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_ImageListFromJSON(widgets.setters.KUL_MASONRY);
-    this.#APIS.event(EventName.imageListFromJSON, (e: CustomEvent<ImageListFromJSONPayload>) => {
+    this.#APIS.event(EventName.imageListFromJSON, (e: CustomEvent<BaseDatasetPayload>) => {
       nodes.eventHandlers.LF_ImageListFromJSON(e, widgets.adders.KUL_MASONRY);
     });
     /*-------------------------------------------------------------------*/
@@ -682,14 +642,14 @@ export class LFManager {
     /*                      I n i t   I n t e g e r                      */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_Integer(widgets.setters.KUL_HISTORY);
-    this.#APIS.event(EventName.integer, (e: CustomEvent<IntegerPayload>) => {
+    this.#APIS.event(EventName.integer, (e: CustomEvent<BaseDatasetPayload>) => {
       nodes.eventHandlers.LF_Integer(e, widgets.adders.KUL_HISTORY);
     });
     /*-------------------------------------------------------------------*/
     /*                   I n i t   I s L a n d s c a p e                 */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_IsLandscape(widgets.setters.KUL_TREE, widgets.adders.KUL_TREE);
-    this.#APIS.event(EventName.isLandscape, (e: CustomEvent<IsLandscapePayload>) => {
+    this.#APIS.event(EventName.isLandscape, (e: CustomEvent<BaseDatasetPayload>) => {
       nodes.eventHandlers.LF_IsLandscape(e, widgets.adders.KUL_TREE);
     });
     /*-------------------------------------------------------------------*/
@@ -718,7 +678,7 @@ export class LFManager {
     /*                I n i t   L o a d F i l e O n c e                  */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_LoadFileOnce(widgets.setters.KUL_HISTORY);
-    this.#APIS.event(EventName.loadFileOnce, (e: CustomEvent<LoadFileOncePayload>) => {
+    this.#APIS.event(EventName.loadFileOnce, (e: CustomEvent<BaseDatasetPayload>) => {
       nodes.eventHandlers.LF_LoadFileOnce(e, widgets.adders.KUL_HISTORY);
     });
     /*-------------------------------------------------------------------*/
@@ -762,7 +722,7 @@ export class LFManager {
     /*                  I n i t   L o r a 2 P r o m p t                  */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_Lora2Prompt(widgets.setters.KUL_CODE, widgets.adders.KUL_CODE);
-    this.#APIS.event(EventName.lora2Prompt, (e: CustomEvent<Lora2PromptPayload>) => {
+    this.#APIS.event(EventName.lora2Prompt, (e: CustomEvent<CodePayload>) => {
       nodes.eventHandlers.LF_Lora2Prompt(e, widgets.adders.KUL_CODE);
     });
     /*-------------------------------------------------------------------*/
@@ -772,7 +732,7 @@ export class LFManager {
       widgets.setters.KUL_CODE,
       widgets.adders.KUL_CODE,
     );
-    this.#APIS.event(EventName.loraTag2Prompt, (e: CustomEvent<LoraTag2PromptPayload>) => {
+    this.#APIS.event(EventName.loraTag2Prompt, (e: CustomEvent<CodePayload>) => {
       nodes.eventHandlers.LF_LoraTag2Prompt(e, widgets.adders.KUL_CODE);
     });
     /*-------------------------------------------------------------------*/
@@ -782,7 +742,7 @@ export class LFManager {
       widgets.setters.KUL_CODE,
       widgets.adders.KUL_CODE,
     );
-    this.#APIS.event(EventName.mathOperation, (e: CustomEvent<MathOperationPayload>) => {
+    this.#APIS.event(EventName.mathOperation, (e: CustomEvent<CodePayload>) => {
       nodes.eventHandlers.LF_MathOperation(e, widgets.adders.KUL_CODE);
     });
     /*-------------------------------------------------------------------*/
@@ -799,12 +759,9 @@ export class LFManager {
       widgets.setters.KUL_TREE,
       widgets.adders.KUL_TREE,
     );
-    this.#APIS.event(
-      EventName.multipleImageResizeForWeb,
-      (e: CustomEvent<MultipleImageResizeForWebPayload>) => {
-        nodes.eventHandlers.LF_MultipleImageResizeForWeb(e, widgets.adders.KUL_TREE);
-      },
-    );
+    this.#APIS.event(EventName.multipleImageResizeForWeb, (e: CustomEvent<BaseDatasetPayload>) => {
+      nodes.eventHandlers.LF_MultipleImageResizeForWeb(e, widgets.adders.KUL_TREE);
+    });
     /*-------------------------------------------------------------------*/
     /*               I n i t   R a n d o m   B o o l e a n               */
     /*-------------------------------------------------------------------*/
@@ -816,13 +773,20 @@ export class LFManager {
       nodes.eventHandlers.LF_RandomBoolean(e, widgets.adders.KUL_ROLL_VIEWER);
     });
     /*-------------------------------------------------------------------*/
+    /*             I n i t   R e g i o n E x t r a c t o r               */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_RegionExtractor(widgets.setters.KUL_HISTORY);
+    this.#APIS.event(EventName.regionExtractor, (e: CustomEvent<BaseDatasetPayload>) => {
+      nodes.eventHandlers.LF_RegionExtractor(e, widgets.adders.KUL_HISTORY);
+    });
+    /*-------------------------------------------------------------------*/
     /*            I n i t   R e s i z e I m a g e B y E d g e            */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_ResizeImageByEdge(
       widgets.setters.KUL_TREE,
       widgets.adders.KUL_TREE,
     );
-    this.#APIS.event(EventName.resizeimageByEdge, (e: CustomEvent<ResizeImageByEdgePayload>) => {
+    this.#APIS.event(EventName.resizeimageByEdge, (e: CustomEvent<BaseDatasetPayload>) => {
       nodes.eventHandlers.LF_ResizeImageByEdge(e, widgets.adders.KUL_TREE);
     });
     /*-------------------------------------------------------------------*/
@@ -832,12 +796,9 @@ export class LFManager {
       widgets.setters.KUL_TREE,
       widgets.adders.KUL_TREE,
     );
-    this.#APIS.event(
-      EventName.resizeimageToDimension,
-      (e: CustomEvent<ResizeImageToDimensionPayload>) => {
-        nodes.eventHandlers.LF_ResizeImageToDimension(e, widgets.adders.KUL_TREE);
-      },
-    );
+    this.#APIS.event(EventName.resizeimageToDimension, (e: CustomEvent<BaseDatasetPayload>) => {
+      nodes.eventHandlers.LF_ResizeImageToDimension(e, widgets.adders.KUL_TREE);
+    });
     /*-------------------------------------------------------------------*/
     /*          I n i t   R e s i z e I m a g e T o S q u a r e          */
     /*-------------------------------------------------------------------*/
@@ -845,12 +806,9 @@ export class LFManager {
       widgets.setters.KUL_TREE,
       widgets.adders.KUL_TREE,
     );
-    this.#APIS.event(
-      EventName.resizeimageToSquare,
-      (e: CustomEvent<ResizeImageToSquarePayload>) => {
-        nodes.eventHandlers.LF_ResizeImageToSquare(e, widgets.adders.KUL_TREE);
-      },
-    );
+    this.#APIS.event(EventName.resizeimageToSquare, (e: CustomEvent<BaseDatasetPayload>) => {
+      nodes.eventHandlers.LF_ResizeImageToSquare(e, widgets.adders.KUL_TREE);
+    });
     /*-------------------------------------------------------------------*/
     /*           I n i t   R e s o l u t i o n S w i t c h e r           */
     /*-------------------------------------------------------------------*/
@@ -865,7 +823,7 @@ export class LFManager {
     /*               I n i t   S a m p l e r S e l e c t o r             */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_SamplerSelector(widgets.setters.KUL_HISTORY);
-    this.#APIS.event(EventName.samplerSelector, (e: CustomEvent<SamplerSelectorPayload>) => {
+    this.#APIS.event(EventName.samplerSelector, (e: CustomEvent<BaseDatasetPayload>) => {
       nodes.eventHandlers.LF_SamplerSelector(e, widgets.adders.KUL_HISTORY);
     });
     /*-------------------------------------------------------------------*/
@@ -875,36 +833,30 @@ export class LFManager {
       widgets.setters.KUL_MASONRY,
       widgets.adders.KUL_MASONRY,
     );
-    this.#APIS.event(
-      EventName.saveImageForCivitAI,
-      (e: CustomEvent<SaveImageForCivitAIPayload>) => {
-        nodes.eventHandlers.LF_SaveImageForCivitAI(e, widgets.adders.KUL_MASONRY);
-      },
-    );
+    this.#APIS.event(EventName.saveImageForCivitAI, (e: CustomEvent<BaseDatasetPayload>) => {
+      nodes.eventHandlers.LF_SaveImageForCivitAI(e, widgets.adders.KUL_MASONRY);
+    });
     /*-------------------------------------------------------------------*/
     /*                    I n i t   S a v e J S O N                      */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_SaveJSON(widgets.setters.KUL_TREE, widgets.adders.KUL_TREE);
-    this.#APIS.event(EventName.saveJson, (e: CustomEvent<SaveJSONPayload>) => {
+    this.#APIS.event(EventName.saveJson, (e: CustomEvent<BaseDatasetPayload>) => {
       nodes.eventHandlers.LF_SaveJSON(e, widgets.adders.KUL_TREE);
     });
     /*-------------------------------------------------------------------*/
     /*           I n i t   S c h e d u l e r S e l e c t o r             */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_SchedulerSelector(widgets.setters.KUL_HISTORY);
-    this.#APIS.event(EventName.schedulerSelector, (e: CustomEvent<SchedulerSelectorPayload>) => {
+    this.#APIS.event(EventName.schedulerSelector, (e: CustomEvent<BaseDatasetPayload>) => {
       nodes.eventHandlers.LF_SchedulerSelector(e, widgets.adders.KUL_HISTORY);
     });
     /*-------------------------------------------------------------------*/
     /*     I n i t   S e q u e n t i a l S e e d s G e n e r a t o r     */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_SequentialSeedsGenerator(widgets.setters.KUL_HISTORY);
-    this.#APIS.event(
-      EventName.sequentialSeedsGenerator,
-      (e: CustomEvent<SequentialSeedsGeneratorPayload>) => {
-        nodes.eventHandlers.LF_SequentialSeedsGenerator(e, widgets.adders.KUL_HISTORY);
-      },
-    );
+    this.#APIS.event(EventName.sequentialSeedsGenerator, (e: CustomEvent<BaseDatasetPayload>) => {
+      nodes.eventHandlers.LF_SequentialSeedsGenerator(e, widgets.adders.KUL_HISTORY);
+    });
     /*-------------------------------------------------------------------*/
     /*              I n i t   S h u f f l e J S O N K e y s              */
     /*-------------------------------------------------------------------*/
@@ -922,7 +874,7 @@ export class LFManager {
       widgets.setters.KUL_CODE,
       widgets.adders.KUL_CODE,
     );
-    this.#APIS.event(EventName.something2Number, (e: CustomEvent<Something2NumberPayload>) => {
+    this.#APIS.event(EventName.something2Number, (e: CustomEvent<CodePayload>) => {
       nodes.eventHandlers.LF_Something2Number(e, widgets.adders.KUL_CODE);
     });
     /*-------------------------------------------------------------------*/
@@ -932,7 +884,7 @@ export class LFManager {
       widgets.setters.KUL_CODE,
       widgets.adders.KUL_CODE,
     );
-    this.#APIS.event(EventName.something2String, (e: CustomEvent<Something2StringPayload>) => {
+    this.#APIS.event(EventName.something2String, (e: CustomEvent<CodePayload>) => {
       nodes.eventHandlers.LF_Something2String(e, widgets.adders.KUL_CODE);
     });
     /*-------------------------------------------------------------------*/
@@ -949,7 +901,7 @@ export class LFManager {
     /*                      I n i t   S t r i n g                        */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_String(widgets.setters.KUL_HISTORY);
-    this.#APIS.event(EventName.string, (e: CustomEvent<StringPayload>) => {
+    this.#APIS.event(EventName.string, (e: CustomEvent<BaseDatasetPayload>) => {
       nodes.eventHandlers.LF_String(e, widgets.adders.KUL_HISTORY);
     });
     /*-------------------------------------------------------------------*/
@@ -1009,22 +961,16 @@ export class LFManager {
       widgets.setters.KUL_CODE,
       widgets.adders.KUL_CODE,
     );
-    this.#APIS.event(
-      EventName.updateUsageStatistics,
-      (e: CustomEvent<UpdateUsageStatisticsPayload>) => {
-        nodes.eventHandlers.LF_UpdateUsageStatistics(e, widgets.adders.KUL_CODE);
-      },
-    );
+    this.#APIS.event(EventName.updateUsageStatistics, (e: CustomEvent<CodePayload>) => {
+      nodes.eventHandlers.LF_UpdateUsageStatistics(e, widgets.adders.KUL_CODE);
+    });
     /*-------------------------------------------------------------------*/
     /*         I n i t   U p s c a l e M o d e l S e l e c t o r         */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_UpscaleModelSelector(widgets.setters.KUL_HISTORY);
-    this.#APIS.event(
-      EventName.upscaleModelSelector,
-      (e: CustomEvent<UpscaleModelSelectorPayload>) => {
-        nodes.eventHandlers.LF_UpscaleModelSelector(e, widgets.adders.KUL_HISTORY);
-      },
-    );
+    this.#APIS.event(EventName.upscaleModelSelector, (e: CustomEvent<BaseDatasetPayload>) => {
+      nodes.eventHandlers.LF_UpscaleModelSelector(e, widgets.adders.KUL_HISTORY);
+    });
     /*-------------------------------------------------------------------*/
     /*      I n i t   U r a n d o m   S e e d   G e n e r a t o r        */
     /*-------------------------------------------------------------------*/
@@ -1032,12 +978,9 @@ export class LFManager {
       widgets.setters.KUL_TREE,
       widgets.adders.KUL_TREE,
     );
-    this.#APIS.event(
-      EventName.urandomSeedGenerator,
-      (e: CustomEvent<UrandomSeedGeneratorPayload>) => {
-        nodes.eventHandlers.LF_UrandomSeedGenerator(e, widgets.adders.KUL_TREE);
-      },
-    );
+    this.#APIS.event(EventName.urandomSeedGenerator, (e: CustomEvent<BaseDatasetPayload>) => {
+      nodes.eventHandlers.LF_UrandomSeedGenerator(e, widgets.adders.KUL_TREE);
+    });
     /*-------------------------------------------------------------------*/
     /*             I n i t   U s a g e S t a t i s t i c s               */
     /*-------------------------------------------------------------------*/
@@ -1045,17 +988,14 @@ export class LFManager {
       widgets.setters.KUL_TAB_BAR_CHART,
       widgets.adders.KUL_TAB_BAR_CHART,
     );
-    this.#APIS.event(
-      EventName.updateUsageStatistics,
-      (e: CustomEvent<UpdateUsageStatisticsPayload>) => {
-        nodes.eventHandlers.LF_UsageStatistics(e, widgets.adders.KUL_TAB_BAR_CHART);
-      },
-    );
+    this.#APIS.event(EventName.updateUsageStatistics, (e: CustomEvent<CodePayload>) => {
+      nodes.eventHandlers.LF_UsageStatistics(e, widgets.adders.KUL_TAB_BAR_CHART);
+    });
     /*-------------------------------------------------------------------*/
     /*                  I n i t   V A E S e l e c t o r                  */
     /*-------------------------------------------------------------------*/
     this.#MANAGERS.nodes.register.LF_VAESelector(widgets.setters.KUL_HISTORY);
-    this.#APIS.event(EventName.vaeSelector, (e: CustomEvent<VAESelectorPayload>) => {
+    this.#APIS.event(EventName.vaeSelector, (e: CustomEvent<BaseDatasetPayload>) => {
       nodes.eventHandlers.LF_VAESelector(e, widgets.adders.KUL_HISTORY);
     });
     /*-------------------------------------------------------------------*/

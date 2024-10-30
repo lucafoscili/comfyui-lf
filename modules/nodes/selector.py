@@ -523,7 +523,6 @@ class LF_VAESelector:
 
         return (vae, vae)
 # endregion
-# region Mappings
 NODE_CLASS_MAPPINGS = {
     "LF_CheckpointSelector": LF_CheckpointSelector,
     "LF_EmbeddingSelector": LF_EmbeddingSelector,
@@ -545,4 +544,3 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_UpscaleModelSelector": "Upscale model selector",
     "LF_VAESelector": "VAE selector",
 }
-# endregion

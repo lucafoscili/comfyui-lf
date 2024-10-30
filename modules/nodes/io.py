@@ -2,6 +2,7 @@ import io
 import json
 import os
 import piexif
+import re
 import requests
 import torch
 
@@ -11,20 +12,20 @@ from PIL import Image
 from PIL.PngImagePlugin import PngInfo
 from server import PromptServer
 
-from ..utils.constants import BASE_OUTPUT_PATH, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, BASE_INPUT_PATH, USER_FOLDER
+from ..utils.constants import BASE_OUTPUT_PATH, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, BASE_INPUT_PATH
 from ..utils.helpers import create_dummy_image_tensor, create_history_node, create_masonry_node, extract_jpeg_metadata, extract_png_metadata, get_resource_url, normalize_input_image, normalize_input_list, normalize_json_input, normalize_list_to_value, normalize_output_image, pil_to_tensor, resolve_filepath, tensor_to_numpy
 
 CATEGORY = f"{CATEGORY_PREFIX}/IO Operations"
- 
+
 # region LF_LoadFileOnce
 class LF_LoadFileOnce:
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "dir": ("STRING", {"label": "Directory path", "tooltip": "Path to the directory containing the images to load."}),
-                "subdir": ("BOOLEAN", {"default": False, "label": "Load from subdir", "tooltip": "Indicates whether to also load images from subdirectories."}),
-                "strip_ext": ("BOOLEAN", {"default": True, "label": "Strip extension from name", "tooltip": "Whether to remove file extensions from filenames."}),
+                "dir": ("STRING", {"tooltip": "Path to the directory containing the images to load."}),
+                "subdir": ("BOOLEAN", {"default": False, "tooltip": "Indicates whether to also load images from subdirectories."}),
+                "strip_ext": ("BOOLEAN", {"default": True, "tooltip": "Whether to remove file extensions from filenames."}),
                 "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget to prevent the same filename to be loaded twice."}),
             },
             "optional": {
@@ -139,9 +140,18 @@ class LF_LoadImages:
                         f, e = os.path.splitext(file)
                         e = e.lstrip('.')
 
-                        file_names.append(file)  
+                        if strip_ext:
+                            file_names.append(f)  
+                        else:
+                            file_names.append(file)  
 
-                        output_file, subfolder, filename = resolve_filepath(f"{USER_FOLDER}", BASE_INPUT_PATH, index, False, f, e, False)
+                        output_file, subfolder, filename = resolve_filepath(
+                            base_output_path=BASE_INPUT_PATH,
+                            index=index,
+                            default_filename=f,
+                            extension=e,
+                            add_counter=False
+                        )
                         url = get_resource_url(subfolder, filename, "input")
               
                         file_creation_time = os.path.getctime(image_path)
@@ -262,6 +272,83 @@ class LF_LoadMetadata:
 
         return (metadata_list,)
 # endregion
+# region LF_RegionExtractor
+class LF_RegionExtractor:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "dir": ("STRING", {"tooltip": "Path to the directory containing the Python files."}),
+                "subdir": ("BOOLEAN", {"default": False, "tooltip": "Whether to load Python files from subdirectories as well."}),
+                "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Tracks extracted regions to avoid reprocessing."}),
+                "extension": ("STRING", {"default": "py", "tooltip": "Extension of the files that will be read."}),
+            },
+            "optional": {
+                "json_input": ("KUL_HISTORY", {"default": {}}),
+            },
+            "hidden": { 
+                "node_id": "UNIQUE_ID",
+            } 
+        }
+
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    OUTPUT_IS_LIST = (False, True)
+    RETURN_NAMES = ("regions", "regions_list")
+    RETURN_TYPES = ("JSON", "JSON")
+
+    def on_exec(self, node_id: str, dir: str, subdir: bool, enable_history: bool, extension: str,  json_input: dict = {}):
+        dir = normalize_list_to_value(dir)
+        subdir = normalize_list_to_value(subdir)
+        enable_history = normalize_list_to_value(enable_history)
+        extension = normalize_list_to_value(extension)
+        json_input = normalize_json_input(json_input)
+
+        if not extension.startswith("."):
+            extension = f".{extension}"
+        
+        files = []
+        for root, _, f in os.walk(dir):
+            if not subdir and root != dir:
+                continue
+            files.extend([os.path.join(root, file) for file in f if file.endswith(".py")])
+        
+        regions_list = []
+
+        nodes = json_input.get("nodes", [])
+        
+        for file_path in files:
+            with open(file_path, 'r') as f:
+                code = f.read()
+                
+                if enable_history and json_input.get(file_path):
+                    continue
+                
+                pattern = r"# region (.+?)\n(.*?)# endregion"
+                matches = re.findall(pattern, code, re.DOTALL)
+                
+                for match in matches:
+                    name = match[0].strip()
+                    code = match[1].strip()
+
+                    if enable_history:
+                        create_history_node(name, nodes)
+
+                    regions_list.append({
+                        "file": file_path,
+                        "name": name,
+                        "code": code
+                    })
+
+        dataset = {"nodes": nodes}
+        
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}regionextractor", {
+            "node": node_id, 
+            "dataset": dataset,
+        })
+
+        return (regions_list, regions_list)
+# endregion
 # region LF_SaveImageForCivitAI
 class LF_SaveImageForCivitAI:
     @classmethod
@@ -313,7 +400,13 @@ class LF_SaveImageForCivitAI:
         dataset = { "nodes": nodes }
 
         for index, img in enumerate(image):
-            output_file, subfolder, filename = resolve_filepath(filepath, BASE_OUTPUT_PATH, index, add_timestamp, "output", extension)
+            output_file, subfolder, filename = resolve_filepath(
+                filepath=filepath,
+                base_output_path=BASE_OUTPUT_PATH,
+                index=index,
+                add_timestamp=add_timestamp,
+                extension=extension
+            )
 
             pil_img = Image.fromarray(tensor_to_numpy(img))
             url = get_resource_url(subfolder, filename, "output")
@@ -361,7 +454,7 @@ class LF_SaveJSON:
         return {
             "required": {
                 "json_data": ("JSON", {"tooltip": "JSON data to save."}),
-                "filepath": ("STRING", {"default": '', "tooltip": "Path and filename for saving the JSON. Use slashes to specify directories."}),
+                "filepath": ("STRING", {"default": '', "tooltip": "Path and filename for saving the JSON. Use slashes to set directories."}),
                 "add_timestamp": ("BOOLEAN", {"default": True, "tooltip": "Add timestamp to the filename as a suffix."}),
             },
             "hidden": { 
@@ -380,35 +473,84 @@ class LF_SaveJSON:
         filepath = normalize_list_to_value(filepath)
         add_timestamp = normalize_list_to_value(add_timestamp)
 
-        try:
-            output_file, _, _ = resolve_filepath(filepath, BASE_OUTPUT_PATH, 0, add_timestamp=add_timestamp)
-
-            with open(output_file, 'w', encoding='utf-8') as json_file:
-                json.dump(json_data, json_file, ensure_ascii=False, indent=4)
-
-            nodes = []
-            root = { "children": nodes, "icon":"check", "id": "root", "value": "JSON saved successfully!" }
-            dataset = { "nodes": [root] }
-            nodes.append({ "description": output_file, "icon": "json", "id": output_file, "value": output_file })
-
-            PromptServer.instance.send_sync(f"{EVENT_PREFIX}savejson", {
-                "node": node_id,
-                "dataset": dataset,
-            })
-
-            return (json_data,)
-
-        except Exception as e:
-            print(f"Error saving JSON: {e}")
-            return None
+        output_file, _, _ = resolve_filepath(
+            filepath=filepath,
+            base_output_path=BASE_OUTPUT_PATH,
+            add_timestamp=add_timestamp,
+            extension="json"
+        )
+ 
+        with open(output_file, 'w', encoding='utf-8') as json_file:
+            json.dump(json_data, json_file, ensure_ascii=False, indent=4)
+ 
+        nodes = []
+        root = { "children": nodes, "icon":"check", "id": "root", "value": "JSON saved successfully!" }
+        dataset = { "nodes": [root] }
+        nodes.append({ "description": output_file, "icon": "json", "id": output_file, "value": output_file })
+ 
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}savejson", {
+            "node": node_id,
+            "dataset": dataset,
+        })
+ 
+        return (json_data,)
 # endregion
-# region Mappings
+# region LF_SaveMarkdown
+class LF_SaveMarkdown:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "markdown_text": ("STRING", {"default": "", "multiline": True, "tooltip": "Markdown data to save."}),
+                "filepath": ("STRING", {"default": '', "tooltip": "Path and filename for saving the Markdown. Use slashes to set directories."}),
+                "add_timestamp": ("BOOLEAN", {"default": True, "tooltip": "Add timestamp to the filename as a suffix."}),
+            },
+            "hidden": { 
+                "node_id": "UNIQUE_ID",
+            } 
+        }
+    
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    OUTPUT_NODE = True
+    RETURN_NAMES = ("string",)
+    RETURN_TYPES = ("STRING",)
+
+    def on_exec(self, node_id: str, markdown_text: str, filepath: str, add_timestamp: bool):
+        markdown_text = normalize_list_to_value(markdown_text)
+        filepath = normalize_list_to_value(filepath)
+        add_timestamp = normalize_list_to_value(add_timestamp)
+
+        output_file, _, _ = resolve_filepath(
+            filepath=filepath,
+            base_output_path=BASE_OUTPUT_PATH,
+            add_timestamp=add_timestamp,
+            extension="md"
+        )
+
+        with open(output_file, 'w', encoding='utf-8') as md_file:
+            md_file.write(markdown_text)
+
+        nodes = []
+        root = { "children": nodes, "icon":"check", "id": "root", "value": "Markdown saved successfully!" }
+        dataset = { "nodes": [root] }
+        nodes.append({ "description": output_file, "icon": "document", "id": output_file, "value": output_file })
+
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}savemarkdown", {
+            "node": node_id,
+            "dataset": dataset,
+        })
+
+        return (markdown_text,)
+# endregion
 NODE_CLASS_MAPPINGS = {
     "LF_LoadFileOnce": LF_LoadFileOnce,
     "LF_LoadImages": LF_LoadImages,
     "LF_LoadLocalJSON": LF_LoadLocalJSON,
     "LF_LoadMetadata": LF_LoadMetadata,
+    "LF_RegionExtractor": LF_RegionExtractor,
     "LF_SaveJSON": LF_SaveJSON,
+    "LF_SaveMarkdown": LF_SaveMarkdown,
     "LF_SaveImageForCivitAI": LF_SaveImageForCivitAI
 }
 
@@ -417,7 +559,8 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_LoadImages": "Load images from disk",
     "LF_LoadLocalJSON": "Load JSON from disk",
     "LF_LoadMetadata": "Load metadata from image",
+    "LF_RegionExtractor": "Extract region from sources",
     "LF_SaveJSON": "Save JSON",
+    "LF_SaveMarkdown": "Save Markdown",
     "LF_SaveImageForCivitAI": "Save image with CivitAI-compatible metadata"
 }
-# endregion
