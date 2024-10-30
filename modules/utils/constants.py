@@ -7,6 +7,7 @@ class AnyType(str):
     def __ne__(self, _: object) -> bool:
         return False
 
+# region constants
 ANY = AnyType("*")
 INT_MAX = 0xffffffffffffffff
 LORA_TAG_REGEX = r'<lora:[^<>]+>'
@@ -193,3 +194,4 @@ def get_usage_title(filename: str, type: str = None):
         return "\n## Upscale models:\n" if type == "markdown" else "Upscale model name"
     if filename == "vaes_usage.json":
         return "\n## VAEs:\n" if type == "markdown" else "VAE name"
+# endregion
