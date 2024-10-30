@@ -29,8 +29,9 @@ class LF_Boolean:
 
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
-    RETURN_NAMES = ("boolean",)
-    RETURN_TYPES = ("BOOLEAN",)
+    OUTPUT_IS_LIST = (False, True)
+    RETURN_NAMES = ("boolean", "boolean_list")
+    RETURN_TYPES = ("BOOLEAN", "BOOLEAN")
 
     def on_exec(self, node_id: str, boolean: bool, enable_history: bool, json_input: dict = {}):
         boolean = normalize_list_to_value(boolean)
@@ -50,7 +51,7 @@ class LF_Boolean:
             "dataset": dataset
         })
 
-        return (boolean,)
+        return (boolean, [boolean])
 # endregion
 # region LF_DisplayBoolean
 class LF_DisplayBoolean:
@@ -331,8 +332,9 @@ class LF_Float:
 
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
-    RETURN_NAMES = ("float",)
-    RETURN_TYPES = ("FLOAT",)
+    OUTPUT_IS_LIST = (False, True)
+    RETURN_NAMES = ("float", "float_list")
+    RETURN_TYPES = ("FLOAT", "FLOAT")
 
     def on_exec(self, node_id: str, float: float, enable_history: bool, json_input: dict = {}):
         float = normalize_list_to_value(float)
@@ -352,7 +354,7 @@ class LF_Float:
             "dataset": dataset,
         })
 
-        return (float,)
+        return (float, [float])
 # endregion
 # region LF_Integer
 class LF_Integer:
@@ -373,8 +375,9 @@ class LF_Integer:
 
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
-    RETURN_NAMES = ("int",)
-    RETURN_TYPES = ("INT",)
+    OUTPUT_IS_LIST = (False, True)
+    RETURN_NAMES = ("int", "int_list")
+    RETURN_TYPES = ("INT", "INT")
 
     def on_exec(self, node_id: str, integer: int, enable_history: bool, json_input: dict = {}):
         integer = normalize_list_to_value(integer)
@@ -394,7 +397,7 @@ class LF_Integer:
             "dataset": dataset
         })
 
-        return (integer,)
+        return (integer, [integer])
 # endregion
 # region LF_RandomBoolean
 class LF_RandomBoolean:
@@ -411,8 +414,9 @@ class LF_RandomBoolean:
 
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
-    RETURN_NAMES = ("boolean",)
-    RETURN_TYPES = ("BOOLEAN",)
+    OUTPUT_IS_LIST = (False, True)
+    RETURN_NAMES = ("boolean", "boolean_list")
+    RETURN_TYPES = ("BOOLEAN", "BOOLEAN")
 
     def on_exec(self, node_id: str, chance_true: float):
         chance_true = max(0, min(100, chance_true))
@@ -427,7 +431,7 @@ class LF_RandomBoolean:
             "roll": random_value,
         })
 
-        return (result,)
+        return (result, [result])
 
     @classmethod
     def IS_CHANGED(cls, **kwargs):
@@ -625,8 +629,9 @@ class LF_String:
 
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
-    RETURN_NAMES = ("string",)
-    RETURN_TYPES = ("STRING",)
+    OUTPUT_IS_LIST = (False, True)
+    RETURN_NAMES = ("string", "string_list")
+    RETURN_TYPES = ("STRING", "STRING")
 
     def on_exec(self, node_id: str, string: str, enable_history: bool, json_input: dict = {}):
         string = normalize_list_to_value(string)
@@ -646,7 +651,7 @@ class LF_String:
             "dataset": dataset,
         })
 
-        return (string,)
+        return (string, [string])
 # endregion
 # region LF_WallOfText
 class LF_WallOfText:
