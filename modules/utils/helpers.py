@@ -740,7 +740,24 @@ def normalize_input_list(input):
         
     return None
 
+def normalize_list_item(l: list, i: int):
+    """
+    Normalize the item at the specified index in a list.
 
+    This function checks if the input is a list and if the specified
+    index is within the bounds of the list. It returns the item at
+    the specified index if valid, otherwise, returns the first item.
+
+    Args:
+        l (list): The list from which the item is retrieved.
+        i (int): The index of the item to retrieve.
+
+    Returns:
+        any: The item at the specified index, or the first item if
+             the index is invalid or not a list.
+    """
+    return l[i] if isinstance(l, list) and i < len(l) else l[0]
+    
 def normalize_list_to_value(input):
     """
     Returns the first element of a list if it contains valid, non-null data, or the input itself otherwise.
@@ -1147,22 +1164,21 @@ def resolve_filepath(filepath: str = USER_FOLDER, base_output_path: str = BASE_T
     else:
         filename_prefix = path_base
 
+    if add_timestamp:
+        filename_prefix = f"{filename_prefix}_%year%-%month%-%day%_%hour%-%minute%-%second%"
+
     output_folder, filename, counter, subfolder, _ = get_save_image_path(
         filename_prefix=filename_prefix,
         output_dir=base_output_path
     )
 
-    if add_timestamp:
-        timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-        filename = f"{filename}_{timestamp}"
-
     if add_counter:
-        filename = f"{filename}_{index if not_none(index) else counter}.{extension}"
-    else:
-        filename = f"{filename}.{extension}" 
+        while os.path.exists(os.path.join(output_folder, f"{filename}_{counter}.{extension}")):
+            counter += 1
+        filename_prefix = f"{filename}_{counter}.{extension}"
 
-    output_file = os.path.join(output_folder, filename)
-    
+    output_file = os.path.join(output_folder, filename_prefix)
+
     os.makedirs(output_folder, exist_ok=True)
 
     return output_file, subfolder, filename
