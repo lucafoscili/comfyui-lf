@@ -140,13 +140,17 @@ class LF_LoadImages:
                         f, e = os.path.splitext(file)
                         e = e.lstrip('.')
 
-                        file_names.append(file)  
+                        if strip_ext:
+                            file_names.append(f)  
+                        else:
+                            file_names.append(file)  
 
                         output_file, subfolder, filename = resolve_filepath(
                             base_output_path=BASE_INPUT_PATH,
                             index=index,
                             default_filename=f,
-                            extension=e
+                            extension=e,
+                            add_counter=False
                         )
                         url = get_resource_url(subfolder, filename, "input")
               

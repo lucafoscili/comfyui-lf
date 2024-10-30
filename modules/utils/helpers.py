@@ -1175,9 +1175,11 @@ def resolve_filepath(filepath: str = USER_FOLDER, base_output_path: str = BASE_T
     if add_counter:
         while os.path.exists(os.path.join(output_folder, f"{filename}_{counter}.{extension}")):
             counter += 1
-        filename_prefix = f"{filename}_{counter}.{extension}"
+        filename = f"{filename}_{counter}.{extension}"
+    else:
+        filename = f"{filename}.{extension}"
 
-    output_file = os.path.join(output_folder, filename_prefix)
+    output_file = os.path.join(output_folder, filename)
 
     os.makedirs(output_folder, exist_ok=True)
 
