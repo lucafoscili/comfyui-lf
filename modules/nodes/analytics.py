@@ -5,7 +5,7 @@ import torch
 
 from server import PromptServer
 
-from ..utils.constants import BASE_PATH, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, USER_FOLDER, get_usage_filename, get_usage_title
+from ..utils.constants import BASE_PATH, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, get_usage_filename, get_usage_title
 from ..utils.helpers import normalize_input_image, normalize_json_input, normalize_list_to_value, normalize_output_image
 
 CATEGORY = f"{CATEGORY_PREFIX}/Analytics"
