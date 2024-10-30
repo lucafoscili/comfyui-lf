@@ -308,7 +308,7 @@ class LF_Extractor:
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}extractor", {
             "node": kwargs.get("node_id"),
-            "result": extracted_text,
+            "value": extracted_text or "No matches...",
         })
         
         return (result_as_json, extracted_text, result_as_int, result_as_float, result_as_boolean)
@@ -523,7 +523,7 @@ class LF_Something2Number:
     """
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}something2number", {
             "node": kwargs.get("node_id"), 
-            "log": log,
+            "value": log,
         })
 
         return (float_values, integer_values, float_sum, integer_sum, float_values, integer_values)
@@ -605,7 +605,7 @@ class LF_Something2String:
         
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}something2string", {
             "node": kwargs.get("node_id"), 
-            "log": log,
+            "value": log,
         })
 
         return tuple(results)

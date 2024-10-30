@@ -1,4 +1,4 @@
-import { EventName, SwitchImagePayload } from '../types/events';
+import { EventName, SwitchFloatPayload } from '../types/events';
 import { LogSeverity } from '../types/manager';
 import { Extension, NodeName } from '../types/nodes';
 import {
@@ -12,7 +12,7 @@ const NAME = NodeName.switchFloat;
 
 export const switchFloatFactory = {
   eventHandler: (
-    event: CustomEvent<SwitchImagePayload>,
+    event: CustomEvent<SwitchFloatPayload>,
     addW: BaseWidgetCallback<CustomWidgetName.booleanViewer>,
   ) => {
     const name = EventName.switchFloat;

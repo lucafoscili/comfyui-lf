@@ -1,4 +1,4 @@
-import { EventName, ExtractorPayload } from '../types/events';
+import { EventName, CodePayload } from '../types/events';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import { CustomWidgetName, type BaseWidgetCallback, type CodeWidgetSetter } from '../types/widgets';
@@ -8,7 +8,7 @@ const NAME = NodeName.extractor;
 
 export const extractorFactory = {
   eventHandler: (
-    event: CustomEvent<ExtractorPayload>,
+    event: CustomEvent<CodePayload>,
     addW: BaseWidgetCallback<CustomWidgetName.code>,
   ) => {
     const name = EventName.extractor;
@@ -18,7 +18,7 @@ export const extractorFactory = {
     const node = getApiRoutes().getNodeById(payload.id);
     if (node) {
       const widget = getCustomWidget(node, CustomWidgetName.code, addW);
-      widget.options.setValue(event.detail.result || 'No match...');
+      widget.options.setValue(event.detail.value);
       getApiRoutes().redraw();
     }
   },

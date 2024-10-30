@@ -71,81 +71,42 @@ export enum EventName {
   writeJson = 'lf-writejson',
 }
 export type EventPayload =
-  | BlurImagesPayload
-  | BooleanPayload
-  | CharacterImpersonatorPayload
+  | BaseDatasetPayload
   | CheckpointSelectorPayload
   | CivitAIMetadataSetupPayload
-  | ClarityEffectPayload
-  | CompareImagesPayload
-  | DisplayBooleanPayload
   | DisplayJSONPayload
   | EmbeddingSelectorPayload
-  | ExtractorPayload
-  | FloatPayload
-  | ImageClassifierPayload
-  | ImageListFromJSONPayload
   | ImageHistogramPayload
-  | IntegerPayload
-  | IsLandscapePayload
   | KeywordCounterPayload
   | LoadImagesPayload
   | LoraAndEmbeddingSelectorPayload
   | LoraSelectorPayload
-  | Lora2PromptPayload
-  | LoraTag2PromptPayload
   | LoadLoraTagsPayload
-  | MathOperationPayload
-  | MultipleImageResizeForWebPayload
   | NotifyPayload
   | RandomBooleanPayload
-  | RegionExtractorPayload
-  | ResizeImageByEdgePayload
-  | ResizeImageToDimensionPayload
-  | ResizeImageToSquarePayload
   | ResolutionSwitcherPayload
-  | SamplerSelectorPayload
-  | SaveImageForCivitAIPayload
-  | SaveJSONPayload
-  | SchedulerSelectorPayload
-  | SequentialSeedsGeneratorPayload
   | ShuffleJSONKeysPayload
-  | Something2NumberPayload
-  | Something2StringPayload
   | SortJSONKeysPayload
-  | StringPayload
   | SwitchImagePayload
   | SwitchIntegerPayload
   | SwitchJSONPayload
   | SwitchStringPayload
-  | UpdateUsageStatisticsPayload
-  | UpscaleModelSelectorPayload
-  | UrandomSeedGeneratorPayload
-  | VAESelectorPayload
   | WriteJSONPayload;
 
 /*-------------------------------------------------------------------*/
-/*           B l u r I m a g e s   D e c l a r a t i o n s           */
+/*                     C o d e   P a y l o a d                       */
 /*-------------------------------------------------------------------*/
 
-export interface BlurImagesPayload extends BaseEventPayload {
-  dataset: KulDataDataset;
-}
-
-/*-------------------------------------------------------------------*/
-/*             B o o l e a n   D e c l a r a t i o n s               */
-/*-------------------------------------------------------------------*/
-
-export interface BooleanPayload extends BaseEventPayload {
-  dataset: KulDataDataset;
-}
-
-/*-------------------------------------------------------------------*/
-/*     C h a r a c t e r I m p e r s o n a t o r    D e c l a r .    */
-/*-------------------------------------------------------------------*/
-
-export interface CharacterImpersonatorPayload extends BaseEventPayload {
+export interface CodePayload extends BaseEventPayload {
   value: string;
+}
+
+/*-------------------------------------------------------------------*/
+/*              B a s e   D a t a s e t   P a y l o a d              */
+/*-------------------------------------------------------------------*/
+
+export interface BaseDatasetPayload extends BaseEventPayload {
+  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/
@@ -168,67 +129,11 @@ export interface CivitAIMetadataSetupPayload extends BaseEventPayload {
 }
 
 /*-------------------------------------------------------------------*/
-/*             C l a r i t y E f f e c t   D e c l a r .             */
-/*-------------------------------------------------------------------*/
-
-export interface ClarityEffectPayload extends BaseEventPayload {
-  dataset: KulDataDataset;
-}
-
-/*-------------------------------------------------------------------*/
-/*              C o m p a r e I m a g e s   D e c l a r .            */
-/*-------------------------------------------------------------------*/
-
-export interface CompareImagesPayload extends BaseEventPayload {
-  dataset: KulDataDataset;
-}
-
-/*-------------------------------------------------------------------*/
-/*    D i s p l a y P r i m i t i v e A s J S O N   D e c l a r .    */
-/*-------------------------------------------------------------------*/
-
-export interface DisplayPrimitiveAsJSONPayload extends BaseEventPayload {
-  dataset: KulDataDataset;
-}
-
-/*-------------------------------------------------------------------*/
-/*       D i s p l a y B o o l e a n   D e c l a r a t i o n s       */
-/*-------------------------------------------------------------------*/
-
-export interface DisplayBooleanPayload extends BaseEventPayload {
-  value: string;
-}
-
-/*-------------------------------------------------------------------*/
-/*         D i s p l a y F l o a t   D e c l a r a t i o n s         */
-/*-------------------------------------------------------------------*/
-
-export interface DisplayFloatPayload extends BaseEventPayload {
-  value: string;
-}
-
-/*-------------------------------------------------------------------*/
-/*       D i s p l a y I n t e g e r   D e c l a r a t i o n s       */
-/*-------------------------------------------------------------------*/
-
-export interface DisplayIntegerPayload extends BaseEventPayload {
-  value: string;
-}
-
-/*-------------------------------------------------------------------*/
 /*         D i s p l a y J S O N   D e c l a r a t i o n s           */
 /*-------------------------------------------------------------------*/
 
 export interface DisplayJSONPayload extends BaseEventPayload {
   json: Record<string, unknown>;
-}
-
-/*-------------------------------------------------------------------*/
-/*        D i s p l a y S t r i n g   D e c l a r a t i o n s        */
-/*-------------------------------------------------------------------*/
-
-export interface DisplayStringPayload extends BaseEventPayload {
-  value: string;
 }
 
 /*-------------------------------------------------------------------*/
@@ -251,51 +156,11 @@ export interface ExtractorPayload extends BaseEventPayload {
 }
 
 /*-------------------------------------------------------------------*/
-/*               F l o a t   D e c l a r a t i o n s                 */
-/*-------------------------------------------------------------------*/
-
-export interface FloatPayload extends BaseEventPayload {
-  dataset: KulDataDataset;
-}
-
-/*-------------------------------------------------------------------*/
-/*     I m a g e C l a s s i f i e r   D e c l a r a t i o n s       */
-/*-------------------------------------------------------------------*/
-
-export interface ImageClassifierPayload extends BaseEventPayload {
-  value: string;
-}
-
-/*-------------------------------------------------------------------*/
-/*    I m a g e L i s t F r o m J S O N   D e c l a r a t i o n s    */
-/*-------------------------------------------------------------------*/
-
-export interface ImageListFromJSONPayload extends BaseEventPayload {
-  dataset: KulDataDataset;
-}
-
-/*-------------------------------------------------------------------*/
 /*       I m a g e H i s t o g r a m   D e c l a r a t i o n s       */
 /*-------------------------------------------------------------------*/
 
 export interface ImageHistogramPayload extends BaseEventPayload {
   datasets: TabBarChartWidgetDeserializedValue;
-}
-
-/*-------------------------------------------------------------------*/
-/*              I n t e g e r   D e c l a r a t i o n s              */
-/*-------------------------------------------------------------------*/
-
-export interface IntegerPayload extends BaseEventPayload {
-  dataset: KulDataDataset;
-}
-
-/*-------------------------------------------------------------------*/
-/*          I s L a n d s c a p e   D e c l a r a t i o n s          */
-/*-------------------------------------------------------------------*/
-
-export interface IsLandscapePayload extends BaseEventPayload {
-  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/
@@ -308,19 +173,10 @@ export interface KeywordCounterPayload extends BaseEventPayload {
 }
 
 /*-------------------------------------------------------------------*/
-/*          L o a d F i l e O n c e   D e c l a r a t i o n s        */
-/*-------------------------------------------------------------------*/
-
-export interface LoadFileOncePayload extends BaseEventPayload {
-  dataset: KulDataDataset;
-}
-
-/*-------------------------------------------------------------------*/
 /*          L o a d   I m a g e s   D e c l a r a t i o n s          */
 /*-------------------------------------------------------------------*/
 
-export interface LoadImagesPayload extends BaseEventPayload {
-  dataset: KulDataDataset;
+export interface LoadImagesPayload extends BaseDatasetPayload {
   index: number;
   name: string;
 }
@@ -335,22 +191,6 @@ export interface LoadLoraTagsPayload extends BaseEventPayload {
   hashes: string[];
   paths: string[];
   chipDataset: KulDataDataset;
-}
-
-/*-------------------------------------------------------------------*/
-/*          L o r a 2 P r o m p t   D e c l a r a t i o n s          */
-/*-------------------------------------------------------------------*/
-
-export interface Lora2PromptPayload extends BaseEventPayload {
-  log: string;
-}
-
-/*-------------------------------------------------------------------*/
-/*      L o r a T a g 2 P r o m p t   D e c l a r a t i o n s        */
-/*-------------------------------------------------------------------*/
-
-export interface LoraTag2PromptPayload extends BaseEventPayload {
-  log: string;
 }
 
 /*-------------------------------------------------------------------*/
@@ -376,22 +216,6 @@ export interface LoraAndEmbeddingSelectorPayload extends BaseEventPayload {
 }
 
 /*-------------------------------------------------------------------*/
-/*       M a t h O p e r a t i o n   D e c l a r a t i o n s         */
-/*-------------------------------------------------------------------*/
-
-export interface MathOperationPayload extends BaseEventPayload {
-  log: string;
-}
-
-/*-------------------------------------------------------------------*/
-/*      M u l t i p l e   R e s i z e    D e c l a r a t i o n s     */
-/*-------------------------------------------------------------------*/
-
-export interface MultipleImageResizeForWebPayload extends BaseEventPayload {
-  dataset: KulDataDataset;
-}
-
-/*-------------------------------------------------------------------*/
 /*              N o t i f y   D e c l a r a t i o n s                */
 /*-------------------------------------------------------------------*/
 
@@ -412,39 +236,6 @@ export interface RandomBooleanPayload extends BaseEventPayload {
   bool: boolean;
   roll: number;
 }
-
-/*-------------------------------------------------------------------*/
-/*      R e g i o n E x t r a c t o r   D e c l a r a t i o n s      */
-/*-------------------------------------------------------------------*/
-
-export interface RegionExtractorPayload extends BaseEventPayload {
-  dataset: KulDataDataset;
-}
-
-/*-------------------------------------------------------------------*/
-/*    R e s i z e I m a g e B y E d g e   D e c l a r a t i o n s    */
-/*-------------------------------------------------------------------*/
-
-export interface ResizeImageByEdgePayload extends BaseEventPayload {
-  dataset: KulDataDataset;
-}
-
-/*-------------------------------------------------------------------*/
-/*    R e s i z e I m a g e T o D i m e n s i o n   D e c l a r .    */
-/*-------------------------------------------------------------------*/
-
-export interface ResizeImageToDimensionPayload extends BaseEventPayload {
-  dataset: KulDataDataset;
-}
-
-/*-------------------------------------------------------------------*/
-/*  R e s i z e I m a g e T o S q u a r e   D e c l a r a t i o n s  */
-/*-------------------------------------------------------------------*/
-
-export interface ResizeImageToSquarePayload extends BaseEventPayload {
-  dataset: KulDataDataset;
-}
-
 /*-------------------------------------------------------------------*/
 /*   R e s o l u t i o n S w i t c h e r   D e c l a r a t i o n s   */
 /*-------------------------------------------------------------------*/
@@ -452,46 +243,6 @@ export interface ResizeImageToSquarePayload extends BaseEventPayload {
 export interface ResolutionSwitcherPayload extends BaseEventPayload {
   bool: boolean;
   roll: number;
-}
-
-/*-------------------------------------------------------------------*/
-/*     S a m p l e r S e l e c t o r   D e c l a r a t i o n s       */
-/*-------------------------------------------------------------------*/
-
-export interface SamplerSelectorPayload extends BaseEventPayload {
-  dataset: KulDataDataset;
-}
-
-/*-------------------------------------------------------------------*/
-/*  R e s i z e I m a g e T o S q u a r e   D e c l a r a t i o n s  */
-/*-------------------------------------------------------------------*/
-
-export interface SaveJSONPayload extends BaseEventPayload {
-  dataset: KulDataDataset;
-}
-
-/*-------------------------------------------------------------------*/
-/*  S a v e I m a g e F o r C i v i t A I   D e c l a r a t i o n s  */
-/*-------------------------------------------------------------------*/
-
-export interface SaveImageForCivitAIPayload extends BaseEventPayload {
-  dataset: KulDataDataset;
-}
-
-/*-------------------------------------------------------------------*/
-/*    S c h e d u l e r S e l e c t o r   D e c l a r a t i o n s    */
-/*-------------------------------------------------------------------*/
-
-export interface SchedulerSelectorPayload extends BaseEventPayload {
-  dataset: KulDataDataset;
-}
-
-/*-------------------------------------------------------------------*/
-/*    S e q u e n t i a l S e e d s G e n e r a t o r   D e c l .    */
-/*-------------------------------------------------------------------*/
-
-export interface SequentialSeedsGeneratorPayload extends BaseEventPayload {
-  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/
@@ -503,35 +254,11 @@ export interface ShuffleJSONKeysPayload extends BaseEventPayload {
 }
 
 /*-------------------------------------------------------------------*/
-/*     S o m e t h i n g 2 N u m b e r   D e c l a r a t i o n s     */
-/*-------------------------------------------------------------------*/
-
-export interface Something2NumberPayload extends BaseEventPayload {
-  log: string;
-}
-
-/*-------------------------------------------------------------------*/
-/*     S o m e t h i n g 2 S t r i n g   D e c l a r a t i o n s     */
-/*-------------------------------------------------------------------*/
-
-export interface Something2StringPayload extends BaseEventPayload {
-  log: string;
-}
-
-/*-------------------------------------------------------------------*/
 /*         S o r t J S O N K e y s   D e c l a r a t i o n s         */
 /*-------------------------------------------------------------------*/
 
 export interface SortJSONKeysPayload extends BaseEventPayload {
   json: Record<string, unknown>;
-}
-
-/*-------------------------------------------------------------------*/
-/*               S t r i n g   D e c l a r a t i o n s               */
-/*-------------------------------------------------------------------*/
-
-export interface StringPayload extends BaseEventPayload {
-  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/
@@ -572,39 +299,6 @@ export interface SwitchJSONPayload extends BaseEventPayload {
 
 export interface SwitchStringPayload extends BaseEventPayload {
   bool: boolean;
-}
-
-/*-------------------------------------------------------------------*/
-/*      U p d a t e U s a g e S t a t i s t i c s   D e c l .        */
-/*-------------------------------------------------------------------*/
-
-export interface UpdateUsageStatisticsPayload extends BaseEventPayload {
-  log: string;
-}
-
-/*-------------------------------------------------------------------*/
-/* U p s c a l e M o d e l S e l e c t o r   D e c l a r a t i o n s */
-/*-------------------------------------------------------------------*/
-
-export interface UpscaleModelSelectorPayload extends BaseEventPayload {
-  dataset: KulDataDataset;
-}
-
-/*-------------------------------------------------------------------*/
-/*           U r a n d o m   S e e d   G e n e r a t o r             */
-/*-------------------------------------------------------------------*/
-
-export interface UrandomSeedGeneratorPayload extends BaseEventPayload {
-  dataset: KulDataDataset;
-  isHistoryEnabled: boolean;
-}
-
-/*-------------------------------------------------------------------*/
-/*          V A E S e l e c t o r   D e c l a r a t i o n s          */
-/*-------------------------------------------------------------------*/
-
-export interface VAESelectorPayload extends BaseEventPayload {
-  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/

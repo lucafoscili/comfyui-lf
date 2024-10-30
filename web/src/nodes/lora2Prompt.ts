@@ -1,4 +1,4 @@
-import { EventName, Lora2PromptPayload } from '../types/events';
+import { EventName, CodePayload } from '../types/events';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import { CustomWidgetName, type BaseWidgetCallback, type CodeWidgetSetter } from '../types/widgets';
@@ -8,7 +8,7 @@ const NAME = NodeName.lora2Prompt;
 
 export const lora2PromptFactory = {
   eventHandler: (
-    event: CustomEvent<Lora2PromptPayload>,
+    event: CustomEvent<CodePayload>,
     addW: BaseWidgetCallback<CustomWidgetName.code>,
   ) => {
     const name = EventName.lora2Prompt;
@@ -18,7 +18,7 @@ export const lora2PromptFactory = {
     const node = getApiRoutes().getNodeById(payload.id);
     if (node) {
       const widget = getCustomWidget(node, CustomWidgetName.code, addW);
-      widget.options.setValue(event.detail.log);
+      widget.options.setValue(event.detail.value);
       getApiRoutes().redraw();
     }
   },

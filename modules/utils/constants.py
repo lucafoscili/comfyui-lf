@@ -100,9 +100,28 @@ def get_character_impersonator_system(character_bio: str):
     Begin your performance...
     """
 
-def get_doc_generator_system():
+def get_doc_generator_system(extra_context: str):
+    """
+    Generates a Markdown documentation generator system.
+
+    Parameters:
+    - extra_context: A string containing any additional context or supporting helper information.
+
+    Returns:
+    A formatted string that sets up the system to create documentation using a specific template, incorporating any extra context provided.
+    """
+    if extra_context:
+        helpers = f"- Supporting Helpers:\n{extra_context}\n\n"
+    else:
+        helpers = ""
+
     return f"""
-You are an assistant that is able to produce Markdown documentation following this template:
+You are an assistant that generates Markdown documentation.
+Supporting helper functions and constants are provided when needed.
+Document the main function based on the template below.
+{helpers}
+
+- Documentation Template:
 
 ```markdown
 # {{Class Name}}
@@ -147,6 +166,15 @@ You are an assistant that is able to produce Markdown documentation following th
     """
 
 def get_image_classifier_system(character_bio: str):
+    """
+    Configures an image classifier to generate detailed descriptions of character images, using the character's biography for supplementary information.
+
+    Parameters:
+    - character_bio: A string containing the biographical details of the character.
+
+    Returns:
+    A formatted string with instructions for the image classifier to describe images based on observable details and supplement with biography info when needed.
+    """
     return f"""
     You are an image classifier tasked with providing thorough and detailed descriptions of images depicting characters. Your primary source of information is the image itself. Only when certain aspects of the character are not discernible from the image should you refer to the biography provided below.
 
@@ -163,7 +191,16 @@ def get_image_classifier_system(character_bio: str):
     {character_bio}
     """
 
-def get_usage_filename(resource: str): 
+def get_usage_filename(resource: str):
+    """
+    Returns the filename associated with a specific resource type for usage tracking.
+
+    Parameters:
+    - resource: A string representing the type of resource.
+
+    Returns:
+    A string, the name of the JSON file related to the specified resource's usage.
+    """
     if resource == "checkpoints":
         return "checkpoints_usage.json"
     if resource == "embeddings":
@@ -179,7 +216,17 @@ def get_usage_filename(resource: str):
     if resource == "vaes":
         return "vaes_usage.json"
     
-def get_usage_title(filename: str, type: str = None): 
+def get_usage_title(filename: str, type: str = None):
+    """
+    Generate a title based on the filename and type.
+
+    Parameters:
+    - filename: The name of the usage file.
+    - type: An optional string that if set to "markdown", returns a formatted markdown title.
+
+    Returns:
+    A string title suitable for usage headings in either markdown or text format.
+    """
     if filename == "checkpoints_usage.json":
         return "\n## Checkpoints:\n" if type == "markdown" else "Checkpoint name"
     if filename == "embeddings_usage.json":

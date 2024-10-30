@@ -321,7 +321,7 @@ class LF_Lora2Prompt:
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}lora2prompt", {
             "node": node_id, 
-            "log": log
+            "value": log
         })
 
         return (text, loras_string)
@@ -383,7 +383,7 @@ class LF_LoraTag2Prompt:
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}loratag2prompt", {
             "node": node_id, 
-            "log": log
+            "value": log
         })
 
         return (clean_loras, keyword_counts, clean_loras, keyword_counts)

@@ -1,4 +1,4 @@
-import { ClarityEffectPayload, EventName } from '../types/events';
+import { BaseDatasetPayload, EventName } from '../types/events';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import {
@@ -12,7 +12,7 @@ const NAME = NodeName.clarityEffect;
 
 export const clarityEffectFactory = {
   eventHandler: (
-    event: CustomEvent<ClarityEffectPayload>,
+    event: CustomEvent<BaseDatasetPayload>,
     addW: BaseWidgetCallback<CustomWidgetName.compare>,
   ) => {
     const name = EventName.clarityEffect;

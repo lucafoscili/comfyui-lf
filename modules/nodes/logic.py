@@ -127,7 +127,7 @@ class LF_MathOperation:
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}mathoperation", {
             "node": node_id, 
-            "log": log
+            "value": log
         })
         
         return (int(result), result)

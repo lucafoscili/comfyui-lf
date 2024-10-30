@@ -1,4 +1,4 @@
-import { BlurImagesPayload, EventName } from '../types/events';
+import { BaseDatasetPayload, EventName } from '../types/events';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import {
@@ -12,7 +12,7 @@ const NAME = NodeName.blurImages;
 
 export const blurImagesFactory = {
   eventHandler: (
-    event: CustomEvent<BlurImagesPayload>,
+    event: CustomEvent<BaseDatasetPayload>,
     addW: BaseWidgetCallback<CustomWidgetName.masonry>,
   ) => {
     const name = EventName.blurImages;

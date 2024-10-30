@@ -262,7 +262,7 @@ class LF_UpdateUsageStatistics:
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}updateusagestatistics", {
             "node": node_id, 
-            "log": log_title + log if log else log_title + "\nThere were no updates this run!"
+            "value": log_title + log if log else log_title + "\nThere were no updates this run!"
         })
 
         return (actual_path, dataset)

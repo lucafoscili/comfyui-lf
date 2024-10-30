@@ -1,4 +1,4 @@
-import { EventName, UpscaleModelSelectorPayload } from '../types/events';
+import { EventName, BaseDatasetPayload } from '../types/events';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import { CustomWidgetName, HistoryWidgetSetter, type BaseWidgetCallback } from '../types/widgets';
@@ -8,7 +8,7 @@ const NAME = NodeName.upscaleModelSelector;
 
 export const upscaleModelSelectorFactory = {
   eventHandler: (
-    event: CustomEvent<UpscaleModelSelectorPayload>,
+    event: CustomEvent<BaseDatasetPayload>,
     addW: BaseWidgetCallback<CustomWidgetName.history>,
   ) => {
     const name = EventName.upscaleModelSelector;

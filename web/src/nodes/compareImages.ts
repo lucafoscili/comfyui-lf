@@ -1,4 +1,4 @@
-import { CompareImagesPayload, EventName } from '../types/events';
+import { BaseDatasetPayload, EventName } from '../types/events';
 import { LogSeverity } from '../types/manager';
 import { NodeName, type Extension } from '../types/nodes';
 import {
@@ -12,7 +12,7 @@ const NAME = NodeName.compareImages;
 
 export const compareImagesFactory = {
   eventHandler: (
-    event: CustomEvent<CompareImagesPayload>,
+    event: CustomEvent<BaseDatasetPayload>,
     addW: BaseWidgetCallback<CustomWidgetName.compare>,
   ) => {
     const name = EventName.compareImages;

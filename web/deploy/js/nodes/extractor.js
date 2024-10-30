@@ -12,7 +12,7 @@ export const extractorFactory = {
         const node = getApiRoutes().getNodeById(payload.id);
         if (node) {
             const widget = getCustomWidget(node, CustomWidgetName.code, addW);
-            widget.options.setValue(event.detail.result || 'No match...');
+            widget.options.setValue(event.detail.value);
             getApiRoutes().redraw();
         }
     },

@@ -65,15 +65,12 @@ export declare enum EventName {
     vaeSelector = "lf-vaeselector",
     writeJson = "lf-writejson"
 }
-export type EventPayload = BlurImagesPayload | BooleanPayload | CharacterImpersonatorPayload | CheckpointSelectorPayload | CivitAIMetadataSetupPayload | ClarityEffectPayload | CompareImagesPayload | DisplayBooleanPayload | DisplayJSONPayload | EmbeddingSelectorPayload | ExtractorPayload | FloatPayload | ImageClassifierPayload | ImageListFromJSONPayload | ImageHistogramPayload | IntegerPayload | IsLandscapePayload | KeywordCounterPayload | LoadImagesPayload | LoraAndEmbeddingSelectorPayload | LoraSelectorPayload | Lora2PromptPayload | LoraTag2PromptPayload | LoadLoraTagsPayload | MathOperationPayload | MultipleImageResizeForWebPayload | NotifyPayload | RandomBooleanPayload | RegionExtractorPayload | ResizeImageByEdgePayload | ResizeImageToDimensionPayload | ResizeImageToSquarePayload | ResolutionSwitcherPayload | SamplerSelectorPayload | SaveImageForCivitAIPayload | SaveJSONPayload | SchedulerSelectorPayload | SequentialSeedsGeneratorPayload | ShuffleJSONKeysPayload | Something2NumberPayload | Something2StringPayload | SortJSONKeysPayload | StringPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | UpdateUsageStatisticsPayload | UpscaleModelSelectorPayload | UrandomSeedGeneratorPayload | VAESelectorPayload | WriteJSONPayload;
-export interface BlurImagesPayload extends BaseEventPayload {
-    dataset: KulDataDataset;
-}
-export interface BooleanPayload extends BaseEventPayload {
-    dataset: KulDataDataset;
-}
-export interface CharacterImpersonatorPayload extends BaseEventPayload {
+export type EventPayload = BaseDatasetPayload | CheckpointSelectorPayload | CivitAIMetadataSetupPayload | DisplayJSONPayload | EmbeddingSelectorPayload | ImageHistogramPayload | KeywordCounterPayload | LoadImagesPayload | LoraAndEmbeddingSelectorPayload | LoraSelectorPayload | LoadLoraTagsPayload | NotifyPayload | RandomBooleanPayload | ResolutionSwitcherPayload | ShuffleJSONKeysPayload | SortJSONKeysPayload | SwitchImagePayload | SwitchIntegerPayload | SwitchJSONPayload | SwitchStringPayload | WriteJSONPayload;
+export interface CodePayload extends BaseEventPayload {
     value: string;
+}
+export interface BaseDatasetPayload extends BaseEventPayload {
+    dataset: KulDataDataset;
 }
 export interface CheckpointSelectorPayload extends BaseEventPayload {
     dataset: KulDataDataset;
@@ -84,29 +81,8 @@ export interface CheckpointSelectorPayload extends BaseEventPayload {
 export interface CivitAIMetadataSetupPayload extends BaseEventPayload {
     metadataString: string;
 }
-export interface ClarityEffectPayload extends BaseEventPayload {
-    dataset: KulDataDataset;
-}
-export interface CompareImagesPayload extends BaseEventPayload {
-    dataset: KulDataDataset;
-}
-export interface DisplayPrimitiveAsJSONPayload extends BaseEventPayload {
-    dataset: KulDataDataset;
-}
-export interface DisplayBooleanPayload extends BaseEventPayload {
-    value: string;
-}
-export interface DisplayFloatPayload extends BaseEventPayload {
-    value: string;
-}
-export interface DisplayIntegerPayload extends BaseEventPayload {
-    value: string;
-}
 export interface DisplayJSONPayload extends BaseEventPayload {
     json: Record<string, unknown>;
-}
-export interface DisplayStringPayload extends BaseEventPayload {
-    value: string;
 }
 export interface EmbeddingSelectorPayload extends BaseEventPayload {
     dataset: KulDataDataset;
@@ -117,33 +93,14 @@ export interface EmbeddingSelectorPayload extends BaseEventPayload {
 export interface ExtractorPayload extends BaseEventPayload {
     result: string;
 }
-export interface FloatPayload extends BaseEventPayload {
-    dataset: KulDataDataset;
-}
-export interface ImageClassifierPayload extends BaseEventPayload {
-    value: string;
-}
-export interface ImageListFromJSONPayload extends BaseEventPayload {
-    dataset: KulDataDataset;
-}
 export interface ImageHistogramPayload extends BaseEventPayload {
     datasets: TabBarChartWidgetDeserializedValue;
-}
-export interface IntegerPayload extends BaseEventPayload {
-    dataset: KulDataDataset;
-}
-export interface IsLandscapePayload extends BaseEventPayload {
-    dataset: KulDataDataset;
 }
 export interface KeywordCounterPayload extends BaseEventPayload {
     chartDataset: KulDataDataset;
     chipDataset: KulDataDataset;
 }
-export interface LoadFileOncePayload extends BaseEventPayload {
-    dataset: KulDataDataset;
-}
-export interface LoadImagesPayload extends BaseEventPayload {
-    dataset: KulDataDataset;
+export interface LoadImagesPayload extends BaseDatasetPayload {
     index: number;
     name: string;
 }
@@ -153,12 +110,6 @@ export interface LoadLoraTagsPayload extends BaseEventPayload {
     hashes: string[];
     paths: string[];
     chipDataset: KulDataDataset;
-}
-export interface Lora2PromptPayload extends BaseEventPayload {
-    log: string;
-}
-export interface LoraTag2PromptPayload extends BaseEventPayload {
-    log: string;
 }
 export interface LoraSelectorPayload extends BaseEventPayload {
     dataset: KulDataDataset;
@@ -172,12 +123,6 @@ export interface LoraAndEmbeddingSelectorPayload extends BaseEventPayload {
     hashes: string[];
     paths: string[];
 }
-export interface MathOperationPayload extends BaseEventPayload {
-    log: string;
-}
-export interface MultipleImageResizeForWebPayload extends BaseEventPayload {
-    dataset: KulDataDataset;
-}
 export interface NotifyPayload extends BaseEventPayload {
     action: 'none' | 'focus tab' | 'interrupt' | 'interrupt and queue' | 'queue prompt';
     image: string;
@@ -190,51 +135,15 @@ export interface RandomBooleanPayload extends BaseEventPayload {
     bool: boolean;
     roll: number;
 }
-export interface RegionExtractorPayload extends BaseEventPayload {
-    dataset: KulDataDataset;
-}
-export interface ResizeImageByEdgePayload extends BaseEventPayload {
-    dataset: KulDataDataset;
-}
-export interface ResizeImageToDimensionPayload extends BaseEventPayload {
-    dataset: KulDataDataset;
-}
-export interface ResizeImageToSquarePayload extends BaseEventPayload {
-    dataset: KulDataDataset;
-}
 export interface ResolutionSwitcherPayload extends BaseEventPayload {
     bool: boolean;
     roll: number;
 }
-export interface SamplerSelectorPayload extends BaseEventPayload {
-    dataset: KulDataDataset;
-}
-export interface SaveJSONPayload extends BaseEventPayload {
-    dataset: KulDataDataset;
-}
-export interface SaveImageForCivitAIPayload extends BaseEventPayload {
-    dataset: KulDataDataset;
-}
-export interface SchedulerSelectorPayload extends BaseEventPayload {
-    dataset: KulDataDataset;
-}
-export interface SequentialSeedsGeneratorPayload extends BaseEventPayload {
-    dataset: KulDataDataset;
-}
 export interface ShuffleJSONKeysPayload extends BaseEventPayload {
     json: Record<string, unknown>;
 }
-export interface Something2NumberPayload extends BaseEventPayload {
-    log: string;
-}
-export interface Something2StringPayload extends BaseEventPayload {
-    log: string;
-}
 export interface SortJSONKeysPayload extends BaseEventPayload {
     json: Record<string, unknown>;
-}
-export interface StringPayload extends BaseEventPayload {
-    dataset: KulDataDataset;
 }
 export interface SwitchFloatPayload extends BaseEventPayload {
     bool: boolean;
@@ -250,19 +159,6 @@ export interface SwitchJSONPayload extends BaseEventPayload {
 }
 export interface SwitchStringPayload extends BaseEventPayload {
     bool: boolean;
-}
-export interface UpdateUsageStatisticsPayload extends BaseEventPayload {
-    log: string;
-}
-export interface UpscaleModelSelectorPayload extends BaseEventPayload {
-    dataset: KulDataDataset;
-}
-export interface UrandomSeedGeneratorPayload extends BaseEventPayload {
-    dataset: KulDataDataset;
-    isHistoryEnabled: boolean;
-}
-export interface VAESelectorPayload extends BaseEventPayload {
-    dataset: KulDataDataset;
 }
 export interface WriteJSONPayload extends BaseEventPayload {
     error: string;
