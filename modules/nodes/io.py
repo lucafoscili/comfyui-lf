@@ -2,6 +2,7 @@ import io
 import json
 import os
 import piexif
+import re
 import requests
 import torch
 
@@ -15,16 +16,16 @@ from ..utils.constants import BASE_OUTPUT_PATH, CATEGORY_PREFIX, EVENT_PREFIX, F
 from ..utils.helpers import create_dummy_image_tensor, create_history_node, create_masonry_node, extract_jpeg_metadata, extract_png_metadata, get_resource_url, normalize_input_image, normalize_input_list, normalize_json_input, normalize_list_to_value, normalize_output_image, pil_to_tensor, resolve_filepath, tensor_to_numpy
 
 CATEGORY = f"{CATEGORY_PREFIX}/IO Operations"
- 
+
 # region LF_LoadFileOnce
 class LF_LoadFileOnce:
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "dir": ("STRING", {"label": "Directory path", "tooltip": "Path to the directory containing the images to load."}),
-                "subdir": ("BOOLEAN", {"default": False, "label": "Load from subdir", "tooltip": "Indicates whether to also load images from subdirectories."}),
-                "strip_ext": ("BOOLEAN", {"default": True, "label": "Strip extension from name", "tooltip": "Whether to remove file extensions from filenames."}),
+                "dir": ("STRING", {"tooltip": "Path to the directory containing the images to load."}),
+                "subdir": ("BOOLEAN", {"default": False, "tooltip": "Indicates whether to also load images from subdirectories."}),
+                "strip_ext": ("BOOLEAN", {"default": True, "tooltip": "Whether to remove file extensions from filenames."}),
                 "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget to prevent the same filename to be loaded twice."}),
             },
             "optional": {
@@ -262,6 +263,83 @@ class LF_LoadMetadata:
 
         return (metadata_list,)
 # endregion
+# region LF_RegionExtractor
+class LF_RegionExtractor:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "dir": ("STRING", {"tooltip": "Path to the directory containing the Python files."}),
+                "subdir": ("BOOLEAN", {"default": False, "tooltip": "Whether to load Python files from subdirectories as well."}),
+                "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Tracks extracted regions to avoid reprocessing."}),
+                "extension": ("STRING", {"default": "py", "tooltip": "Extension of the files that will be read."}),
+            },
+            "optional": {
+                "json_input": ("KUL_HISTORY", {"default": {}}),
+            },
+            "hidden": { 
+                "node_id": "UNIQUE_ID",
+            } 
+        }
+
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    OUTPUT_IS_LIST = (False, True)
+    RETURN_NAMES = ("regions", "regions_list")
+    RETURN_TYPES = ("JSON", "JSON")
+
+    def on_exec(self, node_id: str, dir: str, subdir: bool, enable_history: bool, extension: str,  json_input: dict = {}):
+        dir = normalize_list_to_value(dir)
+        subdir = normalize_list_to_value(subdir)
+        enable_history = normalize_list_to_value(enable_history)
+        extension = normalize_list_to_value(extension)
+        json_input = normalize_json_input(json_input)
+
+        if not extension.startswith("."):
+            extension = f".{extension}"
+        
+        files = []
+        for root, _, f in os.walk(dir):
+            if not subdir and root != dir:
+                continue
+            files.extend([os.path.join(root, file) for file in f if file.endswith(".py")])
+        
+        regions_list = []
+
+        nodes = json_input.get("nodes", [])
+        
+        for file_path in files:
+            with open(file_path, 'r') as f:
+                code = f.read()
+                
+                if enable_history and json_input.get(file_path):
+                    continue
+                
+                pattern = r"# region (.+?)\n(.*?)# endregion"
+                matches = re.findall(pattern, code, re.DOTALL)
+                
+                for match in matches:
+                    name = match[0].strip()
+                    code = match[1].strip()
+
+                    if enable_history:
+                        create_history_node(name, nodes)
+
+                    regions_list.append({
+                        "file": file_path,
+                        "name": name,
+                        "code": code
+                    })
+
+        dataset = {"nodes": nodes}
+        
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}regionextractor", {
+            "node": node_id, 
+            "dataset": dataset,
+        })
+
+        return (regions_list, regions_list)
+# endregion
 # region LF_SaveImageForCivitAI
 class LF_SaveImageForCivitAI:
     @classmethod
@@ -402,12 +480,12 @@ class LF_SaveJSON:
             print(f"Error saving JSON: {e}")
             return None
 # endregion
-# region Mappings
 NODE_CLASS_MAPPINGS = {
     "LF_LoadFileOnce": LF_LoadFileOnce,
     "LF_LoadImages": LF_LoadImages,
     "LF_LoadLocalJSON": LF_LoadLocalJSON,
     "LF_LoadMetadata": LF_LoadMetadata,
+    "LF_RegionExtractor": LF_RegionExtractor,
     "LF_SaveJSON": LF_SaveJSON,
     "LF_SaveImageForCivitAI": LF_SaveImageForCivitAI
 }
@@ -417,7 +495,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_LoadImages": "Load images from disk",
     "LF_LoadLocalJSON": "Load JSON from disk",
     "LF_LoadMetadata": "Load metadata from image",
+    "LF_RegionExtractor": "Extract region from sources",
     "LF_SaveJSON": "Save JSON",
     "LF_SaveImageForCivitAI": "Save image with CivitAI-compatible metadata"
 }
-# endregion

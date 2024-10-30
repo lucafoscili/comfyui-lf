@@ -694,7 +694,6 @@ class LF_WallOfText:
 
         return (wall_of_text, wall_of_text)
 # endregion
-# region Mappings
 NODE_CLASS_MAPPINGS = {
     "LF_Boolean": LF_Boolean,
     "LF_DisplayBoolean": LF_DisplayBoolean,
@@ -727,4 +726,3 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_String": "String",
     "LF_WallOfText": "Wall of text"
 }             
-# endregion

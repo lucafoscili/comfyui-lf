@@ -34,6 +34,7 @@ export var EventName;
     EventName["multipleImageResizeForWeb"] = "lf-multipleimageresizeforweb";
     EventName["notify"] = "lf-notify";
     EventName["randomBoolean"] = "lf-randomboolean";
+    EventName["regionExtractor"] = "lf-regionextractor";
     EventName["resizeimageByEdge"] = "lf-resizeimagebyedge";
     EventName["resizeimageToDimension"] = "lf-resizeimagetodimension";
     EventName["resizeimageToSquare"] = "lf-resizeimagetosquare";

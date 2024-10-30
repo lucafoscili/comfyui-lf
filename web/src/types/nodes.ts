@@ -43,6 +43,7 @@ export enum NodeName {
   multipleImageResizeForWeb = 'LF_MultipleImageResizeForWeb',
   notify = 'LF_Notify',
   randomBoolean = 'LF_RandomBoolean',
+  regionExtractor = 'LF_RegionExtractor',
   resizeImageByEdge = 'LF_ResizeImageByEdge',
   resizeImageToDimension = 'LF_ResizeImageToDimension',
   resizeImageToSquare = 'LF_ResizeImageToSquare',

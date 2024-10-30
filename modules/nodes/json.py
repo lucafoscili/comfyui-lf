@@ -416,7 +416,6 @@ class LF_WriteJSON:
 
         return (json_input,)
 # endregion
-# region Mappings
 NODE_CLASS_MAPPINGS = {
     "LF_DisplayJSON": LF_DisplayJSON,
     "LF_GetRandomKeyFromJSON": LF_GetRandomKeyFromJSON,
@@ -441,4 +440,3 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_StringToJSON": "Convert string to JSON",
     "LF_WriteJSON": "Write JSON"
 }
-# endregion

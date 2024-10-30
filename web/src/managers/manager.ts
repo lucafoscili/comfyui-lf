@@ -72,6 +72,7 @@ import {
   CharacterImpersonatorPayload,
   ImageClassifierPayload,
   SequentialSeedsGeneratorPayload,
+  RegionExtractorPayload,
 } from '../types/events.js';
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
 import { LFTooltip } from './tooltip';
@@ -814,6 +815,13 @@ export class LFManager {
     );
     this.#APIS.event(EventName.randomBoolean, (e: CustomEvent<RandomBooleanPayload>) => {
       nodes.eventHandlers.LF_RandomBoolean(e, widgets.adders.KUL_ROLL_VIEWER);
+    });
+    /*-------------------------------------------------------------------*/
+    /*             I n i t   R e g i o n E x t r a c t o r               */
+    /*-------------------------------------------------------------------*/
+    this.#MANAGERS.nodes.register.LF_RegionExtractor(widgets.setters.KUL_HISTORY);
+    this.#APIS.event(EventName.regionExtractor, (e: CustomEvent<RegionExtractorPayload>) => {
+      nodes.eventHandlers.LF_RegionExtractor(e, widgets.adders.KUL_HISTORY);
     });
     /*-------------------------------------------------------------------*/
     /*            I n i t   R e s i z e I m a g e B y E d g e            */

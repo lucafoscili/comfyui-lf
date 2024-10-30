@@ -288,7 +288,6 @@ class LF_LLMMessenger:
             settings.get("location"), settings.get("style"), settings.get("timeframe")
         )
 # endregion
-# region Mappings
 NODE_CLASS_MAPPINGS = {
     "LF_CharacterImpersonator": LF_CharacterImpersonator,
     "LF_ImageClassifier": LF_ImageClassifier,
@@ -301,4 +300,3 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_LLMChat": "LLM Chat",
     "LF_LLMMessenger": "LLM Messenger"
 }
-# endregion

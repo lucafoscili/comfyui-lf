@@ -516,7 +516,6 @@ class LF_ResizeImageToSquare:
 
         return (image_batch[0], image_list, num_resized)
 # endregion
-# region Mappings
 NODE_CLASS_MAPPINGS = {
     "LF_BlurImages": LF_BlurImages,
     "LF_ClarityEffect": LF_ClarityEffect,
@@ -535,4 +534,3 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_ResizeImageToSquare": "Resize image to square",
     "LF_ResizeImageByEdge": "Resize image by edge",
 }
-# endregion

@@ -34,6 +34,7 @@ export declare class LFNodes {
         LF_MultipleImageResizeForWeb: (event: CustomEvent<import("../types/events").MultipleImageResizeForWebPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;
         LF_Notify: (event: CustomEvent<import("../types/events").NotifyPayload>) => void;
         LF_RandomBoolean: (event: CustomEvent<import("../types/events").RandomBooleanPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.rollViewer>) => void;
+        LF_RegionExtractor: (event: CustomEvent<import("../types/events").RegionExtractorPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
         LF_ResizeImageByEdge: (event: CustomEvent<import("../types/events").ResizeImageByEdgePayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;
         LF_ResizeImageToDimension: (event: CustomEvent<import("../types/events").ResizeImageToDimensionPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;
         LF_ResizeImageToSquare: (event: CustomEvent<import("../types/events").ResizeImageToSquarePayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;
@@ -99,6 +100,7 @@ export declare class LFNodes {
         LF_MultipleImageResizeForWeb: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;
         LF_Notify: () => void;
         LF_RandomBoolean: (setW: import("../types/widgets").RollViewerWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.rollViewer>) => void;
+        LF_RegionExtractor: (setW: import("../types/widgets").HistoryWidgetSetter) => void;
         LF_ResizeImageByEdge: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;
         LF_ResizeImageToDimension: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;
         LF_ResizeImageToSquare: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;
@@ -160,6 +162,7 @@ export declare class LFNodes {
             LF_MultipleImageResizeForWeb: (event: CustomEvent<import("../types/events").MultipleImageResizeForWebPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;
             LF_Notify: (event: CustomEvent<import("../types/events").NotifyPayload>) => void;
             LF_RandomBoolean: (event: CustomEvent<import("../types/events").RandomBooleanPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.rollViewer>) => void;
+            LF_RegionExtractor: (event: CustomEvent<import("../types/events").RegionExtractorPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.history>) => void;
             LF_ResizeImageByEdge: (event: CustomEvent<import("../types/events").ResizeImageByEdgePayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;
             LF_ResizeImageToDimension: (event: CustomEvent<import("../types/events").ResizeImageToDimensionPayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;
             LF_ResizeImageToSquare: (event: CustomEvent<import("../types/events").ResizeImageToSquarePayload>, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;
@@ -225,6 +228,7 @@ export declare class LFNodes {
             LF_MultipleImageResizeForWeb: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;
             LF_Notify: () => void;
             LF_RandomBoolean: (setW: import("../types/widgets").RollViewerWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.rollViewer>) => void;
+            LF_RegionExtractor: (setW: import("../types/widgets").HistoryWidgetSetter) => void;
             LF_ResizeImageByEdge: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;
             LF_ResizeImageToDimension: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;
             LF_ResizeImageToSquare: (setW: import("../types/widgets").TreeWidgetSetter, addW: BaseWidgetCallback<import("../types/widgets").CustomWidgetName.tree>) => void;

@@ -623,6 +623,13 @@ export class LFManager {
             nodes.eventHandlers.LF_RandomBoolean(e, widgets.adders.KUL_ROLL_VIEWER);
         });
         /*-------------------------------------------------------------------*/
+        /*             I n i t   R e g i o n E x t r a c t o r               */
+        /*-------------------------------------------------------------------*/
+        __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_RegionExtractor(widgets.setters.KUL_HISTORY);
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").event(EventName.regionExtractor, (e) => {
+            nodes.eventHandlers.LF_RegionExtractor(e, widgets.adders.KUL_HISTORY);
+        });
+        /*-------------------------------------------------------------------*/
         /*            I n i t   R e s i z e I m a g e B y E d g e            */
         /*-------------------------------------------------------------------*/
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").nodes.register.LF_ResizeImageByEdge(widgets.setters.KUL_TREE, widgets.adders.KUL_TREE);

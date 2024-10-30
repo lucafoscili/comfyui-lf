@@ -438,7 +438,6 @@ class LF_Notify:
 
         return (any, any)
 # endregion
-# region Mappings
 NODE_CLASS_MAPPINGS = {
     "LF_CivitAIMetadataSetup": LF_CivitAIMetadataSetup,
     "LF_ControlPanel": LF_ControlPanel,
@@ -456,4 +455,3 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_LoraTag2Prompt": "Convert LoRA tag to prompt",
     "LF_Notify": "Notify",
 }
-# endregion

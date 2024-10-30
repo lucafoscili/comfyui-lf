@@ -137,7 +137,6 @@ class LF_UrandomSeedGenerator:
         if regen_each_run:
             return float("NaN")
 # endregion
-# region Mappings
 NODE_CLASS_MAPPINGS = {
     "LF_SequentialSeedsGenerator": LF_SequentialSeedsGenerator,
     "LF_UrandomSeedGenerator": LF_UrandomSeedGenerator,
@@ -146,4 +145,3 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_SequentialSeedsGenerator": "Generate sequential seeds",
     "LF_UrandomSeedGenerator": "Urandom Seed Generator",
 }
-# endregion

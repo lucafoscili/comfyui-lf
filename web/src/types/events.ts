@@ -44,6 +44,7 @@ export enum EventName {
   multipleImageResizeForWeb = 'lf-multipleimageresizeforweb',
   notify = 'lf-notify',
   randomBoolean = 'lf-randomboolean',
+  regionExtractor = 'lf-regionextractor',
   resizeimageByEdge = 'lf-resizeimagebyedge',
   resizeimageToDimension = 'lf-resizeimagetodimension',
   resizeimageToSquare = 'lf-resizeimagetosquare',
@@ -98,6 +99,7 @@ export type EventPayload =
   | MultipleImageResizeForWebPayload
   | NotifyPayload
   | RandomBooleanPayload
+  | RegionExtractorPayload
   | ResizeImageByEdgePayload
   | ResizeImageToDimensionPayload
   | ResizeImageToSquarePayload
@@ -409,6 +411,14 @@ export interface NotifyPayload extends BaseEventPayload {
 export interface RandomBooleanPayload extends BaseEventPayload {
   bool: boolean;
   roll: number;
+}
+
+/*-------------------------------------------------------------------*/
+/*      R e g i o n E x t r a c t o r   D e c l a r a t i o n s      */
+/*-------------------------------------------------------------------*/
+
+export interface RegionExtractorPayload extends BaseEventPayload {
+  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/

@@ -282,7 +282,6 @@ class LF_UsageStatistics:
     def on_exec(self):
         return ()
 # endregion
-# region Mappings
 NODE_CLASS_MAPPINGS = {
     "LF_ImageHistogram": LF_ImageHistogram,
     "LF_KeywordCounter": LF_KeywordCounter,
@@ -296,4 +295,3 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_UpdateUsageStatistics": "Update usage statistics",
     "LF_UsageStatistics": "Usage statistics",
 }
-# endregion

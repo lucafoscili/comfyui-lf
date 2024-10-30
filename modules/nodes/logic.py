@@ -360,7 +360,6 @@ class LF_SwitchString:
 
         return (on_true if boolean else on_false,)
 # endregion
-# region Mappings
 NODE_CLASS_MAPPINGS = {
     "LF_IsLandscape": LF_IsLandscape,
     "LF_MathOperation": LF_MathOperation,
@@ -381,4 +380,3 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_SwitchJSON": "Switch JSON",
     "LF_SwitchString": "Switch String",
 } 
-# endregion
