@@ -199,8 +199,9 @@ class LF_SwitchFloat:
 
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
-    RETURN_NAMES = ("float",)
-    RETURN_TYPES = ("FLOAT",)
+    OUTPUT_IS_LIST = (False, True)
+    RETURN_NAMES = ("float", "float_list")
+    RETURN_TYPES = ("FLOAT", "FLOAT")
 
     def check_lazy_status(self, **kwargs: dict):
         switch_value = kwargs["boolean"]
@@ -209,14 +210,16 @@ class LF_SwitchFloat:
         else:
             return ["on_false"]
 
-    def on_exec(self, node_id: str, on_true: int, on_false: int, boolean: bool):
+    def on_exec(self, node_id: str, on_true: float, on_false: float, boolean: bool):
         
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}switchfloat", {
             "node": node_id, 
             "bool": boolean, 
         })
 
-        return (on_true if boolean else on_false,)
+        value = on_true if boolean else on_false
+
+        return (value, [value])
 # endregion
 # region LF_SwitchImage
 class LF_SwitchImage:
@@ -235,8 +238,9 @@ class LF_SwitchImage:
 
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
-    RETURN_NAMES = ("image",)
-    RETURN_TYPES = ("IMAGE",)
+    OUTPUT_IS_LIST = (False, True)
+    RETURN_NAMES = ("image", "image_list")
+    RETURN_TYPES = ("IMAGE", "IMAGE")
 
     def check_lazy_status(self, **kwargs: dict):
         switch_value = kwargs["boolean"]
@@ -252,7 +256,9 @@ class LF_SwitchImage:
             "bool": boolean, 
         })
 
-        return (on_true if boolean else on_false,)
+        value = on_true if boolean else on_false
+
+        return (value, [value])
 # endregion
 # region LF_SwitchInteger    
 class LF_SwitchInteger:
@@ -260,8 +266,8 @@ class LF_SwitchInteger:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "on_true": ("INT", {"lazy": True, "default": 0, "max": INT_MAX, "tooltip": "Value to return if the boolean condition is true."}),
-                "on_false": ("INT", {"lazy": True, "default": 0, "max": INT_MAX, "tooltip": "Value to return if the boolean condition is false."}),
+                "on_true": ("INT", {"default": 0, "max": INT_MAX, "tooltip": "Value to return if the boolean condition is true."}),
+                "on_false": ("INT", {"default": 0, "max": INT_MAX, "tooltip": "Value to return if the boolean condition is false."}),
                 "boolean": ("BOOLEAN", {"default": False, "tooltip": "Boolean condition to switch between 'on_true' and 'on_false' values."}),
             },
             "hidden": {
@@ -271,24 +277,22 @@ class LF_SwitchInteger:
 
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
-    RETURN_NAMES = ("int",)
-    RETURN_TYPES = ("INT",)
-
-    def check_lazy_status(self, **kwargs: dict):
-        switch_value = kwargs["boolean"]
-        if switch_value:
-            return ["on_true"]
-        else:
-            return ["on_false"]
-
+    OUTPUT_IS_LIST = (False, True)
+    RETURN_NAMES = ("int", "int_list")
+    RETURN_TYPES = ("INT", "INT")
+        
     def on_exec(self, node_id: str, on_true: int, on_false: int, boolean: bool):
+        on_true = normalize_list_to_value(on_true)
+        on_false = normalize_list_to_value(on_false)
         
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}switchinteger", {
             "node": node_id, 
             "bool": boolean, 
         })
 
-        return (on_true if boolean else on_false,)
+        value = on_true if boolean else on_false
+
+        return (value, [value])
 # endregion
 # region LF_SwitchJSON
 class LF_SwitchJSON:
@@ -307,8 +311,9 @@ class LF_SwitchJSON:
 
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
-    RETURN_NAMES = ("json",)
-    RETURN_TYPES = ("JSON",)
+    OUTPUT_IS_LIST = (False, True)
+    RETURN_NAMES = ("json", "json_list")
+    RETURN_TYPES = ("JSON", "JSON")
 
     def check_lazy_status(self, **kwargs: dict):
         switch_value = kwargs["boolean"]
@@ -319,12 +324,14 @@ class LF_SwitchJSON:
 
     def on_exec(self, node_id: str, on_true: dict, on_false: dict, boolean: bool):
         
-        PromptServer.instance.send_sync(f"{EVENT_PREFIX}switchimage", {
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}switchjson", {
             "node": node_id, 
             "bool": boolean, 
         })
 
-        return (on_true if boolean else on_false,)
+        value = on_true if boolean else on_false
+
+        return (value, [value])
 # endregion
 # region LF_SwitchString
 class LF_SwitchString:
@@ -341,8 +348,9 @@ class LF_SwitchString:
 
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
-    RETURN_NAMES = ("string",)
-    RETURN_TYPES = ("STRING",)
+    OUTPUT_IS_LIST = (False, True)
+    RETURN_NAMES = ("string", "string_list")
+    RETURN_TYPES = ("STRING", "STRING")
 
     def check_lazy_status(self, **kwargs: dict):
         switch_value = kwargs["boolean"]
@@ -358,7 +366,9 @@ class LF_SwitchString:
             "bool": boolean, 
         })
 
-        return (on_true if boolean else on_false,)
+        value = on_true if boolean else on_false
+
+        return (value, [value])
 # endregion
 NODE_CLASS_MAPPINGS = {
     "LF_IsLandscape": LF_IsLandscape,
