@@ -12,7 +12,7 @@ from PIL import Image
 from PIL.PngImagePlugin import PngInfo
 from server import PromptServer
 
-from ..utils.constants import BASE_OUTPUT_PATH, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, BASE_INPUT_PATH, USER_FOLDER
+from ..utils.constants import BASE_OUTPUT_PATH, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, BASE_INPUT_PATH
 from ..utils.helpers import create_dummy_image_tensor, create_history_node, create_masonry_node, extract_jpeg_metadata, extract_png_metadata, get_resource_url, normalize_input_image, normalize_input_list, normalize_json_input, normalize_list_to_value, normalize_output_image, pil_to_tensor, resolve_filepath, tensor_to_numpy
 
 CATEGORY = f"{CATEGORY_PREFIX}/IO Operations"
@@ -450,7 +450,7 @@ class LF_SaveJSON:
         return {
             "required": {
                 "json_data": ("JSON", {"tooltip": "JSON data to save."}),
-                "filepath": ("STRING", {"default": '', "tooltip": "Path and filename for saving the JSON. Use slashes to specify directories."}),
+                "filepath": ("STRING", {"default": '', "tooltip": "Path and filename for saving the JSON. Use slashes to set directories."}),
                 "add_timestamp": ("BOOLEAN", {"default": True, "tooltip": "Add timestamp to the filename as a suffix."}),
             },
             "hidden": { 
@@ -469,33 +469,75 @@ class LF_SaveJSON:
         filepath = normalize_list_to_value(filepath)
         add_timestamp = normalize_list_to_value(add_timestamp)
 
-        try:
-            output_file, _, _ = resolve_filepath(
-                filepath=filepath,
-                base_output_path=BASE_OUTPUT_PATH,
-                add_timestamp=add_timestamp,
-                extension="json",
-                add_counter=False
-            )
+        output_file, _, _ = resolve_filepath(
+            filepath=filepath,
+            base_output_path=BASE_OUTPUT_PATH,
+            add_timestamp=add_timestamp,
+            extension="json"
+        )
+ 
+        with open(output_file, 'w', encoding='utf-8') as json_file:
+            json.dump(json_data, json_file, ensure_ascii=False, indent=4)
+ 
+        nodes = []
+        root = { "children": nodes, "icon":"check", "id": "root", "value": "JSON saved successfully!" }
+        dataset = { "nodes": [root] }
+        nodes.append({ "description": output_file, "icon": "json", "id": output_file, "value": output_file })
+ 
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}savejson", {
+            "node": node_id,
+            "dataset": dataset,
+        })
+ 
+        return (json_data,)
+# endregion
+# region LF_SaveMarkdown
+class LF_SaveMarkdown:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "markdown_text": ("STRING", {"default": "", "multiline": True, "tooltip": "Markdown data to save."}),
+                "filepath": ("STRING", {"default": '', "tooltip": "Path and filename for saving the Markdown. Use slashes to set directories."}),
+                "add_timestamp": ("BOOLEAN", {"default": True, "tooltip": "Add timestamp to the filename as a suffix."}),
+            },
+            "hidden": { 
+                "node_id": "UNIQUE_ID",
+            } 
+        }
+    
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    OUTPUT_NODE = True
+    RETURN_NAMES = ("string",)
+    RETURN_TYPES = ("STRING",)
 
-            with open(output_file, 'w', encoding='utf-8') as json_file:
-                json.dump(json_data, json_file, ensure_ascii=False, indent=4)
+    def on_exec(self, node_id: str, markdown_text: str, filepath: str, add_timestamp: bool):
+        markdown_text = normalize_list_to_value(markdown_text)
+        filepath = normalize_list_to_value(filepath)
+        add_timestamp = normalize_list_to_value(add_timestamp)
 
-            nodes = []
-            root = { "children": nodes, "icon":"check", "id": "root", "value": "JSON saved successfully!" }
-            dataset = { "nodes": [root] }
-            nodes.append({ "description": output_file, "icon": "json", "id": output_file, "value": output_file })
+        output_file, _, _ = resolve_filepath(
+            filepath=filepath,
+            base_output_path=BASE_OUTPUT_PATH,
+            add_timestamp=add_timestamp,
+            extension="md"
+        )
 
-            PromptServer.instance.send_sync(f"{EVENT_PREFIX}savejson", {
-                "node": node_id,
-                "dataset": dataset,
-            })
+        with open(output_file, 'w', encoding='utf-8') as md_file:
+            md_file.write(markdown_text)
 
-            return (json_data,)
+        nodes = []
+        root = { "children": nodes, "icon":"check", "id": "root", "value": "Markdown saved successfully!" }
+        dataset = { "nodes": [root] }
+        nodes.append({ "description": output_file, "icon": "document", "id": output_file, "value": output_file })
 
-        except Exception as e:
-            print(f"Error saving JSON: {e}")
-            return None
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}savemarkdown", {
+            "node": node_id,
+            "dataset": dataset,
+        })
+
+        return (markdown_text,)
 # endregion
 NODE_CLASS_MAPPINGS = {
     "LF_LoadFileOnce": LF_LoadFileOnce,
@@ -504,6 +546,7 @@ NODE_CLASS_MAPPINGS = {
     "LF_LoadMetadata": LF_LoadMetadata,
     "LF_RegionExtractor": LF_RegionExtractor,
     "LF_SaveJSON": LF_SaveJSON,
+    "LF_SaveMarkdown": LF_SaveMarkdown,
     "LF_SaveImageForCivitAI": LF_SaveImageForCivitAI
 }
 
@@ -514,5 +557,6 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_LoadMetadata": "Load metadata from image",
     "LF_RegionExtractor": "Extract region from sources",
     "LF_SaveJSON": "Save JSON",
+    "LF_SaveMarkdown": "Save Markdown",
     "LF_SaveImageForCivitAI": "Save image with CivitAI-compatible metadata"
 }
