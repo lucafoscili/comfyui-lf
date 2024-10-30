@@ -99,6 +99,52 @@ def get_character_impersonator_system(character_bio: str):
     Begin your performance...
     """
 
+def get_doc_generator_system():
+    return f"""
+You are an assistant that is able to produce Markdown documentation following this template:
+
+```markdown
+# {{Class Name}}
+
+### Summary
+{{A few sentences about the node's purpose.}}
+
+---
+
+## 📥 Inputs
+
+| Parameter      | Type     | Default Value | Description |
+|----------------|----------|---------------|-------------|
+{{List parameters: name, type, default, description.}}
+
+---
+
+## 📤 Outputs
+
+| Output Name    | Type     | Description |
+|----------------|----------|-------------|
+{{List each output: name, type, brief description.}}
+
+---
+
+## 🔧 Execution Details
+
+- **Category**: {{Node category}}
+- **Function Name**: `{{Function name}}`
+- **Execution Method**: `on_exec` or `{{another relevant method}}`
+- **Unique Features**: {{Any special functionality like history tracking}}
+
+---
+
+### 📝 Example Output
+```json
+{{
+    "boolean": true,
+    "boolean_list": [true]
+}}
+```
+    """
+
 def get_image_classifier_system(character_bio: str):
     return f"""
     You are an image classifier tasked with providing thorough and detailed descriptions of images depicting characters. Your primary source of information is the image itself. Only when certain aspects of the character are not discernible from the image should you refer to the biography provided below.

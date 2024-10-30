@@ -4,7 +4,7 @@ import torch
 
 from server import PromptServer
 
-from ..utils.constants import BASE64_PNG_PREFIX, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, HEADERS, INT_MAX, get_character_impersonator_system, get_image_classifier_system
+from ..utils.constants import BASE64_PNG_PREFIX, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, HEADERS, INT_MAX, get_character_impersonator_system, get_doc_generator_system, get_image_classifier_system
 from ..utils.helpers import handle_response, normalize_input_image, normalize_json_input, normalize_list_to_value, tensor_to_base64
 
 CATEGORY = f"{CATEGORY_PREFIX}/LLM"
@@ -18,7 +18,7 @@ class LF_CharacterImpersonator:
                 "temperature": ("FLOAT", {"max": 1.901, "min": 0.1, "step": 0.1, "round": 0.1, "default": 0.7, "tooltip": "Controls the randomness of the generated text. Higher values make the output more random."}),
                 "max_tokens": ("INT", {"max": 8000, "min": 20, "step": 10, "default": 500, "tooltip": "Limits the length of the generated text. Adjusting this value can help control the verbosity of the output."}),
                 "prompt": ("STRING", {"multiline": True, "default": "", "tooltip": "The initial input or question that guides the generation process. Can be a single line or multiple lines of text."}),
-                "seed": ("INT", {"default": 0, "min": 0, "max": INT_MAX, "tooltip": "Determines the starting point for generating random numbers. Setting a specific seed ensures reproducibility of results."}),
+                "seed": ("INT", {"default": 42, "min": 0, "max": INT_MAX, "tooltip": "Determines the starting point for generating random numbers. Setting a specific seed ensures reproducibility of results."}),
                 "character_bio": ("STRING", {"multiline": True, "default": "", "tooltip": "Biographical details of the character to be impersonated. Helps in shaping the tone and content of the generated text."}),
                 "url": ("STRING", {"default": "http://localhost:5001/v1/chat/completions", "tooltip": "URL of the local endpoint where the request is sent."}),
             },
@@ -95,7 +95,7 @@ class LF_ImageClassifier:
                 "temperature" : ("FLOAT", {"max": 1.901, "min": 0.1, "step": 0.1, "round": 0.1, "default": 0.7, "tooltip": "Controls the randomness of the generated text. Higher values make the output more random."}),
                 "max_tokens" : ("INT", {"max": 8000, "min": 20, "step": 10, "default": 500, "tooltip": "Limits the length of the generated text. Adjusting this value can help control the verbosity of the output."}),
                 "prompt": ("STRING", {"multiline": True, "default": "", "tooltip": "The initial input or question that guides the generation process. Can be a single line or multiple lines of text."}),
-                "seed": ("INT", {"default": 0, "min": 0, "max": INT_MAX, "tooltip": "Determines the starting point for generating random numbers. Setting a specific seed ensures reproducibility of results."}),
+                "seed": ("INT", {"default": 42, "min": 0, "max": INT_MAX, "tooltip": "Determines the starting point for generating random numbers. Setting a specific seed ensures reproducibility of results."}),
                 "url": ("STRING", {"default": "http://localhost:5001/v1/chat/completions", "tooltip": "URL of the local endpoint where the request is sent."}),
             },
             "optional": {
@@ -288,15 +288,77 @@ class LF_LLMMessenger:
             settings.get("location"), settings.get("style"), settings.get("timeframe")
         )
 # endregion
+# region LF_MarkdownDocGenerator
+class LF_MarkdownDocGenerator:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "prompt": ("STRING", {"default": "", "tooltip": "The source file to document."}),
+                "temperature": ("FLOAT", {"max": 1.901, "min": 0.1, "step": 0.1, "round": 0.1, "default": 0.5, "tooltip": "Controls the randomness of the generated text. Higher values make the output more random."}),
+                "max_tokens": ("INT", {"max": 8000, "min": 20, "step": 10, "default": 2000, "tooltip": "Limits the length of the generated text. Adjusting this value can help control the verbosity of the output."}),
+                "seed": ("INT", {"default": 42, "min": 0, "max": INT_MAX, "tooltip": "Determines the starting point for generating random numbers. Setting a specific seed ensures reproducibility of results."}),
+                "url": ("STRING", {"default": "http://localhost:5001/v1/chat/completions", "tooltip": "URL of the local endpoint for the LLM."}),
+            },
+            "hidden": { 
+                "node_id": "UNIQUE_ID"
+            }
+        }
+
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    OUTPUT_IS_LIST = (False, False, False, True)
+    RETURN_NAMES = ("request_json", "response_json", "markdown", "markdown_list")
+    RETURN_TYPES = ("JSON", "JSON", "STRING", "STRING")
+
+    def on_exec(self, node_id: str, prompt: str, temperature: float, max_tokens: int, seed: int,  url: str):
+        prompt = normalize_list_to_value(prompt)
+        temperature = normalize_list_to_value(temperature)
+        max_tokens = normalize_list_to_value(max_tokens)
+        seed = normalize_list_to_value(seed)
+        url = normalize_list_to_value(url)
+
+        request = {
+            "temperature": temperature,
+            "max_tokens": max_tokens,
+            "seed": seed,
+            "messages": [
+              {
+                "role": "system",
+                "content": get_doc_generator_system()
+              },
+              {
+                "role": "user",
+                "content": prompt
+              },
+            ],
+        }
+
+        response = requests.post(url, headers=HEADERS, data=json.dumps(request))
+        response_data = response.json()
+        status_code, _, message = handle_response(response, method="POST")
+        
+        if status_code != 200:
+            message = f"Oops! Documentation generation failed with status code {status_code}."
+
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}docgenerator", {
+            "node": node_id, 
+            "value": message,
+        })
+
+        return (request, response_data, message, [message])
+# endregion
 NODE_CLASS_MAPPINGS = {
     "LF_CharacterImpersonator": LF_CharacterImpersonator,
     "LF_ImageClassifier": LF_ImageClassifier,
     "LF_LLMChat": LF_LLMChat,
     "LF_LLMMessenger": LF_LLMMessenger,
+    "LF_MarkdownDocGenerator": LF_MarkdownDocGenerator
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_CharacterImpersonator": "LLM <-> Character",
     "LF_ImageClassifier": "LLM Image classifier",
     "LF_LLMChat": "LLM Chat",
-    "LF_LLMMessenger": "LLM Messenger"
+    "LF_LLMMessenger": "LLM Messenger",
+    "LF_MarkdownDocGenerator": "Markdown doc. generator"
 }
