@@ -297,7 +297,31 @@ class LF_RegionExtractor:
     RETURN_NAMES = ("regions", "regions_list")
     RETURN_TYPES = ("JSON", "JSON")
 
-    def on_exec(self, node_id: str, dir: str, subdir: bool, enable_history: bool, extension: str,  json_input: dict = {}):
+    def on_exec(self, node_id: str, dir: str, subdir: bool, enable_history: bool, extension: str, json_input: dict = {}):
+
+        def find_missing_references(code):
+            """
+            Identify constants and helper functions that are used but not defined in the code region.
+            """
+            # Patterns for constants (uppercase words) and function calls
+            constant_pattern = r'\b([A-Z_][A-Z0-9_]*)\b'
+            function_pattern = r'\b([a-zA-Z_][a-zA-Z0-9_]*)\s*\('
+
+            # All defined names within the region
+            defined_names = set(re.findall(r'\bdef ([a-zA-Z_][a-zA-Z0-9_]*)\b|\b([A-Z_][A-Z0-9_]*)\b\s*=', code))
+            defined_functions = {name[0] for name in defined_names if name[0]}
+            defined_constants = {name[1] for name in defined_names if name[1]}
+
+            # Find all constants and functions used in the code
+            used_constants = set(re.findall(constant_pattern, code))
+            used_functions = set(re.findall(function_pattern, code))
+
+            # Missing constants and functions
+            missing_constants = list(used_constants - defined_constants)
+            missing_functions = list(used_functions - defined_functions)
+
+            return missing_constants, missing_functions
+
         dir = normalize_list_to_value(dir)
         subdir = normalize_list_to_value(subdir)
         enable_history = normalize_list_to_value(enable_history)
@@ -314,7 +338,6 @@ class LF_RegionExtractor:
             files.extend([os.path.join(root, file) for file in f if file.endswith(".py")])
         
         regions_list = []
-
         nodes = json_input.get("nodes", [])
         
         for file_path in files:
@@ -331,13 +354,17 @@ class LF_RegionExtractor:
                     name = match[0].strip()
                     code = match[1].strip()
 
+                    constants, helper_functions = find_missing_references(code)
+                    
                     if enable_history:
                         create_history_node(name, nodes)
 
                     regions_list.append({
                         "file": file_path,
                         "name": name,
-                        "code": code
+                        "code": code,
+                        "constants": constants,
+                        "helperFunctions": helper_functions
                     })
 
         dataset = {"nodes": nodes}
