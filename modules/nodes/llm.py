@@ -294,11 +294,14 @@ class LF_MarkdownDocGenerator:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "prompt": ("STRING", {"default": "", "tooltip": "The source file to document."}),
+                "prompt": ("STRING", {"default": "", "multiline": True, "tooltip": "The source file to document."}),
                 "temperature": ("FLOAT", {"max": 1.901, "min": 0.1, "step": 0.1, "round": 0.1, "default": 0.5, "tooltip": "Controls the randomness of the generated text. Higher values make the output more random."}),
                 "max_tokens": ("INT", {"max": 8000, "min": 20, "step": 10, "default": 2000, "tooltip": "Limits the length of the generated text. Adjusting this value can help control the verbosity of the output."}),
                 "seed": ("INT", {"default": 42, "min": 0, "max": INT_MAX, "tooltip": "Determines the starting point for generating random numbers. Setting a specific seed ensures reproducibility of results."}),
                 "url": ("STRING", {"default": "http://localhost:5001/v1/chat/completions", "tooltip": "URL of the local endpoint for the LLM."}),
+            },
+            "optional": { 
+                "extra_context": ("STRING", {"default": "", "multiline": True, "tooltip": "Additional context to guide the LLM (out of scope constants and helpers definitions)."}),
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
@@ -311,12 +314,13 @@ class LF_MarkdownDocGenerator:
     RETURN_NAMES = ("request_json", "response_json", "markdown", "markdown_list")
     RETURN_TYPES = ("JSON", "JSON", "STRING", "STRING")
 
-    def on_exec(self, node_id: str, prompt: str, temperature: float, max_tokens: int, seed: int,  url: str):
+    def on_exec(self, node_id: str, prompt: str, temperature: float, max_tokens: int, seed: int,  url: str, extra_context: str = None):
         prompt = normalize_list_to_value(prompt)
         temperature = normalize_list_to_value(temperature)
         max_tokens = normalize_list_to_value(max_tokens)
         seed = normalize_list_to_value(seed)
         url = normalize_list_to_value(url)
+        extra_context = normalize_list_to_value(extra_context)
 
         request = {
             "temperature": temperature,
@@ -325,7 +329,7 @@ class LF_MarkdownDocGenerator:
             "messages": [
               {
                 "role": "system",
-                "content": get_doc_generator_system()
+                "content": get_doc_generator_system(extra_context)
               },
               {
                 "role": "user",
