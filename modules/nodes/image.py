@@ -84,7 +84,7 @@ class LF_BlurImages:
 
         image_batch, image_list = normalize_output_image(blurred_images)
 
-        return (image_batch[0], image_list, blurred_file_names, index)
+        return (image_batch[0], image_list, blurred_file_names, len(image_list))
 # endregion
 # region LF_ClarityEffect
 class LF_ClarityEffect:
