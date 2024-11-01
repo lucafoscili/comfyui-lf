@@ -22,15 +22,15 @@ export const countBarChartFactory = {
             },
             getValue() {
                 return {
-                    chartDataset: chart.kulData || {},
-                    chipDataset: chip.kulData || {},
+                    chart: chart.kulData || {},
+                    chip: chip.kulData || {},
                 };
             },
             setValue(value) {
                 const callback = (_, u) => {
-                    const { chartDataset, chipDataset } = u.parsedJson;
-                    chart.kulData = chartDataset || {};
-                    chip.kulData = chipDataset || {};
+                    const json = u.parsedJson;
+                    chart.kulData = json.chart || {};
+                    chip.kulData = json.chip || {};
                     button.classList.remove(countBarChartFactory.cssClasses.buttonHidden);
                 };
                 const onException = () => {
@@ -40,7 +40,7 @@ export const countBarChartFactory = {
             },
         };
     },
-    render: (node, name) => {
+    render: (node) => {
         const wrapper = document.createElement('div');
         const content = document.createElement('div');
         const grid = document.createElement('div');
@@ -72,7 +72,7 @@ export const countBarChartFactory = {
         grid.appendChild(button);
         content.appendChild(grid);
         wrapper.appendChild(content);
-        return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };
+        return { widget: createDOMWidget(TYPE, wrapper, node, options) };
     },
 };
 const copy = async (e, chip) => {

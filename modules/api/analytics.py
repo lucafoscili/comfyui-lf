@@ -12,12 +12,12 @@ async def clear_usage_analytics(request):
     try:
         r = await request.post()
         
-        analytics_type = r.get("type")
+        analytics_type: str = r.get("type")
 
         if not analytics_type:
             return web.Response(status=404, text=f"Missing type (received {analytics_type}).")
         
-        deleted_files = []
+        deleted_files: list[str] = []
         
         for root, _, files in os.walk(BASE_PATH):
             if BACKUP_FOLDER in root:
@@ -48,8 +48,8 @@ async def get_usage_analytics(request):
     try:
         r = await request.post()
         
-        directory = r.get("directory")
-        analytics_type = r.get("type")
+        directory: str = r.get("directory")
+        analytics_type: str = r.get("type")
 
         if not directory or not analytics_type:
             return web.Response(status=500, text=f"Missing directory (received {directory}) or type (received {analytics_type}).")
@@ -59,14 +59,14 @@ async def get_usage_analytics(request):
         if not os.path.exists(analytics_dir):
             return web.Response(status=404, text="Directory not found.")
 
-        analytics_data = {}
+        analytics_data: dict = {}
 
         for filename in os.listdir(analytics_dir):
             if filename.endswith(f"{analytics_type}.json"):
                 file_path = os.path.join(analytics_dir, filename)
                 try:
                     with open(file_path, 'r') as file:
-                        data = json.load(file)
+                        data: dict = json.load(file)
                         analytics_data[filename] = data
                 except Exception as e:
                     return web.Response(status=500, text=f"Failed to read {filename}: {str(e)}")

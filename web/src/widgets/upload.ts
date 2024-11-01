@@ -24,13 +24,13 @@ export const uploadFactory: UploadWidgetFactory = {
         return upload;
       },
       getValue() {
-        return upload.dataset.files || '';
+        return upload.dataset.files;
       },
-      setValue(value: string) {
+      setValue(value) {
         const callback: NormalizeValueCallback<
           CustomWidgetDeserializedValuesMap<typeof TYPE> | string
         > = (v) => {
-          upload.dataset.files = value = v;
+          upload.dataset.files = v;
         };
 
         normalizeValue(value, callback, TYPE);
@@ -38,7 +38,7 @@ export const uploadFactory: UploadWidgetFactory = {
     };
   },
 
-  render: (node, name) => {
+  render: (node) => {
     const wrapper = document.createElement('div');
     const content = document.createElement('div');
     const upload = document.createElement('kul-upload');
@@ -53,7 +53,7 @@ export const uploadFactory: UploadWidgetFactory = {
     content.appendChild(upload);
     wrapper.appendChild(content);
 
-    return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };
+    return { widget: createDOMWidget(TYPE, wrapper, node, options) };
   },
 };
 

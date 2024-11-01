@@ -42,7 +42,7 @@ export const masonryFactory = {
             },
         };
     },
-    render: (node, name) => {
+    render: (node) => {
         const wrapper = document.createElement('div');
         const content = document.createElement('div');
         const masonry = document.createElement('kul-masonry');
@@ -57,7 +57,7 @@ export const masonryFactory = {
         }
         content.appendChild(masonry);
         wrapper.appendChild(content);
-        return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };
+        return { widget: createDOMWidget(TYPE, wrapper, node, options) };
     },
 };
 const masonryEventHandler = (e) => {

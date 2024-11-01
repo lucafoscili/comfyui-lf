@@ -15,17 +15,17 @@ export const uploadFactory = {
                 return upload;
             },
             getValue() {
-                return upload.dataset.files || '';
+                return upload.dataset.files;
             },
             setValue(value) {
                 const callback = (v) => {
-                    upload.dataset.files = value = v;
+                    upload.dataset.files = v;
                 };
                 normalizeValue(value, callback, TYPE);
             },
         };
     },
-    render: (node, name) => {
+    render: (node) => {
         const wrapper = document.createElement('div');
         const content = document.createElement('div');
         const upload = document.createElement('kul-upload');
@@ -37,7 +37,7 @@ export const uploadFactory = {
         });
         content.appendChild(upload);
         wrapper.appendChild(content);
-        return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };
+        return { widget: createDOMWidget(TYPE, wrapper, node, options) };
     },
 };
 const handleUpload = async (e, upload) => {

@@ -16,7 +16,10 @@ class LF_ImageHistogram:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "image": ("IMAGE", {"label": "Image tensor", "tooltip": "Input image tensor to generate histograms from."}),
+                "image": ("IMAGE", {"tooltip": "Input images to generate histograms from."}),
+            },
+            "optional": {
+                "ui_widget": ("KUL_TAB_BAR_CHART", {"default": {}})
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
@@ -30,11 +33,11 @@ class LF_ImageHistogram:
     RETURN_NAMES = ("image", "image_list", "dataset")
     RETURN_TYPES = ("IMAGE", "IMAGE", "JSON")
 
-    def on_exec(self, node_id: str, image: torch.Tensor):
-        image = normalize_input_image(image)
+    def on_exec(self, **kwargs: dict):
+        image: list[torch.Tensor] = normalize_input_image(kwargs.get("image", []))
 
-        batch_histograms = []
-        datasets = {}
+        batch_histograms: list[dict] = []
+        datasets: dict = {}
 
         for img in image:
             image_batch_np = img.cpu().numpy() * 255.0
@@ -62,8 +65,8 @@ class LF_ImageHistogram:
                 })
 
         for index, hist in enumerate(batch_histograms):
-            nodes = []
-            dataset = {
+            nodes: list[dict] = []
+            dataset: dict = {
                 "columns": [
                     {"id": "Axis_0", "title": "Intensity"},
                     {"id": "Series_0", "shape": "number", "title": "Red Channel"},
@@ -75,7 +78,7 @@ class LF_ImageHistogram:
             }
 
             for i in range(256):
-                node = {
+                node: dict = {
                     "cells": {
                         "Axis_0": {"value": i},
                         "Series_0": {"value": hist["red_hist"][i]},
@@ -90,13 +93,13 @@ class LF_ImageHistogram:
             datasets[f"Image #{index + 1}"] = dataset
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}imagehistogram", {
-            "node": node_id, 
+            "node": kwargs.get("node_id"), 
             "datasets": datasets,
         })
 
-        batch, list = normalize_output_image(image)
+        b, l = normalize_output_image(image)
 
-        return (batch[0], list, datasets)
+        return (b[0], l, datasets)
 # endregion
 # region LF_KeywordCounter
 class LF_KeywordCounter:
@@ -106,6 +109,9 @@ class LF_KeywordCounter:
             "required": {
                 "prompt": ("STRING", {"multiline": True, "tooltip": "Prompt containing keywords to count."}),
                 "separator": ("STRING", {"default": ", ", "tooltip": "Character(s) used to separate keywords in the prompt."}),
+            },
+            "optional": {
+                "ui_widget": ("KUL_COUNT_BAR_CHART", {"default": {}})
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
@@ -118,20 +124,20 @@ class LF_KeywordCounter:
     RETURN_NAMES = ("chart_dataset", "chip_dataset")
     RETURN_TYPES = ("JSON", "JSON")
 
-    def on_exec(self, node_id: str, prompt: str, separator: str):
-        prompt = normalize_list_to_value(prompt)
-        separator = normalize_list_to_value(separator)
+    def on_exec(self, **kwargs: dict):
+        prompt: str = normalize_list_to_value(kwargs.get("prompt"))
+        separator: str = normalize_list_to_value(kwargs.get("separator"))
 
-        keywords = prompt.split(separator)
-        keyword_count = {}
+        keywords: list[str] = prompt.split(separator)
+        keyword_count: dict = {}
 
         for keyword in keywords:
             keyword = keyword.strip().lower()
             if keyword:
                 keyword_count[keyword] = keyword_count.get(keyword, 0) + 1
 
-        chart_nodes = []
-        chart_dataset = {
+        chart_nodes: list[dict] = []
+        chart_dataset: dict = {
             "columns": [
                 {"id": "Axis_0", "title": "Keyword"},
                 {"id": "Series_0", "shape": "number", "title": "Count"},
@@ -149,8 +155,8 @@ class LF_KeywordCounter:
             }
             chart_nodes.append(node)
 
-        chip_nodes = []
-        chip_dataset = {
+        chip_nodes: list[dict] = []
+        chip_dataset: dict = {
             "nodes": chip_nodes
         }
 
@@ -162,9 +168,11 @@ class LF_KeywordCounter:
             chip_nodes.append(node)
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}keywordcounter", {
-            "node": node_id, 
-            "chartDataset": chart_dataset,
-            "chipDataset": chip_dataset,
+            "node": kwargs.get("node_id"),
+            "datasets": {
+                "chart": chart_dataset,
+                "chip": chip_dataset,
+            }
         })
 
         return (chart_dataset, chip_dataset)
@@ -178,6 +186,9 @@ class LF_UpdateUsageStatistics:
                 "datasets_dir": ("STRING", {"default": "Workflow_name", "tooltip": "The files are saved in the user directory of ComfyUI under LF_Nodes. This field can be used to add additional folders."}),
                 "dataset": ("JSON", {"defaultInput": True, "tooltip": "Dataset including the resources (produced by CivitAIMetadataSetup)."}),
             },
+            "optional": {
+                "ui_widget": ("KUL_CODE", {"default": {}})
+            },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
             }
@@ -189,7 +200,7 @@ class LF_UpdateUsageStatistics:
     RETURN_NAMES = ("dir", "dataset")
     RETURN_TYPES = ("STRING", "JSON")
 
-    def on_exec(self, node_id: str, datasets_dir: str, dataset: dict):
+    def on_exec(self, **kwargs: dict):
         def update_usage_json(resource_file: str, resource_name: str, resource_value: str):
             resource_value = os.path.splitext(resource_value)[0]
             template = {"columns": [{"id": "name", "title": resource_name}, {"id": "counter", "title": "Nr. of times used", "shape": "number"}], "nodes": []}
@@ -236,8 +247,8 @@ class LF_UpdateUsageStatistics:
                 log += update_usage_json(file, get_usage_title(filename), i)
             return log
 
-        datasets_dir = normalize_list_to_value(datasets_dir)                
-        dataset = normalize_json_input(dataset)
+        datasets_dir: str = normalize_list_to_value(kwargs.get("datasets_dir"))
+        dataset: dict = normalize_json_input(kwargs.get("dataset"))
         
         actual_path = os.path.join(BASE_PATH, datasets_dir)
 
@@ -261,7 +272,7 @@ class LF_UpdateUsageStatistics:
             print(f"Unexpected dataset format: {dataset}")
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}updateusagestatistics", {
-            "node": node_id, 
+            "node": kwargs.get("node_id"), 
             "value": log_title + log if log else log_title + "\nThere were no updates this run!"
         })
 
@@ -273,13 +284,16 @@ class LF_UsageStatistics:
     def INPUT_TYPES(cls):
         return {
             "required": {},
+            "optional": {
+                "ui_widget": ("KUL_TAB_BAR_CHART", {"default": {}})
+            },
         }
     
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
     RETURN_TYPES = ()
 
-    def on_exec(self):
+    def on_exec(self, **kwargs: dict):
         return ()
 # endregion
 NODE_CLASS_MAPPINGS = {

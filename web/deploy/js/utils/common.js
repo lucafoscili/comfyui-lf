@@ -1,5 +1,6 @@
 import { CustomWidgetName, } from '../types/widgets.js';
 import { LogSeverity } from '../types/manager.js';
+const DEFAULT_WIDGET_NAME = 'ui_widget';
 const DOM = document.documentElement;
 const WINDOW = window;
 export const areJSONEqual = (a, b) => {
@@ -12,9 +13,34 @@ export const capitalize = (input) => {
         .map((word) => word.charAt(0).toUpperCase() + word.substring(1))
         .join(' ');
 };
-export const createDOMWidget = (name, type, element, node, options = undefined) => {
+export const createDOMWidget = (type, element, node, options = undefined) => {
     getLFManager().log(`Creating '${type}'`, { element });
-    return node.addDOMWidget(name, type, element, options);
+    try {
+        const { nodeData } = Object.getPrototypeOf(node).constructor;
+        let name = DEFAULT_WIDGET_NAME;
+        for (const key in nodeData.input) {
+            if (Object.prototype.hasOwnProperty.call(nodeData.input, key)) {
+                const input = nodeData.input[key];
+                for (const key in input) {
+                    if (Object.prototype.hasOwnProperty.call(input, key)) {
+                        const element = Array.from(input[key]);
+                        if (element[0] === type) {
+                            name = key;
+                            break;
+                        }
+                    }
+                }
+                if (name) {
+                    break;
+                }
+            }
+        }
+        return node.addDOMWidget(name, type, element, options);
+    }
+    catch (error) {
+        getLFManager().log(`Couldn't find a widget of type ${type}`, { error, node }, LogSeverity.Warning);
+        return node.addDOMWidget(DEFAULT_WIDGET_NAME, type, element, options);
+    }
 };
 export const findWidget = (node, type) => {
     return node?.widgets?.find((w) => w.type === type);
@@ -22,8 +48,8 @@ export const findWidget = (node, type) => {
 export const getApiRoutes = () => {
     return WINDOW.lfManager.getApiRoutes();
 };
-export const getCustomWidget = (node, type, addW) => {
-    return (node?.widgets?.find((w) => w.type.toLowerCase() === type.toLowerCase()) || (addW ? addW(node, type).widget : undefined));
+export const getCustomWidget = (node, type) => {
+    return node?.widgets?.find((w) => w.type.toLowerCase() === type.toLowerCase());
 };
 export const getInput = (node, type) => {
     return node?.inputs?.find((w) => w.type.toLowerCase() === type.toLowerCase());
@@ -156,7 +182,7 @@ export const unescapeJson = (input) => {
     try {
         parsedJson = JSON.parse(input);
         validJson = true;
-        parsedJson = deepParse(parsedJson); // Parse nested JSON if found
+        parsedJson = deepParse(parsedJson);
         unescapedStr = JSON.stringify(parsedJson, null, 2);
     }
     catch (error) {

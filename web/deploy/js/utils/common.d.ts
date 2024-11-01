@@ -1,4 +1,4 @@
-import { BaseWidgetCallback, ComfyWidgetMap, ComfyWidgetName, CustomWidgetDeserializedValuesMap, CustomWidgetMap, CustomWidgetName, CustomWidgetOptions, NormalizeValueCallback, UnescapeJSONPayload } from '../types/widgets';
+import { ComfyWidgetMap, ComfyWidgetName, CustomWidgetDeserializedValuesMap, CustomWidgetMap, CustomWidgetName, CustomWidgetOptions, NormalizeValueCallback, UnescapeJSONPayload } from '../types/widgets';
 import { LogSeverity } from '../types/manager';
 import { KulButton } from '../types/ketchup-lite/components/kul-button/kul-button';
 import { KulChart } from '../types/ketchup-lite/components/kul-chart/kul-chart';
@@ -8,10 +8,10 @@ import { KulSwitch } from '../types/ketchup-lite/components/kul-switch/kul-switc
 import { KulComponent, KulComponentName } from '../types/ketchup-lite/types/GenericTypes';
 export declare const areJSONEqual: (a: unknown, b: unknown) => boolean;
 export declare const capitalize: (input: string) => string;
-export declare const createDOMWidget: (name: string, type: CustomWidgetName, element: HTMLDivElement, node: NodeType, options?: CustomWidgetOptions) => Widget;
+export declare const createDOMWidget: (type: CustomWidgetName, element: HTMLDivElement, node: NodeType, options?: CustomWidgetOptions) => Widget;
 export declare const findWidget: <T extends CustomWidgetName>(node: NodeType, type: T) => CustomWidgetMap[T];
 export declare const getApiRoutes: () => import("../types/manager").ComfyAPIs;
-export declare const getCustomWidget: <T extends CustomWidgetName>(node: NodeType, type: T, addW?: BaseWidgetCallback<T>) => CustomWidgetMap[T];
+export declare const getCustomWidget: <T extends CustomWidgetName>(node: NodeType, type: T) => CustomWidgetMap[T];
 export declare const getInput: (node: NodeType, type: ComfyWidgetName | CustomWidgetName) => SlotInfo;
 export declare const getKulManager: () => import("../types/ketchup-lite/managers/kul-manager/kul-manager").KulManager;
 export declare const getKulThemes: () => KulDataDataset;

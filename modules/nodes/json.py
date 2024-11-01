@@ -2,8 +2,6 @@ import ast
 import numpy as np
 import random
 
-from PIL import Image
-
 from ..utils.constants import BASE_TEMP_PATH, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, INT_MAX, USER_FOLDER
 from ..utils.helpers import create_masonry_node, get_resource_url, normalize_input_list, normalize_output_image, numpy_to_tensor, normalize_list_to_value, normalize_json_input, resolve_filepath, tensor_to_pil
 
@@ -19,6 +17,9 @@ class LF_DisplayJSON:
             "required": {
                 "json_input": ("JSON", { "tooltip": "JSON object to display."}),
             },
+            "optional": {
+                "ui_widget": ("KUL_CODE", { "default": "" }),
+            },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
             } 
@@ -30,11 +31,12 @@ class LF_DisplayJSON:
     RETURN_NAMES = ("json",)
     RETURN_TYPES = ("JSON",)
 
-    def on_exec(self, node_id: str, json_input: dict):
+    def on_exec(self, **kwargs: dict):
+        json_input: dict = normalize_json_input(kwargs.get("json_input"))
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}displayjson", {
-            "node": node_id, 
-            "json": json_input
+            "node": kwargs.get("node_id"),
+            "value": json_input,
         })
         
         return (json_input,)
@@ -48,6 +50,9 @@ class LF_GetRandomKeyFromJSON:
                 "seed": ("INT", {"default": 0, "min": 0, "max": INT_MAX, "tooltip": "The seed for the random pick."}),
                 "json_input": ("JSON", { "tooltip": "JSON object from which a random key will be picked."},),
             },
+            "optional": {
+                "ui_widget": ("KUL_CODE", { "default": "" }),
+            },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
             }
@@ -58,12 +63,19 @@ class LF_GetRandomKeyFromJSON:
     RETURN_NAMES = ("string",)
     RETURN_TYPES = ("STRING",)
 
-    def on_exec(self, node_id: str, json_input: dict, seed: int):
-        json_input = normalize_json_input(json_input)
+    def on_exec(self, **kwargs: dict):
+        seed: int = normalize_list_to_value(kwargs.get("seed"))
+        json_input: dict = normalize_json_input(kwargs.get("json_input"))
 
         random.seed(seed)
         keys = list(json_input.keys())
         selected_key = random.choice(keys)
+
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}getrandomkeyfromjson", {
+            "node": kwargs.get("node_id"),
+            "value": f"## Selected key\n{selected_key}\n\n## Content:\n{json_input.get(selected_key)}",
+        })
+
         return (selected_key,)
 # endregion
 # region LF_GetValueFromJSON
@@ -76,6 +88,9 @@ class LF_GetValueFromJSON:
                 "key": ("STRING", {"default": "", "tooltip": "Key to select."}),
                 "index": ("INT", {"default": 0, "tooltip": "When the input is a list of JSON objects, it sets the index of the occurrence from which the value is extracted."})
             },
+            "optional": {
+                "ui_widget": ("KUL_CODE", { "default": "" }),
+            },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
             } 
@@ -86,7 +101,11 @@ class LF_GetValueFromJSON:
     RETURN_NAMES = ("json", "string", "number", "int", "float", "boolean")
     RETURN_TYPES = ("JSON", "STRING", "NUMBER", "INT", "FLOAT", "BOOLEAN")
 
-    def on_exec(self, node_id: str, json_input: dict, key:str, index: int):
+    def on_exec(self, **kwargs: dict):
+        key: str = normalize_list_to_value(kwargs.get("key"))
+        index: int = normalize_list_to_value(kwargs.get("index"))
+        json_input: dict = normalize_json_input(kwargs.get("json_input", {}))
+
         if isinstance(json_input, list):
             length = len(json_input)
             json_input = json_input[index] if index < length else json_input[length - 1]
@@ -129,6 +148,11 @@ class LF_GetValueFromJSON:
                 int_output = None
                 float_output = None
 
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}getvaluefromjson", {
+            "node": kwargs.get("node_id"),
+            "value": f"## Selected key\n{key}\n\n## Content:\n{string_output}",
+        })
+
         return (json_output, string_output, number_output, int_output, float_output, boolean_output)
 # endregion
 # region LF_ImageListFromJSON
@@ -142,7 +166,9 @@ class LF_ImageListFromJSON:
                 "width": ("INT", {"default": 1024, "tooltip": "Width of the images."}),
                 "height": ("INT", {"default": 1024, "tooltip": "Height of the images."}),
                 "seed": ("INT", {"default": 42, "tooltip": "Seed for generating random noise."}),
-                "previews": ("KUL_MASONRY", {}),
+            },
+            "optional": {
+                "ui_widget": ("KUL_MASONRY", { "default": {} }),
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
@@ -156,7 +182,6 @@ class LF_ImageListFromJSON:
     RETURN_TYPES = ("IMAGE", "IMAGE", "STRING", "INT", "INT", "INT")
 
     def on_exec(self, **kwargs: dict):
-        node_id: str = kwargs.get("node_id")
         json_input: dict = normalize_json_input(kwargs.get("json_input"))
         add_noise: bool = normalize_list_to_value(kwargs.get("add_noise"))
         width: int = normalize_list_to_value(kwargs.get("width"))
@@ -189,8 +214,8 @@ class LF_ImageListFromJSON:
 
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}imagelistfromjson", {
-            "node": node_id,
-            "dataset": dataset
+            "node": kwargs.get("node_id"),
+            "dataset": dataset,
         })
 
         image_batch, image_list = normalize_output_image(image)
@@ -206,7 +231,7 @@ class LF_KeywordToggleFromJSON:
             "required": {
                 "json_input": ("JSON", {"tooltip": "Ketchup Lite compatible JSON dataset."}),
                 "separator": ("STRING", {"default": ", ", "tooltip": "Separator for keywords in the output prompt."}),
-                "chip": ("KUL_CHIP", {"tooltip": "Your custom chip widget."})
+                "ui_widget": ("KUL_CHIP", {})
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
@@ -219,8 +244,12 @@ class LF_KeywordToggleFromJSON:
     RETURN_NAMES = ("json", "keywords", "keywords_list")
     RETURN_TYPES = ("JSON", "STRING", "STRING")
 
-    def on_exec(self, node_id: str, json_input: dict, separator: str, chip: str):
-        selected_keywords = chip.split(", ")
+    def on_exec(self, **kwargs: dict):
+        json_input: dict = normalize_json_input(kwargs.get("json_input"))
+        separator: str = normalize_list_to_value(kwargs.get("separator"))
+        ui_widget: str = normalize_list_to_value(kwargs.get("ui_widget", ""))
+
+        selected_keywords = ui_widget.split(", ")
 
         filtered_json = {
             "nodes": [
@@ -244,6 +273,9 @@ class LF_SetValueInJSON:
                 "key": ("STRING", {"tooltip": "Key to update or insert."}),
                 "value": ("STRING", {"tooltip": "Value to set. Can be a list in string form."}),
             },
+            "optional": {
+                "ui_widget": ("KUL_CODE", { "default": "" }),
+            },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
             }
@@ -255,10 +287,10 @@ class LF_SetValueInJSON:
     RETURN_NAMES = ("json_output",)
     RETURN_TYPES = ("JSON",)
 
-    def on_exec(self, node_id: str, json_input: dict, key: str, value: str):
-        json_input = normalize_json_input(json_input)
-        key = normalize_list_to_value(key)
-        value = normalize_input_list(value)
+    def on_exec(self, **kwargs: dict):
+        json_input: dict = normalize_json_input(kwargs.get("json_input"))
+        key: str = normalize_list_to_value(kwargs.get("key"))
+        value: str = normalize_input_list(kwargs.get("value"))
 
         try:
             parsed_value = ast.literal_eval(value)
@@ -279,6 +311,11 @@ class LF_SetValueInJSON:
         else:
             raise TypeError(f"Unsupported input type for 'json': {type(json_input)}")
 
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}setvalueinjson", {
+            "node": kwargs.get("node_id"),
+            "value": f"## Updated key\n{key}\n\n## Content:\n{value}",
+        })
+
         return (json_input,)
 # endregion
 # region LF_ShuffleJSONKeys
@@ -291,6 +328,9 @@ class LF_ShuffleJSONKeys:
                 "mutate_source": ("BOOLEAN", {"default": False, "tooltip": "Shuffles the input JSON in place without creating a new dictionary as a copy."}),
                 "seed": ("INT", {"default": 0, "min": 0, "max": INT_MAX, "tooltip": "Seed for the random shuffle."})
             },
+            "optional": {
+                "ui_widget": ("KUL_CODE", { "default": "" }),
+            },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
             }
@@ -302,8 +342,10 @@ class LF_ShuffleJSONKeys:
     RETURN_NAMES = ("json",)
     RETURN_TYPES = ("JSON",)
 
-    def on_exec(self, node_id: str, json_input: dict, mutate_source: bool, seed: int):
-        json_input = normalize_json_input(json_input)
+    def on_exec(self, **kwargs: dict):
+        json_input: dict = normalize_json_input(kwargs.get("json_input"))
+        mutate_source: bool = normalize_list_to_value(kwargs.get("mutate_source"))
+        seed: int = normalize_list_to_value(kwargs.get("seed"))
 
         random.seed(seed)
 
@@ -321,8 +363,8 @@ class LF_ShuffleJSONKeys:
             shuffled_json = {key: json_input[key] for key in keys}
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}shufflejsonkeys", {
-            "node": node_id,
-            "json": shuffled_json
+            "node": kwargs.get("node_id"),
+            "value": shuffled_json,
         })
 
         return (shuffled_json,)
@@ -337,6 +379,9 @@ class LF_SortJSONKeys:
                 "ascending": ("BOOLEAN", {"default": True, "tooltip": "Sort ascending (True) or descending (False)."}),
                 "mutate_source": ("BOOLEAN", {"default": False, "tooltip": "Sorts the input JSON in place without creating a new dictionary as a copy."})
             },
+            "optional": {
+                "ui_widget": ("KUL_CODE", { "default": "" }),
+            },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
             }
@@ -348,8 +393,10 @@ class LF_SortJSONKeys:
     RETURN_NAMES = ("json",)
     RETURN_TYPES = ("JSON",)
 
-    def on_exec(self, node_id: str, json_input: dict, ascending: bool, mutate_source: bool):
-        json_input = normalize_json_input(json_input)
+    def on_exec(self, **kwargs: dict):
+        json_input: dict = normalize_json_input(kwargs.get("json_input"))
+        mutate_source: bool = normalize_list_to_value(kwargs.get("mutate_source"))
+        ascending: bool = normalize_list_to_value(kwargs.get("ascending"))
             
         if mutate_source:
             items = {key: json_input[key] for key in json_input}
@@ -361,8 +408,8 @@ class LF_SortJSONKeys:
             sorted_json = {k: json_input[k] for k in sorted(json_input.keys(), reverse=not ascending)}
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}sortjsonkeys", {
-            "node": node_id,
-            "json": sorted_json
+            "node": kwargs.get("node_id"),
+            "value": sorted_json,
         })
 
         return (sorted_json,)
@@ -374,6 +421,9 @@ class LF_StringToJSON:
         return {
             "required": {
                 "string": ("STRING", {"default": "{}", "multiline": True, "tooltip": "Stringified JSON"}),
+            },
+            "optional": {
+                "ui_widget": ("KUL_CODE", { "default": "" }),
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
@@ -387,8 +437,15 @@ class LF_StringToJSON:
     RETURN_NAMES = ("json",)
     RETURN_TYPES = ("JSON",)
 
-    def on_exec(self, node_id: str, string: str):
-        return (normalize_json_input(string),)
+    def on_exec(self, **kwargs: dict):
+        json_data: dict = normalize_json_input(kwargs.get("string"))
+
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}stringtojson", {
+            "node": kwargs.get("node_id"),
+            "value": kwargs.get("string"),
+        })
+
+        return (json_data,)
 # endregion
 # region LF_WriteJSON
 class LF_WriteJSON:
@@ -396,7 +453,7 @@ class LF_WriteJSON:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "json_input": ("KUL_JSON_INPUT", {"default": "{}", "multiline": True, "tooltip": "Write your JSON content here."}),
+                "ui_widget": ("KUL_TEXTAREA", {"default": "{}", "tooltip": "Write your JSON content here."}),
             },
             "hidden": { "node_id": "UNIQUE_ID" }
         }
@@ -406,15 +463,15 @@ class LF_WriteJSON:
     OUTPUT_NODE = True
     RETURN_TYPES = ("JSON",)
 
-    def on_exec(self, node_id: str, json_input:dict):
-        json_input = normalize_json_input(json_input)
+    def on_exec(self, **kwargs: dict):
+        ui_widget: dict = normalize_json_input(kwargs.get("ui_widget", {}))
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}writejson", {
-            "node": node_id,
-            "json": json_input
+            "node": kwargs.get("node_id"),
+            "value": ui_widget,
         })
 
-        return (json_input,)
+        return (ui_widget,)
 # endregion
 NODE_CLASS_MAPPINGS = {
     "LF_DisplayJSON": LF_DisplayJSON,

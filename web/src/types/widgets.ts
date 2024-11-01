@@ -58,7 +58,6 @@ export enum ComfyWidgetName {
   toggle = 'TOGGLE',
 }
 export type CustomWidgetMap = {
-  [CustomWidgetName.booleanViewer]: BooleanViewerWidget;
   [CustomWidgetName.card]: CardWidget;
   [CustomWidgetName.cardsWithChip]: CardsWithChipWidget;
   [CustomWidgetName.chat]: ChatWidget;
@@ -68,16 +67,15 @@ export type CustomWidgetMap = {
   [CustomWidgetName.controlPanel]: ControlPanelWidget;
   [CustomWidgetName.countBarChart]: CountBarChartWidget;
   [CustomWidgetName.history]: HistoryWidget;
-  [CustomWidgetName.jsonInput]: JsonInputWidget;
   [CustomWidgetName.masonry]: MasonryWidget;
   [CustomWidgetName.messenger]: MessengerWidget;
-  [CustomWidgetName.rollViewer]: RollViewerWidget;
+  [CustomWidgetName.progressbar]: ProgressbarWidget;
   [CustomWidgetName.tabBarChart]: TabBarChartWidget;
+  [CustomWidgetName.textarea]: TextareaWidget;
   [CustomWidgetName.tree]: TreeWidget;
   [CustomWidgetName.upload]: UploadWidget;
 };
 export enum CustomWidgetName {
-  booleanViewer = 'KUL_BOOLEAN_VIEWER',
   card = 'KUL_CARD',
   cardsWithChip = 'KUL_CARDS_WITH_CHIP',
   chat = 'KUL_CHAT',
@@ -87,16 +85,15 @@ export enum CustomWidgetName {
   controlPanel = 'KUL_CONTROL_PANEL',
   countBarChart = 'KUL_COUNT_BAR_CHART',
   history = 'KUL_HISTORY',
-  jsonInput = 'KUL_JSON_INPUT',
   masonry = 'KUL_MASONRY',
   messenger = 'KUL_MESSENGER',
-  rollViewer = 'KUL_ROLL_VIEWER',
+  progressbar = 'KUL_PROGRESSBAR',
   tabBarChart = 'KUL_TAB_BAR_CHART',
+  textarea = 'KUL_TEXTAREA',
   tree = 'KUL_TREE',
   upload = 'KUL_UPLOAD',
 }
 export type CustomWidgetDeserializedValues =
-  | BooleanViewerWidgetDeserializedValue
   | CardWidgetDeserializedValue
   | CardsWithChipWidgetDeserializedValue
   | ChatWidgetValueDeserializedValue
@@ -106,15 +103,14 @@ export type CustomWidgetDeserializedValues =
   | ControlPanelWidgetDeserializedValue
   | CountBarChartWidgetDeserializedValue
   | HistoryWidgetValuetDeserializedValue
-  | JsonInputWidgetDeserializedValue
   | MasonryWidgetDeserializedValue
   | MessengerWidgetDeserializedValue
-  | RollViewerWidgetDeserializedValue
+  | ProgressbarWidgetDeserializedValue
   | TabBarChartWidgetDeserializedValue
+  | TextareaWidgetDeserializedValue
   | TreeWidgetValueDeserializedValue
   | UploadWidgetDeserializedValue;
 export type CustomWidgetDeserializedValuesMap<Name extends CustomWidgetName> = {
-  [CustomWidgetName.booleanViewer]: BooleanViewerWidgetDeserializedValue;
   [CustomWidgetName.card]: CardWidgetDeserializedValue;
   [CustomWidgetName.cardsWithChip]: CardsWithChipWidgetDeserializedValue;
   [CustomWidgetName.chat]: ChatWidgetValueDeserializedValue;
@@ -124,16 +120,15 @@ export type CustomWidgetDeserializedValuesMap<Name extends CustomWidgetName> = {
   [CustomWidgetName.controlPanel]: ControlPanelWidgetDeserializedValue;
   [CustomWidgetName.countBarChart]: CountBarChartWidgetDeserializedValue;
   [CustomWidgetName.history]: HistoryWidgetValuetDeserializedValue;
-  [CustomWidgetName.jsonInput]: JsonInputWidgetDeserializedValue;
   [CustomWidgetName.masonry]: MasonryWidgetDeserializedValue;
   [CustomWidgetName.messenger]: MessengerWidgetDeserializedValue;
-  [CustomWidgetName.rollViewer]: RollViewerWidgetDeserializedValue;
+  [CustomWidgetName.progressbar]: ProgressbarWidgetDeserializedValue;
   [CustomWidgetName.tabBarChart]: TabBarChartWidgetDeserializedValue;
+  [CustomWidgetName.textarea]: TextareaWidgetDeserializedValue;
   [CustomWidgetName.tree]: TreeWidgetValueDeserializedValue;
   [CustomWidgetName.upload]: UploadWidgetDeserializedValue;
 }[Name];
 export type CustomWidgetOptions =
-  | BooleanViewerWidgetOptions
   | CardWidgetOptions
   | CardsWithChipWidgetOptions
   | ChatWidgetOptions
@@ -143,15 +138,14 @@ export type CustomWidgetOptions =
   | ControlPanelWidgetOptions
   | CountBarChartWidgetOptions
   | HistoryWidgetOptions
-  | JsonInputWidgetOptions
   | MasonryWidgetOptions
   | MessengerWidgetOptions
-  | RollViewerWidgetOptions
+  | ProgressbarWidgetOptions
   | TabBarChartWidgetOptions
+  | TextareaWidgetOptions
   | TreeWidgetOptions
   | UploadWidgetOptions;
 export type CustomWidgetOptionsCallbacks =
-  | BooleanViewerWidgetOptionsCallback
   | CardWidgetOptionsCallback
   | ChatWidgetOptionsCallback
   | ChipWidgetOptionsCallback
@@ -159,15 +153,14 @@ export type CustomWidgetOptionsCallbacks =
   | CompareWidgetOptionsCallback
   | ControlPanelWidgetOptionsCallback
   | HistoryWidgetOptionsCallback
-  | JsonInputWidgetOptionsCallback
   | MasonryWidgetOptionsCallback
   | MessengerWidgetOptionsCallback
-  | RollViewerWidgetOptionsCallback
+  | ProgressbarWidgetOptionsCallback
   | TabBarChartWidgetOptionsCallback
+  | TextareaWidgetOptionsCallback
   | TreeWidgetOptionsCallback
   | UploadWidgetOptionsCallback;
 export type CustomWidgetOptionsCallbacksMap<Name extends CustomWidgetName> = {
-  [CustomWidgetName.booleanViewer]: BooleanViewerWidgetOptionsCallback;
   [CustomWidgetName.card]: CardWidgetOptionsCallback;
   [CustomWidgetName.cardsWithChip]: CardsWithChipWidgetOptionsCallback;
   [CustomWidgetName.chat]: ChatWidgetOptionsCallback;
@@ -177,37 +170,14 @@ export type CustomWidgetOptionsCallbacksMap<Name extends CustomWidgetName> = {
   [CustomWidgetName.controlPanel]: ControlPanelWidgetOptionsCallback;
   [CustomWidgetName.countBarChart]: CountBarChartWidgetOptionsCallback;
   [CustomWidgetName.history]: HistoryWidgetOptionsCallback;
-  [CustomWidgetName.jsonInput]: JsonInputWidgetOptionsCallback;
   [CustomWidgetName.masonry]: MasonryWidgetOptionsCallback;
   [CustomWidgetName.messenger]: MessengerWidgetOptionsCallback;
-  [CustomWidgetName.rollViewer]: RollViewerWidgetOptionsCallback;
+  [CustomWidgetName.progressbar]: ProgressbarWidgetOptionsCallback;
   [CustomWidgetName.tabBarChart]: TabBarChartWidgetOptionsCallback;
+  [CustomWidgetName.textarea]: TextareaWidgetOptionsCallback;
   [CustomWidgetName.tree]: TreeWidgetOptionsCallback;
   [CustomWidgetName.upload]: UploadWidgetOptionsCallback;
 }[Name];
-
-/*-------------------------------------------------------------------*/
-/*       B o o l e a n  V i e w e r   D e c l a r a t i o n s        */
-/*-------------------------------------------------------------------*/
-
-export interface BooleanViewerWidget extends Widget {
-  options: BooleanViewerWidgetOptions;
-  type: [CustomWidgetName.booleanViewer];
-}
-export interface BooleanViewerWidgetFactory extends BaseWidgetFactory<BooleanViewerWidgetOptions> {
-  options: BooleanViewerWidgetOptionsCallback;
-}
-export type BooleanViewerWidgetOptionsCallback = (
-  textfield: HTMLKulTextfieldElement,
-) => BooleanViewerWidgetOptions;
-export interface BooleanViewerWidgetOptions
-  extends BaseWidgetOptions<BooleanViewerWidgetDeserializedValue> {
-  getComp(): HTMLKulTextfieldElement;
-}
-export type BooleanViewerWidgetSetter = () => {
-  [CustomWidgetName.booleanViewer]: BaseWidgetCallback<CustomWidgetName.booleanViewer>;
-};
-export type BooleanViewerWidgetDeserializedValue = string;
 
 /*-------------------------------------------------------------------*/
 /*                 C a r d   D e c l a r a t i o n s                 */
@@ -227,10 +197,9 @@ export interface CardWidgetOptions extends BaseWidgetOptions<CardWidgetDeseriali
 export type CardWidgetSetter = () => {
   [CustomWidgetName.card]: BaseWidgetCallback<CustomWidgetName.card>;
 };
-export type CardWidgetDeserializedValue = {
-  propsArray: Partial<HTMLKulCardElement>[];
-  template?: string;
-};
+export interface CardWidgetDeserializedValue {
+  props: Partial<HTMLKulCardElement>[];
+}
 
 /*-------------------------------------------------------------------*/
 /*       C a r d s W i t h C h i p   D e c l a r a t i o n s         */
@@ -253,10 +222,9 @@ export interface CardsWithChipWidgetOptions
 export type CardsWithChipWidgetSetter = () => {
   [CustomWidgetName.cardsWithChip]: BaseWidgetCallback<CustomWidgetName.cardsWithChip>;
 };
-export type CardsWithChipWidgetDeserializedValue = {
-  cardPropsArray: Partial<HTMLKulCardElement>[];
-  chipDataset: KulDataDataset;
-};
+export interface CardsWithChipWidgetDeserializedValue extends CardWidgetDeserializedValue {
+  chip: KulDataDataset;
+}
 
 /*-------------------------------------------------------------------*/
 /*                 C h a t   D e c l a r a t i o n s                 */
@@ -386,8 +354,8 @@ export type CountBarChartWidgetSetter = () => {
   [CustomWidgetName.countBarChart]: BaseWidgetCallback<CustomWidgetName.countBarChart>;
 };
 export type CountBarChartWidgetDeserializedValue = {
-  chartDataset: KulDataDataset;
-  chipDataset: KulDataDataset;
+  chart: KulDataDataset;
+  chip: KulDataDataset;
 };
 
 /*-------------------------------------------------------------------*/
@@ -410,27 +378,6 @@ export type HistoryWidgetSetter = () => {
   [CustomWidgetName.history]: BaseWidgetCallback<CustomWidgetName.history>;
 };
 export type HistoryWidgetValuetDeserializedValue = KulDataDataset;
-
-/*-------------------------------------------------------------------*/
-/*           J s o n   I n p u t   D e c l a r a t i o n s           */
-/*-------------------------------------------------------------------*/
-
-export interface JsonInputWidget extends Widget {
-  options: JsonInputWidgetOptions;
-  type: [CustomWidgetName.jsonInput];
-}
-export interface JsonInputWidgetFactory extends BaseWidgetFactory<JsonInputWidgetOptions> {
-  options: JsonInputWidgetOptionsCallback;
-}
-export type JsonInputWidgetOptionsCallback = (
-  textarea: HTMLTextAreaElement,
-) => JsonInputWidgetOptions;
-export interface JsonInputWidgetOptions
-  extends BaseWidgetOptions<JsonInputWidgetDeserializedValue> {}
-export type JsonInputWidgetSetter = () => {
-  [CustomWidgetName.jsonInput]: BaseWidgetCallback<CustomWidgetName.jsonInput>;
-};
-export type JsonInputWidgetDeserializedValue = Record<string, unknown>;
 
 /*-------------------------------------------------------------------*/
 /*               M a s o n r y   D e c l a r a t i o n s             */
@@ -485,28 +432,28 @@ export type MessengerWidgetDeserializedValue = {
 };
 
 /*-------------------------------------------------------------------*/
-/*           R o l l   V i e w e r   D e c l a r a t i o n s         */
+/*   P r o g r e s s b a r   V i e w e r   D e c l a r a t i o n s   */
 /*-------------------------------------------------------------------*/
 
-export interface RollViewerWidget extends Widget {
-  options: RollViewerWidgetOptions;
-  type: [CustomWidgetName.rollViewer];
+export interface ProgressbarWidget extends Widget {
+  options: ProgressbarWidgetOptions;
+  type: [CustomWidgetName.progressbar];
 }
-export interface RollViewerWidgetFactory extends BaseWidgetFactory<RollViewerWidgetOptions> {
-  options: RollViewerWidgetOptionsCallback;
+export interface ProgressbarWidgetFactory extends BaseWidgetFactory<ProgressbarWidgetOptions> {
+  options: ProgressbarWidgetOptionsCallback;
 }
-export type RollViewerWidgetOptionsCallback = (
+export type ProgressbarWidgetOptionsCallback = (
   progressbar: HTMLKulProgressbarElement,
   nodeType: NodeType,
-) => RollViewerWidgetOptions;
-export interface RollViewerWidgetOptions
-  extends BaseWidgetOptions<RollViewerWidgetDeserializedValue> {
+) => ProgressbarWidgetOptions;
+export interface ProgressbarWidgetOptions
+  extends BaseWidgetOptions<ProgressbarWidgetDeserializedValue> {
   getComp(): HTMLKulProgressbarElement;
 }
-export type RollViewerWidgetSetter = () => {
-  [CustomWidgetName.rollViewer]: BaseWidgetCallback<CustomWidgetName.rollViewer>;
+export type ProgressbarWidgetSetter = () => {
+  [CustomWidgetName.progressbar]: BaseWidgetCallback<CustomWidgetName.progressbar>;
 };
-export type RollViewerWidgetDeserializedValue = { bool: boolean; roll: number };
+export type ProgressbarWidgetDeserializedValue = { bool: boolean; roll: number };
 
 /*-------------------------------------------------------------------*/
 /*         T a b B a r C h a r t   D e c l a r a t i o n s           */
@@ -578,3 +525,23 @@ export type UploadWidgetSetter = () => {
   [CustomWidgetName.upload]: BaseWidgetCallback<CustomWidgetName.upload>;
 };
 export type UploadWidgetDeserializedValue = string;
+
+/*-------------------------------------------------------------------*/
+/*              T e x t a r e a   D e c l a r a t i o n s            */
+/*-------------------------------------------------------------------*/
+
+export interface TextareaWidget extends Widget {
+  options: TextareaWidgetOptions;
+  type: [CustomWidgetName.textarea];
+}
+export interface TextareaWidgetFactory extends BaseWidgetFactory<TextareaWidgetOptions> {
+  options: TextareaWidgetOptionsCallback;
+}
+export type TextareaWidgetOptionsCallback = (
+  textarea: HTMLTextAreaElement,
+) => TextareaWidgetOptions;
+export interface TextareaWidgetOptions extends BaseWidgetOptions<TextareaWidgetDeserializedValue> {}
+export type TextareaWidgetSetter = () => {
+  [CustomWidgetName.textarea]: BaseWidgetCallback<CustomWidgetName.textarea>;
+};
+export type TextareaWidgetDeserializedValue = Record<string, unknown>;

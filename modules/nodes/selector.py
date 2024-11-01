@@ -3,7 +3,7 @@ import random
 from server import PromptServer
 
 from ..utils.constants import CATEGORY_PREFIX, CHECKPOINTS, EMBEDDINGS, EVENT_PREFIX, FUNCTION, INT_MAX, LORAS, SAMPLERS, SCHEDULERS, UPSCALERS, VAES
-from ..utils.helpers import create_history_node, filter_list, normalize_json_input, prepare_model_dataset, process_model, send_multi_selector_message, send_single_selector_message
+from ..utils.helpers import create_history_node, filter_list, is_none, normalize_json_input, normalize_list_to_value, prepare_model_dataset, process_model
 
 CATEGORY = f"{CATEGORY_PREFIX}/Selectors"
 
@@ -20,6 +20,7 @@ class LF_CheckpointSelector:
             },
             "optional": {
                 "checkpoint": (["None"] + CHECKPOINTS, {"default": "None", "tooltip": "Checkpoint used to generate the image."}),
+                "ui_widget": ("KUL_CARD", {"default": {}}),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -31,18 +32,23 @@ class LF_CheckpointSelector:
     RETURN_NAMES = ("combo", "string", "path", "image")
     RETURN_TYPES = (CHECKPOINTS, "STRING", "STRING", "IMAGE")
 
-    def on_exec(self, node_id: str, checkpoint: str, get_civitai_info: bool,
-                randomize: bool, seed: int, filter: str):
-        checkpoint = None if checkpoint is None or str(checkpoint) == "None" else checkpoint
+    def on_exec(self, **kwargs: dict):
+        checkpoint: str = normalize_list_to_value(kwargs.get("checkpoint"))
+        get_civitai_info: bool = normalize_list_to_value(kwargs.get("get_civitai_info"))
+        randomize: bool = normalize_list_to_value(kwargs.get("randomize"))
+        seed: int = normalize_list_to_value(kwargs.get("seed"))
+        filter: str = normalize_list_to_value(kwargs.get("filter"))
+
+        if is_none(checkpoint):
+            checkpoint = None 
         
         checkpoints = CHECKPOINTS
 
-        if filter:
-            checkpoints = filter_list(filter, checkpoints)
-            if not checkpoints:
-                raise ValueError(f"Not found a model with the specified filter: {filter}")
-
         if randomize:
+            if filter:
+                checkpoints = filter_list(filter, checkpoints)
+                if not checkpoints:
+                    raise ValueError(f"Not found a model with the specified filter: {filter}")
             random.seed(seed)
             checkpoint = random.choice(checkpoints)
 
@@ -60,7 +66,13 @@ class LF_CheckpointSelector:
         else:
             dataset = prepare_model_dataset(model_name, model_hash, model_base64, model_path)
 
-        send_single_selector_message(node_id, dataset, model_hash, get_civitai_info, model_path, f"{EVENT_PREFIX}checkpointselector")
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}checkpointselector", {
+            "node": kwargs.get("node_id"),
+            "datasets": [dataset],
+            "hashes": [model_hash],
+            "apiFlags": [get_civitai_info],
+            "paths": [model_path],
+        })
 
         return (checkpoint, model_name, model_path, model_cover)
     
@@ -83,6 +95,7 @@ class LF_EmbeddingSelector:
             "optional": {
                 "embedding": (["None"] + EMBEDDINGS, {"default": "None", "tooltip": "Embedding to use."}),
                 "embedding_stack": ("STRING", {"default": "", "defaultInput": True, "tooltip": "Optional string usable to concatenate subsequent selector nodes."}),
+                "ui_widget": ("KUL_CARD", {"default": {}}),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -94,23 +107,36 @@ class LF_EmbeddingSelector:
     RETURN_NAMES = ("combo", "prompt", "string", "path", "image")
     RETURN_TYPES = (EMBEDDINGS, "STRING", "STRING", "STRING", "IMAGE")
 
-    def on_exec(self, node_id: str, embedding: str, get_civitai_info: bool, weight: float,
-                randomize: bool, seed: int, filter: bool, embedding_stack: str = ""):
-        embedding = None if embedding is None or str(embedding) == "None" else embedding
+    def on_exec(self, **kwargs: dict):
+        embedding: str = normalize_list_to_value(kwargs.get("embedding"))
+        get_civitai_info: bool = normalize_list_to_value(kwargs.get("get_civitai_info"))
+        weight: float = normalize_list_to_value(kwargs.get("weight"))
+        randomize: bool = normalize_list_to_value(kwargs.get("randomize"))
+        seed: int = normalize_list_to_value(kwargs.get("seed"))
+        filter: str = normalize_list_to_value(kwargs.get("filter"))
+        embedding_stack: str = normalize_list_to_value(kwargs.get("embedding_stack", ""))
+
+        if is_none(embedding):
+            embedding = None
+
         passthrough = bool(not embedding and not randomize)
 
         if passthrough:
-            send_single_selector_message(node_id, None, None, False, None, f"{EVENT_PREFIX}embeddingselector")
+
+            PromptServer.instance.send_sync(f"{EVENT_PREFIX}embeddingselector", {
+                "node": kwargs.get("node_id"),
+                "apiFlags": [False],
+            })
+
             return (None, embedding_stack, "", "", None)
         
         embeddings = EMBEDDINGS
 
-        if filter:
-            embeddings = filter_list(filter, embeddings)
-            if not embeddings:
-                raise ValueError(f"Not found a model with the specified filter: {filter}")
-
         if randomize:
+            if filter:
+                embeddings = filter_list(filter, embeddings)
+                if not embeddings:
+                    raise ValueError(f"Not found a model with the specified filter: {filter}")
             random.seed(seed)
             embedding = random.choice(embeddings)
 
@@ -133,7 +159,13 @@ class LF_EmbeddingSelector:
         if embedding_stack:
             formatted_embedding = f"{formatted_embedding}, {embedding_stack}"
 
-        send_single_selector_message(node_id, dataset, model_hash, get_civitai_info, model_path, f"{EVENT_PREFIX}embeddingselector")
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}embeddingselector", {
+            "node": kwargs.get("node_id"),
+            "datasets": [dataset],
+            "hashes": [model_hash],
+            "apiFlags": [get_civitai_info],
+            "paths": [model_path],
+        })
 
         return (embedding, formatted_embedding, model_name, model_path, model_cover)
     
@@ -157,6 +189,7 @@ class LF_LoraAndEmbeddingSelector:
                 "lora": (["None"] + LORAS, {"default": "None", "tooltip": "Lora model to use, it will also select the embedding with the same name."}),
                 "lora_stack": ("STRING", {"default": "", "defaultInput": True, "tooltip": "Optional string usable to concatenate subsequent Lora selector nodes."}),
                 "embedding_stack": ("STRING", {"default": "", "defaultInput": True, "tooltip": "Optional string usable to concatenate subsequent embedding selector nodes."}),
+                "ui_widget": ("KUL_CARD", {"default": {}}),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -170,23 +203,37 @@ class LF_LoraAndEmbeddingSelector:
     RETURN_TYPES = (LORAS, EMBEDDINGS, "STRING", "STRING", "STRING", "STRING",
                     "STRING", "STRING", "IMAGE", "IMAGE",)
 
-    def on_exec(self, node_id: str, lora: str, get_civitai_info: bool, weight:float,
-                randomize: bool, seed: int, filter: str, lora_stack: str = "", embedding_stack: str = ""):
-        lora = None if lora is None or str(lora) == "None" else lora
+    def on_exec(self, **kwargs: dict):
+        lora: str = normalize_list_to_value(kwargs.get("lora"))
+        get_civitai_info: bool = normalize_list_to_value(kwargs.get("get_civitai_info"))
+        weight: float = normalize_list_to_value(kwargs.get("weight"))
+        randomize: bool = normalize_list_to_value(kwargs.get("randomize"))
+        seed: int = normalize_list_to_value(kwargs.get("seed"))
+        filter: str = normalize_list_to_value(kwargs.get("filter"))
+        lora_stack: str = normalize_list_to_value(kwargs.get("lora_stack", ""))
+        embedding_stack: str = normalize_list_to_value(kwargs.get("embedding_stack", ""))
+
+        if is_none(lora):
+            lora = None
+        
         passthrough = bool(not lora and not randomize)
 
         if passthrough:
-            send_single_selector_message(node_id, [], [], [], [], f"{EVENT_PREFIX}loraandembeddingselector")
+
+            PromptServer.instance.send_sync(f"{EVENT_PREFIX}loraandembeddingselector", {
+                "node": kwargs.get("node_id"),
+                "apiFlags": [False],
+            })
+
             return (None, None, lora_stack, embedding_stack, "", "", "", "", None, None)
         
         loras = LORAS
-        
-        if filter:
-            loras = filter_list(filter, loras)
-            if not loras:
-                raise ValueError(f"Not found a model with the specified filter: {filter}")
 
         if randomize:
+            if filter:
+                loras = filter_list(filter, loras)
+                if not loras:
+                    raise ValueError(f"Not found a model with the specified filter: {filter}")
             random.seed(seed)
             lora = random.choice(loras)
 
@@ -229,12 +276,13 @@ class LF_LoraAndEmbeddingSelector:
         if embedding_stack:
             formatted_embedding = f"{formatted_embedding}, {embedding_stack}"
 
-        api_flags = [False if l_saved_info else get_civitai_info, False if e_saved_info else get_civitai_info]
-        datasets = [l_dataset, e_dataset]
-        hashes = [l_hash, e_hash]
-        paths = [l_path, e_path]
-
-        send_multi_selector_message(node_id, datasets, hashes, api_flags, paths, f"{EVENT_PREFIX}loraandembeddingselector")
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}loraandembeddingselector", {
+            "node": kwargs.get("node_id"),
+            "datasets": [l_dataset, e_dataset],
+            "hashes": [l_hash, e_hash],
+            "apiFlags": [False if l_saved_info else get_civitai_info, False if e_saved_info else get_civitai_info],
+            "paths": [l_path, e_path],
+        })
 
         return (lora, embedding, lora_tag, formatted_embedding, l_name, e_name, l_path, e_path, l_cover, e_cover)
     
@@ -257,6 +305,7 @@ class LF_LoraSelector:
             "optional": {
                 "lora": (["None"] + LORAS, {"default": "None", "tooltip": "Lora model to use."}),
                 "lora_stack": ("STRING", {"default": "", "defaultInput": True, "tooltip": "Optional string usable to concatenate subsequent selector nodes."}),
+                "ui_widget": ("KUL_CARD", {"default": {}}),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -268,23 +317,36 @@ class LF_LoraSelector:
     RETURN_NAMES = ("lora", "lora_tag", "lora_name", "model_path", "model_cover")
     RETURN_TYPES = (LORAS, "STRING", "STRING", "STRING", "IMAGE")
 
-    def on_exec(self, node_id: str, lora: str, get_civitai_info: bool, weight: float,
-                randomize: bool, seed: int, filter: str, lora_stack: str = ""):
-        lora = None if lora is None or str(lora) == "None" else lora
+    def on_exec(self, **kwargs: dict):
+        lora: str = normalize_list_to_value(kwargs.get("lora"))
+        get_civitai_info: bool = normalize_list_to_value(kwargs.get("get_civitai_info"))
+        weight: float = normalize_list_to_value(kwargs.get("weight"))
+        randomize: bool = normalize_list_to_value(kwargs.get("randomize"))
+        seed: int = normalize_list_to_value(kwargs.get("seed"))
+        filter: str = normalize_list_to_value(kwargs.get("filter"))
+        lora_stack: str = normalize_list_to_value(kwargs.get("lora_stack", ""))
+
+        if is_none(lora):
+            lora = None
+
         passthrough = bool(not lora and not randomize)
 
         if passthrough:
-            send_single_selector_message(node_id, None, None, False, None, f"{EVENT_PREFIX}loraselector")
+
+            PromptServer.instance.send_sync(f"{EVENT_PREFIX}loraselector", {
+                "node": kwargs.get("node_id"),
+                "apiFlags": [False],
+            })
+
             return (None, lora_stack, "", "", None)
         
         loras = LORAS
-        
-        if filter:
-            loras = filter_list(filter, loras)
-            if not loras:
-                raise ValueError(f"Not found a model with the specified filter: {filter}")
 
         if randomize:
+            if filter:
+                loras = filter_list(filter, loras)
+                if not loras:
+                    raise ValueError(f"Not found a model with the specified filter: {filter}")
             random.seed(seed)
             lora = random.choice(loras)
 
@@ -304,10 +366,16 @@ class LF_LoraSelector:
         else:
             dataset = prepare_model_dataset(model_name, model_hash, model_base64, model_path)
 
-        send_single_selector_message(node_id, dataset, model_hash, get_civitai_info, model_path, f"{EVENT_PREFIX}loraselector")
-
         if lora_stack:
             lora_tag = f"{lora_tag}, {lora_stack}"
+
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}loraselector", {
+            "node": kwargs.get("node_id"),
+            "datasets": [dataset],
+            "hashes": [model_hash],
+            "apiFlags": [get_civitai_info],
+            "paths": [model_path],
+        })
 
         return (lora, lora_tag, model_name, model_path, model_cover)
     
@@ -327,7 +395,7 @@ class LF_SamplerSelector:
                 "seed": ("INT", {"default": 42, "min": 0, "max": INT_MAX, "tooltip": "Seed value for when randomization is active."}),
             },
             "optional": {
-                "json_input": ("KUL_HISTORY", {"default": {}}),
+                "ui_widget": ("KUL_HISTORY", {"default": {}}),
                 "sampler": (["None"] + SAMPLERS, {"default": "None", "tooltip": "Sampler used to generate the image."}),
             },
             "hidden": {
@@ -340,23 +408,26 @@ class LF_SamplerSelector:
     RETURN_NAMES = ("combo", "string")
     RETURN_TYPES = (SAMPLERS, "STRING")
 
-    def on_exec(self, node_id: str, sampler: str, enable_history: bool,
-                randomize: bool, seed: int, filter: str, json_input: dict = {}):
-        json_input = normalize_json_input(json_input)
+    def on_exec(self, **kwargs: dict):
+        sampler: str = normalize_list_to_value(kwargs.get("sampler"))
+        enable_history: bool = normalize_list_to_value(kwargs.get("enable_history"))
+        randomize: bool = normalize_list_to_value(kwargs.get("randomize"))
+        seed: int = normalize_list_to_value(kwargs.get("seed"))
+        filter: str = normalize_list_to_value(kwargs.get("filter"))
+        ui_widget: dict = normalize_json_input(kwargs.get("ui_widget", {}))
         
         samplers = SAMPLERS
 
-        nodes = json_input.get("nodes", [])
+        nodes = ui_widget.get("nodes", [])
         dataset = {
             "nodes": nodes
         }
 
-        if filter:
-            samplers = filter_list(filter, samplers)
-            if not samplers:
-                raise ValueError(f"Not found a model with the specified filter: {filter}")
-
         if randomize:
+            if filter:
+                samplers = filter_list(filter, samplers)
+                if not samplers:
+                    raise ValueError(f"Not found a model with the specified filter: {filter}")
             random.seed(seed)
             sampler = random.choice(samplers)
         
@@ -364,7 +435,7 @@ class LF_SamplerSelector:
             create_history_node(sampler, nodes)
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}samplerselector", {
-            "node": node_id, 
+            "node": kwargs.get("node_id"),
             "dataset": dataset,
         })
 
@@ -382,7 +453,7 @@ class LF_SchedulerSelector:
                 "seed": ("INT", {"default": 42, "min": 0, "max": INT_MAX, "tooltip": "Seed value for when randomization is active."}),
             },
             "optional": {
-                "json_input": ("KUL_HISTORY", {"default": {}}),
+                "ui_widget": ("KUL_HISTORY", {"default": {}}),
                 "scheduler": (["None"] + SCHEDULERS, {"default": "None", "tooltip": "Scheduler used to generate the image."}),
             },
             "hidden": {"node_id": "UNIQUE_ID"}
@@ -393,21 +464,26 @@ class LF_SchedulerSelector:
     RETURN_NAMES = ("combo", "string")
     RETURN_TYPES = (SCHEDULERS, "STRING")
 
-    def on_exec(self, node_id: str, scheduler: str, enable_history: bool,
-                randomize: bool, seed: int, filter: str, json_input: dict = {}):
+    def on_exec(self, **kwargs: dict):
+        scheduler: str = normalize_list_to_value(kwargs.get("scheduler"))
+        enable_history: bool = normalize_list_to_value(kwargs.get("enable_history"))
+        randomize: bool = normalize_list_to_value(kwargs.get("randomize"))
+        seed: int = normalize_list_to_value(kwargs.get("seed"))
+        filter: str = normalize_list_to_value(kwargs.get("filter"))
+        ui_widget: dict = normalize_json_input(kwargs.get("ui_widget", {}))
+
         schedulers = SCHEDULERS
 
-        nodes = json_input.get("nodes", [])
+        nodes = ui_widget.get("nodes", [])
         dataset = {
             "nodes": nodes
         }
 
-        if filter:
-            schedulers = filter_list(filter, schedulers)
-            if not schedulers:
-                raise ValueError(f"Not found a model with the specified filter: {filter}")
-
         if randomize:
+            if filter:
+                schedulers = filter_list(filter, schedulers)
+                if not schedulers:
+                    raise ValueError(f"Not found a model with the specified filter: {filter}")
             random.seed(seed)
             scheduler = random.choice(schedulers)
         
@@ -415,7 +491,7 @@ class LF_SchedulerSelector:
             create_history_node(scheduler, nodes)
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}schedulerselector", {
-            "node": node_id, 
+            "node": kwargs.get("node_id"),
             "dataset": dataset,
         })
 
@@ -433,7 +509,7 @@ class LF_UpscaleModelSelector:
                 "seed": ("INT", {"default": 42, "min": 0, "max": INT_MAX, "tooltip": "Seed value for when randomization is active."}),
             },
             "optional": {
-                "json_input": ("KUL_HISTORY", {"default": {}}),
+                "ui_widget": ("KUL_HISTORY", {"default": {}}),
                 "upscale_model": (["None"] + UPSCALERS, {"default": "None", "tooltip": "Upscale model used to upscale the image."}),
             },
             "hidden": {"node_id": "UNIQUE_ID"}
@@ -443,22 +519,27 @@ class LF_UpscaleModelSelector:
     FUNCTION = FUNCTION
     RETURN_NAMES = ("combo", "string")
     RETURN_TYPES = (UPSCALERS, "STRING")
+        
+    def on_exec(self, **kwargs: dict):
+        upscale_model: str = normalize_list_to_value(kwargs.get("upscale_model"))
+        enable_history: bool = normalize_list_to_value(kwargs.get("enable_history"))
+        randomize: bool = normalize_list_to_value(kwargs.get("randomize"))
+        seed: int = normalize_list_to_value(kwargs.get("seed"))
+        filter: str = normalize_list_to_value(kwargs.get("filter"))
+        ui_widget: dict = normalize_json_input(kwargs.get("ui_widget", {}))
 
-    def on_exec(self, node_id: str, upscale_model: str, enable_history: bool,
-                randomize: bool, seed: int, filter: str, json_input: dict = {}):
         upscalers = UPSCALERS
 
-        nodes = json_input.get("nodes", [])
-        dataset = {
+        nodes: list[dict] = ui_widget.get("nodes", [])
+        dataset: dict = {
             "nodes": nodes
         }
 
-        if filter:
-            upscalers = filter_list(filter, upscalers)
-            if not upscalers:
-                raise ValueError(f"Not found a model with the specified filter: {filter}")
-
         if randomize:
+            if filter:
+                upscalers = filter_list(filter, upscalers)
+                if not upscalers:
+                    raise ValueError(f"Not found a model with the specified filter: {filter}")
             random.seed(seed)
             upscale_model = random.choice(upscalers)
         
@@ -466,7 +547,7 @@ class LF_UpscaleModelSelector:
             create_history_node(upscale_model, nodes)
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}upscalemodelselector", {
-            "node": node_id, 
+            "node": kwargs.get("node_id"),
             "dataset": dataset,
         })
 
@@ -484,7 +565,7 @@ class LF_VAESelector:
                 "seed": ("INT", {"default": 42, "min": 0, "max": INT_MAX, "tooltip": "Seed value for when randomization is active."}),
             },
             "optional":{
-                "json_input": ("KUL_HISTORY", {"default": {}}),
+                "ui_widget": ("KUL_HISTORY", {"default": {}}),
                 "vae": (["None"] + VAES, {"default": "None", "tooltip": "VAE used to generate the image."}),
             },
             "hidden": {"node_id": "UNIQUE_ID"}
@@ -494,22 +575,27 @@ class LF_VAESelector:
     FUNCTION = FUNCTION
     RETURN_NAMES = ("combo", "string")
     RETURN_TYPES = (VAES, "STRING")
+        
+    def on_exec(self, **kwargs: dict):
+        vae: str = normalize_list_to_value(kwargs.get("vae"))
+        enable_history: bool = normalize_list_to_value(kwargs.get("enable_history"))
+        randomize: bool = normalize_list_to_value(kwargs.get("randomize"))
+        seed: int = normalize_list_to_value(kwargs.get("seed"))
+        filter: str = normalize_list_to_value(kwargs.get("filter"))
+        ui_widget: dict = normalize_json_input(kwargs.get("ui_widget", {}))
 
-    def on_exec(self, node_id: str, vae: str, enable_history: bool,
-                randomize: bool, seed: int, filter: str, json_input: dict = {}):
         vaes = VAES
 
-        nodes = json_input.get("nodes", [])
+        nodes = ui_widget.get("nodes", [])
         dataset = {
             "nodes": nodes
         }
 
-        if filter:
-            vaes = filter_list(filter, vaes)
-            if not vaes:
-                raise ValueError(f"Not found a model with the specified filter: {filter}")
-
         if randomize:
+            if filter:
+                vaes = filter_list(filter, vaes)
+                if not vaes:
+                    raise ValueError(f"Not found a model with the specified filter: {filter}")
             random.seed(seed)
             vae = random.choice(vaes)
         
@@ -517,7 +603,7 @@ class LF_VAESelector:
             create_history_node(vae, nodes)
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}vaeselector", {
-            "node": node_id, 
+            "node": kwargs.get("node_id"),
             "dataset": dataset,
         })
 

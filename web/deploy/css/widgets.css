@@ -1,0 +1,277 @@
+.lf-card {
+  background: var(--kul-background-color);
+  height: 100%;
+  width: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  overflow: auto;
+}
+.lf-card--has-button {
+  display: grid;
+  grid-template-rows: 1fr auto;
+}
+.lf-card__grid {
+  display: grid;
+  height: 100%;
+  grid-template: var(--card-grid);
+  width: 100%;
+}
+
+.lf-cardswithchip {
+  background: var(--kul-background-color);
+  height: 100%;
+  width: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  overflow: auto;
+}
+.lf-cardswithchip__cards, .lf-cardswithchip__grid {
+  display: grid;
+  height: 100%;
+  width: 100%;
+}
+.lf-cardswithchip__cards {
+  grid-template-columns: repeat(var(--card-grid), 1fr);
+}
+.lf-cardswithchip__grid {
+  grid-template-rows: minmax(0, auto) 1fr;
+}
+
+.lf-chat {
+  background: var(--kul-background-color);
+  height: 100%;
+  width: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  overflow: auto;
+}
+.lf-chat__widget {
+  height: 100%;
+  width: 100%;
+}
+
+.lf-chip {
+  background: var(--kul-background-color);
+  height: 100%;
+  width: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  overflow: auto;
+}
+.lf-chip__widget {
+  height: 100%;
+  width: 100%;
+}
+
+.lf-code {
+  background: var(--kul-background-color);
+  height: 100%;
+  width: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  overflow: auto;
+}
+.lf-code__widget {
+  height: 100%;
+  width: 100%;
+}
+
+.lf-compare {
+  background: var(--kul-background-color);
+  height: 100%;
+  width: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+.lf-compare__widget {
+  height: 100%;
+  width: 100%;
+}
+
+.lf-controlpanel {
+  background: var(--kul-background-color);
+  height: 100%;
+  width: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  overflow: auto;
+  --kul-article-padding: 12px 24px;
+  display: grid;
+}
+.lf-controlpanel__spinner {
+  height: 100%;
+  width: 100%;
+}
+
+.lf-countbarchart {
+  background: var(--kul-background-color);
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  position: relative;
+}
+.lf-countbarchart__grid {
+  display: grid;
+  grid-template-rows: 60% 1fr auto;
+  height: 100%;
+  width: 100%;
+}
+.lf-countbarchart__button, .lf-countbarchart__chip {
+  height: auto;
+}
+.lf-countbarchart__button--hidden, .lf-countbarchart__chip--hidden {
+  visibility: hidden;
+}
+.lf-countbarchart__chip {
+  border-top: 1px solid var(--kul-border-color);
+  border-bottom: 1px solid var(--kul-border-color);
+  box-sizing: border-box;
+  overflow: auto;
+  padding: 4px 0;
+}
+
+.lf-history {
+  background: var(--kul-background-color);
+  height: 100%;
+  width: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  overflow: auto;
+}
+.lf-history__widget {
+  height: 100%;
+  width: 100%;
+}
+
+.lf-masonry {
+  background: var(--kul-background-color);
+  height: 100%;
+  width: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  overflow: auto;
+}
+.lf-masonry__widget {
+  height: 100%;
+  width: 100%;
+}
+
+.lf-messenger {
+  background: var(--kul-background-color);
+  height: 100%;
+  width: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  overflow: auto;
+}
+.lf-messenger__placeholder {
+  background: var(--kul-background-color);
+  color: var(--kul-text-color);
+  font-family: var(--kul-font-family);
+  font-size: var(--kul-font-size);
+  height: 100%;
+  left: 0;
+  position: absolute;
+  text-align: center;
+  top: 0;
+  width: 100%;
+  z-index: 2;
+  justify-self: center;
+}
+.lf-messenger__placeholder--hidden {
+  display: none;
+}
+.lf-messenger__widget {
+  height: 100%;
+  width: 100%;
+}
+
+.lf-progressbar {
+  background: var(--kul-background-color);
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+}
+
+.lf-tabbarchart {
+  background: var(--kul-background-color);
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  position: relative;
+}
+.lf-tabbarchart__grid {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  height: 100%;
+  width: 100%;
+}
+.lf-tabbarchart__grid--no-directory {
+  grid-template-rows: auto 1fr;
+}
+.lf-tabbarchart__directory--hidden {
+  display: none;
+}
+.lf-tabbarchart__tabbar {
+  overflow: auto;
+}
+
+.lf-textarea {
+  background: var(--kul-background-color);
+  height: 100%;
+  width: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  overflow: auto;
+}
+.lf-textarea__widget {
+  background: var(--kul-background-color);
+  border: 0;
+  color: var(--kul-text-color);
+  display: block;
+  font-family: var(--kul-font-family-monospace);
+  font-size: var(--kul-font-size);
+  height: 100%;
+  outline: none;
+  padding: 8px;
+  resize: none;
+  transition: box-shadow 175ms ease;
+  width: 100%;
+}
+.lf-textarea__widget:focus:not(.lf-textarea__widget--error) {
+  box-shadow: inset 0px 0px 4px 1px var(--kul-text-color);
+}
+.lf-textarea__widget--error {
+  box-shadow: inset 0px 0px 4px 1px var(--kul-danger-color);
+}
+
+.lf-tree {
+  background: var(--kul-background-color);
+  height: 100%;
+  width: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  overflow: auto;
+}
+.lf-tree__widget {
+  height: 100%;
+  width: 100%;
+}
+
+.lf-upload {
+  background: var(--kul-background-color);
+  height: 100%;
+  width: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  overflow: auto;
+}
+.lf-upload__widget {
+  height: 100%;
+  width: 100%;
+}
+
+/*# sourceMappingURL=widgets.css.map */

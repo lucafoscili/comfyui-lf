@@ -82,7 +82,9 @@ interface CivitAIModelData {
 }
 
 interface Input {
-  required: Record<string, boolean>;
+  hidden: Record<string, []>;
+  optional: Record<string, []>;
+  required: Record<string, []>;
 }
 
 interface NodeData {
@@ -98,7 +100,7 @@ interface NodeData {
   python_module: string;
 }
 interface NodeType {
-  lfProps?: LFProps;
+  id: string;
   comfyClass?: string;
   filter?: string;
   nodeData?: NodeData;

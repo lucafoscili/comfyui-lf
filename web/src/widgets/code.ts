@@ -15,7 +15,7 @@ export const codeFactory: CodeWidgetFactory = {
     content: BASE_CSS_CLASS,
     code: `${BASE_CSS_CLASS}__widget`,
   },
-  options: (code: HTMLKulCodeElement) => {
+  options: (code) => {
     return {
       hideOnZoom: false,
       getComp() {
@@ -38,7 +38,7 @@ export const codeFactory: CodeWidgetFactory = {
               code.kulValue = u.unescapedStr || '{}';
               break;
             default:
-              code.kulValue = v || '';
+              code.kulValue = typeof v === 'string' ? v : '';
               break;
           }
         };
@@ -47,7 +47,7 @@ export const codeFactory: CodeWidgetFactory = {
       },
     };
   },
-  render: (node, name) => {
+  render: (node) => {
     const wrapper = document.createElement('div');
     const content = document.createElement('div');
     const code = document.createElement('kul-code');
@@ -61,6 +61,7 @@ export const codeFactory: CodeWidgetFactory = {
       case NodeName.displayPrimitiveAsJson:
       case NodeName.shuffleJsonKeys:
       case NodeName.sortJsonKeys:
+      case NodeName.stringToJson:
         code.kulLanguage = 'json';
         code.kulValue = '{}';
         break;
@@ -73,6 +74,6 @@ export const codeFactory: CodeWidgetFactory = {
     content.appendChild(code);
     wrapper.appendChild(content);
 
-    return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };
+    return { widget: createDOMWidget(TYPE, wrapper, node, options) };
   },
 };

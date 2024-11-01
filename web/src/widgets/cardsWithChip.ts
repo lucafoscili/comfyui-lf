@@ -28,28 +28,27 @@ export const cardsWithChipFactory: CardsWithChipWidgetFactory = {
       },
       getValue() {
         return {
-          cardPropsArray: getCardProps(grid) || [],
-          chipDataset: grid.querySelector('kul-chip')?.kulData || {},
+          chip: grid.querySelector('kul-chip')?.kulData || {},
+          props: getCardProps(grid) || [],
         };
       },
       setValue(value) {
         const callback: NormalizeValueCallback<
           CustomWidgetDeserializedValuesMap<typeof TYPE> | string
         > = (v, u) => {
-          const { cardPropsArray, chipDataset } =
-            u.parsedJson as CardsWithChipWidgetDeserializedValue;
+          const { props, chip } = u.parsedJson as CardsWithChipWidgetDeserializedValue;
           const cardsCount = cardHandler(
             grid.querySelector(`.${cardsWithChipFactory.cssClasses.cards}`),
-            cardPropsArray,
+            props,
           );
           if (!cardsCount || !v) {
             return;
           }
           const columns = cardsCount > 1 ? 2 : 1;
           grid.style.setProperty('--card-grid', String(columns).valueOf());
-          const chip = grid.querySelector('kul-chip') as HTMLKulChipElement;
-          if (chip) {
-            chip.kulData = chipDataset;
+          const chipEl = grid.querySelector('kul-chip') as HTMLKulChipElement;
+          if (chipEl) {
+            chipEl.kulData = chip;
           }
         };
 
@@ -57,7 +56,7 @@ export const cardsWithChipFactory: CardsWithChipWidgetFactory = {
       },
     };
   },
-  render: (node: NodeType, name: CustomWidgetName) => {
+  render: (node) => {
     const wrapper = document.createElement('div');
     const content = document.createElement('div');
     const grid = document.createElement('div');
@@ -78,6 +77,6 @@ export const cardsWithChipFactory: CardsWithChipWidgetFactory = {
     content.appendChild(grid);
     wrapper.appendChild(content);
 
-    return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };
+    return { widget: createDOMWidget(TYPE, wrapper, node, options) };
   },
 };

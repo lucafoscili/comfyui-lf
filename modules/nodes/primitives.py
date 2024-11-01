@@ -6,7 +6,7 @@ from itertools import combinations
 from server import PromptServer
 
 from ..utils.constants import CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, INT_MAX
-from ..utils.helpers import convert_to_boolean, convert_to_float, convert_to_int, convert_to_json, create_history_node, normalize_input_list, normalize_json_input, normalize_list_to_value
+from ..utils.helpers import create_history_node, normalize_input_list, normalize_json_input, normalize_list_to_value
 
 CATEGORY = f"{CATEGORY_PREFIX}/Primitives"
     
@@ -20,7 +20,7 @@ class LF_Boolean:
                 "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
             },
             "optional": {
-                "json_input": ("KUL_HISTORY", {"default": {}}),
+                "ui_widget": ("KUL_HISTORY", {"default": {}}),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -33,13 +33,13 @@ class LF_Boolean:
     RETURN_NAMES = ("boolean", "boolean_list")
     RETURN_TYPES = ("BOOLEAN", "BOOLEAN")
 
-    def on_exec(self, node_id: str, boolean: bool, enable_history: bool, json_input: dict = {}):
-        boolean = normalize_list_to_value(boolean)
-        enable_history = normalize_list_to_value(enable_history)
-        json_input = normalize_json_input(json_input)
+    def on_exec(self, **kwargs: dict):
+        boolean: bool = normalize_list_to_value(kwargs.get("boolean"))
+        enable_history: bool = normalize_list_to_value(kwargs.get("enable_history"))
+        ui_widget: dict = normalize_json_input(kwargs.get("ui_widget", {}))
 
-        nodes = json_input.get("nodes", [])
-        dataset = {
+        nodes: list[dict] = ui_widget.get("nodes", [])
+        dataset: dict = {
             "nodes": nodes
         }
 
@@ -47,8 +47,8 @@ class LF_Boolean:
             create_history_node(str(boolean), nodes)
             
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}boolean", {
-            "node": node_id, 
-            "dataset": dataset
+            "node": kwargs.get("node_id"),
+            "dataset": dataset,
         })
 
         return (boolean, [boolean])
@@ -61,6 +61,9 @@ class LF_DisplayBoolean:
             "required": {
                 "boolean": ("BOOLEAN", {"default": False, "forceInput": True, "tooltip": "Boolean value."}),
             },
+            "optional": {
+                "ui_widget": ("KUL_CODE", {"default": ""}),
+            },
             "hidden": {
                 "node_id": "UNIQUE_ID"
             }
@@ -72,20 +75,23 @@ class LF_DisplayBoolean:
     RETURN_NAMES = ("boolean",)
     RETURN_TYPES = ("BOOLEAN",)
 
-    def on_exec(self, node_id: str, boolean: bool):
-        display_boolean = normalize_input_list(boolean)
+    def on_exec(self, **kwargs: dict):
+        display_boolean: bool = normalize_input_list(kwargs.get("boolean"))
 
-        if len(display_boolean) > 1:
-            markdown_value = "\n\n".join(f"{i+1}. {item}" for i, item in enumerate(display_boolean))
+        if isinstance(display_boolean, list):
+            if len(display_boolean) > 1:
+                markdown_value = "\n\n".join(f"{i+1}. {item}" for i, item in enumerate(display_boolean))
+            else:
+                markdown_value = str(display_boolean[0])
         else:
-            markdown_value = str(display_boolean[0]) 
+            markdown_value = ""
         
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}displayboolean", {
-            "node": node_id, 
+            "node": kwargs.get("node_id"),
             "value": markdown_value,
         })
 
-        return (boolean,)
+        return (kwargs.get("boolean"),)
 # endregion
 # region LF_DisplayFloat
 class LF_DisplayFloat:
@@ -94,6 +100,9 @@ class LF_DisplayFloat:
         return {
             "required": {
                 "float": ("FLOAT", {"default": 0, "forceInput": True, "tooltip": "Float value."}),
+            },
+            "optional": {
+                "ui_widget": ("KUL_CODE", {"default": ""}),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -106,20 +115,23 @@ class LF_DisplayFloat:
     RETURN_NAMES = ("float",)
     RETURN_TYPES = ("FLOAT",)
 
-    def on_exec(self, node_id: str, float: float):
-        display_float = normalize_input_list(float)
+    def on_exec(self, **kwargs: dict):
+        display_float: float = normalize_input_list(kwargs.get("float"))
 
-        if len(display_float) > 1:
-            markdown_value = "\n\n".join(f"{i+1}. {item}" for i, item in enumerate(display_float))
+        if isinstance(display_float, list):
+            if len(display_float) > 1:
+                markdown_value = "\n\n".join(f"{i+1}. {item}" for i, item in enumerate(display_float))
+            else:
+                markdown_value = str(display_float[0])
         else:
-            markdown_value = str(display_float[0]) 
+            markdown_value = ""
         
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}displayfloat", {
-            "node": node_id, 
+            "node": kwargs.get("node_id"),
             "value": markdown_value,
         })
 
-        return (float,)
+        return (kwargs.get("float"),)
 # endregion
 # region LF_DisplayInteger
 class LF_DisplayInteger:
@@ -128,6 +140,9 @@ class LF_DisplayInteger:
         return {
             "required": {
                 "integer": ("INT", {"default": 0, "forceInput": True, "tooltip": "Integer value."}),
+            },
+            "optional": {
+                "ui_widget": ("KUL_CODE", {"default": ""}),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -140,34 +155,36 @@ class LF_DisplayInteger:
     RETURN_NAMES = ("integer",)
     RETURN_TYPES = ("INT",)
 
-    def on_exec(self, node_id: str, integer: int):
-        display_integer = normalize_input_list(integer)
+    def on_exec(self, **kwargs: dict):
+        display_integer: int = normalize_input_list(kwargs.get("integer"))
 
-        if len(display_integer) > 1:
-            markdown_value = "\n\n".join(f"{i+1}. {item}" for i, item in enumerate(display_integer))
+        if isinstance(display_integer, list):
+            if len(display_integer) > 1:
+                markdown_value = "\n\n".join(f"{i+1}. {item}" for i, item in enumerate(display_integer))
+            else:
+                markdown_value = str(display_integer[0])
         else:
-            markdown_value = str(display_integer[0]) 
+            markdown_value = ""
         
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}displayinteger", {
-            "node": node_id, 
+            "node": kwargs.get("node_id"),
             "value": markdown_value,
         })
 
-        return (integer,)
+        return (kwargs.get("integer"),)
 # endregion
 # region LF_DisplayPrimitiveAsJSON
 class LF_DisplayPrimitiveAsJSON:
     @classmethod
     def INPUT_TYPES(cls):
         return {
-            "required": {
-                "json": ("KUL_CODE", {}),
-            },
+            "required": {},
             "optional": {
                 "integer": ("INT", {"default": 0, "forceInput": True, "max": INT_MAX, "tooltip": "Integer value."}),
                 "float": ("FLOAT", {"default": 0.0, "forceInput": True, "step": 0.1, "tooltip": "Float value."}),
                 "string": ("STRING", {"default": "", "forceInput": True, "multiline": True, "tooltip": "String value."}),
                 "boolean": ("BOOLEAN", {"default": False, "forceInput": True, "tooltip": "Boolean value."}),
+                "ui_widget": ("KUL_CODE", {"default": ""}),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -181,13 +198,13 @@ class LF_DisplayPrimitiveAsJSON:
     RETURN_TYPES = ("JSON",)
 
     def on_exec(self, **kwargs: dict):
-        integer_list = normalize_input_list(kwargs.get("integer"))
-        float_list = normalize_input_list(kwargs.get("float"))
-        string_list = normalize_input_list(kwargs.get("string"))
-        boolean_list = normalize_input_list(kwargs.get("boolean"))
+        integer_list: int = normalize_input_list(kwargs.get("integer"))
+        float_list: float = normalize_input_list(kwargs.get("float"))
+        string_list: str = normalize_input_list(kwargs.get("string"))
+        boolean_list: bool = normalize_input_list(kwargs.get("boolean"))
 
-        nodes = []
-        dataset = {"nodes": nodes}
+        nodes: list[dict] = []
+        dataset: dict = {"nodes": nodes}
 
         if boolean_list:
             for idx, value in enumerate(boolean_list):
@@ -219,7 +236,7 @@ class LF_DisplayPrimitiveAsJSON:
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}displayprimitiveasjson", {
             "node": kwargs.get("node_id"),
-            "dataset": dataset
+            "value": dataset,
         })
 
         return (dataset,)
@@ -232,6 +249,9 @@ class LF_DisplayString:
             "required": {
                 "string": ("STRING", {"default": "", "forceInput": True, "tooltip": "String value."}),
             },
+            "optional": {
+                "ui_widget": ("KUL_CODE", {"default": ""}),
+            },
             "hidden": {
                 "node_id": "UNIQUE_ID"
             }
@@ -243,75 +263,23 @@ class LF_DisplayString:
     RETURN_NAMES = ("string",)
     RETURN_TYPES = ("STRING",)
 
-    def on_exec(self, node_id: str, string: str):
-        display_string = normalize_input_list(string)
+    def on_exec(self, **kwargs: dict):
+        display_string:str = normalize_input_list(kwargs.get("string"))
 
-        if len(display_string) > 1:
-            markdown_value = "\n\n".join(f"{i+1}. {item}" for i, item in enumerate(display_string))
+        if isinstance(display_string, list):
+            if len(display_string) > 1:
+                markdown_value = "\n\n".join(f"{i+1}. {item}" for i, item in enumerate(display_string))
+            else:
+                markdown_value = display_string[0]
         else:
-            markdown_value = display_string[0]
+            markdown_value = ""
         
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}displaystring", {
-            "node": node_id, 
+            "node": kwargs.get("node_id"),
             "value": markdown_value,
         })
 
-        return (string,)
-# endregion
-# region LF_Extractor
-class LF_Extractor:
-    @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "text": ("STRING", {"default": "", "multiline": True, "tooltip": "The string from which the output will be extracted."}),
-                "starting_delimiter": ("STRING", {"default": "{", "tooltip": "The delimiter where extraction starts."}),
-                "ending_delimiter": ("STRING", {"default": "}", "tooltip": "The delimiter where extraction ends."}),
-                "result": ("KUL_CODE", {"tooltip": "Extracted string."}),
-            },
-            "hidden": {
-                "node_id": "UNIQUE_ID"
-            }
-        }
-
-    CATEGORY = CATEGORY
-    FUNCTION = FUNCTION
-    RETURN_NAMES = ("result_as_json", "extracted_text", "result_as_int", "result_as_float", "result_as_boolean")
-    RETURN_TYPES = ("JSON", "STRING", "INT", "FLOAT", "BOOLEAN")
-
-    def on_exec(self, **kwargs: dict):
-        def extract_nested(text, start_delim, end_delim):
-            stack = []
-            start_idx = None
-            extracted = []
-            for idx, char in enumerate(text):
-                if char == start_delim:
-                    if not stack:
-                        start_idx = idx
-                    stack.append(start_delim)
-                elif char == end_delim and stack:
-                    stack.pop()
-                    if not stack:
-                        extracted.append(text[start_idx + 1:idx])
-            return ''.join(extracted) if extracted else ""
-        
-        text = normalize_list_to_value(kwargs.get("text"))
-        starting_delimiter = normalize_list_to_value(kwargs.get("starting_delimiter"))
-        ending_delimiter = normalize_list_to_value(kwargs.get("ending_delimiter"))
-
-        extracted_text = extract_nested(text, starting_delimiter, ending_delimiter)
-        
-        result_as_json = convert_to_json(extracted_text)
-        result_as_int = convert_to_int(extracted_text)
-        result_as_float = convert_to_float(extracted_text)
-        result_as_boolean = convert_to_boolean(extracted_text)
-
-        PromptServer.instance.send_sync(f"{EVENT_PREFIX}extractor", {
-            "node": kwargs.get("node_id"),
-            "value": extracted_text or "No matches...",
-        })
-        
-        return (result_as_json, extracted_text, result_as_int, result_as_float, result_as_boolean)
+        return (kwargs.get("string"),)
 # endregion
 # region LF_Float
 class LF_Float:
@@ -323,7 +291,7 @@ class LF_Float:
                 "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
             },
             "optional": {
-                "json_input": ("KUL_HISTORY", {"default": {}}),
+                "ui_widget": ("KUL_HISTORY", {"default": {}}),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -336,25 +304,25 @@ class LF_Float:
     RETURN_NAMES = ("float", "float_list")
     RETURN_TYPES = ("FLOAT", "FLOAT")
 
-    def on_exec(self, node_id: str, float: float, enable_history: bool, json_input: dict = {}):
-        float = normalize_list_to_value(float)
-        enable_history = normalize_list_to_value(enable_history)
-        json_input = normalize_json_input(json_input)
+    def on_exec(self, **kwargs: dict):
+        float_input: float = normalize_list_to_value(kwargs.get("float"))
+        enable_history: bool = normalize_list_to_value(kwargs.get("enable_history"))
+        ui_widget: dict = normalize_json_input(kwargs.get("ui_widget", {}))
 
-        nodes = json_input.get("nodes", [])
+        nodes = ui_widget.get("nodes", [])
         dataset = {
             "nodes": nodes
         }
 
         if enable_history:
-            create_history_node(str(float), nodes)
+            create_history_node(str(float_input), nodes)
                 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}float", {
-            "node": node_id, 
+            "node": kwargs.get("node_id"),
             "dataset": dataset,
         })
 
-        return (float, [float])
+        return (float_input, [float_input])
 # endregion
 # region LF_Integer
 class LF_Integer:
@@ -366,7 +334,7 @@ class LF_Integer:
                 "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
             },
             "optional": {
-                "json_input": ("KUL_HISTORY", {"default": {}}),
+                "ui_widget": ("KUL_HISTORY", {"default": {}}),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -379,25 +347,25 @@ class LF_Integer:
     RETURN_NAMES = ("int", "int_list")
     RETURN_TYPES = ("INT", "INT")
 
-    def on_exec(self, node_id: str, integer: int, enable_history: bool, json_input: dict = {}):
-        integer = normalize_list_to_value(integer)
-        enable_history = normalize_list_to_value(enable_history)
-        json_input = normalize_json_input(json_input)
+    def on_exec(self, **kwargs: dict):
+        integer_input: int = normalize_list_to_value(kwargs.get("integer"))
+        enable_history: bool = normalize_list_to_value(kwargs.get("enable_history"))
+        ui_widget: dict = normalize_json_input(kwargs.get("ui_widget", {}))
 
-        nodes = json_input.get("nodes", [])
+        nodes = ui_widget.get("nodes", [])
         dataset = {
             "nodes": nodes
         }
 
         if enable_history:
-            create_history_node(str(integer), nodes)
+            create_history_node(str(integer_input), nodes)
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}integer", {
-            "node": node_id, 
+            "node": kwargs.get("node_id"),
             "dataset": dataset
         })
 
-        return (integer, [integer])
+        return (integer_input, [integer_input])
 # endregion
 # region LF_RandomBoolean
 class LF_RandomBoolean:
@@ -406,6 +374,9 @@ class LF_RandomBoolean:
         return {
             "required": {
                 "chance_true": ("FLOAT", {"default": 50.0, "step": 1, "min": 0, "max": 100, "tooltip": "Percentage chance for True output, 0-100."}),
+            },
+            "optional": {
+                "ui_widget": ("KUL_PROGRESSBAR", {"default": {}}),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -418,16 +389,17 @@ class LF_RandomBoolean:
     RETURN_NAMES = ("boolean", "boolean_list")
     RETURN_TYPES = ("BOOLEAN", "BOOLEAN")
 
-    def on_exec(self, node_id: str, chance_true: float):
-        chance_true = max(0, min(100, chance_true))
+    def on_exec(self, **kwargs: dict):
+        chance_true: str = normalize_list_to_value(kwargs.get("chance_true"))
+        
+        percentage = max(0, min(100, chance_true))
         random_value = random.uniform(0, 100)
 
-        result = random_value <= chance_true
+        result = random_value <= percentage
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}randomboolean", {
-            "node": node_id, 
+            "node": kwargs.get("node_id"),
             "bool": result,
-            "chanceTrue": chance_true,
             "roll": random_value,
         })
 
@@ -448,7 +420,11 @@ class LF_Something2Number:
                 "boolean": ("BOOLEAN", {"tooltip": "Boolean value to convert to numbers."}),
                 "string": ("STRING", {"tooltip": "String value to convert to numbers."}),
                 "integer": ("INT", {"tooltip": "Integer value to convert to numbers."}),
-                "float": ("FLOAT", {"tooltip": "Float value to convert to numbers."})
+                "float": ("FLOAT", {"tooltip": "Float value to convert to numbers."}),
+                "ui_widget": ("KUL_CODE", {"default": ""}),
+            },
+            "hidden": {
+                "node_id": "UNIQUE_ID"
             }
         }
 
@@ -540,7 +516,11 @@ class LF_Something2String:
                 "json": ("JSON", {"tooltip": "JSON value to convert to string."}),
                 "boolean": ("BOOLEAN", {"tooltip": "Boolean value to convert to string."}),
                 "float": ("FLOAT", {"tooltip": "Float value to convert to string."}),
-                "integer": ("INT", {"tooltip": "Integer value to convert to string."})
+                "integer": ("INT", {"tooltip": "Integer value to convert to string."}),
+                "ui_widget": ("KUL_CODE", {"default": ""}),
+            },
+            "hidden": {
+                "node_id": "UNIQUE_ID"
             }
         }
 
@@ -620,7 +600,7 @@ class LF_String:
                 "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
             },
             "optional": {
-                "json_input": ("KUL_HISTORY", {"default": {}}),
+                "ui_widget": ("KUL_HISTORY", {"default": {}}),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -633,25 +613,25 @@ class LF_String:
     RETURN_NAMES = ("string", "string_list")
     RETURN_TYPES = ("STRING", "STRING")
 
-    def on_exec(self, node_id: str, string: str, enable_history: bool, json_input: dict = {}):
-        string = normalize_list_to_value(string)
-        enable_history = normalize_list_to_value(enable_history)
-        json_input = normalize_json_input(json_input)
+    def on_exec(self, **kwargs: dict):
+        string_input: str = normalize_list_to_value(kwargs.get("string"))
+        enable_history: bool = normalize_list_to_value(kwargs.get("enable_history"))
+        ui_widget: dict = normalize_json_input(kwargs.get("ui_widget", {}))
 
-        nodes = json_input.get("nodes", [])
+        nodes = ui_widget.get("nodes", [])
         dataset = {
             "nodes": nodes
         }
 
         if enable_history:
-            create_history_node(string, nodes)
+            create_history_node(string_input, nodes)
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}string", {
-            "node": node_id, 
+            "node": kwargs.get("node_id"), 
             "dataset": dataset,
         })
 
-        return (string, [string])
+        return (string_input, [string_input])
 # endregion
 # region LF_WallOfText
 class LF_WallOfText:
@@ -664,17 +644,21 @@ class LF_WallOfText:
                 "text_2": ("STRING", {"default": "", "multiline": True, "tooltip": "The second required string."}),
             },
             "optional": {
-                "text_3": ("STRING", {"default": "", "defaultInput": True, "multiline": True, "tooltip": "The third optional string."}),
-                "text_4": ("STRING", {"default": "", "defaultInput": True, "multiline": True, "tooltip": "The fourth optional string."}),
-                "text_5": ("STRING", {"default": "", "defaultInput": True, "multiline": True, "tooltip": "The fifth optional string."}),
-                "text_6": ("STRING", {"default": "", "defaultInput": True, "multiline": True, "tooltip": "The sixth optional string."}),
-                "text_7": ("STRING", {"default": "", "defaultInput": True, "multiline": True, "tooltip": "The seventh optional string."}),
-                "text_8": ("STRING", {"default": "", "defaultInput": True, "multiline": True, "tooltip": "The eighth optional string."}),
-                "text_9": ("STRING", {"default": "", "defaultInput": True, "multiline": True, "tooltip": "The ninth optional string."}),
-                "text_10": ("STRING", {"default": "", "defaultInput": True, "multiline": True, "tooltip": "The tenth optional string."}),
+                "text_3": ("STRING", {"default": "", "defaultInput": True, "tooltip": "The third optional string."}),
+                "text_4": ("STRING", {"default": "", "defaultInput": True, "tooltip": "The fourth optional string."}),
+                "text_5": ("STRING", {"default": "", "defaultInput": True, "tooltip": "The fifth optional string."}),
+                "text_6": ("STRING", {"default": "", "defaultInput": True, "tooltip": "The sixth optional string."}),
+                "text_7": ("STRING", {"default": "", "defaultInput": True, "tooltip": "The seventh optional string."}),
+                "text_8": ("STRING", {"default": "", "defaultInput": True, "tooltip": "The eighth optional string."}),
+                "text_9": ("STRING", {"default": "", "defaultInput": True, "tooltip": "The ninth optional string."}),
+                "text_10": ("STRING", {"default": "", "defaultInput": True, "tooltip": "The tenth optional string."}),
                 "shuffle_inputs": ("BOOLEAN", {"default": False, "tooltip": "Toggle shuffling of input strings."}),
                 "seed": ("INT", {"default": 42, "max": INT_MAX, "tooltip": "Seed to control the randomness of the shuffling."}),
-            } 
+                "ui_widget": ("KUL_CODE", {"default": ""}),
+            },
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
         }
 
     CATEGORY = CATEGORY
@@ -684,7 +668,7 @@ class LF_WallOfText:
     RETURN_TYPES = ("STRING", "STRING")
 
     def on_exec(self, **kwargs: dict):
-        texts = [normalize_list_to_value(kwargs.get(f"text_{i}", "")) for i in range(1, 11)]
+        texts: list[str] = [normalize_list_to_value(kwargs.get(f"text_{i}", "")) for i in range(1, 11)]
 
         if len(texts) > 1:
             separator = kwargs.get("separator", "")
@@ -697,6 +681,11 @@ class LF_WallOfText:
         else:
             wall_of_text = texts[0]
 
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}walloftext", {
+            "node": kwargs.get("node_id"), 
+            "value": wall_of_text,
+        })
+
         return (wall_of_text, wall_of_text)
 # endregion
 NODE_CLASS_MAPPINGS = {
@@ -706,7 +695,6 @@ NODE_CLASS_MAPPINGS = {
     "LF_DisplayInteger": LF_DisplayInteger,
     "LF_DisplayPrimitiveAsJSON": LF_DisplayPrimitiveAsJSON,
     "LF_DisplayString": LF_DisplayString,
-    "LF_Extractor": LF_Extractor,
     "LF_Float": LF_Float,
     "LF_Integer": LF_Integer,
     "LF_RandomBoolean": LF_RandomBoolean,

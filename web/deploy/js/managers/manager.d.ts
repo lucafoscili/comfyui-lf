@@ -1,6 +1,7 @@
-import { LFNodes } from './nodes.js';
 import { LFWidgets } from './widgets.js';
 import { ComfyAPIs, LogSeverity } from '../types/manager.js';
+import { NodeName } from '../types/nodes.js';
+import { EventName } from '../types/events.js';
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
 import { LFTooltip } from './tooltip';
 import { KulDataDataset } from '../types/ketchup-lite/components.js';
@@ -19,9 +20,9 @@ export declare class LFManager {
         article: HTMLKulArticleElement;
         dataset: KulArticleNode[];
     };
+    getEventName(node: NodeName): EventName;
     getManagers(): {
         ketchupLite?: KulManager;
-        nodes?: LFNodes;
         tooltip?: LFTooltip;
         widgets?: LFWidgets;
     };

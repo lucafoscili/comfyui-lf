@@ -1,14 +1,17 @@
-import { app } from '/scripts/app.js';
 import { controlPanelFactory } from '../widgets/controlPanel.js';
 import { codeFactory } from '../widgets/code.js';
-import { CustomWidgetName, CustomWidgetOptionsCallbacksMap } from '../types/widgets.js';
+import {
+  CardsWithChipWidget,
+  CardsWithChipWidgetDeserializedValue,
+  CardWidget,
+  CustomWidgetName,
+  CustomWidgetOptionsCallbacksMap,
+} from '../types/widgets.js';
 import { masonryFactory } from '../widgets/masonry.js';
-import { booleanViewerFactory } from '../widgets/booleanViewer.js';
-import { jsonInputFactory } from '../widgets/jsonInput.js';
+import { textareaFactory } from '../widgets/textarea.js';
 import { treeFactory } from '../widgets/tree.js';
 import { chatFactory } from '../widgets/chat.js';
 import { historyFactory } from '../widgets/history.js';
-import { rollViewerFactory } from '../widgets/rollViewer.js';
 import { countBarChartFactory } from '../widgets/countBarChart.js';
 import { uploadFactory } from '../widgets/upload.js';
 import { chipFactory } from '../widgets/chip.js';
@@ -18,132 +21,67 @@ import { cardsWithChipFactory } from '../widgets/cardsWithChip.js';
 import { tabBarChartFactory } from '../widgets/tabBarChart.js';
 import { compareFactory } from '../widgets/compare.js';
 import { NodeName } from '../types/nodes.js';
+import { CardPayload, NotifyPayload, WidgetPayloadMap } from '../types/events.js';
+import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common.js';
+import { APIMetadataEntry, LogSeverity } from '../types/manager.js';
+import { cardPlaceholders, fetchModelMetadata } from '../utils/api.js';
+import { showNotification } from '../helpers/notify.js';
+import { progressbarFactory } from '../widgets/progressbar.js';
 
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
 /*-------------------------------------------------*/
 
 export class LFWidgets {
-  #CSS_EMBEDS = [...Object.keys(CustomWidgetName)];
-
   constructor() {
-    for (let index = 0; index < this.#CSS_EMBEDS.length; index++) {
-      const cssFileName = this.#CSS_EMBEDS[index];
-      const link = document.createElement('link');
-      link.dataset.filename = cssFileName.toString();
-      link.rel = 'stylesheet';
-      link.type = 'text/css';
-      link.href = `extensions/comfyui-lf/css/${cssFileName}.css`;
-      document.head.appendChild(link);
-    }
+    const link = document.createElement('link');
+    link.dataset.filename = 'tooltip';
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = `extensions/comfyui-lf/css/widgets.css`;
+    document.head.appendChild(link);
   }
 
-  add = {
-    [CustomWidgetName.booleanViewer]: (nodeType: NodeType) => {
-      const widget = app.widgets[CustomWidgetName.booleanViewer](
-        nodeType,
-        CustomWidgetName.booleanViewer,
-      ).widget;
-      return widget;
-    },
-    [CustomWidgetName.card]: (nodeType: NodeType) => {
-      const widget = app.widgets[CustomWidgetName.card](nodeType, CustomWidgetName.card).widget;
-      return widget;
-    },
-    [CustomWidgetName.cardsWithChip]: (nodeType: NodeType) => {
-      const widget = app.widgets[CustomWidgetName.cardsWithChip](
-        nodeType,
-        CustomWidgetName.cardsWithChip,
-      ).widget;
-      return widget;
-    },
-    [CustomWidgetName.chat]: (nodeType: NodeType) => {
-      const widget = app.widgets[CustomWidgetName.chat](nodeType, CustomWidgetName.chat).widget;
-      return widget;
-    },
-    [CustomWidgetName.chip]: (nodeType: NodeType) => {
-      const widget = app.widgets[CustomWidgetName.chip](nodeType, CustomWidgetName.chip).widget;
-      return widget;
-    },
-    [CustomWidgetName.code]: (nodeType: NodeType) => {
-      const widget = app.widgets[CustomWidgetName.code](nodeType, CustomWidgetName.code).widget;
-      return widget;
-    },
-    [CustomWidgetName.compare]: (nodeType: NodeType) => {
-      const widget = app.widgets[CustomWidgetName.compare](
-        nodeType,
-        CustomWidgetName.compare,
-      ).widget;
-      return widget;
-    },
-    [CustomWidgetName.controlPanel]: (nodeType: NodeType) => {
-      const widget = app.widgets[CustomWidgetName.controlPanel](
-        nodeType,
-        CustomWidgetName.controlPanel,
-      ).widget;
-      return widget;
-    },
-    [CustomWidgetName.countBarChart]: (nodeType: NodeType) => {
-      const widget = app.widgets[CustomWidgetName.countBarChart](
-        nodeType,
-        CustomWidgetName.countBarChart,
-      ).widget;
-      return widget;
-    },
-    [CustomWidgetName.history]: (nodeType: NodeType) => {
-      const widget = app.widgets[CustomWidgetName.history](
-        nodeType,
-        CustomWidgetName.history,
-      ).widget;
-      return widget;
-    },
-    [CustomWidgetName.jsonInput]: (nodeType: NodeType) => {
-      const widget = app.widgets[CustomWidgetName.jsonInput](
-        nodeType,
-        CustomWidgetName.jsonInput,
-      ).widget;
-      return widget;
-    },
-    [CustomWidgetName.masonry]: (nodeType: NodeType) => {
-      const widget = app.widgets[CustomWidgetName.masonry](
-        nodeType,
-        CustomWidgetName.masonry,
-      ).widget;
-      return widget;
-    },
-    [CustomWidgetName.messenger]: (nodeType: NodeType) => {
-      const widget = app.widgets[CustomWidgetName.messenger](
-        nodeType,
-        CustomWidgetName.messenger,
-      ).widget;
-      return widget;
-    },
-    [CustomWidgetName.rollViewer]: (nodeType: NodeType) => {
-      const widget = app.widgets[CustomWidgetName.rollViewer](
-        nodeType,
-        CustomWidgetName.rollViewer,
-      ).widget;
-      return widget;
-    },
-    [CustomWidgetName.tabBarChart]: (nodeType: NodeType) => {
-      const widget = app.widgets[CustomWidgetName.tabBarChart](
-        nodeType,
-        CustomWidgetName.tabBarChart,
-      ).widget;
-      return widget;
-    },
-    [CustomWidgetName.tree]: (nodeType: NodeType) => {
-      const widget = app.widgets[CustomWidgetName.tree](nodeType, CustomWidgetName.tree).widget;
-      return widget;
-    },
-    [CustomWidgetName.upload]: (nodeType: NodeType) => {
-      const widget = app.widgets[CustomWidgetName.upload](nodeType, CustomWidgetName.upload).widget;
-      return widget;
+  decorators = {
+    card: <W extends CardWidget | CardsWithChipWidget>(payload: CardPayload, widget: W) => {
+      const { apiFlags, datasets, hashes, paths, chip } = payload;
+
+      cardPlaceholders(widget as CardWidget, 1);
+
+      const value: CardsWithChipWidgetDeserializedValue = {
+        props: [],
+        chip,
+      };
+      const models: APIMetadataEntry[] = [];
+      for (let index = 0; index < datasets?.length; index++) {
+        const apiFlag = apiFlags[index];
+        const dataset = datasets[index];
+        const hash = hashes[index];
+        const path = paths[index];
+
+        models.push({ dataset, hash, path, apiFlag });
+      }
+
+      fetchModelMetadata(models).then((r) => {
+        for (let index = 0; index < r.length; index++) {
+          const cardProps = r[index];
+          if (cardProps.kulData) {
+            value.props.push(cardProps);
+          } else {
+            value.props.push({
+              ...cardProps,
+              kulData: models[index].dataset,
+            });
+          }
+        }
+
+        widget.options.setValue(JSON.stringify(value));
+        getApiRoutes().redraw();
+      });
     },
   };
 
   option: { [K in CustomWidgetName]: CustomWidgetOptionsCallbacksMap<K> } = {
-    [CustomWidgetName.booleanViewer]: (textfield) => booleanViewerFactory.options(textfield),
     [CustomWidgetName.card]: (grid: HTMLDivElement) => cardFactory.options(grid),
     [CustomWidgetName.cardsWithChip]: (grid: HTMLDivElement) => cardsWithChipFactory.options(grid),
     [CustomWidgetName.chat]: (chat: HTMLKulChatElement) => chatFactory.options(chat),
@@ -157,150 +95,140 @@ export class LFWidgets {
       button: HTMLKulButtonElement,
     ) => countBarChartFactory.options(chart, chip, button),
     [CustomWidgetName.history]: (history: HTMLKulListElement) => historyFactory.options(history),
-    [CustomWidgetName.jsonInput]: (content: HTMLTextAreaElement) =>
-      jsonInputFactory.options(content),
     [CustomWidgetName.masonry]: (masonry: HTMLKulMasonryElement) => masonryFactory.options(masonry),
     [CustomWidgetName.messenger]: (
       messenger: HTMLKulMessengerElement,
       placeholder: HTMLDivElement,
     ) => messengerFactory.options(messenger, placeholder),
-    [CustomWidgetName.rollViewer]: (rollViewer: HTMLKulProgressbarElement, nodeType: NodeType) =>
-      rollViewerFactory.options(rollViewer, nodeType),
+    [CustomWidgetName.progressbar]: (progressbar: HTMLKulProgressbarElement, nodeType: NodeType) =>
+      progressbarFactory.options(progressbar, nodeType),
     [CustomWidgetName.tabBarChart]: (
       chart: HTMLKulChartElement,
       tabbar: HTMLKulTabbarElement,
       textfield: HTMLKulTextfieldElement,
       node: NodeName,
     ) => tabBarChartFactory.options(chart, tabbar, textfield, node),
+    [CustomWidgetName.textarea]: (content: HTMLTextAreaElement) => textareaFactory.options(content),
     [CustomWidgetName.tree]: (tree: HTMLKulTreeElement) => treeFactory.options(tree),
     [CustomWidgetName.upload]: (upload: HTMLKulUploadElement) => uploadFactory.options(upload),
   };
 
   set = {
-    [CustomWidgetName.booleanViewer]: () => {
-      return {
-        [CustomWidgetName.booleanViewer]: (nodeType: NodeType, name: CustomWidgetName) => {
-          return booleanViewerFactory.render(nodeType, name);
-        },
-      };
+    [CustomWidgetName.card]: (nodeType: NodeType) => {
+      return cardFactory.render(nodeType, CustomWidgetName.card);
     },
-    [CustomWidgetName.card]: () => {
-      return {
-        [CustomWidgetName.card]: (nodeType: NodeType, name: CustomWidgetName) => {
-          return cardFactory.render(nodeType, name);
-        },
-      };
+    [CustomWidgetName.cardsWithChip]: (nodeType: NodeType) => {
+      return cardsWithChipFactory.render(nodeType, CustomWidgetName.cardsWithChip);
     },
-    [CustomWidgetName.cardsWithChip]: () => {
-      return {
-        [CustomWidgetName.cardsWithChip]: (nodeType: NodeType, name: CustomWidgetName) => {
-          return cardsWithChipFactory.render(nodeType, name);
-        },
-      };
+    [CustomWidgetName.chat]: (nodeType: NodeType) => {
+      return chatFactory.render(nodeType, CustomWidgetName.chat);
     },
-    [CustomWidgetName.chat]: () => {
-      return {
-        [CustomWidgetName.chat]: (nodeType: NodeType, name: CustomWidgetName) => {
-          return chatFactory.render(nodeType, name);
-        },
-      };
+    [CustomWidgetName.chip]: (nodeType: NodeType) => {
+      return chipFactory.render(nodeType, CustomWidgetName.chip);
     },
-    [CustomWidgetName.chip]: () => {
-      return {
-        [CustomWidgetName.chip]: (nodeType: NodeType, name: CustomWidgetName) => {
-          return chipFactory.render(nodeType, name);
-        },
-      };
+    [CustomWidgetName.code]: (nodeType: NodeType) => {
+      return codeFactory.render(nodeType, CustomWidgetName.code);
     },
-    [CustomWidgetName.code]: () => {
-      return {
-        [CustomWidgetName.code]: (nodeType: NodeType, name: CustomWidgetName) => {
-          return codeFactory.render(nodeType, name);
-        },
-      };
+    [CustomWidgetName.compare]: (nodeType: NodeType) => {
+      return compareFactory.render(nodeType, CustomWidgetName.compare);
     },
-    [CustomWidgetName.compare]: () => {
-      return {
-        [CustomWidgetName.compare]: (nodeType: NodeType, name: CustomWidgetName) => {
-          return compareFactory.render(nodeType, name);
-        },
-      };
+    [CustomWidgetName.controlPanel]: (nodeType: NodeType) => {
+      return controlPanelFactory.render(nodeType, CustomWidgetName.controlPanel);
     },
-    [CustomWidgetName.controlPanel]: () => {
-      return {
-        [CustomWidgetName.controlPanel]: (nodeType: NodeType, name: CustomWidgetName) => {
-          return controlPanelFactory.render(nodeType, name);
-        },
-      };
+    [CustomWidgetName.countBarChart]: (nodeType: NodeType) => {
+      return countBarChartFactory.render(nodeType, CustomWidgetName.countBarChart);
     },
-    [CustomWidgetName.countBarChart]: () => {
-      return {
-        [CustomWidgetName.countBarChart]: (nodeType: NodeType, name: CustomWidgetName) => {
-          return countBarChartFactory.render(nodeType, name);
-        },
-      };
+    [CustomWidgetName.history]: (nodeType: NodeType) => {
+      return historyFactory.render(nodeType, CustomWidgetName.history);
     },
-    [CustomWidgetName.history]: () => {
-      return {
-        [CustomWidgetName.history]: (nodeType: NodeType, name: CustomWidgetName) => {
-          return historyFactory.render(nodeType, name);
-        },
-      };
+    [CustomWidgetName.masonry]: (nodeType: NodeType) => {
+      return masonryFactory.render(nodeType, CustomWidgetName.masonry);
     },
-    [CustomWidgetName.jsonInput]: () => {
-      return {
-        [CustomWidgetName.jsonInput]: (nodeType: NodeType, name: CustomWidgetName) => {
-          return jsonInputFactory.render(nodeType, name);
-        },
-      };
+    [CustomWidgetName.messenger]: (nodeType: NodeType) => {
+      return messengerFactory.render(nodeType, CustomWidgetName.messenger);
     },
-    [CustomWidgetName.masonry]: () => {
-      return {
-        [CustomWidgetName.masonry]: (nodeType: NodeType, name: CustomWidgetName) => {
-          return masonryFactory.render(nodeType, name);
-        },
-      };
+    [CustomWidgetName.progressbar]: (nodeType: NodeType) => {
+      return progressbarFactory.render(nodeType, CustomWidgetName.progressbar);
     },
-    [CustomWidgetName.messenger]: () => {
-      return {
-        [CustomWidgetName.messenger]: (nodeType: NodeType, name: CustomWidgetName) => {
-          return messengerFactory.render(nodeType, name);
-        },
-      };
+    [CustomWidgetName.tabBarChart]: (nodeType: NodeType) => {
+      return tabBarChartFactory.render(nodeType, CustomWidgetName.tabBarChart);
     },
-    [CustomWidgetName.rollViewer]: () => {
-      return {
-        [CustomWidgetName.rollViewer]: (nodeType: NodeType, name: CustomWidgetName) => {
-          return rollViewerFactory.render(nodeType, name);
-        },
-      };
+    [CustomWidgetName.textarea]: (nodeType: NodeType) => {
+      return textareaFactory.render(nodeType, CustomWidgetName.textarea);
     },
-    [CustomWidgetName.tabBarChart]: () => {
-      return {
-        [CustomWidgetName.tabBarChart]: (nodeType: NodeType, name: CustomWidgetName) => {
-          return tabBarChartFactory.render(nodeType, name);
-        },
-      };
+    [CustomWidgetName.tree]: (nodeType: NodeType) => {
+      return treeFactory.render(nodeType, CustomWidgetName.tree);
     },
-    [CustomWidgetName.tree]: () => {
-      return {
-        [CustomWidgetName.tree]: (nodeType: NodeType, name: CustomWidgetName) => {
-          return treeFactory.render(nodeType, name);
-        },
-      };
-    },
-    [CustomWidgetName.upload]: () => {
-      return {
-        [CustomWidgetName.upload]: (nodeType: NodeType, name: CustomWidgetName) => {
-          return uploadFactory.render(nodeType, name);
-        },
-      };
+    [CustomWidgetName.upload]: (nodeType: NodeType) => {
+      return uploadFactory.render(nodeType, CustomWidgetName.upload);
     },
   };
 
-  get = {
-    adders: this.add,
-    options: this.option,
-    setters: this.set,
+  onEvent = <N extends NodeName, W extends CustomWidgetName>(
+    name: N,
+    event: CustomEvent<WidgetPayloadMap[W]>,
+    widgets: Array<W>,
+  ) => {
+    const lfManager = getLFManager();
+
+    const payload = event.detail;
+    const node = lfManager.getApiRoutes().getNodeById(payload.id);
+    lfManager.log(
+      `${node.comfyClass} (#${node.id}): event '${name}' fired`,
+      { payload, node },
+      LogSeverity.Info,
+    );
+
+    if (node) {
+      switch (name) {
+        case NodeName.notify:
+          if ('action' in payload) {
+            showNotification(payload as NotifyPayload);
+          }
+          break;
+      }
+
+      for (let index = 0; index < widgets.length; index++) {
+        const widgetName = widgets[index];
+        const widget = getCustomWidget(node, widgetName);
+
+        switch (widgetName) {
+          case CustomWidgetName.card:
+          case CustomWidgetName.cardsWithChip:
+            if (widget && 'apiFlags' in payload) {
+              this.decorators.card(payload, widget as CardWidget | CardsWithChipWidget);
+            }
+            break;
+          case CustomWidgetName.code:
+          case CustomWidgetName.upload:
+            if (widget && 'value' in payload) {
+              const { value } = payload;
+              widget.options.setValue(value);
+            }
+            break;
+          case CustomWidgetName.progressbar:
+          case CustomWidgetName.masonry:
+            if (widget) {
+              widget.options.setValue(JSON.stringify(payload));
+            }
+            break;
+          case CustomWidgetName.countBarChart:
+          case CustomWidgetName.tabBarChart:
+            if (widget && 'datasets' in payload) {
+              const { datasets } = payload;
+              widget.options.setValue(JSON.stringify(datasets));
+            }
+            break;
+          default:
+            if (widget && 'dataset' in payload) {
+              const { dataset } = payload;
+              widget.options.setValue(JSON.stringify(dataset));
+            }
+            break;
+        }
+      }
+
+      lfManager.getApiRoutes().redraw();
+    }
   };
 }

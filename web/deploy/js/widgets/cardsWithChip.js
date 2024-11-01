@@ -20,29 +20,29 @@ export const cardsWithChipFactory = {
             },
             getValue() {
                 return {
-                    cardPropsArray: getCardProps(grid) || [],
-                    chipDataset: grid.querySelector('kul-chip')?.kulData || {},
+                    chip: grid.querySelector('kul-chip')?.kulData || {},
+                    props: getCardProps(grid) || [],
                 };
             },
             setValue(value) {
                 const callback = (v, u) => {
-                    const { cardPropsArray, chipDataset } = u.parsedJson;
-                    const cardsCount = cardHandler(grid.querySelector(`.${cardsWithChipFactory.cssClasses.cards}`), cardPropsArray);
+                    const { props, chip } = u.parsedJson;
+                    const cardsCount = cardHandler(grid.querySelector(`.${cardsWithChipFactory.cssClasses.cards}`), props);
                     if (!cardsCount || !v) {
                         return;
                     }
                     const columns = cardsCount > 1 ? 2 : 1;
                     grid.style.setProperty('--card-grid', String(columns).valueOf());
-                    const chip = grid.querySelector('kul-chip');
-                    if (chip) {
-                        chip.kulData = chipDataset;
+                    const chipEl = grid.querySelector('kul-chip');
+                    if (chipEl) {
+                        chipEl.kulData = chip;
                     }
                 };
                 normalizeValue(value, callback, TYPE);
             },
         };
     },
-    render: (node, name) => {
+    render: (node) => {
         const wrapper = document.createElement('div');
         const content = document.createElement('div');
         const grid = document.createElement('div');
@@ -58,6 +58,6 @@ export const cardsWithChipFactory = {
         grid.appendChild(cards);
         content.appendChild(grid);
         wrapper.appendChild(content);
-        return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };
+        return { widget: createDOMWidget(TYPE, wrapper, node, options) };
     },
 };

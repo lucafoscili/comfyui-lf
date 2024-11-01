@@ -211,4 +211,4 @@ web/deploy/js/ketchup-lite/*showcase*
 
 # Messenger - custom characters
 web/deploy/assets/media/custom_characters/*
-!web/deploy/assets/media/custom_characters/.gitpreserve
+!web/deploy/assets/media/custom_characters/.gitkeep

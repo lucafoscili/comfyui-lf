@@ -14,10 +14,10 @@ const DUMMY_PROPS = {
 };
 export const cardPlaceholders = (widget, count) => {
     const dummyValue = {
-        propsArray: [],
+        props: [],
     };
     for (let index = 0; index < count; index++) {
-        dummyValue.propsArray.push(DUMMY_PROPS);
+        dummyValue.props.push(DUMMY_PROPS);
     }
     widget.options.setValue(JSON.stringify(dummyValue));
 };
