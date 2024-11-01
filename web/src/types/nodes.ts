@@ -1,3 +1,4 @@
+import { EventPayload } from './events';
 import { CustomWidgetName } from './widgets';
 
 /*-------------------------------------------------------------------*/
@@ -19,9 +20,13 @@ export enum NodeName {
   displayJson = 'LF_DisplayJSON',
   displayPrimitiveAsJson = 'LF_DisplayPrimitiveAsJSON',
   displayString = 'LF_DisplayString',
+  markdownDocGenerator = 'LF_MarkdownDocGenerator',
   float = 'LF_Float',
   embeddingSelector = 'LF_EmbeddingSelector',
-  extractor = 'LF_Extractor',
+  extractString = 'LF_ExtractString',
+  extractPromptFromLoraTag = 'LF_ExtractPromptFromLoraTag',
+  getValueFromJson = 'LF_GetValueFromJSON',
+  getRandomKeyFromJson = 'LF_GetRandomKeyFromJSON',
   imageClassifier = 'LF_ImageClassifier',
   imageListFromJSON = 'LF_ImageListFromJSON',
   imageHistogram = 'LF_ImageHistogram',
@@ -35,13 +40,12 @@ export enum NodeName {
   loadImages = 'LF_LoadImages',
   loadLoraTags = 'LF_LoadLoraTags',
   loadMetadata = 'LF_LoadMetadata',
-  lora2Prompt = 'LF_Lora2Prompt',
-  loraTag2Prompt = 'LF_LoraTag2Prompt',
   loraAndEmbeddingSelector = 'LF_LoraAndEmbeddingSelector',
   loraSelector = 'LF_LoraSelector',
   mathOperation = 'LF_MathOperation',
   multipleImageResizeForWeb = 'LF_MultipleImageResizeForWeb',
   notify = 'LF_Notify',
+  parsePromptWithLoraTags = 'LF_ParsePromptWithLoraTags',
   randomBoolean = 'LF_RandomBoolean',
   regionExtractor = 'LF_RegionExtractor',
   resizeImageByEdge = 'LF_ResizeImageByEdge',
@@ -53,11 +57,13 @@ export enum NodeName {
   saveJson = 'LF_SaveJSON',
   schedulerSelector = 'LF_SchedulerSelector',
   sequentialSeedsGenerator = 'LF_SequentialSeedsGenerator',
+  setValueInJson = 'LF_SetValueInJSON',
   shuffleJsonKeys = 'LF_ShuffleJSONKeys',
   something2Number = 'LF_Something2Number',
   something2String = 'LF_Something2String',
   sortJsonKeys = 'LF_SortJSONKeys',
   string = 'LF_String',
+  stringToJson = 'LF_StringToJSON',
   switchFloat = 'LF_SwitchFloat',
   switchImage = 'LF_SwitchImage',
   switchInteger = 'LF_SwitchInteger',
@@ -68,12 +74,20 @@ export enum NodeName {
   urandomSeedGenerator = 'LF_UrandomSeedGenerator',
   usageStatistics = 'LF_UsageStatistics',
   vaeSelector = 'LF_VAESelector',
+  wallOfText = 'LF_WallOfText',
   writeJson = 'LF_WriteJSON',
 }
 type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> & U[keyof U];
+export type CustomWidgetGetter = Record<CustomWidgetName, Function>;
 export interface Extension {
   beforeRegisterNodeDef?: (node: NodeType, data: NodeData, name: string) => void;
-  getCustomWidgets?: () => AtLeastOne<Record<CustomWidgetName, Function>>;
+  getCustomWidgets?: () => AtLeastOne<Partial<CustomWidgetGetter>>;
   name: string;
   nodeCreated?: (node: NodeType) => void;
 }
+export type NodePayloadMap = {
+  [N in NodeName]: EventPayload<CustomWidgetName>;
+};
+export type NodeWidgetMap = {
+  [N in NodeName]: CustomWidgetName[];
+};

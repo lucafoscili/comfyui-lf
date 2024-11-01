@@ -8,7 +8,7 @@ import comfy.sd
 import comfy.utils
 
 from ..utils.constants import ANY, BASE64_PNG_PREFIX, CATEGORY_PREFIX, CHECKPOINTS, EVENT_PREFIX, FUNCTION, INT_MAX, LORA_TAG_REGEX, LORAS, NOTIFY_COMBO, SAMPLERS, SCHEDULERS, UPSCALERS, VAES
-from ..utils.helpers import count_words_in_comma_separated_string, get_embedding_hashes, get_lora_hashes, get_sha256, normalize_input_image, normalize_input_list, normalize_list_to_value, cleanse_lora_tag, prepare_model_dataset, process_model, send_multi_selector_message, tensor_to_base64
+from ..utils.helpers import get_embedding_hashes, get_lora_hashes, get_sha256, normalize_input_image, normalize_list_to_value,  prepare_model_dataset, process_model, tensor_to_base64
 
 from server import PromptServer
 
@@ -39,6 +39,7 @@ class LF_CivitAIMetadataSetup:
                 "height": ("INT", {"default": 1024, "tooltip": "Height of the image."}),
                 "hires_upscale": ("FLOAT", {"default": 1.5, "tooltip": "Upscale factor for Hires-fix."}),
                 "hires_upscaler": (UPSCALERS, {"tooltip": "Upscale model for Hires-fix."}),
+                "ui_widget": ("KUL_CODE", {"default": ""}),
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
@@ -65,25 +66,25 @@ class LF_CivitAIMetadataSetup:
                     "id": category
                 })
 
-        cfg:float = normalize_list_to_value(kwargs.get("cfg"))
-        checkpoint:str = normalize_list_to_value(kwargs.get("checkpoint"))
-        clip_skip:int = normalize_list_to_value(kwargs.get("clip_skip"))
-        denoising:float = normalize_list_to_value(kwargs.get("denoising"))
-        embeddings:str = normalize_list_to_value(kwargs.get("embeddings"))
-        height:int = normalize_list_to_value(kwargs.get("height"))
-        hires_upscale:float = normalize_list_to_value(kwargs.get("hires_upscale"))
-        hires_upscaler:str = normalize_list_to_value(kwargs.get("hires_upscaler"))
-        lora_tags:str = normalize_list_to_value(kwargs.get("lora_tags"))
-        negative_prompt:str = normalize_list_to_value(kwargs.get("negative_prompt"))
-        positive_prompt:str = normalize_list_to_value(kwargs.get("positive_prompt"))
-        sampler:str = normalize_list_to_value(kwargs.get("sampler"))
-        scheduler:str = normalize_list_to_value(kwargs.get("scheduler"))
-        seed:int = normalize_list_to_value(kwargs.get("seed"))
-        steps:int = normalize_list_to_value(kwargs.get("steps"))
-        vae:str = normalize_list_to_value(kwargs.get("vae"))
-        width:int = normalize_list_to_value(kwargs.get("width"))
+        cfg: float = normalize_list_to_value(kwargs.get("cfg"))
+        checkpoint: str = normalize_list_to_value(kwargs.get("checkpoint"))
+        clip_skip: int = normalize_list_to_value(kwargs.get("clip_skip"))
+        denoising: float = normalize_list_to_value(kwargs.get("denoising"))
+        embeddings: str = normalize_list_to_value(kwargs.get("embeddings"))
+        height: int = normalize_list_to_value(kwargs.get("height"))
+        hires_upscale: float = normalize_list_to_value(kwargs.get("hires_upscale"))
+        hires_upscaler: str = normalize_list_to_value(kwargs.get("hires_upscaler"))
+        lora_tags: str = normalize_list_to_value(kwargs.get("lora_tags"))
+        negative_prompt: str = normalize_list_to_value(kwargs.get("negative_prompt"))
+        positive_prompt: str = normalize_list_to_value(kwargs.get("positive_prompt"))
+        sampler: str = normalize_list_to_value(kwargs.get("sampler"))
+        scheduler: str = normalize_list_to_value(kwargs.get("scheduler"))
+        seed: int = normalize_list_to_value(kwargs.get("seed"))
+        steps: int = normalize_list_to_value(kwargs.get("steps"))
+        vae: str = normalize_list_to_value(kwargs.get("vae"))
+        width: int = normalize_list_to_value(kwargs.get("width"))
 
-        analytics_dataset = {"nodes": []}
+        analytics_dataset: dict = {"nodes": []}
 
         # Adding nodes to analytics dataset
         add_metadata_node("checkpoints", checkpoint)
@@ -115,7 +116,7 @@ class LF_CivitAIMetadataSetup:
         
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}civitaimetadatasetup", {
             "node": kwargs.get("node_id"),
-            "metadataString": clean_metadata_string,
+            "value": clean_metadata_string,
         })
 
         output_prompt = f"{embeddings}, {positive_prompt}" if positive_prompt else ""
@@ -131,6 +132,9 @@ class LF_ControlPanel:
     def INPUT_TYPES(cls):
         return {
             "required": {},
+            "optional": {
+                "ui_widget": ("KUL_CONTROL_PANEL", {"default": {}})
+            },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
             }
@@ -140,7 +144,7 @@ class LF_ControlPanel:
     FUNCTION = FUNCTION
     RETURN_TYPES = ()
 
-    def on_exec(self):
+    def on_exec(self, **kwargs: dict):
         return ()
 # endregion
 # region LF_LoadLoraTags
@@ -154,6 +158,9 @@ class LF_LoadLoraTags:
                 "clip": ("CLIP", {"tooltip": "The CLIP model to modify."}),
                 "tags": ("STRING", {"default": '', "multiline": True, "tooltip": "Text containing LoRA tags, e.g., <lora:example:1.0>"}),
             },
+            "optional": {
+                "ui_widget": ("KUL_CODE", {"default": ""})
+            },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
             }
@@ -164,7 +171,7 @@ class LF_LoadLoraTags:
     RETURN_NAMES = ("model", "clip")
     RETURN_TYPES = ("MODEL", "CLIP")
 
-    def on_exec(self, node_id: str, get_civitai_info: bool, model, clip, tags: str):   
+    def on_exec(self, **kwargs: dict):
         def get_lora_weights(tag_content: str):
             name = tag_content[1]
             try:
@@ -191,24 +198,29 @@ class LF_LoadLoraTags:
                      "id": value, 
                      "value": value } 
         
-        clip = normalize_list_to_value(clip)
-        get_civitai_info = normalize_list_to_value(get_civitai_info)
-        model = normalize_list_to_value(model)
-        tags = normalize_list_to_value(tags)
+        clip = normalize_list_to_value(kwargs.get("clip"))
+        get_civitai_info: bool = normalize_list_to_value(kwargs.get("get_civitai_info"))
+        model = normalize_list_to_value(kwargs.get("model"))
+        tags: str = normalize_list_to_value(kwargs.get("tags"))
 
         regex = r"\<[0-9a-zA-Z\:\_\-\.\s\/\(\)\\\\]+\>"
         found_tags: list[str] = re.findall(regex, tags)
 
-        api_flags = []
-        nodes = []
-        chip_dataset =  { "nodes": nodes }
-        datasets =  []
-        hashes = []
-        lora_paths = []
-        lora_status = {}
+        api_flags: list[bool] = []
+        nodes: list[dict] = []
+        chip_dataset: dict =  { "nodes": nodes }
+        datasets: list[dict] =  []
+        hashes: list[str] = []
+        lora_paths: list[str] = []
+        lora_status: dict = {}
 
         if not found_tags:
-            send_multi_selector_message(node_id, [], [], [], [], f"{EVENT_PREFIX}loadloratags")
+
+            PromptServer.instance.send_sync(f"{EVENT_PREFIX}loadloratags", {
+                "node": kwargs.get("node_id"),
+                "apiFlags": [False],
+            })
+
             return (model, clip)
 
         for tag in found_tags:
@@ -257,136 +269,17 @@ class LF_LoadLoraTags:
                            "id": "0", 
                            "value": "LoRA loaded successfully!" })
             
-        send_multi_selector_message(node_id, datasets, hashes, api_flags, lora_paths, f"{EVENT_PREFIX}loadloratags", chip_dataset)
+
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}loadloratags", {
+            "node": kwargs.get("node_id"),
+            "datasets": datasets,
+            "hashes": hashes,
+            "apiFlags": api_flags,
+            "paths": lora_paths,
+            "chip": chip_dataset
+        })
 
         return (model, clip)
-# endregion
-# region LF_Lora2Prompt
-class LF_Lora2Prompt:
-    @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "text": ("STRING", {"multiline": True, "tooltip": "The input text containing LoRa tags. These tags will be processed and replaced with extracted keywords."}),
-                "separator": ("STRING", { "default": "SEP", "tooltip": "Character(s) used to separate keywords within the name of a single LoRa file. Helps in extracting individual keywords."}),
-                "weight": ("FLOAT", { "default": 0.5, "tooltip": "A weight value associated with LoRa tags, which may influence processing or output significance."}),
-                "weight_placeholder": ("STRING", { "default": "wwWEIGHTww", "tooltip": "A placeholder within LoRa tags that gets replaced with the actual weight value during processing."}),
-            },
-            "hidden": { 
-                "node_id": "UNIQUE_ID"
-            }
-        } 
-
-    CATEGORY = CATEGORY
-    FUNCTION = FUNCTION
-    RETURN_NAMES = ("prompt", "loras")
-    RETURN_TYPES = ("STRING", "STRING")
-
-    def on_exec(self, node_id: str, text: str, separator: str, weight: float, weight_placeholder: str):
-        text = normalize_list_to_value(text)
-        separator = normalize_list_to_value(separator)
-        weight = normalize_list_to_value(weight)
-        weight_placeholder = normalize_list_to_value(weight_placeholder)
-        
-        loras = re.findall(LORA_TAG_REGEX, text)
-        
-        lora_keyword_map = {}
-        for lora in loras:
-            lora_keyword_map[lora] = cleanse_lora_tag(lora, separator)
-        
-        for lora_tag, keywords in lora_keyword_map.items():
-            text = text.replace(lora_tag, keywords)
-        
-        loras_weighted = [lora.replace(weight_placeholder, str(weight)) for lora in loras]
-        loras_string = "".join(loras_weighted)
-
-        log_entries = [f"## Breakdown\n"]
-        log_entries.append(f"**Original Text**: {text}")
-        log_entries.append(f"**Separator Used**: '{separator}'")
-        log_entries.append(f"**Weight Placeholder**: '{weight_placeholder}', Weight Value: {weight}")
-        
-        log_entries.append("\n### Extracted LoRA Tags:\n")
-        for lora_tag in loras:
-            log_entries.append(f"- **LoRA Tag**: {lora_tag}")
-
-        log_entries.append("\n### Keyword Mapping:\n")
-        for lora_tag, keywords in lora_keyword_map.items():
-            log_entries.append(f"- **Original Tag**: {lora_tag}")
-            log_entries.append(f"  - **Cleansed Keywords**: {keywords}")
-
-        log_entries.append("\n### Final Prompt Substitution:\n")
-        log_entries.append(f"**Modified Text**: {text}")
-        
-        log = "\n".join(log_entries)
-
-        PromptServer.instance.send_sync(f"{EVENT_PREFIX}lora2prompt", {
-            "node": node_id, 
-            "value": log
-        })
-
-        return (text, loras_string)
-# endregion
-# region LF_LoraTag2Prompt
-class LF_LoraTag2Prompt:
-    @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "tag": ("STRING", {"multiline": True, "tooltip": "The LoRA tag to be converted."}),
-                "separator": ("STRING", { "default": "SEP", "tooltip": "String separating each keyword in a LoRA filename."}),
-            },
-            "hidden": { 
-                "node_id": "UNIQUE_ID"
-            }
-        }
-
-    CATEGORY = CATEGORY
-    FUNCTION = FUNCTION
-    RETURN_NAMES = ("keywords", "keywords_count", "keywords_list", "keywords_count_list")
-    RETURN_TYPES = ("STRING", "INT", "STRING", "INT")
-
-    def on_exec(self, node_id: str, tag: str, separator: str):
-        tag_list = normalize_input_list(tag)
-        separator = normalize_list_to_value(separator)
-
-        clean_loras = []
-        keyword_counts = []
-        log_entries = []
-
-        for tag_entry in tag_list:
-            tags_in_entry = re.findall(LORA_TAG_REGEX, tag_entry)
-
-            for t in tags_in_entry:
-                clean_lora = cleanse_lora_tag(t, separator)   
-                keywords_count = count_words_in_comma_separated_string(clean_lora)
-                clean_loras.append(clean_lora)
-                keyword_counts.append(keywords_count)
-
-                log_entries.append(f"""
-### LoRA Tag Entry:
-                                   
-- **Original Tag**: {t}
-- **Cleaned LoRA Tag**: {clean_lora}
-- **Number of Keywords**: {keywords_count}
-- **Keywords Extracted**: {clean_lora.split(', ') if clean_lora else '*No keywords extracted*'}
-                """)
-
-        log = f"""## Breakdown
-
-### Input Details:
-
-- **Original Tags**: {tag_list}
-- **Separator Used**: '{separator}'
-
-{''.join(log_entries)}
-        """
-
-        PromptServer.instance.send_sync(f"{EVENT_PREFIX}loratag2prompt", {
-            "node": node_id, 
-            "value": log
-        })
-
-        return (clean_loras, keyword_counts, clean_loras, keyword_counts)
 # endregion
 # region LF_Notify
 class LF_Notify:
@@ -416,22 +309,21 @@ class LF_Notify:
     RETURN_NAMES = ("any", "any_list")
     RETURN_TYPES = (ANY, ANY)
 
-    def on_exec(self, node_id: str, any, on_click_action: str, title: str, message: str, silent: bool, tag: str = None, image: torch.Tensor = None):
-        any = normalize_list_to_value(any)
-        on_click_action = normalize_list_to_value(on_click_action)
-        title = normalize_list_to_value(title)
-        message = normalize_list_to_value(message)
-        silent = normalize_list_to_value(silent)
-        tag = normalize_list_to_value(tag)
-        if isinstance(image, torch.Tensor):
-            image = normalize_input_image(image)
+    def on_exec(self, **kwargs: dict):
+        any: str = normalize_list_to_value(kwargs.get("any"))
+        on_click_action: str = normalize_list_to_value(kwargs.get("on_click_action"))
+        title: str = normalize_list_to_value(kwargs.get("title"))
+        message: str = normalize_list_to_value(kwargs.get("message"))
+        silent: str = normalize_list_to_value(kwargs.get("silent"))
+        tag: str = normalize_list_to_value(kwargs.get("tag"))
+        image: list[torch.Tensor] = normalize_input_image(kwargs.get("image", []))
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}notify", {
-            "node": node_id, 
+            "node": kwargs.get("node_id"), 
             "title": title,
             "message": message,
             "action": on_click_action.lower(),
-            "image": f"{BASE64_PNG_PREFIX}{tensor_to_base64(image[0])}" if image != None else None,
+            "image": f"{BASE64_PNG_PREFIX}{tensor_to_base64(image[0])}" if image else None,
             "silent": silent,
             "tag": tag
         })
@@ -442,8 +334,6 @@ NODE_CLASS_MAPPINGS = {
     "LF_CivitAIMetadataSetup": LF_CivitAIMetadataSetup,
     "LF_ControlPanel": LF_ControlPanel,
     "LF_LoadLoraTags": LF_LoadLoraTags,
-    "LF_Lora2Prompt": LF_Lora2Prompt,
-    "LF_LoraTag2Prompt": LF_LoraTag2Prompt,
     "LF_Notify": LF_Notify,
 }
 
@@ -451,7 +341,5 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_CivitAIMetadataSetup": "CivitAI metadata setup",
     "LF_ControlPanel": "Control panel",
     "LF_LoadLoraTags": "Load LoRA tags",
-    "LF_Lora2Prompt": "Convert prompt and LoRAs",
-    "LF_LoraTag2Prompt": "Convert LoRA tag to prompt",
     "LF_Notify": "Notify",
 }

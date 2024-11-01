@@ -51,7 +51,7 @@ export const messengerFactory: MessengerWidgetFactory = {
       },
     };
   },
-  render: (node, name) => {
+  render: (node) => {
     const wrapper = document.createElement('div');
     const content = document.createElement('div');
     const placeholder = document.createElement('div');
@@ -83,6 +83,6 @@ to connect as input a valid JSON dataset. Check the repository's workflows to se
     wrapper.appendChild(content);
 
     wrapper.dataset.isInVisibleNodes = 'true';
-    return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };
+    return { widget: createDOMWidget(TYPE, wrapper, node, options) };
   },
 };

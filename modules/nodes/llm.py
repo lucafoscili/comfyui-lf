@@ -23,7 +23,8 @@ class LF_CharacterImpersonator:
                 "url": ("STRING", {"default": "http://localhost:5001/v1/chat/completions", "tooltip": "URL of the local endpoint where the request is sent."}),
             },
             "optional":{
-                "image" : ("IMAGE", {"default": None, "tooltip": "An optional image that can be included in the generation process to influence the output based on visual cues."})
+                "image" : ("IMAGE", {"default": None, "tooltip": "An optional image that can be included in the generation process to influence the output based on visual cues."}),
+                "ui_widget" : ("KUL_CODE", {"default": ""})
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
@@ -35,13 +36,14 @@ class LF_CharacterImpersonator:
     RETURN_NAMES = ("request_json", "response_json", "answer")
     RETURN_TYPES = ("JSON", "JSON", "STRING")
 
-    def on_exec(self, node_id: str, temperature: float, max_tokens: int, prompt: str, seed: int, character_bio: str, url: str, image: torch.Tensor = None):
-        temperature = normalize_list_to_value(temperature)
-        max_tokens = normalize_list_to_value(max_tokens)
-        prompt = normalize_list_to_value(prompt)
-        seed = normalize_list_to_value(seed)
-        character_bio = normalize_list_to_value(character_bio)
-        url = normalize_list_to_value(url)
+    def on_exec(self, **kwargs: dict):
+        temperature: float = normalize_list_to_value(kwargs.get("temperature"))
+        max_tokens: int = normalize_list_to_value(kwargs.get("max_tokens"))
+        prompt: str = normalize_list_to_value(kwargs.get("prompt"))
+        seed: int = normalize_list_to_value(kwargs.get("seed"))
+        character_bio: str = normalize_list_to_value(kwargs.get("character_bio"))
+        url: str = normalize_list_to_value(kwargs.get("url"))
+        image: list[torch.Tensor] = normalize_input_image(kwargs.get("image", []))
 
         system = get_character_impersonator_system(character_bio)
 
@@ -79,7 +81,7 @@ class LF_CharacterImpersonator:
             message = f"Whoops! Request failed with status code {status_code} and method {method}."
         
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}characterimpersonator", {
-            "node": node_id, 
+            "node": kwargs.get("node_id"),
             "value": message,
         })
 
@@ -100,6 +102,7 @@ class LF_ImageClassifier:
             },
             "optional": {
                 "character_bio": ("STRING", {"multiline": True, "default": "", "tooltip": "Biographical details of the character to be impersonated. Helps in shaping the tone and content of the generated text."}),
+                "ui_widget" : ("KUL_CODE", {"default": ""})
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
@@ -111,14 +114,14 @@ class LF_ImageClassifier:
     RETURN_NAMES = ("request_json", "response_json", "message")
     RETURN_TYPES = ("JSON", "JSON", "STRING")
 
-    def on_exec(self, node_id: str, temperature: float, max_tokens: int, prompt: str, seed: int, url: str, image: torch.Tensor, character_bio: str = None):
-        temperature = normalize_list_to_value(temperature)
-        max_tokens = normalize_list_to_value(max_tokens)
-        prompt = normalize_list_to_value(prompt)
-        seed = normalize_list_to_value(seed)
-        character_bio = normalize_list_to_value(character_bio)
-        url = normalize_list_to_value(url)
-        image = normalize_input_image(image)
+    def on_exec(self, **kwargs: dict):
+        temperature: float = normalize_list_to_value(kwargs.get("temperature"))
+        max_tokens: int = normalize_list_to_value(kwargs.get("max_tokens"))
+        prompt: str = normalize_list_to_value(kwargs.get("prompt"))
+        seed: int = normalize_list_to_value(kwargs.get("seed"))
+        url: str = normalize_list_to_value(kwargs.get("url"))
+        image: list[torch.Tensor] = normalize_input_image(kwargs.get("image"))
+        character_bio: str = normalize_list_to_value(kwargs.get("character_bio", ""))
 
         system = get_image_classifier_system(character_bio)
 
@@ -154,7 +157,7 @@ class LF_ImageClassifier:
             message = f"Whoops! Request failed with status code {status_code} and method {method}."
         
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}imageclassifier", {
-            "node": node_id, 
+            "node": kwargs.get("node_id"),
             "value": message,
         })
 
@@ -166,7 +169,7 @@ class LF_LLMChat:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "json_input": ("KUL_CHAT", {}),
+                "ui_widget": ("KUL_CHAT", {}),
             },
         }
     
@@ -176,15 +179,15 @@ class LF_LLMChat:
     RETURN_NAMES = ("chat_history_json", "last_message", "last_user_message", "last_llm_message", "all_messages")
     RETURN_TYPES = ("JSON", "STRING", "STRING", "STRING", "STRING")
 
-    def on_exec(self, json_input: dict):
-        json_input = normalize_json_input(json_input)
+    def on_exec(self, **kwargs: dict):
+        ui_widget: dict = normalize_json_input(kwargs.get("ui_widget", {}))
 
-        all_messages = [message.get("content") for message in json_input]
+        all_messages = [message.get("content") for message in ui_widget]
         last_message = all_messages[-1]
-        last_user_message = next((message.get("content") for message in reversed(json_input) if message["role"] == "user"), "")
-        last_llm_message = next((message.get("content") for message in reversed(json_input) if message["role"] == "assistant"), "")
+        last_user_message = next((message.get("content") for message in reversed(ui_widget) if message["role"] == "user"), "")
+        last_llm_message = next((message.get("content") for message in reversed(ui_widget) if message["role"] == "assistant"), "")
 
-        return (json_input, last_message, last_user_message, last_llm_message, all_messages)
+        return (ui_widget, last_message, last_user_message, last_llm_message, all_messages)
 # endregion
 # region LF_LLMMessenger
 class LF_LLMMessenger:
@@ -192,7 +195,7 @@ class LF_LLMMessenger:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "json_input": ("KUL_MESSENGER", {}),
+                "ui_widget": ("KUL_MESSENGER", {}),
             },
             "optional": {
                 "dataset": ("JSON", {"tooltip": "The dataset JSON containing characters to talk to."}),
@@ -221,10 +224,9 @@ class LF_LLMMessenger:
             """Returns the 'value' and 'description' fields from the node for styled prompt usage."""
             return node.get("value", "No data"), node.get("description", "")
         
-        # Normalize input data
-        json_input = normalize_json_input(kwargs.get("json_input"))
-        dataset = json_input.get("dataset")
-        config = json_input.get("config")
+        ui_widget: dict = normalize_json_input(kwargs.get("ui_widget", {}))
+        dataset = ui_widget.get("dataset", {})
+        config = ui_widget.get("config", {})
         
         if not dataset or not config:
             raise ValueError("It looks like the chat is empty!")
@@ -302,6 +304,7 @@ class LF_MarkdownDocGenerator:
             },
             "optional": { 
                 "extra_context": ("STRING", {"default": "", "multiline": True, "tooltip": "Additional context to guide the LLM (out of scope constants and helpers definitions)."}),
+                "ui_widget" : ("KUL_CODE", {"default": ""})
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
@@ -314,13 +317,13 @@ class LF_MarkdownDocGenerator:
     RETURN_NAMES = ("request_json", "response_json", "markdown", "markdown_list")
     RETURN_TYPES = ("JSON", "JSON", "STRING", "STRING")
 
-    def on_exec(self, node_id: str, prompt: str, temperature: float, max_tokens: int, seed: int,  url: str, extra_context: str = None):
-        prompt = normalize_list_to_value(prompt)
-        temperature = normalize_list_to_value(temperature)
-        max_tokens = normalize_list_to_value(max_tokens)
-        seed = normalize_list_to_value(seed)
-        url = normalize_list_to_value(url)
-        extra_context = normalize_list_to_value(extra_context)
+    def on_exec(self, **kwargs: dict):
+        temperature: float = normalize_list_to_value(kwargs.get("temperature"))
+        max_tokens: int = normalize_list_to_value(kwargs.get("max_tokens"))
+        prompt: str = normalize_list_to_value(kwargs.get("prompt"))
+        seed: int = normalize_list_to_value(kwargs.get("seed"))
+        url: str = normalize_list_to_value(kwargs.get("url"))
+        extra_context: str = normalize_list_to_value(kwargs.get("extra_context", ""))
 
         request = {
             "temperature": temperature,
@@ -345,8 +348,8 @@ class LF_MarkdownDocGenerator:
         if status_code != 200:
             message = f"Oops! Documentation generation failed with status code {status_code}."
 
-        PromptServer.instance.send_sync(f"{EVENT_PREFIX}docgenerator", {
-            "node": node_id, 
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}markdowndocgenerator", {
+            "node": kwargs.get("node_id"),
             "value": message,
         })
 

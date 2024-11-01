@@ -26,7 +26,7 @@ export const chatFactory = {
             },
         };
     },
-    render: (node, name) => {
+    render: (node) => {
         const w = findWidget(node, TYPE);
         if (findWidget(node, TYPE) && node.comfyClass === NodeName.llmChat) {
             return w.element;
@@ -42,10 +42,10 @@ export const chatFactory = {
             switch (eventType) {
                 case 'polling':
                     const severity = status === 'ready'
-                        ? LogSeverity.Success
+                        ? LogSeverity.Info
                         : status === 'offline'
                             ? LogSeverity.Error
-                            : LogSeverity.Info;
+                            : LogSeverity.Warning;
                     getLFManager().log('Chat widget, polling status: ' + status, { chat: e.detail }, severity);
                     break;
                 case 'update':
@@ -56,6 +56,6 @@ export const chatFactory = {
         });
         content.appendChild(chat);
         wrapper.appendChild(content);
-        return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };
+        return { widget: createDOMWidget(TYPE, wrapper, node, options) };
     },
 };

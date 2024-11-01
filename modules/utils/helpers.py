@@ -636,6 +636,22 @@ def handle_response(response: dict, method: str = "GET"):
                 
         return response.status_code, method, "Whoops! Something went wrong."
 # endregion
+# region not_none
+def is_none(input):
+    """
+    Check if the input is either None or a string representation of "None".
+
+    This function evaluates the input to determine if it is a value that is either None
+    or the string "None". It returns False for any other valid input.
+
+    Parameters:
+    input (any type): The input to be checked.
+
+    Returns:
+    bool: True if input is None or "None"; otherwise, False.
+    """
+    return bool(input == None or str(input) == "None")
+# endregion
 # region normalize_input_image
 def normalize_input_image(image: list[torch.Tensor] | torch.Tensor):
     """
@@ -1223,54 +1239,6 @@ def resolve_filepath(filepath: str = USER_FOLDER, base_output_path: str = BASE_T
     os.makedirs(output_folder, exist_ok=True)
 
     return output_file, subfolder, filename
-# endregion
-# region send_single_selector_message
-def send_single_selector_message(node_id, dataset, model_hash, get_civitai_info, model_path, event_name):
-    """
-    Send a synchronous message to the server with a single selector.
-
-    Args:
-        node_id: The identifier for the node.
-        dataset: The dataset associated with the selectors.
-        model_hash: The hash value of the model.
-        get_civitai_info: Flag to indicate if civitai information should be retrieved.
-        model_path: The file path of the model.
-        event_name: The event name for the message.
-    """
-    PromptServer.instance.send_sync(event_name, {
-        "node": node_id,
-        "dataset": dataset,
-        "hash": model_hash,
-        "apiFlag": get_civitai_info,
-        "path": model_path
-    })
-
-    return
-# endregion
-# region send_multi_selector_message
-def send_multi_selector_message(node_id, datasets, model_hashes, get_civitai_info, model_paths, event_name, chip_dataset=None):
-    """
-    Send a synchronous message to the server with multiple selectors.
-
-    Args:
-        node_id: The identifier for the node.
-        datasets: A list of datasets associated with the selectors.
-        model_hashes: A list of hash values of the models.
-        get_civitai_info: Flags for whether to retrieve civitai info for each model.
-        model_paths: A list of file paths of the models.
-        event_name: The event name for the message.
-        chip_dataset: Optional chip dataset information.
-    """
-    PromptServer.instance.send_sync(event_name, {
-        "node": node_id,
-        "datasets": datasets,
-        "hashes": model_hashes,
-        "apiFlags": get_civitai_info,
-        "paths": model_paths,
-        "chipDataset": chip_dataset
-    })
-
-    return
 # endregion
 # region tensor_to_base64
 def tensor_to_base64(tensors: list[torch.Tensor] | torch.Tensor):

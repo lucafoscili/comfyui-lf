@@ -25,7 +25,7 @@ export const compareFactory = {
             },
         };
     },
-    render: (node, name) => {
+    render: (node) => {
         const wrapper = document.createElement('div');
         const content = document.createElement('div');
         const compare = document.createElement('kul-compare');
@@ -39,6 +39,6 @@ export const compareFactory = {
         }
         content.appendChild(compare);
         wrapper.appendChild(content);
-        return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };
+        return { widget: createDOMWidget(TYPE, wrapper, node, options) };
     },
 };

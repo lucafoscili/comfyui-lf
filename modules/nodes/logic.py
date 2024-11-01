@@ -1,14 +1,131 @@
 import math
 import random
+import re
 import torch
 
 from server import PromptServer
 
-from ..utils.constants import ANY, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, INT_MAX
-from ..utils.helpers import normalize_input_image, normalize_input_list, normalize_list_to_value, not_none
+from ..utils.constants import ANY, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, INT_MAX, LORA_TAG_REGEX
+from ..utils.helpers import count_words_in_comma_separated_string, cleanse_lora_tag, normalize_input_list, convert_to_boolean, convert_to_float, convert_to_int, convert_to_json, normalize_input_image, normalize_input_list, normalize_list_to_value, not_none
 
 CATEGORY = f"{CATEGORY_PREFIX}/Logic"
 
+# region LF_ExtractString
+class LF_ExtractString:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "text": ("STRING", {"default": "", "multiline": True, "tooltip": "The string from which the output will be extracted."}),
+                "starting_delimiter": ("STRING", {"default": "{", "tooltip": "The delimiter where extraction starts."}),
+                "ending_delimiter": ("STRING", {"default": "}", "tooltip": "The delimiter where extraction ends."}),
+            },
+            "optional": {
+                "ui_widget": ("KUL_CODE", {"default": ""}),
+            },
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
+        }
+
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    RETURN_NAMES = ("result_as_json", "extracted_text", "result_as_int", "result_as_float", "result_as_boolean")
+    RETURN_TYPES = ("JSON", "STRING", "INT", "FLOAT", "BOOLEAN")
+
+    def on_exec(self, **kwargs: dict):
+        def extract_nested(text, start_delim, end_delim):
+            start_idx = text.rfind(start_delim)
+            if start_idx == -1:
+                return ""
+            end_idx = text.find(end_delim, start_idx + len(start_delim))
+            if end_idx == -1:
+                return ""
+            return text[start_idx + len(start_delim):end_idx]
+    
+        text: str = normalize_list_to_value(kwargs.get("text"))
+        starting_delimiter: str = normalize_list_to_value(kwargs.get("starting_delimiter"))
+        ending_delimiter: str = normalize_list_to_value(kwargs.get("ending_delimiter"))
+    
+        extracted_text = extract_nested(text, starting_delimiter, ending_delimiter)
+        
+        result_as_json: dict = convert_to_json(extracted_text)
+        result_as_int: int = convert_to_int(extracted_text)
+        result_as_float: float = convert_to_float(extracted_text)
+        result_as_boolean: bool = convert_to_boolean(extracted_text)
+    
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}extractstring", {
+            "node": kwargs.get("node_id"),
+            "value": extracted_text or "...No matches...",
+        })
+        
+        return (result_as_json, extracted_text, result_as_int, result_as_float, result_as_boolean)
+# endregion
+# region LF_ExtractPromptFromLoraTag
+class LF_ExtractPromptFromLoraTag:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "tag": ("STRING", {"multiline": True, "tooltip": "The LoRA tag to be converted."}),
+                "separator": ("STRING", { "default": "SEP", "tooltip": "String separating each keyword in a LoRA filename."}),
+            },
+            "optional": {
+                "ui_widget": ("KUL_CODE", {"default": ""})
+            },
+            "hidden": { 
+                "node_id": "UNIQUE_ID"
+            }
+        }
+
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    RETURN_NAMES = ("keywords", "keywords_count", "keywords_list", "keywords_count_list")
+    RETURN_TYPES = ("STRING", "INT", "STRING", "INT")
+
+    def on_exec(self, **kwargs: dict):
+        tag_list: list[str] = normalize_input_list(kwargs.get("tag"))
+        separator: str = normalize_list_to_value(kwargs.get("separator"))
+
+        clean_loras: list[str] = []
+        keyword_counts: list[int] = []
+        log_entries: list[str] = []
+
+        for tag_entry in tag_list:
+            tags_in_entry = re.findall(LORA_TAG_REGEX, tag_entry)
+
+            for t in tags_in_entry:
+                clean_lora = cleanse_lora_tag(t, separator)   
+                keywords_count = count_words_in_comma_separated_string(clean_lora)
+                clean_loras.append(clean_lora)
+                keyword_counts.append(keywords_count)
+
+                log_entries.append(f"""
+### LoRA Tag Entry:
+                                   
+- **Original Tag**: {t}
+- **Cleaned LoRA Tag**: {clean_lora}
+- **Number of Keywords**: {keywords_count}
+- **Keywords Extracted**: {clean_lora.split(', ') if clean_lora else '*No keywords extracted*'}
+                """)
+
+        log = f"""## Breakdown
+
+### Input Details:
+
+- **Original Tags**: {tag_list}
+- **Separator Used**: '{separator}'
+
+{''.join(log_entries)}
+        """
+
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}extractpromptfromloratag", {
+            "node": kwargs.get("node_id"), 
+            "value": log
+        })
+
+        return (clean_loras, keyword_counts, clean_loras, keyword_counts)
+# endregion
 # region LF_IsLandscape
 class LF_IsLandscape:
     @classmethod
@@ -16,6 +133,9 @@ class LF_IsLandscape:
         return {
             "required": {
                 "image": ("IMAGE", {"tooltip": "Input image/images."})
+            },
+            "optional": {
+                "ui_widget": ("KUL_PROGRESSBAR", {"default": {}}),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -29,15 +149,15 @@ class LF_IsLandscape:
                     "is_landscape_list", "heights_list", "widths_list")
     RETURN_TYPES = ("BOOLEAN", "INT", "INT", "BOOLEAN", "INT", "INT")
 
-    def on_exec(self, node_id: str, image: torch.Tensor):
-        image = normalize_input_image(image)
+    def on_exec(self, **kwargs: dict):
+        image: list[torch.Tensor] = normalize_input_image(kwargs.get("image"))
 
-        nodes = []
-        dataset = {"nodes": nodes}
+        nodes: list[dict] = []
+        dataset: dict = {"nodes": nodes}
 
-        heights_list = []
-        widths_list = []
-        is_landscape_list = []
+        heights_list: list[int] = []
+        widths_list: list[int] = []
+        is_landscape_list: list[bool] = []
 
         counter = 0
 
@@ -52,7 +172,7 @@ class LF_IsLandscape:
                           "value": f"Image {counter}: {str(width >= height)}"})
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}islandscape", {
-            "node": node_id, 
+            "node": kwargs.get("node_id"),
             "dataset": dataset,
         })
 
@@ -72,6 +192,7 @@ class LF_MathOperation:
                 "b": (ANY, {"tooltip": "Value or list of values for 'b'."}),
                 "c": (ANY, {"tooltip": "Value or list of values for 'c'."}),
                 "d": (ANY, {"tooltip": "Value or list of values for 'd'."}),
+                "ui_widget": ("KUL_CODE", {"default": ""})
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -83,7 +204,7 @@ class LF_MathOperation:
     RETURN_NAMES = ("int_result", "float_result")
     RETURN_TYPES = ("INT", "FLOAT")
 
-    def on_exec(self, node_id: str, operation: str, a=None, b=None, c=None, d=None):
+    def on_exec(self, **kwargs: dict):
         def normalize_and_sum_with_log(variable):
             normalized = normalize_input_list(variable)
 
@@ -97,6 +218,12 @@ class LF_MathOperation:
 
             single_value = 1 if normalized[0] is True else 0 if normalized[0] is False else normalized[0]
             return float(single_value), f"**{single_value}** <{type(single_value).__name__}>"
+
+        operation: str = normalize_list_to_value(kwargs.get("operation"))
+        a = kwargs.get("a", None)
+        b = kwargs.get("b", None)
+        c = kwargs.get("c", None)
+        d = kwargs.get("d", None)
 
         na_placeholder = "N/A"
 
@@ -126,8 +253,8 @@ class LF_MathOperation:
         """    
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}mathoperation", {
-            "node": node_id, 
-            "value": log
+            "node": kwargs.get("node_id"),
+            "value": log,
         })
         
         return (int(result), result)
@@ -135,6 +262,74 @@ class LF_MathOperation:
     @classmethod
     def VALIDATE_INPUTS(self, **kwargs):
          return True
+# endregion
+# region LF_ParsePromptWithLoraTags
+class LF_ParsePromptWithLoraTags:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "text": ("STRING", {"multiline": True, "tooltip": "The input text containing LoRa tags. These tags will be processed and replaced with extracted keywords."}),
+                "separator": ("STRING", { "default": "SEP", "tooltip": "Character(s) used to separate keywords within the name of a single LoRa file. Helps in extracting individual keywords."}),
+                "weight": ("FLOAT", { "default": 0.5, "tooltip": "A weight value associated with LoRa tags, which may influence processing or output significance."}),
+                "weight_placeholder": ("STRING", { "default": "wwWEIGHTww", "tooltip": "A placeholder within LoRa tags that gets replaced with the actual weight value during processing."}),
+            },
+            "optional": {
+                "ui_widget": ("KUL_CODE", {"default": ""})
+            },
+            "hidden": { 
+                "node_id": "UNIQUE_ID"
+            }
+        } 
+
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    RETURN_NAMES = ("prompt", "loras")
+    RETURN_TYPES = ("STRING", "STRING")
+
+    def on_exec(self, **kwargs: dict):
+        text: str = normalize_list_to_value(kwargs.get("text"))
+        separator: str = normalize_list_to_value(kwargs.get("separator"))
+        weight: float = normalize_list_to_value(kwargs.get("weight"))
+        weight_placeholder: int = normalize_list_to_value(kwargs.get("weight_placeholder"))
+        
+        loras = re.findall(LORA_TAG_REGEX, text)
+        
+        lora_keyword_map = {}
+        for lora in loras:
+            lora_keyword_map[lora] = cleanse_lora_tag(lora, separator)
+        
+        for lora_tag, keywords in lora_keyword_map.items():
+            text = text.replace(lora_tag, keywords)
+        
+        loras_weighted = [lora.replace(weight_placeholder, str(weight)) for lora in loras]
+        loras_string = "".join(loras_weighted)
+
+        log_entries = [f"## Breakdown\n"]
+        log_entries.append(f"**Original Text**: {text}")
+        log_entries.append(f"**Separator Used**: '{separator}'")
+        log_entries.append(f"**Weight Placeholder**: '{weight_placeholder}', Weight Value: {weight}")
+        
+        log_entries.append("\n### Extracted LoRA Tags:\n")
+        for lora_tag in loras:
+            log_entries.append(f"- **LoRA Tag**: {lora_tag}")
+
+        log_entries.append("\n### Keyword Mapping:\n")
+        for lora_tag, keywords in lora_keyword_map.items():
+            log_entries.append(f"- **Original Tag**: {lora_tag}")
+            log_entries.append(f"  - **Cleansed Keywords**: {keywords}")
+
+        log_entries.append("\n### Final Prompt Substitution:\n")
+        log_entries.append(f"**Modified Text**: {text}")
+        
+        log = "\n".join(log_entries)
+
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}parsepromptwithloratags", {
+            "node": kwargs.get("node_id"), 
+            "value": log
+        })
+
+        return (text, loras_string)
 # endregion
 # region LF_ResolutionSwitcher
 class LF_ResolutionSwitcher:
@@ -148,6 +343,9 @@ class LF_ResolutionSwitcher:
                 "landscape_width": ("INT", {"default": 1216, "min": 1, "step": 1, "tooltip": "Width when the image is landscape-oriented."}),
                 "landscape_height": ("INT", {"default": 832, "min": 1, "step": 1, "tooltip": "Height when the image is landscape-oriented."}),
             },
+            "optional": {
+                "ui_widget": ("KUL_PROGRESSBAR", {"default": {}}),
+            },
             "hidden": {
                 "node_id": "UNIQUE_ID"
             }
@@ -158,25 +356,24 @@ class LF_ResolutionSwitcher:
     RETURN_NAMES = ("width", "height", "is_landscape")
     RETURN_TYPES = ("INT", "INT", "BOOLEAN")
 
-    def on_exec(self, node_id: str, chance_landscape: float, portrait_width: int, portrait_height :int, landscape_width: int, landscape_height: int):
-        chance_landscape = normalize_list_to_value(chance_landscape)
-        portrait_width = normalize_list_to_value(portrait_width)
-        portrait_height = normalize_list_to_value(portrait_height)
-        landscape_width = normalize_list_to_value(landscape_width)
-        landscape_height = normalize_list_to_value(landscape_height)
-        
-        chance_landscape = max(0, min(100, chance_landscape))
+    def on_exec(self, **kwargs: dict):
+        chance_landscape: float = normalize_list_to_value(kwargs.get("chance_landscape"))
+        landscape_width: int = normalize_list_to_value(kwargs.get("landscape_width"))
+        portrait_width: int = normalize_list_to_value(kwargs.get("portrait_width"))
+        landscape_height: int = normalize_list_to_value(kwargs.get("landscape_height"))
+        portrait_height: int = normalize_list_to_value(kwargs.get("portrait_height"))
+
+        percentage = max(0, min(100, chance_landscape))
         random_value = random.uniform(0, 100)
 
-        is_landscape = random_value <= chance_landscape
+        is_landscape = random_value <= percentage
 
         width = landscape_width if is_landscape else portrait_width
         height = landscape_height if is_landscape else portrait_height
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}resolutionswitcher", {
-            "node": node_id, 
+            "node": kwargs.get("node_id"),
             "bool": is_landscape,
-            "chanceTrue": chance_landscape,
             "roll": random_value,
         })
 
@@ -191,6 +388,9 @@ class LF_SwitchFloat:
                 "on_true": ("FLOAT", {"lazy": True, "default": 0, "tooltip": "Value to return if the boolean condition is true."}),
                 "on_false": ("FLOAT", {"lazy": True, "default": 0, "tooltip": "Value to return if the boolean condition is false."}),
                 "boolean": ("BOOLEAN", {"default": False, "tooltip": "Boolean condition to switch between 'on_true' and 'on_false' values."}),
+            },
+            "optional": {
+                "ui_widget": ("KUL_PROGRESSBAR", {"default": {}}),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -210,10 +410,13 @@ class LF_SwitchFloat:
         else:
             return ["on_false"]
 
-    def on_exec(self, node_id: str, on_true: float, on_false: float, boolean: bool):
+    def on_exec(self, **kwargs: dict):
+        boolean: bool = normalize_list_to_value(kwargs.get("boolean"))
+        on_false: float = kwargs.get("on_false")
+        on_true: float = kwargs.get("on_true")
         
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}switchfloat", {
-            "node": node_id, 
+            "node": kwargs.get("node_id"),
             "bool": boolean, 
         })
 
@@ -230,6 +433,9 @@ class LF_SwitchImage:
                 "on_true": ("IMAGE", {"lazy": True, "tooltip": "Value to return if the boolean condition is true."}),
                 "on_false": ("IMAGE", {"lazy": True, "tooltip": "Value to return if the boolean condition is false."}),
                 "boolean": ("BOOLEAN", {"default": False, "tooltip": "Boolean condition to switch between 'on_true' and 'on_false' values."}),
+            },
+            "optional": {
+                "ui_widget": ("KUL_PROGRESSBAR", {"default": {}}),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -249,10 +455,13 @@ class LF_SwitchImage:
         else:
             return ["on_false"]
 
-    def on_exec(self, node_id: str, on_true: torch.Tensor, on_false: torch.Tensor, boolean: bool):
+    def on_exec(self, **kwargs: dict):
+        boolean: bool = normalize_list_to_value(kwargs.get("boolean"))
+        on_false: torch.Tensor = kwargs.get("on_false")
+        on_true: torch.Tensor = kwargs.get("on_true")
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}switchimage", {
-            "node": node_id, 
+            "node": kwargs.get("node_id"),
             "bool": boolean, 
         })
 
@@ -270,6 +479,9 @@ class LF_SwitchInteger:
                 "on_false": ("INT", {"default": 0, "max": INT_MAX, "tooltip": "Value to return if the boolean condition is false."}),
                 "boolean": ("BOOLEAN", {"default": False, "tooltip": "Boolean condition to switch between 'on_true' and 'on_false' values."}),
             },
+            "optional": {
+                "ui_widget": ("KUL_PROGRESSBAR", {"default": {}}),
+            },
             "hidden": {
                 "node_id": "UNIQUE_ID"
             }
@@ -281,12 +493,15 @@ class LF_SwitchInteger:
     RETURN_NAMES = ("int", "int_list")
     RETURN_TYPES = ("INT", "INT")
         
-    def on_exec(self, node_id: str, on_true: int, on_false: int, boolean: bool):
+    def on_exec(self, **kwargs: dict):
+        boolean: bool = normalize_list_to_value(kwargs.get("boolean"))
+        on_false: int = kwargs.get("on_false")
+        on_true: int = kwargs.get("on_true")
         on_true = normalize_list_to_value(on_true)
         on_false = normalize_list_to_value(on_false)
         
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}switchinteger", {
-            "node": node_id, 
+            "node": kwargs.get("node_id"),
             "bool": boolean, 
         })
 
@@ -303,6 +518,9 @@ class LF_SwitchJSON:
                 "on_true": ("JSON", {"lazy": True, "tooltip": "Value to return if the boolean condition is true."}),
                 "on_false": ("JSON", {"lazy": True, "tooltip": "Value to return if the boolean condition is false."}),
                 "boolean": ("BOOLEAN", {"default": False, "tooltip": "Boolean condition to switch between 'on_true' and 'on_false' values."}),
+            },
+            "optional": {
+                "ui_widget": ("KUL_PROGRESSBAR", {"default": {}}),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -322,10 +540,13 @@ class LF_SwitchJSON:
         else:
             return ["on_false"]
 
-    def on_exec(self, node_id: str, on_true: dict, on_false: dict, boolean: bool):
+    def on_exec(self, **kwargs: dict):
+        boolean: bool = normalize_list_to_value(kwargs.get("boolean"))
+        on_false: dict = kwargs.get("on_false")
+        on_true: dict = kwargs.get("on_true")
         
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}switchjson", {
-            "node": node_id, 
+            "node": kwargs.get("node_id"),
             "bool": boolean, 
         })
 
@@ -339,11 +560,16 @@ class LF_SwitchString:
     def INPUT_TYPES(cls):
         return {
             "required": {
-            "on_true": ("STRING", {"lazy": True, "multiline": True, "tooltip": "Value to return if the boolean condition is true."}),
-            "on_false": ("STRING", {"lazy": True, "multiline": True, "tooltip": "Value to return if the boolean condition is false."}),
-            "boolean": ("BOOLEAN", {"default": False, "tooltip": "Boolean condition to switch between 'on_true' and 'on_false' values."}),
-        },
-            "hidden": { "node_id": "UNIQUE_ID" }
+                "on_true": ("STRING", {"lazy": True, "multiline": True, "tooltip": "Value to return if the boolean condition is true."}),
+                "on_false": ("STRING", {"lazy": True, "multiline": True, "tooltip": "Value to return if the boolean condition is false."}),
+                "boolean": ("BOOLEAN", {"default": False, "tooltip": "Boolean condition to switch between 'on_true' and 'on_false' values."}),
+            },
+            "optional": {
+                "ui_widget": ("KUL_PROGRESSBAR", {"default": {}}),
+            },
+            "hidden": {
+                "node_id": "UNIQUE_ID" 
+            }
         }
 
     CATEGORY = CATEGORY
@@ -359,10 +585,13 @@ class LF_SwitchString:
         else:
             return ["on_false"]
 
-    def on_exec(self, node_id: str, on_true: str, on_false: str, boolean: bool):
+    def on_exec(self, **kwargs: dict):
+        boolean: bool = normalize_list_to_value(kwargs.get("boolean"))
+        on_false: str = kwargs.get("on_false")
+        on_true: str = kwargs.get("on_true")
         
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}switchstring", {
-            "node": node_id, 
+            "node": kwargs.get("node_id"),
             "bool": boolean, 
         })
 
@@ -371,8 +600,11 @@ class LF_SwitchString:
         return (value, [value])
 # endregion
 NODE_CLASS_MAPPINGS = {
+    "LF_ExtractPromptFromLoraTag": LF_ExtractPromptFromLoraTag,
+    "LF_ExtractString": LF_ExtractString,
     "LF_IsLandscape": LF_IsLandscape,
     "LF_MathOperation": LF_MathOperation,
+    "LF_ParsePromptWithLoraTags": LF_ParsePromptWithLoraTags,
     "LF_ResolutionSwitcher": LF_ResolutionSwitcher,
     "LF_SwitchFloat": LF_SwitchFloat,
     "LF_SwitchImage": LF_SwitchImage,
@@ -381,8 +613,11 @@ NODE_CLASS_MAPPINGS = {
     "LF_SwitchString": LF_SwitchString,
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
+    "LF_ExtractPromptFromLoraTag": "Extract prompt from LoRA tag",
+    "LF_ExtractString": "Extract string",
     "LF_IsLandscape": "Is image in landscape res.?",
     "LF_MathOperation": "Math operation",
+    "LF_ParsePromptWithLoraTags": "Parse Prompt with LoRA tags",
     "LF_ResolutionSwitcher": "Resolution switcher",
     "LF_SwitchFloat": "Switch Float",
     "LF_SwitchImage": "Switch Image",

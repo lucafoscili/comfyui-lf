@@ -30,25 +30,24 @@ export const cardFactory: CardWidgetFactory = {
       },
       getValue() {
         return {
-          propsArray: getCardProps(grid) || [],
-          template: grid?.style.getPropertyValue('--card-grid') || '',
+          props: getCardProps(grid) || [],
         };
       },
       setValue(value) {
         const callback: NormalizeValueCallback<
           CustomWidgetDeserializedValuesMap<typeof TYPE> | string
         > = (_, u) => {
-          const { propsArray, template } = u.parsedJson as CardWidgetDeserializedValue;
-          const gridTemplate = template || 'repeat(1, 1fr) / repeat(1, 1fr)';
-          grid.style.setProperty('--card-grid', gridTemplate);
-          cardHandler(grid, propsArray);
+          const { props } = u.parsedJson as CardWidgetDeserializedValue;
+          const len = props?.length > 1 ? 2 : 1;
+          grid.style.setProperty('--card-grid', `repeat(1, 1fr) / repeat(${len}, 1fr)`);
+          cardHandler(grid, props);
         };
 
         normalizeValue(value, callback, TYPE);
       },
     };
   },
-  render: (node, name) => {
+  render: (node) => {
     const wrapper = document.createElement('div');
     const content = document.createElement('div');
     const grid = document.createElement('div');
@@ -70,7 +69,7 @@ export const cardFactory: CardWidgetFactory = {
         break;
     }
 
-    return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };
+    return { widget: createDOMWidget(TYPE, wrapper, node, options) };
   },
 };
 
@@ -98,17 +97,16 @@ const selectorButton = (grid: HTMLDivElement, node: NodeType) => {
 
           if (models.length) {
             const value: CardWidgetDeserializedValue = {
-              propsArray: [],
-              template: `repeat(1, 1fr) / repeat(${cards.length}, 1fr)`,
+              props: [],
             };
             cardPlaceholders(widget, cards.length);
             fetchModelMetadata(models, true).then((r) => {
               for (let index = 0; index < r.length; index++) {
                 const cardProps = r[index];
                 if (cardProps.kulData) {
-                  value.propsArray.push(cardProps);
+                  value.props.push(cardProps);
                 } else {
-                  value.propsArray.push({
+                  value.props.push({
                     ...cardProps,
                     kulData: models[index].dataset,
                   });

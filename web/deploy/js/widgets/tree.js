@@ -25,7 +25,7 @@ export const treeFactory = {
             },
         };
     },
-    render: (node, name) => {
+    render: (node) => {
         const wrapper = document.createElement('div');
         const content = document.createElement('div');
         const tree = document.createElement('kul-tree');
@@ -48,6 +48,6 @@ export const treeFactory = {
         tree.classList.add(treeFactory.cssClasses.tree);
         content.appendChild(tree);
         wrapper.appendChild(content);
-        return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };
+        return { widget: createDOMWidget(TYPE, wrapper, node, options) };
     },
 };

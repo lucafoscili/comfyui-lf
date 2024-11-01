@@ -29,7 +29,7 @@ class LF_LoadFileOnce:
                 "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget to prevent the same filename to be loaded twice."}),
             },
             "optional": {
-                "json_input": ("KUL_HISTORY", {"default": {}}),
+                "ui_widget": ("KUL_HISTORY", {"default": {}}),
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID",
@@ -42,15 +42,15 @@ class LF_LoadFileOnce:
     RETURN_NAMES = ("file", "name", "file_list", "name_list")
     RETURN_TYPES = ("*", "STRING", "*", "STRING")
 
-    def on_exec(self, node_id: str, dir: str, subdir: str, strip_ext: bool, enable_history: bool, json_input: dict = {}):
-        dir = normalize_list_to_value(dir)
-        subdir = normalize_list_to_value(subdir)
-        strip_ext = normalize_list_to_value(strip_ext)
-        enable_history = normalize_list_to_value(enable_history)
-        json_input = normalize_json_input(json_input)
+    def on_exec(self, **kwargs: dict):
+        dir: str = normalize_list_to_value(kwargs.get("dir"))
+        subdir: bool = normalize_list_to_value(kwargs.get("subdir"))
+        strip_ext: bool = normalize_list_to_value(kwargs.get("strip_ext"))
+        enable_history: bool = normalize_list_to_value(kwargs.get("enable_history"))
+        ui_widget: dict = normalize_json_input(kwargs.get("ui_widget", {}))
 
-        nodes = json_input.get("nodes", [])
-        previous_files = {node['value'] for node in nodes} if nodes else set()
+        nodes: list[dict] = ui_widget.get("nodes", [])
+        previous_files: dict = { node['value'] for node in nodes } if nodes else set()
 
         file, file_name = None, None
         for root, dirs, filenames in os.walk(dir):
@@ -71,11 +71,11 @@ class LF_LoadFileOnce:
                     create_history_node(file_name_stripped, nodes)
                 break
 
-        dataset = {"nodes": nodes}
+        dataset: dict  = { "nodes": nodes }
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}loadfileonce", {
-            "node": node_id,
-            "dataset": dataset
+            "node": kwargs.get("node_id"),
+            "dataset": dataset,
         })
 
         return (file, file_name, file, file_name)
@@ -93,7 +93,7 @@ class LF_LoadImages:
                 "dummy_output": ("BOOLEAN", {"default": False, "tooltip": "Flag indicating whether to output a dummy image tensor and string when the list is empty."}),
             },
             "optional": {
-                "json_input": ("KUL_MASONRY", {"default": ""})
+                "ui_widget": ("KUL_MASONRY", {"default": {}}),
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID",
@@ -106,26 +106,26 @@ class LF_LoadImages:
     RETURN_NAMES = ("image", "image_list", "name", "creation_date", "nr", "selected_image", "selected_index", "selected_name")
     RETURN_TYPES = ("IMAGE", "IMAGE", "STRING", "STRING", "INT", "IMAGE", "INT", "STRING")
 
-    def on_exec(self, node_id: str, dir: str, subdir: bool, strip_ext: bool, load_cap: int, dummy_output: bool, json_input: dict = None):
-        dir = normalize_list_to_value(dir)
-        subdir = normalize_list_to_value(subdir)
-        strip_ext = normalize_list_to_value(strip_ext)
-        load_cap = normalize_list_to_value(load_cap)
-        dummy_output = normalize_list_to_value(dummy_output)
-        json_input = normalize_json_input(json_input)
+    def on_exec(self, **kwargs: dict):
+        dir: str = normalize_list_to_value(kwargs.get("dir"))
+        subdir: bool = normalize_list_to_value(kwargs.get("subdir"))
+        strip_ext: bool = normalize_list_to_value(kwargs.get("strip_ext"))
+        load_cap: int = normalize_list_to_value(kwargs.get("load_cap"))
+        dummy_output: bool = normalize_list_to_value(kwargs.get("dummy_output"))
+        ui_widget: dict = normalize_json_input(kwargs.get("ui_widget", {}))
 
         index = 0
-        file_names = []
-        images = []
-        output_creation_dates = []
+        file_names: list[str] = []
+        images: list[torch.Tensor] = []
+        output_creation_dates: list[str] = []
         selected_image = None
 
-        nodes = []
-        dataset = { "nodes": nodes }
+        nodes: list[dict] = []
+        dataset: dict = { "nodes": nodes }
 
-        if json_input:
-            selected_index = json_input.get("index", None)
-            selected_name = json_input.get("name", None)
+        if ui_widget:
+            selected_index = ui_widget.get("index", None)
+            selected_name = ui_widget.get("name", None)
         else:
             selected_index = None
             selected_name = None
@@ -186,14 +186,12 @@ class LF_LoadImages:
         if dummy_output and images and selected_image is None:
             selected_image = create_dummy_image_tensor()
 
-        PromptServer.instance.send_sync(f"{EVENT_PREFIX}loadimages", {
-            "node": node_id, 
-            "dataset": dataset,
-            "selectedIndex": selected_index,
-            "selectedName": selected_name
-        })
-
         image_batch, image_list = normalize_output_image(images)
+
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}loadimages", {
+            "node": kwargs.get("node_id"), 
+            "dataset": dataset,
+        })
 
         return (image_batch[0], image_list, file_names, output_creation_dates, index, selected_image, selected_index, selected_name)
 # endregion
@@ -205,6 +203,9 @@ class LF_LoadLocalJSON:
             "required": {
                 "url": ("STRING", {"default": "", "multiline": True, "tooltip": "The local URL where the JSON file is stored (i.e.: file://C:/myjson.json)."}),
             },
+            "optional": {
+                "ui_widget": ("KUL_TREE", {"default": {}}),
+            },
             "hidden": { 
                 "node_id": "UNIQUE_ID",
             } 
@@ -214,8 +215,8 @@ class LF_LoadLocalJSON:
     FUNCTION = FUNCTION
     RETURN_TYPES = ("JSON",)
 
-    def on_exec(self, node_id: str, url: str):
-        url = normalize_list_to_value(url)
+    def on_exec(self, **kwargs: dict):
+        url: str = normalize_list_to_value(kwargs.get("url"))
 
         if not url.startswith("file://"):
             url = f"file://{url}"
@@ -223,7 +224,17 @@ class LF_LoadLocalJSON:
         file_path = requests.utils.unquote(url[7:])
         with open(file_path, 'r', encoding='utf-8') as file:
             data = json.load(file)
-            
+ 
+        nodes: list[dict] = []
+        root: dict = { "children": nodes, "icon":"check", "id": "root", "value": "JSON saved successfully!" }
+        dataset: dict = { "nodes": [root] }
+        nodes.append({ "description": url, "icon": "json", "id": url, "value": url })
+ 
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}savejson", {
+            "node": kwargs.get("node_id"),
+            "dataset": dataset,
+        })
+
         return (data,)
 # endregion
 # region LF_LoadMetadata
@@ -234,6 +245,9 @@ class LF_LoadMetadata:
             "required": {
                 "file_names": ("KUL_UPLOAD", {"tooltip": "List of file names separated by semicolons (e.g., file1.jpg;file2.png;file3.jpg)."}),
             },
+            "optional": {
+                "ui_widget": ("KUL_CODE", {"default": ""}),
+            },
             "hidden": { 
                 "node_id": "UNIQUE_ID",
             } 
@@ -241,14 +255,17 @@ class LF_LoadMetadata:
 
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
-    RETURN_NAMES = ("metadata_list",)
+    OUTPUT_NODE = True
+    OUTPUT_IS_LIST = (False, True)
+    RETURN_NAMES = ("metadata", "metadata_list")
     RETURN_TYPES = ("JSON",)
 
-    def on_exec(self, node_id: str, file_names: str):
-        file_names = normalize_list_to_value(file_names)
+    def on_exec(self, **kwargs: dict):
+        file_names: str = normalize_list_to_value(kwargs.get("file_names"))
 
         input_dir = BASE_INPUT_PATH
-        metadata_list = []
+        metadata_list: list[str] = []
+        metadata = ""
 
         if file_names:
             file_names_list = file_names.split(';')
@@ -270,7 +287,12 @@ class LF_LoadMetadata:
                 except Exception as e:
                     metadata_list.append({"file": file_name, "error": str(e)})
 
-        return (metadata_list,)
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}loadmetadata", {
+            "node": kwargs.get("node_id"),
+            "value": metadata,
+        })
+
+        return (metadata_list, metadata_list)
 # endregion
 # region LF_RegionExtractor
 class LF_RegionExtractor:
@@ -278,13 +300,13 @@ class LF_RegionExtractor:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "dir": ("STRING", {"tooltip": "Path to the directory containing the Python files."}),
+                "dir": ("STRING", {"tooltip": "Path to the directory or file containing the Python files."}),
                 "subdir": ("BOOLEAN", {"default": False, "tooltip": "Whether to load Python files from subdirectories as well."}),
                 "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Tracks extracted regions to avoid reprocessing."}),
                 "extension": ("STRING", {"default": "py", "tooltip": "Extension of the files that will be read."}),
             },
             "optional": {
-                "json_input": ("KUL_HISTORY", {"default": {}}),
+                "ui_widget": ("KUL_HISTORY", {"default": {}}),
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID",
@@ -297,8 +319,7 @@ class LF_RegionExtractor:
     RETURN_NAMES = ("regions", "regions_list")
     RETURN_TYPES = ("JSON", "JSON")
 
-    def on_exec(self, node_id: str, dir: str, subdir: bool, enable_history: bool, extension: str, json_input: dict = {}):
-
+    def on_exec(self, **kwargs: dict):
         def find_missing_references(code):
             """
             Identify constants and helper functions that are used but not defined in the code region.
@@ -322,55 +343,68 @@ class LF_RegionExtractor:
 
             return missing_constants, missing_functions
 
-        dir = normalize_list_to_value(dir)
-        subdir = normalize_list_to_value(subdir)
-        enable_history = normalize_list_to_value(enable_history)
-        extension = normalize_list_to_value(extension)
-        json_input = normalize_json_input(json_input)
+        dir_path: str = normalize_list_to_value(kwargs.get("dir"))
+        subdir: bool = normalize_list_to_value(kwargs.get("subdir"))
+        enable_history: bool = normalize_list_to_value(kwargs.get("enable_history"))
+        extension: str = normalize_list_to_value(kwargs.get("extension"))
+        ui_widget: dict = normalize_json_input(kwargs.get("ui_widget", {}))
 
         if not extension.startswith("."):
             extension = f".{extension}"
-        
-        files = []
-        for root, _, f in os.walk(dir):
-            if not subdir and root != dir:
-                continue
-            files.extend([os.path.join(root, file) for file in f if file.endswith(".py")])
-        
-        regions_list = []
-        nodes = json_input.get("nodes", [])
-        
+
+        files: list[str] = []
+        if os.path.isfile(dir_path):
+            # 'dir' is actually a file
+            if dir_path.endswith(extension):
+                files.append(dir_path)
+            else:
+                # The file does not have the correct extension
+                print(f"The file {dir_path} does not have the '{extension}' extension.")
+                return ({}, [])
+        elif os.path.isdir(dir_path):
+            # 'dir' is a directory
+            for root, _, f in os.walk(dir_path):
+                if not subdir and root != dir_path:
+                    continue
+                files.extend([os.path.join(root, file) for file in f if file.endswith(extension)])
+        else:
+            print(f"The path {dir_path} is neither a file nor a directory.")
+            return ({}, [])
+
+        regions_list: list[dict] = []
+        nodes: list[dict] = ui_widget.get("nodes", [])
+
         for file_path in files:
             with open(file_path, 'r') as f:
                 code = f.read()
-                
-                if enable_history and json_input.get(file_path):
+
+                if enable_history and ui_widget.get(file_path):
                     continue
-                
+
                 pattern = r"# region (.+?)\n(.*?)# endregion"
                 matches = re.findall(pattern, code, re.DOTALL)
-                
+
                 for match in matches:
                     name = match[0].strip()
-                    code = match[1].strip()
+                    code_region = match[1].strip()
 
-                    constants, helper_functions = find_missing_references(code)
-                    
+                    constants, helper_functions = find_missing_references(code_region)
+
                     if enable_history:
                         create_history_node(name, nodes)
 
                     regions_list.append({
                         "file": file_path,
                         "name": name,
-                        "code": code,
+                        "code": code_region,
                         "constants": constants,
                         "helperFunctions": helper_functions
                     })
 
-        dataset = {"nodes": nodes}
-        
+        dataset: dict = {"nodes": nodes}
+
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}regionextractor", {
-            "node": node_id, 
+            "node": kwargs.get("node_id"),
             "dataset": dataset,
         })
 
@@ -391,6 +425,7 @@ class LF_SaveImageForCivitAI:
             },
             "optional": {
                 "civitai_metadata": ("STRING", {"defaultInput": True, "tooltip": "String containing CivitAI compatible metadata (created by the node LF_CivitAIMetadataSetup)."}),
+                "ui_widget": ("KUL_CODE", {"defaultInput": ""}),
             },
             "hidden": {
                 "extra_pnginfo": "EXTRA_PNGINFO",
@@ -401,30 +436,27 @@ class LF_SaveImageForCivitAI:
 
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
-    INPUT_IS_LIST = (True, True, False, False, False, False, False)
+    INPUT_IS_LIST = (True, True, False, False, False, False, False, False)
     OUTPUT_IS_LIST = (True, False)
     OUTPUT_NODE = True
     RETURN_NAMES = ("file_names", "civitai_metadata")
     RETURN_TYPES = ("STRING", "STRING")
 
-    def on_exec(self, node_id: str, extra_pnginfo, prompt: dict, image: torch.Tensor,
-                filepath: str, add_timestamp: bool, embed_workflow: bool, extension: str, 
-                quality: int, civitai_metadata: str = None):
+    def on_exec(self, **kwargs: dict):
+        image: list[torch.Tensor] = normalize_input_image(kwargs.get("image"))
+        filepath: list[str] = normalize_input_list(kwargs.get("filepath"))
+        extra_pnginfo: list[torch.Tensor] = normalize_list_to_value(kwargs.get("extra_pnginfo"))
+        prompt: dict = normalize_list_to_value(kwargs.get("prompt"))
+        add_timestamp: bool = normalize_list_to_value(kwargs.get("add_timestamp"))
+        embed_workflow: bool = normalize_list_to_value(kwargs.get("embed_workflow"))
+        extension: str = normalize_list_to_value(kwargs.get("extension"))
+        quality: int = normalize_list_to_value(kwargs.get("quality"))
+        civitai_metadata: str = normalize_list_to_value(kwargs.get("civitai_metadata", None))
 
-        image = normalize_input_image(image)
-        filepath = normalize_input_list(filepath)
-        add_timestamp = normalize_list_to_value(add_timestamp)
-        embed_workflow = normalize_list_to_value(embed_workflow)
-        extension = normalize_list_to_value(extension)
-        quality = normalize_list_to_value(quality)
-        civitai_metadata = normalize_list_to_value(civitai_metadata)
-        prompt = normalize_list_to_value(prompt)
-        extra_pnginfo = normalize_list_to_value(extra_pnginfo)
+        file_names: list[str] = []
 
-        file_names = []
-
-        nodes = []
-        dataset = { "nodes": nodes }
+        nodes: list[dict] = []
+        dataset: dict = { "nodes": nodes }
 
         for index, img in enumerate(image):
             output_file, subfolder, filename = resolve_filepath(
@@ -468,8 +500,8 @@ class LF_SaveImageForCivitAI:
             file_names.append(filename)
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}saveimageforcivitai", {
-            "node": node_id, 
-            "dataset": dataset
+            "node": kwargs.get("node_id"),
+            "dataset": dataset,
         })
 
         return (file_names, civitai_metadata)
@@ -484,6 +516,9 @@ class LF_SaveJSON:
                 "filepath": ("STRING", {"default": '', "tooltip": "Path and filename for saving the JSON. Use slashes to set directories."}),
                 "add_timestamp": ("BOOLEAN", {"default": True, "tooltip": "Add timestamp to the filename as a suffix."}),
             },
+            "optional": {
+                "ui_widget": ("KUL_TREE", {"defaultInput": {}}),
+            },
             "hidden": { 
                 "node_id": "UNIQUE_ID",
             } 
@@ -495,10 +530,10 @@ class LF_SaveJSON:
     RETURN_NAMES = ("json",)
     RETURN_TYPES = ("JSON",)
 
-    def on_exec(self, node_id: str, json_data: dict, filepath: str, add_timestamp: bool):
-        json_data = normalize_json_input(json_data)
-        filepath = normalize_list_to_value(filepath)
-        add_timestamp = normalize_list_to_value(add_timestamp)
+    def on_exec(self, **kwargs: dict):
+        json_data: dict = normalize_json_input(kwargs.get("json_data"))
+        filepath: str = normalize_list_to_value(kwargs.get("filepath"))
+        add_timestamp: bool = normalize_list_to_value(kwargs.get("add_timestamp"))
 
         output_file, _, _ = resolve_filepath(
             filepath=filepath,
@@ -510,13 +545,13 @@ class LF_SaveJSON:
         with open(output_file, 'w', encoding='utf-8') as json_file:
             json.dump(json_data, json_file, ensure_ascii=False, indent=4)
  
-        nodes = []
-        root = { "children": nodes, "icon":"check", "id": "root", "value": "JSON saved successfully!" }
-        dataset = { "nodes": [root] }
+        nodes: list[dict] = []
+        root: dict = { "children": nodes, "icon":"check", "id": "root", "value": "JSON saved successfully!" }
+        dataset: dict = { "nodes": [root] }
         nodes.append({ "description": output_file, "icon": "json", "id": output_file, "value": output_file })
  
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}savejson", {
-            "node": node_id,
+            "node": kwargs.get("node_id"),
             "dataset": dataset,
         })
  
@@ -532,6 +567,9 @@ class LF_SaveMarkdown:
                 "filepath": ("STRING", {"default": '', "tooltip": "Path and filename for saving the Markdown. Use slashes to set directories."}),
                 "add_timestamp": ("BOOLEAN", {"default": True, "tooltip": "Add timestamp to the filename as a suffix."}),
             },
+            "optional": {
+                "ui_widget": ("KUL_TREE", {"defaultInput": {}}),
+            },
             "hidden": { 
                 "node_id": "UNIQUE_ID",
             } 
@@ -543,10 +581,10 @@ class LF_SaveMarkdown:
     RETURN_NAMES = ("string",)
     RETURN_TYPES = ("STRING",)
 
-    def on_exec(self, node_id: str, markdown_text: str, filepath: str, add_timestamp: bool):
-        markdown_text = normalize_list_to_value(markdown_text)
-        filepath = normalize_list_to_value(filepath)
-        add_timestamp = normalize_list_to_value(add_timestamp)
+    def on_exec(self, **kwargs: dict):
+        markdown_text: str = normalize_list_to_value(kwargs.get("markdown_text"))
+        filepath: str = normalize_list_to_value(kwargs.get("filepath"))
+        add_timestamp: bool = normalize_list_to_value(kwargs.get("add_timestamp"))
 
         output_file, _, _ = resolve_filepath(
             filepath=filepath,
@@ -558,13 +596,13 @@ class LF_SaveMarkdown:
         with open(output_file, 'w', encoding='utf-8') as md_file:
             md_file.write(markdown_text)
 
-        nodes = []
-        root = { "children": nodes, "icon":"check", "id": "root", "value": "Markdown saved successfully!" }
-        dataset = { "nodes": [root] }
+        nodes: list[dict] = []
+        root: dict = { "children": nodes, "icon":"check", "id": "root", "value": "Markdown saved successfully!" }
+        dataset: dict = { "nodes": [root] }
         nodes.append({ "description": output_file, "icon": "document", "id": output_file, "value": output_file })
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}savemarkdown", {
-            "node": node_id,
+            "node": kwargs.get("node_id"),
             "dataset": dataset,
         })
 

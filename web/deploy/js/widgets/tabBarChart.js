@@ -89,7 +89,7 @@ export const tabBarChartFactory = {
             },
         };
     },
-    render: (node, name) => {
+    render: (node) => {
         const wrapper = document.createElement('div');
         const grid = document.createElement('div');
         const textfield = document.createElement('kul-textfield');
@@ -125,7 +125,7 @@ export const tabBarChartFactory = {
         grid.appendChild(tabbar);
         grid.appendChild(chart);
         wrapper.appendChild(grid);
-        return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };
+        return { widget: createDOMWidget(TYPE, wrapper, node, options) };
     },
 };
 const prepareTabbarDataset = (data) => {

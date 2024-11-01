@@ -5,7 +5,7 @@ from PIL import Image, ImageFilter
 from server import PromptServer
 
 from ..utils.constants import CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, RESAMPLERS
-from ..utils.helpers import clarity_effect, create_compare_node, create_masonry_node, create_resize_node, get_resource_url, normalize_input_image, normalize_input_list, normalize_list_item, normalize_list_to_value, normalize_output_image, pil_to_tensor, resize_and_crop_image, resize_image, resize_to_square, resolve_filepath, tensor_to_pil
+from ..utils.helpers import clarity_effect, create_compare_node, create_masonry_node, create_resize_node, get_resource_url, normalize_input_image, normalize_input_list, normalize_list_item, normalize_list_to_value, normalize_output_image, not_none, pil_to_tensor, resize_and_crop_image, resize_image, resize_to_square, resolve_filepath, tensor_to_pil
 
 CATEGORY = f"{CATEGORY_PREFIX}/Image"
 
@@ -16,10 +16,11 @@ class LF_BlurImages:
         return {
             "required": {
                 "image": ("IMAGE", {"tooltip": "List of images to blur."}),
-                "blur_percentage": ("FLOAT", {"default": 0.25, "min": 0.05, "max": 1.0, "step": 0.05, "tooltip": "0% Blur: No blur applied, the image remains as-is. 100% Blur: Maximum blur applied based on the image's dimensions, which would result in a highly blurred (almost unrecognizable) image."})
+                "blur_percentage": ("FLOAT", {"default": 0.25, "min": 0.0, "max": 1.0, "step": 0.05, "tooltip": "0% Blur: No blur applied, the image remains as-is. 100% Blur: Maximum blur applied based on the image's dimensions, which would result in a highly blurred (almost unrecognizable) image."}),
             },
             "optional": {
                 "file_name": ("STRING", {"forceInput": True, "tooltip": "Corresponding list of file names for the images."}),
+                "ui_widget": ("KUL_MASONRY", {"default": {}})
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -28,15 +29,15 @@ class LF_BlurImages:
 
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
-    INPUT_IS_LIST = (True, False, True, False)
+    INPUT_IS_LIST = (True, False, False, True)
     OUTPUT_IS_LIST = (False, True, True, False)
     RETURN_NAMES = ("image", "image_list", "file_name", "count")
     RETURN_TYPES = ("IMAGE", "IMAGE", "STRING", "INT")
 
-    def on_exec(self, node_id: str, image: torch.Tensor|list[torch.Tensor], blur_percentage: float, file_name: list[str] = None):
-        blur_percentage = normalize_list_to_value(blur_percentage)
-        file_name = normalize_input_list(file_name)
-        image = normalize_input_image(image)
+    def on_exec(self, **kwargs: dict):
+        image: list[torch.Tensor] = normalize_input_image(kwargs.get("image"))
+        blur_percentage: float = normalize_list_to_value(kwargs.get("blur_percentage"))
+        file_name: list[str] = normalize_input_list(kwargs.get("file_name"))
 
         blurred_images = []
         blurred_file_names = []
@@ -76,13 +77,13 @@ class LF_BlurImages:
             blurred_file_names.append(filename)
 
             nodes.append(create_masonry_node(filename, url, index))
-        
-        PromptServer.instance.send_sync(f"{EVENT_PREFIX}blurimages", {
-            "node": node_id,
-            "dataset": dataset
-        })
 
         image_batch, image_list = normalize_output_image(blurred_images)
+        
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}blurimages", {
+            "node": kwargs.get("node_id"),
+            "dataset": dataset,
+        })
 
         return (image_batch[0], image_list, blurred_file_names, len(image_list))
 # endregion
@@ -97,6 +98,9 @@ class LF_ClarityEffect:
                 "sharpen_amount": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 5.0, "step": 0.1, "tooltip": "Controls how much sharpening is applied to the image."}),
                 "blur_kernel_size": ("INT", {"default": 7, "min": 1, "max": 15, "step": 2, "tooltip": "Controls the size of the Gaussian blur kernel. Higher values mean more smoothing."}),
             },
+            "optional": {
+                "ui_widget": ("KUL_COMPARE", {"default": {}})
+            },
             "hidden": {
                 "node_id": "UNIQUE_ID"
             }
@@ -109,16 +113,16 @@ class LF_ClarityEffect:
     RETURN_NAMES = ("image", "image_list")
     RETURN_TYPES = ("IMAGE", "IMAGE")
 
-    def on_exec(self, node_id: str, image: torch.Tensor|list[torch.Tensor], clarity_strength: float, sharpen_amount: float, blur_kernel_size: int):
-        image = normalize_input_image(image)
-        clarity_strength = normalize_list_to_value(clarity_strength)
-        sharpen_amount = normalize_list_to_value(sharpen_amount)
-        blur_kernel_size = normalize_list_to_value(blur_kernel_size)
+    def on_exec(self, **kwargs: dict):
+        image: list[torch.Tensor] = normalize_input_image(kwargs.get("image"))
+        clarity_strength: float = normalize_list_to_value(kwargs.get("clarity_strength"))
+        sharpen_amount: float = normalize_list_to_value(kwargs.get("sharpen_amount"))
+        blur_kernel_size: int = normalize_list_to_value(kwargs.get("blur_kernel_size"))
 
-        nodes = []
-        dataset = { "nodes": nodes }
+        nodes: list[dict] = []
+        dataset: dict = { "nodes": nodes }
         
-        processed_images = []
+        processed_images: list[torch.Tensor] = []
 
         for index, img in enumerate(image):
             output_file_s, subfolder_s, filename_s = resolve_filepath(
@@ -142,15 +146,15 @@ class LF_ClarityEffect:
 
             nodes.append(create_compare_node(filename_s, filename_t, index))
             processed_images.append(processed)
+        
+        batch_list, image_list = normalize_output_image(processed_images)
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}clarityeffect", {
-            "node": node_id,
+            "node": kwargs.get("node_id"),
             "dataset": dataset,
         })
         
-        batch_list, list = normalize_output_image(processed_images)
-        
-        return (batch_list[0], list)
+        return (batch_list[0], image_list)
 # endregion
 # region LF_CompareImages
 class LF_CompareImages:
@@ -161,7 +165,8 @@ class LF_CompareImages:
                 "image": ("IMAGE", {"tooltip": "First input image tensor or a list of image tensors."}),
             },
             "optional": {
-                "image_opt": ("IMAGE", {"tooltip": "Second input image tensor or a list of image tensors (optional)."})
+                "image_opt": ("IMAGE", {"tooltip": "Second input image tensor or a list of image tensors (optional)."}),
+                "ui_widget": ("KUL_COMPARE", {"default": {}})
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -176,12 +181,12 @@ class LF_CompareImages:
     RETURN_NAMES = ("image", "image_list", "all_images", "dataset")
     RETURN_TYPES = ("IMAGE", "IMAGE", "IMAGE", "JSON")
 
-    def on_exec(self, node_id: str, image: torch.Tensor|list[torch.Tensor], image_opt: torch.Tensor|list[torch.Tensor] = None):
-        image_list_1 = normalize_input_image(image)
-        image_list_2 = normalize_input_image(image_opt) if image_opt is not None else image_list_1
+    def on_exec(self, **kwargs: dict):
+        image_list_1: list[torch.Tensor] = normalize_input_image(kwargs.get("image"))
+        image_list_2: list[torch.Tensor] = normalize_input_image(kwargs.get("image_opt", image_list_1))
         
-        nodes = []
-        dataset = { "nodes": nodes }
+        nodes: list[dict] = []
+        dataset: dict = { "nodes": nodes }
 
         if len(image_list_1) != len(image_list_2):
             raise ValueError("Image lists must have the same length if both inputs are provided.")
@@ -196,7 +201,7 @@ class LF_CompareImages:
             pil_image.save(output_file_s, format="PNG")
             filename_s = get_resource_url(subfolder_s, filename_s, "temp")
 
-            if image_opt is not None:
+            if not_none(kwargs.get("image_opt")):
                 output_file_t, subfolder_t, filename_t = resolve_filepath(
                     index=index,
                     default_filename="compare_t",
@@ -209,15 +214,15 @@ class LF_CompareImages:
 
             nodes.append(create_compare_node(filename_s, filename_t, index))
 
+        image_batch, image_list = normalize_output_image(image_list_1)
+
+        combined_images = image_list_1 + (image_list_2 if kwargs.get("image_opt") is not None else [])
+        _, all_images_list = normalize_output_image(combined_images)
+
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}compareimages", {
-            "node": node_id,
+            "node": kwargs.get("node_id"),
             "dataset": dataset,
         })
-
-        image_batch, image_list = normalize_output_image(image)
-
-        combined_images = image_list_1 + (image_list_2 if image_opt is not None else [])
-        _, all_images_list = normalize_output_image(combined_images)
 
         return (image_batch[0], image_list, all_images_list, dataset)
 # endregion
@@ -229,6 +234,9 @@ class LF_MultipleImageResizeForWeb:
             "required": {
                 "image": ("IMAGE", {"type": "IMAGE", "tooltip": "List of images to process."}),
                 "file_name": ("STRING", {"forceInput": True, "tooltip": "Corresponding list of file names for the images."}),
+            },
+            "optional": {
+                "ui_widget": ("KUL_MASONRY", {"default": {}})
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -242,17 +250,17 @@ class LF_MultipleImageResizeForWeb:
     RETURN_NAMES = ("image", "image_list", "name", "name_list", "names_with_dir", "dataset")
     RETURN_TYPES = ("IMAGE", "IMAGE", "STRING", "STRING", "STRING", "JSON")
 
-    def on_exec(self, node_id:str, image:list[torch.Tensor], file_name:list[str]):
-        image = normalize_input_image(image)
-        file_name = normalize_input_list(file_name)
+    def on_exec(self, **kwargs: dict):
+        image: list[torch.Tensor] = normalize_input_image(kwargs.get("image"))
+        file_name: list[str] = normalize_input_list(kwargs.get("file_name"))
 
-        nodes = []
-        dataset = { "nodes": nodes }
+        nodes: list[dict] = []
+        dataset: dict = { "nodes": nodes }
 
-        output_file_names = []
-        output_file_names_with_dir = []
-        output_images = []
-        resolutions = [256, 320, 512, 640, 1024, 1280, 2048, 2560]
+        output_file_names: list[str] = []
+        output_file_names_with_dir: list[str] = []
+        output_images: list[torch.Tensor] = []
+        resolutions: list[int] = [256, 320, 512, 640, 1024, 1280, 2048, 2560]
 
         for index, img in enumerate(image):
             f_name = file_name[index]
@@ -282,7 +290,7 @@ class LF_MultipleImageResizeForWeb:
             output_file_names_with_dir.append(f"HD/{base_name}.{image_format}")
 
             children:list[dict] = []
-            rootNode = {
+            rootNode: dict = {
                 "children": children,
                 "id": base_name,
                 "value": base_name
@@ -315,7 +323,7 @@ class LF_MultipleImageResizeForWeb:
             nodes.append(rootNode)
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}multipleimageresizeforweb", {
-            "node": node_id,
+            "node": kwargs.get("node_id"),
             "dataset": dataset,
         })
 
@@ -334,6 +342,9 @@ class LF_ResizeImageByEdge:
                 "new_size": ("INT", {"default": 1024, "tooltip": "The size of the longest edge of the output image."}),
                 "resize_method": (RESAMPLERS, {"default": "bicubic", "tooltip": "Method to resize the image."})
             },
+            "optional": {
+                "ui_widget": ("KUL_TREE", {"default": {}})
+            },
             "hidden": {
                 "node_id": "UNIQUE_ID"
             }
@@ -346,22 +357,22 @@ class LF_ResizeImageByEdge:
     RETURN_NAMES = ("image", "image_list", "count")
     RETURN_TYPES = ("IMAGE", "IMAGE", "INT")
 
-    def on_exec(self, node_id:str, image:torch.Tensor|list[torch.Tensor], longest_edge: bool, new_size: int, resize_method: str):
-        image = normalize_input_image(image)
-        longest_edge = normalize_list_to_value(longest_edge)
-        new_size = normalize_input_list(new_size)
-        resize_method = normalize_list_to_value(resize_method)
+    def on_exec(self, **kwargs: dict):
+        image: list[torch.Tensor] = normalize_input_image(kwargs.get("image"))
+        longest_edge: bool = normalize_list_to_value(kwargs.get("longest_edge"))
+        new_size: list[int] = normalize_input_list(kwargs.get("new_size"))
+        resize_method: str = normalize_list_to_value(kwargs.get("resize_method"))
 
-        nodes = []
-        root = { "children": nodes, "icon":"help", "id": "", "value": "" }
-        dataset = { "nodes": [root] }
+        nodes: list[dict] = []
+        root: dict = { "children": nodes, "icon":"help", "id": "", "value": "" }
+        dataset: dict = { "nodes": [root] }
 
-        original_heights = []
-        original_widths = []
-        heights = []
-        widths = []
+        original_heights: list[int] = []
+        original_widths: list[int] = []
+        heights: list[int] = []
+        widths: list[int] = []
 
-        resized_images = []
+        resized_images: list[torch.Tensor] = []
 
         for index, img in enumerate(image):
             n_size = normalize_list_item(new_size, index)
@@ -384,12 +395,12 @@ class LF_ResizeImageByEdge:
         root["id"] = summary_message
         root["value"] = summary_message
 
+        image_batch, image_list = normalize_output_image(resized_images)
+
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}resizeimagebyedge", {
-            "node": node_id,
+            "node": kwargs.get("node_id"),
             "dataset": dataset,
         })
-
-        image_batch, image_list = normalize_output_image(resized_images)
 
         return (image_batch[0], image_list, num_resized)
 # endregion
@@ -406,6 +417,9 @@ class LF_ResizeImageToDimension:
                 "resize_mode": (["crop", "pad"], {"default": "crop", "tooltip": "Choose whether to crop or pad when resizing."}),
                 "pad_color": ("STRING", {"default": "000000", "tooltip": "Color to use for padding if 'pad' mode is selected (hexadecimal)."})
             },
+            "optional": {
+                "ui_widget": ("KUL_TREE", {"default": {}})
+            },
             "hidden": {
                 "node_id": "UNIQUE_ID"
             }
@@ -418,28 +432,28 @@ class LF_ResizeImageToDimension:
     RETURN_NAMES = ("image", "image_list", "count")
     RETURN_TYPES = ("IMAGE", "IMAGE", "INT")
 
-    def on_exec(self, node_id:str, image:torch.Tensor|list[torch.Tensor], height: int, width: int, resize_method: str, resize_mode:str, pad_color:str):
-        image = normalize_input_image(image)
-        height = normalize_input_list(height)
-        width = normalize_input_list(width)
-        resize_method = normalize_list_to_value(resize_method)
-        resize_mode = normalize_list_to_value(resize_mode)
-        pad_color = normalize_list_to_value(pad_color)
+    def on_exec(self, **kwargs: dict):
+        image: list[torch.Tensor] = normalize_input_image(kwargs.get("image"))
+        height: list[int] = normalize_input_list(kwargs.get("height"))
+        width: list[int] = normalize_input_list(kwargs.get("width"))
+        resize_method: str = normalize_list_to_value(kwargs.get("resize_method"))
+        resize_mode: str = normalize_list_to_value(kwargs.get("resize_mode"))
+        pad_color: str = normalize_list_to_value(kwargs.get("pad_color"))
 
-        nodes = []
-        root = { "children": nodes, "icon":"help", "id": "", "value": "" }
-        dataset = { "nodes": [root] }
+        nodes: list[dict] = []
+        root: dict = { "children": nodes, "icon":"help", "id": "", "value": "" }
+        dataset: dict = { "nodes": [root] }
 
-        original_heights = []
-        original_widths = []
-        heights = []
-        widths = []
+        original_heights: list[int] = []
+        original_widths: list[int] = []
+        heights: list[int] = []
+        widths: list[int] = []
 
-        resized_images = []
+        resized_images: list[torch.Tensor] = []
 
         for index, img in enumerate(image):
-            h = normalize_list_item(height, index)
-            w = normalize_list_item(width, index)
+            h: int = normalize_list_item(height, index)
+            w: int = normalize_list_item(width, index)
 
             original_height, original_width = img.shape[1], img.shape[2]
             original_heights.append(original_height)
@@ -459,12 +473,12 @@ class LF_ResizeImageToDimension:
         root["id"] = summary_message
         root["value"] = summary_message
 
+        image_batch, image_list = normalize_output_image(resized_images)
+
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}resizeimagetodimension", {
-            "node": node_id,
+            "node": kwargs.get("node_id"),
             "dataset": dataset,
         })
-
-        image_batch, image_list = normalize_output_image(resized_images)
 
         return (image_batch[0], image_list, num_resized)
 # endregion
@@ -479,6 +493,9 @@ class LF_ResizeImageToSquare:
                 "resize_method": (RESAMPLERS, {"default": "bicubic", "tooltip": "Resampling method for resizing."}),
                 "crop_position": (["top", "bottom", "left", "right", "center"], {"default": "center", "tooltip": "Where to crop the image."})
             },
+            "optional": {
+                "ui_widget": ("KUL_TREE", {"default": {}})
+            },
             "hidden": {
                 "node_id": "UNIQUE_ID"
             }
@@ -486,34 +503,36 @@ class LF_ResizeImageToSquare:
 
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
-    INPUT_IS_LIST = (True, False, False, False, False)
+    INPUT_IS_LIST = (True, True, False, False, False)
     OUTPUT_IS_LIST = (False, True, False)
     RETURN_NAMES = ("image", "image_list", "count")
     RETURN_TYPES = ("IMAGE", "IMAGE", "INT")
 
-    def on_exec(self, node_id:str, image, square_size: int, resize_method: str, crop_position: str):
-        image = normalize_input_image(image)
-        square_size = normalize_list_to_value(square_size)
-        resize_method = normalize_list_to_value(resize_method)
-        crop_position = normalize_list_to_value(crop_position)
+    def on_exec(self, **kwargs: dict):
+        image: list[torch.Tensor] = normalize_input_image(kwargs.get("image"))
+        square_size: list[int] = normalize_input_list(kwargs.get("square_size"))
+        resize_method: str = normalize_list_to_value(kwargs.get("resize_method"))
+        crop_position: str = normalize_list_to_value(kwargs.get("crop_position"))
 
-        nodes = []
-        root = { "children": nodes, "icon":"help", "id": "", "value": "" }
-        dataset = { "nodes": [root] }
+        nodes: list[dict] = []
+        root: dict = { "children": nodes, "icon":"help", "id": "", "value": "" }
+        dataset: dict = { "nodes": [root] }
 
-        original_heights = []
-        original_widths = []
-        heights = []
-        widths = []
+        original_heights: list[int] = []
+        original_widths: list[int] = []
+        heights: list[int] = []
+        widths: list[int] = []
 
-        resized_images = []
+        resized_images: list[torch.Tensor] = []
 
         for index, img in enumerate(image):
+            s: int = normalize_list_item(square_size, index)
+
             original_height, original_width = img.shape[1], img.shape[2]
             original_heights.append(original_height)
             original_widths.append(original_width)
 
-            resized_img = resize_to_square(img, square_size, resize_method, crop_position)
+            resized_img = resize_to_square(img, s, resize_method, crop_position)
             resized_images.append(resized_img)
 
             new_height, new_width = resized_img.shape[1], resized_img.shape[2]
@@ -527,12 +546,12 @@ class LF_ResizeImageToSquare:
         root["id"] = summary_message
         root["value"] = summary_message
 
+        image_batch, image_list = normalize_output_image(resized_images)
+
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}resizeimagetosquare", {
-            "node": node_id,
+            "node": kwargs.get("node_id"),
             "dataset": dataset,
         })
-
-        image_batch, image_list = normalize_output_image(resized_images)
 
         return (image_batch[0], image_list, num_resized)
 # endregion

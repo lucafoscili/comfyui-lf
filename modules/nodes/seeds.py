@@ -22,7 +22,7 @@ class LF_SequentialSeedsGenerator:
                 "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the random seeds at execution time."}),
             },
             "optional": {
-                "json_input": ("KUL_HISTORY", {"default": {}}),
+                "ui_widget": ("KUL_HISTORY", {"default": {}}),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -34,13 +34,15 @@ class LF_SequentialSeedsGenerator:
     RETURN_NAMES = ("seed",) * 20
     RETURN_TYPES = ("INT",) * 20
 
-    def on_exec(self, node_id: str, seed: int, enable_history: bool, json_input: dict = {}):
-        seeds = [seed + i for i in range(20)] 
-        enable_history = normalize_list_to_value(enable_history)
-        json_input = normalize_json_input(json_input)
+    def on_exec(self, **kwargs: dict):
+        seed: int = normalize_list_to_value(kwargs.get("seed"))
+        enable_history: int = normalize_list_to_value(kwargs.get("enable_history"))
+        ui_widget: dict = normalize_json_input(kwargs.get("ui_widget", {}))
 
-        nodes = json_input.get("nodes", [])
-        dataset = {
+        seeds = [seed + i for i in range(20)] 
+
+        nodes: list[dict] = ui_widget.get("nodes", [])
+        dataset: dict = {
             "nodes": nodes
         }
 
@@ -48,7 +50,7 @@ class LF_SequentialSeedsGenerator:
             create_history_node(str(seed), nodes)
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}sequentialseedsgenerator", {
-            "node": node_id, 
+            "node": kwargs.get("node_id"), 
             "dataset": dataset,
         })        
 
@@ -61,10 +63,10 @@ class LF_UrandomSeedGenerator:
         return {
             "required": {
                 "regen_each_run": ("BOOLEAN", {"default": True, "tooltip": "Generates new random seeds each run, while still keeping the seeds fed through the fixed_seeds JSON."}),
-                "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the random seeds at execution time."}),
             },
             "optional": {
                 "fixed_seeds": ("JSON", {"default": {}, "tooltip": "A Ketchup Lite-compatible dataset containing 20 previously generated seeds."}),
+                "ui_widget": ("KUL_TREE", {"default": {}}),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -76,13 +78,14 @@ class LF_UrandomSeedGenerator:
     RETURN_NAMES = tuple(["fixed_seeds_dataset"] + ["seed"] * 20)
     RETURN_TYPES = tuple(["JSON"] + ["INT"] * 20)
 
-    def on_exec(self, node_id: str, enable_history: bool, regen_each_run: bool, fixed_seeds: dict = None):
-        json_data = normalize_json_input(fixed_seeds)
+    def on_exec(self, **kwargs: dict):
+        json_input: dict = normalize_json_input(kwargs.get("fixed_seeds", {}))
+
         existing_seeds = [None] * 20
 
-        if json_data:
+        if json_input:
             try:
-                for node in json_data.get("nodes", []):
+                for node in json_input.get("nodes", []):
                     children = node.get("children", [])
                     for child in children:
                         seed_id = child["id"]
@@ -106,10 +109,10 @@ class LF_UrandomSeedGenerator:
             if existing_seeds[i] is None:
                 existing_seeds[i] = urandom_seed
             
-            time.sleep(0.01)
+            time.sleep(0.05)
 
         execution_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        json_dataset = {
+        json_input = {
             "nodes": [
                 {
                     "children": [
@@ -123,13 +126,11 @@ class LF_UrandomSeedGenerator:
         }
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}urandomseedgenerator", {
-            "node": node_id, 
-            "dataset": json_dataset,
-            "isHistoryEnabled": enable_history,
-            "regenEachRun": regen_each_run,
+            "node": kwargs.get("node_id"), 
+            "dataset": json_input,
         })
 
-        return (json_dataset, *existing_seeds)
+        return (json_input, *existing_seeds)
 
     @classmethod
     def IS_CHANGED(cls, **kwargs):

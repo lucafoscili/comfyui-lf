@@ -1,6 +1,5 @@
 import type { LFWindow } from '../managers/manager';
 import {
-  BaseWidgetCallback,
   ComfyWidgetMap,
   ComfyWidgetName,
   CustomWidgetDeserializedValuesMap,
@@ -19,6 +18,7 @@ import { KulSwitch } from '../types/ketchup-lite/components/kul-switch/kul-switc
 import { KulComponent, KulComponentName } from '../types/ketchup-lite/types/GenericTypes';
 import { KulDom } from '../types/ketchup-lite/managers/kul-manager/kul-manager-declarations';
 
+const DEFAULT_WIDGET_NAME = 'ui_widget';
 const DOM = document.documentElement as KulDom;
 const WINDOW = window as unknown as LFWindow;
 
@@ -35,15 +35,44 @@ export const capitalize = (input: string) => {
 };
 
 export const createDOMWidget = (
-  name: string,
   type: CustomWidgetName,
   element: HTMLDivElement,
   node: NodeType,
   options: CustomWidgetOptions = undefined,
 ) => {
   getLFManager().log(`Creating '${type}'`, { element });
+  try {
+    const { nodeData } = Object.getPrototypeOf(node).constructor as NodeType;
+    let name = DEFAULT_WIDGET_NAME;
 
-  return node.addDOMWidget(name, type, element, options);
+    for (const key in nodeData.input) {
+      if (Object.prototype.hasOwnProperty.call(nodeData.input, key)) {
+        const input = nodeData.input[key as keyof Input];
+
+        for (const key in input) {
+          if (Object.prototype.hasOwnProperty.call(input, key)) {
+            const element = Array.from(input[key]);
+            if (element[0] === type) {
+              name = key;
+              break;
+            }
+          }
+        }
+        if (name) {
+          break;
+        }
+      }
+    }
+
+    return node.addDOMWidget(name, type, element, options);
+  } catch (error) {
+    getLFManager().log(
+      `Couldn't find a widget of type ${type}`,
+      { error, node },
+      LogSeverity.Warning,
+    );
+    return node.addDOMWidget(DEFAULT_WIDGET_NAME, type, element, options);
+  }
 };
 
 export const findWidget = <T extends CustomWidgetName>(
@@ -60,13 +89,10 @@ export const getApiRoutes = () => {
 export const getCustomWidget = <T extends CustomWidgetName>(
   node: NodeType,
   type: T,
-  addW?: BaseWidgetCallback<T>,
 ): CustomWidgetMap[T] => {
-  return (
-    (node?.widgets?.find(
-      (w) => w.type.toLowerCase() === type.toLowerCase(),
-    ) as CustomWidgetMap[T]) || (addW ? (addW(node, type).widget as CustomWidgetMap[T]) : undefined)
-  );
+  return node?.widgets?.find(
+    (w) => w.type.toLowerCase() === type.toLowerCase(),
+  ) as CustomWidgetMap[T];
 };
 
 export const getInput = (node: NodeType, type: ComfyWidgetName | CustomWidgetName): SlotInfo => {
@@ -232,7 +258,7 @@ export const unescapeJson = (input: any): UnescapeJSONPayload => {
   try {
     parsedJson = JSON.parse(input);
     validJson = true;
-    parsedJson = deepParse(parsedJson); // Parse nested JSON if found
+    parsedJson = deepParse(parsedJson);
     unescapedStr = JSON.stringify(parsedJson, null, 2);
   } catch (error) {
     if (typeof input === 'object' && input !== null) {

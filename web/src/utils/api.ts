@@ -20,11 +20,11 @@ const DUMMY_PROPS: Partial<HTMLKulCardElement> = {
 
 export const cardPlaceholders = (widget: CardWidget | CardsWithChipWidget, count: number) => {
   const dummyValue: CardWidgetDeserializedValue = {
-    propsArray: [],
+    props: [],
   };
 
   for (let index = 0; index < count; index++) {
-    dummyValue.propsArray.push(DUMMY_PROPS);
+    dummyValue.props.push(DUMMY_PROPS);
   }
   widget.options.setValue(JSON.stringify(dummyValue));
 };

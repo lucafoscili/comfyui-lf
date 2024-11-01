@@ -29,7 +29,7 @@ export const codeFactory = {
                             code.kulValue = u.unescapedStr || '{}';
                             break;
                         default:
-                            code.kulValue = v || '';
+                            code.kulValue = typeof v === 'string' ? v : '';
                             break;
                     }
                 };
@@ -37,7 +37,7 @@ export const codeFactory = {
             },
         };
     },
-    render: (node, name) => {
+    render: (node) => {
         const wrapper = document.createElement('div');
         const content = document.createElement('div');
         const code = document.createElement('kul-code');
@@ -59,6 +59,6 @@ export const codeFactory = {
         }
         content.appendChild(code);
         wrapper.appendChild(content);
-        return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };
+        return { widget: createDOMWidget(TYPE, wrapper, node, options) };
     },
 };

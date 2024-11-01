@@ -1,11 +1,12 @@
-import { BaseEventPayload, EventName } from './events';
+import { EventPayload, EventName } from './events';
 import { KulDataDataset } from './ketchup-lite/components';
 import { Extension } from './nodes';
+import { CustomWidgetName } from './widgets';
 export interface ComfyAPIs {
     analytics: AnalyticsAPIs;
     backup: BackupAPIs;
     metadata: MetadataAPIs;
-    event: <T extends BaseEventPayload>(name: EventName, callback: (event: CustomEvent<T>) => void) => void;
+    event: <P extends EventPayload<CustomWidgetName>>(name: EventName, callback: (event: CustomEvent<P>) => void) => void;
     fetch: (body: unknown) => Promise<Response>;
     getLinkById: (id: string) => LinkInfo;
     getNodeById: (id: string) => NodeType;
@@ -64,3 +65,4 @@ export interface GetMetadataAPIPayload extends BaseAPIPayload {
 export type TooltipUploadCallback = (b64image: string) => void;
 export type TooltipCallbacks = TooltipUploadCallback;
 export type TooltipLayouts = 'upload';
+export type ExtensionCallback = (node: NodeType) => void;

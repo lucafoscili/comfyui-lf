@@ -32,18 +32,19 @@ export const countBarChartFactory: CountBarChartWidgetFactory = {
       },
       getValue() {
         return {
-          chartDataset: chart.kulData || {},
-          chipDataset: chip.kulData || {},
+          datasets: {
+            chart: chart.kulData || {},
+            chip: chip.kulData || {},
+          },
         };
       },
       setValue(value) {
         const callback: NormalizeValueCallback<
           CustomWidgetDeserializedValuesMap<typeof TYPE> | string
         > = (_, u) => {
-          const { chartDataset, chipDataset } =
-            u.parsedJson as CountBarChartWidgetDeserializedValue;
-          chart.kulData = chartDataset || {};
-          chip.kulData = chipDataset || {};
+          const { datasets } = u.parsedJson as CountBarChartWidgetDeserializedValue;
+          chart.kulData = datasets?.chart || {};
+          chip.kulData = datasets?.chip || {};
           button.classList.remove(countBarChartFactory.cssClasses.buttonHidden);
         };
         const onException = () => {
@@ -54,7 +55,7 @@ export const countBarChartFactory: CountBarChartWidgetFactory = {
       },
     };
   },
-  render: (node, name) => {
+  render: (node) => {
     const wrapper = document.createElement('div');
     const content = document.createElement('div');
     const grid = document.createElement('div');
@@ -93,7 +94,7 @@ export const countBarChartFactory: CountBarChartWidgetFactory = {
     content.appendChild(grid);
     wrapper.appendChild(content);
 
-    return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };
+    return { widget: createDOMWidget(TYPE, wrapper, node, options) };
   },
 };
 

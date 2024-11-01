@@ -49,11 +49,11 @@ export const controlPanelFactory = {
             },
         };
     },
-    render: (node, name) => {
+    render: (node) => {
         const wrapper = document.createElement('div');
         const options = controlPanelFactory.options();
         contentCb(wrapper, false);
-        return { widget: createDOMWidget(name, TYPE, wrapper, node, options) };
+        return { widget: createDOMWidget(TYPE, wrapper, node, options) };
     },
 };
 const readyCb = (domWidget) => {
