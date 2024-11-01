@@ -5,8 +5,9 @@
 
 ## Version 5.1.0 [BREAKING CHANGES] *(2024-11-01)*
 
-Versions 5.0.0 and 5.1.0 have seen a major refactoring that completely overhauled the code to make it more DRY and maintainable.  
-This documentation was written prior to the release of the aforementioned majors so it's outdated - it will be updated in the future.
+Versions 5.0.0 and 5.1.0 have seen a major refactoring that completely overhauled the code to make it more DRY and maintainable. This was necessary to guarantee smooth maintenance and upgrades of the features.
+
+The documentation below was written prior to the release of the aforementioned versions, so it's outdated—it will be updated in the future.
 
 ## Overview
 
