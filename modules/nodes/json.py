@@ -274,7 +274,7 @@ class LF_SetValueInJSON:
                 "value": ("STRING", {"tooltip": "Value to set. Can be a list in string form."}),
             },
             "optional": {
-                "ui_widget": ("KUL_CODE", { "default": {} }),
+                "ui_widget": ("KUL_CODE", { "default": "" }),
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
@@ -329,7 +329,7 @@ class LF_ShuffleJSONKeys:
                 "seed": ("INT", {"default": 0, "min": 0, "max": INT_MAX, "tooltip": "Seed for the random shuffle."})
             },
             "optional": {
-                "ui_widget": ("KUL_CODE", { "default": {} }),
+                "ui_widget": ("KUL_CODE", { "default": "" }),
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
@@ -380,7 +380,7 @@ class LF_SortJSONKeys:
                 "mutate_source": ("BOOLEAN", {"default": False, "tooltip": "Sorts the input JSON in place without creating a new dictionary as a copy."})
             },
             "optional": {
-                "ui_widget": ("KUL_CODE", { "default": {} }),
+                "ui_widget": ("KUL_CODE", { "default": "" }),
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
@@ -423,7 +423,7 @@ class LF_StringToJSON:
                 "string": ("STRING", {"default": "{}", "multiline": True, "tooltip": "Stringified JSON"}),
             },
             "optional": {
-                "ui_widget": ("KUL_CODE", { "default": {} }),
+                "ui_widget": ("KUL_CODE", { "default": "" }),
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"

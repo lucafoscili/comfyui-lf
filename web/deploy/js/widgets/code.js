@@ -49,6 +49,7 @@ export const codeFactory = {
             case NodeName.displayPrimitiveAsJson:
             case NodeName.shuffleJsonKeys:
             case NodeName.sortJsonKeys:
+            case NodeName.stringToJson:
                 code.kulLanguage = 'json';
                 code.kulValue = '{}';
                 break;

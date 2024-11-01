@@ -236,7 +236,7 @@ class LF_DisplayPrimitiveAsJSON:
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}displayprimitiveasjson", {
             "node": kwargs.get("node_id"),
-            "dataset": dataset,
+            "value": dataset,
         })
 
         return (dataset,)
@@ -422,6 +422,9 @@ class LF_Something2Number:
                 "integer": ("INT", {"tooltip": "Integer value to convert to numbers."}),
                 "float": ("FLOAT", {"tooltip": "Float value to convert to numbers."}),
                 "ui_widget": ("KUL_CODE", {"default": ""}),
+            },
+            "hidden": {
+                "node_id": "UNIQUE_ID"
             }
         }
 
@@ -515,6 +518,9 @@ class LF_Something2String:
                 "float": ("FLOAT", {"tooltip": "Float value to convert to string."}),
                 "integer": ("INT", {"tooltip": "Integer value to convert to string."}),
                 "ui_widget": ("KUL_CODE", {"default": ""}),
+            },
+            "hidden": {
+                "node_id": "UNIQUE_ID"
             }
         }
 
@@ -649,7 +655,10 @@ class LF_WallOfText:
                 "shuffle_inputs": ("BOOLEAN", {"default": False, "tooltip": "Toggle shuffling of input strings."}),
                 "seed": ("INT", {"default": 42, "max": INT_MAX, "tooltip": "Seed to control the randomness of the shuffling."}),
                 "ui_widget": ("KUL_CODE", {"default": ""}),
-            } 
+            },
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
         }
 
     CATEGORY = CATEGORY

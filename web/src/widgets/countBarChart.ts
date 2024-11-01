@@ -32,19 +32,17 @@ export const countBarChartFactory: CountBarChartWidgetFactory = {
       },
       getValue() {
         return {
-          datasets: {
-            chart: chart.kulData || {},
-            chip: chip.kulData || {},
-          },
+          chart: chart.kulData || {},
+          chip: chip.kulData || {},
         };
       },
       setValue(value) {
         const callback: NormalizeValueCallback<
           CustomWidgetDeserializedValuesMap<typeof TYPE> | string
         > = (_, u) => {
-          const { datasets } = u.parsedJson as CountBarChartWidgetDeserializedValue;
-          chart.kulData = datasets?.chart || {};
-          chip.kulData = datasets?.chip || {};
+          const json = u.parsedJson as CountBarChartWidgetDeserializedValue;
+          chart.kulData = json.chart || {};
+          chip.kulData = json.chip || {};
           button.classList.remove(countBarChartFactory.cssClasses.buttonHidden);
         };
         const onException = () => {

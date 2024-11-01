@@ -45,7 +45,7 @@ export const NODE_WIDGET_MAP: NodeWidgetMap = {
   LF_LLMMessenger: [CustomWidgetName.messenger],
   LF_LoadFileOnce: [CustomWidgetName.history],
   LF_LoadImages: [CustomWidgetName.masonry],
-  LF_LoadLoraTags: [CustomWidgetName.code],
+  LF_LoadLoraTags: [CustomWidgetName.cardsWithChip],
   LF_LoadMetadata: [CustomWidgetName.code, CustomWidgetName.upload],
   LF_LoraAndEmbeddingSelector: [CustomWidgetName.card],
   LF_LoraSelector: [CustomWidgetName.card],

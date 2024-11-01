@@ -22,17 +22,15 @@ export const countBarChartFactory = {
             },
             getValue() {
                 return {
-                    datasets: {
-                        chart: chart.kulData || {},
-                        chip: chip.kulData || {},
-                    },
+                    chart: chart.kulData || {},
+                    chip: chip.kulData || {},
                 };
             },
             setValue(value) {
                 const callback = (_, u) => {
-                    const { datasets } = u.parsedJson;
-                    chart.kulData = datasets?.chart || {};
-                    chip.kulData = datasets?.chip || {};
+                    const json = u.parsedJson;
+                    chart.kulData = json.chart || {};
+                    chip.kulData = json.chip || {};
                     button.classList.remove(countBarChartFactory.cssClasses.buttonHidden);
                 };
                 const onException = () => {

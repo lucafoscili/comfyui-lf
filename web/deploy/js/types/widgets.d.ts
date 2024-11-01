@@ -257,10 +257,8 @@ export type CountBarChartWidgetSetter = () => {
     [CustomWidgetName.countBarChart]: BaseWidgetCallback<CustomWidgetName.countBarChart>;
 };
 export type CountBarChartWidgetDeserializedValue = {
-    datasets: {
-        chart: KulDataDataset;
-        chip: KulDataDataset;
-    };
+    chart: KulDataDataset;
+    chip: KulDataDataset;
 };
 export interface HistoryWidget extends Widget {
     options: HistoryWidgetOptions;

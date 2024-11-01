@@ -159,7 +159,7 @@ class LF_LoadLoraTags:
                 "tags": ("STRING", {"default": '', "multiline": True, "tooltip": "Text containing LoRA tags, e.g., <lora:example:1.0>"}),
             },
             "optional": {
-                "ui_widget": ("KUL_CODE", {"default": ""})
+                "ui_widget": ("KUL_CARDS_WITH_CHIP", {"default": ""})
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"

@@ -13,21 +13,14 @@ export type EventName = {
 export type EventPayload<W extends CustomWidgetName> = WidgetPayloadMap[W];
 export type WidgetPayloadFor<T extends CustomWidgetName> = WidgetPayloadMap[T];
 export type WidgetPayloadMap = {
-    [W in CustomWidgetName]: W extends CustomWidgetName.card ? CardPayload : W extends CustomWidgetName.cardsWithChip ? CardPayload : W extends CustomWidgetName.chip ? SingleDatasetPayload : W extends CustomWidgetName.code ? CodePayload : W extends CustomWidgetName.compare ? SingleDatasetPayload : W extends CustomWidgetName.controlPanel ? BaseEventPayload : W extends CustomWidgetName.countBarChart ? SingleDatasetPayload : W extends CustomWidgetName.history ? SingleDatasetPayload : W extends CustomWidgetName.textarea ? SingleDatasetPayload : W extends CustomWidgetName.masonry ? MasonryPayload : W extends CustomWidgetName.messenger ? SingleDatasetPayload : W extends CustomWidgetName.progressbar ? ProgressbarPayload : W extends CustomWidgetName.tabBarChart ? MultiDatasetPayload : W extends CustomWidgetName.tree ? SingleDatasetPayload : W extends CustomWidgetName.upload ? BaseEventPayload : never;
+    [W in CustomWidgetName]: W extends CustomWidgetName.card ? CardPayload : W extends CustomWidgetName.cardsWithChip ? CardPayload : W extends CustomWidgetName.code ? StringPayload : W extends CustomWidgetName.compare ? SingleDatasetPayload : W extends CustomWidgetName.countBarChart ? MultiDatasetPayload : W extends CustomWidgetName.history ? SingleDatasetPayload : W extends CustomWidgetName.masonry ? MasonryPayload : W extends CustomWidgetName.progressbar ? ProgressbarPayload : W extends CustomWidgetName.tabBarChart ? MultiDatasetPayload : W extends CustomWidgetName.tree ? SingleDatasetPayload : W extends CustomWidgetName.upload ? StringPayload : BaseEventPayload;
 };
-export interface ProgressbarPayload extends BaseEventPayload {
-    bool: boolean;
-    roll?: number;
-}
 export interface CardPayload extends BaseEventPayload {
     datasets: KulDataDataset[];
     apiFlags: boolean[];
     hashes: string[];
     paths: string[];
     chip?: KulDataDataset;
-}
-export interface CodePayload extends BaseEventPayload {
-    value: string;
 }
 export interface MasonryPayload extends SingleDatasetPayload {
     index: number;
@@ -46,7 +39,14 @@ export interface NotifyPayload extends BaseEventPayload {
     tag: string;
     title: string;
 }
+export interface ProgressbarPayload extends BaseEventPayload {
+    bool: boolean;
+    roll?: number;
+}
 export interface SingleDatasetPayload extends BaseEventPayload {
     dataset: KulDataDataset;
+}
+export interface StringPayload extends BaseEventPayload {
+    value: string;
 }
 export {};

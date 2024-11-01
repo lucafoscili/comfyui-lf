@@ -1,6 +1,7 @@
 import { controlPanelFactory } from '../widgets/controlPanel.js';
 import { codeFactory } from '../widgets/code.js';
 import {
+  CardsWithChipWidget,
   CardsWithChipWidgetDeserializedValue,
   CardWidget,
   CustomWidgetName,
@@ -42,7 +43,7 @@ export class LFWidgets {
   }
 
   decorators = {
-    card: (payload: CardPayload, widget: CardWidget) => {
+    card: <W extends CardWidget | CardsWithChipWidget>(payload: CardPayload, widget: W) => {
       const { apiFlags, datasets, hashes, paths, chip } = payload;
 
       cardPlaceholders(widget as CardWidget, 1);
@@ -195,7 +196,7 @@ export class LFWidgets {
           case CustomWidgetName.card:
           case CustomWidgetName.cardsWithChip:
             if (widget && 'apiFlags' in payload) {
-              this.decorators.card(payload, widget as CardWidget);
+              this.decorators.card(payload, widget as CardWidget | CardsWithChipWidget);
             }
             break;
           case CustomWidgetName.code:
@@ -211,6 +212,7 @@ export class LFWidgets {
               widget.options.setValue(JSON.stringify(payload));
             }
             break;
+          case CustomWidgetName.countBarChart:
           case CustomWidgetName.tabBarChart:
             if (widget && 'datasets' in payload) {
               const { datasets } = payload;

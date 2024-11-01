@@ -26,24 +26,16 @@ export type WidgetPayloadMap = {
     ? CardPayload
     : W extends CustomWidgetName.cardsWithChip
     ? CardPayload
-    : W extends CustomWidgetName.chip
-    ? SingleDatasetPayload
     : W extends CustomWidgetName.code
-    ? CodePayload
+    ? StringPayload
     : W extends CustomWidgetName.compare
     ? SingleDatasetPayload
-    : W extends CustomWidgetName.controlPanel
-    ? BaseEventPayload
     : W extends CustomWidgetName.countBarChart
-    ? SingleDatasetPayload
+    ? MultiDatasetPayload
     : W extends CustomWidgetName.history
-    ? SingleDatasetPayload
-    : W extends CustomWidgetName.textarea
     ? SingleDatasetPayload
     : W extends CustomWidgetName.masonry
     ? MasonryPayload
-    : W extends CustomWidgetName.messenger
-    ? SingleDatasetPayload
     : W extends CustomWidgetName.progressbar
     ? ProgressbarPayload
     : W extends CustomWidgetName.tabBarChart
@@ -51,18 +43,9 @@ export type WidgetPayloadMap = {
     : W extends CustomWidgetName.tree
     ? SingleDatasetPayload
     : W extends CustomWidgetName.upload
-    ? BaseEventPayload
-    : never;
+    ? StringPayload
+    : BaseEventPayload;
 };
-
-/*-------------------------------------------------------------------*/
-/*            B o o l e a n   V i e w e r   P a y l o a d            */
-/*-------------------------------------------------------------------*/
-
-export interface ProgressbarPayload extends BaseEventPayload {
-  bool: boolean;
-  roll?: number;
-}
 
 /*-------------------------------------------------------------------*/
 /*                     C a r d   P a y l o a d                       */
@@ -74,14 +57,6 @@ export interface CardPayload extends BaseEventPayload {
   hashes: string[];
   paths: string[];
   chip?: KulDataDataset;
-}
-
-/*-------------------------------------------------------------------*/
-/*                     C o d e   P a y l o a d                       */
-/*-------------------------------------------------------------------*/
-
-export interface CodePayload extends BaseEventPayload {
-  value: string;
 }
 
 /*-------------------------------------------------------------------*/
@@ -115,9 +90,26 @@ export interface NotifyPayload extends BaseEventPayload {
 }
 
 /*-------------------------------------------------------------------*/
+/*              P r o g r e s s b a r   P a y l o a d                */
+/*-------------------------------------------------------------------*/
+
+export interface ProgressbarPayload extends BaseEventPayload {
+  bool: boolean;
+  roll?: number;
+}
+
+/*-------------------------------------------------------------------*/
 /*            S i n g l e   D a t a s e t   P a y l o a d            */
 /*-------------------------------------------------------------------*/
 
 export interface SingleDatasetPayload extends BaseEventPayload {
   dataset: KulDataDataset;
+}
+
+/*-------------------------------------------------------------------*/
+/*                   S t r i n g   P a y l o a d                     */
+/*-------------------------------------------------------------------*/
+
+export interface StringPayload extends BaseEventPayload {
+  value: string;
 }

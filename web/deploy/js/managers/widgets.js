@@ -163,6 +163,7 @@ export class LFWidgets {
                                 widget.options.setValue(JSON.stringify(payload));
                             }
                             break;
+                        case CustomWidgetName.countBarChart:
                         case CustomWidgetName.tabBarChart:
                             if (widget && 'datasets' in payload) {
                                 const { datasets } = payload;
