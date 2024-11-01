@@ -135,7 +135,7 @@ class LF_IsLandscape:
                 "image": ("IMAGE", {"tooltip": "Input image/images."})
             },
             "optional": {
-                "ui_widget": ("KUL_PROGRESSBAR", {"default": {}}),
+                "ui_widget": ("KUL_TREE", {"default": {}}),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -166,10 +166,11 @@ class LF_IsLandscape:
             _, height, width, _ = img.shape
             heights_list.append(height)
             widths_list.append(width)
-            is_landscape_list.append(width >= height)
-            nodes.append({"icon": "check" if width >= height else "clear",
+            result = width >= height
+            is_landscape_list.append(result)
+            nodes.append({"icon": "check" if result else "clear",
                           "id": counter, 
-                          "value": f"Image {counter}: {str(width >= height)}"})
+                          "value": f"Image {counter}: {str(result)}"})
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}islandscape", {
             "node": kwargs.get("node_id"),

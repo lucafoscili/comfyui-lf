@@ -3,6 +3,11 @@
 
 ![LFNodes](https://github.com/lucafoscili/comfyui-lf/blob/a7ef3c6e62c266b9f09f2f843e8f8590663f6bb6/docs/images/LFNodes.png "Repo logo")
 
+## Version 5.1.0 [BREAKING CHANGES] *(2024-11-01)*
+
+Versions 5.0.0 and 5.1.0 have seen a major refactoring that completely overhauled the code to make it more DRY and maintainable.  
+This documentation was written prior to the release of the aforementioned majors so it's outdated - it will be updated in the future.
+
 ## Overview
 
 A suite of custom nodes for [ComfyUI](https://github.com/comfyanonymous/ComfyUI) aimed at enhancing user experience with more interactive and visually engaging widgets.
@@ -29,6 +34,7 @@ That's a tough one—the nodes span quite a few categories. Here's a quick break
 ## Table of Contents
 
 - [LF Nodes for ComfyUI](#lf-nodes-for-comfyui)
+  - [Version 5.1.0 \[BREAKING CHANGES\] *(2024-11-01)*](#version-510-breaking-changes-2024-11-01)
   - [Overview](#overview)
   - [What kind of nodes does it offer?](#what-kind-of-nodes-does-it-offer)
   - [Table of Contents](#table-of-contents)

@@ -425,7 +425,7 @@ class LF_SaveImageForCivitAI:
             },
             "optional": {
                 "civitai_metadata": ("STRING", {"defaultInput": True, "tooltip": "String containing CivitAI compatible metadata (created by the node LF_CivitAIMetadataSetup)."}),
-                "ui_widget": ("KUL_CODE", {"defaultInput": ""}),
+                "ui_widget": ("KUL_MASONRY", {"default": {}}),
             },
             "hidden": {
                 "extra_pnginfo": "EXTRA_PNGINFO",
