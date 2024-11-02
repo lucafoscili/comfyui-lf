@@ -3,22 +3,23 @@ import shutil
 
 from aiohttp import web
 from datetime import datetime
-from folder_paths import get_filename_list, get_full_path
+from folder_paths import get_full_path
 
 from server import PromptServer
 
-from ..utils.constants import API_ROUTE_PREFIX, BACKUP_FOLDER, BACKUP_PATH, BASE_PATH
+from ..utils.constants import API_ROUTE_PREFIX, BACKUP_FOLDER
+from ..utils.helpers import get_comfy_dir, get_comfy_list
 
 @PromptServer.instance.routes.post(f"{API_ROUTE_PREFIX}/new-backup")
 async def backup_usage_analytics(request):
     try:
-        os.makedirs(BACKUP_PATH, exist_ok=True)
+        os.makedirs(get_comfy_dir("backup"), exist_ok=True)
         
         r = await request.post()
         backup_type = r.get('backup_type', 'automatic')
         
         if backup_type == 'automatic':
-            for folder_name in os.listdir(BACKUP_PATH):
+            for folder_name in os.listdir(get_comfy_dir("backup")):
                 if folder_name.startswith('automatic_'):
                     folder_date_str = folder_name.split('_')[1]
                     folder_date = datetime.strptime(folder_date_str, '%Y%m%d')
@@ -30,7 +31,7 @@ async def backup_usage_analytics(request):
                         }, status=200)
         
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        backup_folder = os.path.join(BACKUP_PATH, f"{backup_type}_{timestamp}")
+        backup_folder = os.path.join(get_comfy_dir("backup"), f"{backup_type}_{timestamp}")
         os.makedirs(backup_folder, exist_ok=True)
         
         models_backup_folder = os.path.join(backup_folder, "models")
@@ -41,9 +42,9 @@ async def backup_usage_analytics(request):
         backed_up_files = []
 
         directories = [
-            ("checkpoints", get_filename_list("checkpoints")),
-            ("embeddings", get_filename_list("embeddings")),
-            ("loras", get_filename_list("loras"))
+            ("checkpoints", get_comfy_list("checkpoints")),
+            ("embeddings", get_comfy_list("embeddings")),
+            ("loras", get_comfy_list("loras"))
         ]
         
         for folder_name, directory in directories:
@@ -65,7 +66,7 @@ async def backup_usage_analytics(request):
                     shutil.copy2(info_file_path, backup_path)
                     backed_up_files.append(backup_path)
 
-        for root, _, files in os.walk(BASE_PATH):
+        for root, _, files in os.walk(get_comfy_dir("base")):
             if BACKUP_FOLDER in root:
                 continue
             
@@ -73,7 +74,7 @@ async def backup_usage_analytics(request):
                 full_path = os.path.join(root, file_name)
                 
                 if os.path.exists(full_path) and file_name.endswith(".json"):
-                    relative_path = os.path.relpath(full_path, BASE_PATH)
+                    relative_path = os.path.relpath(full_path, get_comfy_dir("base"))
                     backup_path = os.path.join(analytics_backup_folder, relative_path)
                     backup_dir = os.path.dirname(backup_path)
                     

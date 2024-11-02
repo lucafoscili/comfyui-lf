@@ -15,15 +15,12 @@ import torch
 import urllib
 
 from datetime import datetime
-from folder_paths import get_save_image_path
+from folder_paths import get_filename_list, get_input_directory, get_output_directory, get_save_image_path, get_temp_directory, get_user_directory
 from PIL import Image
 from PIL.ExifTags import TAGS
 from torchvision.transforms import InterpolationMode, functional
 
-
-from server import PromptServer
-
-from ..utils.constants import BASE64_PNG_PREFIX, BASE_TEMP_PATH, USER_FOLDER
+from ..utils.constants import BACKUP_FOLDER, BASE64_PNG_PREFIX, USER_FOLDER
 
 # region base64_to_tensor
 def base64_to_tensor(base64_str):
@@ -502,6 +499,82 @@ def get_embedding_hashes(embeddings: str, analytics_dataset: dict):
                 except Exception as e:
                     emb_hashes.append(f"{emb_name}: Unknown")
     return emb_hashes
+# endregion
+# region get_comfy_dir
+def get_comfy_dir(folder: str):
+    """
+    Retrieve the directory path corresponding to a specified folder type.
+
+    This function returns the full path of directories for various folder types used
+    within the application. It uses predefined constants for folder names.
+
+    Args:
+        folder (str): The type of folder whose path is required. Valid values include:
+            - "backup": Returns path to the backup folder.
+            - "base": Returns path to the base user directory.
+            - "input": Returns path to the input directory.
+            - "output": Returns path to the output directory.
+            - "temp": Returns path to the temporary directory.
+            - "user": Returns path to the user directory.
+
+    Returns:
+        str: The path to the requested folder type.
+
+    Raises:
+        ValueError: If the folder type is invalid or unsupported.
+
+    Examples:
+        >>> get_directory("input")
+        '/path/to/input/directory'
+
+        >>> get_directory("user")
+        '/path/to/user/directory'
+    """
+    if folder == "backup":
+        dirpath = os.path.join(get_user_directory(), USER_FOLDER)
+        return os.path.join(dirpath, BACKUP_FOLDER)
+    if folder == "base":
+        return os.path.join(get_user_directory(), USER_FOLDER)
+    if folder == "input":
+        return get_input_directory()
+    elif folder == "output":
+        return get_output_directory()
+    elif folder == "temp":
+        return get_temp_directory()
+    elif folder == "user":
+        return get_user_directory()
+# endregion
+# region get_comfy_list
+def get_comfy_list(folder: str):
+    """
+    Retrieve a list of filenames from a specified folder.
+
+    This function is a wrapper around `get_filename_list` from the `folder_paths` module.
+    It retrieves and returns a list of filenames for different types of folders used in the ComfyUI project.
+
+    Args:
+        folder (str): The type of folder to retrieve filenames from. Can be one of:
+            - "checkpoints": For model checkpoint files
+            - "embeddings": For embedding files
+            - "loras": For LoRA (Low-Rank Adaptation) files
+            - "upscale_models": For upscale models
+            - "vae": For VAEs
+            - Other folder types as defined in the project structure
+
+    Returns:
+        list[str]: A list of filenames in the specified folder.
+
+    Notes:
+        - The function uses caching mechanisms to improve performance for repeated calls.
+        - It handles legacy folder mappings and ensures consistent behavior across different project versions.
+        - The returned list contains only the filenames, without full paths.
+
+    Examples:
+        >>> CHECKPOINTS = get_list("checkpoints")
+        >>> EMBEDDINGS = get_list("embeddings")
+        >>> LORAS = get_list("loras")
+    """    
+    return get_filename_list(folder)
 # endregion
 # region get_lora_hashes
 def get_lora_hashes(lora_tags: str, analytics_dataset: dict):
@@ -1196,7 +1269,7 @@ def resize_to_square(image_tensor: torch.Tensor, square_size: int, resample_meth
     return cropped_img
 # endregion
 # region resolve_filepath
-def resolve_filepath(filepath: str = USER_FOLDER, base_output_path: str = BASE_TEMP_PATH, index: int = 0, add_timestamp: bool = False, default_filename: str = "ComfyUI", extension: str = "PNG", add_counter: bool = True) -> str:
+def resolve_filepath(filepath: str = USER_FOLDER, base_output_path: str = get_comfy_dir("temp"), index: int = 0, add_timestamp: bool = False, default_filename: str = "ComfyUI", extension: str = "PNG", add_counter: bool = True) -> str:
     """
     Simplified helper function using ComfyUI's core image-saving logic, ensuring folder and filename separation.
     

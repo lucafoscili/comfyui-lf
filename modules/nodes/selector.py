@@ -2,15 +2,17 @@ import random
 
 from server import PromptServer
 
-from ..utils.constants import CATEGORY_PREFIX, CHECKPOINTS, EMBEDDINGS, EVENT_PREFIX, FUNCTION, INT_MAX, LORAS, SAMPLERS, SCHEDULERS, UPSCALERS, VAES
-from ..utils.helpers import create_history_node, filter_list, is_none, normalize_json_input, normalize_list_to_value, prepare_model_dataset, process_model
+from ..utils.constants import CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, INT_MAX, SAMPLERS, SCHEDULERS
+from ..utils.helpers import create_history_node, filter_list, get_comfy_list, is_none, normalize_json_input, normalize_list_to_value, prepare_model_dataset, process_model
 
 CATEGORY = f"{CATEGORY_PREFIX}/Selectors"
 
 # region LF_CheckpointSelector
 class LF_CheckpointSelector:
+    initial_list = get_comfy_list("checkpoints")
+
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
                 "get_civitai_info": ("BOOLEAN", {"default": True, "tooltip": "Attempts to retrieve more info about the model from CivitAI."}),
@@ -19,7 +21,7 @@ class LF_CheckpointSelector:
                 "seed": ("INT", {"default": 42, "min": 0, "max": INT_MAX, "tooltip": "Seed value for when randomization is active."}),
             },
             "optional": {
-                "checkpoint": (["None"] + CHECKPOINTS, {"default": "None", "tooltip": "Checkpoint used to generate the image."}),
+                "checkpoint": (["None"] + self.initial_list, {"default": "None", "tooltip": "Checkpoint used to generate the image."}),
                 "ui_widget": ("KUL_CARD", {"default": {}}),
             },
             "hidden": {
@@ -30,7 +32,7 @@ class LF_CheckpointSelector:
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
     RETURN_NAMES = ("combo", "string", "path", "image")
-    RETURN_TYPES = (CHECKPOINTS, "STRING", "STRING", "IMAGE")
+    RETURN_TYPES = (initial_list, "STRING", "STRING", "IMAGE")
 
     def on_exec(self, **kwargs: dict):
         checkpoint: str = normalize_list_to_value(kwargs.get("checkpoint"))
@@ -42,7 +44,7 @@ class LF_CheckpointSelector:
         if is_none(checkpoint):
             checkpoint = None 
         
-        checkpoints = CHECKPOINTS
+        checkpoints = get_comfy_list("checkpoints")
 
         if randomize:
             if filter:
@@ -82,8 +84,10 @@ class LF_CheckpointSelector:
 # endregion
 # region LF_EmbeddingSelector
 class LF_EmbeddingSelector:
+    initial_list = get_comfy_list("embeddings")
+
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
                 "get_civitai_info": ("BOOLEAN", {"default": True, "tooltip": "Attempts to retrieve more info about the model from CivitAI."}),
@@ -93,7 +97,7 @@ class LF_EmbeddingSelector:
                 "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter embedding file names. Supports wildcards (*)."}),
             },
             "optional": {
-                "embedding": (["None"] + EMBEDDINGS, {"default": "None", "tooltip": "Embedding to use."}),
+                "embedding": (["None"] + self.initial_list, {"default": "None", "tooltip": "Embedding to use."}),
                 "embedding_stack": ("STRING", {"default": "", "defaultInput": True, "tooltip": "Optional string usable to concatenate subsequent selector nodes."}),
                 "ui_widget": ("KUL_CARD", {"default": {}}),
             },
@@ -105,7 +109,7 @@ class LF_EmbeddingSelector:
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
     RETURN_NAMES = ("combo", "prompt", "string", "path", "image")
-    RETURN_TYPES = (EMBEDDINGS, "STRING", "STRING", "STRING", "IMAGE")
+    RETURN_TYPES = (initial_list, "STRING", "STRING", "STRING", "IMAGE")
 
     def on_exec(self, **kwargs: dict):
         embedding: str = normalize_list_to_value(kwargs.get("embedding"))
@@ -130,7 +134,7 @@ class LF_EmbeddingSelector:
 
             return (None, embedding_stack, "", "", None)
         
-        embeddings = EMBEDDINGS
+        embeddings = get_comfy_list("embeddings")
 
         if randomize:
             if filter:
@@ -175,8 +179,11 @@ class LF_EmbeddingSelector:
 # endregion
 # region LF_LoraAndEmbeddingSelector
 class LF_LoraAndEmbeddingSelector:
+    initial_emb_list = get_comfy_list("embeddings")
+    initial_lora_list = get_comfy_list("loras")
+        
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
                 "get_civitai_info": ("BOOLEAN", {"default": True, "tooltip": "Attempts to retrieve more info about the models from CivitAI."}),
@@ -186,7 +193,7 @@ class LF_LoraAndEmbeddingSelector:
                 "seed": ("INT", {"default": 42, "min": 0, "max": INT_MAX, "tooltip": "Seed value for when randomization is active."}),
             },
             "optional": {
-                "lora": (["None"] + LORAS, {"default": "None", "tooltip": "Lora model to use, it will also select the embedding with the same name."}),
+                "lora": (["None"] + self.initial_lora_list, {"default": "None", "tooltip": "Lora model to use, it will also select the embedding with the same name."}),
                 "lora_stack": ("STRING", {"default": "", "defaultInput": True, "tooltip": "Optional string usable to concatenate subsequent Lora selector nodes."}),
                 "embedding_stack": ("STRING", {"default": "", "defaultInput": True, "tooltip": "Optional string usable to concatenate subsequent embedding selector nodes."}),
                 "ui_widget": ("KUL_CARD", {"default": {}}),
@@ -200,7 +207,7 @@ class LF_LoraAndEmbeddingSelector:
     FUNCTION = FUNCTION
     RETURN_NAMES = ("lora_combo", "emb_combo", "lora_tag", "emb_prompt", "lora_string", "emb_string",
                     "lora_path", "emb_path", "lora_image", "emb_image")
-    RETURN_TYPES = (LORAS, EMBEDDINGS, "STRING", "STRING", "STRING", "STRING",
+    RETURN_TYPES = (initial_lora_list, initial_emb_list, "STRING", "STRING", "STRING", "STRING",
                     "STRING", "STRING", "IMAGE", "IMAGE",)
 
     def on_exec(self, **kwargs: dict):
@@ -227,15 +234,16 @@ class LF_LoraAndEmbeddingSelector:
 
             return (None, None, lora_stack, embedding_stack, "", "", "", "", None, None)
         
-        loras = LORAS
+        EMBEDDINGS = get_comfy_list("embeddings")
+        LORAS = get_comfy_list("loras")
 
         if randomize:
             if filter:
-                loras = filter_list(filter, loras)
-                if not loras:
+                LORAS = filter_list(filter, LORAS)
+                if not LORAS:
                     raise ValueError(f"Not found a model with the specified filter: {filter}")
             random.seed(seed)
-            lora = random.choice(loras)
+            lora = random.choice(LORAS)
 
         embedding = lora
         if embedding not in EMBEDDINGS:
@@ -292,8 +300,10 @@ class LF_LoraAndEmbeddingSelector:
 # endregion
 # region LF_LoraSelector
 class LF_LoraSelector:
+    initial_list = get_comfy_list("loras")
+        
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
                 "get_civitai_info": ("BOOLEAN", {"default": True, "tooltip": "Attempts to retrieve more info about the model from CivitAI."}),
@@ -303,7 +313,7 @@ class LF_LoraSelector:
                 "seed": ("INT", {"default": 42, "min": 0, "max": INT_MAX, "tooltip": "Seed value for when randomization is active."}),
             },
             "optional": {
-                "lora": (["None"] + LORAS, {"default": "None", "tooltip": "Lora model to use."}),
+                "lora": (["None"] + self.initial_list, {"default": "None", "tooltip": "Lora model to use."}),
                 "lora_stack": ("STRING", {"default": "", "defaultInput": True, "tooltip": "Optional string usable to concatenate subsequent selector nodes."}),
                 "ui_widget": ("KUL_CARD", {"default": {}}),
             },
@@ -315,7 +325,7 @@ class LF_LoraSelector:
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
     RETURN_NAMES = ("lora", "lora_tag", "lora_name", "model_path", "model_cover")
-    RETURN_TYPES = (LORAS, "STRING", "STRING", "STRING", "IMAGE")
+    RETURN_TYPES = (initial_list, "STRING", "STRING", "STRING", "IMAGE")
 
     def on_exec(self, **kwargs: dict):
         lora: str = normalize_list_to_value(kwargs.get("lora"))
@@ -340,7 +350,7 @@ class LF_LoraSelector:
 
             return (None, lora_stack, "", "", None)
         
-        loras = LORAS
+        loras = get_comfy_list("loras")
 
         if randomize:
             if filter:
@@ -418,8 +428,8 @@ class LF_SamplerSelector:
         
         samplers = SAMPLERS
 
-        nodes = ui_widget.get("nodes", [])
-        dataset = {
+        nodes: list[dict] = ui_widget.get("nodes", [])
+        dataset: dict = {
             "nodes": nodes
         }
 
@@ -474,8 +484,8 @@ class LF_SchedulerSelector:
 
         schedulers = SCHEDULERS
 
-        nodes = ui_widget.get("nodes", [])
-        dataset = {
+        nodes: list[dict] = ui_widget.get("nodes", [])
+        dataset: dict = {
             "nodes": nodes
         }
 
@@ -499,8 +509,10 @@ class LF_SchedulerSelector:
 # endregion
 # region LF_UpscaleModelSelector
 class LF_UpscaleModelSelector:
+    initial_list = get_comfy_list("upscale_models")
+        
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
                 "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
@@ -510,7 +522,7 @@ class LF_UpscaleModelSelector:
             },
             "optional": {
                 "ui_widget": ("KUL_HISTORY", {"default": {}}),
-                "upscale_model": (["None"] + UPSCALERS, {"default": "None", "tooltip": "Upscale model used to upscale the image."}),
+                "upscale_model": (["None"] + self.initial_list, {"default": "None", "tooltip": "Upscale model used to upscale the image."}),
             },
             "hidden": {"node_id": "UNIQUE_ID"}
         }
@@ -518,7 +530,7 @@ class LF_UpscaleModelSelector:
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
     RETURN_NAMES = ("combo", "string")
-    RETURN_TYPES = (UPSCALERS, "STRING")
+    RETURN_TYPES = (initial_list, "STRING")
         
     def on_exec(self, **kwargs: dict):
         upscale_model: str = normalize_list_to_value(kwargs.get("upscale_model"))
@@ -528,7 +540,7 @@ class LF_UpscaleModelSelector:
         filter: str = normalize_list_to_value(kwargs.get("filter"))
         ui_widget: dict = normalize_json_input(kwargs.get("ui_widget", {}))
 
-        upscalers = UPSCALERS
+        upscalers = get_comfy_list("upscale_models")
 
         nodes: list[dict] = ui_widget.get("nodes", [])
         dataset: dict = {
@@ -555,8 +567,10 @@ class LF_UpscaleModelSelector:
 # endregion
 # region LF_VAESelector
 class LF_VAESelector:
+    initial_list = get_comfy_list("vae")
+        
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
                 "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
@@ -566,7 +580,7 @@ class LF_VAESelector:
             },
             "optional":{
                 "ui_widget": ("KUL_HISTORY", {"default": {}}),
-                "vae": (["None"] + VAES, {"default": "None", "tooltip": "VAE used to generate the image."}),
+                "vae": (["None"] + self.initial_list, {"default": "None", "tooltip": "VAE used to generate the image."}),
             },
             "hidden": {"node_id": "UNIQUE_ID"}
         }
@@ -574,7 +588,7 @@ class LF_VAESelector:
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
     RETURN_NAMES = ("combo", "string")
-    RETURN_TYPES = (VAES, "STRING")
+    RETURN_TYPES = (initial_list, "STRING")
         
     def on_exec(self, **kwargs: dict):
         vae: str = normalize_list_to_value(kwargs.get("vae"))
@@ -584,10 +598,10 @@ class LF_VAESelector:
         filter: str = normalize_list_to_value(kwargs.get("filter"))
         ui_widget: dict = normalize_json_input(kwargs.get("ui_widget", {}))
 
-        vaes = VAES
+        vaes = get_comfy_list("vae")
 
-        nodes = ui_widget.get("nodes", [])
-        dataset = {
+        nodes: list[dict] = ui_widget.get("nodes", [])
+        dataset: dict = {
             "nodes": nodes
         }
 

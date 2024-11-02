@@ -2,8 +2,8 @@ import ast
 import numpy as np
 import random
 
-from ..utils.constants import BASE_TEMP_PATH, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, INT_MAX, USER_FOLDER
-from ..utils.helpers import create_masonry_node, get_resource_url, normalize_input_list, normalize_output_image, numpy_to_tensor, normalize_list_to_value, normalize_json_input, resolve_filepath, tensor_to_pil
+from ..utils.constants import CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, INT_MAX, USER_FOLDER
+from ..utils.helpers import create_masonry_node, get_comfy_dir, get_resource_url, normalize_input_list, normalize_output_image, numpy_to_tensor, normalize_list_to_value, normalize_json_input, resolve_filepath, tensor_to_pil
 
 from server import PromptServer
 
@@ -198,7 +198,10 @@ class LF_ImageListFromJSON:
 
         image = []
         for index in range(num_images):
-            output_file, subfolder, filename = resolve_filepath(f"{USER_FOLDER}", BASE_TEMP_PATH, index, False, "jsonimage_", "PNG", False)
+            output_file, subfolder, filename = resolve_filepath(
+                index=index,
+                default_filename="jsonimage_",
+            )
             url = get_resource_url(subfolder, filename, "temp")
 
             if add_noise:
