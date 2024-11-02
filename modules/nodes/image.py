@@ -555,6 +555,56 @@ class LF_ResizeImageToSquare:
 
         return (image_batch[0], image_list, num_resized)
 # endregion
+# region LF_ViewImages
+class LF_ViewImages:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "image": ("IMAGE", {"tooltip": "Input image tensor or a list of image tensors."}),
+            },
+            "optional": {
+                "ui_widget": ("KUL_MASONRY", {"default": {}})
+            },
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
+        }
+
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    OUTPUT_IS_LIST = (False, True)
+    OUTPUT_NODE = True
+    RETURN_NAMES = ("image", "image_list")
+    RETURN_TYPES = ("IMAGE", "IMAGE")
+
+    def on_exec(self, **kwargs: dict):
+        image: list[torch.Tensor] = normalize_input_image(kwargs.get("image"))
+
+        nodes: list[dict] = []
+        dataset: dict = { "nodes": nodes }
+        
+        for index, img in enumerate(image):
+            output_file, subfolder, filename = resolve_filepath(
+                    index=index,
+                    default_filename="view",
+            )
+            
+            pil_image = tensor_to_pil(img)
+            pil_image.save(output_file, format="PNG")
+            url = get_resource_url(subfolder, filename, "temp")
+
+            nodes.append(create_masonry_node(filename, url, index))
+        
+        batch_list, image_list = normalize_output_image(image)
+
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}viewimages", {
+            "node": kwargs.get("node_id"),
+            "dataset": dataset,
+        })
+        
+        return (batch_list[0], image_list)
+# endregion
 NODE_CLASS_MAPPINGS = {
     "LF_BlurImages": LF_BlurImages,
     "LF_ClarityEffect": LF_ClarityEffect,
@@ -563,6 +613,7 @@ NODE_CLASS_MAPPINGS = {
     "LF_ResizeImageToDimension": LF_ResizeImageToDimension,
     "LF_ResizeImageToSquare": LF_ResizeImageToSquare,
     "LF_ResizeImageByEdge": LF_ResizeImageByEdge,
+    "LF_ViewImages": LF_ViewImages,
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_BlurImages": "Blur images",
@@ -572,4 +623,5 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_ResizeImageToDimension": "Resize image to dimension",
     "LF_ResizeImageToSquare": "Resize image to square",
     "LF_ResizeImageByEdge": "Resize image by edge",
+    "LF_ViewImages": "View images",
 }

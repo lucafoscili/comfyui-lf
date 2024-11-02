@@ -69,6 +69,7 @@ export declare enum NodeName {
     urandomSeedGenerator = "LF_UrandomSeedGenerator",
     usageStatistics = "LF_UsageStatistics",
     vaeSelector = "LF_VAESelector",
+    viewImages = "LF_ViewImages",
     wallOfText = "LF_WallOfText",
     writeJson = "LF_WriteJSON"
 }

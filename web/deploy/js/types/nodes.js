@@ -71,6 +71,7 @@ export var NodeName;
     NodeName["urandomSeedGenerator"] = "LF_UrandomSeedGenerator";
     NodeName["usageStatistics"] = "LF_UsageStatistics";
     NodeName["vaeSelector"] = "LF_VAESelector";
+    NodeName["viewImages"] = "LF_ViewImages";
     NodeName["wallOfText"] = "LF_WallOfText";
     NodeName["writeJson"] = "LF_WriteJSON";
 })(NodeName || (NodeName = {}));

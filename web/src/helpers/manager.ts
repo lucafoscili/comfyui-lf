@@ -82,6 +82,7 @@ export const NODE_WIDGET_MAP: NodeWidgetMap = {
   LF_UsageStatistics: [CustomWidgetName.tabBarChart],
   LF_UrandomSeedGenerator: [CustomWidgetName.tree],
   LF_VAESelector: [CustomWidgetName.history],
+  LF_ViewImages: [CustomWidgetName.masonry],
   LF_WallOfText: [CustomWidgetName.code],
   LF_WriteJSON: [CustomWidgetName.textarea],
 };
