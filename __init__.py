@@ -6,7 +6,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 NODE_CLASS_MAPPINGS = {}
 NODE_DISPLAY_NAME_MAPPINGS = {}
 
-version = "5.1.0"
+version = "5.1.1"
 
 # Directory containing the submodules
 modules_dir = os.path.join(os.path.dirname(__file__), "modules")
