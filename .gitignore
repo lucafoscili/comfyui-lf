@@ -178,6 +178,7 @@ web/deploy/js/ketchup-lite/*showcase*
 !web/deploy/assets/svg/arrow_drop_down.svg
 !web/deploy/assets/svg/audiotrack.svg
 !web/deploy/assets/svg/auto-fix.svg
+!web/deploy/assets/svg/broken_image.svg
 !web/deploy/assets/svg/book-open.svg
 !web/deploy/assets/svg/check.svg
 !web/deploy/assets/svg/chevron_left.svg
