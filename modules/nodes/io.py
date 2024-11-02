@@ -12,8 +12,8 @@ from PIL import Image
 from PIL.PngImagePlugin import PngInfo
 from server import PromptServer
 
-from ..utils.constants import BASE_OUTPUT_PATH, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, BASE_INPUT_PATH
-from ..utils.helpers import create_dummy_image_tensor, create_history_node, create_masonry_node, extract_jpeg_metadata, extract_png_metadata, get_resource_url, normalize_input_image, normalize_input_list, normalize_json_input, normalize_list_to_value, normalize_output_image, pil_to_tensor, resolve_filepath, tensor_to_numpy
+from ..utils.constants import CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION
+from ..utils.helpers import create_dummy_image_tensor, create_history_node, create_masonry_node, extract_jpeg_metadata, extract_png_metadata, get_comfy_dir, get_resource_url, normalize_input_image, normalize_input_list, normalize_json_input, normalize_list_to_value, normalize_output_image, pil_to_tensor, resolve_filepath, tensor_to_numpy
 
 CATEGORY = f"{CATEGORY_PREFIX}/IO Operations"
 
@@ -146,7 +146,7 @@ class LF_LoadImages:
                             file_names.append(file)  
 
                         output_file, subfolder, filename = resolve_filepath(
-                            base_output_path=BASE_INPUT_PATH,
+                            base_output_path=get_comfy_dir("input"),
                             index=index,
                             default_filename=f,
                             extension=e,
@@ -263,7 +263,7 @@ class LF_LoadMetadata:
     def on_exec(self, **kwargs: dict):
         file_names: str = normalize_list_to_value(kwargs.get("file_names"))
 
-        input_dir = BASE_INPUT_PATH
+        input_dir = get_comfy_dir("base")
         metadata_list: list[str] = []
         metadata = ""
 
@@ -461,7 +461,7 @@ class LF_SaveImageForCivitAI:
         for index, img in enumerate(image):
             output_file, subfolder, filename = resolve_filepath(
                 filepath=filepath,
-                base_output_path=BASE_OUTPUT_PATH,
+                base_output_path=get_comfy_dir("output"),
                 index=index,
                 add_timestamp=add_timestamp,
                 extension=extension
@@ -537,7 +537,7 @@ class LF_SaveJSON:
 
         output_file, _, _ = resolve_filepath(
             filepath=filepath,
-            base_output_path=BASE_OUTPUT_PATH,
+            base_output_path=get_comfy_dir("output"),
             add_timestamp=add_timestamp,
             extension="json"
         )
@@ -588,7 +588,7 @@ class LF_SaveMarkdown:
 
         output_file, _, _ = resolve_filepath(
             filepath=filepath,
-            base_output_path=BASE_OUTPUT_PATH,
+            base_output_path=get_comfy_dir("output"),
             add_timestamp=add_timestamp,
             extension="md"
         )

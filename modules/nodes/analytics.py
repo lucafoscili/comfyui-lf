@@ -5,8 +5,8 @@ import torch
 
 from server import PromptServer
 
-from ..utils.constants import BASE_PATH, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, get_usage_filename, get_usage_title
-from ..utils.helpers import normalize_input_image, normalize_json_input, normalize_list_to_value, normalize_output_image
+from ..utils.constants import CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, get_usage_filename, get_usage_title
+from ..utils.helpers import get_comfy_dir, normalize_input_image, normalize_json_input, normalize_list_to_value, normalize_output_image
 
 CATEGORY = f"{CATEGORY_PREFIX}/Analytics"
 
@@ -250,7 +250,7 @@ class LF_UpdateUsageStatistics:
         datasets_dir: str = normalize_list_to_value(kwargs.get("datasets_dir"))
         dataset: dict = normalize_json_input(kwargs.get("dataset"))
         
-        actual_path = os.path.join(BASE_PATH, datasets_dir)
+        actual_path = os.path.join(get_comfy_dir("base"), datasets_dir)
 
         log_title = "# Update summary\n"
         log = ""

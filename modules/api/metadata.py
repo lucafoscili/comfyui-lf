@@ -4,9 +4,10 @@ import os
 import requests
 
 from aiohttp import web
-from folder_paths import get_filename_list, get_full_path
+from folder_paths import get_full_path
 
 from ..utils.constants import API_ROUTE_PREFIX, BASE64_PNG_PREFIX
+from ..utils.helpers import get_comfy_list
 
 from server import PromptServer
 
@@ -14,9 +15,9 @@ from server import PromptServer
 async def clear_model_info(_):
     try:
         directories = [
-            ("checkpoints", get_filename_list("checkpoints")),
-            ("embeddings", get_filename_list("embeddings")),
-            ("loras", get_filename_list("loras"))
+            ("checkpoints", get_comfy_list("checkpoints")),
+            ("embeddings", get_comfy_list("embeddings")),
+            ("loras", get_comfy_list("loras"))
         ]
         
         deleted_files = []

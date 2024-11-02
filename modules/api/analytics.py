@@ -5,7 +5,8 @@ from aiohttp import web
 
 from server import PromptServer
 
-from ..utils.constants import API_ROUTE_PREFIX, BACKUP_FOLDER, BASE_PATH
+from ..utils.constants import API_ROUTE_PREFIX, BACKUP_FOLDER
+from ..utils.helpers import get_comfy_dir
 
 @PromptServer.instance.routes.post(f"{API_ROUTE_PREFIX}/clear-analytics")
 async def clear_usage_analytics(request):
@@ -19,7 +20,7 @@ async def clear_usage_analytics(request):
         
         deleted_files: list[str] = []
         
-        for root, _, files in os.walk(BASE_PATH):
+        for root, _, files in os.walk(get_comfy_dir("base")):
             if BACKUP_FOLDER in root:
                 continue
             
@@ -54,7 +55,7 @@ async def get_usage_analytics(request):
         if not directory or not analytics_type:
             return web.Response(status=500, text=f"Missing directory (received {directory}) or type (received {analytics_type}).")
 
-        analytics_dir = os.path.join(BASE_PATH, directory)
+        analytics_dir = os.path.join(get_comfy_dir("base"), directory)
         
         if not os.path.exists(analytics_dir):
             return web.Response(status=404, text="Directory not found.")

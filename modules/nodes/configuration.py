@@ -7,8 +7,8 @@ from pathlib import Path
 import comfy.sd
 import comfy.utils
 
-from ..utils.constants import ANY, BASE64_PNG_PREFIX, CATEGORY_PREFIX, CHECKPOINTS, EVENT_PREFIX, FUNCTION, INT_MAX, LORA_TAG_REGEX, LORAS, NOTIFY_COMBO, SAMPLERS, SCHEDULERS, UPSCALERS, VAES
-from ..utils.helpers import get_embedding_hashes, get_lora_hashes, get_sha256, normalize_input_image, normalize_list_to_value,  prepare_model_dataset, process_model, tensor_to_base64
+from ..utils.constants import ANY, BASE64_PNG_PREFIX, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, INT_MAX, NOTIFY_COMBO, SAMPLERS, SCHEDULERS
+from ..utils.helpers import get_comfy_list, get_embedding_hashes, get_lora_hashes, get_sha256, normalize_input_image, normalize_list_to_value,  prepare_model_dataset, process_model, tensor_to_base64
 
 from server import PromptServer
 
@@ -20,10 +20,10 @@ class LF_CivitAIMetadataSetup:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "checkpoint": (CHECKPOINTS, {"default": "None", "tooltip": "Checkpoint used to generate the image."}),
+                "checkpoint": (get_comfy_list("checkpoints"), {"default": "None", "tooltip": "Checkpoint used to generate the image."}),
             },
             "optional": {
-                "vae": (VAES, {"tooltip": "VAE used to generate the image."}),
+                "vae": (get_comfy_list("vae"), {"tooltip": "VAE used to generate the image."}),
                 "sampler": (SAMPLERS, {"default": "None", "tooltip": "Sampler used to generate the image."}),
                 "scheduler": (SCHEDULERS, {"default": "None", "tooltip": "Scheduler used to generate the image."}),
                 "embeddings": ("STRING", {"default": '', "multiline": True, "tooltip": "Embeddings used to generate the image."}),
@@ -38,7 +38,7 @@ class LF_CivitAIMetadataSetup:
                 "width": ("INT", {"default": 1024, "tooltip": "Width of the image."}),
                 "height": ("INT", {"default": 1024, "tooltip": "Height of the image."}),
                 "hires_upscale": ("FLOAT", {"default": 1.5, "tooltip": "Upscale factor for Hires-fix."}),
-                "hires_upscaler": (UPSCALERS, {"tooltip": "Upscale model for Hires-fix."}),
+                "hires_upscaler": (get_comfy_list("upscale_models"), {"tooltip": "Upscale model for Hires-fix."}),
                 "ui_widget": ("KUL_CODE", {"default": ""}),
             },
             "hidden": { 
@@ -52,10 +52,10 @@ class LF_CivitAIMetadataSetup:
                     "sampler", "scheduler", "embeddings", "lora_tags",
                     "full_pos_prompt", "neg_prompt", "steps", "denoising", "clip_skip", "cfg", "seed", 
                     "width", "height", "hires_upscaler", "hires_upscale", "analytics_dataset")
-    RETURN_TYPES = ("STRING", CHECKPOINTS, VAES,
+    RETURN_TYPES = ("STRING", get_comfy_list("checkpoints"), get_comfy_list("vae"),
                     SAMPLERS, SCHEDULERS, "STRING", "STRING",
                     "STRING", "STRING", "INT", "FLOAT", "INT", "FLOAT", "INT",
-                    "INT", "INT", UPSCALERS, "FLOAT", "JSON")
+                    "INT", "INT", get_comfy_list("upscale_models"), "FLOAT", "JSON")
 
     def on_exec(self, **kwargs:dict):
         def add_metadata_node(category, item):
@@ -180,7 +180,7 @@ class LF_LoadLoraTags:
             except ValueError:
                 return None, None, None
 
-            lora_files = LORAS
+            lora_files = get_comfy_list("loras")
 
             lora_name:str = None
             for lora_file in lora_files:
