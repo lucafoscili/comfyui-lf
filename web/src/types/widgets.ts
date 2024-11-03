@@ -398,6 +398,7 @@ export type MasonryWidgetSetter = () => {
   [CustomWidgetName.masonry]: BaseWidgetCallback<CustomWidgetName.masonry>;
 };
 export interface MasonryWidgetDeserializedValue {
+  columns?: KulMasonry['kulColumns'];
   dataset: KulDataDataset;
   index?: number;
   name?: string;

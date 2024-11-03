@@ -17,6 +17,7 @@ export const masonryFactory = {
             getValue() {
                 const index = parseInt(masonry?.dataset.index);
                 return {
+                    columns: masonry?.kulColumns || 3,
                     dataset: masonry?.kulData || {},
                     index: isValidNumber(index) ? index : NaN,
                     name: masonry?.dataset.name || '',
@@ -25,7 +26,10 @@ export const masonryFactory = {
             },
             setValue(value) {
                 const callback = (_, u) => {
-                    const { dataset, index, name, view } = u.parsedJson;
+                    const { columns, dataset, index, name, view } = u.parsedJson;
+                    if (columns) {
+                        masonry.kulColumns = columns;
+                    }
                     if (dataset) {
                         masonry.kulData = dataset || {};
                     }

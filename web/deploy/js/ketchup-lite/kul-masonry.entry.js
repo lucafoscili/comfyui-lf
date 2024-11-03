@@ -1,5 +1,5 @@
-import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, F as Fragment, H as Host } from './index-4d533537.js';
-import { k as kulManagerInstance } from './kul-manager-26d0782a.js';
+import { h, r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, F as Fragment, H as Host } from './index-7f37b7be.js';
+import { k as kulManagerInstance } from './kul-manager-6086df84.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 import { K as KUL_WRAPPER_ID, c as KUL_STYLE_ID } from './GenericVariables-f3380974.js';
 
@@ -13,10 +13,68 @@ var KulMasonryProps;
     KulMasonryProps["kulSelectable"] = "Allows for the selection of elements.";
     KulMasonryProps["kulShape"] = "Sets the type of shapes to compare.";
     KulMasonryProps["kulStyle"] = "Sets a custom CSS style for the component.";
-    KulMasonryProps["kulView"] = "Sets the type of view, either the actual masonry or a waterfall view.";
+    KulMasonryProps["kulView"] = "Sets the type of view, either the actual masonry or a sequential view.";
 })(KulMasonryProps || (KulMasonryProps = {}));
 
-const kulMasonryCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}:host{--kul_masonry_button_bottom:var(--kul-masonry-grid-gap, 16px);--kul_masonry_button_right:var(--kul-masonry-button-right, 16px);--kul_masonry_column_size:var(--kul-masonry-column-size, minmax(0px, 1fr));--kul_masonry_grid_items_alignment:var(\n    --kul-masonry-grid-items-alignment,\n    start\n  );--kul_masonry_grid_gap:var(--kul-masonry-grid-gap, 8px);--kul_masonry_padding:var(--kul-masonry-padding, 12px);--kul_masonry_selected_border:var(\n    --kul-masonry-selected-border,\n    var(--kul-primary-color)\n  );display:block;height:100%;width:100%}:host([kul-selectable]) kul-image{cursor:pointer;overflow:hidden;transition:filter 0.3 ease}:host([kul-selectable]) kul-image:hover{filter:brightness(125%)}#kul-component{height:100%;width:100%}.masonry{box-sizing:border-box;display:flex;flex-direction:column;gap:var(--kul_masonry_grid_gap);height:100%;padding:var(--kul_masonry_padding);width:100%}.grid{align-items:var(--kul_masonry_grid_items_alignment);column-gap:var(--kul_masonry_grid_gap);display:grid}.grid--masonry{grid-template-columns:repeat(var(--kul_masonry_columns), var(--kul_masonry_column_size))}.grid--waterfall{grid-template-columns:1fr}.grid__column{display:flex;flex:1;flex-direction:column;gap:var(--kul_masonry_grid_gap);width:100%}.grid__change-view{bottom:var(--kul_masonry_button_bottom);position:absolute;right:var(--kul_masonry_button_right);z-index:2}[data-selected=true]{border-radius:5px;box-shadow:0 4px 10px var(--kul_masonry_selected_border);outline:2px solid var(--kul_masonry_selected_border);outline-offset:4px;position:relative;transform:scale(1.05);transition:transform 0.3s ease, box-shadow 0.3s ease, outline-offset 0.3s ease;z-index:1}[data-selected=true]:after{border:4px solid var(--kul_masonry_selected_border);border-radius:8px;bottom:-4px;content:\"\";left:-4px;pointer-events:none;position:absolute;right:-4px;top:-4px}";
+const STYLING = 'floating';
+const MASONRY_ICON = 'view_quilt';
+const HORIZONTAL_ICON = 'view_column';
+const MINUS_ICON = 'remove';
+const PLUS_ICON = 'plus';
+const VERTICAL_ICON = 'view_day';
+const buttonHandler = (adapter, e) => {
+    const { eventType, id } = e.detail;
+    switch (eventType) {
+        case 'click':
+            switch (id) {
+                case MASONRY_ICON:
+                    adapter.actions.changeView();
+                    break;
+                case MINUS_ICON:
+                    adapter.actions.removeColumn();
+                    break;
+                case PLUS_ICON:
+                    adapter.actions.addColumn();
+                    break;
+            }
+            break;
+    }
+};
+const ACTIONS = {
+    masonry: {
+        add: (adapter) => {
+            return (h("kul-button", { class: 'grid__add-column kul-slim', id: PLUS_ICON, key: PLUS_ICON, kulIcon: PLUS_ICON, kulStyling: STYLING, "onKul-button-event": buttonHandler.bind(buttonHandler, adapter), ref: (el) => {
+                    if (el) {
+                        adapter.components.buttons.addColumn = el;
+                    }
+                }, title: "Click to add a column to the masonry." }));
+        },
+        remove: (adapter) => {
+            return (h("kul-button", { class: 'grid__remove-column kul-slim', id: MINUS_ICON, key: MINUS_ICON, kulIcon: MINUS_ICON, kulStyling: STYLING, "onKul-button-event": buttonHandler.bind(buttonHandler, adapter), ref: (el) => {
+                    if (el) {
+                        adapter.components.buttons.removeColumn = el;
+                    }
+                }, title: "Click to remove a column from the masonry." }));
+        },
+    },
+    changeView: (adapter) => {
+        return (h("kul-button", { class: 'grid__change-view', id: MASONRY_ICON, key: MASONRY_ICON, kulIcon: adapter.isMasonry()
+                ? VERTICAL_ICON
+                : adapter.isVertical()
+                    ? HORIZONTAL_ICON
+                    : MASONRY_ICON, kulStyling: STYLING, "onKul-button-event": buttonHandler.bind(buttonHandler, adapter), ref: (el) => {
+                if (el) {
+                    adapter.components.buttons.changeView = el;
+                }
+            }, title: adapter.isMasonry()
+                ? 'Click to view the images arranged vertically.'
+                : adapter.isVertical()
+                    ? 'Click to view the images arranged horizontally.'
+                    : 'Click to view the images arranged in a masonry.' }));
+    },
+};
+
+const kulMasonryCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}@keyframes fade-in-grid{0%{display:none}1%{display:grid;opacity:0}100%{display:grid;opacity:1}}:host{--kul_masonry_button_bottom:var(--kul-masonry-button-bottom, 16px);--kul_masonry_button_right:var(--kul-masonry-button-right, 16px);--kul_masonry_column_size:var(--kul-masonry-column-size, minmax(0px, 1fr));--kul_masonry_grid_items_alignment:var(\n    --kul-masonry-grid-items-alignment,\n    start\n  );--kul_masonry_grid_gap:var(--kul-masonry-grid-gap, 8px);--kul_masonry_padding:var(--kul-masonry-padding, 12px);--kul_masonry_selected_border:var(\n    --kul-masonry-selected-border,\n    var(--kul-primary-color)\n  );--kul_masonry_transition_duration:var(\n    --kul-masonry-transition-duration,\n    0.3s\n  );--kul_masonry_transition_timing_function:var(\n    --kul-masonry-transition-timing-function,\n    ease\n  );--kul_masonry_grid_gap_actions:var(--kul-masonry-grid-gap-actions, 8px);--kul_masonry_grid_gap_actions_sub:var(\n    --kul-masonry-grid-gap-actions-sub,\n    4px\n  );--kul_masonry_selected_border_radius:var(\n    --kul-masonry-selected-border-radius,\n    5px\n  );--kul_masonry_selected_outline_offset:var(\n    --kul-masonry-selected-outline-offset,\n    4px\n  );--kul_masonry_selected_outline_width:var(\n    --kul-masonry-selected-outline-width,\n    2px\n  );--kul_masonry_selected_transform_scale:var(\n    --kul-masonry-selected-transform-scale,\n    1.05\n  );--kul_masonry_hover_brightness:var(--kul-masonry-hover-brightness, 125%);--kul_masonry_selected_after_border_width:var(\n    --kul-masonry-selected-after-border-width,\n    4px\n  );--kul_masonry_selected_after_border_radius:var(\n    --kul-masonry-selected-after-border-radius,\n    8px\n  );--kul_masonry_selected_after_offset:var(\n    --kul-masonry-selected-after-offset,\n    -4px\n  );--kul_masonry_selected_box_shadow_offset_y:var(\n    --kul-masonry-selected-box-shadow-offset-y,\n    4px\n  );--kul_masonry_selected_box_shadow_blur:var(\n    --kul-masonry-selected-box-shadow-blur,\n    10px\n  );--kul_masonry_selected_z_index:var(--kul-masonry-selected-z-index, 1);--kul_masonry_actions_z_index:var(--kul-masonry-actions-z-index, 2);display:block;height:100%;width:100%}:host([kul-selectable]) kul-image{cursor:pointer;overflow:hidden;transition:filter var(--kul_masonry_transition_duration) var(--kul_masonry_transition_timing_function)}:host([kul-selectable]) kul-image:hover{filter:brightness(var(--kul_masonry_hover_brightness))}#kul-component{height:100%;width:100%}.masonry{box-sizing:border-box;display:flex;flex-direction:column;gap:var(--kul_masonry_grid_gap);height:100%;padding:var(--kul_masonry_padding);width:100%}.masonry:not(:hover) .grid__actions{display:none}.grid{align-items:var(--kul_masonry_grid_items_alignment);column-gap:var(--kul_masonry_grid_gap);display:grid}.grid--horizontal{grid-template-rows:1fr}.grid--horizontal .grid__column{flex-direction:row}.grid--masonry{grid-template-columns:repeat(var(--kul_masonry_columns), var(--kul_masonry_column_size))}.grid--masonry .grid__column{flex-direction:column}.grid--vertical{grid-template-columns:1fr}.grid--vertical .grid__column{flex-direction:column}.grid__column{display:flex;flex:1;gap:var(--kul_masonry_grid_gap);width:100%}.grid__actions{animation:fade-in-grid 125ms ease-in;bottom:var(--kul_masonry_button_bottom);display:grid;grid-auto-flow:row;grid-gap:var(--kul_masonry_grid_gap_actions);justify-items:center;position:absolute;right:var(--kul_masonry_button_right);z-index:var(--kul_masonry_actions_z_index)}.grid__actions__sub{display:grid;grid-gap:var(--kul_masonry_grid_gap_actions_sub)}[data-selected=true]{border-radius:var(--kul_masonry_selected_border_radius);box-shadow:0 var(--kul_masonry_selected_box_shadow_offset_y) var(--kul_masonry_selected_box_shadow_blur) var(--kul_masonry_selected_border);outline:var(--kul_masonry_selected_outline_width) solid var(--kul_masonry_selected_border);outline-offset:var(--kul_masonry_selected_outline_offset);position:relative;transform:scale(var(--kul_masonry_selected_transform_scale));transition:transform var(--kul_masonry_transition_duration) var(--kul_masonry_transition_timing_function), box-shadow var(--kul_masonry_transition_duration) var(--kul_masonry_transition_timing_function), outline-offset var(--kul_masonry_transition_duration) var(--kul_masonry_transition_timing_function);z-index:var(--kul_masonry_selected_z_index)}[data-selected=true]:after{border:var(--kul_masonry_selected_after_border_width) solid var(--kul_masonry_selected_border);border-radius:var(--kul_masonry_selected_after_border_radius);bottom:var(--kul_masonry_selected_after_offset);content:\"\";left:var(--kul_masonry_selected_after_offset);pointer-events:none;position:absolute;right:var(--kul_masonry_selected_after_offset);top:var(--kul_masonry_selected_after_offset)}";
 const KulMasonryStyle0 = kulMasonryCss;
 
 const KulMasonry = class {
@@ -154,6 +212,39 @@ const KulMasonry = class {
     /*-------------------------------------------------*/
     /*           P r i v a t e   M e t h o d s         */
     /*-------------------------------------------------*/
+    #adapter = {
+        actions: {
+            addColumn: async () => {
+                this.kulColumns++;
+            },
+            removeColumn: async () => {
+                if (this.kulColumns > 2) {
+                    this.kulColumns--;
+                }
+            },
+            changeView: async () => {
+                if (this.#isMasonry()) {
+                    this.kulView = 'vertical';
+                }
+                else if (this.#isVertical()) {
+                    this.kulView = 'horizontal';
+                }
+                else {
+                    this.kulView = 'masonry';
+                }
+            },
+        },
+        components: {
+            buttons: {
+                addColumn: null,
+                removeColumn: null,
+                changeView: null,
+            },
+        },
+        isMasonry: () => this.#isMasonry(),
+        isVertical: () => this.#isVertical(),
+        get: { masonry: () => this, shapes: () => this.shapes },
+    };
     #divideShapesIntoColumns(columnCount) {
         const props = this.shapes[this.kulShape].map(() => ({
             htmlProps: {
@@ -178,23 +269,14 @@ const KulMasonry = class {
     #hasShapes() {
         return !!this.shapes?.[this.kulShape];
     }
+    #isVertical() {
+        return this.kulView === 'vertical';
+    }
     #isMasonry() {
-        return !!(this.kulView === 'masonry');
+        return this.kulView === 'masonry';
     }
     #prepChangeView() {
-        const icon = this.#isMasonry() ? 'view_day' : 'view_quilt';
-        const iconOff = this.#isMasonry() ? 'view_quilt' : 'view_day';
-        const buttonEventHandler = (e) => {
-            const { eventType, value } = e.detail;
-            switch (eventType) {
-                case 'click':
-                    this.kulView = value === 'on' ? 'masonry' : 'waterfall';
-                    break;
-            }
-        };
-        return (h("kul-button", { class: 'grid__change-view', kulIcon: icon, kulIconOff: iconOff, kulStyling: 'floating', kulToggable: true, kulValue: this.#isMasonry() ? true : false, "onKul-button-event": buttonEventHandler, title: this.#isMasonry()
-                ? 'Click to view the images arranged as a waterfall.'
-                : 'Click to view the images arranged as a masonry.' }));
+        return (h("div", { class: "grid__actions" }, this.#isMasonry() ? (h("div", { class: "grid__actions__sub" }, ACTIONS.masonry.add(this.#adapter), ACTIONS.masonry.remove(this.#adapter))) : null, ACTIONS.changeView(this.#adapter)));
     }
     #prepView() {
         const columnCount = this.#isMasonry() ? this.kulColumns : 1;
@@ -230,7 +312,7 @@ const KulMasonry = class {
         const style = {
             ['--kul_masonry_columns']: this.kulColumns?.toString() || '4',
         };
-        return (h(Host, { key: '44d77b3d16e0493625b5ad8c2f2ce6c4d11602ef' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '7eeccbf24776e3a1d07243df41b93121b3d810f0', id: KUL_WRAPPER_ID, style: style }, h("div", { key: '35bcf127118458452ab150f7ae2db43700287ed1', class: "masonry" }, this.#prepMasonry()))));
+        return (h(Host, { key: 'ff8c67744fb38ecb17815bbb9e5ca3265ebd78c8' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '92c5e5ee0d88f75cfadf374b8fec0d958b718513', id: KUL_WRAPPER_ID, style: style }, h("div", { key: '24bb3ea939b3aa2dd63f898be1de49a4cb1f4b02', class: "masonry" }, this.#prepMasonry()))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

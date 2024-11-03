@@ -7,6 +7,7 @@ export declare enum NodeName {
     checkpointSelector = "LF_CheckpointSelector",
     civitaiMetadataSetup = "LF_CivitAIMetadataSetup",
     clarityEffect = "LF_ClarityEffect",
+    colorAnalysis = "LF_ColorAnalysis",
     compareImages = "LF_CompareImages",
     controlPanel = "LF_ControlPanel",
     displayBoolean = "LF_DisplayBoolean",
@@ -37,6 +38,8 @@ export declare enum NodeName {
     loadMetadata = "LF_LoadMetadata",
     loraAndEmbeddingSelector = "LF_LoraAndEmbeddingSelector",
     loraSelector = "LF_LoraSelector",
+    lutApplication = "LF_LUTApplication",
+    lutGeneration = "LF_LUTGeneration",
     mathOperation = "LF_MathOperation",
     multipleImageResizeForWeb = "LF_MultipleImageResizeForWeb",
     notify = "LF_Notify",
@@ -69,6 +72,7 @@ export declare enum NodeName {
     urandomSeedGenerator = "LF_UrandomSeedGenerator",
     usageStatistics = "LF_UsageStatistics",
     vaeSelector = "LF_VAESelector",
+    viewImages = "LF_ViewImages",
     wallOfText = "LF_WallOfText",
     writeJson = "LF_WriteJSON"
 }
