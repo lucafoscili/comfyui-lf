@@ -1,5 +1,5 @@
-import { h, F as Fragment, r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, H as Host, a as getAssetPath } from './index-4d533537.js';
-import { k as kulManagerInstance, K as KulThemeColorValues } from './kul-manager-26d0782a.js';
+import { h, F as Fragment, r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, H as Host, a as getAssetPath } from './index-7f37b7be.js';
+import { k as kulManagerInstance, K as KulThemeColorValues } from './kul-manager-6086df84.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 import { K as KUL_WRAPPER_ID, c as KUL_STYLE_ID, a as KulDataCyAttributes } from './GenericVariables-f3380974.js';
 
@@ -605,7 +605,7 @@ const KulChat = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: 'e4ae662f1345993b33580dad37cca1f566745af4' }, this.kulStyle && (h("style", { key: '04a95adf6d799cf5b48da393778d67232d9e0f9c', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: 'f376ac5a40f3a5399f5873877b468cf6124c01d9', id: KUL_WRAPPER_ID }, h("div", { key: '7869e41912aef3cb171dbaca7bdaafad6256242e', class: `${this.view} ${this.view}--${this.kulLayout} ${this.view}--${this.status}` }, this.view === 'settings'
+        return (h(Host, { key: '732ef036c1c065396ec8b0bf9cae0a354eaf453d' }, this.kulStyle && (h("style", { key: '962c0e1e6a01109f23a050f2ef668bb3fd4fee9b', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: '0c4baf87d882551bf6805d959305541b2a5815fc', id: KUL_WRAPPER_ID }, h("div", { key: 'adcc1b7ea6f00ec2891eef10e16356db27bb2d86', class: `${this.view} ${this.view}--${this.kulLayout} ${this.view}--${this.status}` }, this.view === 'settings'
             ? prepSettings(this.#adapter)
             : this.status === 'ready'
                 ? prepChat(this.#adapter)
@@ -932,7 +932,7 @@ const KulChip = class {
             'chip-set--filter': this.#isFilter(),
             'chip-set--input': this.#isInput(),
         };
-        return (h(Host, { key: 'dc32210666ee1b15dbf5a2381fed30d21947bf94' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '72840f2ab66a7b108792d81ef75590e93ed3d52c', id: KUL_WRAPPER_ID }, h("div", { key: '7c2cfc5672a2ef0d3229d009b8e421daa6e9a373', class: className, role: "grid" }, this.#prepChipSet()))));
+        return (h(Host, { key: '7391de32b4051dc12acc04f1b8bc525d989116e9' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'eb58f96a8827f162cfdf5dc60ea370782282357c', id: KUL_WRAPPER_ID }, h("div", { key: '33b59600b4163e722f22f0be9984fe648f1d7e9f', class: className, role: "grid" }, this.#prepChipSet()))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

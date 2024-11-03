@@ -178,7 +178,7 @@ cross-spawn@^7.0.0:
     shebang-command "^2.0.0"
     which "^2.0.1"
 
-dayjs@^1.11.11:
+dayjs@^1.11.13:
   version "1.11.13"
   resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.13.tgz#92430b0139055c3ebb60150aa13e860a4b5a366c"
   integrity sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==
@@ -302,14 +302,13 @@ jsonfile@^6.0.1:
   optionalDependencies:
     graceful-fs "^4.1.6"
 
-ketchup-lite@1.5.16:
-  version "1.5.16"
-  resolved "https://registry.yarnpkg.com/ketchup-lite/-/ketchup-lite-1.5.16.tgz#550d3d28b80ff165a8687e73e06a00eff2a994ea"
-  integrity sha512-IKlwsmeaHEJ2aaPFgzQZKb8BYJUWar1JVyQNyGRJZXnrG/3yeyoKmWtXuKoTQxGn6cyiPTRqWBtcdB9BoG6ntA==
+ketchup-lite@1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/ketchup-lite/-/ketchup-lite-1.6.0.tgz#a6efe8db4053138e0f31abb319dce348f4a9f615"
+  integrity sha512-5GM7fNbx+X5etQ2u73FqmVFvV06Q1zR6Fu2Tv4OI1PAaxHvRTZXKNbd1sGZXgEUZ3tTIhO5p58TU6iDcRE8MSg==
   dependencies:
-    dayjs "^1.11.11"
+    dayjs "^1.11.13"
     echarts "5.5.1"
-    numeral "^2.0.6"
     prismjs "^1.29.0"
 
 lru-cache@^11.0.0:
@@ -341,11 +340,6 @@ node-addon-api@^7.0.0:
   version "7.1.1"
   resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-7.1.1.tgz#1aba6693b0f255258a049d621329329322aad558"
   integrity sha512-5m3bsyrjFWE1xf7nz7YXdN4udnVtXK6/Yfgn5qnahL6bCkf2yKt4k3nuTKAtT4r3IG8JNR2ncsIMdZuAzJjHQQ==
-
-numeral@^2.0.6:
-  version "2.0.6"
-  resolved "https://registry.yarnpkg.com/numeral/-/numeral-2.0.6.tgz#4ad080936d443c2561aed9f2197efffe25f4e506"
-  integrity sha512-qaKRmtYPZ5qdw4jWJD6bxEf1FJEqllJrwxCLIm0sQU/A7v2/czigzOb+C2uSiFsa9lBUzeH7M1oK+Q+OLxL3kA==
 
 package-json-from-dist@^1.0.0:
   version "1.0.0"
@@ -388,15 +382,16 @@ rimraf@^6.0.1:
     glob "^11.0.0"
     package-json-from-dist "^1.0.0"
 
-sass@^1.80.4:
-  version "1.80.4"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.80.4.tgz#bc0418fd796cad2f1a1309d8b4d7fe44b7027de0"
-  integrity sha512-rhMQ2tSF5CsuuspvC94nPM9rToiAFw2h3JTrLlgmNw1MH79v8Cr3DH6KF6o6r+8oofY3iYVPUf66KzC8yuVN1w==
+sass@^1.80.6:
+  version "1.80.6"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.80.6.tgz#5d0aa55763984effe41e40019c9571ab73e6851f"
+  integrity sha512-ccZgdHNiBF1NHBsWvacvT5rju3y1d/Eu+8Ex6c21nHp2lZGLBEtuwc415QfiI1PJa1TpCo3iXwwSRjRpn2Ckjg==
   dependencies:
-    "@parcel/watcher" "^2.4.1"
     chokidar "^4.0.0"
     immutable "^4.0.0"
     source-map-js ">=0.6.2 <2.0.0"
+  optionalDependencies:
+    "@parcel/watcher" "^2.4.1"
 
 shebang-command@^2.0.0:
   version "2.0.0"

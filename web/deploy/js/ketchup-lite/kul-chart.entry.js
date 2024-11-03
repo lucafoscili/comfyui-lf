@@ -1,5 +1,5 @@
-import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-4d533537.js';
-import { k as kulManagerInstance, K as KulThemeColorValues } from './kul-manager-26d0782a.js';
+import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-7f37b7be.js';
+import { k as kulManagerInstance, K as KulThemeColorValues } from './kul-manager-6086df84.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 import { K as KUL_WRAPPER_ID, c as KUL_STYLE_ID } from './GenericVariables-f3380974.js';
 
@@ -84359,6 +84359,529 @@ use(installUniversalTransition);
 // })
 use(installLabelLayout);
 
+const onClick = (adapter, e) => {
+    const chart = adapter.get.chart();
+    const dataset = chart.kulData;
+    const seriesName = e.seriesName;
+    const dataIndex = e.dataIndex;
+    const node = dataset?.nodes?.[dataIndex] || {
+        id: '*NOTFOUND*',
+    };
+    const column = adapter.get.seriesColumn(seriesName)?.[0] || {
+        id: '*NOTFOUND*',
+        title: seriesName,
+    };
+    const xValue = e.name;
+    let yValue = typeof e.value !== 'number' && typeof e.value !== 'string'
+        ? String(e.value).valueOf()
+        : e.value;
+    if (typeof yValue !== 'string' && typeof yValue !== 'number') {
+        yValue = String(yValue);
+    }
+    adapter.emit.event('click', {
+        column,
+        node,
+        x: xValue,
+        y: yValue,
+    });
+};
+
+const CHART_DESIGN = {
+    axis: (adapter) => {
+        const theme = adapter.get.design.theme;
+        const axis = {
+            axisLabel: {
+                color: theme.textColor,
+                fontFamily: theme.font,
+            },
+            axisLine: { lineStyle: { color: theme.textColor } },
+            axisTick: { lineStyle: { color: theme.border } },
+            splitLine: { lineStyle: { color: theme.border } },
+        };
+        return axis;
+    },
+    colors: (adapter, count) => {
+        const hex = (color) => {
+            return adapter.get.manager().theme.colorCheck(color).hexColor;
+        };
+        const chart = adapter.get.chart();
+        const manager = adapter.get.manager();
+        const colorArray = [];
+        if (chart.kulColors && chart.kulColors.length > 0) {
+            colorArray.push(...chart.kulColors.map((c) => hex(c)));
+        }
+        else {
+            let index = 1;
+            let colorVar = `--kul-chart-color-${index}`;
+            while (manager.theme.cssVars[colorVar]) {
+                colorArray.push(hex(manager.theme.cssVars[colorVar]));
+                index++;
+                colorVar = `--kul-chart-color-${index}`;
+            }
+        }
+        while (colorArray.length < count) {
+            colorArray.push(manager.theme.randomColor(128));
+        }
+        return colorArray.slice(0, count);
+    },
+    label: (adapter) => {
+        const theme = adapter.get.design.theme;
+        const label = {
+            show: true,
+            formatter: '{b|{b}}',
+            rich: {
+                b: {
+                    color: theme.textColor,
+                    fontFamily: theme.font,
+                    textShadow: 'none',
+                },
+            },
+            textShadowColor: 'transparent',
+            textShadowOffsetX: 0,
+            textShadowOffsetY: 0,
+            textShadowBlur: 0,
+        };
+        return label;
+    },
+    legend: (adapter) => {
+        const chart = adapter.get.chart();
+        if (chart.kulLegend === 'hidden') {
+            return null;
+        }
+        const theme = adapter.get.design.theme;
+        const data = Object.keys(adapter.get.y());
+        const legend = {
+            data,
+            [chart.kulLegend]: 0,
+            textStyle: {
+                color: theme.textColor,
+                fontFamily: theme.font,
+            },
+        };
+        return legend;
+    },
+    theme: {
+        backgroundColor: '',
+        border: '',
+        dangerColor: '',
+        font: '',
+        successColor: '',
+        textColor: '',
+    },
+    tooltip: (adapter) => {
+        const theme = adapter.get.design.theme;
+        const tooltip = {
+            backgroundColor: theme.backgroundColor,
+            textStyle: {
+                color: theme.textColor,
+                fontFamily: theme.font,
+            },
+        };
+        return tooltip;
+    },
+};
+
+const CHART_OPTIONS = {
+    calendar: (adapter) => {
+        const chart = adapter.get.chart();
+        const design = adapter.get.design;
+        const dateKey = chart.kulAxis;
+        const valueKey = chart.kulSeries[0];
+        const data = chart.kulData.nodes.map((node) => {
+            return [
+                String(node.cells[dateKey]?.value ||
+                    new Date().toISOString().split('T')[0]),
+                parseFloat(adapter.actions.stringify(node.cells[valueKey]?.value) ||
+                    '0'),
+            ];
+        });
+        const colors = design.colors(adapter, 1);
+        const year = new Date(Math.min(...data.map(([date]) => new Date(date).getTime()))).getFullYear();
+        const options = {
+            color: colors,
+            calendar: {
+                range: year,
+                cellSize: ['auto', 24],
+                itemStyle: {
+                    borderWidth: 1,
+                    borderColor: design.theme.border,
+                    color: design.theme.backgroundColor,
+                },
+                dayLabel: {
+                    color: design.theme.textColor,
+                    fontFamily: design.theme.font,
+                },
+                monthLabel: {
+                    color: design.theme.textColor,
+                    fontFamily: design.theme.font,
+                },
+                yearLabel: {
+                    color: design.theme.textColor,
+                    fontFamily: design.theme.font,
+                },
+            },
+            series: [
+                {
+                    type: 'heatmap',
+                    coordinateSystem: 'calendar',
+                    data: data,
+                    label: {
+                        show: false,
+                    },
+                    itemStyle: {
+                        color: colors[0],
+                    },
+                },
+            ],
+            tooltip: design.tooltip(adapter),
+            visualMap: {
+                align: 'auto',
+                bottom: 'bottom',
+                inRange: {
+                    color: [design.theme.backgroundColor, colors[0]],
+                },
+                left: 'center',
+                max: Math.max(...data.map(([_, value]) => Number(value))),
+                min: Math.min(...data.map(([_, value]) => Number(value))),
+                orient: 'horizontal',
+                text: ['High', 'Low'],
+                textStyle: {
+                    color: design.theme.textColor,
+                    fontFamily: design.theme.font,
+                },
+            },
+        };
+        return options;
+    },
+    candlestick: (adapter) => {
+        const chart = adapter.get.chart();
+        const design = adapter.get.design;
+        const stringify = adapter.actions.stringify;
+        const data = chart.kulData.nodes.map((node) => {
+            const open = parseFloat(stringify(node.cells['Open']?.value) || '0');
+            const close = parseFloat(stringify(node.cells['Close']?.value) || '0');
+            const low = parseFloat(stringify(node.cells['Low']?.value) || '0');
+            const high = parseFloat(stringify(node.cells['High']?.value) || '0');
+            return [open, close, low, high];
+        });
+        const colors = [design.theme.successColor, design.theme.dangerColor];
+        const options = {
+            color: colors,
+            xAxis: {
+                type: 'category',
+                data: chart.kulData.nodes.map((node) => stringify(node.cells[chart.kulAxis]?.value || '')),
+                axisLabel: {
+                    color: design.theme.textColor,
+                    fontFamily: design.theme.font,
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: design.theme.border,
+                    },
+                },
+            },
+            yAxis: {
+                type: 'value',
+                axisLabel: {
+                    color: design.theme.textColor,
+                    fontFamily: design.theme.font,
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: design.theme.border,
+                    },
+                },
+                splitLine: {
+                    lineStyle: {
+                        color: design.theme.border,
+                    },
+                },
+            },
+            series: [
+                {
+                    type: 'candlestick',
+                    data: data,
+                    itemStyle: {
+                        color: colors[0],
+                        color0: colors[1],
+                        borderColor: colors[0],
+                        borderColor0: colors[1],
+                    },
+                },
+            ],
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                },
+                backgroundColor: design.theme.backgroundColor,
+                textStyle: {
+                    color: design.theme.textColor,
+                    fontFamily: design.theme.font,
+                },
+            },
+        };
+        return options;
+    },
+    default: (adapter) => {
+        const chart = adapter.get.chart();
+        const design = adapter.get.design;
+        const seriesOptions = [];
+        const types = chart.kulTypes || [];
+        const colors = design.colors(adapter, Object.keys(adapter.get.y()).length);
+        let index = 0;
+        for (const [seriesName, data] of Object.entries(adapter.get.y())) {
+            const color = colors[index];
+            const kulType = types[index] || types[0];
+            const seriesType = adapter.actions.mapType(kulType);
+            const seriesOption = {};
+            switch (seriesType) {
+                case 'bar':
+                    seriesOption.color = color;
+                    seriesOption.name = seriesName;
+                    seriesOption.type = 'bar';
+                    seriesOption.data = data;
+                    seriesOption.itemStyle = { color };
+                    break;
+                case 'line':
+                    seriesOption.color = color;
+                    seriesOption.name = seriesName;
+                    seriesOption.type = 'line';
+                    seriesOption.data = data;
+                    seriesOption.itemStyle = { color };
+                    if (kulType === 'area') {
+                        seriesOption.areaStyle = {
+                            color: new LinearGradient$1(0, 0, 0, 0.25, [
+                                {
+                                    offset: 0,
+                                    color: `rgba(${adapter.get
+                                        .manager()
+                                        .theme.colorCheck(color).rgbValues}, 0.375)`,
+                                },
+                            ]),
+                        };
+                    }
+                    if (kulType === 'gaussian') {
+                        seriesOption.smooth = true;
+                    }
+                    break;
+                default:
+                    seriesOption.color = color;
+                    seriesOption.name = seriesName;
+                    seriesOption.type = seriesType;
+                    seriesOption.data = data;
+                    seriesOption.itemStyle = { color: colors[index] };
+                    break;
+            }
+            seriesOptions.push(seriesOption);
+            index++;
+        }
+        const isHorizontal = chart.kulTypes?.[0] === 'hbar';
+        const options = {
+            color: design.colors(adapter, Object.keys(adapter.get.y()).length),
+            legend: design.legend(adapter),
+            tooltip: {
+                ...design.tooltip(adapter),
+                trigger: 'axis',
+            },
+            series: seriesOptions,
+            xAxis: {
+                ...design.axis(adapter),
+                mainType: 'xAxis',
+                type: isHorizontal ? 'value' : 'category',
+                data: isHorizontal ? undefined : adapter.get.x(),
+                ...chart.kulXAxis,
+            },
+            yAxis: {
+                ...design.axis(adapter),
+                mainType: 'yAxis',
+                type: isHorizontal ? 'category' : 'value',
+                data: isHorizontal ? adapter.get.x() : undefined,
+                ...chart.kulYAxis,
+            },
+        };
+        return options;
+    },
+    funnel: (adapter) => {
+        const chart = adapter.get.chart();
+        const design = adapter.get.design;
+        const data = chart.kulSeries.map((seriesName) => {
+            const totalValue = chart.kulData.nodes.reduce((sum, node) => {
+                return (sum +
+                    parseFloat(adapter.actions.stringify(node.cells[seriesName]?.value) || '0'));
+            }, 0);
+            return {
+                name: String(seriesName),
+                value: totalValue,
+            };
+        });
+        const colors = design.colors(adapter, data.length);
+        const options = {
+            color: colors,
+            legend: {
+                ...design.legend(adapter),
+                data: data.map((item) => item.name),
+            },
+            series: [
+                {
+                    type: 'funnel',
+                    data: data,
+                    sort: 'descending',
+                    label: {
+                        show: true,
+                        position: 'inside',
+                        color: design.theme.textColor,
+                        fontFamily: design.theme.font,
+                    },
+                    itemStyle: {
+                        borderColor: design.theme.border,
+                        borderWidth: 1,
+                    },
+                },
+            ],
+            tooltip: design.tooltip(adapter),
+        };
+        return options;
+    },
+    pie: (adapter) => {
+        const chart = adapter.get.chart();
+        const design = adapter.get.design;
+        const data = Object.entries(adapter.get.y()).map(([name, values]) => ({
+            name,
+            value: values.reduce((a, b) => a + b, 0),
+        }));
+        const options = {
+            color: design.colors(adapter, data.length),
+            label: design.label(adapter),
+            legend: design.legend(adapter),
+            tooltip: {
+                ...design.tooltip(adapter),
+                trigger: 'item',
+                formatter: '{a} <br/>{b}: {c} ({d}%)',
+            },
+            series: [
+                {
+                    name: adapter.get
+                        .manager()
+                        .data.column.find(chart.kulData, {
+                        id: chart.kulAxis,
+                    })?.[0].title || 'Data',
+                    type: 'pie',
+                    data,
+                },
+            ],
+        };
+        return options;
+    },
+    radar: (adapter) => {
+        const chart = adapter.get.chart();
+        const design = adapter.get.design;
+        const stringify = adapter.actions.stringify;
+        const indicators = chart.kulSeries.map((seriesName) => {
+            const values = adapter.get.y()[seriesName] || [];
+            const max = Math.max(...values);
+            return {
+                name: seriesName,
+                max: isNaN(max) ? 100 : max,
+            };
+        });
+        const data = chart.kulData.nodes.map((node) => {
+            return {
+                name: stringify(node.cells[chart.kulAxis]?.value) || 'Entity',
+                value: chart.kulSeries.map((seriesName) => parseFloat(stringify(node.cells[seriesName]?.value) || '0')),
+            };
+        });
+        const colors = design.colors(adapter, data.length);
+        const options = {
+            color: colors,
+            legend: {
+                ...design.legend(adapter),
+                data: data.map((item) => item.name),
+            },
+            radar: {
+                indicator: indicators,
+                shape: 'circle',
+                axisName: {
+                    color: design.theme.textColor,
+                    fontFamily: design.theme.font,
+                },
+                splitArea: {
+                    show: true,
+                    areaStyle: {
+                        color: [colors[0] + '1A', colors[1] + '0D'],
+                    },
+                },
+                splitLine: {
+                    lineStyle: {
+                        color: colors[2] || 'rgba(128, 128, 128, 0.5)',
+                        type: 'dashed',
+                    },
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: colors[2] || 'rgba(128, 128, 128, 0.5)',
+                    },
+                },
+            },
+            series: [
+                {
+                    areaStyle: {
+                        opacity: 0.2,
+                    },
+                    lineStyle: {
+                        width: 2,
+                    },
+                    symbol: 'circle',
+                    symbolSize: 6,
+                    type: 'radar',
+                    data: data,
+                },
+            ],
+            tooltip: design.tooltip(adapter),
+        };
+        return options;
+    },
+    sankey: (adapter) => {
+        const chart = adapter.get.chart();
+        const design = adapter.get.design;
+        const stringify = adapter.actions.stringify;
+        const sourceKey = chart.kulAxis;
+        const targetKey = chart.kulSeries[0];
+        const valueKey = chart.kulSeries[1];
+        const links = chart.kulData.nodes.map((node) => {
+            return {
+                source: stringify(node.cells[sourceKey]?.value || 'Source'),
+                target: stringify(node.cells[targetKey]?.value || 'Target'),
+                value: parseFloat(stringify(node.cells[valueKey]?.value) || '0'),
+            };
+        });
+        const colors = design.colors(adapter, links.length);
+        const options = {
+            color: colors,
+            series: [
+                {
+                    type: 'sankey',
+                    data: [
+                        ...new Set(links.flatMap((link) => [link.source, link.target])),
+                    ].map((name) => ({ name })),
+                    links: links,
+                    label: {
+                        show: true,
+                        color: design.theme.textColor,
+                        fontFamily: design.theme.font,
+                    },
+                    lineStyle: {
+                        color: 'gradient',
+                        curveness: 0.5,
+                    },
+                },
+            ],
+            tooltip: design.tooltip(adapter),
+        };
+        return options;
+    },
+};
+
 const kulChartCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}@keyframes fade-in-grid{0%{display:none}1%{display:grid;opacity:0}100%{display:grid;opacity:1}}:host{-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);display:block;height:var(--kul_chart_height, 100%);min-height:var(--kul_chart_height, 100%);min-width:var(--kul_chart_width, 100%);width:var(--kul_chart_width, 100%)}#kul-component{width:100%;height:100%;position:relative}";
 const KulChartStyle0 = kulChartCss;
 
@@ -84389,33 +84912,24 @@ const KulChart = class {
     /*-------------------------------------------------*/
     /*       I n t e r n a l   V a r i a b l e s       */
     /*-------------------------------------------------*/
-    #chartContainer;
-    #chartEl;
-    #gaussianDatasets;
     #kulManager = kulManagerInstance();
-    #sortedDataset = null;
-    #minColorHeatMap = '';
-    #maxColorHeatMap = '';
-    #themeBackground = '';
-    #themeBorder = '';
-    #themeFont = '';
-    #themeText = '';
     #findColumn = this.#kulManager.data.column.find;
     #stringify = this.#kulManager.data.cell.stringify;
+    #chartContainer;
+    #chartEl;
+    #x = [];
+    #y;
     /*-------------------------------------------------*/
     /*                   E v e n t s                   */
     /*-------------------------------------------------*/
     kulEvent;
-    onKulEvent(e, eventType, { column, node, x, y }) {
+    onKulEvent(e, eventType, data) {
         this.kulEvent.emit({
             comp: this,
             eventType,
             id: this.rootElement.id,
             originalEvent: e,
-            column,
-            node,
-            x,
-            y,
+            data,
         });
     }
     /*-------------------------------------------------*/
@@ -84448,14 +84962,47 @@ const KulChart = class {
      */
     async unmount(ms = 0) {
         setTimeout(() => {
-            this.onKulEvent(new CustomEvent('unmount'), 'unmount', {});
+            this.onKulEvent(new CustomEvent('unmount'), 'unmount');
             this.rootElement.remove();
         }, ms);
     }
     /*-------------------------------------------------*/
     /*           P r i v a t e   M e t h o d s         */
     /*-------------------------------------------------*/
-    #initChart() {
+    #adapter = {
+        actions: {
+            mapType: (type) => {
+                switch (type) {
+                    case 'area':
+                    case 'bubble':
+                    case 'gaussian':
+                        return 'line';
+                    case 'calendar':
+                    case 'hbar':
+                        return 'bar';
+                    default:
+                        return type;
+                }
+            },
+            onClick: (e) => onClick(this.#adapter, e),
+            stringify: (str) => this.#stringify(str),
+        },
+        emit: {
+            event: (eventType, data, e = new CustomEvent(eventType)) => {
+                this.onKulEvent(e, eventType, data);
+            },
+        },
+        get: {
+            chart: () => this,
+            design: CHART_DESIGN,
+            manager: () => this.#kulManager,
+            options: CHART_OPTIONS,
+            seriesColumn: (series) => this.#findColumn(this.kulData, { title: series }),
+            x: () => this.#x,
+            y: () => this.#y,
+        },
+    };
+    #init() {
         if (this.#chartEl) {
             dispose(this.#chartContainer);
         }
@@ -84464,1023 +85011,87 @@ const KulChart = class {
             this.#createChart();
         }
         else {
-            this.#kulManager.debug.logs.new(this, "Can't intialize chart without specifiying at least 1 type.", 'warning');
+            this.#kulManager.debug.logs.new(this, "Can't initialize chart without specifying at least 1 type.", 'warning');
         }
     }
-    #createX(dataset = null) {
+    #updateThemeColors() {
+        const theme = this.#adapter.get.design.theme;
+        const themeVars = this.#kulManager.theme.cssVars;
+        theme.backgroundColor = themeVars[KulThemeColorValues.BACKGROUND];
+        theme.border = themeVars[KulThemeColorValues.BORDER];
+        theme.dangerColor = themeVars[KulThemeColorValues.DANGER];
+        theme.font = themeVars['--kul-font-family'];
+        theme.successColor = themeVars[KulThemeColorValues.SUCCESS];
+        theme.textColor = themeVars[KulThemeColorValues.TEXT];
+    }
+    #createAxisData() {
         const x = [];
-        if (!dataset) {
-            dataset = this.kulData;
-        }
-        if (!this.kulAxis) {
-            for (let i = 0; i < dataset.nodes.length; i++) {
-                const cells = dataset.nodes[i].cells;
-                const treatedCells = {};
-                for (const key in cells) {
-                    const cell = cells[key];
-                    const title = this.#findColumn(this.kulData, { id: key })[0]
-                        .title;
-                    treatedCells[title] = cell;
+        const axisId = this.kulAxis;
+        const dataset = this.kulData;
+        if (dataset?.nodes?.length) {
+            for (const node of dataset.nodes) {
+                const cell = axisId && node.cells
+                    ? node.cells[axisId]
+                    : Object.values(node.cells || {})[0];
+                if (cell?.value != null) {
+                    x.push(this.#stringify(cell.value));
                 }
-                if (treatedCells[0]) {
-                    x.push(this.#stringify(treatedCells[0].value));
+                else {
+                    x.push(''); // Handle missing values appropriately
                 }
             }
         }
-        else {
-            for (let i = 0; i < dataset.nodes.length; i++) {
-                const cells = dataset.nodes[i].cells;
-                const treatedCells = {};
-                const title = this.#findColumn(dataset, { id: this.kulAxis })[0]
-                    .title;
-                treatedCells[title] = cells[this.kulAxis];
-                x.push(this.#stringify(treatedCells[title].value));
-            }
-        }
-        return x;
+        this.#x = x;
     }
-    #createY() {
+    #createSeriesData() {
         const y = {};
-        if (this.kulSeries && this.kulSeries.length > 0) {
-            for (const node of this.kulData.nodes) {
-                for (const key of Object.keys(node.cells)) {
-                    if (key != this.kulAxis) {
-                        if (this.kulSeries.includes(key)) {
-                            const cell = node.cells[key];
-                            const value = cell.value;
-                            const column = this.#findColumn(this.kulData, {
-                                id: key,
-                            })[0];
-                            if (column) {
-                                const title = column.title;
-                                if (!y[title]) {
-                                    y[title] = [];
-                                }
-                                y[title].push(value);
-                            }
-                        }
-                    }
+        const seriesIds = this.kulSeries && this.kulSeries.length > 0
+            ? this.kulSeries
+            : this.kulData?.columns
+                ?.map((col) => col.id)
+                .filter((id) => id !== this.kulAxis) || [];
+        const dataset = this.kulData;
+        if (dataset?.nodes?.length) {
+            for (const seriesId of seriesIds) {
+                const seriesValues = [];
+                for (const node of dataset.nodes) {
+                    const cellValue = node.cells?.[seriesId]?.value;
+                    const numericValue = cellValue != null ? Number(cellValue) : NaN;
+                    seriesValues.push(numericValue);
                 }
+                const seriesName = this.#findColumn(dataset, {
+                    id: seriesId,
+                })?.[0]?.title || seriesId;
+                y[seriesName] = seriesValues;
             }
         }
-        else {
-            for (const node of this.kulData.nodes) {
-                for (const key of Object.keys(node.cells)) {
-                    if (key !== this.kulAxis) {
-                        const cell = node.cells[key];
-                        const value = cell.value;
-                        const column = this.#findColumn(this.kulData, {
-                            id: key,
-                        })[0];
-                        if (column) {
-                            const title = column.title;
-                            if (!y[title]) {
-                                y[title] = [];
-                            }
-                            y[title].push(value);
-                        }
-                    }
-                }
-            }
-        }
-        return y;
+        this.#y = y;
     }
     async #createChart() {
-        this.#sortedDataset = null;
-        const options = {};
-        const firstType = this.kulTypes[0];
-        switch (firstType) {
-            /*            case 'bubble':
-                Object.assign(options, this.#bubbleChart());
-                break;
-            case 'calendar':
-                Object.assign(options, this.#calendarChart());
-                break;
-            case 'candle':
-                Object.assign(options, this.#candleChart());
-                break;
-            case 'funnel':
-                Object.assign(options, this.#funnelChart());
-                break;
-            case 'gaussian':
-                Object.assign(options, this.#setGaussianOptions());
-                break;
-            case 'radar':
-                Object.assign(options, this.#radarChart());
-                break;
-            case 'sankey':
-                Object.assign(options, this.#sankeyChart());
-                break;*/
-            case 'pie':
-                Object.assign(options, this.#setPieOptions());
-                break;
-            default:
-                Object.assign(options, this.#setOptions());
-                break;
-        }
+        const options = this.#createChartOptions();
         this.#chartEl.setOption(options, true);
-        this.#chartEl.on('click', (e) => {
-            const column = this.#kulManager.data.column.find(this.kulData, {
-                title: e.seriesName,
-            })[0];
-            const node = { id: '*NOTFOUND*' };
-            if (this.#sortedDataset && e.seriesType === 'bar') {
-                Object.assign(node, this.#sortedDataset.nodes[e.dataIndex]);
-            }
-            else if (!Array.isArray(e.data)) {
-                Object.assign(node, this.kulData.nodes[e.dataIndex]);
-            }
-            this.onKulEvent(e.event?.event, 'click', {
-                column,
-                node,
-                x: Array.isArray(e.data) ? e.data[0] : e.name,
-                y: Array.isArray(e.data) ? e.data[1] : e.value,
-            });
-        });
+        this.#chartEl.on('click', this.#adapter.actions.onClick);
     }
-    #updateTextColor() {
-        this.#themeBackground =
-            this.#kulManager.theme.cssVars[KulThemeColorValues.BACKGROUND];
-        this.#themeBorder =
-            this.#kulManager.theme.cssVars[KulThemeColorValues.BORDER];
-        this.#themeFont = this.#kulManager.theme.cssVars['--kul-font-family'];
-        this.#themeText =
-            this.#kulManager.theme.cssVars[KulThemeColorValues.TEXT];
-    }
-    #setColors(requiredNumber) {
-        const colorArray = this.kulColors && this.kulColors.length > 0
-            ? [...this.kulColors]
-            : [];
-        let key = '--kul-chart-color-';
-        for (let index = 1; this.#kulManager.theme.cssVars[key + index]; index++) {
-            colorArray.push(this.#kulManager.theme.cssVars[key + index]);
-        }
-        if (this.kulColors && this.kulColors[0]) {
-            this.#maxColorHeatMap = this.kulColors[0];
-        }
-        else {
-            const colorCheckDark = this.#kulManager.theme.colorCheck(colorArray[0]);
-            this.#maxColorHeatMap = `hsl(${colorCheckDark.hue}, ${colorCheckDark.saturation},  ${(parseFloat(colorCheckDark.lightness) - 30).toString()}%)`;
-        }
-        if (this.kulColors && this.kulColors[1]) {
-            this.#minColorHeatMap = this.kulColors[1];
-        }
-        else {
-            const colorCheckBright = this.#kulManager.theme.colorCheck(colorArray[0]);
-            this.#minColorHeatMap = `hsl(${colorCheckBright.hue}, ${colorCheckBright.saturation}, ${(parseFloat(colorCheckBright.lightness) + 30).toString()}%)`;
-        }
-        for (let index = colorArray.length; requiredNumber && index < requiredNumber; index++) {
-            colorArray.push(this.#kulManager.theme.randomColor(128));
-        }
-        return colorArray;
-    }
-    #setAxisColors() {
-        return {
-            axisLabel: {
-                color: this.#themeText,
-                fontFamily: this.#themeFont,
-            },
-            axisLine: { lineStyle: { color: this.#themeText } },
-            axisTick: { lineStyle: { color: this.#themeBorder } },
-            splitLine: { lineStyle: { color: this.#themeBorder } },
-        };
-    }
-    #setLegend(y) {
-        if (this.kulLegend === 'hidden') {
-            return null;
-        }
-        const data = [];
-        for (let key in y) {
-            data.push(key);
-        }
-        return {
-            data: data,
-            [this.kulLegend]: 0,
-            textStyle: {
-                color: this.#themeText,
-                fontFamily: this.#themeFont,
-            },
-        };
-    }
-    #setTooltip() {
-        return {
-            backgroundColor: this.#themeBackground,
-            textStyle: {
-                color: this.#themeText,
-                fontFamily: this.#themeFont,
-            },
-        };
-    }
-    #setOptions() {
-        const x = this.#createX();
-        const y = this.#createY();
-        let i = 0;
-        const series = [];
-        const color = this.#setColors(Object.keys(y).length);
-        for (const key in y) {
-            const values = y[key];
-            let type;
-            if (this.kulTypes[i]) {
-                type = this.kulTypes[i];
-            }
-            else {
-                type = 'line';
-            }
-            this.#addSeries(type, series, values, key, color[i]);
-            i++;
-        }
-        const isHorizontal = !!('hbar' === this.kulTypes[0]);
-        return {
-            color,
-            legend: this.#setLegend(y),
-            series,
-            tooltip: {
-                ...this.#setTooltip(),
-                trigger: 'axis',
-            },
-            xAxis: {
-                ...this.#setAxisColors(),
-                data: isHorizontal ? undefined : x,
-                type: isHorizontal ? 'value' : 'category',
-                ...this.kulXAxis,
-            },
-            yAxis: {
-                ...this.#setAxisColors(),
-                data: isHorizontal ? x : undefined,
-                type: isHorizontal ? 'category' : 'value',
-                ...this.kulYAxis,
-            },
-        };
-    }
-    #setPieOptions() {
-        const y = this.#createY();
-        const data = [];
-        for (let key in y) {
-            let sum = 0;
-            for (let j = 0; j < y[key].length; j++) {
-                sum = sum + parseFloat(y[key][j]);
-            }
-            data.push({
-                name: key,
-                value: sum,
-            });
-        }
-        return {
-            color: this.#setColors(Object.keys(y).length),
-            label: {
-                show: true,
-                formatter: '{b|{b}}',
-                rich: {
-                    b: {
-                        color: this.#themeText,
-                        fontFamily: this.#themeFont,
-                        textShadow: 'none',
-                    },
-                },
-                textShadowColor: 'transparent',
-                textShadowOffsetX: 0,
-                textShadowOffsetY: 0,
-                textShadowBlur: 0,
-            },
-            legend: this.#setLegend(y),
-            tooltip: {
-                ...this.#setTooltip(),
-                trigger: 'item',
-                formatter: '{a} <br/>{b}: {c} ({d}%)',
-            },
-            series: [
-                {
-                    name: this.#findColumn(this.kulData, {
-                        id: this.kulAxis,
-                    })[0].title,
-                    type: 'pie',
-                    data: data,
-                    emphasis: {
-                        itemStyle: {
-                            shadowBlur: 10,
-                            shadowOffsetX: 0,
-                            shadowColor: 'rgba(0, 0, 0, 0.5)',
-                        },
-                    },
-                },
-            ],
-        };
-    }
-    /*
-    #funnelChart() {
-        const x = this.#createX();
-        const y = this.#createY();
-        const cellsSum: { [index: string]: number } = {};
-        const data = [];
-        let highest = 0;
-
-        for (let key in y) {
-            for (let j = 0; j < y[key].length; j++) {
-                if (cellsSum[x[j]]) {
-                    cellsSum[x[j]] += parseFloat(y[key][j]);
-                } else {
-                    cellsSum[x[j]] = parseFloat(y[key][j]);
-                }
-            }
-        }
-
-        for (let key in cellsSum) {
-            const value = cellsSum[key];
-            if (value > highest) {
-                highest = value;
-            }
-        }
-
-        for (const key in cellsSum) {
-            const value = cellsSum[key];
-            data.push({
-                name: key,
-                value: ((100 * value) / highest).toFixed(2),
-            });
-        }
-        return {
-            color: this.#setColors(Object.keys(cellsSum).length),
-            title: this.#setTitle(),
-            tooltip: {
-                ...this.#setTooltip(),
-                trigger: 'item',
-                formatter: (value: unknown) => {
-                    const name = (value as GenericObject).data.name as string;
-                    const percentage = (value as GenericObject).data
-                        .value as string;
-                    return `${name}: <strong>${
-                        cellsSum[name]
-                    }</strong> (${this.#kulManager.math.format(percentage)}%)`;
-                },
-            },
-            legend: this.#setLegend(cellsSum),
-            series: [
-                {
-                    name: this.#kulManager.data.column.find(this.data, {
-                        name: this.axis,
-                    })[0].title,
-                    type: 'funnel',
-                    gap: 2,
-                    label: {
-                        show: true,
-                        position: 'right',
-                    },
-                    labelLine: {
-                        lineStyle: {
-                            width: 1,
-                            type: 'solid',
-                        },
-                    },
-                    itemStyle: {
-                        borderColor: this.#themeBackground,
-                        borderWidth: 1,
-                    },
-                    left: '10%',
-                    right: '10%',
-                    width: '80%',
-                    data,
-                },
-            ],
-        } as echarts.EChartsOption;
-    }
-
-    #radarChart() {
-        const x = this.#createX();
-        const y = this.#createY();
-        const data: { name: string; value: number[] }[] = [],
-            transposedData: { name: string; value: number[] }[] = [],
-            transposedIndicator: { name: string; max: number }[] = [];
-
-        for (const [_index, values] of x.entries()) {
-            data.push({ name: values, value: [] });
-        }
-
-        for (const key in y) {
-            transposedData.push({
-                name: key,
-                value: y[key],
-            });
-            for (const values in y[key]) {
-                data[values].value.push(y[key][values]);
-            }
-        }
-        for (let index = 0; index < data.length; index++) {
-            const dataEl = data[index];
-            const key = dataEl.name;
-            const foundEl = transposedIndicator.find((d) => d.name === key);
-            const max = Math.floor(Math.max(...dataEl.value) * 1.05);
-            if (!foundEl) {
-                transposedIndicator.push({
-                    name: key,
-                    max,
-                });
-            } else {
-                foundEl.max = foundEl.max > max ? foundEl.max : max;
-            }
-        }
-
-        return {
-            color: this.#setColors(Object.keys(y).length),
-            title: this.#setTitle(),
-            legend: this.#setLegend(y),
-            radar: {
-                indicator: transposedIndicator,
-            },
-            tooltip: {
-                ...this.#setTooltip(),
-                trigger: 'item',
-            },
-            series: [
-                {
-                    name: this.#kulManager.data.column.find(this.data, {
-                        name: this.axis,
-                    })[0].title,
-                    type: 'radar',
-                    data: transposedData,
-                },
-            ],
-        } as echarts.EChartsOption;
-    }
-
-    #bubbleChart() {
-        const y = this.#createY(),
-            data = [],
-            temp = [],
-            legend = {},
-            series = [];
-        let year = [];
-
-        const content = this.data.columns.map((data) => data.title);
-
-        if (content && content.length) {
-            for (let i = 0; i < y[content[0]].length; i++) {
-                const arr = [];
-                for (let j = 0; j < content.length; j++) {
-                    arr.push(y[content[j]][i]);
-                    // last value always be a year
-                    if (j === content.length - 1) {
-                        year.push(y[content[j]][i]);
-                    }
-                }
-                temp.push(arr);
-            }
-        }
-
-        year = [...new Set(year)];
-
-        year.forEach((e, i) => {
-            let k = [];
-            temp.forEach((data) => {
-                if (data.includes(e)) k.push(data);
-            });
-            data.push(k);
-
-            legend[e] = i;
-        });
-
-        data.forEach((el, i) => {
-            series.push({
-                name: year[i],
-                data: el,
-                type: 'scatter',
-                symbolSize: function (data) {
-                    return Math.sqrt(data[2]) / 5e2;
-                },
-                emphasis: {
-                    focus: 'series',
-                    label: {
-                        show: true,
-                        formatter: function (param: any) {
-                            return param.data[3];
-                        },
-                        position: 'top',
-                    },
-                },
-            });
-        });
-
-        return {
-            title: this.#setTitle(),
-            legend: this.#setLegend(legend),
-            tooltip: {
-                ...this.#setTooltip(),
-                trigger: 'item',
-                formatter: (value: unknown) => {
-                    const name = (value as GenericObject).data;
-                    const data = content.map((e, i) => {
-                        return `<li>  ${e}: ${name[i]} </li>`;
-                    });
-                    let showContent = '';
-                    data.forEach((r) => {
-                        showContent += r;
-                    });
-
-                    return `<ul>${showContent}</ul> `;
-                },
-            },
-            xAxis: {
-                splitLine: {
-                    lineStyle: {
-                        type: 'dashed',
-                    },
-                },
-            },
-            yAxis: {
-                splitLine: {
-                    lineStyle: {
-                        type: 'dashed',
-                    },
-                },
-                scale: true,
-            },
-            color: this.#setColors(content.length),
-            series: series,
-        } as echarts.EChartsOption;
-    }
-
-    #sankeyChart() {
-        const links: GenericObject[] = [],
-            y = this.#createY(),
-            keys = Object.keys(y);
-        // Assuming all arrays in the question object have the same length
-        const arrayLength = y[keys[0]].length;
-
-        for (let i = 0; i < arrayLength; i++) {
-            const entry: GenericObject = {};
-
-            entry['source'] = y[keys[0]][i];
-            entry['target'] = y[keys[1]][i];
-            entry['value'] = parseInt(y[keys[2]][i]);
-
-            links.push(entry);
-        }
-
-        const data = Array.from(
-            new Set([
-                ...links.map((link) => link.source),
-                ...links.map((link) => link.target),
-            ])
-        ).map((name) => ({ name }));
-
-        const legend = {};
-        data.forEach((e, i) => {
-            legend[e.name] = i;
-        });
-
-        return {
-            title: this.#setTitle(),
-            legend: this.#setLegend(legend),
-            color: this.#setColors(arrayLength),
-            tooltip: {
-                ...this.#setTooltip(),
-                trigger: 'item',
-            },
-            series: {
-                type: 'sankey',
-                layout: 'none',
-                emphasis: {
-                    focus: 'adjacency',
-                },
-                data,
-                links,
-                right: '10%',
-                left: '10%',
-            },
-        } as echarts.EChartsOption;
-    }
-
-    #candleChart() {
-        const y = this.#createY(),
-            answer = [],
-            itemStyle = {
-                color: 'red',
-                borderColor: 'red',
-                color0: 'green',
-                borderColor0: 'green',
-            };
-
-        let caseInsensitiveObj = new Proxy(y, {
-            get: function (target, prop: any) {
-                // Convert the property name to lowercase
-                const lowercaseProp = prop.toLowerCase();
-
-                // Search for the property case-insensitively
-                for (let key in target) {
-                    if (key.toLowerCase() === lowercaseProp) {
-                        return target[key];
-                    }
-                }
-
-                // Property not found, return undefined
-                return undefined;
-            },
-        });
-        const date = caseInsensitiveObj['date'];
-
-        for (let i = 0; i < caseInsensitiveObj['Open'].length; i++) {
-            answer.push([
-                parseInt(caseInsensitiveObj['close'][i]),
-                parseInt(caseInsensitiveObj['Open'][i]),
-                parseInt(caseInsensitiveObj['Low'][i]),
-                parseInt(caseInsensitiveObj['High'][i]),
-            ]);
-        }
-        let legend = {};
-        date.forEach((e, i) => {
-            legend[e] = i;
-        });
-        return {
-            legend: this.#setLegend(legend),
-            tooltip: {
-                ...this.#setTooltip(),
-                trigger: 'item',
-            },
-            title: this.#setTitle(),
-            xAxis: {
-                data: date,
-            },
-            yAxis: {},
-            series: [
-                {
-                    type: 'candlestick',
-                    data: answer,
-                    itemStyle: itemStyle,
-                },
-            ],
-        } as echarts.EChartsOption;
-    }
-
-    #calendarChart() {
-        const y = this.#createY();
-
-        let caseInsensitiveObj = new Proxy(y, {
-            get: function (target, prop: any) {
-                // Convert the property name to lowercase
-                const lowercaseProp = prop.toLowerCase();
-
-                // Search for the property case-insensitively
-                for (let key in target) {
-                    if (key.toLowerCase() === lowercaseProp) {
-                        return target[key];
-                    }
-                }
-
-                // Property not found, return undefined
-                return undefined;
-            },
-        });
-
-        const date = caseInsensitiveObj['Date'],
-            answer = [],
-            keys = Object.keys(y),
-            year = new Date(date[0]).getFullYear(),
-            arrayLength = date.length;
-
-        date.forEach((element, i) => {
-            answer.push([element, caseInsensitiveObj['Value'][i]]);
-        });
-        return {
-            tooltip: {
-                ...this.#setTooltip(),
-                trigger: 'item',
-                formatter: (value: unknown) => {
-                    const name = (value as GenericObject).data;
-                    const data = keys.map((e, i) => {
-                        return `<li>  ${e}: ${name[i]} </li>`;
-                    });
-                    let showContent = '';
-                    data.forEach((r) => {
-                        showContent += r;
-                    });
-
-                    return `<ul>${showContent}</ul> `;
-                },
-            },
-            gradientColor: this.#setColors(arrayLength),
-            title: this.#setTitle(),
-            visualMap: {
-                show: false,
-                min: 0,
-                max: 10000,
-            },
-            calendar: {
-                range: year,
-                itemStyle: {
-                    color: this.#themeBackground,
-                },
-                dayLabel: {
-                    color: this.#themeText,
-                },
-                yearLabel: {
-                    color: this.#themeText,
-                },
-                monthLabel: {
-                    color: this.#themeText,
-                },
-                splitLine: {
-                    show: true,
-                    lineStyle: {
-                        color: this.#themeText,
-                    },
-                },
-            },
-            series: {
-                type: 'heatmap',
-                coordinateSystem: 'calendar',
-                data: answer,
-            },
-        } as echarts.EChartsOption;
-    }
-*/
-    /*
-    #setVisualMap(
-        max: number,
-        min: number,
-        colors: string[],
-        hasNumericValues: boolean
-    ) {
-        const opts: echarts.EChartsOption = {
-            visualMap: {
-                show: false,
-            },
-        };
-        const colorRange = !hasNumericValues
-            ? undefined
-            : colors.length > 0
-            ? ({
-                  inRange: { color: colors },
-                  min: min,
-                  max: max,
-                  textStyle: { color: this.#themeText },
-              } as VisualMapComponentOption)
-            : ({
-                  inRange: {
-                      color: [this.#minColorHeatMap, this.#maxColorHeatMap],
-                  },
-                  min: min,
-                  max: max,
-                  textStyle: { color: this.#themeText },
-              } as VisualMapComponentOption);
-        if (colorRange) {
-            opts.visualMap = {
-                ...opts.visualMap,
-                ...colorRange,
-                calculable: true,
-                formatter: (value) => {
-                    return this.#kulManager.math.format(value as string);
-                },
-                min: min,
-                max: max,
-                show: true,
-            };
-        }
-        return opts;
-    }
-
-    #setGaussianOptions() {
-        let x = this.#createX();
-        const y = this.#createY();
-        const series: echarts.SeriesOption[] = [];
-        const mixedSeries =
-            this.types.filter((i) => i != KulChartType.GAUSSIAN).length > 0;
-        const needSortDataset =
-            this.types.filter((j) => j != KulChartType.GAUSSIAN).length == 1;
-        this.#gaussianDatasets = {};
-        let i: number = 0;
-        const color = this.#setColors(Object.keys(y).length);
-        for (const key in y) {
-            let type: KulChartType;
-            if (this.types[i]) {
-                type = this.types[i];
-            } else {
-                type = KulChartType.GAUSSIAN;
-            }
-            let values: ValueDisplayedValue[] = null;
-            const column = this.data.columns.find(
-                (col: KulDataColumn) => col.title === key
-            );
-            if (type == KulChartType.GAUSSIAN) {
-                if (!this.#kulManager.objects.isNumber(column.obj)) {
-                    const newDataset = this.#kulManager.data.distinct(
-                        this.data,
-                        [column.name]
-                    );
-                    values = this.#kulManager.data.cell.getUnivocalValue(
-                        newDataset,
-                        column
-                    );
-                    this.#gaussianDatasets[column.name] = newDataset;
-                } else {
-                    values = [];
-                    for (let index = 0; index < y[key].length; index++) {
-                        const element = y[key][index];
-                        values.push({ value: element });
-                    }
-                }
-            } else {
-                if (needSortDataset) {
-                    // if there is only one series other than the Gaussian then I apply the sorting algorithm that arranges the data in "mountain"
-                    this.#sortedDataset = this.#kulManager.data.sort(
-                        this.data,
-                        'normalDistribution',
-                        column.name
-                    );
-                    values = this.#kulManager.data.cell.getValue(
-                        this.#sortedDataset,
-                        column
-                    );
-                    x = this.#createX(this.#sortedDataset);
-                } else {
-                    values = this.#kulManager.data.cell.getValue(
-                        this.data,
-                        column
-                    );
-                }
-            }
-            const justValues: string[] = new Array();
-
-            for (let i = 0; i < values.length; i++) {
-                justValues.push(values[i].value);
-            }
-
-            this.#addSeries(
-                type,
-                series,
-                justValues,
-                key,
-                color[i],
-                mixedSeries,
-                needSortDataset
-            );
-            i++;
-        }
-        // "any" because type is mismanaged inside echarts library
-        const tipCb: any = (params: any[]) => {
-            params.sort((a, b) => a.seriesIndex - b.seriesIndex);
-            const wrapper =
-                '<div style="display: flex; flex-direction: column">';
-            let format = wrapper;
-            let count = 0;
-            for (let index = 0; index < params.length; index++) {
-                const param = params[index];
-
-                if (
-                    this.types[param.seriesIndex] == undefined ||
-                    this.types[param.seriesIndex] == KulChartType.GAUSSIAN
-                ) {
-                    const value = param.value[0];
-                    const x = `<div style="color: ${param.color};"><span style="margin-right: 5px;"><strong>x:</strong></span><span>${param.value[0]}</span></div>`;
-                    if (!index) {
-                        format += x;
-                    }
-
-                    const column = this.data.columns.find(
-                        (col: KulDataColumn) => col.title === param.seriesName
-                    ).name;
-                    const filters: KulDataFindCellFilters = {
-                        columns: [column],
-                        range: {
-                            max: value + (value / 100) * 50,
-                            min: value - (value / 100) * 50,
-                        },
-                    };
-                    const rows = this.#kulManager.data.row.find(
-                        this.#gaussianDatasets[column]
-                            ? this.#gaussianDatasets[column]
-                            : this.data,
-                        filters
-                    );
-                    for (let index = 0; index < rows.length; index++) {
-                        const row = rows[index];
-                        const cells = row.cells;
-                        if (cells[this.axis] || cells[column].title) {
-                            let title = '';
-                            if (cells[this.axis]) {
-                                title = cells[this.axis].value;
-                            } else {
-                                title = cells[column].title;
-                            }
-                            const remainder = count % 4;
-                            if (!remainder) {
-                                if (count) {
-                                    format += `</div>`;
-                                }
-                                format += `<div style="display: flex; flex-direction: row;">`;
-                            }
-                            const style = `style="color: ${param.color}; margin-right: 5px"`;
-                            format += `<span ${style}><strong>${title}</strong>: ${cells[column].value}</span>`;
-                            count++;
-                        }
-                    }
-                    if (format !== wrapper) format += '</div>';
-                } else {
-                    const style = `style="color: ${param.color}; margin-right: 5px"`;
-                    format += `<div ${style}><strong>${param.name}</strong>: ${param.value}</div>`;
-                }
-            }
-            if (format === wrapper) {
-                return null;
-            } else {
-                return format;
-            }
-        };
-        // list of x-axis, one for the non-Gaussian series which appears on the left and one for the Gaussian series on the right.
-        const xAxisTmp = [
-            {
-                ...this.#setAxisColors(),
-                data: x.length > 0 ? x : null,
-                type: 'category',
-                ...this.xAxis,
-            },
-            {
-                ...this.#setAxisColors(),
-                type: 'value',
-                max: 'dataMax',
-                min: 'dataMin',
-                ...this.xAxis,
-            },
-        ];
-        // list of y-axis, one for the non-Gaussian series which appears at the bottom and one for the Gaussian series at the top.
-        const yAxisTmp = [
-            {
-                ...this.#setAxisColors(),
-                type: 'value',
-                ...this.yAxis,
-            },
-            {
-                ...this.#setAxisColors(),
-                type: 'value',
-                ...this.yAxis,
-            },
-        ];
-        // If the series are not mixed, then I eliminate the extra axis
-        if (!mixedSeries) {
-            xAxisTmp.splice(0, 1);
-            yAxisTmp.splice(0, 1);
-        }
-        return {
-            color,
-            legend: this.#setLegend(y),
-            series: series,
-            title: this.#setTitle(),
-            tooltip: {
-                ...this.#setTooltip(),
-                trigger: 'axis',
-                formatter: tipCb,
-            },
-            xAxis: xAxisTmp,
-            yAxis: yAxisTmp,
-        } as echarts.EChartsOption;
-    }
-*/
-    #addSeries(type, series, values, key, color, mixedSeries = false, needSortDataset = false) {
-        switch (type) {
-            case 'bar':
-            case 'hbar':
-                series.push({
-                    data: values,
-                    name: key,
-                    type: 'bar',
-                    barWidth: needSortDataset ? '100%' : undefined,
-                });
-                break;
-            case 'gaussian':
-                series.push({
-                    data: this.#kulManager.math.normalDistribution(values),
-                    name: key,
-                    showSymbol: false,
-                    smooth: true,
-                    type: 'line',
-                    xAxisIndex: mixedSeries ? 1 : 0,
-                    yAxisIndex: mixedSeries ? 1 : 0,
-                });
-                break;
-            case 'scatter':
-                series.push({
-                    data: values,
-                    name: key,
-                    type: 'scatter',
-                });
-                break;
-            case 'area':
-            case 'line':
+    #createChartOptions() {
+        const options = this.#adapter.get.options;
+        const firstType = this.kulTypes?.[0] || 'line';
+        this.#createSeriesData();
+        switch (firstType) {
+            case 'calendar':
+                return options.calendar(this.#adapter);
+            case 'candlestick':
+                return options.candlestick(this.#adapter);
+            case 'funnel':
+                return options.funnel(this.#adapter);
+            case 'pie':
+                return options.pie(this.#adapter);
+            case 'radar':
+                return options.radar(this.#adapter);
+            case 'sankey':
+                return options.sankey(this.#adapter);
             default:
-                series.push({
-                    data: values,
-                    name: key,
-                    type: 'line',
-                    areaStyle: type === 'area'
-                        ? {
-                            color: new LinearGradient$1(0, 0, 0, 0.25, [
-                                {
-                                    offset: 0,
-                                    color: `rgba(${this.#kulManager.theme.colorCheck(color).rgbValues}, 0.375)`,
-                                },
-                            ]),
-                        }
-                        : undefined,
-                });
-                break;
+                this.#createAxisData();
+                return options.default(this.#adapter);
         }
     }
     /*-------------------------------------------------*/
@@ -85490,16 +85101,16 @@ const KulChart = class {
         this.#kulManager.theme.register(this);
     }
     componentDidLoad() {
-        this.onKulEvent(new CustomEvent('ready'), 'ready', {});
+        this.onKulEvent(new CustomEvent('ready'), 'ready');
         this.#kulManager.debug.updateDebugInfo(this, 'did-load');
     }
     componentWillRender() {
-        this.#updateTextColor();
+        this.#updateThemeColors();
         this.#kulManager.debug.updateDebugInfo(this, 'will-render');
     }
     componentDidRender() {
         if (this.kulData && this.kulData.columns && this.kulData.nodes) {
-            this.#initChart();
+            this.#init();
         }
         else {
             this.#kulManager.debug.logs.new(this, 'Not enough data. (' + JSON.stringify(this.kulData) + ')', 'informational');
@@ -85508,10 +85119,10 @@ const KulChart = class {
     }
     render() {
         const style = {
-            '--kul_chart_height': this.kulSizeY ? this.kulSizeY : '100%',
-            '--kul_chart_width': this.kulSizeX ? this.kulSizeX : '100%',
+            '--kul_chart_height': this.kulSizeY || '100%',
+            '--kul_chart_width': this.kulSizeX || '100%',
         };
-        return (h(Host, { key: 'c1b91df476f158c3e149df2ba8e8957dc2ddaf35', style: style }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '7d823a095faa6af8cb7e6ab87fdb05d667a3d3b7', id: KUL_WRAPPER_ID, ref: (chartContainer) => (this.#chartContainer = chartContainer) })));
+        return (h(Host, { key: 'c5edb596c5dc32adcabde6cf235ab0f0ffc843cf', style: style }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '1592e1c4ca8aabbef7edfe6d5c85f61322487859', id: KUL_WRAPPER_ID, ref: (chartContainer) => (this.#chartContainer = chartContainer) })));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

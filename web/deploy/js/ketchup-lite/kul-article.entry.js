@@ -1,5 +1,5 @@
-import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, F as Fragment, H as Host } from './index-4d533537.js';
-import { k as kulManagerInstance, b as KulLanguageGeneric } from './kul-manager-26d0782a.js';
+import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, F as Fragment, H as Host } from './index-7f37b7be.js';
+import { k as kulManagerInstance, b as KulLanguageGeneric } from './kul-manager-6086df84.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 import { K as KUL_WRAPPER_ID, c as KUL_STYLE_ID } from './GenericVariables-f3380974.js';
 
@@ -164,7 +164,7 @@ const KulArticle = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: '803a6bd92fc955ba165609621cd9a193d92b8131' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '77bdeeaf8479b2d7dce7c13d3c2298235e57eae7', id: KUL_WRAPPER_ID }, this.kulData?.nodes?.length ? (this.#prepArticle()) : (h("div", { class: "empty-data" }, h("div", { class: "empty-data__text" }, this.#kulManager.language.translate(KulLanguageGeneric.EMPTY_DATA)))))));
+        return (h(Host, { key: '95c96e18ed87aed546593bbdbab4545cb02dedc5' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'ee797c33e97c72150c03879450ef256bba0b94a0', id: KUL_WRAPPER_ID }, this.kulData?.nodes?.length ? (this.#prepArticle()) : (h("div", { class: "empty-data" }, h("div", { class: "empty-data__text" }, this.#kulManager.language.translate(KulLanguageGeneric.EMPTY_DATA)))))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

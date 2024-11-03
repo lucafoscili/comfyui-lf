@@ -1,6 +1,6 @@
-import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, a as getAssetPath, h, H as Host } from './index-4d533537.js';
+import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, a as getAssetPath, h, H as Host } from './index-7f37b7be.js';
 import { a as KulDataCyAttributes, K as KUL_WRAPPER_ID, c as KUL_STYLE_ID } from './GenericVariables-f3380974.js';
-import { k as kulManagerInstance } from './kul-manager-26d0782a.js';
+import { k as kulManagerInstance } from './kul-manager-6086df84.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 
 /*-------------------------------------------------*/
@@ -211,7 +211,7 @@ const KulAccordion = class {
     }
     render() {
         this.#rippleSurface = {};
-        return (h(Host, { key: '51e0579637b4d70fc882c43afa30e3a8ea948610' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '0bcf7ba149a4fc2952fe1674e589c7a7f01585af', id: KUL_WRAPPER_ID }, h("div", { key: 'a33784bc3e08d5dd5e23413e8b07d24de75928c1', class: "accordion" }, this.#prepAccordion()))));
+        return (h(Host, { key: 'e0c846d214ee730e5f57fdb5c58ca500dedf7c74' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'd494aedb92dec3151c34c226e9ec40360481d656', id: KUL_WRAPPER_ID }, h("div", { key: '0767a857471bf101b77f4290ba57ac0290df9e7d', class: "accordion" }, this.#prepAccordion()))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

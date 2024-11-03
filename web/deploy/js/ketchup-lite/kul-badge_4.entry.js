@@ -1,5 +1,5 @@
-import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, H as Host, F as Fragment, a as getAssetPath } from './index-4d533537.js';
-import { k as kulManagerInstance, K as KulThemeColorValues, d as KulDynamicPositionPlacement, b as KulLanguageGeneric } from './kul-manager-26d0782a.js';
+import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, H as Host, F as Fragment, a as getAssetPath } from './index-7f37b7be.js';
+import { k as kulManagerInstance, K as KulThemeColorValues, d as KulDynamicPositionPlacement, b as KulLanguageGeneric } from './kul-manager-6086df84.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 import { K as KUL_WRAPPER_ID, c as KUL_STYLE_ID, b as KUL_DROPDOWN_CLASS_VISIBLE, d as KUL_DROPDOWN_CLASS, a as KulDataCyAttributes, C as CSS_VAR_PREFIX } from './GenericVariables-f3380974.js';
 
@@ -107,9 +107,9 @@ const KulBadge = class {
             if (!this.kulImageProps.kulColor) {
                 this.kulImageProps.kulColor = `var(${KulThemeColorValues.TEXT_ON_PRIMARY})`;
             }
-            imageEl = h("kul-image", { key: '7b791716faeb2d64a1efc25ac587dc7b4188fef7', ...this.kulImageProps });
+            imageEl = h("kul-image", { key: '854661916f5cb1bd1443f42e0e08ce9c1cc8ce7e', ...this.kulImageProps });
         }
-        return (h(Host, { key: '2b083832a5469320c830a34a4c42633e4e9650b1' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '6f22d25c8907dfdf7f225c079fbd00dc4cb25682', id: KUL_WRAPPER_ID, onClick: (e) => this.onKulEvent(e, 'click') }, this.kulLabel, imageEl)));
+        return (h(Host, { key: '4100fc0f5ad4d0a4f8a93501009d107af5e2f273' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '7747a710d13277fc05b5d3e2cd7f1ca203209f95', id: KUL_WRAPPER_ID, onClick: (e) => this.onKulEvent(e, 'click') }, this.kulLabel, imageEl)));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);
