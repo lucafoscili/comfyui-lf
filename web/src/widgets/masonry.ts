@@ -27,6 +27,7 @@ export const masonryFactory: MasonryWidgetFactory = {
       getValue() {
         const index = parseInt(masonry?.dataset.index);
         return {
+          columns: masonry?.kulColumns || 3,
           dataset: masonry?.kulData || {},
           index: isValidNumber(index) ? index : NaN,
           name: masonry?.dataset.name || '',
@@ -37,7 +38,11 @@ export const masonryFactory: MasonryWidgetFactory = {
         const callback: NormalizeValueCallback<
           CustomWidgetDeserializedValuesMap<typeof TYPE> | string
         > = (_, u) => {
-          const { dataset, index, name, view } = u.parsedJson as MasonryWidgetDeserializedValue;
+          const { columns, dataset, index, name, view } =
+            u.parsedJson as MasonryWidgetDeserializedValue;
+          if (columns) {
+            masonry.kulColumns = columns;
+          }
           if (dataset) {
             masonry.kulData = dataset || {};
           }

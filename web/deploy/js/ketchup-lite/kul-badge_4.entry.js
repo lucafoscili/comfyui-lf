@@ -565,6 +565,12 @@ const KulImage = class {
         });
     }
     /*-------------------------------------------------*/
+    /*                 W a t c h e r s                 */
+    /*-------------------------------------------------*/
+    async resetState() {
+        this.error = false;
+    }
+    /*-------------------------------------------------*/
     /*           P u b l i c   M e t h o d s           */
     /*-------------------------------------------------*/
     /**
@@ -631,7 +637,7 @@ const KulImage = class {
                 this.error = true;
                 this.onKulEvent(e, 'error');
             }, onLoad: (e) => {
-                this.error = false;
+                this.resetState();
                 this.onKulEvent(e, 'load');
             }, src: this.kulValue }));
     }
@@ -688,6 +694,9 @@ const KulImage = class {
         this.#kulManager.theme.unregister(this);
     }
     static get assetsDirs() { return ["assets/svg"]; }
+    static get watchers() { return {
+        "kulValue": ["resetState"]
+    }; }
 };
 KulImage.style = KulImageStyle0;
 

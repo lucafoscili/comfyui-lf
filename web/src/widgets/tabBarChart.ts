@@ -39,6 +39,7 @@ export const tabBarChartFactory: TabBarChartWidgetFactory = {
           case NodeName.usageStatistics:
             return { directory: chart.dataset.directory || '' };
           default:
+          case NodeName.colorAnalysis:
           case NodeName.imageHistogram:
             return {};
         }
@@ -50,6 +51,8 @@ export const tabBarChartFactory: TabBarChartWidgetFactory = {
           const parsedValue = u.parsedJson as TabBarChartWidgetDeserializedValue;
 
           switch (node) {
+            case NodeName.colorAnalysis:
+            case NodeName.lutGeneration:
             case NodeName.imageHistogram:
               for (const key in parsedValue) {
                 if (Object.prototype.hasOwnProperty.call(parsedValue, key)) {
@@ -119,18 +122,27 @@ export const tabBarChartFactory: TabBarChartWidgetFactory = {
     );
 
     switch (node.comfyClass as NodeName) {
-      case NodeName.imageHistogram:
-        chart.kulAxis = 'Axis_0';
+      case NodeName.colorAnalysis:
+        chart.kulAxis = 'intensity';
         chart.kulColors = ['red', 'green', 'blue'];
-        chart.kulSeries = ['Series_0', 'Series_1', 'Series_2'];
-        chart.kulTypes = ['area', 'area', 'area'];
+        chart.kulSeries = ['red', 'green', 'blue'];
+        chart.kulTypes = ['scatter'];
+        grid.classList.add(tabBarChartFactory.cssClasses.gridNoDirectory);
+        textfield.classList.add(tabBarChartFactory.cssClasses.directoryHidden);
+        break;
+      case NodeName.imageHistogram:
+      case NodeName.lutGeneration:
+        chart.kulAxis = 'intensity';
+        chart.kulColors = ['red', 'green', 'blue'];
+        chart.kulSeries = ['red', 'green', 'blue'];
+        chart.kulTypes = ['area'];
         grid.classList.add(tabBarChartFactory.cssClasses.gridNoDirectory);
         textfield.classList.add(tabBarChartFactory.cssClasses.directoryHidden);
         break;
       case NodeName.usageStatistics:
         chart.kulAxis = 'name';
         chart.dataset.type = 'usage';
-        chart.kulSeries = ['counter'];
+        chart.kulSeries = ['counter', 'counter'];
         chart.kulTypes = ['area', 'scatter'];
         break;
     }
@@ -187,6 +199,7 @@ const tabbarEventHandler = (
   switch (eventType) {
     case 'click':
       switch (nodeName) {
+        case NodeName.colorAnalysis:
         case NodeName.imageHistogram:
           chart.kulData = node.cells.kulChart.kulData;
           break;

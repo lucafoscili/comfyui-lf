@@ -9,6 +9,8 @@ Versions 5.0.0 and 5.1.0 have seen a major refactoring that completely overhaule
 
 The documentation below was written prior to the release of the aforementioned versions, so it's outdated—it will be updated in the future.
 
+![LoRA tester workflow](path "Screenshot taken from the LoRA tester workflow")
+
 ## Overview
 
 A suite of custom nodes for [ComfyUI](https://github.com/comfyanonymous/ComfyUI) aimed at enhancing user experience with more interactive and visually engaging widgets.
@@ -32,6 +34,8 @@ That's a tough one—the nodes span quite a few categories. Here's a quick break
 - **Seed generation nodes**: Generate seeds for complex workflows.
 - **Selector nodes**: Resource selection widgets with metadata display for models.
   
+![CICD](path "Screenshot taken from the C.I. workflow")
+
 ## Table of Contents
 
 - [LF Nodes for ComfyUI](#lf-nodes-for-comfyui)

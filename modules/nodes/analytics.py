@@ -5,11 +5,113 @@ import torch
 
 from server import PromptServer
 
-from ..utils.constants import CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, get_usage_filename, get_usage_title
-from ..utils.helpers import get_comfy_dir, normalize_input_image, normalize_json_input, normalize_list_to_value, normalize_output_image
+from ..utils.constants import BLUE_CHANNEL_ID, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, get_usage_filename, get_usage_title, GREEN_CHANNEL_ID, INTENSITY_ID, RED_CHANNEL_ID, SUM_ID
+from ..utils.helpers import get_comfy_dir, normalize_input_image, normalize_json_input, normalize_list_to_value, normalize_output_image, tensor_to_numpy
 
 CATEGORY = f"{CATEGORY_PREFIX}/Analytics"
 
+# region LF_ColorAnalysis
+class LF_ColorAnalysis:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "source_image": ("IMAGE", {"tooltip": "Source image from which to extract the color style."}),
+                "target_image": ("IMAGE", {"tooltip": "Target image to be adjusted to match the source color pattern."}),
+            },
+            "optional": {
+                "ui_widget": ("KUL_TAB_BAR_CHART", {"default": {}})
+            },
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
+        }
+
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    OUTPUT_IS_LIST = (False, True, False)
+    OUTPUT_NODE = True
+    RETURN_NAMES = ("image", "image_list", "dataset")
+    RETURN_TYPES = ("IMAGE", "IMAGE", "JSON")
+
+    def on_exec(self, **kwargs: dict):
+        source_image: list[torch.Tensor] = normalize_input_image(kwargs.get("source_image", []))
+        target_image: list[torch.Tensor] = normalize_input_image(kwargs.get("target_image", []))
+
+        if len(source_image) != len(target_image):
+            raise ValueError("Source and Target batches should have the same number of images.")
+
+        mapping_datasets: dict = {}
+
+        for idx in range(len(source_image)):
+            source_np = tensor_to_numpy(source_image[idx])
+            target_np = tensor_to_numpy(target_image[idx])
+
+            source_histograms: dict = {
+                RED_CHANNEL_ID: np.histogram(source_np[:, :, 0], bins=256, range=(0, 255))[0],
+                GREEN_CHANNEL_ID: np.histogram(source_np[:, :, 1], bins=256, range=(0, 255))[0],
+                BLUE_CHANNEL_ID: np.histogram(source_np[:, :, 2], bins=256, range=(0, 255))[0]
+            }
+            
+            target_histograms: dict = {
+                RED_CHANNEL_ID: np.histogram(target_np[:, :, 0], bins=256, range=(0, 255))[0],
+                GREEN_CHANNEL_ID: np.histogram(target_np[:, :, 1], bins=256, range=(0, 255))[0],
+                BLUE_CHANNEL_ID: np.histogram(target_np[:, :, 2], bins=256, range=(0, 255))[0]
+            }
+
+            mapping_json: dict = {
+                "red_channel": self.generate_mapping(source_histograms[RED_CHANNEL_ID], target_histograms[RED_CHANNEL_ID]),
+                "green_channel": self.generate_mapping(source_histograms[GREEN_CHANNEL_ID], target_histograms[GREEN_CHANNEL_ID]),
+                "blue_channel": self.generate_mapping(source_histograms[BLUE_CHANNEL_ID], target_histograms[BLUE_CHANNEL_ID]),
+            }
+
+            nodes: list[dict] = []
+            dataset: dict = {
+                "columns": [
+                    {"id": INTENSITY_ID, "title": "Color Intensity (From)"},
+                    {"id": RED_CHANNEL_ID, "title": "Red Channel Mapping", "shape": "number"},
+                    {"id": GREEN_CHANNEL_ID, "title": "Green Channel Mapping", "shape": "number"},
+                    {"id": BLUE_CHANNEL_ID, "title": "Blue Channel Mapping", "shape": "number"}
+                ],
+                "nodes": nodes
+            }
+
+            for i in range(256):
+                node: dict = {
+                    "id": str(i),
+                    "cells": {
+                        INTENSITY_ID: {"value": str(i)},
+                        RED_CHANNEL_ID: {"value": str(mapping_json["red_channel"][i]), "shape": "number"},
+                        GREEN_CHANNEL_ID: {"value": str(mapping_json["green_channel"][i]), "shape": "number"},
+                        BLUE_CHANNEL_ID: {"value": str(mapping_json["blue_channel"][i]), "shape": "number"}
+                    }
+                }
+                nodes.append(node)
+
+            mapping_datasets[f"Image #{idx + 1}"] = dataset
+
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}coloranalysis", {
+            "node": kwargs.get("node_id"),
+            "datasets": mapping_datasets
+        })
+
+        image_batch, image_list = normalize_output_image(target_image)
+
+        return (image_batch[0], image_list, mapping_datasets)
+
+    @staticmethod
+    def generate_mapping(source_hist, target_hist):
+        source_cumsum = np.cumsum(source_hist) / np.sum(source_hist)
+        target_cumsum = np.cumsum(target_hist) / np.sum(target_hist)
+
+        mapping = np.zeros(256, dtype=np.uint8)
+        target_idx = 0
+        for i in range(256):
+            while target_idx < 255 and target_cumsum[target_idx] < source_cumsum[i]:
+                target_idx += 1
+            mapping[i] = target_idx
+        return mapping.tolist()
+# endregion
 # region LF_ImageHistogram
 class LF_ImageHistogram:
     @classmethod
@@ -50,29 +152,29 @@ class LF_ImageHistogram:
                 green_channel = image_np[:, :, 1]
                 blue_channel = image_np[:, :, 2]
 
-                red_hist = np.histogram(red_channel, bins=256, range=(0, 255))[0]
-                green_hist = np.histogram(green_channel, bins=256, range=(0, 255))[0]
-                blue_hist = np.histogram(blue_channel, bins=256, range=(0, 255))[0]
+                r = np.histogram(red_channel, bins=256, range=(0, 255))[0]
+                g = np.histogram(green_channel, bins=256, range=(0, 255))[0]
+                b = np.histogram(blue_channel, bins=256, range=(0, 255))[0]
 
                 sum_channel = red_channel.astype(np.int32) + green_channel.astype(np.int32) + blue_channel.astype(np.int32)
-                sum_hist = np.histogram(sum_channel, bins=256, range=(0, 765))[0]
+                s = np.histogram(sum_channel, bins=256, range=(0, 765))[0]
 
                 batch_histograms.append({
-                    "red_hist": red_hist.tolist(),
-                    "green_hist": green_hist.tolist(),
-                    "blue_hist": blue_hist.tolist(),
-                    "sum_hist": sum_hist.tolist(),
+                    "r": r.tolist(),
+                    "g": g.tolist(),
+                    "b": b.tolist(),
+                    "s": s.tolist(),
                 })
 
         for index, hist in enumerate(batch_histograms):
             nodes: list[dict] = []
             dataset: dict = {
                 "columns": [
-                    {"id": "Axis_0", "title": "Intensity"},
-                    {"id": "Series_0", "shape": "number", "title": "Red Channel"},
-                    {"id": "Series_1", "shape": "number", "title": "Green Channel"},
-                    {"id": "Series_2", "shape": "number", "title": "Blue Channel"},
-                    {"id": "Series_3", "shape": "number", "title": "Sum of Channels"},
+                    {"id": INTENSITY_ID, "title": "Intensity"},
+                    {"id": RED_CHANNEL_ID, "shape": "number", "title": "Red Channel"},
+                    {"id": GREEN_CHANNEL_ID, "shape": "number", "title": "Green Channel"},
+                    {"id": BLUE_CHANNEL_ID, "shape": "number", "title": "Blue Channel"},
+                    {"id": SUM_ID, "shape": "number", "title": "Sum of Channels"},
                 ],
                 "nodes": nodes
             }
@@ -80,11 +182,11 @@ class LF_ImageHistogram:
             for i in range(256):
                 node: dict = {
                     "cells": {
-                        "Axis_0": {"value": i},
-                        "Series_0": {"value": hist["red_hist"][i]},
-                        "Series_1": {"value": hist["green_hist"][i]},
-                        "Series_2": {"value": hist["blue_hist"][i]},
-                        "Series_3": {"value": hist["sum_hist"][i] if i < len(hist["sum_hist"]) else 0},
+                        INTENSITY_ID: {"value": i},
+                        RED_CHANNEL_ID: {"value": hist["r"][i]},
+                        GREEN_CHANNEL_ID: {"value": hist["g"][i]},
+                        BLUE_CHANNEL_ID: {"value": hist["b"][i]},
+                        SUM_ID: {"value": hist["s"][i] if i < len(hist["s"]) else 0},
                     },
                     "id": str(i),
                 }
@@ -92,12 +194,12 @@ class LF_ImageHistogram:
 
             datasets[f"Image #{index + 1}"] = dataset
 
+        b, l = normalize_output_image(image)
+
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}imagehistogram", {
             "node": kwargs.get("node_id"), 
             "datasets": datasets,
         })
-
-        b, l = normalize_output_image(image)
 
         return (b[0], l, datasets)
 # endregion
@@ -176,6 +278,71 @@ class LF_KeywordCounter:
         })
 
         return (chart_dataset, chip_dataset)
+# endregion
+# region LF_LUTGeneration
+class LF_LUTGeneration:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "color_analysis_dataset": ("JSON", {"tooltip": "Transformation dataset generated by Color Analysis Node."}),
+            },
+            "optional": {
+                "ui_widget": ("KUL_TAB_BAR_CHART", {"default": {}})
+            },
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
+        }
+
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    OUTPUT_IS_LIST = (False,)
+    OUTPUT_NODE = True
+    RETURN_NAMES = ("lut_dataset",)
+    RETURN_TYPES = ("JSON",)
+
+    def on_exec(self, **kwargs: dict):
+        color_analysis: dict = normalize_json_input(kwargs.get("color_analysis_dataset"))
+
+        lut_datasets: dict = {}
+        for image_key, color_analysis in color_analysis.items():
+            nodes: list[dict] = []
+            dataset: dict = {
+                "columns": [
+                    {"id": INTENSITY_ID, "title": "Color Intensity"},
+                    {"id": RED_CHANNEL_ID, "title": "Red Channel LUT"},
+                    {"id": GREEN_CHANNEL_ID, "title": "Green Channel LUT"},
+                    {"id": BLUE_CHANNEL_ID, "title": "Blue Channel LUT"}
+                ],
+                "nodes": nodes
+            }
+
+            for node in color_analysis["nodes"]:
+                i = node["cells"][INTENSITY_ID]["value"]
+                r = node["cells"][RED_CHANNEL_ID]["value"]
+                g = node["cells"][GREEN_CHANNEL_ID]["value"]
+                b = node["cells"][BLUE_CHANNEL_ID]["value"]
+
+                lut_node = {
+                    "id": INTENSITY_ID,
+                    "cells": {
+                        INTENSITY_ID: {"value": i},
+                        RED_CHANNEL_ID: {"value": r, "shape": "number"},
+                        GREEN_CHANNEL_ID: {"value": g, "shape": "number"},
+                        BLUE_CHANNEL_ID: {"value": b, "shape": "number"}
+                    }
+                }
+                nodes.append(lut_node)
+
+            lut_datasets[image_key] = dataset
+
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}lutgeneration", {
+            "node": kwargs.get("node_id"),
+            "datasets": lut_datasets
+        })
+
+        return (lut_datasets,)
 # endregion
 # region LF_UpdateUsageStatistics
 class LF_UpdateUsageStatistics:
@@ -297,15 +464,19 @@ class LF_UsageStatistics:
         return ()
 # endregion
 NODE_CLASS_MAPPINGS = {
+    "LF_ColorAnalysis": LF_ColorAnalysis,
     "LF_ImageHistogram": LF_ImageHistogram,
     "LF_KeywordCounter": LF_KeywordCounter,
+    "LF_LUTGeneration": LF_LUTGeneration,
     "LF_UpdateUsageStatistics": LF_UpdateUsageStatistics,
     "LF_UsageStatistics": LF_UsageStatistics,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
+    "LF_ColorAnalysis": "Color Analysis",
     "LF_ImageHistogram":  "Image Histogram",
     "LF_KeywordCounter": "Keyword counter",
+    "LF_LUTGeneration": "LUT Generation",
     "LF_UpdateUsageStatistics": "Update usage statistics",
     "LF_UsageStatistics": "Usage statistics",
 }

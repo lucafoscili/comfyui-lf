@@ -9,6 +9,12 @@ ANY = AnyType("*")
 INT_MAX = 0xffffffffffffffff
 LORA_TAG_REGEX = r'<lora:[^<>]+>'
 
+BLUE_CHANNEL_ID = "blue"
+GREEN_CHANNEL_ID = "green"
+INTENSITY_ID = "intensity"
+RED_CHANNEL_ID = "red"
+SUM_ID = "sum"
+
 NOTIFY_COMBO = ["None", "Focus tab", "Interrupt", "Interrupt and queue", "Queue prompt"]
 
 API_ROUTE_PREFIX = "/comfyui-lf"
