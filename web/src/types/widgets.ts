@@ -43,6 +43,7 @@ export type ComfyWidgetMap = {
   [ComfyWidgetName.number]: Widget;
   [ComfyWidgetName.seed]: Widget;
   [ComfyWidgetName.string]: Widget;
+  [ComfyWidgetName.text]: Widget;
   [ComfyWidgetName.toggle]: Widget;
 };
 export enum ComfyWidgetName {
@@ -55,6 +56,7 @@ export enum ComfyWidgetName {
   number = 'NUMBER',
   seed = 'SEED',
   string = 'STRING',
+  text = 'TEXT',
   toggle = 'TOGGLE',
 }
 export type CustomWidgetMap = {

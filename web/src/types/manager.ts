@@ -15,6 +15,7 @@ export interface ComfyAPIs {
     name: EventName,
     callback: (event: CustomEvent<P>) => void,
   ) => void;
+  comfyUi: () => ComfyUI;
   fetch: (body: unknown) => Promise<Response>;
   getLinkById: (id: string) => LinkInfo;
   getNodeById: (id: string) => NodeType;

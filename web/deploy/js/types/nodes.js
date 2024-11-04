@@ -55,6 +55,7 @@ export var NodeName;
     NodeName["samplerSelector"] = "LF_SamplerSelector";
     NodeName["saveImageForCivitai"] = "LF_SaveImageForCivitAI";
     NodeName["saveJson"] = "LF_SaveJSON";
+    NodeName["saveMarkdown"] = "LF_SaveMarkdown";
     NodeName["schedulerSelector"] = "LF_SchedulerSelector";
     NodeName["sequentialSeedsGenerator"] = "LF_SequentialSeedsGenerator";
     NodeName["setValueInJson"] = "LF_SetValueInJSON";

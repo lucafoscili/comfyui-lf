@@ -20,13 +20,19 @@ import { KulDataDataset } from '../types/ketchup-lite/components.js';
 import { KulDom } from '../types/ketchup-lite/managers/kul-manager/kul-manager-declarations.js';
 import { KulManager } from '../types/ketchup-lite/managers/kul-manager/kul-manager.js';
 import { CustomWidgetName } from '../types/widgets.js';
-import { NODE_WIDGET_MAP, onConnectionsChange, onDrawBackground } from '../helpers/manager.js';
+import {
+  NODE_WIDGET_MAP,
+  onConnectionsChange,
+  onDrawBackground,
+  onNodeCreated,
+} from '../helpers/manager.js';
 
 /*-------------------------------------------------*/
 /*                 L F   C l a s s                 */
 /*-------------------------------------------------*/
 
 export interface LFWindow extends Window {
+  comfyAPI: ComfyUI;
   lfManager: LFManager;
 }
 
@@ -328,6 +334,7 @@ export class LFManager {
         return payload;
       },
     },
+    comfyUi: () => (window as unknown as LFWindow).comfyAPI,
     event: (name, callback) => {
       api.addEventListener(name, callback);
     },
@@ -445,11 +452,14 @@ export class LFManager {
           callbacks.push(onConnectionsChange);
         }
 
+        callbacks.push(onNodeCreated);
+
         const extension: Extension = {
           name: 'LFExt_' + name,
           async beforeRegisterNodeDef(node) {
-            callbacks.forEach((c) => c(node));
-            callbacks;
+            if (node.comfyClass === name) {
+              callbacks.forEach((c) => c(node));
+            }
           },
           getCustomWidgets: () =>
             widgets.reduce((acc, widget) => {
@@ -463,7 +473,7 @@ export class LFManager {
         this.getApiRoutes().register(extension);
 
         this.#APIS.event(eventName, (e) => {
-          this.#MANAGERS.widgets.onEvent(name, e, widgets);
+          this.#MANAGERS.widgets.onEvent(name, e, widgets as CustomWidgetName[]);
         });
       }
     }

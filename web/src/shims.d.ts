@@ -3,6 +3,122 @@
 /*   coding more quick.                            */
 /*   Mostly A.I. generated, not reliable           */
 /*-------------------------------------------------*/
+
+declare interface ComfyUI {
+  api: {
+    api: ComfyApi;
+  };
+  app: {
+    ANIM_PREVIEW_WIDGET: string;
+    app: ComfyApp;
+    ComfyApp: Function;
+  };
+  asyncDialog: {
+    ComfyAsyncDialog: Function;
+  };
+  button: {
+    ComfyButton: Function;
+  };
+  buttonGroup: {
+    ComfyButtonGroup: Function;
+  };
+  changeTracker: {
+    globalTracker: ChangeTracker;
+    ChangeTracker: Function;
+  };
+  clipspace: {
+    ClipspaceDialog: Function;
+  };
+  colorPalette: {
+    defaultColorPalette: any;
+    getColorPalette: Function;
+  };
+  defaultGraph: {
+    defaultGraph: any;
+  };
+  dialog: {
+    ComfyDialog: Function;
+  };
+  domWidget: {
+    addDomClippingSetting: Function;
+  };
+  draggableList: {
+    DraggableList: Function;
+  };
+  flac: {
+    getFromFlacBuffer: Function;
+    getFromFlacFile: Function;
+  };
+  groupNode: {
+    GroupNodeConfig: Function;
+    GroupNodeHandler: Function;
+  };
+  groupNodeManage: {
+    ManageGroupDialog: Function;
+  };
+  imagePreview: {
+    calculateImageGrid: Function;
+    createImageHost: Function;
+  };
+  index: {
+    ComfyAppMenu: Function;
+  };
+  logging: {
+    ComfyLogging: Function;
+  };
+  png: {
+    getFromPngBuffer: Function;
+    getFromPngFile: Function;
+  };
+  pnginfo: {
+    getPngMetadata: Function;
+    getFlacMetadata: Function;
+    getWebpMetadata: Function;
+    getLatentMetadata: Function;
+    importA1111: Function;
+  };
+  popup: {
+    ComfyPopup: Function;
+  };
+  settings: {
+    ComfySettingsDialog: Function;
+  };
+  splitButton: {
+    ComfySplitButton: Function;
+  };
+  toggleSwitch: {
+    toggleSwitch: Function;
+  };
+  ui: {
+    ComfyDialog: Function;
+    $el: Function;
+    ComfyUI: Function;
+  };
+  utils: {
+    clone: Function;
+    applyTextReplacements: (api: ComfyUI, value: string) => string;
+    addStylesheet: Function;
+    downloadBlob: Function;
+    prop: Function;
+  };
+  widgetInputs: {
+    getWidgetConfig: Function;
+    convertToInput: Function;
+    setWidgetConfig: Function;
+    mergeIfValid: Function;
+  };
+  widgets: {
+    ComfyWidgets: any;
+    updateControlWidgetLabel: Function;
+    addValueControlWidget: Function;
+    addValueControlWidgets: Function;
+    initWidgets: Function;
+  };
+  workflows: {
+    ComfyWorkflowManager: Function;
+    ComfyWorkflow: Function;
+  };
+}
 declare interface NotificationOptions {
   // Existing properties
   badge?: string;
@@ -204,13 +320,14 @@ interface SlotInfo {
 }
 interface Widget {
   element?: DOMWidget;
-  type?: any;
+  type?: CustomWidgetName | ComfyWidgetName;
   name?: string;
   value?: any;
   options?: WidgetOptions;
   last_y?: number;
   y?: number;
   computedHeight?: number;
+  serializeValue: () => string;
   onRemove?: () => void;
 }
 type OnConnectionChangeCallback = (

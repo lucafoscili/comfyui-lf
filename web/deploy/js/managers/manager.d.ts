@@ -7,6 +7,7 @@ import { LFTooltip } from './tooltip';
 import { KulDataDataset } from '../types/ketchup-lite/components.js';
 import { KulManager } from '../types/ketchup-lite/managers/kul-manager/kul-manager.js';
 export interface LFWindow extends Window {
+    comfyAPI: ComfyUI;
     lfManager: LFManager;
 }
 export declare class LFManager {
