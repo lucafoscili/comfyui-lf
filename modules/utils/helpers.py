@@ -1269,7 +1269,7 @@ def resize_to_square(image_tensor: torch.Tensor, square_size: int, resample_meth
     return cropped_img
 # endregion
 # region resolve_filepath
-def resolve_filepath(filepath: str = USER_FOLDER, base_output_path: str = get_comfy_dir("temp"), index: int = 0, add_timestamp: bool = False, default_filename: str = "ComfyUI", extension: str = "PNG", add_counter: bool = True) -> str:
+def resolve_filepath(filename_prefix: str = None, base_output_path: str = None, add_timestamp: bool = False, extension: str = "PNG", add_counter: bool = True, image: torch.Tensor = None) -> str:
     """
     Simplified helper function using ComfyUI's core image-saving logic, ensuring folder and filename separation.
     
@@ -1285,19 +1285,30 @@ def resolve_filepath(filepath: str = USER_FOLDER, base_output_path: str = get_co
     Returns:
         str: Fully resolved file path with subfolders, filename, and extension.
     """
-    path_base = filepath[index] if isinstance(filepath, list) and index < len(filepath) else filepath[0] if isinstance(filepath, list) else filepath
 
-    if os.path.splitext(os.path.basename(path_base))[1] == "":
-        filename_prefix = os.path.join(path_base, default_filename)
+    if filename_prefix == None:
+        filename_prefix = f"{USER_FOLDER}/ComfyUI"
     else:
-        filename_prefix = path_base
+        filename_prefix = normalize_list_to_value(filename_prefix)
+
+    if base_output_path == None:
+        base_output_path = get_comfy_dir("temp")
 
     if add_timestamp:
         filename_prefix = f"{filename_prefix}_%year%-%month%-%day%_%hour%-%minute%-%second%"
+    
+    if isinstance(normalize_list_to_value(image), torch.Tensor):
+        height = image.shape[1]
+        width = image.shape[2]
+    else:
+        height = None
+        width = None
 
     output_folder, filename, counter, subfolder, _ = get_save_image_path(
         filename_prefix=filename_prefix,
-        output_dir=base_output_path
+        output_dir=base_output_path,
+        image_height=height,
+        image_width=width,
     )
 
     if add_counter:

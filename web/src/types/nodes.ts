@@ -58,6 +58,7 @@ export enum NodeName {
   samplerSelector = 'LF_SamplerSelector',
   saveImageForCivitai = 'LF_SaveImageForCivitAI',
   saveJson = 'LF_SaveJSON',
+  saveMarkdown = 'LF_SaveMarkdown',
   schedulerSelector = 'LF_SchedulerSelector',
   sequentialSeedsGenerator = 'LF_SequentialSeedsGenerator',
   setValueInJson = 'LF_SetValueInJSON',

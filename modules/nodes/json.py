@@ -198,11 +198,6 @@ class LF_ImageListFromJSON:
 
         image = []
         for index in range(num_images):
-            output_file, subfolder, filename = resolve_filepath(
-                index=index,
-                default_filename="jsonimage_",
-            )
-            url = get_resource_url(subfolder, filename, "temp")
 
             if add_noise:
                 img = numpy_to_tensor(np.random.randint(0, 256, (height, width, 3), dtype=np.uint8))
@@ -210,9 +205,15 @@ class LF_ImageListFromJSON:
                 img = numpy_to_tensor(np.full((height, width, 3), 255, dtype=np.uint8))
 
             pil_img = tensor_to_pil(img)
+
+            output_file, subfolder, filename = resolve_filepath(
+                filename_prefix="jsonimage_",
+                image=img
+            )
+            url = get_resource_url(subfolder, filename, "temp")
             pil_img.save(output_file, format="PNG")
-            image.append(img)
             
+            image.append(img)
             nodes.append(create_masonry_node(filename, url, index))
 
 

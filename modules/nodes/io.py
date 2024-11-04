@@ -13,7 +13,7 @@ from PIL.PngImagePlugin import PngInfo
 from server import PromptServer
 
 from ..utils.constants import CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION
-from ..utils.helpers import create_dummy_image_tensor, create_history_node, create_masonry_node, extract_jpeg_metadata, extract_png_metadata, get_comfy_dir, get_resource_url, normalize_input_image, normalize_input_list, normalize_json_input, normalize_list_to_value, normalize_output_image, pil_to_tensor, resolve_filepath, tensor_to_numpy
+from ..utils.helpers import create_dummy_image_tensor, create_history_node, create_masonry_node, extract_jpeg_metadata, extract_png_metadata, get_comfy_dir, get_resource_url, normalize_input_image, normalize_input_list, normalize_json_input, normalize_list_to_value, normalize_output_image, pil_to_tensor, resolve_filepath, tensor_to_pil
 
 CATEGORY = f"{CATEGORY_PREFIX}/IO Operations"
 
@@ -143,25 +143,24 @@ class LF_LoadImages:
                         if strip_ext:
                             file_names.append(f)  
                         else:
-                            file_names.append(file)  
-
-                        output_file, subfolder, filename = resolve_filepath(
-                            base_output_path=get_comfy_dir("input"),
-                            index=index,
-                            default_filename=f,
-                            extension=e,
-                            add_counter=False
-                        )
-                        url = get_resource_url(subfolder, filename, "input")
+                            file_names.append(file)
               
                         file_creation_time = os.path.getctime(image_path)
                         creation_date = datetime.fromtimestamp(file_creation_time).strftime('%Y-%m-%d')
                         output_creation_dates.append(creation_date)
-        
                         pil_img = Image.open(io.BytesIO(img_file.read())).convert("RGB")
+                        img_tensor = pil_to_tensor(pil_img)
+  
+                        output_file, subfolder, filename = resolve_filepath(
+                            filename_prefix=f,
+                            base_output_path=get_comfy_dir("input"),
+                            extension=e,
+                            add_counter=False,
+                            image=img_tensor
+                        )
+                        url = get_resource_url(subfolder, filename, "input")
                         pil_img.save(output_file, format=e)
 
-                        img_tensor = pil_to_tensor(pil_img)
                         images.append(img_tensor)
                         
                         nodes.append(create_masonry_node(filename, url, index))
@@ -226,7 +225,7 @@ class LF_LoadLocalJSON:
             data = json.load(file)
  
         nodes: list[dict] = []
-        root: dict = { "children": nodes, "icon":"check", "id": "root", "value": "JSON saved successfully!" }
+        root: dict = { "children": nodes, "icon":"check", "id": "root", "value": "JSON loaded successfully!" }
         dataset: dict = { "nodes": [root] }
         nodes.append({ "description": url, "icon": "json", "id": url, "value": url })
  
@@ -417,7 +416,7 @@ class LF_SaveImageForCivitAI:
         return {
             "required": {
                 "image": ("IMAGE", {"tooltip": "Input images to save."}),
-                "filepath": ("STRING", {"default": '', "tooltip": "Path and filename. Use slashes to specify directories."}),
+                "filename_prefix": ("STRING", {"default": '', "tooltip": "Path and filename. Use slashes to specify directories."}),
                 "add_timestamp": ("BOOLEAN", {"default": True, "tooltip": "Sets the execution time's timestamp as a suffix of the file name."}),
                 "embed_workflow": ("BOOLEAN", {"default": True, "tooltip": "Whether to embed inside the images the current workflow or not."}),
                 "extension": (['png', 'jpeg', 'webp'], {"default": "png", "tooltip": "Supported file formats."}),
@@ -444,7 +443,7 @@ class LF_SaveImageForCivitAI:
 
     def on_exec(self, **kwargs: dict):
         image: list[torch.Tensor] = normalize_input_image(kwargs.get("image"))
-        filepath: list[str] = normalize_input_list(kwargs.get("filepath"))
+        filename_prefix: list[str] = normalize_input_list(kwargs.get("filename_prefix"))
         extra_pnginfo: list[torch.Tensor] = normalize_list_to_value(kwargs.get("extra_pnginfo"))
         prompt: dict = normalize_list_to_value(kwargs.get("prompt"))
         add_timestamp: bool = normalize_list_to_value(kwargs.get("add_timestamp"))
@@ -459,15 +458,15 @@ class LF_SaveImageForCivitAI:
         dataset: dict = { "nodes": nodes }
 
         for index, img in enumerate(image):
-            output_file, subfolder, filename = resolve_filepath(
-                filepath=filepath,
-                base_output_path=get_comfy_dir("output"),
-                index=index,
-                add_timestamp=add_timestamp,
-                extension=extension
-            )
+            pil_img = tensor_to_pil(img)
 
-            pil_img = Image.fromarray(tensor_to_numpy(img))
+            output_file, subfolder, filename = resolve_filepath(
+                filename_prefix=filename_prefix,
+                base_output_path=get_comfy_dir("output"),
+                add_timestamp=add_timestamp,
+                extension=extension,
+                image=img
+            )
             url = get_resource_url(subfolder, filename, "output")
         
             if extension == 'png':
@@ -513,11 +512,11 @@ class LF_SaveJSON:
         return {
             "required": {
                 "json_data": ("JSON", {"tooltip": "JSON data to save."}),
-                "filepath": ("STRING", {"default": '', "tooltip": "Path and filename for saving the JSON. Use slashes to set directories."}),
+                "filename_prefix": ("STRING", {"default": '', "tooltip": "Path and filename for saving the JSON. Use slashes to set directories."}),
                 "add_timestamp": ("BOOLEAN", {"default": True, "tooltip": "Add timestamp to the filename as a suffix."}),
             },
             "optional": {
-                "ui_widget": ("KUL_TREE", {"defaultInput": {}}),
+                "ui_widget": ("KUL_TREE", {"default": {}}),
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID",
@@ -532,11 +531,11 @@ class LF_SaveJSON:
 
     def on_exec(self, **kwargs: dict):
         json_data: dict = normalize_json_input(kwargs.get("json_data"))
-        filepath: str = normalize_list_to_value(kwargs.get("filepath"))
+        filename_prefix: str = normalize_list_to_value(kwargs.get("filename_prefix"))
         add_timestamp: bool = normalize_list_to_value(kwargs.get("add_timestamp"))
 
         output_file, _, _ = resolve_filepath(
-            filepath=filepath,
+            filename_prefix=filename_prefix,
             base_output_path=get_comfy_dir("output"),
             add_timestamp=add_timestamp,
             extension="json"
@@ -564,11 +563,11 @@ class LF_SaveMarkdown:
         return {
             "required": {
                 "markdown_text": ("STRING", {"default": "", "multiline": True, "tooltip": "Markdown data to save."}),
-                "filepath": ("STRING", {"default": '', "tooltip": "Path and filename for saving the Markdown. Use slashes to set directories."}),
+                "filename_prefix": ("STRING", {"default": '', "tooltip": "Path and filename for saving the Markdown. Use slashes to set directories."}),
                 "add_timestamp": ("BOOLEAN", {"default": True, "tooltip": "Add timestamp to the filename as a suffix."}),
             },
             "optional": {
-                "ui_widget": ("KUL_TREE", {"defaultInput": {}}),
+                "ui_widget": ("KUL_TREE", {"default": {}}),
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID",
@@ -583,11 +582,11 @@ class LF_SaveMarkdown:
 
     def on_exec(self, **kwargs: dict):
         markdown_text: str = normalize_list_to_value(kwargs.get("markdown_text"))
-        filepath: str = normalize_list_to_value(kwargs.get("filepath"))
+        filename_prefix: str = normalize_list_to_value(kwargs.get("filename_prefix"))
         add_timestamp: bool = normalize_list_to_value(kwargs.get("add_timestamp"))
 
         output_file, _, _ = resolve_filepath(
-            filepath=filepath,
+            filename_prefix=filename_prefix,
             base_output_path=get_comfy_dir("output"),
             add_timestamp=add_timestamp,
             extension="md"

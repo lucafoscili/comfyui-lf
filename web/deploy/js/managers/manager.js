@@ -19,7 +19,7 @@ import { LFEndpoints, LogSeverity, } from '../types/manager.js';
 import { NodeName } from '../types/nodes.js';
 import { LFTooltip } from './tooltip.js';
 import { CustomWidgetName } from '../types/widgets.js';
-import { NODE_WIDGET_MAP, onConnectionsChange, onDrawBackground } from '../helpers/manager.js';
+import { NODE_WIDGET_MAP, onConnectionsChange, onDrawBackground, onNodeCreated, } from '../helpers/manager.js';
 const LOG_STYLE = {
     fontFamily: 'var(--kul-font-family-monospace)',
     margin: '0',
@@ -292,6 +292,7 @@ export class LFManager {
                     return payload;
                 },
             },
+            comfyUi: () => window.comfyAPI,
             event: (name, callback) => {
                 api.addEventListener(name, callback);
             },
@@ -386,11 +387,13 @@ export class LFManager {
                 if (widgets.includes(CustomWidgetName.chip)) {
                     callbacks.push(onConnectionsChange);
                 }
+                callbacks.push(onNodeCreated);
                 const extension = {
                     name: 'LFExt_' + name,
                     async beforeRegisterNodeDef(node) {
-                        callbacks.forEach((c) => c(node));
-                        callbacks;
+                        if (node.comfyClass === name) {
+                            callbacks.forEach((c) => c(node));
+                        }
                     },
                     getCustomWidgets: () => widgets.reduce((acc, widget) => {
                         return {

@@ -47,11 +47,7 @@ export const treeFactory: TreeWidgetFactory = {
         tree.kulAccordionLayout = false;
         tree.kulSelectable = false;
         break;
-      case NodeName.multipleImageResizeForWeb:
-      case NodeName.resizeImageByEdge:
-      case NodeName.resizeImageToDimension:
-      case NodeName.resizeImageToSquare:
-      case NodeName.urandomSeedGenerator:
+      default:
         tree.kulAccordionLayout = true;
         tree.kulSelectable = false;
         break;

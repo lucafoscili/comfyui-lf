@@ -9,6 +9,7 @@ export var ComfyWidgetName;
     ComfyWidgetName["number"] = "NUMBER";
     ComfyWidgetName["seed"] = "SEED";
     ComfyWidgetName["string"] = "STRING";
+    ComfyWidgetName["text"] = "TEXT";
     ComfyWidgetName["toggle"] = "TOGGLE";
 })(ComfyWidgetName || (ComfyWidgetName = {}));
 export var CustomWidgetName;

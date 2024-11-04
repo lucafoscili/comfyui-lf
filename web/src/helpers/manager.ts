@@ -4,6 +4,7 @@ import { NodeName, NodeWidgetMap } from '../types/nodes';
 import { ComfyWidgetName, CustomWidgetName } from '../types/widgets';
 import {
   areJSONEqual,
+  getApiRoutes,
   getCustomWidget,
   getInput,
   getLFManager,
@@ -66,6 +67,7 @@ export const NODE_WIDGET_MAP: NodeWidgetMap = {
   LF_SamplerSelector: [CustomWidgetName.history],
   LF_SaveImageForCivitAI: [CustomWidgetName.masonry],
   LF_SaveJSON: [CustomWidgetName.tree],
+  LF_SaveMarkdown: [CustomWidgetName.tree],
   LF_SchedulerSelector: [CustomWidgetName.history],
   LF_SequentialSeedsGenerator: [CustomWidgetName.history],
   LF_SetValueInJSON: [CustomWidgetName.code],
@@ -90,18 +92,6 @@ export const NODE_WIDGET_MAP: NodeWidgetMap = {
   LF_WriteJSON: [CustomWidgetName.textarea],
 };
 
-export const onDrawBackground = async (nodeType: NodeType) => {
-  const onDrawBackground = nodeType.prototype.onDrawBackground;
-  nodeType.prototype.onDrawBackground = function () {
-    const r = onDrawBackground?.apply(this, arguments);
-    const node = this;
-
-    refreshChart(node);
-
-    return r;
-  };
-};
-
 export const onConnectionsChange = async (nodeType: NodeType) => {
   const onConnectionsChange = nodeType.prototype.onConnectionsChange;
   nodeType.prototype.onConnectionsChange = function () {
@@ -118,6 +108,43 @@ export const onConnectionsChange = async (nodeType: NodeType) => {
         break;
     }
 
+    return r;
+  };
+};
+
+export const onDrawBackground = async (nodeType: NodeType) => {
+  const onDrawBackground = nodeType.prototype.onDrawBackground;
+  nodeType.prototype.onDrawBackground = function () {
+    const r = onDrawBackground?.apply(this, arguments);
+    const node = this;
+
+    refreshChart(node);
+
+    return r;
+  };
+};
+
+export const onNodeCreated = async (nodeType: NodeType) => {
+  const onNodeCreated = nodeType.prototype.onNodeCreated;
+
+  nodeType.prototype.onNodeCreated = function () {
+    const r = onNodeCreated ? onNodeCreated.apply(this, arguments) : void 0;
+    const node = this;
+
+    for (let index = 0; index < node.widgets?.length; index++) {
+      const w = node.widgets[index];
+
+      switch (w.type.toUpperCase()) {
+        case ComfyWidgetName.customtext:
+        case ComfyWidgetName.string:
+        case ComfyWidgetName.text:
+          w.serializeValue = () => {
+            const comfy = getApiRoutes().comfyUi();
+            return comfy.utils.applyTextReplacements(comfy, w.value);
+          };
+          break;
+      }
+    }
     return r;
   };
 };

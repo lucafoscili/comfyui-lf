@@ -55,12 +55,6 @@ class LF_BlurImages:
                     base_name = split_name[0]
             else:
                 base_name = ""
-                
-            output_file, subfolder, filename = resolve_filepath(
-                    index=index,
-                    default_filename=f"{base_name}_Blur",
-                    add_counter=False
-            )
             
             pil_image = tensor_to_pil(img)
             
@@ -69,14 +63,19 @@ class LF_BlurImages:
             adjusted_blur_radius: float = blur_percentage * (min_dimension / 10)
             
             blurred_image = pil_image.filter(ImageFilter.GaussianBlur(adjusted_blur_radius))
-            blurred_image.save(output_file, format="PNG")
-            url = get_resource_url(subfolder, filename, "temp")
             
             blurred_tensor = pil_to_tensor(blurred_image)
             blurred_images.append(blurred_tensor)
+                
+            output_file, subfolder, filename = resolve_filepath(
+                    filename_prefix=f"{base_name}_Blur",
+                    add_counter=False,
+                    image=blurred_tensor,
+            )
+            blurred_image.save(output_file, format="PNG")
+            url = get_resource_url(subfolder, filename, "temp")
 
             blurred_file_names.append(filename)
-
             nodes.append(create_masonry_node(filename, url, index))
 
         image_batch, image_list = normalize_output_image(blurred_images)
@@ -126,22 +125,22 @@ class LF_ClarityEffect:
         processed_images: list[torch.Tensor] = []
 
         for index, img in enumerate(image):
-            output_file_s, subfolder_s, filename_s = resolve_filepath(
-                    index=index,
-                    default_filename="clarity_s",
-            )
-            output_file_t, subfolder_t, filename_t = resolve_filepath(
-                    index=index,
-                    default_filename="clarity_t",
-            )
-            
             pil_image = tensor_to_pil(img)
+
+            output_file_s, subfolder_s, filename_s = resolve_filepath(
+                    filename_prefix="clarity_s",
+                    image=img,
+            )
             pil_image.save(output_file_s, format="PNG")
             filename_s = get_resource_url(subfolder_s, filename_s, "temp")
 
             processed = clarity_effect(img, clarity_strength, sharpen_amount, blur_kernel_size)
-
             pil_image = tensor_to_pil(processed)
+
+            output_file_t, subfolder_t, filename_t = resolve_filepath(
+                    filename_prefix="clarity_t",
+                    image=processed,
+            )
             pil_image.save(output_file_t, format="PNG")
             filename_t = get_resource_url(subfolder_t, filename_t, "temp")
 
@@ -193,21 +192,22 @@ class LF_CompareImages:
             raise ValueError("Image lists must have the same length if both inputs are provided.")
         
         for index, img in enumerate(image_list_1):
-            output_file_s, subfolder_s, filename_s = resolve_filepath(
-                    index=index,
-                    default_filename="compare_s",
-            )
-            
             pil_image = tensor_to_pil(img)
+
+            output_file_s, subfolder_s, filename_s = resolve_filepath(
+                    filename_prefix="compare_s",
+                    image=img,
+            )
             pil_image.save(output_file_s, format="PNG")
             filename_s = get_resource_url(subfolder_s, filename_s, "temp")
 
             if not_none(kwargs.get("image_opt")):
-                output_file_t, subfolder_t, filename_t = resolve_filepath(
-                    index=index,
-                    default_filename="compare_t",
-                )
                 pil_image = tensor_to_pil(image_list_2[index])
+
+                output_file_t, subfolder_t, filename_t = resolve_filepath(
+                    filename_prefix="compare_t",
+                    image=image_list_2[index],
+                )
                 pil_image.save(output_file_t, format="PNG")
                 filename_t = get_resource_url(subfolder_t, filename_t, "temp")
             else:
@@ -280,20 +280,21 @@ class LF_LUTApplication:
             adjusted_np[:, :, 2] = b[image_np[:, :, 2]]
 
             adjusted_tensor = numpy_to_tensor(adjusted_np)
+            pil_image = tensor_to_pil(img)
 
             output_file_s, subfolder_s, filename_s = resolve_filepath(
-                    index=index,
-                    default_filename="lut_s",
+                    filename_prefix="lut_s",
+                    image=img,
             )
-            pil_image = tensor_to_pil(img)
             pil_image.save(output_file_s, format="PNG")
             filename_s = get_resource_url(subfolder_s, filename_s, "temp")
             
-            output_file_t, subfolder_t, filename_t = resolve_filepath(
-                    index=index,
-                    default_filename="lut_t",
-            )
             pil_image = tensor_to_pil(adjusted_tensor)
+            
+            output_file_t, subfolder_t, filename_t = resolve_filepath(
+                    filename_prefix="lut_t",
+                    image=adjusted_tensor,
+            )
             pil_image.save(output_file_t, format="PNG")
             filename_t = get_resource_url(subfolder_t, filename_t, "temp")
 
@@ -668,12 +669,12 @@ class LF_ViewImages:
         dataset: dict = { "nodes": nodes }
         
         for index, img in enumerate(image):
-            output_file, subfolder, filename = resolve_filepath(
-                    index=index,
-                    default_filename="view",
-            )
-            
             pil_image = tensor_to_pil(img)
+
+            output_file, subfolder, filename = resolve_filepath(
+                    filename_prefix="view",
+                    image=img,
+            )
             pil_image.save(output_file, format="PNG")
             url = get_resource_url(subfolder, filename, "temp")
 
