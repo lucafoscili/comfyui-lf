@@ -2,8 +2,8 @@ import ast
 import numpy as np
 import random
 
-from ..utils.constants import CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, INT_MAX, USER_FOLDER
-from ..utils.helpers import create_masonry_node, get_comfy_dir, get_resource_url, normalize_input_list, normalize_output_image, numpy_to_tensor, normalize_list_to_value, normalize_json_input, resolve_filepath, tensor_to_pil
+from ..utils.constants import ANY, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, INT_MAX, USER_FOLDER
+from ..utils.helpers import create_masonry_node, get_comfy_dir, get_resource_url, normalize_input_list, normalize_list_item, normalize_output_image, numpy_to_tensor, normalize_list_to_value, normalize_json_input, resolve_filepath, tensor_to_pil
 
 from server import PromptServer
 
@@ -275,7 +275,7 @@ class LF_SetValueInJSON:
             "required": {
                 "json_input": ("JSON", {"tooltip": "JSON Object."}),
                 "key": ("STRING", {"tooltip": "Key to update or insert."}),
-                "value": ("STRING", {"tooltip": "Value to set. Can be a list in string form."}),
+                "value": (ANY, {"tooltip": "Value to set."}),
             },
             "optional": {
                 "ui_widget": ("KUL_CODE", { "default": "" }),
@@ -287,40 +287,47 @@ class LF_SetValueInJSON:
 
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
-    INPUT_IS_LIST = (True, False, True)
-    RETURN_NAMES = ("json_output",)
-    RETURN_TYPES = ("JSON",)
+    INPUT_IS_LIST = (False, False, True)
+    RETURN_NAMES = ("json", "json_list")
+    RETURN_TYPES = ("JSON", "JSON")
 
     def on_exec(self, **kwargs: dict):
         json_input: dict = normalize_json_input(kwargs.get("json_input"))
         key: str = normalize_list_to_value(kwargs.get("key"))
-        value: str = normalize_input_list(kwargs.get("value"))
-
-        try:
-            parsed_value = ast.literal_eval(value)
-            if not isinstance(parsed_value, (list, dict)):
-                parsed_value = value
-        except (ValueError, SyntaxError):
-            parsed_value = value
-
-        if isinstance(json_input, dict):
-            json_input[key] = parsed_value
-
-        elif isinstance(json_input, list):
-            for json_obj in json_input:
-                if isinstance(json_obj, dict):
-                    json_obj[key] = parsed_value
+        value = normalize_input_list(kwargs.get("value"))
+    
+        log = f"## Updated key\n{key}\n\n## Content:\n"
+    
+        if isinstance(json_input, list):
+            for index, item in enumerate(json_input):
+                v = normalize_list_item(value, index)
+                if isinstance(item, dict):
+                    item[key] = v
+                    log += f"\n[{index}]: {v}"
+                elif isinstance(item, list):
+                    for sub_index, sub_item in enumerate(item):
+                        if isinstance(sub_item, dict):
+                            sub_item[key] = v
+                            log += f"\n[{index}][{sub_index}]: {v}"
                 else:
-                    raise TypeError(f"Expected a dictionary inside the list, but got {type(json_obj)}")
+                    log += f"\n[{index}]: Could not update non-dict item."
+    
+            PromptServer.instance.send_sync(f"{EVENT_PREFIX}setvalueinjson", {
+                "node": kwargs.get("node_id"),
+                "value": log
+            })
         else:
-            raise TypeError(f"Unsupported input type for 'json': {type(json_input)}")
-
-        PromptServer.instance.send_sync(f"{EVENT_PREFIX}setvalueinjson", {
-            "node": kwargs.get("node_id"),
-            "value": f"## Updated key\n{key}\n\n## Content:\n{value}",
-        })
-
-        return (json_input,)
+            json_input[key] = value
+            log += f"\n{value}"
+    
+            PromptServer.instance.send_sync(f"{EVENT_PREFIX}setvalueinjson", {
+                "node": kwargs.get("node_id"),
+                "value": log
+            })
+    
+        s = json_input[0] if isinstance(json_input, list) and len(json_input) == 1 else json_input
+    
+        return (s, json_input)
 # endregion
 # region LF_ShuffleJSONKeys
 class LF_ShuffleJSONKeys:
