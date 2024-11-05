@@ -121,8 +121,8 @@ That's a tough one—the nodes span quite a few categories. Here's a quick break
     - [UpscaleModelSelector](#upscalemodelselector)
     - [VAESelector](#vaeselector)
   - [Installation](#installation)
-  - [Using ComfyUI Manager](#using-comfyui-manager)
-  - [Manual](#manual)
+    - [Using ComfyUI Manager](#using-comfyui-manager)
+    - [Manual](#manual)
   - [Notes](#notes)
   - [Contributing](#contributing)
   - [License](#license)
@@ -488,13 +488,13 @@ Used to select a VAE, the history widget allows for a quick swap between the mos
 
 ## Installation
 
-## Using ComfyUI Manager
+### Using ComfyUI Manager
 
 - Open ComfyUI Manager.
 - Search LF Nodes.
 - Install the node suite and restart ComfyUI.
 
-## Manual
+### Manual
 
 - Go to the `ComfyUI/custom_nodes` folder.
 - Open a terminal.
