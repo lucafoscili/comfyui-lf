@@ -1,7 +1,6 @@
 import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-7f37b7be.js';
-import { k as kulManagerInstance, K as KulThemeColorValues } from './kul-manager-6086df84.js';
+import { k as kulManagerInstance, c as KulThemeColorValues, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-75d4bcb9.js';
 import { g as getProps } from './componentUtils-a994b230.js';
-import { K as KUL_WRAPPER_ID, c as KUL_STYLE_ID } from './GenericVariables-f3380974.js';
 
 /*-------------------------------------------------*/
 /*                    P r o p s                    */
@@ -84468,10 +84467,11 @@ const CHART_DESIGN = {
         successColor: '',
         textColor: '',
     },
-    tooltip: (adapter) => {
+    tooltip: (adapter, formatter) => {
         const theme = adapter.get.design.theme;
         const tooltip = {
             backgroundColor: theme.backgroundColor,
+            formatter,
             textStyle: {
                 color: theme.textColor,
                 fontFamily: theme.font,
@@ -84482,6 +84482,88 @@ const CHART_DESIGN = {
 };
 
 const CHART_OPTIONS = {
+    bubble: (adapter) => {
+        const chart = adapter.get.chart();
+        const design = adapter.get.design;
+        const stringify = adapter.actions.stringify;
+        const xAxisKey = chart.kulAxis;
+        const xAxisColumn = adapter.get
+            .manager()
+            .data.column.find(chart.kulData, { id: xAxisKey })?.[0];
+        const yAxisKey = chart.kulSeries[0];
+        const bubbleSizeKey = chart.kulSeries[1];
+        const xCategories = new Set();
+        const yCategories = new Set();
+        const data = chart.kulData.nodes.map((node) => {
+            const xValue = stringify(node.cells[xAxisKey]?.value) || '0';
+            const yValue = stringify(node.cells[yAxisKey]?.value) || '0';
+            const bubbleSize = parseFloat(stringify(node.cells[bubbleSizeKey]?.value) || '0');
+            xCategories.add(xValue);
+            yCategories.add(yValue);
+            return [xValue, yValue, bubbleSize];
+        });
+        const colors = design.colors(adapter, 1);
+        const formatter = (params) => {
+            return `${xAxisColumn.title}: ${params.value[0]}<br>${yAxisKey}: ${params.value[1]}<br>Size: ${params.value[2]}`;
+        };
+        const options = {
+            color: colors,
+            xAxis: {
+                type: 'category',
+                name: xAxisColumn ? xAxisColumn.title : 'X Axis',
+                data: Array.from(xCategories),
+                axisLabel: {
+                    color: design.theme.textColor,
+                    fontFamily: design.theme.font,
+                },
+            },
+            yAxis: {
+                type: 'category',
+                name: yAxisKey ? yAxisKey : 'Y Axis',
+                data: Array.from(yCategories),
+                axisLabel: {
+                    color: design.theme.textColor,
+                    fontFamily: design.theme.font,
+                },
+            },
+            series: [
+                {
+                    type: 'scatter',
+                    data: data,
+                    symbolSize: (val) => val[2],
+                    itemStyle: {
+                        borderColor: design.theme.border,
+                        borderWidth: 1,
+                        color: colors[0],
+                    },
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)',
+                        },
+                    },
+                },
+            ],
+            tooltip: design.tooltip(adapter, formatter),
+            visualMap: {
+                min: Math.min(...data.map(([_, __, count]) => Number(count))),
+                max: Math.max(...data.map(([_, __, count]) => Number(count))),
+                calculable: true,
+                orient: 'vertical',
+                left: 'left',
+                bottom: '15%',
+                inRange: {
+                    color: ['#f6efa6', colors[0]],
+                },
+                text: ['High', 'Low'],
+                textStyle: {
+                    color: design.theme.textColor,
+                    fontFamily: design.theme.font,
+                },
+            },
+        };
+        return options;
+    },
     calendar: (adapter) => {
         const chart = adapter.get.chart();
         const design = adapter.get.design;
@@ -84609,17 +84691,7 @@ const CHART_OPTIONS = {
                     },
                 },
             ],
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'cross',
-                },
-                backgroundColor: design.theme.backgroundColor,
-                textStyle: {
-                    color: design.theme.textColor,
-                    fontFamily: design.theme.font,
-                },
-            },
+            tooltip: design.tooltip(adapter),
         };
         return options;
     },
@@ -84743,6 +84815,94 @@ const CHART_OPTIONS = {
         };
         return options;
     },
+    heatmap: (adapter) => {
+        const chart = adapter.get.chart();
+        const design = adapter.get.design;
+        const stringify = adapter.actions.stringify;
+        const xAxisKey = chart.kulAxis;
+        const xAxisColumn = adapter.get
+            .manager()
+            .data.column.find(chart.kulData, { id: xAxisKey })?.[0];
+        const axisLabel = xAxisColumn ? xAxisColumn.title : 'X Axis';
+        const seriesLabels = chart.kulSeries.map((seriesId) => {
+            const column = adapter.get
+                .manager()
+                .data.column.find(chart.kulData, { id: seriesId })?.[0];
+            return column ? column.title : 'Y Axis';
+        });
+        const xCategories = new Set();
+        const yCategories = new Set();
+        const data = chart.kulData.nodes.map((node) => {
+            const sourceValue = stringify(node.cells[xAxisKey]?.value) || '0';
+            const targetValue = stringify(node.cells[chart.kulSeries[0]]?.value) || '0';
+            const mappingCount = parseFloat(stringify(node.cells[chart.kulSeries[1]]?.value) || '0');
+            xCategories.add(sourceValue);
+            yCategories.add(targetValue);
+            return [sourceValue, targetValue, mappingCount];
+        });
+        const colors = design.colors(adapter, 1);
+        const formatter = (params) => {
+            return `${axisLabel}: ${params.value[0]}<br>${seriesLabels[0]}: ${params.value[1]}<br>Frequency: ${params.value[2]}`;
+        };
+        const options = {
+            color: colors,
+            xAxis: {
+                type: 'category',
+                name: axisLabel,
+                data: Array.from(xCategories),
+                axisLabel: {
+                    color: design.theme.textColor,
+                    fontFamily: design.theme.font,
+                },
+            },
+            yAxis: {
+                type: 'category',
+                name: seriesLabels[0],
+                data: Array.from(yCategories),
+                axisLabel: {
+                    color: design.theme.textColor,
+                    fontFamily: design.theme.font,
+                },
+            },
+            series: [
+                {
+                    type: 'heatmap',
+                    data: data,
+                    label: {
+                        show: false,
+                    },
+                    itemStyle: {
+                        borderColor: design.theme.border,
+                        borderWidth: 1,
+                    },
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)',
+                        },
+                    },
+                },
+            ],
+            tooltip: design.tooltip(adapter, formatter),
+            visualMap: {
+                min: Math.min(...data.map(([_, __, count]) => Number(count))),
+                max: Math.max(...data.map(([_, __, count]) => Number(count))),
+                calculable: true,
+                orient: 'vertical',
+                left: 'left',
+                bottom: '15%',
+                inRange: {
+                    color: ['#f6efa6', colors[0]],
+                },
+                text: ['High', 'Low'],
+                textStyle: {
+                    color: design.theme.textColor,
+                    fontFamily: design.theme.font,
+                },
+            },
+        };
+        return options;
+    },
     pie: (adapter) => {
         const chart = adapter.get.chart();
         const design = adapter.get.design;
@@ -84750,20 +84910,22 @@ const CHART_OPTIONS = {
             name,
             value: values.reduce((a, b) => a + b, 0),
         }));
+        const formatter = (args) => {
+            const { data: { name, value }, percent, seriesName, } = args;
+            debugger;
+            return `<strong>${seriesName}</strong><br/>${name}: ${value.toLocaleString()} (${percent.toFixed(2)}%)`;
+        };
         const options = {
             color: design.colors(adapter, data.length),
             label: design.label(adapter),
             legend: design.legend(adapter),
             tooltip: {
-                ...design.tooltip(adapter),
+                ...design.tooltip(adapter, formatter),
                 trigger: 'item',
-                formatter: '{a} <br/>{b}: {c} ({d}%)',
             },
             series: [
                 {
-                    name: adapter.get
-                        .manager()
-                        .data.column.find(chart.kulData, {
+                    name: adapter.get.manager().data.column.find(chart.kulData, {
                         id: chart.kulAxis,
                     })?.[0].title || 'Data',
                     type: 'pie',
@@ -84777,12 +84939,11 @@ const CHART_OPTIONS = {
         const chart = adapter.get.chart();
         const design = adapter.get.design;
         const stringify = adapter.actions.stringify;
-        const indicators = chart.kulSeries.map((seriesName) => {
-            const values = adapter.get.y()[seriesName] || [];
-            const max = Math.max(...values);
+        const indicator = chart.kulSeries.map((seriesName) => {
+            adapter.get.y()[seriesName] || [];
             return {
                 name: seriesName,
-                max: isNaN(max) ? 100 : max,
+                alignTicks: false,
             };
         });
         const data = chart.kulData.nodes.map((node) => {
@@ -84799,7 +84960,7 @@ const CHART_OPTIONS = {
                 data: data.map((item) => item.name),
             },
             radar: {
-                indicator: indicators,
+                indicator,
                 shape: 'circle',
                 axisName: {
                     color: design.theme.textColor,
@@ -84822,6 +84983,7 @@ const CHART_OPTIONS = {
                         color: colors[2] || 'rgba(128, 128, 128, 0.5)',
                     },
                 },
+                axisTick: { alignWithLabel: false, show: false },
             },
             series: [
                 {
@@ -85077,12 +85239,16 @@ const KulChart = class {
         const firstType = this.kulTypes?.[0] || 'line';
         this.#createSeriesData();
         switch (firstType) {
+            case 'bubble':
+                return options.bubble(this.#adapter);
             case 'calendar':
                 return options.calendar(this.#adapter);
             case 'candlestick':
                 return options.candlestick(this.#adapter);
             case 'funnel':
                 return options.funnel(this.#adapter);
+            case 'heatmap':
+                return options.heatmap(this.#adapter);
             case 'pie':
                 return options.pie(this.#adapter);
             case 'radar':
@@ -85122,7 +85288,7 @@ const KulChart = class {
             '--kul_chart_height': this.kulSizeY || '100%',
             '--kul_chart_width': this.kulSizeX || '100%',
         };
-        return (h(Host, { key: 'c5edb596c5dc32adcabde6cf235ab0f0ffc843cf', style: style }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '1592e1c4ca8aabbef7edfe6d5c85f61322487859', id: KUL_WRAPPER_ID, ref: (chartContainer) => (this.#chartContainer = chartContainer) })));
+        return (h(Host, { key: 'f0a11a6fa10783276337111d535580deaf35005f', style: style }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '38b5345ecc079c7469893018dd1221ce669e9ba3', id: KUL_WRAPPER_ID, ref: (chartContainer) => (this.#chartContainer = chartContainer) })));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

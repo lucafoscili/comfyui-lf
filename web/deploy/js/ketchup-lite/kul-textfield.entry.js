@@ -1,7 +1,6 @@
 import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, a as getAssetPath, H as Host } from './index-7f37b7be.js';
-import { k as kulManagerInstance } from './kul-manager-6086df84.js';
+import { k as kulManagerInstance, a as KulDataCyAttributes, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-75d4bcb9.js';
 import { g as getProps } from './componentUtils-a994b230.js';
-import { a as KulDataCyAttributes, K as KUL_WRAPPER_ID, c as KUL_STYLE_ID } from './GenericVariables-f3380974.js';
 
 /*-------------------------------------------------*/
 /*                    P r o p s                    */
