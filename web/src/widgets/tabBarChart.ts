@@ -110,6 +110,7 @@ export const tabBarChartFactory: TabBarChartWidgetFactory = {
   },
   render: (node) => {
     const wrapper = document.createElement('div');
+    const content = document.createElement('div');
     const grid = document.createElement('div');
     const textfield = document.createElement('kul-textfield');
     const chart = document.createElement('kul-chart');
@@ -163,12 +164,13 @@ export const tabBarChartFactory: TabBarChartWidgetFactory = {
       'kul-textfield-event',
       textfieldEventHandler.bind(textfieldEventHandler, chart, options.refresh),
     );
-
     grid.appendChild(textfield);
     grid.appendChild(tabbar);
     grid.appendChild(chart);
 
-    wrapper.appendChild(grid);
+    content.classList.add(tabBarChartFactory.cssClasses.content);
+    content.appendChild(grid);
+    wrapper.appendChild(content);
 
     return { widget: createDOMWidget(TYPE, wrapper, node, options) };
   },
