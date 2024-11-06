@@ -159,7 +159,8 @@ class LF_LoadImages:
                             image=img_tensor
                         )
                         url = get_resource_url(subfolder, filename, "input")
-                        pil_img.save(output_file, format=e)
+                        e = e.lower().replace('jpg', 'jpeg')
+                        pil_img.save(output_file, format=e.upper())
 
                         images.append(img_tensor)
                         
