@@ -1,4 +1,3 @@
-from enum import Enum
 from comfy.samplers import KSampler
 
 class AnyType(str):
@@ -6,7 +5,7 @@ class AnyType(str):
         return False
 
 # region constants
-class Input(Enum):
+class Input:
     BOOLEAN = "BOOLEAN"
     CLIP = "CLIP"
     FLOAT = "FLOAT"
@@ -16,7 +15,7 @@ class Input(Enum):
     KUL_CARDS_WITH_CHIP = "KUL_CARDS_WITH_CHIP"
     KUL_CHAT = "KUL_CHAT"
     KUL_CHIP = "KUL_CHIP"
-    KUL_CODE = "CODE"
+    KUL_CODE = "KUL_CODE"
     KUL_COMPARE = "KUL_COMPARE"
     KUL_CONTROL_PANEL = "KUL_CONTROL_PANEL"
     KUL_COUNT_BAR_CHART = "KUL_COUNT_BAR_CHART"
@@ -31,7 +30,6 @@ class Input(Enum):
     JSON = "JSON"
     MODEL = "MODEL"
     STRING = "STRING"
-
 
 ANY = AnyType("*")
 INT_MAX = 0xffffffffffffffff
