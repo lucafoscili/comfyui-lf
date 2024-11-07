@@ -1,11 +1,9 @@
 name: Update Node Count
 
 on:
-  schedule:
-    - cron: '0 * * * *' # Runs every hour
   push:
     branches:
-      - main
+      - master
 
 jobs:
   count-nodes:
