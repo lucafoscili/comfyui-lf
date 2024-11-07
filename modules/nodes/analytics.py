@@ -48,21 +48,21 @@ class LF_ColorAnalysis:
             target_np = tensor_to_numpy(target_image[idx])
 
             source_histograms: dict = {
-                RED_CHANNEL_ID: np.histogram(source_np[:, :, 0], bins=256, range=(0, 255))[0],
-                GREEN_CHANNEL_ID: np.histogram(source_np[:, :, 1], bins=256, range=(0, 255))[0],
-                BLUE_CHANNEL_ID: np.histogram(source_np[:, :, 2], bins=256, range=(0, 255))[0]
+                RED_CHANNEL_ID: np.histogram(source_np[:, :, 0], bins=256, range=(0, 256))[0],
+                GREEN_CHANNEL_ID: np.histogram(source_np[:, :, 1], bins=256, range=(0, 256))[0],
+                BLUE_CHANNEL_ID: np.histogram(source_np[:, :, 2], bins=256, range=(0, 256))[0]
             }
-            
+
             target_histograms: dict = {
-                RED_CHANNEL_ID: np.histogram(target_np[:, :, 0], bins=256, range=(0, 255))[0],
-                GREEN_CHANNEL_ID: np.histogram(target_np[:, :, 1], bins=256, range=(0, 255))[0],
-                BLUE_CHANNEL_ID: np.histogram(target_np[:, :, 2], bins=256, range=(0, 255))[0]
+                RED_CHANNEL_ID: np.histogram(target_np[:, :, 0], bins=256, range=(0, 256))[0],
+                GREEN_CHANNEL_ID: np.histogram(target_np[:, :, 1], bins=256, range=(0, 256))[0],
+                BLUE_CHANNEL_ID: np.histogram(target_np[:, :, 2], bins=256, range=(0, 256))[0]
             }
 
             mapping_json: dict = {
-                "red_channel": self.generate_mapping(source_histograms[RED_CHANNEL_ID], target_histograms[RED_CHANNEL_ID]),
-                "green_channel": self.generate_mapping(source_histograms[GREEN_CHANNEL_ID], target_histograms[GREEN_CHANNEL_ID]),
-                "blue_channel": self.generate_mapping(source_histograms[BLUE_CHANNEL_ID], target_histograms[BLUE_CHANNEL_ID]),
+                "red_channel": self.generate_mapping(target_histograms[RED_CHANNEL_ID], source_histograms[RED_CHANNEL_ID]),
+                "green_channel": self.generate_mapping(target_histograms[GREEN_CHANNEL_ID], source_histograms[GREEN_CHANNEL_ID]),
+                "blue_channel": self.generate_mapping(target_histograms[BLUE_CHANNEL_ID], source_histograms[BLUE_CHANNEL_ID]),
             }
 
             nodes: list[dict] = []
@@ -100,16 +100,17 @@ class LF_ColorAnalysis:
         return (image_batch[0], image_list, mapping_datasets)
 
     @staticmethod
-    def generate_mapping(source_hist, target_hist):
-        source_cumsum = np.cumsum(source_hist) / np.sum(source_hist)
-        target_cumsum = np.cumsum(target_hist) / np.sum(target_hist)
+    def generate_mapping(target_hist, source_hist):
+        source_cdf = np.cumsum(source_hist).astype(np.float64)
+        source_cdf /= source_cdf[-1]
+        target_cdf = np.cumsum(target_hist).astype(np.float64)
+        target_cdf /= target_cdf[-1]
 
         mapping = np.zeros(256, dtype=np.uint8)
-        target_idx = 0
-        for i in range(256):
-            while target_idx < 255 and target_cumsum[target_idx] < source_cumsum[i]:
-                target_idx += 1
-            mapping[i] = target_idx
+
+        for r in range(256):
+            s = np.argmin(np.abs(source_cdf - target_cdf[r]))
+            mapping[r] = s
         return mapping.tolist()
 # endregion
 # region LF_ImageHistogram

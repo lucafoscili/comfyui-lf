@@ -1,0 +1,27 @@
+name: Update Node Count
+
+on:
+  schedule:
+    - cron: '0 * * * *' # Runs every hour
+  push:
+    branches:
+      - main
+
+jobs:
+  count-nodes:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Count Nodes
+        run: |
+          COUNT=$(grep -ro '# region' modules/nodes | wc -l)
+          echo "{ \"nodes\": $COUNT }" > count.json
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: 'Updated node count'
+          file_pattern: count.json
