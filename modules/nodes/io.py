@@ -12,7 +12,7 @@ from PIL import Image
 from PIL.PngImagePlugin import PngInfo
 from server import PromptServer
 
-from ..utils.constants import CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION
+from ..utils.constants import CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, Input
 from ..utils.helpers import create_dummy_image_tensor, create_history_node, create_masonry_node, extract_jpeg_metadata, extract_png_metadata, get_comfy_dir, get_resource_url, normalize_input_image, normalize_input_list, normalize_json_input, normalize_list_to_value, normalize_output_image, pil_to_tensor, resolve_filepath, tensor_to_pil
 
 CATEGORY = f"{CATEGORY_PREFIX}/IO Operations"
@@ -20,16 +20,29 @@ CATEGORY = f"{CATEGORY_PREFIX}/IO Operations"
 # region LF_LoadFileOnce
 class LF_LoadFileOnce:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "dir": ("STRING", {"tooltip": "Path to the directory containing the images to load."}),
-                "subdir": ("BOOLEAN", {"default": False, "tooltip": "Indicates whether to also load images from subdirectories."}),
-                "strip_ext": ("BOOLEAN", {"default": True, "tooltip": "Whether to remove file extensions from filenames."}),
-                "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget to prevent the same filename to be loaded twice."}),
+                "dir": (Input.STRING, {
+                    "tooltip": "Path to the directory containing the images to load."
+                }),
+                "subdir": (Input.BOOLEAN, {
+                    "default": False, 
+                    "tooltip": "Indicates whether to also load images from subdirectories."
+                }),
+                "strip_ext": (Input.BOOLEAN, {
+                    "default": True, 
+                    "tooltip": "Whether to remove file extensions from filenames."
+                }),
+                "enable_history": (Input.BOOLEAN, {
+                    "default": True, 
+                    "tooltip": "Enables history, saving the execution value and date of the widget to prevent the same filename to be loaded twice."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_HISTORY", {"default": {}}),
+                "ui_widget": (Input.KUL_HISTORY, {
+                    "default": {}
+                }),
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID",
@@ -83,17 +96,34 @@ class LF_LoadFileOnce:
 # region LF_LoadImages
 class LF_LoadImages:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "dir": ("STRING", {"default":"", "tooltip": "Path to the directory containing the images to load."}),
-                "subdir": ("BOOLEAN", {"default": False, "tooltip": "Indicates whether to also load images from subdirectories."}),
-                "strip_ext": ("BOOLEAN", {"default": True, "tooltip": "Whether to remove file extensions from filenames."}),
-                "load_cap": ("INT", {"default": 0, "tooltip": "Maximum number of images to load before stopping. Set 0 for an unlimited amount."}),
-                "dummy_output": ("BOOLEAN", {"default": False, "tooltip": "Flag indicating whether to output a dummy image tensor and string when the list is empty."}),
+                "dir": (Input.STRING, {
+                    "default":"", 
+                    "tooltip": "Path to the directory containing the images to load."
+                }),
+                "subdir": (Input.BOOLEAN, {
+                    "default": False, 
+                    "tooltip": "Indicates whether to also load images from subdirectories."
+                }),
+                "strip_ext": (Input.BOOLEAN, {
+                    "default": True, 
+                    "tooltip": "Whether to remove file extensions from filenames."
+                }),
+                "load_cap": (Input.INTEGER, {
+                    "default": 0, 
+                    "tooltip": "Maximum number of images to load before stopping. Set 0 for an unlimited amount."
+                }),
+                "dummy_output": (Input.BOOLEAN, {
+                    "default": False, 
+                    "tooltip": "Flag indicating whether to output a dummy image tensor and string when the list is empty."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_MASONRY", {"default": {}}),
+                "ui_widget": (Input.KUL_MASONRY, {
+                    "default": {}
+                }),
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID",
@@ -198,13 +228,19 @@ class LF_LoadImages:
 # region LF_LoadLocalJSON
 class LF_LoadLocalJSON:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "url": ("STRING", {"default": "", "multiline": True, "tooltip": "The local URL where the JSON file is stored (i.e.: file://C:/myjson.json)."}),
+                "url": (Input.STRING, {
+                    "default": "", 
+                    "multiline": True, 
+                    "tooltip": "The local URL where the JSON file is stored (i.e.: file://C:/myjson.json)."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_TREE", {"default": {}}),
+                "ui_widget": (Input.KUL_TREE, {
+                    "default": {}
+                }),
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID",
@@ -240,13 +276,17 @@ class LF_LoadLocalJSON:
 # region LF_LoadMetadata
 class LF_LoadMetadata:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "file_names": ("KUL_UPLOAD", {"tooltip": "List of file names separated by semicolons (e.g., file1.jpg;file2.png;file3.jpg)."}),
+                "file_names": (Input.KUL_UPLOAD, {
+                    "tooltip": "List of file names separated by semicolons (e.g., file1.jpg;file2.png;file3.jpg)."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_CODE", {"default": ""}),
+                "ui_widget": (Input.KUL_CODE, {
+                    "default": ""
+                }),
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID",
@@ -297,16 +337,29 @@ class LF_LoadMetadata:
 # region LF_RegionExtractor
 class LF_RegionExtractor:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "dir": ("STRING", {"tooltip": "Path to the directory or file containing the Python files."}),
-                "subdir": ("BOOLEAN", {"default": False, "tooltip": "Whether to load Python files from subdirectories as well."}),
-                "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Tracks extracted regions to avoid reprocessing."}),
-                "extension": ("STRING", {"default": "py", "tooltip": "Extension of the files that will be read."}),
+                "dir": (Input.STRING, {
+                    "tooltip": "Path to the directory or file containing the Python files."
+                }),
+                "subdir": (Input.BOOLEAN, {
+                    "default": False, 
+                    "tooltip": "Whether to load Python files from subdirectories as well."
+                }),
+                "enable_history": (Input.BOOLEAN, {
+                    "default": True, 
+                    "tooltip": "Tracks extracted regions to avoid reprocessing."
+                }),
+                "extension": (Input.STRING, {
+                    "default": "py", 
+                    "tooltip": "Extension of the files that will be read."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_HISTORY", {"default": {}}),
+                "ui_widget": (Input.KUL_HISTORY, {
+                    "default": {}
+                }),
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID",
@@ -413,19 +466,43 @@ class LF_RegionExtractor:
 # region LF_SaveImageForCivitAI
 class LF_SaveImageForCivitAI:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "image": ("IMAGE", {"tooltip": "Input images to save."}),
-                "filename_prefix": ("STRING", {"default": '', "tooltip": "Path and filename. Use slashes to specify directories."}),
-                "add_timestamp": ("BOOLEAN", {"default": True, "tooltip": "Sets the execution time's timestamp as a suffix of the file name."}),
-                "embed_workflow": ("BOOLEAN", {"default": True, "tooltip": "Whether to embed inside the images the current workflow or not."}),
-                "extension": (['png', 'jpeg', 'webp'], {"default": "png", "tooltip": "Supported file formats."}),
-                "quality": ("INT", {"default": 100, "min": 1, "max": 100, "tooltip": "Quality of saved images in jpeg or webp format."}),
+                "image": (Input.IMAGE, {
+                    "tooltip": "Input images to save."
+                }),
+                "filename_prefix": (Input.STRING, {
+                    "default": '', 
+                    "tooltip": "Path and filename. Use slashes to specify directories."
+                }),
+                "add_timestamp": (Input.BOOLEAN, {
+                    "default": True, 
+                    "tooltip": "Sets the execution time's timestamp as a suffix of the file name."
+                }),
+                "embed_workflow": (Input.BOOLEAN, {
+                    "default": True, 
+                    "tooltip": "Whether to embed inside the images the current workflow or not."
+                }),
+                "extension": (['png', 'jpeg', 'webp'], {
+                    "default": "png", 
+                    "tooltip": "Supported file formats."
+                }),
+                "quality": (Input.INTEGER, {
+                    "default": 100, 
+                    "min": 1, 
+                    "max": 100, 
+                    "tooltip": "Quality of saved images in jpeg or webp format."
+                }),
             },
             "optional": {
-                "civitai_metadata": ("STRING", {"defaultInput": True, "tooltip": "String containing CivitAI compatible metadata (created by the node LF_CivitAIMetadataSetup)."}),
-                "ui_widget": ("KUL_MASONRY", {"default": {}}),
+                "civitai_metadata": (Input.STRING, {
+                    "defaultInput": True, 
+                    "tooltip": "String containing CivitAI compatible metadata (created by the node LF_CivitAIMetadataSetup)."
+                }),
+                "ui_widget": (Input.KUL_MASONRY, {
+                    "default": {}
+                }),
             },
             "hidden": {
                 "extra_pnginfo": "EXTRA_PNGINFO",
@@ -509,15 +586,25 @@ class LF_SaveImageForCivitAI:
 # region LF_SaveJSON
 class LF_SaveJSON:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "json_data": ("JSON", {"tooltip": "JSON data to save."}),
-                "filename_prefix": ("STRING", {"default": '', "tooltip": "Path and filename for saving the JSON. Use slashes to set directories."}),
-                "add_timestamp": ("BOOLEAN", {"default": True, "tooltip": "Add timestamp to the filename as a suffix."}),
+                "json_data": (Input.JSON, {
+                    "tooltip": "JSON data to save."
+                }),
+                "filename_prefix": (Input.STRING, {
+                    "default": '', 
+                    "tooltip": "Path and filename for saving the JSON. Use slashes to set directories."
+                }),
+                "add_timestamp": (Input.BOOLEAN, {
+                    "default": True, 
+                    "tooltip": "Add timestamp to the filename as a suffix."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_TREE", {"default": {}}),
+                "ui_widget": (Input.KUL_TREE, {
+                    "default": {}
+                }),
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID",
@@ -560,15 +647,27 @@ class LF_SaveJSON:
 # region LF_SaveMarkdown
 class LF_SaveMarkdown:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "markdown_text": ("STRING", {"default": "", "multiline": True, "tooltip": "Markdown data to save."}),
-                "filename_prefix": ("STRING", {"default": '', "tooltip": "Path and filename for saving the Markdown. Use slashes to set directories."}),
-                "add_timestamp": ("BOOLEAN", {"default": True, "tooltip": "Add timestamp to the filename as a suffix."}),
+                "markdown_text": (Input.STRING, {
+                    "default": "", 
+                    "multiline": True, 
+                    "tooltip": "Markdown data to save."
+                }),
+                "filename_prefix": (Input.STRING, {
+                    "default": '', 
+                    "tooltip": "Path and filename for saving the Markdown. Use slashes to set directories."
+                }),
+                "add_timestamp": (Input.BOOLEAN, {
+                    "default": True, 
+                    "tooltip": "Add timestamp to the filename as a suffix."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_TREE", {"default": {}}),
+                "ui_widget": (Input.KUL_TREE, {
+                    "default": {}
+                }),
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID",

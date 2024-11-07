@@ -5,7 +5,7 @@ import torch
 
 from server import PromptServer
 
-from ..utils.constants import ANY, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, INT_MAX, LORA_TAG_REGEX
+from ..utils.constants import ANY, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, Input, INT_MAX, LORA_TAG_REGEX
 from ..utils.helpers import count_words_in_comma_separated_string, cleanse_lora_tag, normalize_input_list, convert_to_boolean, convert_to_float, convert_to_int, convert_to_json, normalize_input_image, normalize_input_list, normalize_list_to_value, not_none
 
 CATEGORY = f"{CATEGORY_PREFIX}/Logic"
@@ -13,15 +13,27 @@ CATEGORY = f"{CATEGORY_PREFIX}/Logic"
 # region LF_ExtractString
 class LF_ExtractString:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "text": ("STRING", {"default": "", "multiline": True, "tooltip": "The string from which the output will be extracted."}),
-                "starting_delimiter": ("STRING", {"default": "{", "tooltip": "The delimiter where extraction starts."}),
-                "ending_delimiter": ("STRING", {"default": "}", "tooltip": "The delimiter where extraction ends."}),
+                "text": (Input.STRING, {
+                    "default": "", 
+                    "multiline": True, 
+                    "tooltip": "The string from which the output will be extracted."
+                }),
+                "starting_delimiter": (Input.STRING, {
+                    "default": "{", 
+                    "tooltip": "The delimiter where extraction starts."
+                }),
+                "ending_delimiter": (Input.STRING, {
+                    "default": "}", 
+                    "tooltip": "The delimiter where extraction ends."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_CODE", {"default": ""}),
+                "ui_widget": (Input.KUL_CODE, {
+                    "default": ""
+                }),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -64,14 +76,22 @@ class LF_ExtractString:
 # region LF_ExtractPromptFromLoraTag
 class LF_ExtractPromptFromLoraTag:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "tag": ("STRING", {"multiline": True, "tooltip": "The LoRA tag to be converted."}),
-                "separator": ("STRING", { "default": "SEP", "tooltip": "String separating each keyword in a LoRA filename."}),
+                "tag": (Input.STRING, {
+                    "multiline": True, 
+                    "tooltip": "The LoRA tag to be converted."
+                }),
+                "separator": (Input.STRING, { 
+                    "default": "SEP", 
+                    "tooltip": "String separating each keyword in a LoRA filename."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_CODE", {"default": ""})
+                "ui_widget": (Input.KUL_CODE, {
+                    "default": ""
+                })
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
@@ -129,13 +149,17 @@ class LF_ExtractPromptFromLoraTag:
 # region LF_IsLandscape
 class LF_IsLandscape:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "image": ("IMAGE", {"tooltip": "Input image/images."})
+                "image": (Input.IMAGE, {
+                    "tooltip": "Input image/images."
+                })
             },
             "optional": {
-                "ui_widget": ("KUL_TREE", {"default": {}}),
+                "ui_widget": (Input.KUL_TREE, {
+                    "default": {}
+                }),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -183,17 +207,30 @@ class LF_IsLandscape:
 # region LF_MathOperation
 class LF_MathOperation:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "operation": ("STRING", {"default": "a * b / c + d", "tooltip": "Math operation to execute. Use variables like 'a', 'b', 'c', 'd'."}),
+                "operation": (Input.STRING, {
+                    "default": "a * b / c + d", 
+                    "tooltip": "Math operation to execute. Use variables like 'a', 'b', 'c', 'd'."
+                }),
             },
             "optional": {
-                "a": (ANY, {"tooltip": "Value or list of values for 'a'."}),
-                "b": (ANY, {"tooltip": "Value or list of values for 'b'."}),
-                "c": (ANY, {"tooltip": "Value or list of values for 'c'."}),
-                "d": (ANY, {"tooltip": "Value or list of values for 'd'."}),
-                "ui_widget": ("KUL_CODE", {"default": ""})
+                "a": (ANY, {
+                    "tooltip": "Value or list of values for 'a'."
+                }),
+                "b": (ANY, {
+                    "tooltip": "Value or list of values for 'b'."
+                }),
+                "c": (ANY, {
+                    "tooltip": "Value or list of values for 'c'."
+                }),
+                "d": (ANY, {
+                    "tooltip": "Value or list of values for 'd'."
+                }),
+                "ui_widget": (Input.KUL_CODE, {
+                    "default": ""
+                })
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -267,16 +304,30 @@ class LF_MathOperation:
 # region LF_ParsePromptWithLoraTags
 class LF_ParsePromptWithLoraTags:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "text": ("STRING", {"multiline": True, "tooltip": "The input text containing LoRa tags. These tags will be processed and replaced with extracted keywords."}),
-                "separator": ("STRING", { "default": "SEP", "tooltip": "Character(s) used to separate keywords within the name of a single LoRa file. Helps in extracting individual keywords."}),
-                "weight": ("FLOAT", { "default": 0.5, "tooltip": "A weight value associated with LoRa tags, which may influence processing or output significance."}),
-                "weight_placeholder": ("STRING", { "default": "wwWEIGHTww", "tooltip": "A placeholder within LoRa tags that gets replaced with the actual weight value during processing."}),
+                "text": (Input.STRING, {
+                    "multiline": True, 
+                    "tooltip": "The input text containing LoRa tags. These tags will be processed and replaced with extracted keywords."
+                }),
+                "separator": (Input.STRING, { 
+                    "default": "SEP", 
+                    "tooltip": "Character(s) used to separate keywords within the name of a single LoRa file. Helps in extracting individual keywords."
+                }),
+                "weight": (Input.FLOAT, { 
+                    "default": 0.5, 
+                    "tooltip": "A weight value associated with LoRa tags, which may influence processing or output significance."
+                }),
+                "weight_placeholder": (Input.STRING, { 
+                    "default": "wwWEIGHTww", 
+                    "tooltip": "A placeholder within LoRa tags that gets replaced with the actual weight value during processing."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_CODE", {"default": ""})
+                "ui_widget": (Input.KUL_CODE, {
+                    "default": ""
+                })
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
@@ -335,17 +386,40 @@ class LF_ParsePromptWithLoraTags:
 # region LF_ResolutionSwitcher
 class LF_ResolutionSwitcher:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "chance_landscape": ("FLOAT", {"default": 20.0, "step": 5, "min": 0, "max": 100, "tooltip": "Percentage chance for landscape output, 0-100."}),
-                "portrait_width": ("INT", {"default": 832, "min": 1, "step": 1, "tooltip": "Width when the image is portrait-oriented."}),
-                "portrait_height": ("INT", {"default": 1216, "min": 1, "step": 1, "tooltip": "Height when the image is portrait-oriented."}),
-                "landscape_width": ("INT", {"default": 1216, "min": 1, "step": 1, "tooltip": "Width when the image is landscape-oriented."}),
-                "landscape_height": ("INT", {"default": 832, "min": 1, "step": 1, "tooltip": "Height when the image is landscape-oriented."}),
+                "chance_landscape": (Input.FLOAT, {
+                    "default": 20.0, 
+                    "step": 5, 
+                    "min": 0, 
+                    "max": 100, 
+                    "tooltip": "Percentage chance for landscape output, 0-100."
+                }),
+                "portrait_width": (Input.INTEGER, {
+                    "default": 832, 
+                    "min": 1, 
+                    "step": 1, 
+                    "tooltip": "Width when the image is portrait-oriented."
+                }),
+                "portrait_height": (Input.INTEGER, {
+                    "default": 1216, "min": 1, 
+                    "step": 1, 
+                    "tooltip": "Height when the image is portrait-oriented."
+                }),
+                "landscape_width": (Input.INTEGER, {
+                    "default": 1216, "min": 1, 
+                    "step": 1, 
+                    "tooltip": "Width when the image is landscape-oriented."
+                }),
+                "landscape_height": (Input.INTEGER, {
+                    "default": 832, "min": 1, 
+                    "step": 1, 
+                    "tooltip": "Height when the image is landscape-oriented."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_PROGRESSBAR", {"default": {}}),
+                "ui_widget": (Input.KUL_PROGRESSBAR, {"default": {}}),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -383,15 +457,28 @@ class LF_ResolutionSwitcher:
 # region LF_SwitchFloat
 class LF_SwitchFloat:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "on_true": ("FLOAT", {"lazy": True, "default": 0, "tooltip": "Value to return if the boolean condition is true."}),
-                "on_false": ("FLOAT", {"lazy": True, "default": 0, "tooltip": "Value to return if the boolean condition is false."}),
-                "boolean": ("BOOLEAN", {"default": False, "tooltip": "Boolean condition to switch between 'on_true' and 'on_false' values."}),
+                "on_true": (Input.FLOAT, {
+                    "lazy": True, 
+                    "default": 0, 
+                    "tooltip": "Value to return if the boolean condition is true."
+                }),
+                "on_false": (Input.FLOAT, {
+                    "lazy": True, 
+                    "default": 0, 
+                    "tooltip": "Value to return if the boolean condition is false."
+                }),
+                "boolean": (Input.BOOLEAN, {
+                    "default": False, 
+                    "tooltip": "Boolean condition to switch between 'on_true' and 'on_false' values."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_PROGRESSBAR", {"default": {}}),
+                "ui_widget": (Input.KUL_PROGRESSBAR, {
+                    "default": {}
+                }),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -428,15 +515,26 @@ class LF_SwitchFloat:
 # region LF_SwitchImage
 class LF_SwitchImage:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "on_true": ("IMAGE", {"lazy": True, "tooltip": "Value to return if the boolean condition is true."}),
-                "on_false": ("IMAGE", {"lazy": True, "tooltip": "Value to return if the boolean condition is false."}),
-                "boolean": ("BOOLEAN", {"default": False, "tooltip": "Boolean condition to switch between 'on_true' and 'on_false' values."}),
+                "on_true": (Input.IMAGE, {
+                    "lazy": True, 
+                    "tooltip": "Value to return if the boolean condition is true."
+                }),
+                "on_false": (Input.IMAGE, {
+                    "lazy": True, 
+                    "tooltip": "Value to return if the boolean condition is false."
+                }),
+                "boolean": (Input.BOOLEAN, {
+                    "default": False, 
+                    "tooltip": "Boolean condition to switch between 'on_true' and 'on_false' values."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_PROGRESSBAR", {"default": {}}),
+                "ui_widget": (Input.KUL_PROGRESSBAR, {
+                    "default": {}
+                }),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -473,15 +571,28 @@ class LF_SwitchImage:
 # region LF_SwitchInteger    
 class LF_SwitchInteger:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "on_true": ("INT", {"default": 0, "max": INT_MAX, "tooltip": "Value to return if the boolean condition is true."}),
-                "on_false": ("INT", {"default": 0, "max": INT_MAX, "tooltip": "Value to return if the boolean condition is false."}),
-                "boolean": ("BOOLEAN", {"default": False, "tooltip": "Boolean condition to switch between 'on_true' and 'on_false' values."}),
+                "on_true": (Input.INTEGER, {
+                    "default": 0, 
+                    "max": INT_MAX, 
+                    "tooltip": "Value to return if the boolean condition is true."
+                }),
+                "on_false": (Input.INTEGER, {
+                    "default": 0, 
+                    "max": INT_MAX, 
+                    "tooltip": "Value to return if the boolean condition is false."
+                }),
+                "boolean": (Input.BOOLEAN, {
+                    "default": False, 
+                    "tooltip": "Boolean condition to switch between 'on_true' and 'on_false' values."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_PROGRESSBAR", {"default": {}}),
+                "ui_widget": (Input.KUL_PROGRESSBAR, {
+                    "default": {}
+                }),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -513,15 +624,26 @@ class LF_SwitchInteger:
 # region LF_SwitchJSON
 class LF_SwitchJSON:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "on_true": ("JSON", {"lazy": True, "tooltip": "Value to return if the boolean condition is true."}),
-                "on_false": ("JSON", {"lazy": True, "tooltip": "Value to return if the boolean condition is false."}),
-                "boolean": ("BOOLEAN", {"default": False, "tooltip": "Boolean condition to switch between 'on_true' and 'on_false' values."}),
+                "on_true": (Input.JSON, {
+                    "lazy": True, 
+                    "tooltip": "Value to return if the boolean condition is true."
+                }),
+                "on_false": (Input.JSON, {
+                    "lazy": True, 
+                    "tooltip": "Value to return if the boolean condition is false."
+                }),
+                "boolean": (Input.BOOLEAN, {
+                    "default": False, 
+                    "tooltip": "Boolean condition to switch between 'on_true' and 'on_false' values."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_PROGRESSBAR", {"default": {}}),
+                "ui_widget": (Input.KUL_PROGRESSBAR, {
+                    "default": {}
+                }),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -558,15 +680,28 @@ class LF_SwitchJSON:
 # region LF_SwitchString
 class LF_SwitchString:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "on_true": ("STRING", {"lazy": True, "multiline": True, "tooltip": "Value to return if the boolean condition is true."}),
-                "on_false": ("STRING", {"lazy": True, "multiline": True, "tooltip": "Value to return if the boolean condition is false."}),
-                "boolean": ("BOOLEAN", {"default": False, "tooltip": "Boolean condition to switch between 'on_true' and 'on_false' values."}),
+                "on_true": (Input.STRING, {
+                    "lazy": True, 
+                    "multiline": True, 
+                    "tooltip": "Value to return if the boolean condition is true."
+                }),
+                "on_false": (Input.STRING, {
+                    "lazy": True, 
+                    "multiline": True, 
+                    "tooltip": "Value to return if the boolean condition is false."
+                }),
+                "boolean": (Input.BOOLEAN, {
+                    "default": False, 
+                    "tooltip": "Boolean condition to switch between 'on_true' and 'on_false' values."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_PROGRESSBAR", {"default": {}}),
+                "ui_widget": (Input.KUL_PROGRESSBAR, {
+                    "default": {}
+                }),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID" 

@@ -1,9 +1,8 @@
-import ast
 import numpy as np
 import random
 
-from ..utils.constants import ANY, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, INT_MAX, USER_FOLDER
-from ..utils.helpers import create_masonry_node, get_comfy_dir, get_resource_url, normalize_input_list, normalize_list_item, normalize_output_image, numpy_to_tensor, normalize_list_to_value, normalize_json_input, resolve_filepath, tensor_to_pil
+from ..utils.constants import ANY, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, Input, INT_MAX
+from ..utils.helpers import create_masonry_node, get_resource_url, normalize_input_list, normalize_list_item, normalize_output_image, numpy_to_tensor, normalize_list_to_value, normalize_json_input, resolve_filepath, tensor_to_pil
 
 from server import PromptServer
 
@@ -12,13 +11,17 @@ CATEGORY = f"{CATEGORY_PREFIX}/JSON"
 # region LF_DisplayJSON
 class LF_DisplayJSON:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "json_input": ("JSON", { "tooltip": "JSON object to display."}),
+                "json_input": (Input.JSON, { 
+                    "tooltip": "JSON object to display."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_CODE", { "default": "" }),
+                "ui_widget": (Input.KUL_CODE, { 
+                    "default": "" 
+                }),
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
@@ -44,14 +47,23 @@ class LF_DisplayJSON:
 # region LF_GetRandomKeyFromJSON
 class LF_GetRandomKeyFromJSON:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "seed": ("INT", {"default": 0, "min": 0, "max": INT_MAX, "tooltip": "The seed for the random pick."}),
-                "json_input": ("JSON", { "tooltip": "JSON object from which a random key will be picked."},),
+                "seed": (Input.INTEGER, {
+                    "default": 0, 
+                    "min": 0, 
+                    "max": INT_MAX, 
+                    "tooltip": "The seed for the random pick."
+                }),
+                "json_input": (Input.JSON, { 
+                    "tooltip": "JSON object from which a random key will be picked."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_CODE", { "default": "" }),
+                "ui_widget": (Input.KUL_CODE, { 
+                    "default": "" 
+                }),
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
@@ -81,15 +93,25 @@ class LF_GetRandomKeyFromJSON:
 # region LF_GetValueFromJSON
 class LF_GetValueFromJSON:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "json_input": ("JSON", {"tooltip": "JSON Object."}),
-                "key": ("STRING", {"default": "", "tooltip": "Key to select."}),
-                "index": ("INT", {"default": 0, "tooltip": "When the input is a list of JSON objects, it sets the index of the occurrence from which the value is extracted."})
+                "json_input": (Input.JSON, {
+                    "tooltip": "JSON Object."
+                }),
+                "key": (Input.STRING, {
+                    "default": "", 
+                    "tooltip": "Key to select."
+                }),
+                "index": (Input.INTEGER, {
+                    "default": 0, 
+                    "tooltip": "When the input is a list of JSON objects, it sets the index of the occurrence from which the value is extracted."
+                })
             },
             "optional": {
-                "ui_widget": ("KUL_CODE", { "default": "" }),
+                "ui_widget": (Input.KUL_CODE, { 
+                    "default": "" 
+                }),
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
@@ -158,17 +180,33 @@ class LF_GetValueFromJSON:
 # region LF_ImageListFromJSON
 class LF_ImageListFromJSON:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "json_input": ("JSON", {"tooltip": "Input JSON containing keys to determine batch size."}),
-                "add_noise": ("BOOLEAN", {"default": True, "tooltip": "Add noise to the images."}),
-                "width": ("INT", {"default": 1024, "tooltip": "Width of the images."}),
-                "height": ("INT", {"default": 1024, "tooltip": "Height of the images."}),
-                "seed": ("INT", {"default": 42, "tooltip": "Seed for generating random noise."}),
+                "json_input": (Input.JSON, {
+                    "tooltip": "Input JSON containing keys to determine batch size."
+                }),
+                "add_noise": (Input.BOOLEAN, {
+                    "default": True, 
+                    "tooltip": "Add noise to the images."
+                }),
+                "width": (Input.INTEGER, {
+                    "default": 1024, 
+                    "tooltip": "Width of the images."
+                }),
+                "height": (Input.INTEGER, {
+                    "default": 1024, 
+                    "tooltip": "Height of the images."
+                }),
+                "seed": (Input.INTEGER, {
+                    "default": 42, 
+                    "tooltip": "Seed for generating random noise."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_MASONRY", { "default": {} }),
+                "ui_widget": (Input.KUL_MASONRY, { 
+                    "default": {} 
+                }),
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
@@ -230,12 +268,18 @@ class LF_ImageListFromJSON:
 # region LF_KeywordToggleFromJSON
 class LF_KeywordToggleFromJSON:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "json_input": ("JSON", {"tooltip": "Ketchup Lite compatible JSON dataset."}),
-                "separator": ("STRING", {"default": ", ", "tooltip": "Separator for keywords in the output prompt."}),
-                "ui_widget": ("KUL_CHIP", {})
+                "json_input": (Input.JSON, {
+                    "tooltip": "Ketchup Lite compatible JSON dataset."
+                }),
+                "separator": (Input.STRING, {
+                    "default": ", ", "tooltip": "Separator for keywords in the output prompt."
+                }),
+                "ui_widget": ("KUL_CHIP", {
+                    "default": ""
+                })
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
@@ -270,15 +314,23 @@ class LF_KeywordToggleFromJSON:
 # region LF_SetValueInJSON
 class LF_SetValueInJSON:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "json_input": ("JSON", {"tooltip": "JSON Object."}),
-                "key": ("STRING", {"tooltip": "Key to update or insert."}),
-                "value": (ANY, {"tooltip": "Value to set."}),
+                "json_input": (Input.JSON, {
+                    "tooltip": "JSON Object."
+                }),
+                "key": (Input.STRING, {
+                    "tooltip": "Key to update or insert."
+                }),
+                "value": (ANY, {
+                    "tooltip": "Value to set."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_CODE", { "default": "" }),
+                "ui_widget": (Input.KUL_CODE, { 
+                    "default": "" 
+                }),
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
@@ -332,15 +384,27 @@ class LF_SetValueInJSON:
 # region LF_ShuffleJSONKeys
 class LF_ShuffleJSONKeys:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "json_input": ("JSON", {"tooltip": "Input JSON object."}),
-                "mutate_source": ("BOOLEAN", {"default": False, "tooltip": "Shuffles the input JSON in place without creating a new dictionary as a copy."}),
-                "seed": ("INT", {"default": 0, "min": 0, "max": INT_MAX, "tooltip": "Seed for the random shuffle."})
+                "json_input": (Input.JSON, {
+                    "tooltip": "Input JSON object."
+                }),
+                "mutate_source": (Input.BOOLEAN, {
+                    "default": False, 
+                    "tooltip": "Shuffles the input JSON in place without creating a new dictionary as a copy."
+                }),
+                "seed": (Input.INTEGER, {
+                    "default": 0, 
+                    "min": 0, 
+                    "max": INT_MAX, 
+                    "tooltip": "Seed for the random shuffle."
+                })
             },
             "optional": {
-                "ui_widget": ("KUL_CODE", { "default": "" }),
+                "ui_widget": (Input.KUL_CODE, { 
+                    "default": "" 
+                }),
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
@@ -383,15 +447,25 @@ class LF_ShuffleJSONKeys:
 # region LF_SortJSONKeys
 class LF_SortJSONKeys:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "json_input": ("JSON", {"tooltip": "Input JSON object."}),
-                "ascending": ("BOOLEAN", {"default": True, "tooltip": "Sort ascending (True) or descending (False)."}),
-                "mutate_source": ("BOOLEAN", {"default": False, "tooltip": "Sorts the input JSON in place without creating a new dictionary as a copy."})
+                "json_input": (Input.JSON, {
+                    "tooltip": "Input JSON object."
+                }),
+                "ascending": (Input.BOOLEAN, {
+                    "default": True, 
+                    "tooltip": "Sort ascending (True) or descending (False)."
+                }),
+                "mutate_source": (Input.BOOLEAN, {
+                    "default": False, 
+                    "tooltip": "Sorts the input JSON in place without creating a new dictionary as a copy."
+                })
             },
             "optional": {
-                "ui_widget": ("KUL_CODE", { "default": "" }),
+                "ui_widget": (Input.KUL_CODE, { 
+                    "default": "" 
+                }),
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
@@ -428,13 +502,19 @@ class LF_SortJSONKeys:
 # region LF_StringToJSON
 class LF_StringToJSON:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "string": ("STRING", {"default": "{}", "multiline": True, "tooltip": "Stringified JSON"}),
+                "string": (Input.STRING, {
+                    "default": "{}", 
+                    "multiline": True, 
+                    "tooltip": "Stringified JSON"
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_CODE", { "default": "" }),
+                "ui_widget": (Input.KUL_CODE, { 
+                    "default": "" 
+                }),
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
@@ -461,10 +541,13 @@ class LF_StringToJSON:
 # region LF_WriteJSON
 class LF_WriteJSON:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "ui_widget": ("KUL_TEXTAREA", {"default": "{}", "tooltip": "Write your JSON content here."}),
+                "ui_widget": ("KUL_TEXTAREA", {
+                    "default": "{}", 
+                    "tooltip": "Write your JSON content here."
+                }),
             },
             "hidden": { "node_id": "UNIQUE_ID" }
         }

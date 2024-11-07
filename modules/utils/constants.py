@@ -1,3 +1,4 @@
+from enum import Enum
 from comfy.samplers import KSampler
 
 class AnyType(str):
@@ -5,6 +6,33 @@ class AnyType(str):
         return False
 
 # region constants
+class Input(Enum):
+    BOOLEAN = "BOOLEAN"
+    CLIP = "CLIP"
+    FLOAT = "FLOAT"
+    IMAGE = "IMAGE"
+    INTEGER = "INT"
+    KUL_CARD = "KUL_CARD"
+    KUL_CARDS_WITH_CHIP = "KUL_CARDS_WITH_CHIP"
+    KUL_CHAT = "KUL_CHAT"
+    KUL_CHIP = "KUL_CHIP"
+    KUL_CODE = "CODE"
+    KUL_COMPARE = "KUL_COMPARE"
+    KUL_CONTROL_PANEL = "KUL_CONTROL_PANEL"
+    KUL_COUNT_BAR_CHART = "KUL_COUNT_BAR_CHART"
+    KUL_HISTORY = "KUL_HISTORY"
+    KUL_MASONRY = "KUL_MASONRY"
+    KUL_MESSENGER = "KUL_MESSENGER"
+    KUL_PROGRESSBAR = "KUL_PROGRESSBAR"
+    KUL_TAB_BAR_CHART = "KUL_TAB_BAR_CHART"
+    KUL_TEXTAREA = "KUL_TEXTAREA"
+    KUL_TREE = "KUL_TREE"
+    KUL_UPLOAD = "KUL_UPLOAD"
+    JSON = "JSON"
+    MODEL = "MODEL"
+    STRING = "STRING"
+
+
 ANY = AnyType("*")
 INT_MAX = 0xffffffffffffffff
 LORA_TAG_REGEX = r'<lora:[^<>]+>'

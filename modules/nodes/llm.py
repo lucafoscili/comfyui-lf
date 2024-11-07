@@ -12,19 +12,53 @@ CATEGORY = f"{CATEGORY_PREFIX}/LLM"
 # region LF_CharacterImpersonator
 class LF_CharacterImpersonator:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "temperature": ("FLOAT", {"max": 1.901, "min": 0.1, "step": 0.1, "round": 0.1, "default": 0.7, "tooltip": "Controls the randomness of the generated text. Higher values make the output more random."}),
-                "max_tokens": ("INT", {"max": 8000, "min": 20, "step": 10, "default": 500, "tooltip": "Limits the length of the generated text. Adjusting this value can help control the verbosity of the output."}),
-                "prompt": ("STRING", {"multiline": True, "default": "", "tooltip": "The initial input or question that guides the generation process. Can be a single line or multiple lines of text."}),
-                "seed": ("INT", {"default": 42, "min": 0, "max": INT_MAX, "tooltip": "Determines the starting point for generating random numbers. Setting a specific seed ensures reproducibility of results."}),
-                "character_bio": ("STRING", {"multiline": True, "default": "", "tooltip": "Biographical details of the character to be impersonated. Helps in shaping the tone and content of the generated text."}),
-                "url": ("STRING", {"default": "http://localhost:5001/v1/chat/completions", "tooltip": "URL of the local endpoint where the request is sent."}),
+                "temperature": ("FLOAT", {
+                    "max": 1.901, 
+                    "min": 0.1, 
+                    "step": 0.1, 
+                    "round": 0.1, 
+                    "default": 0.7, 
+                    "tooltip": "Controls the randomness of the generated text. Higher values make the output more random."
+                }),
+                "max_tokens": ("INT", {
+                    "max": 8000, 
+                    "min": 20, 
+                    "step": 10, 
+                    "default": 500, 
+                    "tooltip": "Limits the length of the generated text. Adjusting this value can help control the verbosity of the output."
+                }),
+                "prompt": ("STRING", {
+                    "multiline": True, 
+                    "default": "", 
+                    "tooltip": "The initial input or question that guides the generation process. Can be a single line or multiple lines of text."
+                }),
+                "seed": ("INT", {
+                    "default": 42, 
+                    "min": 0, 
+                    "max": INT_MAX, 
+                    "tooltip": "Determines the starting point for generating random numbers. Setting a specific seed ensures reproducibility of results."
+                }),
+                "character_bio": ("STRING", {
+                    "multiline": True, 
+                    "default": "", 
+                    "tooltip": "Biographical details of the character to be impersonated. Helps in shaping the tone and content of the generated text."
+                }),
+                "url": ("STRING", {
+                    "default": "http://localhost:5001/v1/chat/completions", 
+                    "tooltip": "URL of the local endpoint where the request is sent."
+                }),
             },
             "optional":{
-                "image" : ("IMAGE", {"default": None, "tooltip": "An optional image that can be included in the generation process to influence the output based on visual cues."}),
-                "ui_widget" : ("KUL_CODE", {"default": ""})
+                "image" : ("IMAGE", {
+                    "default": None, 
+                    "tooltip": "An optional image that can be included in the generation process to influence the output based on visual cues."
+                }),
+                "ui_widget" : ("KUL_CODE", {
+                    "default": ""
+                })
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
@@ -90,19 +124,53 @@ class LF_CharacterImpersonator:
 # region LF_ImageClassifier
 class LF_ImageClassifier:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "image" : ("IMAGE", {"default": None, "tooltip": "The image that the LLM will try to classify."}),
-                "temperature" : ("FLOAT", {"max": 1.901, "min": 0.1, "step": 0.1, "round": 0.1, "default": 0.7, "tooltip": "Controls the randomness of the generated text. Higher values make the output more random."}),
-                "max_tokens" : ("INT", {"max": 8000, "min": 20, "step": 10, "default": 500, "tooltip": "Limits the length of the generated text. Adjusting this value can help control the verbosity of the output."}),
-                "prompt": ("STRING", {"multiline": True, "default": "", "tooltip": "The initial input or question that guides the generation process. Can be a single line or multiple lines of text."}),
-                "seed": ("INT", {"default": 42, "min": 0, "max": INT_MAX, "tooltip": "Determines the starting point for generating random numbers. Setting a specific seed ensures reproducibility of results."}),
-                "url": ("STRING", {"default": "http://localhost:5001/v1/chat/completions", "tooltip": "URL of the local endpoint where the request is sent."}),
+                "image" : ("IMAGE", {
+                    "default": None, 
+                    "tooltip": "The image that the LLM will try to classify."
+                }),
+                "temperature" : ("FLOAT", {
+                    "max": 1.901, 
+                    "min": 0.1, 
+                    "step": 0.1, 
+                    "round": 0.1, 
+                    "default": 0.7, 
+                    "tooltip": "Controls the randomness of the generated text. Higher values make the output more random."
+                }),
+                "max_tokens" : ("INT", {
+                    "max": 8000, 
+                    "min": 20, 
+                    "step": 10, 
+                    "default": 500, 
+                    "tooltip": "Limits the length of the generated text. Adjusting this value can help control the verbosity of the output."
+                }),
+                "prompt": ("STRING", {
+                    "multiline": True, 
+                    "default": "", 
+                    "tooltip": "The initial input or question that guides the generation process. Can be a single line or multiple lines of text."
+                }),
+                "seed": ("INT", {
+                    "default": 42, 
+                    "min": 0, 
+                    "max": INT_MAX, 
+                    "tooltip": "Determines the starting point for generating random numbers. Setting a specific seed ensures reproducibility of results."
+                }),
+                "url": ("STRING", {
+                    "default": "http://localhost:5001/v1/chat/completions", 
+                    "tooltip": "URL of the local endpoint where the request is sent."
+                }),
             },
             "optional": {
-                "character_bio": ("STRING", {"multiline": True, "default": "", "tooltip": "Biographical details of the character to be impersonated. Helps in shaping the tone and content of the generated text."}),
-                "ui_widget" : ("KUL_CODE", {"default": ""})
+                "character_bio": ("STRING", {
+                    "multiline": True, 
+                    "default": "", 
+                    "tooltip": "Biographical details of the character to be impersonated. Helps in shaping the tone and content of the generated text."
+                }),
+                "ui_widget" : ("KUL_CODE", {
+                    "default": ""
+                })
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
@@ -166,10 +234,12 @@ class LF_ImageClassifier:
 # region LF_LLMChat
 class LF_LLMChat:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "ui_widget": ("KUL_CHAT", {}),
+                "ui_widget": ("KUL_CHAT", {
+                    "default": ""
+                }),
             },
         }
     
@@ -192,14 +262,22 @@ class LF_LLMChat:
 # region LF_LLMMessenger
 class LF_LLMMessenger:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "ui_widget": ("KUL_MESSENGER", {}),
+                "ui_widget": ("KUL_MESSENGER", {
+                    "default": ""
+                }),
             },
             "optional": {
-                "dataset": ("JSON", {"tooltip": "The dataset JSON containing characters to talk to."}),
-                "config": ("JSON", {"tooltip": "Set of parameters that initializes the interface."}),
+                "dataset": ("JSON", {
+                    "default": "",
+                    "tooltip": "The dataset JSON containing characters to talk to."
+                }),
+                "config": ("JSON", {
+                    "default": "",
+                    "tooltip": "Set of parameters that initializes the interface."
+                }),
             }
         }
 
@@ -293,18 +371,49 @@ class LF_LLMMessenger:
 # region LF_MarkdownDocGenerator
 class LF_MarkdownDocGenerator:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "prompt": ("STRING", {"default": "", "multiline": True, "tooltip": "The source file to document."}),
-                "temperature": ("FLOAT", {"max": 1.901, "min": 0.1, "step": 0.1, "round": 0.1, "default": 0.5, "tooltip": "Controls the randomness of the generated text. Higher values make the output more random."}),
-                "max_tokens": ("INT", {"max": 8000, "min": 20, "step": 10, "default": 2000, "tooltip": "Limits the length of the generated text. Adjusting this value can help control the verbosity of the output."}),
-                "seed": ("INT", {"default": 42, "min": 0, "max": INT_MAX, "tooltip": "Determines the starting point for generating random numbers. Setting a specific seed ensures reproducibility of results."}),
-                "url": ("STRING", {"default": "http://localhost:5001/v1/chat/completions", "tooltip": "URL of the local endpoint for the LLM."}),
+                "prompt": ("STRING", {
+                    "default": "", 
+                    "multiline": True, 
+                    "tooltip": "The source file to document."
+                }),
+                "temperature": ("FLOAT", {
+                    "max": 1.901, 
+                    "min": 0.1, 
+                    "step": 0.1, 
+                    "round": 0.1, 
+                    "default": 0.5, 
+                    "tooltip": "Controls the randomness of the generated text. Higher values make the output more random."
+                }),
+                "max_tokens": ("INT", {
+                    "max": 8000, 
+                    "min": 20, 
+                    "step": 10, 
+                    "default": 2000, 
+                    "tooltip": "Limits the length of the generated text. Adjusting this value can help control the verbosity of the output."
+                }),
+                "seed": ("INT", {
+                    "default": 42, 
+                    "min": 0, 
+                    "max": INT_MAX, 
+                    "tooltip": "Determines the starting point for generating random numbers. Setting a specific seed ensures reproducibility of results."
+                }),
+                "url": ("STRING", {
+                    "default": "http://localhost:5001/v1/chat/completions", 
+                    "tooltip": "URL of the local endpoint for the LLM."
+                }),
             },
             "optional": { 
-                "extra_context": ("STRING", {"default": "", "multiline": True, "tooltip": "Additional context to guide the LLM (out of scope constants and helpers definitions)."}),
-                "ui_widget" : ("KUL_CODE", {"default": ""})
+                "extra_context": ("STRING", {
+                    "default": "", 
+                    "multiline": True, 
+                    "tooltip": "Additional context to guide the LLM (out of scope constants and helpers definitions)."
+                }),
+                "ui_widget" : ("KUL_CODE", {
+                    "default": ""
+                })
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
