@@ -36,8 +36,10 @@ async def backup_usage_analytics(request):
         
         models_backup_folder = os.path.join(backup_folder, "models")
         analytics_backup_folder = os.path.join(backup_folder, "analytics")
+        workflows_backup_folder = os.path.join(backup_folder, "workflows")
         os.makedirs(models_backup_folder, exist_ok=True)
         os.makedirs(analytics_backup_folder, exist_ok=True)
+        os.makedirs(workflows_backup_folder, exist_ok=True)
         
         backed_up_files = []
 
@@ -82,7 +84,21 @@ async def backup_usage_analytics(request):
                     
                     shutil.copy2(full_path, backup_path)
                     backed_up_files.append(backup_path)
-        
+
+        workflows_dir = os.path.join(get_comfy_dir("user"), "default", "workflows")
+        if os.path.exists(workflows_dir):
+            for root, _, files in os.walk(workflows_dir):
+                for file_name in files:
+                    workflow_path = os.path.join(root, file_name)
+                    if os.path.isfile(workflow_path):
+                        relative_path = os.path.relpath(workflow_path, workflows_dir)
+                        backup_path = os.path.join(workflows_backup_folder, relative_path)
+                        backup_dir = os.path.dirname(backup_path)
+                        os.makedirs(backup_dir, exist_ok=True)
+                        
+                        shutil.copy2(workflow_path, backup_path)
+                        backed_up_files.append(backup_path)
+
         return web.json_response({
             "status": "success",
             "message": f"{backup_type.capitalize()} backup created with {len(backed_up_files)} files.",
