@@ -7,7 +7,7 @@ from pathlib import Path
 import comfy.sd
 import comfy.utils
 
-from ..utils.constants import ANY, BASE64_PNG_PREFIX, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, INT_MAX, NOTIFY_COMBO, SAMPLERS, SCHEDULERS
+from ..utils.constants import ANY, BASE64_PNG_PREFIX, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, Input, INT_MAX, NOTIFY_COMBO, SAMPLERS, SCHEDULERS
 from ..utils.helpers import get_comfy_list, get_embedding_hashes, get_lora_hashes, get_sha256, normalize_input_image, normalize_list_to_value,  prepare_model_dataset, process_model, tensor_to_base64
 
 from server import PromptServer
@@ -17,29 +17,94 @@ CATEGORY = f"{CATEGORY_PREFIX}/Configuration"
 # region LF_CivitAIMetadataSetup
 class LF_CivitAIMetadataSetup:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "checkpoint": (get_comfy_list("checkpoints"), {"default": "None", "tooltip": "Checkpoint used to generate the image."}),
+                "checkpoint": (get_comfy_list("checkpoints"), {
+                    "default": "None", 
+                    "tooltip": "Checkpoint used to generate the image."
+                }),
             },
             "optional": {
-                "vae": (get_comfy_list("vae"), {"tooltip": "VAE used to generate the image."}),
-                "sampler": (SAMPLERS, {"default": "None", "tooltip": "Sampler used to generate the image."}),
-                "scheduler": (SCHEDULERS, {"default": "None", "tooltip": "Scheduler used to generate the image."}),
-                "embeddings": ("STRING", {"default": '', "multiline": True, "tooltip": "Embeddings used to generate the image."}),
-                "lora_tags": ("STRING", {"default": '', "multiline": True, "tooltip": "Tags of the LoRAs used to generate the image."}),
-                "positive_prompt": ("STRING", {"default": '', "multiline": True, "tooltip": "Prompt to generate the image."}),
-                "negative_prompt": ("STRING", {"default": '', "multiline": True, "tooltip": "Negative prompt used to generate the image."}),
-                "steps": ("INT", {"default": 30, "min": 1, "max": 10000, "tooltip": "Steps used to generate the image."}),
-                "denoising": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 1.0, "tooltip": "Denoising strength used to generate the image."}),
-                "clip_skip": ("INT", {"default": -1, "min": -24, "max": -1, "tooltip": "CLIP skip used to generate the image."}),
-                "cfg": ("FLOAT", {"default": 7.0, "min": 0.0, "max": 30.0, "tooltip": "CFG used to generate the image."}),
-                "seed": ("INT", {"default": 0, "min": 0, "max": INT_MAX, "tooltip": "Seed used to generate the image."}),
-                "width": ("INT", {"default": 1024, "tooltip": "Width of the image."}),
-                "height": ("INT", {"default": 1024, "tooltip": "Height of the image."}),
-                "hires_upscale": ("FLOAT", {"default": 1.5, "tooltip": "Upscale factor for Hires-fix."}),
-                "hires_upscaler": (get_comfy_list("upscale_models"), {"tooltip": "Upscale model for Hires-fix."}),
-                "ui_widget": ("KUL_CODE", {"default": ""}),
+                "vae": (get_comfy_list("vae"), {
+                    "tooltip": "VAE used to generate the image."
+                }),
+                "sampler": (SAMPLERS, {
+                    "default": "None", 
+                    "tooltip": "Sampler used to generate the image."
+                }),
+                "scheduler": (SCHEDULERS, {
+                    "default": "None", 
+                    "tooltip": "Scheduler used to generate the image."
+                }),
+                "embeddings": (Input.STRING, {
+                    "default": '', 
+                    "multiline": True, 
+                    "tooltip": "Embeddings used to generate the image."
+                }),
+                "lora_tags": (Input.STRING, {
+                    "default": '', 
+                    "multiline": True, 
+                    "tooltip": "Tags of the LoRAs used to generate the image."
+                }),
+                "positive_prompt": (Input.STRING, {
+                    "default": '', 
+                    "multiline": True, 
+                    "tooltip": "Prompt to generate the image."
+                }),
+                "negative_prompt": (Input.STRING, {
+                    "default": '', 
+                    "multiline": True, 
+                    "tooltip": "Negative prompt used to generate the image."
+                }),
+                "steps": (Input.INTEGER, {
+                    "default": 30, 
+                    "min": 1, 
+                    "max": 10000, 
+                    "tooltip": "Steps used to generate the image."
+                }),
+                "denoising": (Input.FLOAT, {
+                    "default": 1.0, 
+                    "min": 0.0, 
+                    "max": 1.0, 
+                    "tooltip": "Denoising strength used to generate the image."
+                }),
+                "clip_skip": (Input.INTEGER, {
+                    "default": -1, 
+                    "min": -24, 
+                    "max": -1, 
+                    "tooltip": "CLIP skip used to generate the image."
+                }),
+                "cfg": (Input.FLOAT, {
+                    "default": 7.0, 
+                    "min": 0.0, 
+                    "max": 30.0, 
+                    "tooltip": "CFG used to generate the image."
+                }),
+                "seed": (Input.INTEGER, {
+                    "default": 0, 
+                    "min": 0, 
+                    "max": INT_MAX, 
+                    "tooltip": "Seed used to generate the image."
+                }),
+                "width": (Input.INTEGER, {
+                    "default": 1024, 
+                    "tooltip": "Width of the image."
+                }),
+                "height": (Input.INTEGER, {
+                    "default": 1024, 
+                    "tooltip": "Height of the image."
+                }),
+                "hires_upscale": (Input.FLOAT, {
+                    "default": 1.5, 
+                    "tooltip": "Upscale factor for Hires-fix."
+                }),
+                "hires_upscaler": (get_comfy_list("upscale_models"), {
+                    "tooltip": "Upscale model for Hires-fix."
+                }),
+                "ui_widget": (Input.KUL_CODE, {
+                    "default": ""
+                }),
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
@@ -129,11 +194,13 @@ class LF_CivitAIMetadataSetup:
 # region LF_ControlPanel
 class LF_ControlPanel:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {},
             "optional": {
-                "ui_widget": ("KUL_CONTROL_PANEL", {"default": {}})
+                "ui_widget": (Input.KUL_CONTROL_PANEL, {
+                    "default": {}
+                })
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
@@ -150,16 +217,29 @@ class LF_ControlPanel:
 # region LF_LoadLoraTags
 class LF_LoadLoraTags:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "get_civitai_info": ("BOOLEAN", {"default": True, "tooltip": "Attempts to retrieve more info about the models from CivitAI."}),
-                "model": ("MODEL", {"tooltip": "The main model to apply the LoRA to."}),
-                "clip": ("CLIP", {"tooltip": "The CLIP model to modify."}),
-                "tags": ("STRING", {"default": '', "multiline": True, "tooltip": "Text containing LoRA tags, e.g., <lora:example:1.0>"}),
+                "get_civitai_info": (Input.BOOLEAN, {
+                    "default": True, 
+                    "tooltip": "Attempts to retrieve more info about the models from CivitAI."
+                }),
+                "model": (Input.MODEL, {
+                    "tooltip": "The main model to apply the LoRA to."
+                }),
+                "clip": (Input.CLIP, {
+                    "tooltip": "The CLIP model to modify."
+                }),
+                "tags": (Input.STRING, {
+                    "default": '', 
+                    "multiline": True, 
+                    "tooltip": "Text containing LoRA tags, e.g., <lora:example:1.0>"
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_CARDS_WITH_CHIP", {"default": ""})
+                "ui_widget": (Input.KUL_CARDS_WITH_CHIP, {
+                    "default": ""
+                })
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
@@ -284,18 +364,36 @@ class LF_LoadLoraTags:
 # region LF_Notify
 class LF_Notify:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "any": (ANY, {"tooltip": "Pass-through data."}),
-                "title": ("STRING", {"default": "ComfyUI - LF Nodes", "tooltip": "The title displayed by the notification."}),
-                "message": ("STRING", {"default": "Your ComfyUI workflow sent you a notification!", "multiline": True, "tooltip": "The message displayed by the notification."}),
-                "on_click_action": (NOTIFY_COMBO, {"tooltip": "Action triggered when clicking on the notification."}),
-                "silent": ("BOOLEAN", {"default": True, "tooltip": "The notifications will be displayed without triggering a sound effect."}),
+                "any": (ANY, {
+                    "tooltip": "Pass-through data."
+                }),
+                "title": (Input.STRING, {
+                    "default": "ComfyUI - LF Nodes", 
+                    "tooltip": "The title displayed by the notification."
+                }),
+                "message": (Input.STRING, {
+                    "default": "Your ComfyUI workflow sent you a notification!", 
+                    "multiline": True, 
+                    "tooltip": "The message displayed by the notification."
+                }),
+                "on_click_action": (NOTIFY_COMBO, {
+                    "tooltip": "Action triggered when clicking on the notification."
+                }),
+                "silent": (Input.BOOLEAN, {
+                    "default": True, 
+                    "tooltip": "The notifications will be displayed without triggering a sound effect."
+                }),
             },
             "optional": {
-                "image": ("IMAGE", {"tooltip": "Image displayed in the notification."}),
-                "tag": ("STRING", {"default": '', "tooltip": "Used to group notifications (old ones with the same tag will be replaced)."}),
+                "image": (Input.IMAGE, {
+                    "tooltip": "Image displayed in the notification."
+                }),
+                "tag": (Input.STRING, {
+                    "default": '', "tooltip": "Used to group notifications (old ones with the same tag will be replaced)."
+                }),
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"

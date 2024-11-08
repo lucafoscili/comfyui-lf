@@ -2,7 +2,7 @@ import random
 
 from server import PromptServer
 
-from ..utils.constants import CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, INT_MAX, SAMPLERS, SCHEDULERS
+from ..utils.constants import CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, Input, INT_MAX, SAMPLERS, SCHEDULERS
 from ..utils.helpers import create_history_node, filter_list, get_comfy_list, is_none, normalize_json_input, normalize_list_to_value, prepare_model_dataset, process_model
 
 CATEGORY = f"{CATEGORY_PREFIX}/Selectors"
@@ -15,14 +15,33 @@ class LF_CheckpointSelector:
     def INPUT_TYPES(self):
         return {
             "required": {
-                "get_civitai_info": ("BOOLEAN", {"default": True, "tooltip": "Attempts to retrieve more info about the model from CivitAI."}),
-                "randomize": ("BOOLEAN", {"default": False, "tooltip": "Selects a checkpoint randomly from your checkpoints directory."}),
-                "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter checkpoint file names. Supports wildcards (*)"}),
-                "seed": ("INT", {"default": 42, "min": 0, "max": INT_MAX, "tooltip": "Seed value for when randomization is active."}),
+                "get_civitai_info": (Input.BOOLEAN, {
+                    "default": True, 
+                    "tooltip": "Attempts to retrieve more info about the model from CivitAI."
+                }),
+                "randomize": (Input.BOOLEAN, {
+                    "default": False, 
+                    "tooltip": "Selects a checkpoint randomly from your checkpoints directory."
+                }),
+                "filter": (Input.STRING, {
+                    "default": "", 
+                    "tooltip": "When randomization is active, this field can be used to filter checkpoint file names. Supports wildcards (*)"
+                }),
+                "seed": (Input.INTEGER, {
+                    "default": 42, 
+                    "min": 0, 
+                    "max": INT_MAX, 
+                    "tooltip": "Seed value for when randomization is active."
+                }),
             },
             "optional": {
-                "checkpoint": (["None"] + self.initial_list, {"default": "None", "tooltip": "Checkpoint used to generate the image."}),
-                "ui_widget": ("KUL_CARD", {"default": {}}),
+                "checkpoint": (["None"] + self.initial_list, {
+                    "default": "None", 
+                    "tooltip": "Checkpoint used to generate the image."
+                }),
+                "ui_widget": (Input.KUL_CARD, {
+                    "default": {}
+                }),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -90,16 +109,44 @@ class LF_EmbeddingSelector:
     def INPUT_TYPES(self):
         return {
             "required": {
-                "get_civitai_info": ("BOOLEAN", {"default": True, "tooltip": "Attempts to retrieve more info about the model from CivitAI."}),
-                "weight": ("FLOAT", {"default": 1.0, "min": -3.0, "max": 3.0, "tooltip": "Embedding's weight."}),
-                "randomize": ("BOOLEAN", {"default": False, "tooltip": "Selects an embedding randomly from your embeddings directory."}),
-                "seed": ("INT", {"default": 42, "min": 0, "max": INT_MAX, "tooltip": "Seed value for when randomization is active."}),
-                "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter embedding file names. Supports wildcards (*)."}),
+                "get_civitai_info": (Input.BOOLEAN, {
+                    "default": True, 
+                    "tooltip": "Attempts to retrieve more info about the model from CivitAI."
+                }),
+                "weight": (Input.FLOAT, {
+                    "default": 1.0, 
+                    "min": -3.0, 
+                    "max": 3.0, 
+                    "tooltip": "Embedding's weight."
+                }),
+                "randomize": (Input.BOOLEAN, {
+                    "default": False, 
+                    "tooltip": "Selects an embedding randomly from your embeddings directory."
+                }),
+                "seed": (Input.INTEGER, {
+                    "default": 42, 
+                    "min": 0, 
+                    "max": INT_MAX, 
+                    "tooltip": "Seed value for when randomization is active."
+                }),
+                "filter": (Input.STRING, {
+                    "default": "", 
+                    "tooltip": "When randomization is active, this field can be used to filter embedding file names. Supports wildcards (*)."
+                }),
             },
             "optional": {
-                "embedding": (["None"] + self.initial_list, {"default": "None", "tooltip": "Embedding to use."}),
-                "embedding_stack": ("STRING", {"default": "", "defaultInput": True, "tooltip": "Optional string usable to concatenate subsequent selector nodes."}),
-                "ui_widget": ("KUL_CARD", {"default": {}}),
+                "embedding": (["None"] + self.initial_list, {
+                    "default": "None", 
+                    "tooltip": "Embedding to use."
+                }),
+                "embedding_stack": (Input.STRING, {
+                    "default": "", 
+                    "defaultInput": True, 
+                    "tooltip": "Optional string usable to concatenate subsequent selector nodes."
+                }),
+                "ui_widget": (Input.KUL_CARD, {
+                    "default": {}
+                }),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -186,17 +233,49 @@ class LF_LoraAndEmbeddingSelector:
     def INPUT_TYPES(self):
         return {
             "required": {
-                "get_civitai_info": ("BOOLEAN", {"default": True, "tooltip": "Attempts to retrieve more info about the models from CivitAI."}),
-                "weight": ("FLOAT", {"default": 1.0, "min": -3.0, "max": 3.0, "tooltip": "Lora and embedding weights."}),
-                "randomize": ("BOOLEAN", {"default": False, "tooltip": "Selects a combination of Lora and Embedding randomly from your directories."}),
-                "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter file names. Supports wildcards (*)."}),
-                "seed": ("INT", {"default": 42, "min": 0, "max": INT_MAX, "tooltip": "Seed value for when randomization is active."}),
+                "get_civitai_info": (Input.BOOLEAN, {
+                    "default": True, 
+                    "tooltip": "Attempts to retrieve more info about the models from CivitAI."
+                }),
+                "weight": (Input.FLOAT, {
+                    "default": 1.0, 
+                    "min": -3.0, 
+                    "max": 3.0, 
+                    "tooltip": "Lora and embedding weights."
+                }),
+                "randomize": (Input.BOOLEAN, {
+                    "default": False, 
+                    "tooltip": "Selects a combination of Lora and Embedding randomly from your directories."
+                }),
+                "filter": (Input.STRING, {
+                    "default": "", 
+                    "tooltip": "When randomization is active, this field can be used to filter file names. Supports wildcards (*)."
+                }),
+                "seed": (Input.INTEGER, {
+                    "default": 42, 
+                    "min": 0, 
+                    "max": INT_MAX, 
+                    "tooltip": "Seed value for when randomization is active."
+                }),
             },
             "optional": {
-                "lora": (["None"] + self.initial_lora_list, {"default": "None", "tooltip": "Lora model to use, it will also select the embedding with the same name."}),
-                "lora_stack": ("STRING", {"default": "", "defaultInput": True, "tooltip": "Optional string usable to concatenate subsequent Lora selector nodes."}),
-                "embedding_stack": ("STRING", {"default": "", "defaultInput": True, "tooltip": "Optional string usable to concatenate subsequent embedding selector nodes."}),
-                "ui_widget": ("KUL_CARD", {"default": {}}),
+                "lora": (["None"] + self.initial_lora_list, {
+                    "default": "None", 
+                    "tooltip": "Lora model to use, it will also select the embedding with the same name."
+                }),
+                "lora_stack": (Input.STRING, {
+                    "default": "", 
+                    "defaultInput": True, 
+                    "tooltip": "Optional string usable to concatenate subsequent Lora selector nodes."
+                }),
+                "embedding_stack": (Input.STRING, {
+                    "default": "", 
+                    "defaultInput": True, 
+                    "tooltip": "Optional string usable to concatenate subsequent embedding selector nodes."
+                }),
+                "ui_widget": (Input.KUL_CARD, {
+                    "default": {}
+                }),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -306,16 +385,44 @@ class LF_LoraSelector:
     def INPUT_TYPES(self):
         return {
             "required": {
-                "get_civitai_info": ("BOOLEAN", {"default": True, "tooltip": "Attempts to retrieve more info about the model from CivitAI."}),
-                "weight": ("FLOAT", {"default": 1.0, "min": -3.0, "max": 3.0, "tooltip": "Lora weight."}),
-                "randomize": ("BOOLEAN", {"default": False, "tooltip": "Selects a Lora randomly from your loras directory."}),
-                "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter Lora file names. Supports wildcards (*)."}),
-                "seed": ("INT", {"default": 42, "min": 0, "max": INT_MAX, "tooltip": "Seed value for when randomization is active."}),
+                "get_civitai_info": (Input.BOOLEAN, {
+                    "default": True, 
+                    "tooltip": "Attempts to retrieve more info about the model from CivitAI."
+                }),
+                "weight": (Input.FLOAT, {
+                    "default": 1.0, 
+                    "min": -3.0, 
+                    "max": 3.0, 
+                    "tooltip": "Lora weight."
+                }),
+                "randomize": (Input.BOOLEAN, {
+                    "default": False, 
+                    "tooltip": "Selects a Lora randomly from your loras directory."
+                }),
+                "filter": (Input.STRING, {
+                    "default": "", 
+                    "tooltip": "When randomization is active, this field can be used to filter Lora file names. Supports wildcards (*)."
+                }),
+                "seed": (Input.INTEGER, {
+                    "default": 42, 
+                    "min": 0, 
+                    "max": INT_MAX, 
+                    "tooltip": "Seed value for when randomization is active."
+                }),
             },
             "optional": {
-                "lora": (["None"] + self.initial_list, {"default": "None", "tooltip": "Lora model to use."}),
-                "lora_stack": ("STRING", {"default": "", "defaultInput": True, "tooltip": "Optional string usable to concatenate subsequent selector nodes."}),
-                "ui_widget": ("KUL_CARD", {"default": {}}),
+                "lora": (["None"] + self.initial_list, {
+                    "default": "None", 
+                    "tooltip": "Lora model to use."
+                }),
+                "lora_stack": (Input.STRING, {
+                    "default": "", 
+                    "defaultInput": True, 
+                    "tooltip": "Optional string usable to concatenate subsequent selector nodes."
+                }),
+                "ui_widget": (Input.KUL_CARD, {
+                    "default": {}
+                }),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -396,17 +503,36 @@ class LF_LoraSelector:
 # region LF_SamplerSelector
 class LF_SamplerSelector:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
-                "randomize": ("BOOLEAN", {"default": False, "tooltip": "Selects a sampler randomly."}),
-                "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter sampler names. Supports wildcards (*)."}),
-                "seed": ("INT", {"default": 42, "min": 0, "max": INT_MAX, "tooltip": "Seed value for when randomization is active."}),
+                "enable_history": (Input.BOOLEAN, {
+                    "default": True, 
+                    "tooltip": "Enables history, saving the execution value and date of the widget."
+                    }),
+                "randomize": (Input.BOOLEAN, {
+                    "default": False,
+                    "tooltip": "Selects a sampler randomly."
+                }),
+                "filter": (Input.STRING, {
+                    "default": "", 
+                    "tooltip": "When randomization is active, this field can be used to filter sampler names. Supports wildcards (*)."
+                }),
+                "seed": (Input.INTEGER, {
+                    "default": 42, 
+                    "min": 0, 
+                    "max": INT_MAX, 
+                    "tooltip": "Seed value for when randomization is active."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_HISTORY", {"default": {}}),
-                "sampler": (["None"] + SAMPLERS, {"default": "None", "tooltip": "Sampler used to generate the image."}),
+                "ui_widget": (Input.KUL_HISTORY, {
+                    "default": {}
+                }),
+                "sampler": (["None"] + SAMPLERS, {
+                    "default": "None", 
+                    "tooltip": "Sampler used to generate the image."
+                }),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -454,17 +580,36 @@ class LF_SamplerSelector:
 # region LF_SchedulerSelector
 class LF_SchedulerSelector:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
-                "randomize": ("BOOLEAN", {"default": False, "tooltip": "Selects a scheduler randomly."}),
-                "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter scheduler names. Supports wildcards (*)."}),
-                "seed": ("INT", {"default": 42, "min": 0, "max": INT_MAX, "tooltip": "Seed value for when randomization is active."}),
+                "enable_history": (Input.BOOLEAN, {
+                    "default": True, 
+                    "tooltip": "Enables history, saving the execution value and date of the widget."
+                }),
+                "randomize": (Input.BOOLEAN, {
+                    "default": False, 
+                    "tooltip": "Selects a scheduler randomly."
+                }),
+                "filter": (Input.STRING, {
+                    "default": "", 
+                    "tooltip": "When randomization is active, this field can be used to filter scheduler names. Supports wildcards (*)."
+                }),
+                "seed": (Input.INTEGER, {
+                    "default": 42, 
+                    "min": 0, 
+                    "max": INT_MAX, 
+                    "tooltip": "Seed value for when randomization is active."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_HISTORY", {"default": {}}),
-                "scheduler": (["None"] + SCHEDULERS, {"default": "None", "tooltip": "Scheduler used to generate the image."}),
+                "ui_widget": (Input.KUL_HISTORY, {
+                    "default": {}
+                }),
+                "scheduler": (["None"] + SCHEDULERS, {
+                    "default": "None", 
+                    "tooltip": "Scheduler used to generate the image."
+                }),
             },
             "hidden": {"node_id": "UNIQUE_ID"}
         }
@@ -515,14 +660,33 @@ class LF_UpscaleModelSelector:
     def INPUT_TYPES(self):
         return {
             "required": {
-                "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
-                "randomize": ("BOOLEAN", {"default": False, "tooltip": "Selects a scheduler randomly."}),
-                "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter upscale models names. Supports wildcards (*)."}),
-                "seed": ("INT", {"default": 42, "min": 0, "max": INT_MAX, "tooltip": "Seed value for when randomization is active."}),
+                "enable_history": (Input.BOOLEAN, {
+                    "default": True, 
+                    "tooltip": "Enables history, saving the execution value and date of the widget."
+                }),
+                "randomize": (Input.BOOLEAN, {
+                    "default": False, 
+                    "tooltip": "Selects a scheduler randomly."
+                }),
+                "filter": (Input.STRING, {
+                    "default": "", 
+                    "tooltip": "When randomization is active, this field can be used to filter upscale models names. Supports wildcards (*)."
+                }),
+                "seed": (Input.INTEGER, {
+                    "default": 42, 
+                    "min": 0, 
+                    "max": INT_MAX, 
+                    "tooltip": "Seed value for when randomization is active."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_HISTORY", {"default": {}}),
-                "upscale_model": (["None"] + self.initial_list, {"default": "None", "tooltip": "Upscale model used to upscale the image."}),
+                "ui_widget": (Input.KUL_HISTORY, {
+                    "default": {}
+                }),
+                "upscale_model": (["None"] + self.initial_list, {
+                    "default": "None", 
+                    "tooltip": "Upscale model used to upscale the image."
+                }),
             },
             "hidden": {"node_id": "UNIQUE_ID"}
         }
@@ -573,14 +737,33 @@ class LF_VAESelector:
     def INPUT_TYPES(self):
         return {
             "required": {
-                "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
-                "randomize": ("BOOLEAN", {"default": False, "tooltip": "Selects a VAE randomly."}),
-                "filter": ("STRING", {"default": "", "tooltip": "When randomization is active, this field can be used to filter VAE names. Supports wildcards (*)."}),
-                "seed": ("INT", {"default": 42, "min": 0, "max": INT_MAX, "tooltip": "Seed value for when randomization is active."}),
+                "enable_history": (Input.BOOLEAN, {
+                    "default": True, 
+                    "tooltip": "Enables history, saving the execution value and date of the widget."
+                }),
+                "randomize": (Input.BOOLEAN, {
+                    "default": False, 
+                    "tooltip": "Selects a VAE randomly."
+                }),
+                "filter": (Input.STRING, {
+                    "default": "", 
+                    "tooltip": "When randomization is active, this field can be used to filter VAE names. Supports wildcards (*)."
+                }),
+                "seed": (Input.INTEGER, {
+                    "default": 42, 
+                    "min": 0, 
+                    "max": INT_MAX, 
+                    "tooltip": "Seed value for when randomization is active."
+                }),
             },
             "optional":{
-                "ui_widget": ("KUL_HISTORY", {"default": {}}),
-                "vae": (["None"] + self.initial_list, {"default": "None", "tooltip": "VAE used to generate the image."}),
+                "ui_widget": (Input.KUL_HISTORY, {
+                    "default": {}
+                }),
+                "vae": (["None"] + self.initial_list, {
+                    "default": "None", 
+                    "tooltip": "VAE used to generate the image."
+                }),
             },
             "hidden": {"node_id": "UNIQUE_ID"}
         }

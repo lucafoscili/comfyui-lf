@@ -7,7 +7,7 @@ from datetime import datetime
 
 from server import PromptServer
 
-from ..utils.constants import CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, INT_MAX
+from ..utils.constants import CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, Input, INT_MAX
 from ..utils.helpers import create_history_node, normalize_json_input, normalize_list_to_value
 
 CATEGORY = f"{CATEGORY_PREFIX}/Seed generation"
@@ -15,14 +15,23 @@ CATEGORY = f"{CATEGORY_PREFIX}/Seed generation"
 # region LF_SequentialSeedsGenerator
 class LF_SequentialSeedsGenerator:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "seed": ("INT", {"default": 0, "max": INT_MAX, "tooltip": "Seed value from which the other seeds will be progressively increased."}),
-                "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the random seeds at execution time."}),
+                "seed": (Input.INTEGER, {
+                    "default": 0, 
+                    "max": INT_MAX, 
+                    "tooltip": "Seed value from which the other seeds will be progressively increased."
+                }),
+                "enable_history": (Input.BOOLEAN, {
+                    "default": True, 
+                    "tooltip": "Enables history, saving the random seeds at execution time."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_HISTORY", {"default": {}}),
+                "ui_widget": (Input.KUL_HISTORY, {
+                    "default": {}
+                }),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -59,14 +68,22 @@ class LF_SequentialSeedsGenerator:
 # region LF_UrandomSeedGenerator
 class LF_UrandomSeedGenerator:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "regen_each_run": ("BOOLEAN", {"default": True, "tooltip": "Generates new random seeds each run, while still keeping the seeds fed through the fixed_seeds JSON."}),
+                "regen_each_run": (Input.BOOLEAN, {
+                    "default": True, 
+                    "tooltip": "Generates new random seeds each run, while still keeping the seeds fed through the fixed_seeds JSON."
+                }),
             },
             "optional": {
-                "fixed_seeds": ("JSON", {"default": {}, "tooltip": "A Ketchup Lite-compatible dataset containing 20 previously generated seeds."}),
-                "ui_widget": ("KUL_TREE", {"default": {}}),
+                "fixed_seeds": (Input.JSON, {
+                    "default": {}, 
+                    "tooltip": "A Ketchup Lite-compatible dataset containing 20 previously generated seeds."
+                }),
+                "ui_widget": (Input.KUL_TREE, {
+                    "default": {}
+                }),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"

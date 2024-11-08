@@ -5,7 +5,7 @@ from itertools import combinations
 
 from server import PromptServer
 
-from ..utils.constants import CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, INT_MAX
+from ..utils.constants import CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, Input, INT_MAX
 from ..utils.helpers import create_history_node, normalize_input_list, normalize_json_input, normalize_list_to_value
 
 CATEGORY = f"{CATEGORY_PREFIX}/Primitives"
@@ -13,14 +13,22 @@ CATEGORY = f"{CATEGORY_PREFIX}/Primitives"
 # region LF_Boolean
 class LF_Boolean:
     @classmethod 
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "boolean": ("BOOLEAN", {"default": False, "tooltip": "Boolean value."}),
-                "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
+                "boolean": (Input.BOOLEAN, {
+                    "default": False, 
+                    "tooltip": "Boolean value."
+                }),
+                "enable_history": (Input.BOOLEAN, {
+                    "default": True, 
+                    "tooltip": "Enables history, saving the execution value and date of the widget."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_HISTORY", {"default": {}}),
+                "ui_widget": (Input.KUL_HISTORY, {
+                    "default": {}
+                }),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -56,13 +64,19 @@ class LF_Boolean:
 # region LF_DisplayBoolean
 class LF_DisplayBoolean:
     @classmethod 
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "boolean": ("BOOLEAN", {"default": False, "forceInput": True, "tooltip": "Boolean value."}),
+                "boolean": (Input.BOOLEAN, {
+                    "default": False, 
+                    "forceInput": True, 
+                    "tooltip": "Boolean value."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_CODE", {"default": ""}),
+                "ui_widget": (Input.KUL_CODE, {
+                    "default": ""
+                }),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -96,13 +110,19 @@ class LF_DisplayBoolean:
 # region LF_DisplayFloat
 class LF_DisplayFloat:
     @classmethod 
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "float": ("FLOAT", {"default": 0, "forceInput": True, "tooltip": "Float value."}),
+                "float": (Input.FLOAT, {
+                    "default": 0, 
+                    "forceInput": True, 
+                    "tooltip": "Float value."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_CODE", {"default": ""}),
+                "ui_widget": (Input.KUL_CODE, {
+                    "default": ""
+                }),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -136,13 +156,19 @@ class LF_DisplayFloat:
 # region LF_DisplayInteger
 class LF_DisplayInteger:
     @classmethod 
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "integer": ("INT", {"default": 0, "forceInput": True, "tooltip": "Integer value."}),
+                "integer": (Input.INTEGER, {
+                    "default": 0, 
+                    "forceInput": True, 
+                    "tooltip": "Integer value."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_CODE", {"default": ""}),
+                "ui_widget": (Input.KUL_CODE, {
+                    "default": ""
+                }),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -176,15 +202,36 @@ class LF_DisplayInteger:
 # region LF_DisplayPrimitiveAsJSON
 class LF_DisplayPrimitiveAsJSON:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {},
             "optional": {
-                "integer": ("INT", {"default": 0, "forceInput": True, "max": INT_MAX, "tooltip": "Integer value."}),
-                "float": ("FLOAT", {"default": 0.0, "forceInput": True, "step": 0.1, "tooltip": "Float value."}),
-                "string": ("STRING", {"default": "", "forceInput": True, "multiline": True, "tooltip": "String value."}),
-                "boolean": ("BOOLEAN", {"default": False, "forceInput": True, "tooltip": "Boolean value."}),
-                "ui_widget": ("KUL_CODE", {"default": ""}),
+                "integer": (Input.INTEGER, {
+                    "default": 0, 
+                    "forceInput": True, 
+                    "max": INT_MAX, 
+                    "tooltip": "Integer value."
+                }),
+                "float": (Input.FLOAT, {
+                    "default": 0.0, 
+                    "forceInput": True, 
+                    "step": 0.1, 
+                    "tooltip": "Float value."
+                }),
+                "string": (Input.STRING, {
+                    "default": "", 
+                    "forceInput": True, 
+                    "multiline": True, 
+                    "tooltip": "String value."
+                }),
+                "boolean": (Input.BOOLEAN, {
+                    "default": False, 
+                    "forceInput": True, 
+                    "tooltip": "Boolean value."
+                }),
+                "ui_widget": (Input.KUL_CODE, {
+                    "default": ""
+                }),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -244,13 +291,19 @@ class LF_DisplayPrimitiveAsJSON:
 # region LF_DisplayString
 class LF_DisplayString:
     @classmethod 
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "string": ("STRING", {"default": "", "forceInput": True, "tooltip": "String value."}),
+                "string": (Input.STRING, {
+                    "default": "", 
+                    "forceInput": True, 
+                    "tooltip": "String value."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_CODE", {"default": ""}),
+                "ui_widget": (Input.KUL_CODE, {
+                    "default": ""
+                }),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -284,14 +337,23 @@ class LF_DisplayString:
 # region LF_Float
 class LF_Float:
     @classmethod 
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "float": ("FLOAT", {"default": 0, "step": 0.1, "tooltip": "Float value."}),
-                "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
+                "float": (Input.FLOAT, {
+                    "default": 0, 
+                    "step": 0.1, 
+                    "tooltip": "Float value."
+                }),
+                "enable_history": (Input.BOOLEAN, {
+                    "default": True, 
+                    "tooltip": "Enables history, saving the execution value and date of the widget."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_HISTORY", {"default": {}}),
+                "ui_widget": (Input.KUL_HISTORY, {
+                    "default": {}
+                }),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -327,14 +389,23 @@ class LF_Float:
 # region LF_Integer
 class LF_Integer:
     @classmethod 
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "integer": ("INT", {"default": 0, "max": INT_MAX, "tooltip": "Integer value."}),
-                "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
+                "integer": (Input.INTEGER, {
+                    "default": 0, 
+                    "max": INT_MAX, 
+                    "tooltip": "Integer value."
+                }),
+                "enable_history": (Input.BOOLEAN, {
+                    "default": True, 
+                    "tooltip": "Enables history, saving the execution value and date of the widget."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_HISTORY", {"default": {}}),
+                "ui_widget": (Input.KUL_HISTORY, {
+                    "default": {}
+                }),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -370,13 +441,21 @@ class LF_Integer:
 # region LF_RandomBoolean
 class LF_RandomBoolean:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "chance_true": ("FLOAT", {"default": 50.0, "step": 1, "min": 0, "max": 100, "tooltip": "Percentage chance for True output, 0-100."}),
+                "chance_true": (Input.FLOAT, {
+                    "default": 50.0, 
+                    "step": 1, 
+                    "min": 0, 
+                    "max": 100, 
+                    "tooltip": "Percentage chance for True output, 0-100."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_PROGRESSBAR", {"default": {}}),
+                "ui_widget": (Input.KUL_PROGRESSBAR, {
+                    "default": {}
+                }),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -412,16 +491,28 @@ class LF_RandomBoolean:
 # region LF_Something2Number
 class LF_Something2Number:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {},
             "optional": {
-                "JSON": ("JSON", {"tooltip": "JSON value to convert to numbers."}),
-                "boolean": ("BOOLEAN", {"tooltip": "Boolean value to convert to numbers."}),
-                "string": ("STRING", {"tooltip": "String value to convert to numbers."}),
-                "integer": ("INT", {"tooltip": "Integer value to convert to numbers."}),
-                "float": ("FLOAT", {"tooltip": "Float value to convert to numbers."}),
-                "ui_widget": ("KUL_CODE", {"default": ""}),
+                "JSON": (Input.JSON, {
+                    "tooltip": "JSON value to convert to numbers."
+                }),
+                "boolean": (Input.BOOLEAN, {
+                    "tooltip": "Boolean value to convert to numbers."
+                }),
+                "string": (Input.STRING, {
+                    "tooltip": "String value to convert to numbers."
+                }),
+                "integer": (Input.INTEGER, {
+                    "tooltip": "Integer value to convert to numbers."
+                }),
+                "float": (Input.FLOAT, {
+                    "tooltip": "Float value to convert to numbers."
+                }),
+                "ui_widget": (Input.KUL_CODE, {
+                    "default": ""
+                }),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -507,17 +598,30 @@ class LF_Something2Number:
 # region LF_Something2String
 class LF_Something2String:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "separator": ("STRING", {"default": ", ", "tooltip": "Character(s) separating each string apart."}),
+                "separator": (Input.STRING, {
+                    "default": ", ", 
+                    "tooltip": "Character(s) separating each string apart."
+                }),
             },
             "optional": {
-                "json": ("JSON", {"tooltip": "JSON value to convert to string."}),
-                "boolean": ("BOOLEAN", {"tooltip": "Boolean value to convert to string."}),
-                "float": ("FLOAT", {"tooltip": "Float value to convert to string."}),
-                "integer": ("INT", {"tooltip": "Integer value to convert to string."}),
-                "ui_widget": ("KUL_CODE", {"default": ""}),
+                "json": (Input.JSON, {
+                    "tooltip": "JSON value to convert to string."
+                }),
+                "boolean": (Input.BOOLEAN, {
+                    "tooltip": "Boolean value to convert to string."
+                }),
+                "float": (Input.FLOAT, {
+                    "tooltip": "Float value to convert to string."
+                }),
+                "integer": (Input.INTEGER, {
+                    "tooltip": "Integer value to convert to string."
+                }),
+                "ui_widget": (Input.KUL_CODE, {
+                    "default": ""
+                }),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -593,14 +697,23 @@ class LF_Something2String:
 # region LF_String
 class LF_String:
     @classmethod 
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "string": ("STRING", {"default": "", "multiline": True, "tooltip": "String value."}),
-                "enable_history": ("BOOLEAN", {"default": True, "tooltip": "Enables history, saving the execution value and date of the widget."}),
+                "string": (Input.STRING, {
+                    "default": "", 
+                    "multiline": True, 
+                    "tooltip": "String value."
+                }),
+                "enable_history": (Input.BOOLEAN, {
+                    "default": True, 
+                    "tooltip": "Enables history, saving the execution value and date of the widget."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_HISTORY", {"default": {}}),
+                "ui_widget": (Input.KUL_HISTORY, {
+                    "default": {}
+                }),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -636,25 +749,74 @@ class LF_String:
 # region LF_WallOfText
 class LF_WallOfText:
     @classmethod 
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "separator": ("STRING", {"default": ", ", "tooltip": "Character(s) separating each string apart."}),
-                "text_1": ("STRING", {"default": "", "multiline": True, "tooltip": "The first required string."}),
-                "text_2": ("STRING", {"default": "", "multiline": True, "tooltip": "The second required string."}),
+                "separator": (Input.STRING, {
+                    "default": ", ", 
+                    "tooltip": "Character(s) separating each string apart."}),
+                "text_1": (Input.STRING, {
+                    "default": "", 
+                    "multiline": True, 
+                    "tooltip": "The first required string."}),
+                "text_2": (Input.STRING, {
+                    "default": "", 
+                    "multiline": True, 
+                    "tooltip": "The second required string."}),
             },
             "optional": {
-                "text_3": ("STRING", {"default": "", "defaultInput": True, "tooltip": "The third optional string."}),
-                "text_4": ("STRING", {"default": "", "defaultInput": True, "tooltip": "The fourth optional string."}),
-                "text_5": ("STRING", {"default": "", "defaultInput": True, "tooltip": "The fifth optional string."}),
-                "text_6": ("STRING", {"default": "", "defaultInput": True, "tooltip": "The sixth optional string."}),
-                "text_7": ("STRING", {"default": "", "defaultInput": True, "tooltip": "The seventh optional string."}),
-                "text_8": ("STRING", {"default": "", "defaultInput": True, "tooltip": "The eighth optional string."}),
-                "text_9": ("STRING", {"default": "", "defaultInput": True, "tooltip": "The ninth optional string."}),
-                "text_10": ("STRING", {"default": "", "defaultInput": True, "tooltip": "The tenth optional string."}),
-                "shuffle_inputs": ("BOOLEAN", {"default": False, "tooltip": "Toggle shuffling of input strings."}),
-                "seed": ("INT", {"default": 42, "max": INT_MAX, "tooltip": "Seed to control the randomness of the shuffling."}),
-                "ui_widget": ("KUL_CODE", {"default": ""}),
+                "text_3": (Input.STRING, {
+                    "default": "", 
+                    "defaultInput": True, 
+                    "tooltip": "The third optional string."
+                }),
+                "text_4": (Input.STRING, {
+                    "default": "", 
+                    "defaultInput": True, 
+                    "tooltip": "The fourth optional string."
+                }),
+                "text_5": (Input.STRING, {
+                    "default": "", 
+                    "defaultInput": True, 
+                    "tooltip": "The fifth optional string."
+                }),
+                "text_6": (Input.STRING, {
+                    "default": "", 
+                    "defaultInput": True, 
+                    "tooltip": "The sixth optional string."
+                }),
+                "text_7": (Input.STRING, {
+                    "default": "", 
+                    "defaultInput": True, 
+                    "tooltip": "The seventh optional string."
+                }),
+                "text_8": (Input.STRING, {
+                    "default": "", 
+                    "defaultInput": True, 
+                    "tooltip": "The eighth optional string."
+                }),
+                "text_9": (Input.STRING, {
+                    "default": "", 
+                    "defaultInput": True, 
+                    "tooltip": "The ninth optional string."
+                }),
+                "text_10": (Input.STRING, {
+                    "default": "", 
+                    "defaultInput": True, 
+                    "tooltip": "The tenth optional string."
+                }),
+                "shuffle_inputs": (Input.BOOLEAN, {
+                    "default": False, 
+                    "tooltip": "Toggle shuffling of input strings."
+                }),
+                "seed": (Input.INTEGER, {
+                    "default": 42, 
+                    "max": INT_MAX, 
+                    "tooltip": "Seed to control the randomness of the shuffling."
+                }),
+                "ui_widget": (Input.KUL_CODE, {
+                    "default": ""
+                }),
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"

@@ -124,7 +124,7 @@ export const tabBarChartFactory: TabBarChartWidgetFactory = {
 
     switch (node.comfyClass as NodeName) {
       case NodeName.colorAnalysis:
-        chart.kulAxis = 'intensity';
+        chart.kulAxis = ['intensity'];
         chart.kulColors = ['red', 'green', 'blue'];
         chart.kulSeries = ['red', 'green', 'blue'];
         chart.kulTypes = ['scatter'];
@@ -133,7 +133,7 @@ export const tabBarChartFactory: TabBarChartWidgetFactory = {
         break;
       case NodeName.imageHistogram:
       case NodeName.lutGeneration:
-        chart.kulAxis = 'intensity';
+        chart.kulAxis = ['intensity'];
         chart.kulColors = ['red', 'green', 'blue'];
         chart.kulSeries = ['red', 'green', 'blue'];
         chart.kulTypes = ['area'];
@@ -141,10 +141,10 @@ export const tabBarChartFactory: TabBarChartWidgetFactory = {
         textfield.classList.add(tabBarChartFactory.cssClasses.directoryHidden);
         break;
       case NodeName.usageStatistics:
-        chart.kulAxis = 'name';
+        chart.kulAxis = ['name'];
         chart.dataset.type = 'usage';
         chart.kulSeries = ['counter', 'counter'];
-        chart.kulTypes = ['area', 'scatter'];
+        chart.kulTypes = ['area'];
         break;
     }
 

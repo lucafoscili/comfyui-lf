@@ -5,7 +5,7 @@ import torch
 from PIL import Image, ImageFilter
 from server import PromptServer
 
-from ..utils.constants import BLUE_CHANNEL_ID, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, GREEN_CHANNEL_ID, RED_CHANNEL_ID, RESAMPLERS
+from ..utils.constants import BLUE_CHANNEL_ID, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, GREEN_CHANNEL_ID, Input, RED_CHANNEL_ID, RESAMPLERS
 from ..utils.helpers import clarity_effect, create_compare_node, create_masonry_node, create_resize_node, get_resource_url, normalize_input_image, normalize_input_list, normalize_json_input, normalize_list_item, normalize_list_to_value, normalize_output_image, not_none, numpy_to_tensor, pil_to_tensor, resize_and_crop_image, resize_image, resize_to_square, resolve_filepath, tensor_to_numpy, tensor_to_pil
 
 CATEGORY = f"{CATEGORY_PREFIX}/Image"
@@ -13,15 +13,28 @@ CATEGORY = f"{CATEGORY_PREFIX}/Image"
 # region LF_BlurImages
 class LF_BlurImages:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "image": ("IMAGE", {"tooltip": "List of images to blur."}),
-                "blur_percentage": ("FLOAT", {"default": 0.25, "min": 0.0, "max": 1.0, "step": 0.05, "tooltip": "0% Blur: No blur applied, the image remains as-is. 100% Blur: Maximum blur applied based on the image's dimensions, which would result in a highly blurred (almost unrecognizable) image."}),
+                "image": (Input.IMAGE, {
+                    "tooltip": "List of images to blur."
+                }),
+                "blur_percentage": (Input.FLOAT, {
+                    "default": 0.25, 
+                    "min": 0.0, 
+                    "max": 1.0, 
+                    "step": 0.05, 
+                    "tooltip": "0% Blur: No blur applied, the image remains as-is. 100% Blur: Maximum blur applied based on the image's dimensions, which would result in a highly blurred (almost unrecognizable) image."
+                }),
             },
             "optional": {
-                "file_name": ("STRING", {"forceInput": True, "tooltip": "Corresponding list of file names for the images."}),
-                "ui_widget": ("KUL_MASONRY", {"default": {}})
+                "file_name": (Input.STRING, {
+                    "forceInput": True, 
+                    "tooltip": "Corresponding list of file names for the images."
+                }),
+                "ui_widget": (Input.KUL_MASONRY, {
+                    "default": {}
+                })
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -90,16 +103,38 @@ class LF_BlurImages:
 # region LF_ClarityEffect
 class LF_ClarityEffect:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "image": ("IMAGE", {"tooltip": "Input image tensor or a list of image tensors."}),
-                "clarity_strength": ("FLOAT", {"default": 0.5, "min": 0.0, "max": 5.0, "step": 0.1, "tooltip": "Controls the amount of contrast enhancement in midtones."}),
-                "sharpen_amount": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 5.0, "step": 0.1, "tooltip": "Controls how much sharpening is applied to the image."}),
-                "blur_kernel_size": ("INT", {"default": 7, "min": 1, "max": 15, "step": 2, "tooltip": "Controls the size of the Gaussian blur kernel. Higher values mean more smoothing."}),
+                "image": (Input.IMAGE, {
+                    "tooltip": "Input image tensor or a list of image tensors."
+                }),
+                "clarity_strength": (Input.FLOAT, {
+                    "default": 0.5, 
+                    "min": 0.0, 
+                    "max": 5.0, 
+                    "step": 0.1, 
+                    "tooltip": "Controls the amount of contrast enhancement in midtones."
+                }),
+                "sharpen_amount": (Input.FLOAT, {
+                    "default": 1.0, 
+                    "min": 0.0, 
+                    "max": 5.0, 
+                    "step": 0.1, 
+                    "tooltip": "Controls how much sharpening is applied to the image."
+                }),
+                "blur_kernel_size": (Input.INTEGER, {
+                    "default": 7, 
+                    "min": 1, 
+                    "max": 15, 
+                    "step": 2, 
+                    "tooltip": "Controls the size of the Gaussian blur kernel. Higher values mean more smoothing."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_COMPARE", {"default": {}})
+                "ui_widget": (Input.KUL_COMPARE, {
+                    "default": {}
+                })
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -159,14 +194,20 @@ class LF_ClarityEffect:
 # region LF_CompareImages
 class LF_CompareImages:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "image": ("IMAGE", {"tooltip": "First input image tensor or a list of image tensors."}),
+                "image": (Input.IMAGE, {
+                    "tooltip": "First input image tensor or a list of image tensors."
+                }),
             },
             "optional": {
-                "image_opt": ("IMAGE", {"tooltip": "Second input image tensor or a list of image tensors (optional)."}),
-                "ui_widget": ("KUL_COMPARE", {"default": {}})
+                "image_opt": (Input.IMAGE, {
+                    "tooltip": "Second input image tensor or a list of image tensors (optional)."
+                }),
+                "ui_widget": (Input.KUL_COMPARE, {
+                    "default": {}
+                })
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -230,14 +271,24 @@ class LF_CompareImages:
 # region LF_LUTApplication
 class LF_LUTApplication:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "image": ("IMAGE", {"tooltip": "Target image to which the LUT will be applied."}),
-                "lut_dataset": ("JSON", {"tooltip": "LUT dataset generated by LUT Generation Node."}),
+                "image": (Input.IMAGE, {
+                    "tooltip": "Target image to which the LUT will be applied."
+                }),
+                "lut_dataset": (Input.JSON, {
+                    "tooltip": "LUT dataset generated by LUT Generation Node."
+                }),
+                "strength" : (Input.FLOAT, {
+                    "default": 0.5, "min": 0, "max": 1, "step": 0.05,
+                    "tooltip": "The strength of the filter (from 0 - no effect, to 1 - full effect)."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_COMPARE", {"default": {}})
+                "ui_widget": (Input.KUL_COMPARE, {
+                    "default": {}
+                })
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -253,6 +304,7 @@ class LF_LUTApplication:
 
     def on_exec(self, **kwargs: dict):
         image: list[torch.Tensor] = normalize_input_image(kwargs.get("image", []))
+        strength: float = normalize_list_to_value(kwargs.get("strength"))
         lut_dataset: dict = normalize_json_input(kwargs.get("lut_dataset", {}))
 
         nodes: list[dict] = []
@@ -279,23 +331,28 @@ class LF_LUTApplication:
             adjusted_np[:, :, 1] = g[image_np[:, :, 1]]
             adjusted_np[:, :, 2] = b[image_np[:, :, 2]]
 
-            adjusted_tensor = numpy_to_tensor(adjusted_np)
-            pil_image = tensor_to_pil(img)
+            image_np_float = image_np.astype(np.float32)
+            adjusted_np_float = adjusted_np.astype(np.float32)
 
+            blended_np = (1 - strength) * image_np_float + strength * adjusted_np_float
+            blended_np = np.clip(blended_np, 0, 255).astype(np.uint8)
+
+            adjusted_tensor = numpy_to_tensor(blended_np)
+
+            pil_image_original = tensor_to_pil(img)
             output_file_s, subfolder_s, filename_s = resolve_filepath(
-                    filename_prefix="lut_s",
-                    image=img,
+                filename_prefix="lut_s",
+                image=img,
             )
-            pil_image.save(output_file_s, format="PNG")
+            pil_image_original.save(output_file_s, format="PNG")
             filename_s = get_resource_url(subfolder_s, filename_s, "temp")
-            
-            pil_image = tensor_to_pil(adjusted_tensor)
-            
+
+            pil_image_blended = tensor_to_pil(adjusted_tensor)
             output_file_t, subfolder_t, filename_t = resolve_filepath(
-                    filename_prefix="lut_t",
-                    image=adjusted_tensor,
+                filename_prefix="lut_t",
+                image=adjusted_tensor,
             )
-            pil_image.save(output_file_t, format="PNG")
+            pil_image_blended.save(output_file_t, format="PNG")
             filename_t = get_resource_url(subfolder_t, filename_t, "temp")
 
             adjusted_images.append(adjusted_tensor)
@@ -313,14 +370,22 @@ class LF_LUTApplication:
 # region LF_MultipleImageResizeForWeb
 class LF_MultipleImageResizeForWeb:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "image": ("IMAGE", {"type": "IMAGE", "tooltip": "List of images to process."}),
-                "file_name": ("STRING", {"forceInput": True, "tooltip": "Corresponding list of file names for the images."}),
+                "image": (Input.IMAGE, {
+                    "type": "IMAGE", 
+                    "tooltip": "List of images to process."
+                }),
+                "file_name": (Input.STRING, {
+                    "forceInput": True, 
+                    "tooltip": "Corresponding list of file names for the images."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_MASONRY", {"default": {}})
+                "ui_widget": (Input.KUL_MASONRY, {
+                    "default": {}
+                })
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -418,16 +483,29 @@ class LF_MultipleImageResizeForWeb:
 # region LF_ResizeImageByEdge
 class LF_ResizeImageByEdge:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "image": ("IMAGE", {"tooltip": "Input image tensor or a list of image tensors."}),
-                "longest_edge": ("BOOLEAN", {"default": False, "tooltip": "Resizes the image by the longest side if set to True. Otherwise, resizes by the shortest side."}),
-                "new_size": ("INT", {"default": 1024, "tooltip": "The size of the longest edge of the output image."}),
-                "resize_method": (RESAMPLERS, {"default": "bicubic", "tooltip": "Method to resize the image."})
+                "image": (Input.IMAGE, {
+                    "tooltip": "Input image tensor or a list of image tensors."
+                }),
+                "longest_edge": (Input.BOOLEAN, {
+                    "default": False, 
+                    "tooltip": "Resizes the image by the longest side if set to True. Otherwise, resizes by the shortest side."
+                }),
+                "new_size": (Input.INTEGER, {
+                    "default": 1024, 
+                    "tooltip": "The size of the longest edge of the output image."
+                }),
+                "resize_method": (RESAMPLERS, {
+                    "default": "bicubic", 
+                    "tooltip": "Method to resize the image."
+                })
             },
             "optional": {
-                "ui_widget": ("KUL_TREE", {"default": {}})
+                "ui_widget": (Input.KUL_TREE, {
+                    "default": {}
+                })
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -491,18 +569,37 @@ class LF_ResizeImageByEdge:
 # region LF_ResizeImageToDimension
 class LF_ResizeImageToDimension:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "image": ("IMAGE", {"tooltip": "Input image tensor or a list of image tensors."}),
-                "height": ("INT", {"default": 1216, "tooltip": "The target height for the output image."}),
-                "width": ("INT", {"default": 832, "tooltip": "The target width for the output image."}),
-                "resize_method": (RESAMPLERS, {"default": "bicubic", "tooltip": "Method to resize the image."}),
-                "resize_mode": (["crop", "pad"], {"default": "crop", "tooltip": "Choose whether to crop or pad when resizing."}),
-                "pad_color": ("STRING", {"default": "000000", "tooltip": "Color to use for padding if 'pad' mode is selected (hexadecimal)."})
+                "image": (Input.IMAGE, {
+                    "tooltip": "Input image tensor or a list of image tensors."
+                }),
+                "height": (Input.INTEGER, {
+                    "default": 1216, 
+                    "tooltip": "The target height for the output image."
+                }),
+                "width": (Input.INTEGER, {
+                    "default": 832, 
+                    "tooltip": "The target width for the output image."
+                }),
+                "resize_method": (RESAMPLERS, {
+                    "default": "bicubic", 
+                    "tooltip": "Method to resize the image."
+                }),
+                "resize_mode": (["crop", "pad"], {
+                    "default": "crop", 
+                    "tooltip": "Choose whether to crop or pad when resizing."
+                }),
+                "pad_color": (Input.STRING, {
+                    "default": "000000", 
+                    "tooltip": "Color to use for padding if 'pad' mode is selected (hexadecimal)."
+                })
             },
             "optional": {
-                "ui_widget": ("KUL_TREE", {"default": {}})
+                "ui_widget": (Input.KUL_TREE, {
+                    "default": {}
+                })
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -569,16 +666,29 @@ class LF_ResizeImageToDimension:
 # region LF_ResizeImageToSquare
 class LF_ResizeImageToSquare:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "image": ("IMAGE", {"tooltip": "Input image tensor or a list of image tensors."}),
-                "square_size": ("INT", {"default": 1024, "tooltip": "The length of the square's edge."}),
-                "resize_method": (RESAMPLERS, {"default": "bicubic", "tooltip": "Resampling method for resizing."}),
-                "crop_position": (["top", "bottom", "left", "right", "center"], {"default": "center", "tooltip": "Where to crop the image."})
+                "image": (Input.IMAGE, {
+                    "tooltip": "Input image tensor or a list of image tensors."
+                }),
+                "square_size": (Input.INTEGER, {
+                    "default": 1024, 
+                    "tooltip": "The length of the square's edge."
+                }),
+                "resize_method": (RESAMPLERS, {
+                    "default": "bicubic", 
+                    "tooltip": "Resampling method for resizing."
+                }),
+                "crop_position": (["top", "bottom", "left", "right", "center"], {
+                    "default": "center", 
+                    "tooltip": "Where to crop the image."
+                })
             },
             "optional": {
-                "ui_widget": ("KUL_TREE", {"default": {}})
+                "ui_widget": (Input.KUL_TREE, {
+                    "default": {}
+                })
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -642,13 +752,17 @@ class LF_ResizeImageToSquare:
 # region LF_ViewImages
 class LF_ViewImages:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "image": ("IMAGE", {"tooltip": "Input image tensor or a list of image tensors."}),
+                "image": (Input.IMAGE, {
+                    "tooltip": "Input image tensor or a list of image tensors."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_MASONRY", {"default": {}})
+                "ui_widget": (Input.KUL_MASONRY, {
+                    "default": {}
+                })
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"

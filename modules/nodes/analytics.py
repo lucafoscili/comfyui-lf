@@ -5,7 +5,7 @@ import torch
 
 from server import PromptServer
 
-from ..utils.constants import BLUE_CHANNEL_ID, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, get_usage_filename, get_usage_title, GREEN_CHANNEL_ID, INTENSITY_ID, RED_CHANNEL_ID, SUM_ID
+from ..utils.constants import BLUE_CHANNEL_ID, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, get_usage_filename, get_usage_title, GREEN_CHANNEL_ID, Input, INTENSITY_ID, RED_CHANNEL_ID, SUM_ID
 from ..utils.helpers import get_comfy_dir, normalize_input_image, normalize_json_input, normalize_list_to_value, normalize_output_image, tensor_to_numpy
 
 CATEGORY = f"{CATEGORY_PREFIX}/Analytics"
@@ -13,14 +13,20 @@ CATEGORY = f"{CATEGORY_PREFIX}/Analytics"
 # region LF_ColorAnalysis
 class LF_ColorAnalysis:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "source_image": ("IMAGE", {"tooltip": "Source image from which to extract the color style."}),
-                "target_image": ("IMAGE", {"tooltip": "Target image to be adjusted to match the source color pattern."}),
+                "source_image": (Input.IMAGE, {
+                    "tooltip": "Source image from which to extract the color style."
+                }),
+                "target_image": (Input.IMAGE, {
+                    "tooltip": "Target image to be adjusted to match the source color pattern."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_TAB_BAR_CHART", {"default": {}})
+                "ui_widget": (Input.KUL_TAB_BAR_CHART, {
+                    "default": {}
+                })
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -48,21 +54,21 @@ class LF_ColorAnalysis:
             target_np = tensor_to_numpy(target_image[idx])
 
             source_histograms: dict = {
-                RED_CHANNEL_ID: np.histogram(source_np[:, :, 0], bins=256, range=(0, 255))[0],
-                GREEN_CHANNEL_ID: np.histogram(source_np[:, :, 1], bins=256, range=(0, 255))[0],
-                BLUE_CHANNEL_ID: np.histogram(source_np[:, :, 2], bins=256, range=(0, 255))[0]
+                RED_CHANNEL_ID: np.histogram(source_np[:, :, 0], bins=256, range=(0, 256))[0],
+                GREEN_CHANNEL_ID: np.histogram(source_np[:, :, 1], bins=256, range=(0, 256))[0],
+                BLUE_CHANNEL_ID: np.histogram(source_np[:, :, 2], bins=256, range=(0, 256))[0]
             }
-            
+
             target_histograms: dict = {
-                RED_CHANNEL_ID: np.histogram(target_np[:, :, 0], bins=256, range=(0, 255))[0],
-                GREEN_CHANNEL_ID: np.histogram(target_np[:, :, 1], bins=256, range=(0, 255))[0],
-                BLUE_CHANNEL_ID: np.histogram(target_np[:, :, 2], bins=256, range=(0, 255))[0]
+                RED_CHANNEL_ID: np.histogram(target_np[:, :, 0], bins=256, range=(0, 256))[0],
+                GREEN_CHANNEL_ID: np.histogram(target_np[:, :, 1], bins=256, range=(0, 256))[0],
+                BLUE_CHANNEL_ID: np.histogram(target_np[:, :, 2], bins=256, range=(0, 256))[0]
             }
 
             mapping_json: dict = {
-                "red_channel": self.generate_mapping(source_histograms[RED_CHANNEL_ID], target_histograms[RED_CHANNEL_ID]),
-                "green_channel": self.generate_mapping(source_histograms[GREEN_CHANNEL_ID], target_histograms[GREEN_CHANNEL_ID]),
-                "blue_channel": self.generate_mapping(source_histograms[BLUE_CHANNEL_ID], target_histograms[BLUE_CHANNEL_ID]),
+                "red_channel": self.generate_mapping(target_histograms[RED_CHANNEL_ID], source_histograms[RED_CHANNEL_ID]),
+                "green_channel": self.generate_mapping(target_histograms[GREEN_CHANNEL_ID], source_histograms[GREEN_CHANNEL_ID]),
+                "blue_channel": self.generate_mapping(target_histograms[BLUE_CHANNEL_ID], source_histograms[BLUE_CHANNEL_ID]),
             }
 
             nodes: list[dict] = []
@@ -100,28 +106,33 @@ class LF_ColorAnalysis:
         return (image_batch[0], image_list, mapping_datasets)
 
     @staticmethod
-    def generate_mapping(source_hist, target_hist):
-        source_cumsum = np.cumsum(source_hist) / np.sum(source_hist)
-        target_cumsum = np.cumsum(target_hist) / np.sum(target_hist)
+    def generate_mapping(target_hist, source_hist):
+        source_cdf = np.cumsum(source_hist).astype(np.float64)
+        source_cdf /= source_cdf[-1]
+        target_cdf = np.cumsum(target_hist).astype(np.float64)
+        target_cdf /= target_cdf[-1]
 
         mapping = np.zeros(256, dtype=np.uint8)
-        target_idx = 0
-        for i in range(256):
-            while target_idx < 255 and target_cumsum[target_idx] < source_cumsum[i]:
-                target_idx += 1
-            mapping[i] = target_idx
+
+        for r in range(256):
+            s = np.argmin(np.abs(source_cdf - target_cdf[r]))
+            mapping[r] = s
         return mapping.tolist()
 # endregion
 # region LF_ImageHistogram
 class LF_ImageHistogram:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "image": ("IMAGE", {"tooltip": "Input images to generate histograms from."}),
+                "image": (Input.IMAGE, {
+                    "tooltip": "Input images to generate histograms from."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_TAB_BAR_CHART", {"default": {}})
+                "ui_widget": (Input.KUL_TAB_BAR_CHART, {
+                    "default": {}
+                })
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
@@ -206,14 +217,22 @@ class LF_ImageHistogram:
 # region LF_KeywordCounter
 class LF_KeywordCounter:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "prompt": ("STRING", {"multiline": True, "tooltip": "Prompt containing keywords to count."}),
-                "separator": ("STRING", {"default": ", ", "tooltip": "Character(s) used to separate keywords in the prompt."}),
+                "prompt": (Input.STRING, {
+                    "multiline": True, 
+                    "tooltip": "Prompt containing keywords to count."
+                }),
+                "separator": (Input.STRING, {
+                    "default": ", ", 
+                    "tooltip": "Character(s) used to separate keywords in the prompt."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_COUNT_BAR_CHART", {"default": {}})
+                "ui_widget": (Input.KUL_COUNT_BAR_CHART, {
+                    "default": {}
+                })
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
@@ -282,13 +301,17 @@ class LF_KeywordCounter:
 # region LF_LUTGeneration
 class LF_LUTGeneration:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "color_analysis_dataset": ("JSON", {"tooltip": "Transformation dataset generated by Color Analysis Node."}),
+                "color_analysis_dataset": (Input.JSON, {
+                    "tooltip": "Transformation dataset generated by Color Analysis Node."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_TAB_BAR_CHART", {"default": {}})
+                "ui_widget": (Input.KUL_TAB_BAR_CHART, {
+                    "default": {}
+                })
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -347,14 +370,22 @@ class LF_LUTGeneration:
 # region LF_UpdateUsageStatistics
 class LF_UpdateUsageStatistics:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {
-                "datasets_dir": ("STRING", {"default": "Workflow_name", "tooltip": "The files are saved in the user directory of ComfyUI under LF_Nodes. This field can be used to add additional folders."}),
-                "dataset": ("JSON", {"defaultInput": True, "tooltip": "Dataset including the resources (produced by CivitAIMetadataSetup)."}),
+                "datasets_dir": (Input.STRING, {
+                    "default": "Workflow_name", 
+                    "tooltip": "The files are saved in the user directory of ComfyUI under LF_Nodes. This field can be used to add additional folders."
+                }),
+                "dataset": (Input.JSON, {
+                    "defaultInput": True, 
+                    "tooltip": "Dataset including the resources (produced by CivitAIMetadataSetup)."
+                }),
             },
             "optional": {
-                "ui_widget": ("KUL_CODE", {"default": {}})
+                "ui_widget": (Input.KUL_CODE, {
+                    "default": {}
+                })
             },
             "hidden": { 
                 "node_id": "UNIQUE_ID"
@@ -448,11 +479,13 @@ class LF_UpdateUsageStatistics:
 # region LF_UsageStatistics
 class LF_UsageStatistics:
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(self):
         return {
             "required": {},
             "optional": {
-                "ui_widget": ("KUL_TAB_BAR_CHART", {"default": {}})
+                "ui_widget": (Input.KUL_TAB_BAR_CHART, {
+                    "default": {}
+                })
             },
         }
     

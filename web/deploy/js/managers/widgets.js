@@ -131,8 +131,8 @@ export class LFWidgets {
             const lfManager = getLFManager();
             const payload = event.detail;
             const node = lfManager.getApiRoutes().getNodeById(payload.id);
-            lfManager.log(`${node.comfyClass} (#${node.id}): event '${name}' fired`, { payload, node }, LogSeverity.Info);
             if (node) {
+                lfManager.log(`${node.comfyClass} (#${node.id}): event '${name}' fired`, { payload, node }, LogSeverity.Info);
                 switch (name) {
                     case NodeName.notify:
                         if ('action' in payload) {
@@ -179,6 +179,9 @@ export class LFWidgets {
                     }
                 }
                 lfManager.getApiRoutes().redraw();
+            }
+            else {
+                lfManager.log(`Event '${name}' was fired but its related node (#${payload.id}) wasn't found in the graph! Skipping handling the event.`, { payload, name }, LogSeverity.Warning);
             }
         };
         const link = document.createElement('link');
