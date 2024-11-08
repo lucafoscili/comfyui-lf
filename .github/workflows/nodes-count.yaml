@@ -5,9 +5,9 @@ on:
     branches:
       - master
 
-# Grant write permissions to the GITHUB_TOKEN
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   count-nodes:
@@ -22,8 +22,13 @@ jobs:
           COUNT=$(grep -ro '# region' modules/nodes | wc -l)
           echo "{ \"nodes\": $COUNT }" > count.json
 
-      - name: Commit changes
-        uses: stefanzweifel/git-auto-commit-action@v4
+      - name: Create Pull Request with Node Count Update
+        uses: peter-evans/create-pull-request@v5
         with:
-          commit_message: 'Updated node count'
-          file_pattern: count.json
+          commit-message: 'Update node count'
+          title: 'Update node count'
+          body: 'Automatically updates the node count.'
+          branch: 'update-node-count-${{ github.run_id }}'
+          labels: 'automated PR'
+          author: 'github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>'
+          add-paths: 'count.json'
