@@ -5,13 +5,17 @@ on:
     branches:
       - master
 
+# Grant write permissions to the GITHUB_TOKEN
+permissions:
+  contents: write
+
 jobs:
   count-nodes:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Count Nodes
         run: |
