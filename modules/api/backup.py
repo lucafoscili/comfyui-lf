@@ -15,8 +15,8 @@ async def backup_usage_analytics(request):
     try:
         os.makedirs(get_comfy_dir("backup"), exist_ok=True)
         
-        r = await request.post()
-        backup_type = r.get('backup_type', 'automatic')
+        r: dict = await request.post()
+        backup_type: str = r.get('backup_type', 'automatic')
         
         if backup_type == 'automatic':
             for folder_name in os.listdir(get_comfy_dir("backup")):

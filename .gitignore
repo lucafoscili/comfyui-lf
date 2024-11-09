@@ -191,6 +191,7 @@ web/deploy/js/ketchup-lite/*showcase*
 !web/deploy/assets/svg/delete.svg
 !web/deploy/assets/svg/download.svg
 !web/deploy/assets/svg/file.svg
+!web/deploy/assets/svg/find_replace.svg
 !web/deploy/assets/svg/history.svg
 !web/deploy/assets/svg/hotel.svg
 !web/deploy/assets/svg/keyboard_voice.svg

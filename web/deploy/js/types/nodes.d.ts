@@ -32,6 +32,7 @@ export declare enum NodeName {
     keywordToggleFromJson = "LF_KeywordToggleFromJSON",
     llmChat = "LF_LLMChat",
     llmMessenger = "LF_LLMMessenger",
+    loadAndEditImages = "LF_LoadAndEditImages",
     loadFileOnce = "LF_LoadFileOnce",
     loadImages = "LF_LoadImages",
     loadLoraTags = "LF_LoadLoraTags",

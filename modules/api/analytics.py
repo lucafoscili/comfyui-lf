@@ -11,7 +11,7 @@ from ..utils.helpers import get_comfy_dir
 @PromptServer.instance.routes.post(f"{API_ROUTE_PREFIX}/clear-analytics")
 async def clear_usage_analytics(request):
     try:
-        r = await request.post()
+        r: dict = await request.post()
         
         analytics_type: str = r.get("type")
 
@@ -47,7 +47,7 @@ async def clear_usage_analytics(request):
 @PromptServer.instance.routes.post(f"{API_ROUTE_PREFIX}/get-analytics")
 async def get_usage_analytics(request):
     try:
-        r = await request.post()
+        r: dict = await request.post()
         
         directory: str = r.get("directory")
         analytics_type: str = r.get("type")

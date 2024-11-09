@@ -62,6 +62,7 @@ export type CustomWidgetMap = {
     [CustomWidgetName.controlPanel]: ControlPanelWidget;
     [CustomWidgetName.countBarChart]: CountBarChartWidget;
     [CustomWidgetName.history]: HistoryWidget;
+    [CustomWidgetName.imageEditor]: ImageEditorWidget;
     [CustomWidgetName.masonry]: MasonryWidget;
     [CustomWidgetName.messenger]: MessengerWidget;
     [CustomWidgetName.progressbar]: ProgressbarWidget;
@@ -81,6 +82,7 @@ export declare enum CustomWidgetName {
     controlPanel = "KUL_CONTROL_PANEL",
     countBarChart = "KUL_COUNT_BAR_CHART",
     history = "KUL_HISTORY",
+    imageEditor = "KUL_IMAGE_EDITOR",
     masonry = "KUL_MASONRY",
     messenger = "KUL_MESSENGER",
     progressbar = "KUL_PROGRESSBAR",
@@ -89,7 +91,7 @@ export declare enum CustomWidgetName {
     tree = "KUL_TREE",
     upload = "KUL_UPLOAD"
 }
-export type CustomWidgetDeserializedValues = CardWidgetDeserializedValue | CardsWithChipWidgetDeserializedValue | CarouselWidgetDeserializedValue | ChatWidgetValueDeserializedValue | ChipWidgetValueDeserializedValue | CodeWidgetValueDeserializedValue | CompareWidgetValueDeserializedValue | ControlPanelWidgetDeserializedValue | CountBarChartWidgetDeserializedValue | HistoryWidgetValuetDeserializedValue | MasonryWidgetDeserializedValue | MessengerWidgetDeserializedValue | ProgressbarWidgetDeserializedValue | TabBarChartWidgetDeserializedValue | TextareaWidgetDeserializedValue | TreeWidgetValueDeserializedValue | UploadWidgetDeserializedValue;
+export type CustomWidgetDeserializedValues = CardWidgetDeserializedValue | CardsWithChipWidgetDeserializedValue | CarouselWidgetDeserializedValue | ChatWidgetValueDeserializedValue | ChipWidgetValueDeserializedValue | CodeWidgetValueDeserializedValue | CompareWidgetValueDeserializedValue | ControlPanelWidgetDeserializedValue | CountBarChartWidgetDeserializedValue | HistoryWidgetValuetDeserializedValue | ImageEditorWidgetDeserializedValue | MasonryWidgetDeserializedValue | MessengerWidgetDeserializedValue | ProgressbarWidgetDeserializedValue | TabBarChartWidgetDeserializedValue | TextareaWidgetDeserializedValue | TreeWidgetValueDeserializedValue | UploadWidgetDeserializedValue;
 export type CustomWidgetDeserializedValuesMap<Name extends CustomWidgetName> = {
     [CustomWidgetName.card]: CardWidgetDeserializedValue;
     [CustomWidgetName.cardsWithChip]: CardsWithChipWidgetDeserializedValue;
@@ -101,6 +103,7 @@ export type CustomWidgetDeserializedValuesMap<Name extends CustomWidgetName> = {
     [CustomWidgetName.controlPanel]: ControlPanelWidgetDeserializedValue;
     [CustomWidgetName.countBarChart]: CountBarChartWidgetDeserializedValue;
     [CustomWidgetName.history]: HistoryWidgetValuetDeserializedValue;
+    [CustomWidgetName.imageEditor]: ImageEditorWidgetDeserializedValue;
     [CustomWidgetName.masonry]: MasonryWidgetDeserializedValue;
     [CustomWidgetName.messenger]: MessengerWidgetDeserializedValue;
     [CustomWidgetName.progressbar]: ProgressbarWidgetDeserializedValue;
@@ -109,8 +112,8 @@ export type CustomWidgetDeserializedValuesMap<Name extends CustomWidgetName> = {
     [CustomWidgetName.tree]: TreeWidgetValueDeserializedValue;
     [CustomWidgetName.upload]: UploadWidgetDeserializedValue;
 }[Name];
-export type CustomWidgetOptions = CardWidgetOptions | CardsWithChipWidgetOptions | CarouselWidgetOptions | ChatWidgetOptions | ChipWidgetOptions | CodeWidgetOptions | CompareWidgetOptions | ControlPanelWidgetOptions | CountBarChartWidgetOptions | HistoryWidgetOptions | MasonryWidgetOptions | MessengerWidgetOptions | ProgressbarWidgetOptions | TabBarChartWidgetOptions | TextareaWidgetOptions | TreeWidgetOptions | UploadWidgetOptions;
-export type CustomWidgetOptionsCallbacks = CardWidgetOptionsCallback | CarouselWidgetOptionsCallback | ChatWidgetOptionsCallback | ChipWidgetOptionsCallback | CodeWidgetOptionsCallback | CompareWidgetOptionsCallback | ControlPanelWidgetOptionsCallback | HistoryWidgetOptionsCallback | MasonryWidgetOptionsCallback | MessengerWidgetOptionsCallback | ProgressbarWidgetOptionsCallback | TabBarChartWidgetOptionsCallback | TextareaWidgetOptionsCallback | TreeWidgetOptionsCallback | UploadWidgetOptionsCallback;
+export type CustomWidgetOptions = CardWidgetOptions | CardsWithChipWidgetOptions | CarouselWidgetOptions | ChatWidgetOptions | ChipWidgetOptions | CodeWidgetOptions | CompareWidgetOptions | ControlPanelWidgetOptions | CountBarChartWidgetOptions | HistoryWidgetOptions | ImageEditorWidgetOptions | MasonryWidgetOptions | MessengerWidgetOptions | ProgressbarWidgetOptions | TabBarChartWidgetOptions | TextareaWidgetOptions | TreeWidgetOptions | UploadWidgetOptions;
+export type CustomWidgetOptionsCallbacks = CardWidgetOptionsCallback | CarouselWidgetOptionsCallback | ChatWidgetOptionsCallback | ChipWidgetOptionsCallback | CodeWidgetOptionsCallback | CompareWidgetOptionsCallback | ControlPanelWidgetOptionsCallback | HistoryWidgetOptionsCallback | ImageEditorWidgetOptionsCallback | MasonryWidgetOptionsCallback | MessengerWidgetOptionsCallback | ProgressbarWidgetOptionsCallback | TabBarChartWidgetOptionsCallback | TextareaWidgetOptionsCallback | TreeWidgetOptionsCallback | UploadWidgetOptionsCallback;
 export type CustomWidgetOptionsCallbacksMap<Name extends CustomWidgetName> = {
     [CustomWidgetName.card]: CardWidgetOptionsCallback;
     [CustomWidgetName.cardsWithChip]: CardsWithChipWidgetOptionsCallback;
@@ -122,6 +125,7 @@ export type CustomWidgetOptionsCallbacksMap<Name extends CustomWidgetName> = {
     [CustomWidgetName.controlPanel]: ControlPanelWidgetOptionsCallback;
     [CustomWidgetName.countBarChart]: CountBarChartWidgetOptionsCallback;
     [CustomWidgetName.history]: HistoryWidgetOptionsCallback;
+    [CustomWidgetName.imageEditor]: ImageEditorWidgetOptionsCallback;
     [CustomWidgetName.masonry]: MasonryWidgetOptionsCallback;
     [CustomWidgetName.messenger]: MessengerWidgetOptionsCallback;
     [CustomWidgetName.progressbar]: ProgressbarWidgetOptionsCallback;
@@ -298,6 +302,24 @@ export type HistoryWidgetSetter = () => {
     [CustomWidgetName.history]: BaseWidgetCallback<CustomWidgetName.history>;
 };
 export type HistoryWidgetValuetDeserializedValue = KulDataDataset;
+export interface ImageEditorWidget extends Widget {
+    options: ImageEditorWidgetOptions;
+    type: [CustomWidgetName.imageEditor];
+}
+export interface ImageEditorWidgetFactory extends BaseWidgetFactory<ImageEditorWidgetOptions> {
+    options: ImageEditorWidgetOptionsCallback;
+}
+export type ImageEditorWidgetOptionsCallback = (masonry: HTMLKulMasonryElement, textfield: HTMLKulTextfieldElement) => ImageEditorWidgetOptions;
+export interface ImageEditorWidgetOptions extends BaseWidgetOptions<ImageEditorWidgetDeserializedValue> {
+    getComp(): {
+        masonry: HTMLKulMasonryElement;
+    };
+    refresh: (directory: string) => Promise<void>;
+}
+export type ImageEditorWidgetSetter = () => {
+    [CustomWidgetName.imageEditor]: BaseWidgetCallback<CustomWidgetName.imageEditor>;
+};
+export type ImageEditorWidgetDeserializedValue = KulDataDataset;
 export interface MasonryWidget extends Widget {
     options: MasonryWidgetOptions;
     type: [CustomWidgetName.masonry];

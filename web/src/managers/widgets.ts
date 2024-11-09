@@ -28,6 +28,7 @@ import { cardPlaceholders, fetchModelMetadata } from '../utils/api.js';
 import { showNotification } from '../helpers/notify.js';
 import { progressbarFactory } from '../widgets/progressbar.js';
 import { carouselFactory } from '../widgets/carousel.js';
+import { imageEditorFactory } from '../widgets/imageEditor.js';
 
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
@@ -98,6 +99,10 @@ export class LFWidgets {
       button: HTMLKulButtonElement,
     ) => countBarChartFactory.options(chart, chip, button),
     [CustomWidgetName.history]: (history: HTMLKulListElement) => historyFactory.options(history),
+    [CustomWidgetName.imageEditor]: (
+      masonry: HTMLKulMasonryElement,
+      textfield: HTMLKulTextfieldElement,
+    ) => imageEditorFactory.options(masonry, textfield),
     [CustomWidgetName.masonry]: (masonry: HTMLKulMasonryElement) => masonryFactory.options(masonry),
     [CustomWidgetName.messenger]: (
       messenger: HTMLKulMessengerElement,
@@ -146,6 +151,9 @@ export class LFWidgets {
     },
     [CustomWidgetName.history]: (nodeType: NodeType) => {
       return historyFactory.render(nodeType, CustomWidgetName.history);
+    },
+    [CustomWidgetName.imageEditor]: (nodeType: NodeType) => {
+      return imageEditorFactory.render(nodeType, CustomWidgetName.imageEditor);
     },
     [CustomWidgetName.masonry]: (nodeType: NodeType) => {
       return masonryFactory.render(nodeType, CustomWidgetName.masonry);

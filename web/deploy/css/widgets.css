@@ -157,6 +157,64 @@
   width: 100%;
 }
 
+.lf-imageeditor {
+  background: var(--kul-background-color);
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  position: relative;
+}
+.lf-imageeditor__dir-textfield {
+  grid-area: dir-textfield;
+}
+.lf-imageeditor__load-button {
+  grid-area: load-button;
+  padding-bottom: 12px;
+}
+.lf-imageeditor__grid {
+  display: grid;
+  grid-template-areas: "dir-textfield" "load-button" "masonry";
+  grid-template-rows: auto auto 1fr;
+  height: 100%;
+  width: 100%;
+}
+.lf-imageeditor__grid--selected {
+  grid-template-areas: "dir-textfield edit-panel" "load-button edit-panel" "masonry edit-panel";
+  grid-template-columns: 30% 70%;
+}
+.lf-imageeditor__grid--selected .lf-imageeditor__edit-panel {
+  display: grid;
+}
+.lf-imageeditor__masonry {
+  grid-area: masonry;
+  overflow: auto;
+  position: relative;
+}
+.lf-imageeditor__filters-tree {
+  border-right: 2px solid var(--kul-border-color);
+  grid-area: filters-tree;
+}
+.lf-imageeditor__image {
+  border-bottom: 2px solid var(--kul-border-color);
+  grid-area: image;
+}
+.lf-imageeditor__settings {
+  align-items: center;
+  display: grid;
+  grid-area: settings;
+  height: 100%;
+  justify-content: center;
+  width: 100%;
+}
+.lf-imageeditor__edit-panel {
+  border-left: 2px solid var(--kul-border-color);
+  display: none;
+  grid-area: edit-panel;
+  grid-template-areas: "image image" "filters-tree settings";
+  grid-template-columns: 40% 1fr;
+  grid-template-rows: 60% 1fr;
+}
+
 .lf-masonry {
   background: var(--kul-background-color);
   height: 100%;

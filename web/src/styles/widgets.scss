@@ -160,6 +160,85 @@
   }
 }
 
+.lf-imageeditor {
+  & {
+    @include lf-root($max: false);
+    position: relative;
+  }
+
+  &__dir-textfield {
+    grid-area: dir-textfield;
+  }
+
+  &__load-button {
+    grid-area: load-button;
+    padding-bottom: 12px;
+  }
+
+  &__grid {
+    & {
+      display: grid;
+      grid-template-areas:
+        'dir-textfield'
+        'load-button'
+        'masonry';
+      grid-template-rows: auto auto 1fr;
+      height: 100%;
+      width: 100%;
+    }
+
+    &--selected {
+      & {
+        grid-template-areas:
+          'dir-textfield edit-panel'
+          'load-button edit-panel'
+          'masonry edit-panel';
+        grid-template-columns: 30% 70%;
+      }
+
+      .lf-imageeditor__edit-panel {
+        display: grid;
+      }
+    }
+  }
+
+  &__masonry {
+    grid-area: masonry;
+    overflow: auto;
+    position: relative;
+  }
+
+  &__filters-tree {
+    border-right: 2px solid var(--kul-border-color);
+    grid-area: filters-tree;
+  }
+
+  &__image {
+    border-bottom: 2px solid var(--kul-border-color);
+    grid-area: image;
+  }
+
+  &__settings {
+    align-items: center;
+    display: grid;
+    grid-area: settings;
+    height: 100%;
+    justify-content: center;
+    width: 100%;
+  }
+
+  &__edit-panel {
+    border-left: 2px solid var(--kul-border-color);
+    display: none;
+    grid-area: edit-panel;
+    grid-template-areas:
+      'image image'
+      'filters-tree settings';
+    grid-template-columns: 40% 1fr;
+    grid-template-rows: 60% 1fr;
+  }
+}
+
 .lf-masonry {
   & {
     @include lf-root();

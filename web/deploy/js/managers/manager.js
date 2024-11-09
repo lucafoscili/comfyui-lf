@@ -154,6 +154,85 @@ export class LFManager {
                     return payload;
                 },
             },
+            image: {
+                get: async (directory) => {
+                    const payload = {
+                        data: {},
+                        message: '',
+                        status: LogSeverity.Info,
+                    };
+                    try {
+                        const body = new FormData();
+                        body.append('directory', directory);
+                        const response = await api.fetchApi(LFEndpoints.GetImage, {
+                            body,
+                            method: 'POST',
+                        });
+                        const code = response.status;
+                        switch (code) {
+                            case 200:
+                                const p = await response.json();
+                                if (p.status === 'success') {
+                                    payload.data = p.data;
+                                    payload.message = 'Analytics data fetched successfully.';
+                                    payload.status = LogSeverity.Success;
+                                    this.log(payload.message, { payload }, payload.status);
+                                    __classPrivateFieldGet(this, _LFManager_CACHED_DATASETS, "f").usage = payload.data;
+                                }
+                                break;
+                            default:
+                                payload.message = `Unexpected response from the get-image API: ${response.text}`;
+                                payload.status = LogSeverity.Error;
+                                break;
+                        }
+                    }
+                    catch (error) {
+                        payload.message = error;
+                        payload.status = LogSeverity.Error;
+                    }
+                    this.log(payload.message, { payload }, payload.status);
+                    return payload;
+                },
+                process: async (url, type, settings) => {
+                    const payload = {
+                        data: '',
+                        message: '',
+                        status: LogSeverity.Info,
+                    };
+                    try {
+                        const body = new FormData();
+                        body.append('url', url);
+                        body.append('type', type);
+                        body.append('settings', JSON.stringify(settings));
+                        const response = await api.fetchApi(LFEndpoints.ProcessImage, {
+                            body,
+                            method: 'POST',
+                        });
+                        const code = response.status;
+                        switch (code) {
+                            case 200:
+                                const p = await response.json();
+                                if (p.status === 'success') {
+                                    payload.data = p.data;
+                                    payload.message = 'Image processed successfully.';
+                                    payload.status = LogSeverity.Success;
+                                    this.log(payload.message, { payload }, payload.status);
+                                }
+                                break;
+                            default:
+                                payload.message = `Unexpected response from the process-image API: ${response.text}`;
+                                payload.status = LogSeverity.Error;
+                                break;
+                        }
+                    }
+                    catch (error) {
+                        payload.message = error;
+                        payload.status = LogSeverity.Error;
+                    }
+                    this.log(payload.message, { payload }, payload.status);
+                    return payload;
+                },
+            },
             metadata: {
                 clear: async () => {
                     const payload = {

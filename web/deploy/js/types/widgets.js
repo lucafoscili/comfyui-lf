@@ -24,6 +24,7 @@ export var CustomWidgetName;
     CustomWidgetName["controlPanel"] = "KUL_CONTROL_PANEL";
     CustomWidgetName["countBarChart"] = "KUL_COUNT_BAR_CHART";
     CustomWidgetName["history"] = "KUL_HISTORY";
+    CustomWidgetName["imageEditor"] = "KUL_IMAGE_EDITOR";
     CustomWidgetName["masonry"] = "KUL_MASONRY";
     CustomWidgetName["messenger"] = "KUL_MESSENGER";
     CustomWidgetName["progressbar"] = "KUL_PROGRESSBAR";

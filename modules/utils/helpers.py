@@ -640,7 +640,7 @@ def get_resource_url(subfolder: str, filename: str, resource_type: str = 'output
         f"filename={urllib.parse.quote(filename)}",
         f"type={resource_type}",
         f"subfolder={subfolder}",
-        f"&{get_random_parameter()}"
+        f"{get_random_parameter()}"
     ]
     
     return f"/view?{'&'.join(params)}"

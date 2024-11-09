@@ -40,6 +40,9 @@ export declare class LFWidgets {
         KUL_HISTORY: (nodeType: NodeType) => {
             widget: Widget;
         };
+        KUL_IMAGE_EDITOR: (nodeType: NodeType) => {
+            widget: Widget;
+        };
         KUL_MASONRY: (nodeType: NodeType) => {
             widget: Widget;
         };

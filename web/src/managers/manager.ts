@@ -8,9 +8,11 @@ import {
   ComfyAPIs,
   ExtensionCallback,
   GetAnalyticsAPIPayload,
+  GetImageAPIPayload,
   GetMetadataAPIPayload,
   LFEndpoints,
   LogSeverity,
+  ProcessImageAPIPayload,
 } from '../types/manager.js';
 import { CustomWidgetGetter, Extension, NodeName } from '../types/nodes.js';
 import { EventName } from '../types/events.js';
@@ -170,6 +172,93 @@ export class LFManager {
               break;
             default:
               payload.message = 'Unexpected response from the API!';
+              payload.status = LogSeverity.Error;
+              break;
+          }
+        } catch (error) {
+          payload.message = error;
+          payload.status = LogSeverity.Error;
+        }
+
+        this.log(payload.message, { payload }, payload.status);
+        return payload;
+      },
+    },
+    image: {
+      get: async (directory) => {
+        const payload: GetImageAPIPayload = {
+          data: {},
+          message: '',
+          status: LogSeverity.Info,
+        };
+
+        try {
+          const body = new FormData();
+          body.append('directory', directory);
+
+          const response = await api.fetchApi(LFEndpoints.GetImage, {
+            body,
+            method: 'POST',
+          });
+
+          const code = response.status;
+
+          switch (code) {
+            case 200:
+              const p: GetImageAPIPayload = await response.json();
+              if (p.status === 'success') {
+                payload.data = p.data;
+                payload.message = 'Analytics data fetched successfully.';
+                payload.status = LogSeverity.Success;
+                this.log(payload.message, { payload }, payload.status);
+                this.#CACHED_DATASETS.usage = payload.data;
+              }
+              break;
+            default:
+              payload.message = `Unexpected response from the get-image API: ${response.text}`;
+              payload.status = LogSeverity.Error;
+              break;
+          }
+        } catch (error) {
+          payload.message = error;
+          payload.status = LogSeverity.Error;
+        }
+
+        this.log(payload.message, { payload }, payload.status);
+        return payload;
+      },
+      process: async (url, type, settings) => {
+        const payload: ProcessImageAPIPayload = {
+          data: '',
+          message: '',
+          status: LogSeverity.Info,
+        };
+
+        try {
+          const body = new FormData();
+          body.append('url', url);
+          body.append('type', type);
+          body.append('settings', JSON.stringify(settings));
+
+          const response = await api.fetchApi(LFEndpoints.ProcessImage, {
+            body,
+            method: 'POST',
+          });
+
+          const code = response.status;
+
+          switch (code) {
+            case 200:
+              const p: ProcessImageAPIPayload = await response.json();
+              if (p.status === 'success') {
+                payload.data = p.data;
+                payload.message = 'Image processed successfully.';
+                payload.status = LogSeverity.Success;
+                this.log(payload.message, { payload }, payload.status);
+              }
+              break;
+            default:
+              payload.message = `Unexpected response from the process-image API: ${response.text}`;
               payload.status = LogSeverity.Error;
               break;
           }

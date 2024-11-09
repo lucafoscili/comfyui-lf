@@ -34,6 +34,7 @@ export var NodeName;
     NodeName["keywordToggleFromJson"] = "LF_KeywordToggleFromJSON";
     NodeName["llmChat"] = "LF_LLMChat";
     NodeName["llmMessenger"] = "LF_LLMMessenger";
+    NodeName["loadAndEditImages"] = "LF_LoadAndEditImages";
     NodeName["loadFileOnce"] = "LF_LoadFileOnce";
     NodeName["loadImages"] = "LF_LoadImages";
     NodeName["loadLoraTags"] = "LF_LoadLoraTags";

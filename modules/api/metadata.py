@@ -20,7 +20,7 @@ async def clear_model_info(_):
             ("loras", get_comfy_list("loras"))
         ]
         
-        deleted_files = []
+        deleted_files: list = []
         
         for folder_name, directory in directories:
             for model_file in directory:
@@ -51,7 +51,7 @@ async def clear_model_info(_):
 @PromptServer.instance.routes.post(f"{API_ROUTE_PREFIX}/save-metadata")
 async def save_model_info(request):
     try:
-        r = await request.post()
+        r: dict = await request.post()
         
         metadata = r.get("metadata")
         model_path = r.get("model_path")
@@ -91,7 +91,7 @@ async def save_model_info(request):
 @PromptServer.instance.routes.post(f"{API_ROUTE_PREFIX}/update-metadata-cover")
 async def update_metadata_cover(request):
     try:
-        r = await request.post()
+        r: dict = await request.post()
         
         model_path = r.get("model_path")
         base64_image = r.get("base64_image")

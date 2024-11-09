@@ -35,6 +35,7 @@ export const NODE_WIDGET_MAP = {
     LF_KeywordToggleFromJSON: [CustomWidgetName.chip],
     LF_LLMChat: [CustomWidgetName.chat],
     LF_LLMMessenger: [CustomWidgetName.messenger],
+    LF_LoadAndEditImages: [CustomWidgetName.imageEditor],
     LF_LoadFileOnce: [CustomWidgetName.history],
     LF_LoadImages: [CustomWidgetName.masonry],
     LF_LoadLoraTags: [CustomWidgetName.cardsWithChip],

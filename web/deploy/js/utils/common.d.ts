@@ -9,6 +9,7 @@ import { KulComponent, KulComponentName } from '../types/ketchup-lite/types/Gene
 export declare const areJSONEqual: (a: unknown, b: unknown) => boolean;
 export declare const capitalize: (input: string) => string;
 export declare const createDOMWidget: (type: CustomWidgetName, element: HTMLDivElement, node: NodeType, options?: CustomWidgetOptions) => Widget;
+export declare const debounce: <T extends (...args: any[]) => void>(func: T, delay: number) => (...args: Parameters<T>) => void;
 export declare const findWidget: <T extends CustomWidgetName>(node: NodeType, type: T) => CustomWidgetMap[T];
 export declare const getApiRoutes: () => import("../types/manager").ComfyAPIs;
 export declare const getCustomWidget: <T extends CustomWidgetName>(node: NodeType, type: T) => CustomWidgetMap[T];
