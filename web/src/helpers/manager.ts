@@ -39,6 +39,7 @@ export const NODE_WIDGET_MAP: NodeWidgetMap = {
   LF_ImageClassifier: [CustomWidgetName.code],
   LF_ImageHistogram: [CustomWidgetName.tabBarChart],
   LF_ImageListFromJSON: [CustomWidgetName.masonry],
+  LF_ImagesSlideshow: [CustomWidgetName.carousel],
   LF_Integer: [CustomWidgetName.history],
   LF_IsLandscape: [CustomWidgetName.tree],
   LF_KeywordCounter: [CustomWidgetName.countBarChart],

@@ -60,6 +60,7 @@ export var NodeName;
     NodeName["sequentialSeedsGenerator"] = "LF_SequentialSeedsGenerator";
     NodeName["setValueInJson"] = "LF_SetValueInJSON";
     NodeName["shuffleJsonKeys"] = "LF_ShuffleJSONKeys";
+    NodeName["imagesSlideshow"] = "LF_ImagesSlideshow";
     NodeName["something2Number"] = "LF_Something2Number";
     NodeName["something2String"] = "LF_Something2String";
     NodeName["sortJsonKeys"] = "LF_SortJSONKeys";

@@ -63,6 +63,7 @@ export enum NodeName {
   sequentialSeedsGenerator = 'LF_SequentialSeedsGenerator',
   setValueInJson = 'LF_SetValueInJSON',
   shuffleJsonKeys = 'LF_ShuffleJSONKeys',
+  imagesSlideshow = 'LF_ImagesSlideshow',
   something2Number = 'LF_Something2Number',
   something2String = 'LF_Something2String',
   sortJsonKeys = 'LF_SortJSONKeys',

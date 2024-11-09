@@ -61,6 +61,7 @@ export enum ComfyWidgetName {
 }
 export type CustomWidgetMap = {
   [CustomWidgetName.card]: CardWidget;
+  [CustomWidgetName.carousel]: CarouselWidget;
   [CustomWidgetName.cardsWithChip]: CardsWithChipWidget;
   [CustomWidgetName.chat]: ChatWidget;
   [CustomWidgetName.chip]: ChipWidget;
@@ -80,6 +81,7 @@ export type CustomWidgetMap = {
 export enum CustomWidgetName {
   card = 'KUL_CARD',
   cardsWithChip = 'KUL_CARDS_WITH_CHIP',
+  carousel = 'KUL_CAROUSEL',
   chat = 'KUL_CHAT',
   chip = 'KUL_CHIP',
   code = 'KUL_CODE',
@@ -98,6 +100,7 @@ export enum CustomWidgetName {
 export type CustomWidgetDeserializedValues =
   | CardWidgetDeserializedValue
   | CardsWithChipWidgetDeserializedValue
+  | CarouselWidgetDeserializedValue
   | ChatWidgetValueDeserializedValue
   | ChipWidgetValueDeserializedValue
   | CodeWidgetValueDeserializedValue
@@ -115,6 +118,7 @@ export type CustomWidgetDeserializedValues =
 export type CustomWidgetDeserializedValuesMap<Name extends CustomWidgetName> = {
   [CustomWidgetName.card]: CardWidgetDeserializedValue;
   [CustomWidgetName.cardsWithChip]: CardsWithChipWidgetDeserializedValue;
+  [CustomWidgetName.carousel]: CarouselWidgetDeserializedValue;
   [CustomWidgetName.chat]: ChatWidgetValueDeserializedValue;
   [CustomWidgetName.chip]: ChipWidgetValueDeserializedValue;
   [CustomWidgetName.code]: CodeWidgetValueDeserializedValue;
@@ -133,6 +137,7 @@ export type CustomWidgetDeserializedValuesMap<Name extends CustomWidgetName> = {
 export type CustomWidgetOptions =
   | CardWidgetOptions
   | CardsWithChipWidgetOptions
+  | CarouselWidgetOptions
   | ChatWidgetOptions
   | ChipWidgetOptions
   | CodeWidgetOptions
@@ -149,6 +154,7 @@ export type CustomWidgetOptions =
   | UploadWidgetOptions;
 export type CustomWidgetOptionsCallbacks =
   | CardWidgetOptionsCallback
+  | CarouselWidgetOptionsCallback
   | ChatWidgetOptionsCallback
   | ChipWidgetOptionsCallback
   | CodeWidgetOptionsCallback
@@ -165,6 +171,7 @@ export type CustomWidgetOptionsCallbacks =
 export type CustomWidgetOptionsCallbacksMap<Name extends CustomWidgetName> = {
   [CustomWidgetName.card]: CardWidgetOptionsCallback;
   [CustomWidgetName.cardsWithChip]: CardsWithChipWidgetOptionsCallback;
+  [CustomWidgetName.carousel]: CarouselWidgetOptionsCallback;
   [CustomWidgetName.chat]: ChatWidgetOptionsCallback;
   [CustomWidgetName.chip]: ChipWidgetOptionsCallback;
   [CustomWidgetName.code]: CodeWidgetOptionsCallback;
@@ -226,6 +233,30 @@ export type CardsWithChipWidgetSetter = () => {
 };
 export interface CardsWithChipWidgetDeserializedValue extends CardWidgetDeserializedValue {
   chip: KulDataDataset;
+}
+
+/*-------------------------------------------------------------------*/
+/*              C a r o u s e l   D e c l a r a t i o n s            */
+/*-------------------------------------------------------------------*/
+
+export interface CarouselWidget extends Widget {
+  options: CarouselWidgetOptions;
+  type: [CustomWidgetName.carousel];
+}
+export interface CarouselWidgetFactory extends BaseWidgetFactory<CarouselWidgetOptions> {
+  options: CarouselWidgetOptionsCallback;
+}
+export type CarouselWidgetOptionsCallback = (
+  masonry: HTMLKulCarouselElement,
+) => CarouselWidgetOptions;
+export interface CarouselWidgetOptions extends BaseWidgetOptions<CarouselWidgetDeserializedValue> {
+  getComp(): HTMLKulCarouselElement;
+}
+export type CarouselWidgetSetter = () => {
+  [CustomWidgetName.carousel]: BaseWidgetCallback<CustomWidgetName.carousel>;
+};
+export interface CarouselWidgetDeserializedValue {
+  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/

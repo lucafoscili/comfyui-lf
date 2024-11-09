@@ -20,6 +20,7 @@ import { LogSeverity } from '../types/manager.js';
 import { cardPlaceholders, fetchModelMetadata } from '../utils/api.js';
 import { showNotification } from '../helpers/notify.js';
 import { progressbarFactory } from '../widgets/progressbar.js';
+import { carouselFactory } from '../widgets/carousel.js';
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
 /*-------------------------------------------------*/
@@ -62,6 +63,7 @@ export class LFWidgets {
         this.option = {
             [CustomWidgetName.card]: (grid) => cardFactory.options(grid),
             [CustomWidgetName.cardsWithChip]: (grid) => cardsWithChipFactory.options(grid),
+            [CustomWidgetName.carousel]: (carousel) => carouselFactory.options(carousel),
             [CustomWidgetName.chat]: (chat) => chatFactory.options(chat),
             [CustomWidgetName.chip]: (chip) => chipFactory.options(chip),
             [CustomWidgetName.code]: (code) => codeFactory.options(code),
@@ -80,6 +82,9 @@ export class LFWidgets {
         this.set = {
             [CustomWidgetName.card]: (nodeType) => {
                 return cardFactory.render(nodeType, CustomWidgetName.card);
+            },
+            [CustomWidgetName.carousel]: (nodeType) => {
+                return carouselFactory.render(nodeType, CustomWidgetName.carousel);
             },
             [CustomWidgetName.cardsWithChip]: (nodeType) => {
                 return cardsWithChipFactory.render(nodeType, CustomWidgetName.cardsWithChip);

@@ -29,6 +29,17 @@
   }
 }
 
+.lf-carousel {
+  & {
+    @include lf-root();
+  }
+
+  &__widget {
+    height: 100%;
+    width: 100%;
+  }
+}
+
 .lf-cardswithchip {
   & {
     @include lf-root();

@@ -16,6 +16,7 @@ export var CustomWidgetName;
 (function (CustomWidgetName) {
     CustomWidgetName["card"] = "KUL_CARD";
     CustomWidgetName["cardsWithChip"] = "KUL_CARDS_WITH_CHIP";
+    CustomWidgetName["carousel"] = "KUL_CAROUSEL";
     CustomWidgetName["chat"] = "KUL_CHAT";
     CustomWidgetName["chip"] = "KUL_CHIP";
     CustomWidgetName["code"] = "KUL_CODE";
