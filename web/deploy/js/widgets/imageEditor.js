@@ -92,14 +92,14 @@ const prepSettings = (settings, node, imageviewer) => {
             settings.appendChild(sliderControl);
         });
     }
-    const updateSettings = (triggerApiCall = true) => {
+    const updateSettings = async (triggerApiCall = true) => {
         const inputs = settings.querySelectorAll('input');
         inputs.forEach((input) => {
             const id = input.id;
             settingsValues[id] = parseFloat(input.value);
         });
         if (triggerApiCall) {
-            const image = imageviewer.shadowRoot.querySelector('kul-image.details-grid__image');
+            const image = (await imageviewer.getComponents()).image;
             getApiRoutes()
                 .image.process(image.kulValue, filterType, settingsValues)
                 .then((r) => {

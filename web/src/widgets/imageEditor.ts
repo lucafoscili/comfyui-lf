@@ -1,16 +1,6 @@
 import { TREE_DATA } from '../fixtures/imageEditor';
-import {
-  KulButtonEventPayload,
-  KulImageEventPayload,
-  KulImageviewerEventPayload,
-  KulMasonryEventPayload,
-  KulTreeEventPayload,
-} from '../types/ketchup-lite/components';
-import { KulButton } from '../types/ketchup-lite/components/kul-button/kul-button';
-import {
-  KulDataCell,
-  KulDataNode,
-} from '../types/ketchup-lite/managers/kul-data/kul-data-declarations';
+import { KulImageviewerEventPayload, KulTreeEventPayload } from '../types/ketchup-lite/components';
+import { KulDataNode } from '../types/ketchup-lite/managers/kul-data/kul-data-declarations';
 import { KulGenericEvent } from '../types/ketchup-lite/types/GenericTypes';
 import { FilterSettingsMap, LogSeverity, SliderConfig } from '../types/manager';
 import {
@@ -25,7 +15,6 @@ import {
   debounce,
   getApiRoutes,
   getLFManager,
-  isValidNumber,
   normalizeValue,
   unescapeJson,
 } from '../utils/common';
@@ -146,7 +135,7 @@ const prepSettings = (
     });
   }
 
-  const updateSettings = (triggerApiCall: boolean = true) => {
+  const updateSettings = async (triggerApiCall: boolean = true) => {
     const inputs = settings.querySelectorAll('input');
     inputs.forEach((input) => {
       const id = input.id as keyof FilterSettingsMap[typeof filterType];
@@ -154,9 +143,7 @@ const prepSettings = (
     });
 
     if (triggerApiCall) {
-      const image: HTMLKulImageElement = imageviewer.shadowRoot.querySelector(
-        'kul-image.details-grid__image',
-      );
+      const image = (await imageviewer.getComponents()).image;
       getApiRoutes()
         .image.process(image.kulValue, filterType, settingsValues)
         .then((r) => {
