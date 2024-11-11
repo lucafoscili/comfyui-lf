@@ -1,5 +1,5 @@
 import { h, r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, F as Fragment, H as Host } from './index-7f37b7be.js';
-import { k as kulManagerInstance, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-75d4bcb9.js';
+import { k as kulManagerInstance, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-c62793b7.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 
 /*-------------------------------------------------*/
@@ -177,6 +177,12 @@ const KulMasonry = class {
         return this.selectedShape;
     }
     /**
+     * Redecorates the shapes, updating potential new values.
+     */
+    async redecorateShapes() {
+        this.updateShapes();
+    }
+    /**
      * This method is used to trigger a new render of the component.
      */
     async refresh() {
@@ -195,8 +201,10 @@ const KulMasonry = class {
             this.selectedShape = newState;
         }
         else {
-            this.#kulManager.debug.logs.new(this, `Couldn't fix shape with index: ${index}`, 'warning');
+            this.selectedShape = {};
+            this.#kulManager.debug.logs.new(this, `Couldn't set shape with index: ${index}`);
         }
+        this.updateShapes();
     }
     /**
      * Initiates the unmount sequence, which removes the component from the DOM after a delay.
@@ -311,7 +319,7 @@ const KulMasonry = class {
         const style = {
             ['--kul_masonry_columns']: this.kulColumns?.toString() || '4',
         };
-        return (h(Host, { key: 'ff8c67744fb38ecb17815bbb9e5ca3265ebd78c8' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '92c5e5ee0d88f75cfadf374b8fec0d958b718513', id: KUL_WRAPPER_ID, style: style }, h("div", { key: '24bb3ea939b3aa2dd63f898be1de49a4cb1f4b02', class: "masonry" }, this.#prepMasonry()))));
+        return (h(Host, { key: '2aeacef47345f960a75365d9bc09b74de677a8d4' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'b8d05f1d065b529caf9803ca52109cfcd33ec69a', id: KUL_WRAPPER_ID, style: style }, h("div", { key: '4b0cd4ea4b69957d988dda6be2398ff4f222d23b', class: "masonry" }, this.#prepMasonry()))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

@@ -286,7 +286,10 @@ const cellDecorateShapes = (component, shape, items, eventDispatcher, defaultPro
 const cellExists = (node) => {
     return !!(node && node.cells && Object.keys(node.cells).length);
 };
-const cellGetShape = (cell) => {
+const cellGetShape = (cell, deepCopy) => {
+    if (!deepCopy) {
+        return cell;
+    }
     const prefix = 'kul';
     const shapeProps = {};
     for (const prop in cell) {
@@ -311,7 +314,7 @@ const cellGetShape = (cell) => {
     }
     return shapeProps;
 };
-const cellGetAllShapes = (dataset) => {
+const cellGetAllShapes = (dataset, deepCopy = true) => {
     if (!nodeExists(dataset)) {
         return;
     }
@@ -338,7 +341,7 @@ const cellGetAllShapes = (dataset) => {
         for (const key in cells) {
             if (Object.prototype.hasOwnProperty.call(cells, key)) {
                 const cell = cells[key];
-                const extracted = cellGetShape(cell);
+                const extracted = cellGetShape(cell, deepCopy);
                 switch (cell.shape) {
                     case 'badge':
                         shapes.badge.push(extracted);
@@ -427,8 +430,8 @@ class KulData {
         exists: (node) => cellExists(node),
         shapes: {
             decorate: (shape, items, eventDispatcher, defaultProps, defaultCb) => cellDecorateShapes(this.#SHAPES_MAP[shape], shape, items, eventDispatcher, defaultProps, defaultCb),
-            get: (cell) => cellGetShape(cell),
-            getAll: (dataset) => cellGetAllShapes(dataset),
+            get: (cell, deepCopy = true) => cellGetShape(cell, deepCopy),
+            getAll: (dataset, deepCopy = true) => cellGetAllShapes(dataset, deepCopy),
         },
         stringify: (value) => cellStringify(value),
     };
@@ -4407,6 +4410,6 @@ function kulManagerInstance() {
     return dom.ketchupLite;
 }
 
-export { CSS_VAR_PREFIX as C, KUL_WRAPPER_ID as K, RIPPLE_SURFACE_CLASS as R, KulDataCyAttributes as a, KUL_STYLE_ID as b, KulThemeColorValues as c, KulLanguageSearch as d, KulLanguageGeneric as e, commonjsGlobal as f, KUL_DROPDOWN_CLASS_VISIBLE as g, KulDynamicPositionPlacement as h, KUL_DROPDOWN_CLASS as i, kulManagerInstance as k };
+export { CSS_VAR_PREFIX as C, KUL_WRAPPER_ID as K, RIPPLE_SURFACE_CLASS as R, KulDataCyAttributes as a, KUL_STYLE_ID as b, KulThemeColorValues as c, commonjsGlobal as d, KulLanguageSearch as e, KulLanguageGeneric as f, KUL_DROPDOWN_CLASS_VISIBLE as g, KulDynamicPositionPlacement as h, KUL_DROPDOWN_CLASS as i, kulManagerInstance as k };
 
-//# sourceMappingURL=kul-manager-75d4bcb9.js.map
+//# sourceMappingURL=kul-manager-c62793b7.js.map
