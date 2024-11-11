@@ -309,10 +309,10 @@ export interface ImageEditorWidget extends Widget {
 export interface ImageEditorWidgetFactory extends BaseWidgetFactory<ImageEditorWidgetOptions> {
     options: ImageEditorWidgetOptionsCallback;
 }
-export type ImageEditorWidgetOptionsCallback = (masonry: HTMLKulMasonryElement, textfield: HTMLKulTextfieldElement) => ImageEditorWidgetOptions;
+export type ImageEditorWidgetOptionsCallback = (imageviewer: HTMLKulImageviewerElement) => ImageEditorWidgetOptions;
 export interface ImageEditorWidgetOptions extends BaseWidgetOptions<ImageEditorWidgetDeserializedValue> {
     getComp(): {
-        masonry: HTMLKulMasonryElement;
+        imageviewer: HTMLKulImageviewerElement;
     };
     refresh: (directory: string) => Promise<void>;
 }

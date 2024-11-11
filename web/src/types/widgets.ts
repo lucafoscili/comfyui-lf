@@ -431,12 +431,11 @@ export interface ImageEditorWidgetFactory extends BaseWidgetFactory<ImageEditorW
   options: ImageEditorWidgetOptionsCallback;
 }
 export type ImageEditorWidgetOptionsCallback = (
-  masonry: HTMLKulMasonryElement,
-  textfield: HTMLKulTextfieldElement,
+  imageviewer: HTMLKulImageviewerElement,
 ) => ImageEditorWidgetOptions;
 export interface ImageEditorWidgetOptions
   extends BaseWidgetOptions<ImageEditorWidgetDeserializedValue> {
-  getComp(): { masonry: HTMLKulMasonryElement };
+  getComp(): { imageviewer: HTMLKulImageviewerElement };
   refresh: (directory: string) => Promise<void>;
 }
 export type ImageEditorWidgetSetter = () => {

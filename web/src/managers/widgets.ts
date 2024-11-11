@@ -99,10 +99,8 @@ export class LFWidgets {
       button: HTMLKulButtonElement,
     ) => countBarChartFactory.options(chart, chip, button),
     [CustomWidgetName.history]: (history: HTMLKulListElement) => historyFactory.options(history),
-    [CustomWidgetName.imageEditor]: (
-      masonry: HTMLKulMasonryElement,
-      textfield: HTMLKulTextfieldElement,
-    ) => imageEditorFactory.options(masonry, textfield),
+    [CustomWidgetName.imageEditor]: (imageviewer: HTMLKulImageviewerElement) =>
+      imageEditorFactory.options(imageviewer),
     [CustomWidgetName.masonry]: (masonry: HTMLKulMasonryElement) => masonryFactory.options(masonry),
     [CustomWidgetName.messenger]: (
       messenger: HTMLKulMessengerElement,
