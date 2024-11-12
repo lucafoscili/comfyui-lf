@@ -1,10 +1,9 @@
-import { h, F as Fragment, r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, H as Host } from './index-7f37b7be.js';
-import { k as kulManagerInstance, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-75d4bcb9.js';
+import { h, F as Fragment, r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, H as Host } from './index-4ebcb21f.js';
+import { k as kulManagerInstance, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-233b3207.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 
-/*-------------------------------------------------*/
-/*                    P r o p s                    */
-/*-------------------------------------------------*/
+//#endregion
+//#region Props
 var KulMessengerProps;
 (function (KulMessengerProps) {
     KulMessengerProps["kulAutosave"] = "Automatically saves the dataset when a chat updates.";
@@ -12,6 +11,7 @@ var KulMessengerProps;
     KulMessengerProps["kulStyle"] = "Custom style of the component.";
     KulMessengerProps["kulValue"] = "Sets the initial configuration, including active character and filters.";
 })(KulMessengerProps || (KulMessengerProps = {}));
+//#endregion
 
 const CLEAN_UI = {
     customization: false,

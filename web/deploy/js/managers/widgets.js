@@ -20,6 +20,8 @@ import { LogSeverity } from '../types/manager.js';
 import { cardPlaceholders, fetchModelMetadata } from '../utils/api.js';
 import { showNotification } from '../helpers/notify.js';
 import { progressbarFactory } from '../widgets/progressbar.js';
+import { carouselFactory } from '../widgets/carousel.js';
+import { imageEditorFactory } from '../widgets/imageEditor.js';
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
 /*-------------------------------------------------*/
@@ -62,6 +64,7 @@ export class LFWidgets {
         this.option = {
             [CustomWidgetName.card]: (grid) => cardFactory.options(grid),
             [CustomWidgetName.cardsWithChip]: (grid) => cardsWithChipFactory.options(grid),
+            [CustomWidgetName.carousel]: (carousel) => carouselFactory.options(carousel),
             [CustomWidgetName.chat]: (chat) => chatFactory.options(chat),
             [CustomWidgetName.chip]: (chip) => chipFactory.options(chip),
             [CustomWidgetName.code]: (code) => codeFactory.options(code),
@@ -69,6 +72,7 @@ export class LFWidgets {
             [CustomWidgetName.controlPanel]: () => controlPanelFactory.options(),
             [CustomWidgetName.countBarChart]: (chart, chip, button) => countBarChartFactory.options(chart, chip, button),
             [CustomWidgetName.history]: (history) => historyFactory.options(history),
+            [CustomWidgetName.imageEditor]: (imageviewer) => imageEditorFactory.options(imageviewer),
             [CustomWidgetName.masonry]: (masonry) => masonryFactory.options(masonry),
             [CustomWidgetName.messenger]: (messenger, placeholder) => messengerFactory.options(messenger, placeholder),
             [CustomWidgetName.progressbar]: (progressbar, nodeType) => progressbarFactory.options(progressbar, nodeType),
@@ -80,6 +84,9 @@ export class LFWidgets {
         this.set = {
             [CustomWidgetName.card]: (nodeType) => {
                 return cardFactory.render(nodeType, CustomWidgetName.card);
+            },
+            [CustomWidgetName.carousel]: (nodeType) => {
+                return carouselFactory.render(nodeType, CustomWidgetName.carousel);
             },
             [CustomWidgetName.cardsWithChip]: (nodeType) => {
                 return cardsWithChipFactory.render(nodeType, CustomWidgetName.cardsWithChip);
@@ -104,6 +111,9 @@ export class LFWidgets {
             },
             [CustomWidgetName.history]: (nodeType) => {
                 return historyFactory.render(nodeType, CustomWidgetName.history);
+            },
+            [CustomWidgetName.imageEditor]: (nodeType) => {
+                return imageEditorFactory.render(nodeType, CustomWidgetName.imageEditor);
             },
             [CustomWidgetName.masonry]: (nodeType) => {
                 return masonryFactory.render(nodeType, CustomWidgetName.masonry);

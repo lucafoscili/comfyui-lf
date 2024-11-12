@@ -17,6 +17,29 @@ from ..utils.helpers import create_dummy_image_tensor, create_history_node, crea
 
 CATEGORY = f"{CATEGORY_PREFIX}/IO Operations"
 
+# region LF_LoadAndEditImages
+class LF_LoadAndEditImages:
+    @classmethod
+    def INPUT_TYPES(self):
+        return {
+            "required": {},
+            "optional": {
+                "ui_widget": (Input.KUL_IMAGE_EDITOR, {
+                    "default": {}
+                })
+            },
+            "hidden": { 
+                "node_id": "UNIQUE_ID"
+            }
+        }
+    
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    RETURN_TYPES = ()
+
+    def on_exec(self, **kwargs: dict):
+        return ()
+# endregion
 # region LF_LoadFileOnce
 class LF_LoadFileOnce:
     @classmethod
@@ -708,6 +731,7 @@ class LF_SaveMarkdown:
         return (markdown_text,)
 # endregion
 NODE_CLASS_MAPPINGS = {
+    "LF_LoadAndEditImages": LF_LoadAndEditImages,
     "LF_LoadFileOnce": LF_LoadFileOnce,
     "LF_LoadImages": LF_LoadImages,
     "LF_LoadLocalJSON": LF_LoadLocalJSON,
@@ -719,6 +743,7 @@ NODE_CLASS_MAPPINGS = {
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
+    "LF_LoadAndEditImages": "Load and edit images",
     "LF_LoadFileOnce": "Load file from disk once",
     "LF_LoadImages": "Load images from disk",
     "LF_LoadLocalJSON": "Load JSON from disk",

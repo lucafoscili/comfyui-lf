@@ -61,6 +61,7 @@ export enum ComfyWidgetName {
 }
 export type CustomWidgetMap = {
   [CustomWidgetName.card]: CardWidget;
+  [CustomWidgetName.carousel]: CarouselWidget;
   [CustomWidgetName.cardsWithChip]: CardsWithChipWidget;
   [CustomWidgetName.chat]: ChatWidget;
   [CustomWidgetName.chip]: ChipWidget;
@@ -69,6 +70,7 @@ export type CustomWidgetMap = {
   [CustomWidgetName.controlPanel]: ControlPanelWidget;
   [CustomWidgetName.countBarChart]: CountBarChartWidget;
   [CustomWidgetName.history]: HistoryWidget;
+  [CustomWidgetName.imageEditor]: ImageEditorWidget;
   [CustomWidgetName.masonry]: MasonryWidget;
   [CustomWidgetName.messenger]: MessengerWidget;
   [CustomWidgetName.progressbar]: ProgressbarWidget;
@@ -80,6 +82,7 @@ export type CustomWidgetMap = {
 export enum CustomWidgetName {
   card = 'KUL_CARD',
   cardsWithChip = 'KUL_CARDS_WITH_CHIP',
+  carousel = 'KUL_CAROUSEL',
   chat = 'KUL_CHAT',
   chip = 'KUL_CHIP',
   code = 'KUL_CODE',
@@ -87,6 +90,7 @@ export enum CustomWidgetName {
   controlPanel = 'KUL_CONTROL_PANEL',
   countBarChart = 'KUL_COUNT_BAR_CHART',
   history = 'KUL_HISTORY',
+  imageEditor = 'KUL_IMAGE_EDITOR',
   masonry = 'KUL_MASONRY',
   messenger = 'KUL_MESSENGER',
   progressbar = 'KUL_PROGRESSBAR',
@@ -98,6 +102,7 @@ export enum CustomWidgetName {
 export type CustomWidgetDeserializedValues =
   | CardWidgetDeserializedValue
   | CardsWithChipWidgetDeserializedValue
+  | CarouselWidgetDeserializedValue
   | ChatWidgetValueDeserializedValue
   | ChipWidgetValueDeserializedValue
   | CodeWidgetValueDeserializedValue
@@ -105,6 +110,7 @@ export type CustomWidgetDeserializedValues =
   | ControlPanelWidgetDeserializedValue
   | CountBarChartWidgetDeserializedValue
   | HistoryWidgetValuetDeserializedValue
+  | ImageEditorWidgetDeserializedValue
   | MasonryWidgetDeserializedValue
   | MessengerWidgetDeserializedValue
   | ProgressbarWidgetDeserializedValue
@@ -115,6 +121,7 @@ export type CustomWidgetDeserializedValues =
 export type CustomWidgetDeserializedValuesMap<Name extends CustomWidgetName> = {
   [CustomWidgetName.card]: CardWidgetDeserializedValue;
   [CustomWidgetName.cardsWithChip]: CardsWithChipWidgetDeserializedValue;
+  [CustomWidgetName.carousel]: CarouselWidgetDeserializedValue;
   [CustomWidgetName.chat]: ChatWidgetValueDeserializedValue;
   [CustomWidgetName.chip]: ChipWidgetValueDeserializedValue;
   [CustomWidgetName.code]: CodeWidgetValueDeserializedValue;
@@ -122,6 +129,7 @@ export type CustomWidgetDeserializedValuesMap<Name extends CustomWidgetName> = {
   [CustomWidgetName.controlPanel]: ControlPanelWidgetDeserializedValue;
   [CustomWidgetName.countBarChart]: CountBarChartWidgetDeserializedValue;
   [CustomWidgetName.history]: HistoryWidgetValuetDeserializedValue;
+  [CustomWidgetName.imageEditor]: ImageEditorWidgetDeserializedValue;
   [CustomWidgetName.masonry]: MasonryWidgetDeserializedValue;
   [CustomWidgetName.messenger]: MessengerWidgetDeserializedValue;
   [CustomWidgetName.progressbar]: ProgressbarWidgetDeserializedValue;
@@ -133,6 +141,7 @@ export type CustomWidgetDeserializedValuesMap<Name extends CustomWidgetName> = {
 export type CustomWidgetOptions =
   | CardWidgetOptions
   | CardsWithChipWidgetOptions
+  | CarouselWidgetOptions
   | ChatWidgetOptions
   | ChipWidgetOptions
   | CodeWidgetOptions
@@ -140,6 +149,7 @@ export type CustomWidgetOptions =
   | ControlPanelWidgetOptions
   | CountBarChartWidgetOptions
   | HistoryWidgetOptions
+  | ImageEditorWidgetOptions
   | MasonryWidgetOptions
   | MessengerWidgetOptions
   | ProgressbarWidgetOptions
@@ -149,12 +159,14 @@ export type CustomWidgetOptions =
   | UploadWidgetOptions;
 export type CustomWidgetOptionsCallbacks =
   | CardWidgetOptionsCallback
+  | CarouselWidgetOptionsCallback
   | ChatWidgetOptionsCallback
   | ChipWidgetOptionsCallback
   | CodeWidgetOptionsCallback
   | CompareWidgetOptionsCallback
   | ControlPanelWidgetOptionsCallback
   | HistoryWidgetOptionsCallback
+  | ImageEditorWidgetOptionsCallback
   | MasonryWidgetOptionsCallback
   | MessengerWidgetOptionsCallback
   | ProgressbarWidgetOptionsCallback
@@ -165,6 +177,7 @@ export type CustomWidgetOptionsCallbacks =
 export type CustomWidgetOptionsCallbacksMap<Name extends CustomWidgetName> = {
   [CustomWidgetName.card]: CardWidgetOptionsCallback;
   [CustomWidgetName.cardsWithChip]: CardsWithChipWidgetOptionsCallback;
+  [CustomWidgetName.carousel]: CarouselWidgetOptionsCallback;
   [CustomWidgetName.chat]: ChatWidgetOptionsCallback;
   [CustomWidgetName.chip]: ChipWidgetOptionsCallback;
   [CustomWidgetName.code]: CodeWidgetOptionsCallback;
@@ -172,6 +185,7 @@ export type CustomWidgetOptionsCallbacksMap<Name extends CustomWidgetName> = {
   [CustomWidgetName.controlPanel]: ControlPanelWidgetOptionsCallback;
   [CustomWidgetName.countBarChart]: CountBarChartWidgetOptionsCallback;
   [CustomWidgetName.history]: HistoryWidgetOptionsCallback;
+  [CustomWidgetName.imageEditor]: ImageEditorWidgetOptionsCallback;
   [CustomWidgetName.masonry]: MasonryWidgetOptionsCallback;
   [CustomWidgetName.messenger]: MessengerWidgetOptionsCallback;
   [CustomWidgetName.progressbar]: ProgressbarWidgetOptionsCallback;
@@ -226,6 +240,30 @@ export type CardsWithChipWidgetSetter = () => {
 };
 export interface CardsWithChipWidgetDeserializedValue extends CardWidgetDeserializedValue {
   chip: KulDataDataset;
+}
+
+/*-------------------------------------------------------------------*/
+/*              C a r o u s e l   D e c l a r a t i o n s            */
+/*-------------------------------------------------------------------*/
+
+export interface CarouselWidget extends Widget {
+  options: CarouselWidgetOptions;
+  type: [CustomWidgetName.carousel];
+}
+export interface CarouselWidgetFactory extends BaseWidgetFactory<CarouselWidgetOptions> {
+  options: CarouselWidgetOptionsCallback;
+}
+export type CarouselWidgetOptionsCallback = (
+  masonry: HTMLKulCarouselElement,
+) => CarouselWidgetOptions;
+export interface CarouselWidgetOptions extends BaseWidgetOptions<CarouselWidgetDeserializedValue> {
+  getComp(): HTMLKulCarouselElement;
+}
+export type CarouselWidgetSetter = () => {
+  [CustomWidgetName.carousel]: BaseWidgetCallback<CustomWidgetName.carousel>;
+};
+export interface CarouselWidgetDeserializedValue {
+  dataset: KulDataDataset;
 }
 
 /*-------------------------------------------------------------------*/
@@ -380,6 +418,30 @@ export type HistoryWidgetSetter = () => {
   [CustomWidgetName.history]: BaseWidgetCallback<CustomWidgetName.history>;
 };
 export type HistoryWidgetValuetDeserializedValue = KulDataDataset;
+
+/*-------------------------------------------------------------------*/
+/*          I m a g e E d i t o r   D e c l a r a t i o n s          */
+/*-------------------------------------------------------------------*/
+
+export interface ImageEditorWidget extends Widget {
+  options: ImageEditorWidgetOptions;
+  type: [CustomWidgetName.imageEditor];
+}
+export interface ImageEditorWidgetFactory extends BaseWidgetFactory<ImageEditorWidgetOptions> {
+  options: ImageEditorWidgetOptionsCallback;
+}
+export type ImageEditorWidgetOptionsCallback = (
+  imageviewer: HTMLKulImageviewerElement,
+) => ImageEditorWidgetOptions;
+export interface ImageEditorWidgetOptions
+  extends BaseWidgetOptions<ImageEditorWidgetDeserializedValue> {
+  getComp(): { imageviewer: HTMLKulImageviewerElement };
+  refresh: (directory: string) => Promise<void>;
+}
+export type ImageEditorWidgetSetter = () => {
+  [CustomWidgetName.imageEditor]: BaseWidgetCallback<CustomWidgetName.imageEditor>;
+};
+export type ImageEditorWidgetDeserializedValue = KulDataDataset;
 
 /*-------------------------------------------------------------------*/
 /*               M a s o n r y   D e c l a r a t i o n s             */

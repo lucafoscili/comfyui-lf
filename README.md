@@ -1,7 +1,23 @@
 <!-- markdownlint-disable MD033 -->
 # LF Nodes for ComfyUI
 
-![LFNodes](https://github.com/lucafoscili/comfyui-lf/blob/a7ef3c6e62c266b9f09f2f843e8f8590663f6bb6/docs/images/LFNodes.png "Repo logo")
+<div align="center">
+
+![LF Nodes](https://img.shields.io/badge/dynamic/json?logo=python&logoColor=black&labelColor=white&color=black&label=Nodes&query=nodes&url=https://raw.githubusercontent.com/lucafoscili/comfyui-lf/master/count.json)
+
+</div>
+
+<div align="center">
+
+![LFNodes](https://github.com/lucafoscili/comfyui-lf/blob/a7ef3c6e62c266b9f09f2f843e8f8590663f6bb6/docs/images/LFNodes.png "LF Nodes logo")
+
+</div>
+
+<div align="center">
+
+![GitHub last commit](https://img.shields.io/github/last-commit/lucafoscili/comfyui-lf?logo=github&logoColor=black&labelColor=white&color=black)
+
+</div>
 
 ## Version 5.1.0 [BREAKING CHANGES] *(2024-11-01)*
 

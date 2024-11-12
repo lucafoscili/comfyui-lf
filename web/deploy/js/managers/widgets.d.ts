@@ -13,6 +13,9 @@ export declare class LFWidgets {
         KUL_CARD: (nodeType: NodeType) => {
             widget: Widget;
         };
+        KUL_CAROUSEL: (nodeType: NodeType) => {
+            widget: Widget;
+        };
         KUL_CARDS_WITH_CHIP: (nodeType: NodeType) => {
             widget: Widget;
         };
@@ -35,6 +38,9 @@ export declare class LFWidgets {
             widget: Widget;
         };
         KUL_HISTORY: (nodeType: NodeType) => {
+            widget: Widget;
+        };
+        KUL_IMAGE_EDITOR: (nodeType: NodeType) => {
             widget: Widget;
         };
         KUL_MASONRY: (nodeType: NodeType) => {

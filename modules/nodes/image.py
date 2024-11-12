@@ -268,6 +268,60 @@ class LF_CompareImages:
 
         return (image_batch[0], image_list, all_images_list, dataset)
 # endregion
+# region LF_ImagesSlideshow
+class LF_ImagesSlideshow:
+    @classmethod
+    def INPUT_TYPES(self):
+        return {
+            "required": {
+                "image": (Input.IMAGE, {
+                    "tooltip": "Input image tensor or a list of image tensors."
+                }),
+            },
+            "optional": {
+                "ui_widget": (Input.KUL_CAROUSEL, {
+                    "default": {}
+                })
+            },
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
+        }
+
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    OUTPUT_IS_LIST = (False, True)
+    OUTPUT_NODE = True
+    RETURN_NAMES = ("image", "image_list")
+    RETURN_TYPES = ("IMAGE", "IMAGE")
+
+    def on_exec(self, **kwargs: dict):
+        image: list[torch.Tensor] = normalize_input_image(kwargs.get("image"))
+
+        nodes: list[dict] = []
+        dataset: dict = { "nodes": nodes }
+        
+        for index, img in enumerate(image):
+            pil_image = tensor_to_pil(img)
+
+            output_file, subfolder, filename = resolve_filepath(
+                    filename_prefix="view",
+                    image=img,
+            )
+            pil_image.save(output_file, format="PNG")
+            url = get_resource_url(subfolder, filename, "temp")
+
+            nodes.append(create_masonry_node(filename, url, index))
+        
+        batch_list, image_list = normalize_output_image(image)
+
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}imagesslideshow", {
+            "node": kwargs.get("node_id"),
+            "dataset": dataset,
+        })
+        
+        return (batch_list[0], image_list)
+# endregion
 # region LF_LUTApplication
 class LF_LUTApplication:
     @classmethod
@@ -807,6 +861,7 @@ NODE_CLASS_MAPPINGS = {
     "LF_BlurImages": LF_BlurImages,
     "LF_ClarityEffect": LF_ClarityEffect,
     "LF_CompareImages": LF_CompareImages,
+    "LF_ImagesSlideshow": LF_ImagesSlideshow,
     "LF_LUTApplication": LF_LUTApplication,
     "LF_MultipleImageResizeForWeb": LF_MultipleImageResizeForWeb,
     "LF_ResizeImageToDimension": LF_ResizeImageToDimension,
@@ -818,6 +873,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_BlurImages": "Blur images",
     "LF_ClarityEffect": "Clarity effect (filter)",
     "LF_CompareImages": "Compare images",
+    "LF_ImagesSlideshow": "Images slideshow",
     "LF_LUTApplication": "LUT Application (filter)",
     "LF_MultipleImageResizeForWeb": "Multiple image resize for Web",
     "LF_ResizeImageToDimension": "Resize image to dimension",

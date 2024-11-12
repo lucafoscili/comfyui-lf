@@ -42,6 +42,13 @@ export const createDOMWidget = (type, element, node, options = undefined) => {
         return node.addDOMWidget(DEFAULT_WIDGET_NAME, type, element, options);
     }
 };
+export const debounce = (func, delay) => {
+    let timer;
+    return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => func(...args), delay);
+    };
+};
 export const findWidget = (node, type) => {
     return node?.widgets?.find((w) => w.type === type);
 };
