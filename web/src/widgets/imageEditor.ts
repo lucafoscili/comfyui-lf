@@ -72,7 +72,9 @@ export const imageEditorFactory: ImageEditorWidgetFactory = {
     const options = imageEditorFactory.options(imageviewer);
 
     settings.classList.add(imageEditorFactory.cssClasses.settings);
+    settings.slot = 'settings';
 
+    imageviewer.appendChild(settings);
     imageviewer.classList.add(imageEditorFactory.cssClasses.imageviewer);
     imageviewer.kulLoadCallback = async (_, value) => await options.refresh(value);
     imageviewer.kulValue = TREE_DATA;
@@ -135,7 +137,7 @@ const prepSettings = (
     });
   }
 
-  const updateSettings = async (triggerApiCall: boolean = true) => {
+  const updateSettings = async (triggerApiCall = true, addSnapshot = false) => {
     const inputs = settings.querySelectorAll('input');
     inputs.forEach((input) => {
       const id = input.id as keyof FilterSettingsMap[typeof filterType];
@@ -143,13 +145,17 @@ const prepSettings = (
     });
 
     if (triggerApiCall) {
-      const image = (await imageviewer.getComponents()).image;
+      const value = (await imageviewer.getCurrentSnapshot()).value;
       getApiRoutes()
-        .image.process(image.kulValue, filterType, settingsValues)
-        .then((r) => {
+        .image.process(value, filterType, settingsValues)
+        .then(async (r) => {
           if (r.status === 'success') {
-            image.kulValue = r.data;
-            image.title = r.data;
+            if (addSnapshot) {
+              imageviewer.addSnapshot(r.data);
+            } else {
+              const image = (await imageviewer.getComponents()).image;
+              image.kulValue = r.data;
+            }
           } else {
             console.error('Image processing failed:', r.message);
             getLFManager().log('Error processing image!', { r }, LogSeverity.Error);
@@ -172,6 +178,7 @@ const prepSettings = (
 
   const debouncedUpdateSettings = debounce(updateSettings, 300);
   settings.addEventListener('input', () => debouncedUpdateSettings());
+  settings.addEventListener('change', () => updateSettings(true, true));
 };
 
 const createSliderControl = (sliderData: { [key: string]: string }): HTMLDivElement => {
