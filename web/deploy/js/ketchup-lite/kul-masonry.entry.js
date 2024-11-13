@@ -1,5 +1,5 @@
 import { h, r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, F as Fragment, H as Host } from './index-4ebcb21f.js';
-import { k as kulManagerInstance, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-233b3207.js';
+import { k as kulManagerInstance, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-74b8aa66.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 
 /*-------------------------------------------------*/
@@ -319,7 +319,7 @@ const KulMasonry = class {
         const style = {
             ['--kul_masonry_columns']: this.kulColumns?.toString() || '4',
         };
-        return (h(Host, { key: '2aeacef47345f960a75365d9bc09b74de677a8d4' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'b8d05f1d065b529caf9803ca52109cfcd33ec69a', id: KUL_WRAPPER_ID, style: style }, h("div", { key: '4b0cd4ea4b69957d988dda6be2398ff4f222d23b', class: "masonry" }, this.#prepMasonry()))));
+        return (h(Host, { key: '99d5e60ef5efce2acaa5b5f7b9ba30f53a4c75fb' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '2cd61c4e104ebf86234670916d3def4e6323dd40', id: KUL_WRAPPER_ID, style: style }, h("div", { key: '839c70bfd7628c83641cbb17676b1886ea165b24', class: "masonry" }, this.#prepMasonry()))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

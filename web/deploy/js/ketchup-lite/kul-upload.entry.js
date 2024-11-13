@@ -1,5 +1,5 @@
 import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-4ebcb21f.js';
-import { k as kulManagerInstance, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-233b3207.js';
+import { k as kulManagerInstance, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-74b8aa66.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 
 /*-------------------------------------------------*/
@@ -169,15 +169,15 @@ const KulUpload = class {
     }
     render() {
         const hasSelectedFiles = this.selectedFiles && this.selectedFiles.length;
-        return (h(Host, { key: 'a00462139e2ea32013e88d4feaaf801f3db60bd9' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '1f4188284cb7559ceb5a06c2246091c2d49e2dc9', id: KUL_WRAPPER_ID }, h("div", { key: '567da2844b2df0d69289d7080765c1d45add9b41', class: `wrapper ${this.selectedFiles && this.selectedFiles.length
+        return (h(Host, { key: 'f8c93ce37e58d91ace1fc72cdc58f25a1c9ec9cf' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'b5959d089715c104b716d0faeb624ed3ec33b8e7', id: KUL_WRAPPER_ID }, h("div", { key: 'd00417adaf57374bd0e19533bf661bdbd7a696c7', class: `wrapper ${this.selectedFiles && this.selectedFiles.length
                 ? 'wrapper--with-info'
-                : ''}` }, h("div", { key: '84a4d15ae8205c26f09e06d78fdeadc226460e09', class: "file-upload", onPointerDown: (e) => this.onKulEvent(e, 'pointerdown') }, h("input", { key: '72cf4bacb2f3341ea56471133f2b638d220f0532', class: "file-upload__input", id: "upload-input", multiple: true, onChange: () => this.#handleFileChange(), ref: (el) => {
+                : ''}` }, h("div", { key: 'c3d38c769302bf5bad7a2048a53ab3399f0e5db0', class: "file-upload", onPointerDown: (e) => this.onKulEvent(e, 'pointerdown') }, h("input", { key: 'fa23ab4fa2f7636ef63361e28dc617719919949c', class: "file-upload__input", id: "upload-input", multiple: true, onChange: () => this.#handleFileChange(), ref: (el) => {
                 this.#input = el;
-            }, type: "file" }), h("label", { key: '0d24d73e4755a71b2c1433fc6bfe6ba9ebf6d969', class: "file-upload__label", htmlFor: "upload-input", ref: (el) => {
+            }, type: "file" }), h("label", { key: '702ccc06f8e9a6abd70eca20e8a7fa57b20888ab', class: "file-upload__label", htmlFor: "upload-input", ref: (el) => {
                 if (this.kulRipple) {
                     this.#rippleSurface = el;
                 }
-            } }, h("div", { key: 'b00137a0876d71a7a86db7d400f377a275b98480', class: "file-upload__text" }, this.kulLabel))), h("div", { key: '406affa669d0cc9c92d49cc5b19bf492aab9e5c3', class: "file-info" }, hasSelectedFiles
+            } }, h("div", { key: 'ced80b475861f1eae937cbd532421665df7bcf61', class: "file-upload__text" }, this.kulLabel))), h("div", { key: '1acca3a39ebbc4c3955e07ddd0058d4ccc663711', class: "file-info" }, hasSelectedFiles
             ? this.#prepFileInfo()
             : undefined)))));
     }

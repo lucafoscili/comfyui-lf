@@ -6,6 +6,7 @@ export interface ComfyAPIs {
     analytics: AnalyticsAPIs;
     backup: BackupAPIs;
     image: ImageAPIs;
+    json: JSONAPIs;
     metadata: MetadataAPIs;
     event: <P extends EventPayload<CustomWidgetName>>(name: EventName, callback: (event: CustomEvent<P>) => void) => void;
     comfyUi: () => ComfyUI;
@@ -29,6 +30,10 @@ export interface ImageAPIs {
     get: (dir: string) => Promise<GetImageAPIPayload>;
     process: <T extends FilterType>(url: string, type: T, settings: FilterSettingsMap[T]) => Promise<ProcessImageAPIPayload>;
 }
+export interface JSONAPIs {
+    get: (path: string) => Promise<GetJSONAPIPayload>;
+    update: (path: string, dataset: KulDataDataset) => Promise<BaseAPIPayload>;
+}
 export interface MetadataAPIs {
     clear: () => Promise<BaseAPIPayload>;
     get: (hash: string) => Promise<GetMetadataAPIPayload>;
@@ -46,10 +51,12 @@ export declare enum LFEndpoints {
     ClearMetadata = "/comfyui-lf/clear-metadata",
     GetAnalytics = "/comfyui-lf/get-analytics",
     GetImage = "/comfyui-lf/get-image",
+    GetJson = "/comfyui-lf/get-json",
     GetMetadata = "/comfyui-lf/get-metadata",
     NewBackup = "/comfyui-lf/new-backup",
     ProcessImage = "/comfyui-lf/process-image",
     SaveMetadata = "/comfyui-lf/save-metadata",
+    UpdateJson = "/comfyui-lf/update-json",
     UpdateMetadataCover = "/comfyui-lf/update-metadata-cover"
 }
 export declare enum LogSeverity {
@@ -68,6 +75,9 @@ export interface GetAnalyticsAPIPayload extends BaseAPIPayload {
     data: Record<string, KulDataDataset>;
 }
 export interface GetImageAPIPayload extends BaseAPIPayload {
+    data: KulDataDataset;
+}
+export interface GetJSONAPIPayload extends BaseAPIPayload {
     data: KulDataDataset;
 }
 export interface GetMetadataAPIPayload extends BaseAPIPayload {

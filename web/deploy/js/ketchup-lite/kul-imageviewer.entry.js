@@ -1,5 +1,5 @@
 import { h, r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, H as Host } from './index-4ebcb21f.js';
-import { a as KulDataCyAttributes, k as kulManagerInstance, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-233b3207.js';
+import { a as KulDataCyAttributes, k as kulManagerInstance, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-74b8aa66.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 
 //#endregion
@@ -15,15 +15,41 @@ var KulImageviewerProps;
 
 const ACTIONS = {
     async clearHistory(adapter, index = null) {
+        const history = adapter.set.state.history;
         if (index === null) {
-            adapter.set.state.history.clear();
-            adapter.set.state.history.index(null);
-            adapter.set.state.currentShape({});
-            adapter.components.refs.masonry.setSelectedShape(null);
+            history.clear();
+            adapter.actions.clearSelection(adapter);
         }
         else {
-            adapter.set.state.history.clear(index);
+            history.clear(index);
         }
+    },
+    async clearSelection(adapter) {
+        const stateSetter = adapter.set.state;
+        stateSetter.currentShape({});
+        stateSetter.history.index(null);
+        adapter.components.refs.masonry.setSelectedShape(null);
+    },
+    async delete(adapter) {
+        const getters = adapter.get;
+        const imageviewer = getters.imageviewer();
+        const dataset = getters.imageviewer().kulData;
+        const manager = getters.manager();
+        const currentSelectedShape = getters.state.currentShape();
+        await adapter.actions.clearHistory(adapter, currentSelectedShape.shape.index);
+        const cell = adapter.actions.findImage(adapter);
+        const node = manager.data.node.findNodeByCell(dataset, cell);
+        manager.data.node.pop(dataset.nodes, node);
+        imageviewer.kulData = { ...dataset };
+        await adapter.actions.clearSelection(adapter);
+    },
+    findImage(adapter) {
+        const imageviewer = adapter.get.imageviewer();
+        const manager = adapter.get.manager();
+        const currentSelectedShape = adapter.get.state.currentShape();
+        const cells = manager.data.cell.shapes.getAll(imageviewer.kulData, false);
+        return cells['image'].find((c) => c.value === currentSelectedShape.value ||
+            c.kulValue === currentSelectedShape.value);
     },
     async load(adapter) {
         const imageviewer = adapter.get.imageviewer();
@@ -50,18 +76,16 @@ const ACTIONS = {
             return;
         }
         const imageviewer = adapter.get.imageviewer();
-        const manager = adapter.get.manager();
+        adapter.get.manager();
         const index = currentSelectedShape.shape.index;
         const shape = currentSelectedShape.shape.shape;
         const currentSnapshot = adapter.get.state.history.currentSnapshot();
         const value = currentSnapshot.value;
-        adapter.actions.updateValue(shape, value);
-        await adapter.actions.clearHistory(adapter, index);
-        const cells = manager.data.cell.shapes.getAll(imageviewer.kulData, false);
-        const cell = cells['image'].find((c) => c.value === currentSelectedShape.value ||
-            c.kulValue === currentSelectedShape.value);
+        const cell = adapter.actions.findImage(adapter);
         cell.value = value;
         cell.kulValue = value;
+        adapter.actions.updateValue(shape, value);
+        await adapter.actions.clearHistory(adapter, index);
         imageviewer.kulData = { ...imageviewer.kulData };
     },
     async undo(adapter) {
@@ -83,22 +107,24 @@ const ACTIONS = {
 const COMPONENTS = {
     jsx: {
         clearHistory: (adapter) => prepClearHistory(adapter),
-        save: (adapter) => prepSave(adapter),
+        delete: (adapter) => prepDelete(adapter),
         image: (adapter) => prepImage(adapter),
         load: (adapter) => prepLoad(adapter),
         masonry: (adapter) => prepMasonry(adapter),
         redo: (adapter) => prepRedo(adapter),
+        save: (adapter) => prepSave(adapter),
         textfield: (adapter) => prepTextfield(adapter),
         tree: (adapter) => prepTree(adapter),
         undo: (adapter) => prepUndo(adapter),
     },
     refs: {
         clearHistory: null,
-        save: null,
+        delete: null,
         image: null,
         load: null,
         masonry: null,
         redo: null,
+        save: null,
         textfield: null,
         tree: null,
         undo: null,
@@ -126,9 +152,36 @@ const prepClearHistory = (adapter) => {
     };
     const hasHistory = !!(adapter.get.state.history.current()?.length > 1);
     const isDisabled = !hasHistory;
-    return (h("kul-button", { class: className, "data-cy": KulDataCyAttributes.BUTTON, kulDisabled: isDisabled, kulIcon: "delete-empty", kulLabel: "Clear history", "onKul-button-event": eventHandler, ref: (el) => {
+    return (h("kul-button", { class: className, "data-cy": KulDataCyAttributes.BUTTON, kulDisabled: isDisabled, kulIcon: "layers_clear", kulLabel: "Clear history", kulStyling: "flat", "onKul-button-event": eventHandler, ref: (el) => {
             if (el) {
                 adapter.components.refs.clearHistory = el;
+            }
+        } },
+        h("kul-spinner", { kulActive: true, kulDimensions: "2px", kulLayout: 1, slot: "spinner" })));
+};
+// #endregion
+// #region Delete
+const prepDelete = (adapter) => {
+    const imageviewer = adapter.get.imageviewer();
+    const className = {
+        'details-grid__delete': true,
+        'kul-danger': true,
+        'kul-full-width': true,
+    };
+    const eventHandler = async (e) => {
+        const { comp, eventType } = e.detail;
+        imageviewer.onKulEvent(e, 'kul-event');
+        switch (eventType) {
+            case 'click':
+                requestAnimationFrame(() => (comp.kulShowSpinner = true));
+                await adapter.actions.delete(adapter);
+                requestAnimationFrame(() => (comp.kulShowSpinner = false));
+                break;
+        }
+    };
+    return (h("kul-button", { class: className, "data-cy": KulDataCyAttributes.BUTTON, kulIcon: "delete-empty", kulLabel: "Delete image", "onKul-button-event": eventHandler, ref: (el) => {
+            if (el) {
+                adapter.components.refs.delete = el;
             }
         } },
         h("kul-spinner", { kulActive: true, kulDimensions: "2px", kulLayout: 1, slot: "spinner" })));
@@ -197,8 +250,7 @@ const prepMasonry = (adapter) => {
                     case 'click':
                         const currentShape = adapter.get.state.currentShape();
                         if (currentShape?.shape?.index === selectedShape.index) {
-                            adapter.set.state.currentShape({});
-                            adapter.set.state.history.index(null);
+                            adapter.actions.clearSelection(adapter);
                         }
                         else {
                             adapter.set.state.currentShape(selectedShape);
@@ -239,7 +291,7 @@ const prepRedo = (adapter) => {
     const index = adapter.get.state.history.index();
     const hasHistory = !!currentHistory?.length;
     const isDisabled = !(hasHistory && index < currentHistory.length - 1);
-    return (h("kul-button", { class: className, "data-cy": KulDataCyAttributes.BUTTON, kulDisabled: isDisabled, kulIcon: "redo", kulLabel: "Redo", "onKul-button-event": eventHandler, ref: (el) => {
+    return (h("kul-button", { class: className, "data-cy": KulDataCyAttributes.BUTTON, kulDisabled: isDisabled, kulIcon: "redo", kulLabel: "Redo", kulStyling: "flat", "onKul-button-event": eventHandler, ref: (el) => {
             if (el) {
                 adapter.components.refs.redo = el;
             }
@@ -329,7 +381,7 @@ const prepUndo = (adapter) => {
     const index = adapter.get.state.history.index();
     const hasHistory = !!currentHistory?.length;
     const isDisabled = !(hasHistory && index > 0);
-    return (h("kul-button", { class: className, "data-cy": KulDataCyAttributes.BUTTON, kulDisabled: isDisabled, kulIcon: "undo", kulLabel: "Undo", "onKul-button-event": eventHandler, ref: (el) => {
+    return (h("kul-button", { class: className, "data-cy": KulDataCyAttributes.BUTTON, kulDisabled: isDisabled, kulIcon: "undo", kulLabel: "Undo", kulStyling: "flat", "onKul-button-event": eventHandler, ref: (el) => {
             if (el) {
                 adapter.components.refs.undo = el;
             }
@@ -337,7 +389,7 @@ const prepUndo = (adapter) => {
 };
 // #endregion
 
-const kulImageviewerCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}@keyframes fade-in-grid{0%{display:none}1%{display:grid;opacity:0}100%{display:grid;opacity:1}}:host{--kul_imageviewer_display:var(--kul-imageviewer-display, block);--kul_imageviewer_height:var(--kul-imageviewer-height, 100%);--kul_imageviewer_width:var(--kul-imageviewer-width, 100%);--kul_imageviewer_component_height:var(\n    --kul-imageviewer-component-height,\n    100%\n  );--kul_imageviewer_component_width:var(\n    --kul-imageviewer-component-width,\n    100%\n  );--kul_imageviewer_viewer_height:var(--kul-imageviewer-viewer-height, 100%);--kul_imageviewer_viewer_width:var(--kul-imageviewer-viewer-width, 100%);--kul_imageviewer_main_grid_border_width:var(\n    --kul-imageviewer-main-grid-border-width,\n    2px\n  );--kul_imageviewer_main_grid_border_style:var(\n    --kul-imageviewer-main-grid-border-style,\n    solid\n  );--kul_imageviewer_main_grid_border_color:var(\n    --kul-imageviewer-main-grid-border-color,\n    var(--kul-border-color)\n  );--kul_imageviewer_main_grid_box_sizing:var(\n    --kul-imageviewer-main-grid-box-sizing,\n    border-box\n  );--kul_imageviewer_main_grid_display:var(\n    --kul-imageviewer-main-grid-display,\n    grid\n  );--kul_imageviewer_main_grid_template_columns:var(\n    --kul-imageviewer-main-grid-template-columns,\n    100% 0\n  );--kul_imageviewer_main_grid_height:var(\n    --kul-imageviewer-main-grid-height,\n    100%\n  );--kul_imageviewer_main_grid_width:var(\n    --kul-imageviewer-main-grid-width,\n    100%\n  );--kul_imageviewer_main_grid_has_selection_template_columns:var(\n    --kul-imageviewer-main-grid-has-selection-template-columns,\n    30% 70%\n  );--kul_imageviewer_navigation_grid_display:var(\n    --kul-imageviewer-navigation-grid-display,\n    grid\n  );--kul_imageviewer_navigation_grid_template_rows:var(\n    --kul-imageviewer-navigation-grid-template-rows,\n    auto auto 1fr\n  );--kul_imageviewer_navigation_grid_height:var(\n    --kul-imageviewer-navigation-grid-height,\n    100%\n  );--kul_imageviewer_navigation_grid_width:var(\n    --kul-imageviewer-navigation-grid-width,\n    100%\n  );--kul_imageviewer_navigation_grid_textfield_padding:var(\n    --kul-imageviewer-navigation-grid-textfield-padding,\n    0\n  );--kul_imageviewer_navigation_grid_button_padding_bottom:var(\n    --kul-imageviewer-navigation-grid-button-padding-bottom,\n    12px\n  );--kul_imageviewer_navigation_grid_masonry_overflow:var(\n    --kul-imageviewer-navigation-grid-masonry-overflow,\n    auto\n  );--kul_imageviewer_navigation_grid_masonry_position:var(\n    --kul-imageviewer-navigation-grid-masonry-position,\n    relative\n  );--kul_imageviewer_details_grid_border_left_width:var(\n    --kul-imageviewer-details-grid-border-left-width,\n    2px\n  );--kul_imageviewer_details_grid_border_left_style:var(\n    --kul-imageviewer-details-grid-border-left-style,\n    solid\n  );--kul_imageviewer_details_grid_border_left_color:var(\n    --kul-imageviewer-details-grid-border-left-color,\n    var(--kul-border-color)\n  );--kul_imageviewer_details_grid_box_sizing:var(\n    --kul-imageviewer-details-grid-box-sizing,\n    border-box\n  );--kul_imageviewer_details_grid_display:var(\n    --kul-imageviewer-details-grid-display,\n    none\n  );--kul_imageviewer_details_grid_template_areas:var(\n    --kul-imageviewer-details-grid-template-areas,\n    \"image image\" \"actions actions\" \"tree settings\"\n  );--kul_imageviewer_details_grid_template_columns:var(\n    --kul-imageviewer-details-grid-template-columns,\n    40% 1fr\n  );--kul_imageviewer_details_grid_template_rows:var(\n    --kul-imageviewer-details-grid-template-rows,\n    60% auto 1fr\n  );--kul_imageviewer_details_grid_height:var(\n    --kul-imageviewer-details-grid-height,\n    100%\n  );--kul_imageviewer_details_grid_width:var(\n    --kul-imageviewer-details-grid-width,\n    100%\n  );--kul_imageviewer_details_grid_actions_border_bottom_width:var(\n    --kul-imageviewer-details-grid-actions-border-bottom-width,\n    2px\n  );--kul_imageviewer_details_grid_actions_border_bottom_style:var(\n    --kul-imageviewer-details-grid-actions-border-bottom-style,\n    solid\n  );--kul_imageviewer_details_grid_actions_border_bottom_color:var(\n    --kul-imageviewer-details-grid-actions-border-bottom-color,\n    var(--kul-border-color)\n  );--kul_imageviewer_details_grid_actions_box_sizing:var(\n    --kul-imageviewer-details-grid-actions-box-sizing,\n    border-box\n  );--kul_imageviewer_details_grid_actions_display:var(\n    --kul-imageviewer-details-grid-actions-display,\n    flex\n  );--kul_imageviewer_details_grid_actions_grid_area:var(\n    --kul-imageviewer-details-grid-actions-grid-area,\n    actions\n  );--kul_imageviewer_details_grid_image_border_bottom_width:var(\n    --kul-imageviewer-details-grid-image-border-bottom-width,\n    2px\n  );--kul_imageviewer_details_grid_image_border_bottom_style:var(\n    --kul-imageviewer-details-grid-image-border-bottom-style,\n    solid\n  );--kul_imageviewer_details_grid_image_border_bottom_color:var(\n    --kul-imageviewer-details-grid-image-border-bottom-color,\n    var(--kul-border-color)\n  );--kul_imageviewer_details_grid_image_box_sizing:var(\n    --kul-imageviewer-details-grid-image-box-sizing,\n    border-box\n  );--kul_imageviewer_details_grid_image_grid_area:var(\n    --kul-imageviewer-details-grid-image-grid-area,\n    image\n  );--kul_imageviewer_details_grid_tree_border_right_width:var(\n    --kul-imageviewer-details-grid-tree-border-right-width,\n    2px\n  );--kul_imageviewer_details_grid_tree_border_right_style:var(\n    --kul-imageviewer-details-grid-tree-border-right-style,\n    solid\n  );--kul_imageviewer_details_grid_tree_border_right_color:var(\n    --kul-imageviewer-details-grid-tree-border-right-color,\n    var(--kul-border-color)\n  );--kul_imageviewer_details_grid_tree_box_sizing:var(\n    --kul-imageviewer-details-grid-tree-box-sizing,\n    border-box\n  );--kul_imageviewer_details_grid_tree_grid_area:var(\n    --kul-imageviewer-details-grid-tree-grid-area,\n    tree\n  );display:var(--kul_imageviewer_display);height:var(--kul_imageviewer_height);width:var(--kul_imageviewer_width)}#kul-component{height:var(--kul_imageviewer_component_height);width:var(--kul_imageviewer_component_width)}.imageviewer{height:var(--kul_imageviewer_viewer_height);width:var(--kul_imageviewer_viewer_width)}.main-grid{border:var(--kul_imageviewer_main_grid_border_width) var(--kul_imageviewer_main_grid_border_style) var(--kul_imageviewer_main_grid_border_color);box-sizing:var(--kul_imageviewer_main_grid_box_sizing);display:var(--kul_imageviewer_main_grid_display);grid-template-columns:var(--kul_imageviewer_main_grid_template_columns);height:var(--kul_imageviewer_main_grid_height);overflow:auto;width:var(--kul_imageviewer_main_grid_width)}.main-grid--has-selection{grid-template-columns:var(--kul_imageviewer_main_grid_has_selection_template_columns)}.main-grid--has-selection .details-grid{display:grid}.navigation-grid{display:var(--kul_imageviewer_navigation_grid_display);grid-template-rows:var(--kul_imageviewer_navigation_grid_template_rows);height:var(--kul_imageviewer_navigation_grid_height);overflow:auto;width:var(--kul_imageviewer_navigation_grid_width)}.navigation-grid__textfield{padding:var(--kul_imageviewer_navigation_grid_textfield_padding)}.navigation-grid__button{padding-bottom:var(--kul_imageviewer_navigation_grid_button_padding_bottom)}.navigation-grid__masonry{overflow:var(--kul_imageviewer_navigation_grid_masonry_overflow);position:var(--kul_imageviewer_navigation_grid_masonry_position)}.details-grid{border-left:var(--kul_imageviewer_details_grid_border_left_width) var(--kul_imageviewer_details_grid_border_left_style) var(--kul_imageviewer_details_grid_border_left_color);box-sizing:var(--kul_imageviewer_details_grid_box_sizing);display:var(--kul_imageviewer_details_grid_display);grid-template-areas:var(--kul_imageviewer_details_grid_template_areas);grid-template-columns:var(--kul_imageviewer_details_grid_template_columns);grid-template-rows:var(--kul_imageviewer_details_grid_template_rows);height:var(--kul_imageviewer_details_grid_height);overflow:auto;width:var(--kul_imageviewer_details_grid_width)}.details-grid__actions{border-bottom:var(--kul_imageviewer_details_grid_actions_border_bottom_width) var(--kul_imageviewer_details_grid_actions_border_bottom_style) var(--kul_imageviewer_details_grid_actions_border_bottom_color);box-sizing:var(--kul_imageviewer_details_grid_actions_box_sizing);display:var(--kul_imageviewer_details_grid_actions_display);grid-area:var(--kul_imageviewer_details_grid_actions_grid_area)}.details-grid__image{border-bottom:var(--kul_imageviewer_details_grid_image_border_bottom_width) var(--kul_imageviewer_details_grid_image_border_bottom_style) var(--kul_imageviewer_details_grid_image_border_bottom_color);box-sizing:var(--kul_imageviewer_details_grid_image_box_sizing);grid-area:var(--kul_imageviewer_details_grid_image_grid_area)}.details-grid__tree{border-right:var(--kul_imageviewer_details_grid_tree_border_right_width) var(--kul_imageviewer_details_grid_tree_border_right_style) var(--kul_imageviewer_details_grid_tree_border_right_color);box-sizing:var(--kul_imageviewer_details_grid_tree_box_sizing);grid-area:var(--kul_imageviewer_details_grid_tree_grid_area);overflow:auto}";
+const kulImageviewerCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}@keyframes fade-in-grid{0%{display:none}1%{display:grid;opacity:0}100%{display:grid;opacity:1}}:host{--kul_imageviewer_display:var(--kul-imageviewer-display, block);--kul_imageviewer_height:var(--kul-imageviewer-height, 100%);--kul_imageviewer_width:var(--kul-imageviewer-width, 100%);--kul_imageviewer_component_height:var(\n    --kul-imageviewer-component-height,\n    100%\n  );--kul_imageviewer_component_width:var(\n    --kul-imageviewer-component-width,\n    100%\n  );--kul_imageviewer_viewer_height:var(--kul-imageviewer-viewer-height, 100%);--kul_imageviewer_viewer_width:var(--kul-imageviewer-viewer-width, 100%);--kul_imageviewer_main_grid_border_width:var(\n    --kul-imageviewer-main-grid-border-width,\n    2px\n  );--kul_imageviewer_main_grid_border_style:var(\n    --kul-imageviewer-main-grid-border-style,\n    solid\n  );--kul_imageviewer_main_grid_border_color:var(\n    --kul-imageviewer-main-grid-border-color,\n    var(--kul-border-color)\n  );--kul_imageviewer_main_grid_box_sizing:var(\n    --kul-imageviewer-main-grid-box-sizing,\n    border-box\n  );--kul_imageviewer_main_grid_display:var(\n    --kul-imageviewer-main-grid-display,\n    grid\n  );--kul_imageviewer_main_grid_template_columns:var(\n    --kul-imageviewer-main-grid-template-columns,\n    100% 0\n  );--kul_imageviewer_main_grid_height:var(\n    --kul-imageviewer-main-grid-height,\n    100%\n  );--kul_imageviewer_main_grid_width:var(\n    --kul-imageviewer-main-grid-width,\n    100%\n  );--kul_imageviewer_main_grid_has_selection_template_columns:var(\n    --kul-imageviewer-main-grid-has-selection-template-columns,\n    30% 70%\n  );--kul_imageviewer_navigation_grid_display:var(\n    --kul-imageviewer-navigation-grid-display,\n    grid\n  );--kul_imageviewer_navigation_grid_template_rows:var(\n    --kul-imageviewer-navigation-grid-template-rows,\n    auto auto 1fr\n  );--kul_imageviewer_navigation_grid_height:var(\n    --kul-imageviewer-navigation-grid-height,\n    100%\n  );--kul_imageviewer_navigation_grid_width:var(\n    --kul-imageviewer-navigation-grid-width,\n    100%\n  );--kul_imageviewer_navigation_grid_textfield_padding:var(\n    --kul-imageviewer-navigation-grid-textfield-padding,\n    0\n  );--kul_imageviewer_navigation_grid_button_padding_bottom:var(\n    --kul-imageviewer-navigation-grid-button-padding-bottom,\n    12px\n  );--kul_imageviewer_navigation_grid_masonry_overflow:var(\n    --kul-imageviewer-navigation-grid-masonry-overflow,\n    auto\n  );--kul_imageviewer_navigation_grid_masonry_position:var(\n    --kul-imageviewer-navigation-grid-masonry-position,\n    relative\n  );--kul_imageviewer_details_grid_border_left_width:var(\n    --kul-imageviewer-details-grid-border-left-width,\n    2px\n  );--kul_imageviewer_details_grid_border_left_style:var(\n    --kul-imageviewer-details-grid-border-left-style,\n    solid\n  );--kul_imageviewer_details_grid_border_left_color:var(\n    --kul-imageviewer-details-grid-border-left-color,\n    var(--kul-border-color)\n  );--kul_imageviewer_details_grid_box_sizing:var(\n    --kul-imageviewer-details-grid-box-sizing,\n    border-box\n  );--kul_imageviewer_details_grid_display:var(\n    --kul-imageviewer-details-grid-display,\n    none\n  );--kul_imageviewer_details_grid_template_areas:var(\n    --kul-imageviewer-details-grid-template-areas,\n    \"image image\" \"actions actions\" \"tree settings\"\n  );--kul_imageviewer_details_grid_template_columns:var(\n    --kul-imageviewer-details-grid-template-columns,\n    40% 1fr\n  );--kul_imageviewer_details_grid_template_rows:var(\n    --kul-imageviewer-details-grid-template-rows,\n    60% auto 1fr\n  );--kul_imageviewer_details_grid_height:var(\n    --kul-imageviewer-details-grid-height,\n    100%\n  );--kul_imageviewer_details_grid_width:var(\n    --kul-imageviewer-details-grid-width,\n    100%\n  );--kul_imageviewer_details_grid_actions_border_bottom_width:var(\n    --kul-imageviewer-details-grid-actions-border-bottom-width,\n    2px\n  );--kul_imageviewer_details_grid_actions_border_bottom_style:var(\n    --kul-imageviewer-details-grid-actions-border-bottom-style,\n    solid\n  );--kul_imageviewer_details_grid_actions_border_bottom_color:var(\n    --kul-imageviewer-details-grid-actions-border-bottom-color,\n    var(--kul-border-color)\n  );--kul_imageviewer_details_grid_actions_box_sizing:var(\n    --kul-imageviewer-details-grid-actions-box-sizing,\n    border-box\n  );--kul_imageviewer_details_grid_actions_display:var(\n    --kul-imageviewer-details-grid-actions-display,\n    flex\n  );--kul_imageviewer_details_grid_actions_grid_area:var(\n    --kul-imageviewer-details-grid-actions-grid-area,\n    actions\n  );--kul_imageviewer_details_grid_image_border_bottom_width:var(\n    --kul-imageviewer-details-grid-image-border-bottom-width,\n    2px\n  );--kul_imageviewer_details_grid_image_border_bottom_style:var(\n    --kul-imageviewer-details-grid-image-border-bottom-style,\n    solid\n  );--kul_imageviewer_details_grid_image_border_bottom_color:var(\n    --kul-imageviewer-details-grid-image-border-bottom-color,\n    var(--kul-border-color)\n  );--kul_imageviewer_details_grid_image_box_sizing:var(\n    --kul-imageviewer-details-grid-image-box-sizing,\n    border-box\n  );--kul_imageviewer_details_grid_image_grid_area:var(\n    --kul-imageviewer-details-grid-image-grid-area,\n    image\n  );--kul_imageviewer_details_grid_tree_border_right_width:var(\n    --kul-imageviewer-details-grid-tree-border-right-width,\n    2px\n  );--kul_imageviewer_details_grid_tree_border_right_style:var(\n    --kul-imageviewer-details-grid-tree-border-right-style,\n    solid\n  );--kul_imageviewer_details_grid_tree_border_right_color:var(\n    --kul-imageviewer-details-grid-tree-border-right-color,\n    var(--kul-border-color)\n  );--kul_imageviewer_details_grid_tree_box_sizing:var(\n    --kul-imageviewer-details-grid-tree-box-sizing,\n    border-box\n  );--kul_imageviewer_details_grid_tree_grid_area:var(\n    --kul-imageviewer-details-grid-tree-grid-area,\n    tree\n  );-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);display:var(--kul_imageviewer_display);height:var(--kul_imageviewer_height);width:var(--kul_imageviewer_width)}#kul-component{height:var(--kul_imageviewer_component_height);width:var(--kul_imageviewer_component_width)}.imageviewer{height:var(--kul_imageviewer_viewer_height);width:var(--kul_imageviewer_viewer_width)}.main-grid{border:var(--kul_imageviewer_main_grid_border_width) var(--kul_imageviewer_main_grid_border_style) var(--kul_imageviewer_main_grid_border_color);box-sizing:var(--kul_imageviewer_main_grid_box_sizing);display:var(--kul_imageviewer_main_grid_display);grid-template-columns:var(--kul_imageviewer_main_grid_template_columns);height:var(--kul_imageviewer_main_grid_height);overflow:auto;width:var(--kul_imageviewer_main_grid_width)}.main-grid--has-selection{grid-template-columns:var(--kul_imageviewer_main_grid_has_selection_template_columns)}.main-grid--has-selection .details-grid{display:grid}.navigation-grid{display:var(--kul_imageviewer_navigation_grid_display);grid-template-rows:var(--kul_imageviewer_navigation_grid_template_rows);height:var(--kul_imageviewer_navigation_grid_height);overflow:auto;width:var(--kul_imageviewer_navigation_grid_width)}.navigation-grid__textfield{padding:var(--kul_imageviewer_navigation_grid_textfield_padding)}.navigation-grid__button{padding-bottom:var(--kul_imageviewer_navigation_grid_button_padding_bottom)}.navigation-grid__masonry{overflow:var(--kul_imageviewer_navigation_grid_masonry_overflow);position:var(--kul_imageviewer_navigation_grid_masonry_position)}.details-grid{border-left:var(--kul_imageviewer_details_grid_border_left_width) var(--kul_imageviewer_details_grid_border_left_style) var(--kul_imageviewer_details_grid_border_left_color);box-sizing:var(--kul_imageviewer_details_grid_box_sizing);display:var(--kul_imageviewer_details_grid_display);grid-template-areas:var(--kul_imageviewer_details_grid_template_areas);grid-template-columns:var(--kul_imageviewer_details_grid_template_columns);grid-template-rows:var(--kul_imageviewer_details_grid_template_rows);height:var(--kul_imageviewer_details_grid_height);overflow:auto;width:var(--kul_imageviewer_details_grid_width)}.details-grid__actions{border-bottom:var(--kul_imageviewer_details_grid_actions_border_bottom_width) var(--kul_imageviewer_details_grid_actions_border_bottom_style) var(--kul_imageviewer_details_grid_actions_border_bottom_color);box-sizing:var(--kul_imageviewer_details_grid_actions_box_sizing);display:var(--kul_imageviewer_details_grid_actions_display);grid-area:var(--kul_imageviewer_details_grid_actions_grid_area)}.details-grid__image{border-bottom:var(--kul_imageviewer_details_grid_image_border_bottom_width) var(--kul_imageviewer_details_grid_image_border_bottom_style) var(--kul_imageviewer_details_grid_image_border_bottom_color);box-sizing:var(--kul_imageviewer_details_grid_image_box_sizing);grid-area:var(--kul_imageviewer_details_grid_image_grid_area)}.details-grid__tree{border-right:var(--kul_imageviewer_details_grid_tree_border_right_width) var(--kul_imageviewer_details_grid_tree_border_right_style) var(--kul_imageviewer_details_grid_tree_border_right_color);box-sizing:var(--kul_imageviewer_details_grid_tree_box_sizing);grid-area:var(--kul_imageviewer_details_grid_tree_grid_area);overflow:auto}";
 const KulImageviewerStyle0 = kulImageviewerCss;
 
 const KulImageviewer = class {
@@ -513,7 +565,7 @@ const KulImageviewer = class {
     }
     #prepDetails() {
         const jsx = this.#adapter.components.jsx;
-        return (h("div", { class: "details-grid" }, jsx.image(this.#adapter), h("div", { class: "details-grid__actions" }, jsx.clearHistory(this.#adapter), jsx.undo(this.#adapter), jsx.redo(this.#adapter), jsx.save(this.#adapter)), jsx.tree(this.#adapter), h("div", { class: "details-grid__settings" }, h("slot", { name: "settings" }))));
+        return (h("div", { class: "details-grid" }, jsx.image(this.#adapter), h("div", { class: "details-grid__actions" }, jsx.delete(this.#adapter), jsx.clearHistory(this.#adapter), jsx.undo(this.#adapter), jsx.redo(this.#adapter), jsx.save(this.#adapter)), jsx.tree(this.#adapter), h("div", { class: "details-grid__settings" }, h("slot", { name: "settings" }))));
     }
     #prepImageviewer() {
         const className = {
@@ -542,7 +594,7 @@ const KulImageviewer = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: 'bf54dd516d45bef8a80d46a2040455afb86b2329' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '6b061385a940f0ef54767a866d73e12637892b89', id: KUL_WRAPPER_ID }, h("div", { key: '5a0ebeb3f62c64f3ec25a5aae74aae10a026dd9b', class: "imageviewer" }, this.#prepImageviewer()))));
+        return (h(Host, { key: '3ea146707b850d2251fbb7b0d1f4bf1e8ca4f4c1' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'eb00e9bac4adc7a82d0fcf37bc9635f902624d42', id: KUL_WRAPPER_ID }, h("div", { key: '41bd4964376beff891227b41cd662d370152d0fa', class: "imageviewer" }, this.#prepImageviewer()))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

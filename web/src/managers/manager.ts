@@ -271,6 +271,89 @@ export class LFManager {
         return payload;
       },
     },
+    json: {
+      get: async (filePath) => {
+        const payload = {
+          data: {},
+          message: '',
+          status: LogSeverity.Info,
+        };
+
+        try {
+          const body = new FormData();
+          body.append('file_path', filePath);
+
+          const response = await api.fetchApi(LFEndpoints.GetJson, {
+            body,
+            method: 'POST',
+          });
+
+          const code = response.status;
+
+          switch (code) {
+            case 200:
+              const p = await response.json();
+              if (p.status === 'success') {
+                payload.data = p.data;
+                payload.message = 'JSON data fetched successfully.';
+                payload.status = LogSeverity.Success;
+                this.log(payload.message, { payload }, payload.status);
+                this.#CACHED_DATASETS.usage = payload.data;
+              }
+              break;
+            default:
+              payload.message = `Unexpected response from the get-json API: ${await response.text()}`;
+              payload.status = LogSeverity.Error;
+              break;
+          }
+        } catch (error) {
+          payload.message = error.toString();
+          payload.status = LogSeverity.Error;
+        }
+
+        this.log(payload.message, { payload }, payload.status);
+        return payload;
+      },
+      update: async (filePath, dataset) => {
+        const payload: BaseAPIPayload = {
+          message: '',
+          status: LogSeverity.Info,
+        };
+
+        const body = new FormData();
+        body.append('file_path', filePath);
+        body.append('dataset', JSON.stringify(dataset));
+
+        try {
+          const response = await api.fetchApi(LFEndpoints.UpdateJson, {
+            body,
+            method: 'POST',
+          });
+
+          const code = response.status;
+
+          switch (code) {
+            case 200:
+              const p: BaseAPIPayload = await response.json();
+              if (p.status === 'success') {
+                payload.message = p.message;
+                payload.status = LogSeverity.Success;
+              }
+              break;
+            default:
+              payload.message = 'Unexpected response from the API!';
+              payload.status = LogSeverity.Error;
+              break;
+          }
+        } catch (error) {
+          payload.message = error;
+          payload.status = LogSeverity.Error;
+        }
+
+        this.log(payload.message, { payload }, payload.status);
+        return payload;
+      },
+    },
     metadata: {
       clear: async () => {
         const payload: BaseAPIPayload = {

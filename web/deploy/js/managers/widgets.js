@@ -72,7 +72,7 @@ export class LFWidgets {
             [CustomWidgetName.controlPanel]: () => controlPanelFactory.options(),
             [CustomWidgetName.countBarChart]: (chart, chip, button) => countBarChartFactory.options(chart, chip, button),
             [CustomWidgetName.history]: (history) => historyFactory.options(history),
-            [CustomWidgetName.imageEditor]: (imageviewer) => imageEditorFactory.options(imageviewer),
+            [CustomWidgetName.imageEditor]: (imageviewer, actionButtons) => imageEditorFactory.options(imageviewer, actionButtons),
             [CustomWidgetName.masonry]: (masonry) => masonryFactory.options(masonry),
             [CustomWidgetName.messenger]: (messenger, placeholder) => messengerFactory.options(messenger, placeholder),
             [CustomWidgetName.progressbar]: (progressbar, nodeType) => progressbarFactory.options(progressbar, nodeType),
@@ -154,6 +154,39 @@ export class LFWidgets {
                     const widgetName = widgets[index];
                     const widget = getCustomWidget(node, widgetName);
                     switch (widgetName) {
+                        case CustomWidgetName.imageEditor:
+                            switch (name) {
+                                case NodeName.imagesEditingBreakpoint:
+                                    if (widget && 'value' in payload) {
+                                        const { value } = payload;
+                                        lfManager.log(`Initiating JSON data fetch for editing breakpoint from path: ${value}`, { widget, value });
+                                        getApiRoutes()
+                                            .json.get(value)
+                                            .then((r) => {
+                                            if (r.status === LogSeverity.Success) {
+                                                lfManager.log('JSON data fetched successfully for image editing breakpoint.', { data: r.data }, LogSeverity.Success);
+                                                widget.options.setValue(JSON.stringify(r.data));
+                                            }
+                                            else {
+                                                lfManager.log(`Failed to fetch JSON data: ${r.message}`, { response: r }, LogSeverity.Error);
+                                            }
+                                        })
+                                            .catch((error) => {
+                                            lfManager.log(`Error during JSON fetch for editing breakpoint: ${error.toString()}`, { error }, LogSeverity.Error);
+                                        });
+                                    }
+                                    else {
+                                        lfManager.log(`Image editor widget handling failed: missing 'widget' or 'value' in payload.`, { widget, payload }, LogSeverity.Warning);
+                                    }
+                                    break;
+                                default:
+                                    if (widget && 'dataset' in payload) {
+                                        const { dataset } = payload;
+                                        widget.options.setValue(JSON.stringify(dataset));
+                                    }
+                                    break;
+                            }
+                            break;
                         case CustomWidgetName.card:
                         case CustomWidgetName.cardsWithChip:
                             if (widget && 'apiFlags' in payload) {
