@@ -9,7 +9,7 @@
 
 <div align="center">
 
-![LFNodes](https://github.com/lucafoscili/comfyui-lf/blob/a7ef3c6e62c266b9f09f2f843e8f8590663f6bb6/docs/images/LFNodes.png "LF Nodes logo")
+![LFNodes](https://github.com/lucafoscili/comfyui-lf/blob/780ac30dd51350ba4ec7d5e0a5af39edd350b61d/docs/images/LFNodes.png "LF Nodes logo")
 
 </div>
 
