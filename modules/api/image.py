@@ -5,13 +5,13 @@ import torch
 
 from aiohttp import web
 from PIL import Image
-from urllib.parse import urlparse, parse_qs
 
 from server import PromptServer
 
 from ..utils.constants import API_ROUTE_PREFIX
-from ..utils.helpers import clarity_effect, create_masonry_node, get_comfy_dir, get_resource_url, pil_to_tensor, resolve_filepath, tensor_to_pil
+from ..utils.helpers import clarity_effect, create_masonry_node, get_comfy_dir, get_resource_url, pil_to_tensor, resolve_filepath, resolve_url, tensor_to_pil
 
+# region get-image
 @PromptServer.instance.routes.post(f"{API_ROUTE_PREFIX}/get-image")
 async def get_images_in_directory(request):
     try:
@@ -42,22 +42,18 @@ async def get_images_in_directory(request):
 
     except Exception as e:
         return web.Response(status=500, text=f"Error: {str(e)}")
-    
+# endregion
+# region process-image
 @PromptServer.instance.routes.post(f"{API_ROUTE_PREFIX}/process-image")
 async def get_images_in_directory(request):
     try:
         r: dict = await request.post()
+
         api_url: str = r.get("url")
-
-        parsed_url = urlparse(api_url)
-        query_params = parse_qs(parsed_url.query)
-
         filter_type: str = r.get("type")
         settings: dict = json.loads(r.get("settings"))
 
-        filename = query_params.get("filename", [None])[0]
-        file_type = query_params.get("type", [None])[0]
-        subfolder = query_params.get("subfolder", [None])[0]
+        filename, file_type, subfolder = resolve_url(api_url)
 
         if not filename or not file_type:
             return web.Response(status=400, text="Missing required URL parameters.")
@@ -105,3 +101,4 @@ def load_image_tensor(image_path: str) -> torch.Tensor:
     img_tensor = pil_to_tensor(pil_image)
 
     return img_tensor
+# endregion

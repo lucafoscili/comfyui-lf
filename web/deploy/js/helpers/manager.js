@@ -28,6 +28,7 @@ export const NODE_WIDGET_MAP = {
     LF_ImageClassifier: [CustomWidgetName.code],
     LF_ImageHistogram: [CustomWidgetName.tabBarChart],
     LF_ImageListFromJSON: [CustomWidgetName.masonry],
+    LF_ImagesEditingBreakpoint: [CustomWidgetName.imageEditor],
     LF_ImagesSlideshow: [CustomWidgetName.carousel],
     LF_Integer: [CustomWidgetName.history],
     LF_IsLandscape: [CustomWidgetName.tree],

@@ -432,6 +432,7 @@ export interface ImageEditorWidgetFactory extends BaseWidgetFactory<ImageEditorW
 }
 export type ImageEditorWidgetOptionsCallback = (
   imageviewer: HTMLKulImageviewerElement,
+  actionButtons: ImageEditorWidgetActionButtons,
 ) => ImageEditorWidgetOptions;
 export interface ImageEditorWidgetOptions
   extends BaseWidgetOptions<ImageEditorWidgetDeserializedValue> {
@@ -442,6 +443,10 @@ export type ImageEditorWidgetSetter = () => {
   [CustomWidgetName.imageEditor]: BaseWidgetCallback<CustomWidgetName.imageEditor>;
 };
 export type ImageEditorWidgetDeserializedValue = KulDataDataset;
+export interface ImageEditorWidgetActionButtons {
+  interrupt?: HTMLKulButtonElement;
+  resume?: HTMLKulButtonElement;
+}
 
 /*-------------------------------------------------------------------*/
 /*               M a s o n r y   D e c l a r a t i o n s             */

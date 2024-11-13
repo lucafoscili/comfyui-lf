@@ -204,11 +204,13 @@ web/deploy/js/ketchup-lite/*showcase*
 !web/deploy/assets/svg/movie.svg
 !web/deploy/assets/svg/palette.svg
 !web/deploy/assets/svg/people.svg
+!web/deploy/assets/svg/play.svg
 !web/deploy/assets/svg/portrait.svg
 !web/deploy/assets/svg/redo.svg
 !web/deploy/assets/svg/refresh.svg
 !web/deploy/assets/svg/save.svg
 !web/deploy/assets/svg/settings.svg
+!web/deploy/assets/svg/stop.svg
 !web/deploy/assets/svg/style.svg
 !web/deploy/assets/svg/undo.svg
 !web/deploy/assets/svg/upload.svg

@@ -19,6 +19,7 @@ from folder_paths import get_filename_list, get_input_directory, get_output_dire
 from PIL import Image
 from PIL.ExifTags import TAGS
 from torchvision.transforms import InterpolationMode, functional
+from urllib.parse import urlparse, parse_qs
 
 from ..utils.constants import BACKUP_FOLDER, BASE64_PNG_PREFIX, USER_FOLDER
 
@@ -1323,6 +1324,17 @@ def resolve_filepath(filename_prefix: str = None, base_output_path: str = None, 
     os.makedirs(output_folder, exist_ok=True)
 
     return output_file, subfolder, filename
+# endregion
+# region resolve_url
+def resolve_url(api_url: str):
+    parsed_url = urlparse(api_url)
+    query_params = parse_qs(parsed_url.query)
+
+    filename = query_params.get("filename", [None])[0]
+    file_type = query_params.get("type", [None])[0]
+    subfolder = query_params.get("subfolder", [None])[0]
+
+    return filename, file_type, subfolder
 # endregion
 # region tensor_to_base64
 def tensor_to_base64(tensors: list[torch.Tensor] | torch.Tensor):

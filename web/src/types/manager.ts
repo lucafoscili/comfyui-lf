@@ -11,6 +11,7 @@ export interface ComfyAPIs {
   analytics: AnalyticsAPIs;
   backup: BackupAPIs;
   image: ImageAPIs;
+  json: JSONAPIs;
   metadata: MetadataAPIs;
   event: <P extends EventPayload<CustomWidgetName>>(
     name: EventName,
@@ -41,6 +42,10 @@ export interface ImageAPIs {
     settings: FilterSettingsMap[T],
   ) => Promise<ProcessImageAPIPayload>;
 }
+export interface JSONAPIs {
+  get: (path: string) => Promise<GetJSONAPIPayload>;
+  update: (path: string, dataset: KulDataDataset) => Promise<BaseAPIPayload>;
+}
 export interface MetadataAPIs {
   clear: () => Promise<BaseAPIPayload>;
   get: (hash: string) => Promise<GetMetadataAPIPayload>;
@@ -62,10 +67,12 @@ export enum LFEndpoints {
   ClearMetadata = `/comfyui-lf/clear-metadata`,
   GetAnalytics = `/comfyui-lf/get-analytics`,
   GetImage = `/comfyui-lf/get-image`,
+  GetJson = `/comfyui-lf/get-json`,
   GetMetadata = `/comfyui-lf/get-metadata`,
   NewBackup = `/comfyui-lf/new-backup`,
   ProcessImage = `/comfyui-lf/process-image`,
   SaveMetadata = '/comfyui-lf/save-metadata',
+  UpdateJson = `/comfyui-lf/update-json`,
   UpdateMetadataCover = '/comfyui-lf/update-metadata-cover',
 }
 export enum LogSeverity {
@@ -86,6 +93,9 @@ export interface GetAnalyticsAPIPayload extends BaseAPIPayload {
 export interface GetImageAPIPayload extends BaseAPIPayload {
   data: KulDataDataset;
 }
+export interface GetJSONAPIPayload extends BaseAPIPayload {
+  data: KulDataDataset;
+}
 export interface GetMetadataAPIPayload extends BaseAPIPayload {
   data: CivitAIModelData;
 }
@@ -102,7 +112,6 @@ export interface ClaritySettings {
   sharpen_amount: number;
   blur_kernel_size: number;
 }
-
 export interface VignetteSettings {
   vignette_intensity: number;
 }

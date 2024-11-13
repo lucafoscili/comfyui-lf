@@ -309,7 +309,7 @@ export interface ImageEditorWidget extends Widget {
 export interface ImageEditorWidgetFactory extends BaseWidgetFactory<ImageEditorWidgetOptions> {
     options: ImageEditorWidgetOptionsCallback;
 }
-export type ImageEditorWidgetOptionsCallback = (imageviewer: HTMLKulImageviewerElement) => ImageEditorWidgetOptions;
+export type ImageEditorWidgetOptionsCallback = (imageviewer: HTMLKulImageviewerElement, actionButtons: ImageEditorWidgetActionButtons) => ImageEditorWidgetOptions;
 export interface ImageEditorWidgetOptions extends BaseWidgetOptions<ImageEditorWidgetDeserializedValue> {
     getComp(): {
         imageviewer: HTMLKulImageviewerElement;
@@ -320,6 +320,10 @@ export type ImageEditorWidgetSetter = () => {
     [CustomWidgetName.imageEditor]: BaseWidgetCallback<CustomWidgetName.imageEditor>;
 };
 export type ImageEditorWidgetDeserializedValue = KulDataDataset;
+export interface ImageEditorWidgetActionButtons {
+    interrupt?: HTMLKulButtonElement;
+    resume?: HTMLKulButtonElement;
+}
 export interface MasonryWidget extends Widget {
     options: MasonryWidgetOptions;
     type: [CustomWidgetName.masonry];

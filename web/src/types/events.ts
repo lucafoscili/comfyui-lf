@@ -2,10 +2,7 @@ import { KulDataDataset } from './ketchup-lite/components';
 import { NodeName } from './nodes';
 import { CustomWidgetName } from './widgets';
 
-/*-------------------------------------------------------------------*/
-/*               C o m m o n   D e c l a r a t i o n s               */
-/*-------------------------------------------------------------------*/
-
+// #region Common declarations
 export interface BaseEventPayload {
   id: string;
 }
@@ -46,11 +43,8 @@ export type WidgetPayloadMap = {
     ? StringPayload
     : BaseEventPayload;
 };
-
-/*-------------------------------------------------------------------*/
-/*                     C a r d   P a y l o a d                       */
-/*-------------------------------------------------------------------*/
-
+// #endregion
+// #region Card payload
 export interface CardPayload extends BaseEventPayload {
   datasets: KulDataDataset[];
   apiFlags: boolean[];
@@ -58,28 +52,19 @@ export interface CardPayload extends BaseEventPayload {
   paths: string[];
   chip?: KulDataDataset;
 }
-
-/*-------------------------------------------------------------------*/
-/*       M a s o n r y   I m a g e s   D e c l a r a t i o n s       */
-/*-------------------------------------------------------------------*/
-
+// #endregion
+// #region Masonry payload
 export interface MasonryPayload extends SingleDatasetPayload {
   index: number;
   name: string;
 }
-
-/*-------------------------------------------------------------------*/
-/*             M u l t i   D a t a s e t   P a y l o a d             */
-/*-------------------------------------------------------------------*/
-
+// #endregion
+// #region Multi dataset payload
 export interface MultiDatasetPayload extends BaseEventPayload {
   datasets: { [index: string]: KulDataDataset };
 }
-
-/*-------------------------------------------------------------------*/
-/*              N o t i f y   D e c l a r a t i o n s                */
-/*-------------------------------------------------------------------*/
-
+// #endregion
+// #region Notify payload
 export interface NotifyPayload extends BaseEventPayload {
   action: 'none' | 'focus tab' | 'interrupt' | 'interrupt and queue' | 'queue prompt';
   image: string;
@@ -88,28 +73,20 @@ export interface NotifyPayload extends BaseEventPayload {
   tag: string;
   title: string;
 }
-
-/*-------------------------------------------------------------------*/
-/*              P r o g r e s s b a r   P a y l o a d                */
-/*-------------------------------------------------------------------*/
-
+// #endregion
+// #region Progressbar payload
 export interface ProgressbarPayload extends BaseEventPayload {
   bool: boolean;
   roll?: number;
 }
-
-/*-------------------------------------------------------------------*/
-/*            S i n g l e   D a t a s e t   P a y l o a d            */
-/*-------------------------------------------------------------------*/
-
+// #endregion
+// #region Dataset payload
 export interface SingleDatasetPayload extends BaseEventPayload {
   dataset: KulDataDataset;
 }
-
-/*-------------------------------------------------------------------*/
-/*                   S t r i n g   P a y l o a d                     */
-/*-------------------------------------------------------------------*/
-
+// #endregion
+// #region String payload
 export interface StringPayload extends BaseEventPayload {
   value: string;
 }
+// #endregion

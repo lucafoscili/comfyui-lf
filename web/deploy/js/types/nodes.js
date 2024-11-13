@@ -28,6 +28,7 @@ export var NodeName;
     NodeName["imageClassifier"] = "LF_ImageClassifier";
     NodeName["imageListFromJSON"] = "LF_ImageListFromJSON";
     NodeName["imageHistogram"] = "LF_ImageHistogram";
+    NodeName["imagesEditingBreakpoint"] = "LF_ImagesEditingBreakpoint";
     NodeName["integer"] = "LF_Integer";
     NodeName["isLandscape"] = "LF_IsLandscape";
     NodeName["keywordCounter"] = "LF_KeywordCounter";

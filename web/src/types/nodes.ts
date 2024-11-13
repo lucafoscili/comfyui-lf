@@ -31,6 +31,7 @@ export enum NodeName {
   imageClassifier = 'LF_ImageClassifier',
   imageListFromJSON = 'LF_ImageListFromJSON',
   imageHistogram = 'LF_ImageHistogram',
+  imagesEditingBreakpoint = 'LF_ImagesEditingBreakpoint',
   integer = 'LF_Integer',
   isLandscape = 'LF_IsLandscape',
   keywordCounter = 'LF_KeywordCounter',
