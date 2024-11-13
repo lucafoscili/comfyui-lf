@@ -1,5 +1,5 @@
 import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, F as Fragment, H as Host } from './index-4ebcb21f.js';
-import { k as kulManagerInstance, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-233b3207.js';
+import { k as kulManagerInstance, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-74b8aa66.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 
 /*-------------------------------------------------*/
@@ -165,7 +165,7 @@ const KulTypewriter = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: '6afb6b3aa08907e8c49246545865bd07785728ca' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '64bedc2cb4918e46cec73bc6f6531abd0cbdbc71', id: KUL_WRAPPER_ID }, this.#prepText())));
+        return (h(Host, { key: 'f2e7a7397e2d1dee101ee0ab1c4127ac312c1ccf' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'ede2788cfa49db8eaeb3bb710abd6932cdc9769b', id: KUL_WRAPPER_ID }, this.#prepText())));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

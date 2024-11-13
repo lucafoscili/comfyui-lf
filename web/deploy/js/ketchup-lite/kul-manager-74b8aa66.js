@@ -1,4 +1,4 @@
-import { h, a as getAssetPath, c as setAssetPath } from './index-7f37b7be.js';
+import { h, a as getAssetPath, c as setAssetPath } from './index-4ebcb21f.js';
 
 const columnFind = (dataset, filters) => {
     const result = [];
@@ -33,6 +33,26 @@ var KulDataCyAttributes;
     KulDataCyAttributes["SHOWCASE_GRID_WRAPPER"] = "wrapper";
 })(KulDataCyAttributes || (KulDataCyAttributes = {}));
 
+const findNodeByCell = (dataset, targetCell) => {
+    function recursive(nodes) {
+        for (const node of nodes) {
+            if (node.cells) {
+                for (const cellKey in node.cells) {
+                    if (node.cells[cellKey] === targetCell) {
+                        return node;
+                    }
+                }
+            }
+            if (node.children) {
+                const foundNode = recursive(node.children);
+                if (foundNode)
+                    return foundNode;
+            }
+        }
+        return null;
+    }
+    return recursive(dataset.nodes);
+};
 const nodeExists = (dataset) => {
     return !!(dataset && dataset.nodes?.length);
 };
@@ -197,16 +217,16 @@ const nodeSetProperties = (nodes, properties, recursively, exclude) => {
     return updated;
 };
 const nodeToStream = (nodes) => {
+    function recursive(node) {
+        streamlined.push(node);
+        for (let index = 0; node.children && index < node.children.length; index++) {
+            recursive(node.children[index]);
+        }
+    }
     const streamlined = [];
     for (let index = 0; index < nodes.length; index++) {
         const node = nodes[index];
         recursive(node);
-        function recursive(node) {
-            streamlined.push(node);
-            for (let index = 0; node.children && index < node.children.length; index++) {
-                recursive(node.children[index]);
-            }
-        }
     }
     return streamlined;
 };
@@ -441,10 +461,12 @@ class KulData {
     node = {
         exists: (dataset) => nodeExists(dataset),
         filter: (dataset, filters, partialMatch = false) => nodeFilter(dataset, filters, partialMatch),
+        findNodeByCell: (dataset, cell) => findNodeByCell(dataset, cell),
         fixIds: (nodes) => nodeFixIds(nodes),
         getDrilldownInfo: (nodes) => nodeGetDrilldownInfo(nodes),
         getParent: (nodes, child) => nodeGetParent(nodes, child),
         pop: (nodes, node2remove) => nodePop(nodes, node2remove),
+        removeNodeByCell: (dataset, cell) => findNodeByCell(dataset, cell),
         setProperties: (nodes, properties, recursively, exclude) => nodeSetProperties(nodes, properties, recursively, exclude),
         toStream: (nodes) => nodeToStream(nodes),
     };
@@ -4412,4 +4434,4 @@ function kulManagerInstance() {
 
 export { CSS_VAR_PREFIX as C, KUL_WRAPPER_ID as K, RIPPLE_SURFACE_CLASS as R, KulDataCyAttributes as a, KUL_STYLE_ID as b, KulThemeColorValues as c, commonjsGlobal as d, KulLanguageSearch as e, KulLanguageGeneric as f, KUL_DROPDOWN_CLASS_VISIBLE as g, KulDynamicPositionPlacement as h, KUL_DROPDOWN_CLASS as i, kulManagerInstance as k };
 
-//# sourceMappingURL=kul-manager-c62793b7.js.map
+//# sourceMappingURL=kul-manager-74b8aa66.js.map

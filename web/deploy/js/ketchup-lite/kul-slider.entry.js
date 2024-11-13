@@ -1,5 +1,5 @@
 import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-4ebcb21f.js';
-import { k as kulManagerInstance, K as KUL_WRAPPER_ID, a as KulDataCyAttributes, b as KUL_STYLE_ID } from './kul-manager-233b3207.js';
+import { k as kulManagerInstance, K as KUL_WRAPPER_ID, a as KulDataCyAttributes, b as KUL_STYLE_ID } from './kul-manager-74b8aa66.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 
 /*-------------------------------------------------*/
@@ -153,9 +153,9 @@ const KulSlider = class {
             'form-field': true,
             'form-field--align-end': this.kulLeadingLabel,
         };
-        return (h(Host, { key: 'f947aae0db9ce78d397bb24de5de60b2726f587a' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '15e0b9dfdc0f6f9e1b95bcd23f0ab7377a993f48', id: KUL_WRAPPER_ID }, h("div", { key: '13f721be7264bf78a5f1626c1298b97db0db865e', class: formClassName }, h("div", { key: '457fa07ea128db85b80161664ff2bc2dc38d99b1', class: className, style: {
+        return (h(Host, { key: '7ef59d65c0b2bb303425fa40f4da7aa288376c66' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '308c809b93f6e49e8af16adb6defdc131245149d', id: KUL_WRAPPER_ID }, h("div", { key: 'f8b1ebb8d82c040412ca523fff6030b8b94bf803', class: formClassName }, h("div", { key: '011b2430ad2be0464b5524f8254eda9353b715b8', class: className, style: {
                 '--slider-value': `${((this.value - this.kulMin) / (this.kulMax - this.kulMin)) * 100}%`,
-            } }, h("input", { key: '111c8a9c94ea16dc44ded468d904ddc6025477a9', type: "range", class: "slider__native-control", "data-cy": KulDataCyAttributes.INPUT, min: this.kulMin, max: this.kulMax, step: this.kulStep, value: this.value, disabled: this.kulDisabled, onBlur: (e) => {
+            } }, h("input", { key: 'd26649031a4f9e9ad037ff1a9502ab1bb3f93601', type: "range", class: "slider__native-control", "data-cy": KulDataCyAttributes.INPUT, min: this.kulMin, max: this.kulMax, step: this.kulStep, value: this.value, disabled: this.kulDisabled, onBlur: (e) => {
                 this.onKulEvent(e, 'blur');
             }, onFocus: (e) => {
                 this.onKulEvent(e, 'focus');
@@ -168,11 +168,11 @@ const KulSlider = class {
                 if (el) {
                     this.#input = el;
                 }
-            } }), h("div", { key: '389bd05d56ac34661d4070760fc1eb0fa160f63e', class: "slider__track" }, h("div", { key: '20512967ba6787f8d99ac629b6ffee35a065a627', class: "slider__thumb-underlay" }, h("div", { key: '7363818661b9bc65339caacc4e7407e006493625', class: "slider__thumb", ref: (el) => {
+            } }), h("div", { key: 'f2a48a8b981460012fd14b2ee067d4797b648e49', class: "slider__track" }, h("div", { key: '062c79eee73b68230bb2ddaefef43808b2ba4047', class: "slider__thumb-underlay" }, h("div", { key: '361e06112523044240bc85434088903f8e6c08fd', class: "slider__thumb", ref: (el) => {
                 if (this.kulRipple) {
                     this.#rippleSurface = el;
                 }
-            } }))), h("span", { key: 'cc83eedcee1ffb04944e0044372c35ccb016a7d7', class: "slider__value" }, this.value)), h("label", { key: '51b63b8f07447b94c873c4b8370463bc379a07fc', class: "form-field__label" }, this.kulLabel)))));
+            } }))), h("span", { key: '107d2578df4df50c538b6d2363612c38c4170e52', class: "slider__value" }, this.value)), h("label", { key: 'e0f2ff9c4d2421d7371a9eef117c58e8af5b6805', class: "form-field__label" }, this.kulLabel)))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);
