@@ -1,3 +1,4 @@
+import { ON_COMPLETE } from '../fixtures/imageEditor';
 import {
   KulButtonEventPayload,
   KulImageviewerEventPayload,
@@ -11,7 +12,9 @@ import {
 import { KulGenericEvent } from '../types/ketchup-lite/types/GenericTypes';
 import { FilterSettingsMap, LogSeverity, SliderConfig } from '../types/manager';
 import { NodeName } from '../types/nodes';
+import { ImageEditorWidgetActionButtons } from '../types/widgets';
 import { debounce, getApiRoutes, getLFManager, unescapeJson } from '../utils/common';
+import { imageEditorFactory } from '../widgets/imageEditor';
 
 export enum ColumnId {
   Path = 'path',
@@ -22,11 +25,14 @@ export enum Status {
   Pending = 'pending',
 }
 export const INTERRUPT_ICON = 'stop';
+export const RESET_ICON = 'refresh';
 export const RESUME_ICON = 'play';
 
 //#region buttonEventHandler
 export const buttonEventHandler = async (
   imageviewer: HTMLKulImageviewerElement,
+  actionButtons: ImageEditorWidgetActionButtons,
+  grid: HTMLDivElement,
   e: CustomEvent<KulButtonEventPayload>,
 ) => {
   const { comp, eventType } = e.detail;
@@ -43,11 +49,12 @@ export const buttonEventHandler = async (
           const path = (unescapeJson(pathColumn).parsedJson as KulDataColumn).title;
 
           await getApiRoutes().json.update(path, dataset);
-          requestAnimationFrame(() => (comp.kulDisabled = true));
+          setGridStatus(Status.Completed, grid, actionButtons);
 
           const masonry = (await imageviewer.getComponents()).masonry;
+          await imageviewer.reset();
           await masonry.setSelectedShape(null);
-          imageviewer.kulData = {};
+          imageviewer.kulData = ON_COMPLETE;
         }
       };
 
@@ -91,7 +98,6 @@ export const imageviewerEventHandler = async (
         switch (node.comfyClass) {
           case NodeName.imagesEditingBreakpoint:
             r.load.kulDisabled = true;
-            r.load.kulIcon = 'timer-sand';
             r.load.kulLabel = '';
             r.textfield.kulDisabled = true;
             r.textfield.kulLabel = 'Previews are visible in your ComfyUI/temp folder';
@@ -111,101 +117,97 @@ export const prepSettings = (
   node: KulDataNode,
   imageviewer: HTMLKulImageviewerElement,
 ) => {
+  const updateSettings = async (addSnapshot = false) => {
+    const settingsValues: FilterSettingsMap[typeof filterType] =
+      {} as FilterSettingsMap[typeof filterType];
+
+    const sliders = settings.querySelectorAll('kul-slider');
+    for (const slider of sliders) {
+      const id = slider.dataset.id as keyof FilterSettingsMap[typeof filterType];
+      const value = await slider.getValue();
+      (settingsValues as any)[id] = addSnapshot ? value.real : value.display;
+    }
+
+    const value = (await imageviewer.getCurrentSnapshot()).value;
+    getApiRoutes()
+      .image.process(value, filterType, settingsValues)
+      .then(async (r) => {
+        if (r.status === 'success') {
+          if (addSnapshot) {
+            imageviewer.addSnapshot(r.data);
+          } else {
+            const image = (await imageviewer.getComponents()).image;
+            requestAnimationFrame(() => (image.kulValue = r.data));
+          }
+        } else {
+          console.error('Image processing failed:', r.message);
+          getLFManager().log('Error processing image!', { r }, LogSeverity.Error);
+        }
+      })
+      .catch((error) => {
+        console.error('API call failed:', error);
+        getLFManager().log('Error processing image!', { error }, LogSeverity.Error);
+      });
+  };
+
   settings.innerHTML = '';
 
   const widgets = unescapeJson(node.cells.kulCode.value).parsedJson;
   const filterType = node.id as keyof FilterSettingsMap;
-  const settingsValues: FilterSettingsMap[typeof filterType] =
-    {} as FilterSettingsMap[typeof filterType];
 
   const resetButton = document.createElement('kul-button');
-  resetButton.kulIcon = 'refresh';
+  resetButton.classList.add('kul-full-width');
+  resetButton.kulIcon = RESET_ICON;
   resetButton.kulLabel = 'Reset';
   settings.appendChild(resetButton);
 
   for (const controlName in widgets) {
     const sliders = widgets[controlName];
     sliders.forEach((sliderData: SliderConfig<string>) => {
-      const sliderControl = createSliderControl(sliderData);
+      const sliderControl = createSliderControl(sliderData, updateSettings);
       settings.appendChild(sliderControl);
     });
   }
 
-  const updateSettings = async (triggerApiCall = true, addSnapshot = false) => {
-    const inputs = settings.querySelectorAll('input');
-    inputs.forEach((input) => {
-      const id = input.id as keyof FilterSettingsMap[typeof filterType];
-      (settingsValues as any)[id] = parseFloat(input.value);
+  resetButton.addEventListener('click', async () => {
+    const sliders = settings.querySelectorAll('kul-slider');
+    sliders.forEach(async (slider) => {
+      await slider.setValue(slider.kulValue);
+      await slider.refresh();
     });
-
-    if (triggerApiCall) {
-      const value = (await imageviewer.getCurrentSnapshot()).value;
-      getApiRoutes()
-        .image.process(value, filterType, settingsValues)
-        .then(async (r) => {
-          if (r.status === 'success') {
-            if (addSnapshot) {
-              imageviewer.addSnapshot(r.data);
-            } else {
-              const image = (await imageviewer.getComponents()).image;
-              image.kulValue = r.data;
-            }
-          } else {
-            console.error('Image processing failed:', r.message);
-            getLFManager().log('Error processing image!', { r }, LogSeverity.Error);
-          }
-        })
-        .catch((error) => {
-          console.error('API call failed:', error);
-          getLFManager().log('Error processing image!', { error }, LogSeverity.Error);
-        });
-    }
-  };
-
-  resetButton.addEventListener('click', () => {
-    const inputs = settings.querySelectorAll('input');
-    inputs.forEach((input) => {
-      input.value = input.defaultValue;
-    });
-    updateSettings(false);
   });
-
-  const debouncedUpdateSettings = debounce(updateSettings, 300);
-  settings.addEventListener('input', () => debouncedUpdateSettings());
-  settings.addEventListener('change', () => updateSettings(true, true));
 };
 //#endregion
 //#region createSliderControl
-export const createSliderControl = (sliderData: { [key: string]: string }): HTMLDivElement => {
-  const container = document.createElement('div');
-  container.className = 'slider-control';
+export const createSliderControl = (
+  sliderData: { [key: string]: string },
+  callback: (triggerApiCall?: boolean, addSnapshot?: boolean) => Promise<void>,
+) => {
+  const slider = document.createElement('kul-slider');
+  slider.dataset.id = sliderData.id;
+  slider.kulLabel = sliderData.ariaLabel;
+  slider.kulLeadingLabel = true;
+  slider.kulMax = Number(sliderData.max);
+  slider.kulMin = Number(sliderData.min);
+  slider.kulStep = Number(sliderData.step);
+  slider.kulStyle = '.form-field { width: 100%; }';
+  slider.kulValue = Number(sliderData.defaultValue);
+  slider.addEventListener('kul-slider-event', (e) => {
+    const { eventType } = e.detail;
 
-  const label = document.createElement('label');
-  label.textContent = sliderData.ariaLabel || 'Slider';
-  label.title = sliderData.title;
+    switch (eventType) {
+      case 'change':
+        callback(true);
+        break;
 
-  const input = document.createElement('input');
-  input.type = 'range';
-  input.id = sliderData.id;
-  input.min = sliderData.min;
-  input.max = sliderData.max;
-  input.step = sliderData.step;
-  input.value = sliderData.defaultValue;
-  input.ariaLabel = sliderData.ariaLabel;
-
-  const valueDisplay = document.createElement('span');
-  valueDisplay.className = 'slider-value';
-  valueDisplay.textContent = sliderData.defaultValue;
-
-  input.addEventListener('input', () => {
-    valueDisplay.textContent = input.value;
+      case 'input':
+        const debouncedCallback = debounce(callback, 300);
+        debouncedCallback();
+        break;
+    }
   });
 
-  container.appendChild(label);
-  container.appendChild(input);
-  container.appendChild(valueDisplay);
-
-  return container;
+  return slider;
 };
 //#endregion
 //#region Utils
@@ -214,5 +216,28 @@ export const getPathColumn = (dataset: KulDataDataset) => {
 };
 export const getStatusColumn = (dataset: KulDataDataset) => {
   return dataset?.columns?.find((c) => c.id === ColumnId.Status) || null;
+};
+export const setGridStatus = (
+  status: Status,
+  grid: HTMLDivElement,
+  actionButtons: ImageEditorWidgetActionButtons,
+) => {
+  switch (status) {
+    case Status.Completed:
+      requestAnimationFrame(() => {
+        actionButtons.interrupt.kulDisabled = true;
+        actionButtons.resume.kulDisabled = true;
+      });
+      grid.classList.add(imageEditorFactory.cssClasses.gridIsInactive);
+      break;
+
+    case Status.Pending:
+      requestAnimationFrame(() => {
+        actionButtons.interrupt.kulDisabled = false;
+        actionButtons.resume.kulDisabled = false;
+      });
+      grid.classList.remove(imageEditorFactory.cssClasses.gridIsInactive);
+      break;
+  }
 };
 //#endregion

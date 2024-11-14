@@ -1,4 +1,18 @@
 import { TREE_DATA_IDS } from '../types/manager.js';
+export const ON_COMPLETE = {
+    nodes: [
+        {
+            cells: {
+                kulImage: {
+                    htmlProps: { title: 'All done!' },
+                    shape: 'image',
+                    value: 'done_all',
+                },
+            },
+            id: 'root',
+        },
+    ],
+};
 const SETTINGS = {
     clarity: {
         slider: [

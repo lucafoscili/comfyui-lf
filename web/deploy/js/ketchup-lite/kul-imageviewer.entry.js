@@ -1,5 +1,5 @@
 import { h, r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, H as Host } from './index-4ebcb21f.js';
-import { a as KulDataCyAttributes, k as kulManagerInstance, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-74b8aa66.js';
+import { a as KulDataCyAttributes, k as kulManagerInstance, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-0684a7cb.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 
 //#endregion
@@ -76,7 +76,6 @@ const ACTIONS = {
             return;
         }
         const imageviewer = adapter.get.imageviewer();
-        adapter.get.manager();
         const index = currentSelectedShape.shape.index;
         const shape = currentSelectedShape.shape.shape;
         const currentSnapshot = adapter.get.state.history.currentSnapshot();
@@ -448,6 +447,19 @@ const KulImageviewer = class {
         this.#adapter.set.state.history.new(newShape, true);
     }
     /**
+     * Clears the history related to the shape identified by the index.
+     * When index is not provided, it clear the full history.
+     */
+    async clearHistory(index = null) {
+        await this.#adapter.actions.clearHistory(this.#adapter, index);
+    }
+    /**
+     * Clears the currently selected shape.
+     */
+    async clearSelection() {
+        await this.#adapter.actions.clearSelection(this.#adapter);
+    }
+    /**
      * This method is used to retrieve the references to the subcomponents.
      */
     async getComponents() {
@@ -480,6 +492,13 @@ const KulImageviewer = class {
      */
     async refresh() {
         forceUpdate(this);
+    }
+    /**
+     * Clears the full history and clears the current selection.
+     */
+    async reset() {
+        await this.#adapter.actions.clearHistory(this.#adapter);
+        await this.#adapter.actions.clearSelection(this.#adapter);
     }
     /**
      * Initiates the unmount sequence, which removes the component from the DOM after a delay.
@@ -594,7 +613,7 @@ const KulImageviewer = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: '3ea146707b850d2251fbb7b0d1f4bf1e8ca4f4c1' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'eb00e9bac4adc7a82d0fcf37bc9635f902624d42', id: KUL_WRAPPER_ID }, h("div", { key: '41bd4964376beff891227b41cd662d370152d0fa', class: "imageviewer" }, this.#prepImageviewer()))));
+        return (h(Host, { key: '5e4cdd312a961bcf4c4654534e35d3cc993598d9' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '3edc5cad0fa50675d8e910d710a77266afcad32b', id: KUL_WRAPPER_ID }, h("div", { key: '5105f4504c056dd7abc6ff7ae52a1c4257680e60', class: "imageviewer" }, this.#prepImageviewer()))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

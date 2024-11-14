@@ -103,7 +103,8 @@ export class LFWidgets {
     [CustomWidgetName.imageEditor]: (
       imageviewer: HTMLKulImageviewerElement,
       actionButtons: ImageEditorWidgetActionButtons,
-    ) => imageEditorFactory.options(imageviewer, actionButtons),
+      grid: HTMLDivElement,
+    ) => imageEditorFactory.options(imageviewer, actionButtons, grid),
     [CustomWidgetName.masonry]: (masonry: HTMLKulMasonryElement) => masonryFactory.options(masonry),
     [CustomWidgetName.messenger]: (
       messenger: HTMLKulMessengerElement,

@@ -281,16 +281,11 @@ class LF_ImagesEditingBreakpoint:
                 "image": (Input.IMAGE, {
                     "tooltip": "Batch of images."
                 }),
-                "timeout": (Input.INTEGER, {
-                    "default": 60,
-                    "min": 1,
-                    "max": 600,
-                    "step": 5,
-                    "tooltip": "Duration in seconds before the loop waiting for user confirmation ends automatically."
-                })
             },
             "optional": {
-                "ui_widget": (Input.KUL_IMAGE_EDITOR, {"default": {}})
+                "ui_widget": (Input.KUL_IMAGE_EDITOR, {
+                    "default": {}
+                })
             },
             "hidden": {
                 "node_id": "UNIQUE_ID"
@@ -299,14 +294,12 @@ class LF_ImagesEditingBreakpoint:
 
     CATEGORY = CATEGORY
     FUNCTION = FUNCTION
-    OUTPUT_IS_LIST = (False, True)
-    RETURN_NAMES = ("image", "image_list")
-    RETURN_TYPES = ("IMAGE", "IMAGE")
+    OUTPUT_IS_LIST = (False, True, False, True)
+    RETURN_NAMES = ("image", "image_list", "orig_image", "orig_image_list")
+    RETURN_TYPES = ("IMAGE", "IMAGE", "IMAGE", "IMAGE")
 
     def on_exec(self, **kwargs):
-        def wait_for_editing_completion(json_file_path, timeout=60):
-            start_time = time.time()
-
+        def wait_for_editing_completion(json_file_path):
             while True:
                 with open(json_file_path, 'r', encoding='utf-8') as json_file:
                     dataset = json.load(json_file)
@@ -315,16 +308,11 @@ class LF_ImagesEditingBreakpoint:
                 if status_column and status_column.get("title") == "completed":
                     break
                 
-                if time.time() - start_time > timeout:
-                    print("Timeout reached; continuing with current image edits.")
-                    break
-                
                 time.sleep(0.5)
 
             return dataset
 
         image: list[torch.Tensor] = normalize_input_image(kwargs.get("image"))
-        timeout: int = normalize_list_to_value(kwargs.get("timeout"))
 
         columns: list[dict] = []
         nodes: list[dict] = []
@@ -353,7 +341,7 @@ class LF_ImagesEditingBreakpoint:
             "value": temp_json_file,
         })
 
-        dataset = wait_for_editing_completion(temp_json_file, timeout)
+        dataset = wait_for_editing_completion(temp_json_file)
 
         edited_images = []
         for node in dataset["nodes"]:
@@ -371,9 +359,10 @@ class LF_ImagesEditingBreakpoint:
             pil_image = Image.open(image_path).convert("RGB")
             edited_images.append(pil_to_tensor(pil_image))
 
-        batch_list, image_list = normalize_output_image(edited_images)
+        batch_list, image_list = normalize_output_image(image)
+        edited_batch_list, edited_image_list = normalize_output_image(edited_images)
 
-        return (batch_list[0], image_list)      
+        return (edited_batch_list[0], edited_image_list, batch_list[0], image_list)      
 # endregion
 # region LF_ImagesSlideshow
 class LF_ImagesSlideshow:

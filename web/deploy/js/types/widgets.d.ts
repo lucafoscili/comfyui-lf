@@ -309,7 +309,7 @@ export interface ImageEditorWidget extends Widget {
 export interface ImageEditorWidgetFactory extends BaseWidgetFactory<ImageEditorWidgetOptions> {
     options: ImageEditorWidgetOptionsCallback;
 }
-export type ImageEditorWidgetOptionsCallback = (imageviewer: HTMLKulImageviewerElement, actionButtons: ImageEditorWidgetActionButtons) => ImageEditorWidgetOptions;
+export type ImageEditorWidgetOptionsCallback = (imageviewer: HTMLKulImageviewerElement, actionButtons: ImageEditorWidgetActionButtons, grid: HTMLDivElement) => ImageEditorWidgetOptions;
 export interface ImageEditorWidgetOptions extends BaseWidgetOptions<ImageEditorWidgetDeserializedValue> {
     getComp(): {
         imageviewer: HTMLKulImageviewerElement;

@@ -182,6 +182,23 @@
     &--has-actions {
       grid-template-rows: auto 1fr;
     }
+
+    &--is-inactive {
+      & {
+        pointer-events: none;
+      }
+
+      &:after {
+        background-color: rgba(var(--kul-background-color-rgb), 0.875);
+        content: '';
+        cursor: not-allowed;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+      }
+    }
   }
 
   &__settings {
@@ -189,7 +206,7 @@
     display: grid;
     grid-area: settings;
     height: 100%;
-    justify-content: center;
+    padding: 1.25em;
     width: 100%;
   }
 

@@ -1,6 +1,21 @@
 import { KulDataDataset } from '../types/ketchup-lite/components';
 import { FilterSettingsMap, FilterType, SliderConfig, TREE_DATA_IDS } from '../types/manager';
 
+export const ON_COMPLETE: KulDataDataset = {
+  nodes: [
+    {
+      cells: {
+        kulImage: {
+          htmlProps: { title: 'All done!' },
+          shape: 'image',
+          value: 'done_all',
+        },
+      },
+      id: 'root',
+    },
+  ],
+};
+
 const SETTINGS: {
   [K in FilterType]: { slider: SliderConfig<Extract<keyof FilterSettingsMap[K], string>>[] };
 } = {
