@@ -177,6 +177,17 @@
 .lf-imageeditor__grid--has-actions {
   grid-template-rows: auto 1fr;
 }
+.lf-imageeditor__grid--is-inactive {
+  pointer-events: none;
+}
+.lf-imageeditor__grid--is-inactive:after {
+  background-color: var(--kul-background-color-rgb, 0.75);
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
 .lf-imageeditor__settings {
   align-items: center;
   display: grid;

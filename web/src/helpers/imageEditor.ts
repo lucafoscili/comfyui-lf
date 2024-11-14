@@ -1,3 +1,4 @@
+import { ON_COMPLETE } from '../fixtures/imageEditor';
 import {
   KulButtonEventPayload,
   KulImageviewerEventPayload,
@@ -11,7 +12,9 @@ import {
 import { KulGenericEvent } from '../types/ketchup-lite/types/GenericTypes';
 import { FilterSettingsMap, LogSeverity, SliderConfig } from '../types/manager';
 import { NodeName } from '../types/nodes';
+import { ImageEditorWidgetActionButtons } from '../types/widgets';
 import { debounce, getApiRoutes, getLFManager, unescapeJson } from '../utils/common';
+import { imageEditorFactory } from '../widgets/imageEditor';
 
 export enum ColumnId {
   Path = 'path',
@@ -27,6 +30,8 @@ export const RESUME_ICON = 'play';
 //#region buttonEventHandler
 export const buttonEventHandler = async (
   imageviewer: HTMLKulImageviewerElement,
+  actionButtons: ImageEditorWidgetActionButtons,
+  grid: HTMLDivElement,
   e: CustomEvent<KulButtonEventPayload>,
 ) => {
   const { comp, eventType } = e.detail;
@@ -43,11 +48,12 @@ export const buttonEventHandler = async (
           const path = (unescapeJson(pathColumn).parsedJson as KulDataColumn).title;
 
           await getApiRoutes().json.update(path, dataset);
-          requestAnimationFrame(() => (comp.kulDisabled = true));
+          setGridStatus(Status.Completed, grid, actionButtons);
 
           const masonry = (await imageviewer.getComponents()).masonry;
+          await imageviewer.reset();
           await masonry.setSelectedShape(null);
-          imageviewer.kulData = {};
+          imageviewer.kulData = ON_COMPLETE;
         }
       };
 
@@ -214,5 +220,28 @@ export const getPathColumn = (dataset: KulDataDataset) => {
 };
 export const getStatusColumn = (dataset: KulDataDataset) => {
   return dataset?.columns?.find((c) => c.id === ColumnId.Status) || null;
+};
+export const setGridStatus = (
+  status: Status,
+  grid: HTMLDivElement,
+  actionButtons: ImageEditorWidgetActionButtons,
+) => {
+  switch (status) {
+    case Status.Completed:
+      requestAnimationFrame(() => {
+        actionButtons.interrupt.kulDisabled = true;
+        actionButtons.resume.kulDisabled = true;
+      });
+      grid.classList.add(imageEditorFactory.cssClasses.gridIsInactive);
+      break;
+
+    case Status.Pending:
+      requestAnimationFrame(() => {
+        actionButtons.interrupt.kulDisabled = false;
+        actionButtons.resume.kulDisabled = false;
+      });
+      grid.classList.remove(imageEditorFactory.cssClasses.gridIsInactive);
+      break;
+  }
 };
 //#endregion

@@ -1,6 +1,8 @@
+import { ON_COMPLETE } from '../fixtures/imageEditor.js';
 import { LogSeverity } from '../types/manager.js';
 import { NodeName } from '../types/nodes.js';
 import { debounce, getApiRoutes, getLFManager, unescapeJson } from '../utils/common.js';
+import { imageEditorFactory } from '../widgets/imageEditor.js';
 export var ColumnId;
 (function (ColumnId) {
     ColumnId["Path"] = "path";
@@ -14,7 +16,7 @@ export var Status;
 export const INTERRUPT_ICON = 'stop';
 export const RESUME_ICON = 'play';
 //#region buttonEventHandler
-export const buttonEventHandler = async (imageviewer, e) => {
+export const buttonEventHandler = async (imageviewer, actionButtons, grid, e) => {
     const { comp, eventType } = e.detail;
     switch (eventType) {
         case 'click':
@@ -26,10 +28,11 @@ export const buttonEventHandler = async (imageviewer, e) => {
                     statusColumn.title = Status.Completed;
                     const path = unescapeJson(pathColumn).parsedJson.title;
                     await getApiRoutes().json.update(path, dataset);
-                    requestAnimationFrame(() => (comp.kulDisabled = true));
+                    setGridStatus(Status.Completed, grid, actionButtons);
                     const masonry = (await imageviewer.getComponents()).masonry;
+                    await imageviewer.reset();
                     await masonry.setSelectedShape(null);
-                    imageviewer.kulData = {};
+                    imageviewer.kulData = ON_COMPLETE;
                 }
             };
             switch (comp.kulIcon) {
@@ -174,5 +177,23 @@ export const getPathColumn = (dataset) => {
 };
 export const getStatusColumn = (dataset) => {
     return dataset?.columns?.find((c) => c.id === ColumnId.Status) || null;
+};
+export const setGridStatus = (status, grid, actionButtons) => {
+    switch (status) {
+        case Status.Completed:
+            requestAnimationFrame(() => {
+                actionButtons.interrupt.kulDisabled = true;
+                actionButtons.resume.kulDisabled = true;
+            });
+            grid.classList.add(imageEditorFactory.cssClasses.gridIsInactive);
+            break;
+        case Status.Pending:
+            requestAnimationFrame(() => {
+                actionButtons.interrupt.kulDisabled = false;
+                actionButtons.resume.kulDisabled = false;
+            });
+            grid.classList.remove(imageEditorFactory.cssClasses.gridIsInactive);
+            break;
+    }
 };
 //#endregion

@@ -5,6 +5,7 @@ import {
   imageviewerEventHandler,
   INTERRUPT_ICON,
   RESUME_ICON,
+  setGridStatus,
   Status,
 } from '../helpers/imageEditor';
 import { LogSeverity } from '../types/manager';
@@ -27,11 +28,12 @@ export const imageEditorFactory: ImageEditorWidgetFactory = {
     content: BASE_CSS_CLASS,
     actions: `${BASE_CSS_CLASS}__actions`,
     grid: `${BASE_CSS_CLASS}__grid`,
-    gridHasResume: `${BASE_CSS_CLASS}__grid--has-actions`,
+    gridHasActions: `${BASE_CSS_CLASS}__grid--has-actions`,
+    gridIsInactive: `${BASE_CSS_CLASS}__grid--is-inactive`,
     imageviewer: `${BASE_CSS_CLASS}__widget`,
     settings: `${BASE_CSS_CLASS}__settings`,
   },
-  options: (imageviewer, actionButtons) => {
+  options: (imageviewer, actionButtons, grid) => {
     return {
       hideOnZoom: false,
       getComp() {
@@ -60,7 +62,7 @@ export const imageEditorFactory: ImageEditorWidgetFactory = {
         > = (_, u) => {
           const parsedValue = u.parsedJson as ImageEditorWidgetDeserializedValue;
           if (getStatusColumn(parsedValue)?.title === Status.Pending) {
-            actionButtons.resume.kulDisabled = false;
+            setGridStatus(Status.Pending, grid, actionButtons);
           }
 
           imageviewer.kulData = parsedValue || {};
@@ -104,34 +106,32 @@ export const imageEditorFactory: ImageEditorWidgetFactory = {
         interrupt.kulLabel = 'Interrupt workflow';
         interrupt.kulStyling = 'flat';
         interrupt.title = 'Click to interrupt the workflow.';
-        interrupt.addEventListener(
-          'kul-button-event',
-          buttonEventHandler.bind(buttonEventHandler, imageviewer),
-        );
 
         resume.classList.add(imageEditorFactory.cssClasses.resume);
         resume.classList.add('kul-full-width');
         resume.classList.add('kul-success');
-        resume.kulDisabled = true;
         resume.kulIcon = RESUME_ICON;
         resume.kulLabel = 'Resume workflow';
         resume.kulStyling = 'flat';
         resume.title =
           'Click to resume the workflow. Remember to save your snapshots after editing the images!';
-        resume.addEventListener(
-          'kul-button-event',
-          buttonEventHandler.bind(buttonEventHandler, imageviewer),
-        );
 
         actions.classList.add(imageEditorFactory.cssClasses.actions);
         actions.appendChild(interrupt);
         actions.appendChild(resume);
+        actions.addEventListener(
+          'kul-button-event',
+          buttonEventHandler.bind(buttonEventHandler, imageviewer, actionButtons, grid),
+        );
 
-        grid.classList.add(imageEditorFactory.cssClasses.gridHasResume);
+        grid.classList.add(imageEditorFactory.cssClasses.gridIsInactive);
+        grid.classList.add(imageEditorFactory.cssClasses.gridHasActions);
         grid.appendChild(actions);
 
         actionButtons.interrupt = interrupt;
         actionButtons.resume = resume;
+
+        setGridStatus(Status.Completed, grid, actionButtons);
     }
 
     grid.classList.add(imageEditorFactory.cssClasses.grid);
@@ -142,7 +142,7 @@ export const imageEditorFactory: ImageEditorWidgetFactory = {
 
     wrapper.appendChild(content);
 
-    const options = imageEditorFactory.options(imageviewer, actionButtons);
+    const options = imageEditorFactory.options(imageviewer, actionButtons, grid);
     return { widget: createDOMWidget(TYPE, wrapper, node, options) };
   },
 };

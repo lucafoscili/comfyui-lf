@@ -433,6 +433,7 @@ export interface ImageEditorWidgetFactory extends BaseWidgetFactory<ImageEditorW
 export type ImageEditorWidgetOptionsCallback = (
   imageviewer: HTMLKulImageviewerElement,
   actionButtons: ImageEditorWidgetActionButtons,
+  grid: HTMLDivElement,
 ) => ImageEditorWidgetOptions;
 export interface ImageEditorWidgetOptions
   extends BaseWidgetOptions<ImageEditorWidgetDeserializedValue> {

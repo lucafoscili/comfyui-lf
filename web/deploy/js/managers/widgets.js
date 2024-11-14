@@ -72,7 +72,7 @@ export class LFWidgets {
             [CustomWidgetName.controlPanel]: () => controlPanelFactory.options(),
             [CustomWidgetName.countBarChart]: (chart, chip, button) => countBarChartFactory.options(chart, chip, button),
             [CustomWidgetName.history]: (history) => historyFactory.options(history),
-            [CustomWidgetName.imageEditor]: (imageviewer, actionButtons) => imageEditorFactory.options(imageviewer, actionButtons),
+            [CustomWidgetName.imageEditor]: (imageviewer, actionButtons, grid) => imageEditorFactory.options(imageviewer, actionButtons, grid),
             [CustomWidgetName.masonry]: (masonry) => masonryFactory.options(masonry),
             [CustomWidgetName.messenger]: (messenger, placeholder) => messengerFactory.options(messenger, placeholder),
             [CustomWidgetName.progressbar]: (progressbar, nodeType) => progressbarFactory.options(progressbar, nodeType),

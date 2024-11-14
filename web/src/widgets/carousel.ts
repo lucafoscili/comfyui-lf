@@ -2,7 +2,6 @@ import { KulDataDataset } from '../types/ketchup-lite/components';
 import {
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
-  CarouselWidgetDeserializedValue,
   CarouselWidgetFactory,
   NormalizeValueCallback,
 } from '../types/widgets';
