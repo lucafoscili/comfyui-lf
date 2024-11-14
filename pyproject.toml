@@ -1,7 +1,7 @@
 [project]
 name = "comfyui-lf"
 description = "Custom nodes with a touch of extra UX ✨ History for primitives, JSON manipulation, logic switches with visual feedback, LLM chat, analytics nodes, CivitAI metadata fetching... and more!"
-version = "5.1.7"
+version = "5.1.8"
 license = {file = "LICENSE"}
 dependencies = ["numpy", "openai==1.12.0", "opencv-python", "piexif", "Pillow", "requests", "torch"]
 
