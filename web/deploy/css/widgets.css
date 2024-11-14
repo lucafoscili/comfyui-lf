@@ -181,7 +181,9 @@
   pointer-events: none;
 }
 .lf-imageeditor__grid--is-inactive:after {
-  background-color: var(--kul-background-color-rgb, 0.75);
+  background-color: rgba(var(--kul-background-color-rgb), 0.875);
+  content: "";
+  cursor: not-allowed;
   height: 100%;
   left: 0;
   position: absolute;
@@ -193,7 +195,7 @@
   display: grid;
   grid-area: settings;
   height: 100%;
-  justify-content: center;
+  padding: 1.25em;
   width: 100%;
 }
 .lf-imageeditor__widget {

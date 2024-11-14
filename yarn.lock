@@ -289,10 +289,10 @@ jsonfile@^6.0.1:
   optionalDependencies:
     graceful-fs "^4.1.6"
 
-ketchup-lite@1.6.11:
-  version "1.6.11"
-  resolved "https://registry.yarnpkg.com/ketchup-lite/-/ketchup-lite-1.6.11.tgz#11bae78fb49f3e0940ef05532f2c41292a492430"
-  integrity sha512-LhTdBBE1gUd2SClD4SBZX+H1b/nd4yB8eBDawyoEBXaR7I0CTOjPcbYdcQsb5MuKfERWtp7MKla474SfCOqHsw==
+ketchup-lite@1.6.13:
+  version "1.6.13"
+  resolved "https://registry.yarnpkg.com/ketchup-lite/-/ketchup-lite-1.6.13.tgz#716e53bcfbcbed15169cd8351b1ba70cf0cdee99"
+  integrity sha512-JmJIldOKE/gFeOMv2JTr9bgnKu3P38qc7485zNmbEZTXNhAB2g63UJB4N9xZCHjOnNYjc0UIXsxwAvBw6j8m/w==
 
 lru-cache@^11.0.0:
   version "11.0.1"

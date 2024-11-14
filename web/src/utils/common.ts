@@ -22,6 +22,8 @@ const DEFAULT_WIDGET_NAME = 'ui_widget';
 const DOM = document.documentElement as KulDom;
 const WINDOW = window as unknown as LFWindow;
 
+let timer: ReturnType<typeof setTimeout>;
+
 export const areJSONEqual = (a: unknown, b: unknown) => {
   return JSON.stringify(a) === JSON.stringify(b);
 };
@@ -76,7 +78,6 @@ export const createDOMWidget = (
 };
 
 export const debounce = <T extends (...args: any[]) => void>(func: T, delay: number) => {
-  let timer: ReturnType<typeof setTimeout>;
   return (...args: Parameters<T>) => {
     clearTimeout(timer);
     timer = setTimeout(() => func(...args), delay);

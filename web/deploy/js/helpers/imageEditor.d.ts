@@ -10,13 +10,14 @@ export declare enum Status {
     Pending = "pending"
 }
 export declare const INTERRUPT_ICON = "stop";
+export declare const RESET_ICON = "refresh";
 export declare const RESUME_ICON = "play";
 export declare const buttonEventHandler: (imageviewer: HTMLKulImageviewerElement, actionButtons: ImageEditorWidgetActionButtons, grid: HTMLDivElement, e: CustomEvent<KulButtonEventPayload>) => Promise<void>;
 export declare const imageviewerEventHandler: (settings: HTMLDivElement, node: NodeType, e: CustomEvent<KulImageviewerEventPayload>) => Promise<void>;
 export declare const prepSettings: (settings: HTMLDivElement, node: KulDataNode, imageviewer: HTMLKulImageviewerElement) => void;
 export declare const createSliderControl: (sliderData: {
     [key: string]: string;
-}) => HTMLDivElement;
+}, callback: (triggerApiCall?: boolean, addSnapshot?: boolean) => Promise<void>) => HTMLKulSliderElement;
 export declare const getPathColumn: (dataset: KulDataDataset) => KulDataColumn;
 export declare const getStatusColumn: (dataset: KulDataDataset) => KulDataColumn;
 export declare const setGridStatus: (status: Status, grid: HTMLDivElement, actionButtons: ImageEditorWidgetActionButtons) => void;

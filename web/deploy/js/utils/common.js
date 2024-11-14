@@ -3,6 +3,7 @@ import { LogSeverity } from '../types/manager.js';
 const DEFAULT_WIDGET_NAME = 'ui_widget';
 const DOM = document.documentElement;
 const WINDOW = window;
+let timer;
 export const areJSONEqual = (a, b) => {
     return JSON.stringify(a) === JSON.stringify(b);
 };
@@ -43,7 +44,6 @@ export const createDOMWidget = (type, element, node, options = undefined) => {
     }
 };
 export const debounce = (func, delay) => {
-    let timer;
     return (...args) => {
         clearTimeout(timer);
         timer = setTimeout(() => func(...args), delay);

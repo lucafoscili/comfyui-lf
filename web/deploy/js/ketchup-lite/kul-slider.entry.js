@@ -1,10 +1,9 @@
 import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-4ebcb21f.js';
-import { k as kulManagerInstance, K as KUL_WRAPPER_ID, a as KulDataCyAttributes, b as KUL_STYLE_ID } from './kul-manager-74b8aa66.js';
+import { k as kulManagerInstance, K as KUL_WRAPPER_ID, a as KulDataCyAttributes, b as KUL_STYLE_ID } from './kul-manager-0684a7cb.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 
-/*-------------------------------------------------*/
-/*                    P r o p s                    */
-/*-------------------------------------------------*/
+//#endregion
+//#region Props
 var KulSliderProps;
 (function (KulSliderProps) {
     KulSliderProps["kulDisabled"] = "When true, the component is disabled, preventing user interaction.";
@@ -17,6 +16,7 @@ var KulSliderProps;
     KulSliderProps["kulStyle"] = "Sets a custom CSS style for the component.";
     KulSliderProps["kulValue"] = "The initial numeric value of the slider within the defined range.";
 })(KulSliderProps || (KulSliderProps = {}));
+//#endregion
 
 const kulSliderCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}@keyframes fade-in-grid{0%{display:none}1%{display:grid;opacity:0}100%{display:grid;opacity:1}}:host{--kul_slider_font_family:var(\n    --kul-slider-font-family,\n    var(--kul-font-family)\n  );--kul_slider_font_size:var(--kul-slider-font-size, var(--kul-font-size));--kul_slider_font_weight:var(--kul-slider-font-weight, 400);--kul_slider_label_color:var(\n    --kul-slider-label-color,\n    var(--kul-text-color)\n  );--kul_slider_primary_color:var(\n    --kul-slider-primary-color,\n    var(--kul-primary-color)\n  );--kul_slider_primary_color_rgb:var(\n    --kul-slider-primary-color-rgb,\n    var(--kul-primary-color-rgb)\n  );--kul_slider_thumb_color:var(\n    --kul-slider-thumb-color,\n    var(--kul-border-color)\n  );--kul_slider_label_font_size:var(--kul-slider-label-font-size, 0.875em);--kul_slider_label_line_height:var(--kul-slider-label-line-height, 2em);--kul_slider_label_letter_spacing:var(\n    --kul-slider-label-letter-spacing,\n    0.0178571429em\n  );--kul_slider_label_padding_left:var(--kul-slider-label-padding-left, 4px);--kul_slider_label_padding_right:var(--kul-slider-label-padding-right, 4px);--kul_slider_margin:var(--kul-slider-margin, 0 0.75em);--kul_slider_min_width:var(--kul-slider-min-width, 120px);--kul_slider_value_bottom_position:var(\n    --kul-slider-value-bottom-position,\n    -3em\n  );--kul_slider_value_font_weight:var(--kul-slider-value-font-weight, 500);--kul_slider_value_font_size:var(--kul-slider-value-font-size, 0.875em);--kul_slider_disabled_opacity:var(--kul-slider-disabled-opacity, 0.5);--kul_slider_track_height:var(--kul-slider-track-height, 6px);--kul_slider_track_border_radius:var(--kul-slider-track-border-radius, 12px);--kul_slider_backdrop_filter:var(--kul-slider-backdrop-filter, blur(10px));--kul_slider_box_shadow:var(\n    --kul-slider-box-shadow,\n    0px 4px 8px rgba(0, 0, 0, 0.2)\n  );--kul_slider_transition_duration:var(--kul-slider-transition-duration, 0.3s);--kul_slider_thumb_underlay_top:var(--kul-slider-thumb-underlay-top, -9px);--kul_slider_thumb_width:var(--kul-slider-thumb-width, 24px);--kul_slider_thumb_height:var(--kul-slider-thumb-height, 24px);--kul_slider_thumb_border_radius:var(--kul-slider-thumb-border-radius, 50%);--kul_slider_thumb_backdrop_filter:var(\n    --kul-slider-thumb-backdrop-filter,\n    blur(10px)\n  );--kul_slider_thumb_backdrop_filter_active:var(\n    --kul-slider-thumb-backdrop-filter-active,\n    blur(12px)\n  );--kul_slider_thumb_box_shadow:var(\n    --kul-slider-thumb-box-shadow,\n    0px 4px 8px rgba(0, 0, 0, 0.2)\n  );--kul_slider_thumb_hover_scale:var(--kul-slider-thumb-hover-scale, 1.1);--kul_slider_thumb_active_after_scale:var(\n    --kul-slider-thumb-active-after-scale,\n    1.5\n  );display:block;font-family:var(--kul_slider_font_family);font-size:var(--kul_slider_font_size)}.form-field{font-size:var(--kul_slider_label_font_size);line-height:var(--kul_slider_label_line_height);font-weight:var(--kul_slider_font_weight);letter-spacing:var(--kul_slider_label_letter_spacing);color:var(--kul_slider_label_color);display:inline-flex;align-items:center;vertical-align:middle}.form-field--align-end .form-field__label{margin-left:auto;margin-right:0;padding-left:0;padding-right:var(--kul_slider_label_padding_right);order:-1}.slider{position:relative;display:block;outline:none;user-select:none;margin:var(--kul_slider_margin);min-width:var(--kul_slider_min_width);width:100%}.slider__label{color:var(--kul_slider_label_color);cursor:pointer;font-family:var(--kul_slider_font_family);margin-left:0;margin-right:auto;padding-left:var(--kul_slider_label_padding_left);padding-right:0;user-select:none}.slider__value{position:absolute;bottom:var(--kul_slider_value_bottom_position);left:50%;transform:translateX(-50%);color:var(--kul_slider_label_color);font-weight:var(--kul_slider_value_font_weight);font-size:var(--kul_slider_value_font_size);white-space:nowrap}.slider--disabled{cursor:auto;opacity:var(--kul_slider_disabled_opacity);pointer-events:none}.slider--checked__track{background:rgba(var(--kul_slider_primary_color_rgb), 0.75)}.slider__track{box-sizing:border-box;width:100%;height:var(--kul_slider_track_height);border-radius:var(--kul_slider_track_border_radius);background:rgba(var(--kul_slider_primary_color_rgb), 0.2);backdrop-filter:var(--kul_slider_backdrop_filter);box-shadow:var(--kul_slider_box_shadow);transition:background-color var(--kul_slider_transition_duration)}.slider__thumb-underlay{position:absolute;top:var(--kul_slider_thumb_underlay_top);left:calc(var(--slider-value));transform:translateX(-50%);width:var(--kul_slider_thumb_width);height:var(--kul_slider_thumb_height);display:flex;align-items:center;justify-content:center;border-radius:var(--kul_slider_thumb_border_radius);backdrop-filter:var(--kul_slider_thumb_backdrop_filter);transition:left var(--kul_slider_transition_duration);pointer-events:none}.slider__thumb{width:var(--kul_slider_thumb_width);height:var(--kul_slider_thumb_height);background:rgba(var(--kul_slider_primary_color_rgb), 0.6);border-radius:var(--kul_slider_thumb_border_radius);backdrop-filter:var(--kul_slider_thumb_backdrop_filter_active);box-shadow:var(--kul_slider_thumb_box_shadow);transition:background-color var(--kul_slider_transition_duration), transform var(--kul_slider_transition_duration);cursor:pointer}.slider__thumb:hover{transform:scale(var(--kul_slider_thumb_hover_scale));background:rgba(var(--kul_slider_primary_color_rgb), 0.8)}.slider__native-control{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;z-index:2}:host(.kul-danger){--kul-slider-primary-color:var(--kul-danger-color);--kul-slider-primary-color-rgb:var(--kul-danger-color-rgb)}:host(.kul-info){--kul-slider-primary-color:var(--kul-info-color);--kul-slider-primary-color-rgb:var(--kul-info-color-rgb)}:host(.kul-secondary){--kul-slider-primary-color:var(--kul-secondary-color);--kul-slider-primary-color-rgb:var(--kul-secondary-color-rgb)}:host(.kul-success){--kul-slider-primary-color:var(--kul-success-color);--kul-slider-primary-color-rgb:var(--kul-success-color-rgb)}:host(.kul-warning){--kul-slider-primary-color:var(--kul-warning-color);--kul-slider-primary-color-rgb:var(--kul-warning-color-rgb)}";
 const KulSliderStyle0 = kulSliderCss;
@@ -32,7 +32,7 @@ const KulSlider = class {
             renderStart: 0,
             startTime: performance.now(),
         };
-        this.value = 0;
+        this.value = { display: 0, real: 0 };
         this.kulDisabled = false;
         this.kulLabel = '';
         this.kulLeadingLabel = false;
@@ -44,26 +44,31 @@ const KulSlider = class {
         this.kulValue = 50;
     }
     get rootElement() { return getElement(this); }
-    /*-------------------------------------------------*/
-    /*       I n t e r n a l   V a r i a b l e s       */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Internal variables
     #input;
     #kulManager = kulManagerInstance();
     #rippleSurface;
-    /*-------------------------------------------------*/
-    /*                   E v e n t s                   */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Events
     /**
      * Describes event emitted for various slider interactions like click, focus, blur.
      */
     kulEvent;
     onKulEvent(e, eventType) {
         switch (eventType) {
+            case 'change':
+                this.setValue(+this.#input.value);
+                this.refresh();
+                break;
+            case 'input':
+                this.value.display = +this.#input.value;
+                this.refresh();
+                break;
             case 'pointerdown':
                 if (this.kulRipple) {
                     this.#kulManager.theme.ripple.trigger(e, this.#rippleSurface);
                 }
-                break;
         }
         this.kulEvent.emit({
             comp: this,
@@ -73,9 +78,8 @@ const KulSlider = class {
             value: this.value,
         });
     }
-    /*-------------------------------------------------*/
-    /*           P u b l i c   M e t h o d s           */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Public methods
     /**
      * Fetches debug information of the component's current state.
      * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves with the debug information object.
@@ -110,7 +114,8 @@ const KulSlider = class {
      * @returns {Promise<void>}
      */
     async setValue(value) {
-        this.value = value;
+        this.value.display = value;
+        this.value.real = value;
     }
     /**
      * Initiates the unmount sequence, which removes the component from the DOM after a delay.
@@ -122,12 +127,11 @@ const KulSlider = class {
             this.rootElement.remove();
         }, ms);
     }
-    /*-------------------------------------------------*/
-    /*          L i f e c y c l e   H o o k s          */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Lifecycle hooks
     componentWillLoad() {
         if (this.kulValue) {
-            this.value = this.kulValue;
+            this.setValue(this.kulValue);
         }
         this.#kulManager.theme.register(this);
     }
@@ -153,14 +157,15 @@ const KulSlider = class {
             'form-field': true,
             'form-field--align-end': this.kulLeadingLabel,
         };
-        return (h(Host, { key: '7ef59d65c0b2bb303425fa40f4da7aa288376c66' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '308c809b93f6e49e8af16adb6defdc131245149d', id: KUL_WRAPPER_ID }, h("div", { key: 'f8b1ebb8d82c040412ca523fff6030b8b94bf803', class: formClassName }, h("div", { key: '011b2430ad2be0464b5524f8254eda9353b715b8', class: className, style: {
-                '--slider-value': `${((this.value - this.kulMin) / (this.kulMax - this.kulMin)) * 100}%`,
-            } }, h("input", { key: 'd26649031a4f9e9ad037ff1a9502ab1bb3f93601', type: "range", class: "slider__native-control", "data-cy": KulDataCyAttributes.INPUT, min: this.kulMin, max: this.kulMax, step: this.kulStep, value: this.value, disabled: this.kulDisabled, onBlur: (e) => {
+        return (h(Host, { key: '7075468d8d9057117e8481c54db7d988292b1301' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'ae71936b20b1288c90c310b6940baddefd582103', id: KUL_WRAPPER_ID }, h("div", { key: '8ee9a5583caa6939df01caa18a3b9369decd0aff', class: formClassName }, h("div", { key: 'bd469e255c4f32b2631b3abb2078c71e7a07cc81', class: className, style: {
+                '--slider-value': `${((this.value.display - this.kulMin) / (this.kulMax - this.kulMin)) * 100}%`,
+            } }, h("input", { key: '0f5f4848cd9c48726899c299986a624ab71a200f', type: "range", class: "slider__native-control", "data-cy": KulDataCyAttributes.INPUT, min: this.kulMin, max: this.kulMax, step: this.kulStep, value: this.value.real, disabled: this.kulDisabled, onBlur: (e) => {
                 this.onKulEvent(e, 'blur');
+            }, onChange: (e) => {
+                this.onKulEvent(e, 'change');
             }, onFocus: (e) => {
                 this.onKulEvent(e, 'focus');
             }, onInput: (e) => {
-                this.value = +this.#input.value;
                 this.onKulEvent(e, 'input');
             }, onPointerDown: (e) => {
                 this.onKulEvent(e, 'pointerdown');
@@ -168,11 +173,11 @@ const KulSlider = class {
                 if (el) {
                     this.#input = el;
                 }
-            } }), h("div", { key: 'f2a48a8b981460012fd14b2ee067d4797b648e49', class: "slider__track" }, h("div", { key: '062c79eee73b68230bb2ddaefef43808b2ba4047', class: "slider__thumb-underlay" }, h("div", { key: '361e06112523044240bc85434088903f8e6c08fd', class: "slider__thumb", ref: (el) => {
+            } }), h("div", { key: '647c3230e7a438563caf6f7833fc52a1a2f61b98', class: "slider__track" }, h("div", { key: '82bc17ed12d8a0477db2d50b1cd75788c1b55df9', class: "slider__thumb-underlay" }, h("div", { key: 'a92e32a969d594eb5ebacfe44aa9519c71ec4b09', class: "slider__thumb", ref: (el) => {
                 if (this.kulRipple) {
                     this.#rippleSurface = el;
                 }
-            } }))), h("span", { key: '107d2578df4df50c538b6d2363612c38c4170e52', class: "slider__value" }, this.value)), h("label", { key: 'e0f2ff9c4d2421d7371a9eef117c58e8af5b6805', class: "form-field__label" }, this.kulLabel)))));
+            } }))), h("span", { key: 'c00bd716ae729da2ad044fb5b195971de3725338', class: "slider__value" }, this.value.display)), h("label", { key: '0aaccd1cabfbb1d9eb5d8eedc966a43b432f43e5', class: "form-field__label" }, this.kulLabel)))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);
