@@ -4,6 +4,7 @@ import {
   CustomWidgetName,
   CarouselWidgetFactory,
   NormalizeValueCallback,
+  CarouselWidgetDeserializedValue,
 } from '../types/widgets';
 import { createDOMWidget, normalizeValue } from '../utils/common';
 
@@ -30,7 +31,8 @@ export const carouselFactory: CarouselWidgetFactory = {
         const callback: NormalizeValueCallback<
           CustomWidgetDeserializedValuesMap<typeof TYPE> | string
         > = (_, u) => {
-          carousel.kulData = (u.parsedJson as KulDataDataset) || {};
+          const { dataset } = u.parsedJson as CarouselWidgetDeserializedValue;
+          carousel.kulData = dataset || {};
         };
 
         normalizeValue(value, callback, TYPE);

@@ -20,7 +20,8 @@ export const carouselFactory = {
             },
             setValue(value) {
                 const callback = (_, u) => {
-                    carousel.kulData = u.parsedJson || {};
+                    const { dataset } = u.parsedJson;
+                    carousel.kulData = dataset || {};
                 };
                 normalizeValue(value, callback, TYPE);
             },
