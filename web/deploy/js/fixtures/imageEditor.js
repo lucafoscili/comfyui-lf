@@ -1,24 +1,10 @@
-import { TREE_DATA_IDS } from '../types/manager.js';
-export const ON_COMPLETE = {
-    nodes: [
-        {
-            cells: {
-                kulImage: {
-                    htmlProps: { title: 'All done!' },
-                    shape: 'image',
-                    value: 'done_all',
-                },
-            },
-            id: 'root',
-        },
-    ],
-};
+//#region Settings
 const SETTINGS = {
     clarity: {
         slider: [
             {
-                ariaLabel: 'Clarity strength',
-                defaultValue: '0.5',
+                ariaLabel: 'Clarity Strength',
+                defaultValue: '0',
                 id: 'clarity_strength',
                 max: '5',
                 min: '0',
@@ -26,20 +12,20 @@ const SETTINGS = {
                 title: 'Controls the amount of contrast enhancement in midtones.',
             },
             {
-                ariaLabel: 'Sharpen amount',
+                ariaLabel: 'Sharpen Amount',
+                defaultValue: '0',
+                id: 'sharpen_amount',
                 max: '5',
                 min: '0',
-                id: 'sharpen_amount',
-                defaultValue: '1.0',
                 step: '0.1',
                 title: 'Controls how much sharpening is applied to the image.',
             },
             {
-                ariaLabel: 'Blur kernel size',
+                ariaLabel: 'Blur Kernel Size',
+                defaultValue: '0',
+                id: 'blur_kernel_size',
                 max: '15',
                 min: '1',
-                id: 'blur_kernel_size',
-                defaultValue: '7',
                 step: '2',
                 title: 'Controls the size of the Gaussian blur kernel. Higher values mean more smoothing.',
             },
@@ -47,10 +33,20 @@ const SETTINGS = {
     },
     vignette: {
         slider: [
-        // Define vignette sliders here, following the same pattern
+            {
+                ariaLabel: 'Vignette Intensity',
+                defaultValue: '0',
+                id: 'vignette_intensity',
+                max: '100',
+                min: '0',
+                step: '1',
+                title: 'Controls the intensity of the vignette effect.',
+            },
         ],
     },
 };
+//#endregion
+//#region Tree dataset
 export const TREE_DATA = {
     nodes: [
         {
@@ -59,8 +55,13 @@ export const TREE_DATA = {
             icon: 'settings',
             children: [
                 {
-                    cells: { kulCode: { shape: 'code', value: JSON.stringify(SETTINGS.clarity) } },
-                    id: TREE_DATA_IDS.Clarity,
+                    cells: {
+                        kulCode: {
+                            shape: 'code',
+                            value: JSON.stringify(SETTINGS.clarity),
+                        },
+                    },
+                    id: 'clarity',
                     value: 'Clarity',
                 },
             ],
@@ -71,11 +72,17 @@ export const TREE_DATA = {
             icon: 'palette',
             children: [
                 {
-                    cells: { kulCode: { shape: 'code', value: JSON.stringify({}) } },
-                    id: TREE_DATA_IDS.Vignette,
+                    cells: {
+                        kulCode: {
+                            shape: 'code',
+                            value: JSON.stringify(SETTINGS.vignette),
+                        },
+                    },
+                    id: 'vignette',
                     value: 'Vignette',
                 },
             ],
         },
     ],
 };
+//#endregion

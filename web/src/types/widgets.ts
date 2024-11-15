@@ -448,6 +448,74 @@ export interface ImageEditorWidgetActionButtons {
   interrupt?: HTMLKulButtonElement;
   resume?: HTMLKulButtonElement;
 }
+export interface ImageEditorWidgetFilterSettings {
+  [key: string]: number;
+}
+export interface ImageEditorWidgetClaritySettings extends ImageEditorWidgetFilterSettings {
+  clarity_strength: number;
+  sharpen_amount: number;
+  blur_kernel_size: number;
+}
+export interface ImageEditorWidgetVignetteSettings extends ImageEditorWidgetFilterSettings {
+  vignette_intensity: number;
+}
+export interface ImageEditorWidgetFilterSettingsMap {
+  clarity: ImageEditorWidgetClaritySettings;
+  vignette: ImageEditorWidgetVignetteSettings;
+}
+export type ImageEditorWidgetFilterType = keyof ImageEditorWidgetFilterSettingsMap;
+export enum ImageEditorWidgetControls {
+  Slider = 'slider',
+  Toggle = 'toggle',
+}
+export enum ImageEditorWidgetColumnId {
+  Path = 'path',
+  Status = 'status',
+}
+export enum ImageEditorWidgetStatus {
+  Completed = 'completed',
+  Pending = 'pending',
+}
+export enum ImageEditorWidgetIcons {
+  Interrupt = 'stop',
+  Reset = 'refresh',
+  Resume = 'play',
+}
+export type ImageEditorWidgetSliderID<ImageEditorWidgetSettings> = Extract<
+  keyof ImageEditorWidgetSettings,
+  string
+>;
+export interface ImageEditorWidgetSliderConfig<ID extends string> {
+  ariaLabel: string;
+  defaultValue: string;
+  id: ID;
+  max: string;
+  min: string;
+  step: string;
+  title: string;
+}
+export type ImageEditorWidgetControlConfig<ID extends string> =
+  | ImageEditorWidgetSliderConfig<ID>
+  | ImageEditorWidgetToggleConfig<ID>;
+export type ImageEditorWidgetControlConfigMap = {
+  [ImageEditorWidgetControls.Slider]: ImageEditorWidgetSliderConfig<string>;
+  [ImageEditorWidgetControls.Toggle]: ImageEditorWidgetToggleConfig<string>;
+};
+export interface ImageEditorWidgetToggleConfig<ID extends string> {
+  ariaLabel: string;
+  defaultValue: boolean;
+  id: ID;
+  title: string;
+}
+export type ImageEditorWidgetSettingsFor<F extends ImageEditorWidgetFilterType> = Partial<{
+  [C in ImageEditorWidgetControls]: ImageEditorWidgetControlConfig<
+    Extract<keyof ImageEditorWidgetFilterSettingsMap[F], string>
+  >[];
+}>;
+export type ImageEditorWidgetSettings = {
+  [F in ImageEditorWidgetFilterType]: ImageEditorWidgetSettingsFor<F>;
+};
+export type ImageEditorWidgetUpdateCallback = (addSnapshot?: boolean) => Promise<void>;
 
 /*-------------------------------------------------------------------*/
 /*               M a s o n r y   D e c l a r a t i o n s             */

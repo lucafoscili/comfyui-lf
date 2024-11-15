@@ -85,9 +85,9 @@ async def get_images_in_directory(request):
         return web.Response(status=500, text=f"Error: {str(e)}")       
 
 def apply_clarity_effect(img_tensor: torch.Tensor, settings: dict):
-    clarity_strength = float(settings.get("clarity_strength", 0.5))
-    sharpen_amount = float(settings.get("sharpen_amount", 1.0))
-    blur_kernel_size = int(settings.get("blur_kernel_size", 7))
+    clarity_strength = float(settings.get("clarity_strength", 0))
+    sharpen_amount = float(settings.get("sharpen_amount", 0))
+    blur_kernel_size = int(settings.get("blur_kernel_size", 0))
 
     processed_tensor = clarity_effect(img_tensor, clarity_strength, sharpen_amount, blur_kernel_size)
     return processed_tensor

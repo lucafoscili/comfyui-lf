@@ -401,7 +401,7 @@ class LF_ImagesSlideshow:
             pil_image = tensor_to_pil(img)
 
             output_file, subfolder, filename = resolve_filepath(
-                    filename_prefix="view",
+                    filename_prefix="slide",
                     image=img,
             )
             pil_image.save(output_file, format="PNG")

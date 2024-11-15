@@ -1,8 +1,8 @@
 import { TREE_DATA } from '../fixtures/imageEditor.js';
-import { buttonEventHandler, getStatusColumn, imageviewerEventHandler, INTERRUPT_ICON, RESUME_ICON, setGridStatus, Status, } from '../helpers/imageEditor.js';
+import { buttonEventHandler, getStatusColumn, imageviewerEventHandler, setGridStatus, } from '../helpers/imageEditor.js';
 import { LogSeverity } from '../types/manager.js';
 import { NodeName } from '../types/nodes.js';
-import { CustomWidgetName, } from '../types/widgets.js';
+import { CustomWidgetName, ImageEditorWidgetStatus, ImageEditorWidgetIcons, } from '../types/widgets.js';
 import { createDOMWidget, getLFManager, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-imageeditor';
 const TYPE = CustomWidgetName.imageEditor;
@@ -44,8 +44,8 @@ export const imageEditorFactory = {
             setValue: (value) => {
                 const callback = (_, u) => {
                     const parsedValue = u.parsedJson;
-                    if (getStatusColumn(parsedValue)?.title === Status.Pending) {
-                        setGridStatus(Status.Pending, grid, actionButtons);
+                    if (getStatusColumn(parsedValue)?.title === ImageEditorWidgetStatus.Pending) {
+                        setGridStatus(ImageEditorWidgetStatus.Pending, grid, actionButtons);
                     }
                     imageviewer.kulData = parsedValue || {};
                 };
@@ -75,14 +75,14 @@ export const imageEditorFactory = {
                 interrupt.classList.add(imageEditorFactory.cssClasses.resume);
                 interrupt.classList.add('kul-full-width');
                 interrupt.classList.add('kul-danger');
-                interrupt.kulIcon = INTERRUPT_ICON;
+                interrupt.kulIcon = ImageEditorWidgetIcons.Interrupt;
                 interrupt.kulLabel = 'Interrupt workflow';
                 interrupt.kulStyling = 'flat';
                 interrupt.title = 'Click to interrupt the workflow.';
                 resume.classList.add(imageEditorFactory.cssClasses.resume);
                 resume.classList.add('kul-full-width');
                 resume.classList.add('kul-success');
-                resume.kulIcon = RESUME_ICON;
+                resume.kulIcon = ImageEditorWidgetIcons.Resume;
                 resume.kulLabel = 'Resume workflow';
                 resume.kulStyling = 'flat';
                 resume.title =
@@ -96,7 +96,7 @@ export const imageEditorFactory = {
                 grid.appendChild(actions);
                 actionButtons.interrupt = interrupt;
                 actionButtons.resume = resume;
-                setGridStatus(Status.Completed, grid, actionButtons);
+                setGridStatus(ImageEditorWidgetStatus.Completed, grid, actionButtons);
         }
         grid.classList.add(imageEditorFactory.cssClasses.grid);
         grid.appendChild(imageviewer);

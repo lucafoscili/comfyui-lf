@@ -33,3 +33,24 @@ export var CustomWidgetName;
     CustomWidgetName["tree"] = "KUL_TREE";
     CustomWidgetName["upload"] = "KUL_UPLOAD";
 })(CustomWidgetName || (CustomWidgetName = {}));
+export var ImageEditorWidgetControls;
+(function (ImageEditorWidgetControls) {
+    ImageEditorWidgetControls["Slider"] = "slider";
+    ImageEditorWidgetControls["Toggle"] = "toggle";
+})(ImageEditorWidgetControls || (ImageEditorWidgetControls = {}));
+export var ImageEditorWidgetColumnId;
+(function (ImageEditorWidgetColumnId) {
+    ImageEditorWidgetColumnId["Path"] = "path";
+    ImageEditorWidgetColumnId["Status"] = "status";
+})(ImageEditorWidgetColumnId || (ImageEditorWidgetColumnId = {}));
+export var ImageEditorWidgetStatus;
+(function (ImageEditorWidgetStatus) {
+    ImageEditorWidgetStatus["Completed"] = "completed";
+    ImageEditorWidgetStatus["Pending"] = "pending";
+})(ImageEditorWidgetStatus || (ImageEditorWidgetStatus = {}));
+export var ImageEditorWidgetIcons;
+(function (ImageEditorWidgetIcons) {
+    ImageEditorWidgetIcons["Interrupt"] = "stop";
+    ImageEditorWidgetIcons["Reset"] = "refresh";
+    ImageEditorWidgetIcons["Resume"] = "play";
+})(ImageEditorWidgetIcons || (ImageEditorWidgetIcons = {}));
