@@ -1,5 +1,5 @@
-import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-4ebcb21f.js';
-import { k as kulManagerInstance, c as KulThemeColorValues, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-0684a7cb.js';
+import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-53f95fee.js';
+import { k as kulManagerInstance, c as KulThemeColorValues, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-9e1be956.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 
 /*-------------------------------------------------*/
@@ -36,17 +36,17 @@ PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
 /* global Reflect, Promise */
 
-var extendStatics$1 = function(d, b) {
-    extendStatics$1 = Object.setPrototypeOf ||
+var extendStatics = function(d, b) {
+    extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-    return extendStatics$1(d, b);
+    return extendStatics(d, b);
 };
 
-function __extends$1(d, b) {
+function __extends(d, b) {
     if (typeof b !== "function" && b !== null)
         throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-    extendStatics$1(d, b);
+    extendStatics(d, b);
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 }
@@ -736,37 +736,6 @@ function hasOwn(own, prop) {
 }
 function noop() { }
 var RADIAN_TO_DEGREE = 180 / Math.PI;
-
-/*! *****************************************************************************
-Copyright (c) Microsoft Corporation.
-
-Permission to use, copy, modify, and/or distribute this software for any
-purpose with or without fee is hereby granted.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.
-***************************************************************************** */
-/* global Reflect, Promise */
-
-var extendStatics = function(d, b) {
-    extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-    return extendStatics(d, b);
-};
-
-function __extends(d, b) {
-    if (typeof b !== "function" && b !== null)
-        throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-    extendStatics(d, b);
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-}
 
 function create$2(x, y) {
     if (x == null) {
@@ -8388,7 +8357,7 @@ function enableClassExtend(rootClz, mandatoryMethods) {
     var ExtendedClass;
     if (isESClass(superClass)) {
       ExtendedClass = /** @class */function (_super) {
-        __extends$1(class_1, _super);
+        __extends(class_1, _super);
         function class_1() {
           return _super.apply(this, arguments) || this;
         }
@@ -16641,7 +16610,7 @@ function copyLayoutParams(target, source) {
 
 var inner$l = makeInner();
 var ComponentModel = /** @class */function (_super) {
-  __extends$1(ComponentModel, _super);
+  __extends(ComponentModel, _super);
   function ComponentModel(option, parentModel, ecModel) {
     var _this = _super.call(this, option, parentModel, ecModel) || this;
     _this.uid = getUID('ec_cpt_model');
@@ -17360,7 +17329,7 @@ var initBase;
 var OPTION_INNER_KEY = '\0_ec_inner';
 var OPTION_INNER_VALUE = 1;
 var GlobalModel = /** @class */function (_super) {
-  __extends$1(GlobalModel, _super);
+  __extends(GlobalModel, _super);
   function GlobalModel() {
     return _super !== null && _super.apply(this, arguments) || this;
   }
@@ -22028,7 +21997,7 @@ function getSelectionKey(data, dataIndex) {
 }
 var SERIES_UNIVERSAL_TRANSITION_PROP = '__universalTransitionEnabled';
 var SeriesModel = /** @class */function (_super) {
-  __extends$1(SeriesModel, _super);
+  __extends(SeriesModel, _super);
   function SeriesModel() {
     // [Caution]: Because this class or desecendants can be used as `XXX.extend(subProto)`,
     // the class members must not be initialized in constructor or declaration place.
@@ -25690,7 +25659,7 @@ function toLowercaseNameAndCallEventful(host, method, args) {
   return Eventful$1.prototype[method].apply(host, args);
 }
 var MessageCenter = /** @class */function (_super) {
-  __extends$1(MessageCenter, _super);
+  __extends(MessageCenter, _super);
   function MessageCenter() {
     return _super !== null && _super.apply(this, arguments) || this;
   }
@@ -25721,7 +25690,7 @@ var enableConnect;
 var markStatusToUpdate;
 var applyChangedStates;
 var ECharts = /** @class */function (_super) {
-  __extends$1(ECharts, _super);
+  __extends(ECharts, _super);
   function ECharts(dom,
   // Theme name or themeOption.
   theme, opts) {
@@ -27270,7 +27239,7 @@ var ECharts = /** @class */function (_super) {
     }
     createExtensionAPI = function (ecIns) {
       return new ( /** @class */function (_super) {
-        __extends$1(class_1, _super);
+        __extends(class_1, _super);
         function class_1() {
           return _super !== null && _super.apply(this, arguments) || this;
         }
@@ -29985,7 +29954,7 @@ function scale(val, extent) {
 }
 
 var OrdinalScale = /** @class */function (_super) {
-  __extends$1(OrdinalScale, _super);
+  __extends(OrdinalScale, _super);
   function OrdinalScale(setting) {
     var _this = _super.call(this, setting) || this;
     _this.type = 'ordinal';
@@ -30147,7 +30116,7 @@ const OrdinalScale$1 = OrdinalScale;
 
 var roundNumber = round$3;
 var IntervalScale = /** @class */function (_super) {
-  __extends$1(IntervalScale, _super);
+  __extends(IntervalScale, _super);
   function IntervalScale() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = 'interval';
@@ -30823,7 +30792,7 @@ var bisect = function (a, x, lo, hi) {
   return lo;
 };
 var TimeScale = /** @class */function (_super) {
-  __extends$1(TimeScale, _super);
+  __extends(TimeScale, _super);
   function TimeScale(settings) {
     var _this = _super.call(this, settings) || this;
     _this.type = 'time';
@@ -31256,7 +31225,7 @@ var mathCeil$1 = Math.ceil;
 var mathPow$1 = Math.pow;
 var mathLog$1 = Math.log;
 var LogScale = /** @class */function (_super) {
-  __extends$1(LogScale, _super);
+  __extends(LogScale, _super);
   function LogScale() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = 'log';
@@ -32019,7 +31988,7 @@ var GeoJSONLineStringGeometry = /** @class */function () {
   return GeoJSONLineStringGeometry;
 }();
 var GeoJSONRegion = /** @class */function (_super) {
-  __extends$1(GeoJSONRegion, _super);
+  __extends(GeoJSONRegion, _super);
   function GeoJSONRegion(name, geometries, cp) {
     var _this = _super.call(this, name) || this;
     _this.type = 'geoJSON';
@@ -32150,7 +32119,7 @@ var GeoJSONRegion = /** @class */function (_super) {
   return GeoJSONRegion;
 }(Region);
 var GeoSVGRegion = /** @class */function (_super) {
-  __extends$1(GeoSVGRegion, _super);
+  __extends(GeoSVGRegion, _super);
   function GeoSVGRegion(name, elOnlyForCalculate) {
     var _this = _super.call(this, name) || this;
     _this.type = 'geoSVG';
@@ -36481,7 +36450,7 @@ function install$R(registers) {
 }
 
 var LineSeriesModel = /** @class */function (_super) {
-  __extends$1(LineSeriesModel, _super);
+  __extends(LineSeriesModel, _super);
   function LineSeriesModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = LineSeriesModel.type;
@@ -36613,7 +36582,7 @@ function getDefaultInterpolatedLabel(data, interpolatedValue) {
 }
 
 var Symbol = /** @class */function (_super) {
-  __extends$1(Symbol, _super);
+  __extends(Symbol, _super);
   function Symbol(data, idx, seriesScope, opts) {
     var _this = _super.call(this) || this;
     _this.updateData(data, idx, seriesScope, opts);
@@ -37417,7 +37386,7 @@ var ECPolylineShape = /** @class */function () {
   return ECPolylineShape;
 }();
 var ECPolyline = /** @class */function (_super) {
-  __extends$1(ECPolyline, _super);
+  __extends(ECPolyline, _super);
   function ECPolyline(opts) {
     var _this = _super.call(this, opts) || this;
     _this.type = 'ec-polyline';
@@ -37517,14 +37486,14 @@ var ECPolyline = /** @class */function (_super) {
   return ECPolyline;
 }(Path$1);
 var ECPolygonShape = /** @class */function (_super) {
-  __extends$1(ECPolygonShape, _super);
+  __extends(ECPolygonShape, _super);
   function ECPolygonShape() {
     return _super !== null && _super.apply(this, arguments) || this;
   }
   return ECPolygonShape;
 }(ECPolylineShape);
 var ECPolygon = /** @class */function (_super) {
-  __extends$1(ECPolygon, _super);
+  __extends(ECPolygon, _super);
   function ECPolygon(opts) {
     var _this = _super.call(this, opts) || this;
     _this.type = 'ec-polygon';
@@ -38096,7 +38065,7 @@ function getEndLabelStateSpecified(endLabelModel, coordSys) {
   };
 }
 var LineView = /** @class */function (_super) {
-  __extends$1(LineView, _super);
+  __extends(LineView, _super);
   function LineView() {
     return _super !== null && _super.apply(this, arguments) || this;
   }
@@ -38920,7 +38889,7 @@ function install$Q(registers) {
 }
 
 var BaseBarSeriesModel = /** @class */function (_super) {
-  __extends$1(BaseBarSeriesModel, _super);
+  __extends(BaseBarSeriesModel, _super);
   function BaseBarSeriesModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = BaseBarSeriesModel.type;
@@ -39033,7 +39002,7 @@ SeriesModel$1.registerClass(BaseBarSeriesModel);
 const BaseBarSeriesModel$1 = BaseBarSeriesModel;
 
 var BarSeriesModel = /** @class */function (_super) {
-  __extends$1(BarSeriesModel, _super);
+  __extends(BarSeriesModel, _super);
   function BarSeriesModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = BarSeriesModel.type;
@@ -39114,7 +39083,7 @@ var SausageShape = /** @class */function () {
   return SausageShape;
 }();
 var SausagePath = /** @class */function (_super) {
-  __extends$1(SausagePath, _super);
+  __extends(SausagePath, _super);
   function SausagePath(opts) {
     var _this = _super.call(this, opts) || this;
     _this.type = 'sausage';
@@ -39359,7 +39328,7 @@ function getClipArea(coord, data) {
   return coordSysClipArea;
 }
 var BarView = /** @class */function (_super) {
-  __extends$1(BarView, _super);
+  __extends(BarView, _super);
   function BarView() {
     var _this = _super.call(this) || this;
     _this.type = BarView.type;
@@ -40019,7 +39988,7 @@ var LagePathShape = /** @class */function () {
   return LagePathShape;
 }();
 var LargePath = /** @class */function (_super) {
-  __extends$1(LargePath, _super);
+  __extends(LargePath, _super);
   function LargePath(opts) {
     var _this = _super.call(this, opts) || this;
     _this.type = 'largeBar';
@@ -40877,7 +40846,7 @@ function pieLabelLayout(seriesModel) {
  * Piece of pie including Sector, Label, LabelLine
  */
 var PiePiece = /** @class */function (_super) {
-  __extends$1(PiePiece, _super);
+  __extends(PiePiece, _super);
   function PiePiece(data, idx, startAngle) {
     var _this = _super.call(this) || this;
     _this.z2 = 2;
@@ -41032,7 +41001,7 @@ var PiePiece = /** @class */function (_super) {
 }(Sector$1);
 // Pie view
 var PieView = /** @class */function (_super) {
-  __extends$1(PieView, _super);
+  __extends(PieView, _super);
   function PieView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.ignoreLabelLineUpdate = true;
@@ -41209,7 +41178,7 @@ const LegendVisualProvider$1 = LegendVisualProvider;
 
 var innerData = makeInner();
 var PieSeriesModel = /** @class */function (_super) {
-  __extends$1(PieSeriesModel, _super);
+  __extends(PieSeriesModel, _super);
   function PieSeriesModel() {
     return _super !== null && _super.apply(this, arguments) || this;
   }
@@ -41401,7 +41370,7 @@ function install$O(registers) {
 }
 
 var ScatterSeriesModel = /** @class */function (_super) {
-  __extends$1(ScatterSeriesModel, _super);
+  __extends(ScatterSeriesModel, _super);
   function ScatterSeriesModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = ScatterSeriesModel.type;
@@ -41481,7 +41450,7 @@ var LargeSymbolPathShape = /** @class */function () {
   return LargeSymbolPathShape;
 }();
 var LargeSymbolPath = /** @class */function (_super) {
-  __extends$1(LargeSymbolPath, _super);
+  __extends(LargeSymbolPath, _super);
   function LargeSymbolPath(opts) {
     var _this = _super.call(this, opts) || this;
     _this._off = 0;
@@ -41737,7 +41706,7 @@ var LargeSymbolDraw = /** @class */function () {
 const LargeSymbolDraw$1 = LargeSymbolDraw;
 
 var ScatterView = /** @class */function (_super) {
-  __extends$1(ScatterView, _super);
+  __extends(ScatterView, _super);
   function ScatterView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = ScatterView.type;
@@ -41823,7 +41792,7 @@ var ScatterView = /** @class */function (_super) {
 const ScatterView$1 = ScatterView;
 
 var GridModel = /** @class */function (_super) {
-  __extends$1(GridModel, _super);
+  __extends(GridModel, _super);
   function GridModel() {
     return _super !== null && _super.apply(this, arguments) || this;
   }
@@ -41851,7 +41820,7 @@ var GridModel = /** @class */function (_super) {
 const GridModel$1 = GridModel;
 
 var CartesianAxisModel = /** @class */function (_super) {
-  __extends$1(CartesianAxisModel, _super);
+  __extends(CartesianAxisModel, _super);
   function CartesianAxisModel() {
     return _super !== null && _super.apply(this, arguments) || this;
   }
@@ -42079,7 +42048,7 @@ function axisModelCreator(registers, axisName, BaseAxisModelClass, extraDefaultO
   each$f(AXIS_TYPES, function (v, axisType) {
     var defaultOption = merge(merge({}, axisDefault[axisType], true), extraDefaultOption, true);
     var AxisModel = /** @class */function (_super) {
-      __extends$1(AxisModel, _super);
+      __extends(AxisModel, _super);
       function AxisModel() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.type = axisName + 'Axis.' + axisType;
@@ -42168,7 +42137,7 @@ function canCalculateAffineTransform(scale) {
   return scale.type === 'interval' || scale.type === 'time';
 }
 var Cartesian2D = /** @class */function (_super) {
-  __extends$1(Cartesian2D, _super);
+  __extends(Cartesian2D, _super);
   function Cartesian2D() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = 'cartesian2d';
@@ -42285,7 +42254,7 @@ var Cartesian2D = /** @class */function (_super) {
 const Cartesian2D$1 = Cartesian2D;
 
 var Axis2D = /** @class */function (_super) {
-  __extends$1(Axis2D, _super);
+  __extends(Axis2D, _super);
   function Axis2D(dim, scale, coordExtent, axisType, position) {
     var _this = _super.call(this, dim, scale, coordExtent) || this;
     /**
@@ -43690,7 +43659,7 @@ var axisPointerClazz = {};
  * Base class of AxisView.
  */
 var AxisView = /** @class */function (_super) {
-  __extends$1(AxisView, _super);
+  __extends(AxisView, _super);
   function AxisView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = AxisView.type;
@@ -43834,7 +43803,7 @@ function rectCoordAxisHandleRemove(axisView) {
 var axisBuilderAttrs$3 = ['axisLine', 'axisTickLabel', 'axisName'];
 var selfBuilderAttrs$2 = ['splitArea', 'splitLine', 'minorSplitLine'];
 var CartesianAxisView = /** @class */function (_super) {
-  __extends$1(CartesianAxisView, _super);
+  __extends(CartesianAxisView, _super);
   function CartesianAxisView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = CartesianAxisView.type;
@@ -43990,7 +43959,7 @@ var axisElementBuilders$2 = {
   }
 };
 var CartesianXAxisView = /** @class */function (_super) {
-  __extends$1(CartesianXAxisView, _super);
+  __extends(CartesianXAxisView, _super);
   function CartesianXAxisView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = CartesianXAxisView.type;
@@ -44000,7 +43969,7 @@ var CartesianXAxisView = /** @class */function (_super) {
   return CartesianXAxisView;
 }(CartesianAxisView);
 var CartesianYAxisView = /** @class */function (_super) {
-  __extends$1(CartesianYAxisView, _super);
+  __extends(CartesianYAxisView, _super);
   function CartesianYAxisView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = CartesianXAxisView.type;
@@ -44012,7 +43981,7 @@ var CartesianYAxisView = /** @class */function (_super) {
 
 // Grid view
 var GridView = /** @class */function (_super) {
-  __extends$1(GridView, _super);
+  __extends(GridView, _super);
   function GridView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = 'grid';
@@ -44133,7 +44102,7 @@ function radarBackwardCompat(option) {
 }
 
 var RadarView$2 = /** @class */function (_super) {
-  __extends$1(RadarView, _super);
+  __extends(RadarView, _super);
   function RadarView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = RadarView.type;
@@ -44307,7 +44276,7 @@ var RadarView$2 = /** @class */function (_super) {
 const RadarView$3 = RadarView$2;
 
 var RadarSeriesModel = /** @class */function (_super) {
-  __extends$1(RadarSeriesModel, _super);
+  __extends(RadarSeriesModel, _super);
   function RadarSeriesModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = RadarSeriesModel.type;
@@ -44399,7 +44368,7 @@ function defaultsShow(opt, show) {
   }, opt);
 }
 var RadarModel = /** @class */function (_super) {
-  __extends$1(RadarModel, _super);
+  __extends(RadarModel, _super);
   function RadarModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = RadarModel.type;
@@ -44505,7 +44474,7 @@ const RadarModel$1 = RadarModel;
 
 var axisBuilderAttrs$2 = ['axisLine', 'axisTickLabel', 'axisName'];
 var RadarView = /** @class */function (_super) {
-  __extends$1(RadarView, _super);
+  __extends(RadarView, _super);
   function RadarView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = RadarView.type;
@@ -44656,7 +44625,7 @@ var RadarView = /** @class */function (_super) {
 const RadarView$1 = RadarView;
 
 var IndicatorAxis = /** @class */function (_super) {
-  __extends$1(IndicatorAxis, _super);
+  __extends(IndicatorAxis, _super);
   function IndicatorAxis(dim, scale, radiusExtent) {
     var _this = _super.call(this, dim, scale, radiusExtent) || this;
     _this.type = 'value';
@@ -44874,7 +44843,7 @@ registerAction({
 }, noop);
 
 var RoamController = /** @class */function (_super) {
-  __extends$1(RoamController, _super);
+  __extends(RoamController, _super);
   function RoamController(zr) {
     var _this = _super.call(this) || this;
     _this._zr = zr;
@@ -47048,7 +47017,7 @@ const MapDraw$1 = MapDraw;
 // @ts-ignore FIXME:TS fix the "compatible with each other"?
 
 var MapView = /** @class */function (_super) {
-  __extends$1(MapView, _super);
+  __extends(MapView, _super);
   function MapView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = MapView.type;
@@ -47177,7 +47146,7 @@ var MapView = /** @class */function (_super) {
 const MapView$1 = MapView;
 
 var MapSeries = /** @class */function (_super) {
-  __extends$1(MapSeries, _super);
+  __extends(MapSeries, _super);
   function MapSeries() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = MapSeries.type;
@@ -47479,7 +47448,7 @@ function mapSymbolLayout(ecModel) {
 
 var v2ApplyTransform = applyTransform$1;
 var View = /** @class */function (_super) {
-  __extends$1(View, _super);
+  __extends(View, _super);
   function View(name) {
     var _this = _super.call(this) || this;
     _this.type = 'view';
@@ -47688,7 +47657,7 @@ var GEO_DEFAULT_PARAMS = {
 };
 var geo2DDimensions = ['lng', 'lat'];
 var Geo = /** @class */function (_super) {
-  __extends$1(Geo, _super);
+  __extends(Geo, _super);
   function Geo(name, map, opt) {
     var _this = _super.call(this, name) || this;
     _this.dimensions = geo2DDimensions;
@@ -48001,7 +47970,7 @@ var geoCreator = new GeoCreator();
 const geoCreator$1 = geoCreator;
 
 var GeoModel = /** @class */function (_super) {
-  __extends$1(GeoModel, _super);
+  __extends(GeoModel, _super);
   function GeoModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = GeoModel.type;
@@ -48243,7 +48212,7 @@ function updateCenterAndZoom(view, payload, zoomLimit, api) {
 }
 
 var GeoView = /** @class */function (_super) {
-  __extends$1(GeoView, _super);
+  __extends(GeoView, _super);
   function GeoView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = GeoView.type;
@@ -48646,7 +48615,7 @@ var TreeEdgeShape = /** @class */function () {
   return TreeEdgeShape;
 }();
 var TreePath = /** @class */function (_super) {
-  __extends$1(TreePath, _super);
+  __extends(TreePath, _super);
   function TreePath(opts) {
     return _super.call(this, opts) || this;
   }
@@ -48695,7 +48664,7 @@ var TreePath = /** @class */function (_super) {
   return TreePath;
 }(Path$1);
 var TreeView = /** @class */function (_super) {
-  __extends$1(TreeView, _super);
+  __extends(TreeView, _super);
   function TreeView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = TreeView.type;
@@ -49652,7 +49621,7 @@ function wrapTreePathInfo(node, seriesModel) {
 }
 
 var TreeSeriesModel = /** @class */function (_super) {
-  __extends$1(TreeSeriesModel, _super);
+  __extends(TreeSeriesModel, _super);
   function TreeSeriesModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.hasSymbolVisual = true;
@@ -50079,7 +50048,7 @@ function enableAriaDecalForTree(seriesModel) {
 }
 
 var TreemapSeriesModel = /** @class */function (_super) {
-  __extends$1(TreemapSeriesModel, _super);
+  __extends(TreemapSeriesModel, _super);
   function TreemapSeriesModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = TreemapSeriesModel.type;
@@ -50678,7 +50647,7 @@ var getItemStyleNormal = function (model) {
 };
 var inner$d = makeInner();
 var TreemapView = /** @class */function (_super) {
-  __extends$1(TreemapView, _super);
+  __extends(TreemapView, _super);
   function TreemapView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = TreemapView.type;
@@ -53405,7 +53374,7 @@ var StraightLineShape = /** @class */function () {
   return StraightLineShape;
 }();
 /** @class */(function (_super) {
-  __extends$1(CurveShape, _super);
+  __extends(CurveShape, _super);
   function CurveShape() {
     return _super !== null && _super.apply(this, arguments) || this;
   }
@@ -53415,7 +53384,7 @@ function isStraightLine(shape) {
   return isNaN(+shape.cpx1) || isNaN(+shape.cpy1);
 }
 var ECLinePath = /** @class */function (_super) {
-  __extends$1(ECLinePath, _super);
+  __extends(ECLinePath, _super);
   function ECLinePath(opts) {
     var _this = _super.call(this, opts) || this;
     _this.type = 'ec-line';
@@ -53513,7 +53482,7 @@ function setLinePoints(targetShape, points) {
   }
 }
 var Line = /** @class */function (_super) {
-  __extends$1(Line, _super);
+  __extends(Line, _super);
   function Line(lineData, idx, seriesScope) {
     var _this = _super.call(this) || this;
     _this._createLine(lineData, idx, seriesScope);
@@ -54068,7 +54037,7 @@ function isViewCoordSys(coordSys) {
   return coordSys.type === 'view';
 }
 var GraphView = /** @class */function (_super) {
-  __extends$1(GraphView, _super);
+  __extends(GraphView, _super);
   function GraphView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = GraphView.type;
@@ -54737,7 +54706,7 @@ function createGraphFromNodeEdge(nodes, edges, seriesModel, directed, beforeLink
 }
 
 var GraphSeriesModel = /** @class */function (_super) {
-  __extends$1(GraphSeriesModel, _super);
+  __extends(GraphSeriesModel, _super);
   function GraphSeriesModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = GraphSeriesModel.type;
@@ -55012,7 +54981,7 @@ var PointerShape = /** @class */function () {
   return PointerShape;
 }();
 var PointerPath = /** @class */function (_super) {
-  __extends$1(PointerPath, _super);
+  __extends(PointerPath, _super);
   function PointerPath(opts) {
     var _this = _super.call(this, opts) || this;
     _this.type = 'pointer';
@@ -55066,7 +55035,7 @@ function formatLabel(value, labelFormatter) {
   return label;
 }
 var GaugeView = /** @class */function (_super) {
-  __extends$1(GaugeView, _super);
+  __extends(GaugeView, _super);
   function GaugeView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = GaugeView.type;
@@ -55546,7 +55515,7 @@ var GaugeView = /** @class */function (_super) {
 const GaugeView$1 = GaugeView;
 
 var GaugeSeriesModel = /** @class */function (_super) {
-  __extends$1(GaugeSeriesModel, _super);
+  __extends(GaugeSeriesModel, _super);
   function GaugeSeriesModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = GaugeSeriesModel.type;
@@ -55695,7 +55664,7 @@ var opacityAccessPath$1 = ['itemStyle', 'opacity'];
  * Piece of pie including Sector, Label, LabelLine
  */
 var FunnelPiece = /** @class */function (_super) {
-  __extends$1(FunnelPiece, _super);
+  __extends(FunnelPiece, _super);
   function FunnelPiece(data, idx) {
     var _this = _super.call(this) || this;
     var polygon = _this;
@@ -55803,7 +55772,7 @@ var FunnelPiece = /** @class */function (_super) {
   return FunnelPiece;
 }(Polygon$1);
 var FunnelView = /** @class */function (_super) {
-  __extends$1(FunnelView, _super);
+  __extends(FunnelView, _super);
   function FunnelView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = FunnelView.type;
@@ -55840,7 +55809,7 @@ var FunnelView = /** @class */function (_super) {
 const FunnelView$1 = FunnelView;
 
 var FunnelSeriesModel = /** @class */function (_super) {
-  __extends$1(FunnelSeriesModel, _super);
+  __extends(FunnelSeriesModel, _super);
   function FunnelSeriesModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = FunnelSeriesModel.type;
@@ -56233,7 +56202,7 @@ function install$D(registers) {
 
 var DEFAULT_SMOOTH = 0.3;
 var ParallelView$2 = /** @class */function (_super) {
-  __extends$1(ParallelView, _super);
+  __extends(ParallelView, _super);
   function ParallelView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = ParallelView.type;
@@ -56404,7 +56373,7 @@ function isEmptyValue(val, axisType) {
 const ParallelView$3 = ParallelView$2;
 
 var ParallelSeriesModel = /** @class */function (_super) {
-  __extends$1(ParallelSeriesModel, _super);
+  __extends(ParallelSeriesModel, _super);
   function ParallelSeriesModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = ParallelSeriesModel.type;
@@ -56595,7 +56564,7 @@ function mergeAxisOptionFromParallel(option) {
 
 var CLICK_THRESHOLD = 5; // > 4
 var ParallelView = /** @class */function (_super) {
-  __extends$1(ParallelView, _super);
+  __extends(ParallelView, _super);
   function ParallelView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = ParallelView.type;
@@ -56685,7 +56654,7 @@ function checkTrigger(view, triggerOn) {
 const ParallelView$1 = ParallelView;
 
 var ParallelModel = /** @class */function (_super) {
-  __extends$1(ParallelModel, _super);
+  __extends(ParallelModel, _super);
   function ParallelModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = ParallelModel.type;
@@ -56762,7 +56731,7 @@ var ParallelModel = /** @class */function (_super) {
 const ParallelModel$1 = ParallelModel;
 
 var ParallelAxis = /** @class */function (_super) {
-  __extends$1(ParallelAxis, _super);
+  __extends(ParallelAxis, _super);
   function ParallelAxis(dim, scale, coordExtent, axisType, axisIndex) {
     var _this = _super.call(this, dim, scale, coordExtent) || this;
     _this.type = axisType || 'value';
@@ -57271,7 +57240,7 @@ var parallelCoordSysCreator = {
 const parallelCoordSysCreator$1 = parallelCoordSysCreator;
 
 var ParallelAxisModel = /** @class */function (_super) {
-  __extends$1(ParallelAxisModel, _super);
+  __extends(ParallelAxisModel, _super);
   function ParallelAxisModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = ParallelAxisModel.type;
@@ -57381,7 +57350,7 @@ var baseUID = 0;
  *     }
  */
 var BrushController = /** @class */function (_super) {
-  __extends$1(BrushController, _super);
+  __extends(BrushController, _super);
   function BrushController(zr) {
     var _this = _super.call(this) || this;
     /**
@@ -58043,7 +58012,7 @@ function normalizeRect(rect) {
 
 var elementList$1 = ['axisLine', 'axisTickLabel', 'axisName'];
 var ParallelAxisView = /** @class */function (_super) {
-  __extends$1(ParallelAxisView, _super);
+  __extends(ParallelAxisView, _super);
   function ParallelAxisView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = ParallelAxisView.type;
@@ -58281,7 +58250,7 @@ var SankeyPathShape = /** @class */function () {
   return SankeyPathShape;
 }();
 var SankeyPath = /** @class */function (_super) {
-  __extends$1(SankeyPath, _super);
+  __extends(SankeyPath, _super);
   function SankeyPath(opts) {
     return _super.call(this, opts) || this;
   }
@@ -58310,7 +58279,7 @@ var SankeyPath = /** @class */function (_super) {
   return SankeyPath;
 }(Path$1);
 var SankeyView = /** @class */function (_super) {
-  __extends$1(SankeyView, _super);
+  __extends(SankeyView, _super);
   function SankeyView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = SankeyView.type;
@@ -58544,7 +58513,7 @@ function createGridClipShape$1(rect, seriesModel, cb) {
 const SankeyView$1 = SankeyView;
 
 var SankeySeriesModel = /** @class */function (_super) {
-  __extends$1(SankeySeriesModel, _super);
+  __extends(SankeySeriesModel, _super);
   function SankeySeriesModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = SankeySeriesModel.type;
@@ -59311,7 +59280,7 @@ var WhiskerBoxCommonMixin = /** @class */function () {
 }();
 
 var BoxplotSeriesModel = /** @class */function (_super) {
-  __extends$1(BoxplotSeriesModel, _super);
+  __extends(BoxplotSeriesModel, _super);
   function BoxplotSeriesModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = BoxplotSeriesModel.type;
@@ -59373,7 +59342,7 @@ mixin(BoxplotSeriesModel, WhiskerBoxCommonMixin, true);
 const BoxplotSeriesModel$1 = BoxplotSeriesModel;
 
 var BoxplotView = /** @class */function (_super) {
-  __extends$1(BoxplotView, _super);
+  __extends(BoxplotView, _super);
   function BoxplotView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = BoxplotView.type;
@@ -59434,7 +59403,7 @@ var BoxPathShape = /** @class */function () {
   return BoxPathShape;
 }();
 var BoxPath = /** @class */function (_super) {
-  __extends$1(BoxPath, _super);
+  __extends(BoxPath, _super);
   function BoxPath(opts) {
     var _this = _super.call(this, opts) || this;
     _this.type = 'boxplotBoxPath';
@@ -59711,7 +59680,7 @@ function install$z(registers) {
 
 var SKIP_PROPS = ['color', 'borderColor'];
 var CandlestickView = /** @class */function (_super) {
-  __extends$1(CandlestickView, _super);
+  __extends(CandlestickView, _super);
   function CandlestickView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = CandlestickView.type;
@@ -59844,7 +59813,7 @@ var NormalBoxPathShape = /** @class */function () {
   return NormalBoxPathShape;
 }();
 var NormalBoxPath = /** @class */function (_super) {
-  __extends$1(NormalBoxPath, _super);
+  __extends(NormalBoxPath, _super);
   function NormalBoxPath(opts) {
     var _this = _super.call(this, opts) || this;
     _this.type = 'normalCandlestickBox';
@@ -59911,7 +59880,7 @@ var LargeBoxPathShape = /** @class */function () {
   return LargeBoxPathShape;
 }();
 var LargeBoxPath = /** @class */function (_super) {
-  __extends$1(LargeBoxPath, _super);
+  __extends(LargeBoxPath, _super);
   function LargeBoxPath(opts) {
     var _this = _super.call(this, opts) || this;
     _this.type = 'largeCandlestickBox';
@@ -59992,7 +59961,7 @@ function setLargeStyle(sign, el, seriesModel, data) {
 const CandlestickView$1 = CandlestickView;
 
 var CandlestickSeriesModel = /** @class */function (_super) {
-  __extends$1(CandlestickSeriesModel, _super);
+  __extends(CandlestickSeriesModel, _super);
   function CandlestickSeriesModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = CandlestickSeriesModel.type;
@@ -60296,7 +60265,7 @@ function updateRipplePath(rippleGroup, effectCfg) {
   });
 }
 var EffectSymbol = /** @class */function (_super) {
-  __extends$1(EffectSymbol, _super);
+  __extends(EffectSymbol, _super);
   function EffectSymbol(data, idx) {
     var _this = _super.call(this) || this;
     var symbol = new SymbolClz(data, idx);
@@ -60441,7 +60410,7 @@ var EffectSymbol = /** @class */function (_super) {
 const EffectSymbol$1 = EffectSymbol;
 
 var EffectScatterView = /** @class */function (_super) {
-  __extends$1(EffectScatterView, _super);
+  __extends(EffectScatterView, _super);
   function EffectScatterView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = EffectScatterView.type;
@@ -60492,7 +60461,7 @@ var EffectScatterView = /** @class */function (_super) {
 const EffectScatterView$1 = EffectScatterView;
 
 var EffectScatterSeriesModel = /** @class */function (_super) {
-  __extends$1(EffectScatterSeriesModel, _super);
+  __extends(EffectScatterSeriesModel, _super);
   function EffectScatterSeriesModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = EffectScatterSeriesModel.type;
@@ -60558,7 +60527,7 @@ function install$x(registers) {
 }
 
 var EffectLine = /** @class */function (_super) {
-  __extends$1(EffectLine, _super);
+  __extends(EffectLine, _super);
   function EffectLine(lineData, idx, seriesScope) {
     var _this = _super.call(this) || this;
     _this.add(_this.createLine(lineData, idx, seriesScope));
@@ -60713,7 +60682,7 @@ var EffectLine = /** @class */function (_super) {
 const EffectLine$1 = EffectLine;
 
 var Polyline = /** @class */function (_super) {
-  __extends$1(Polyline, _super);
+  __extends(Polyline, _super);
   function Polyline(lineData, idx, seriesScope) {
     var _this = _super.call(this) || this;
     _this._createPolyline(lineData, idx, seriesScope);
@@ -60771,7 +60740,7 @@ var Polyline = /** @class */function (_super) {
 const Polyline$1 = Polyline;
 
 var EffectPolyline = /** @class */function (_super) {
-  __extends$1(EffectPolyline, _super);
+  __extends(EffectPolyline, _super);
   function EffectPolyline() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this._lastFrame = 0;
@@ -60863,7 +60832,7 @@ var LargeLinesPathShape = /** @class */function () {
   return LargeLinesPathShape;
 }();
 var LargeLinesPath = /** @class */function (_super) {
-  __extends$1(LargeLinesPath, _super);
+  __extends(LargeLinesPath, _super);
   function LargeLinesPath(opts) {
     var _this = _super.call(this, opts) || this;
     _this._off = 0;
@@ -61170,7 +61139,7 @@ var linesLayout = {
 const linesLayout$1 = linesLayout;
 
 var LinesView = /** @class */function (_super) {
-  __extends$1(LinesView, _super);
+  __extends(LinesView, _super);
   function LinesView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = LinesView.type;
@@ -61315,7 +61284,7 @@ function compatEc2(seriesOpt) {
   }
 }
 var LinesSeriesModel = /** @class */function (_super) {
-  __extends$1(LinesSeriesModel, _super);
+  __extends(LinesSeriesModel, _super);
   function LinesSeriesModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = LinesSeriesModel.type;
@@ -61784,7 +61753,7 @@ function isGeoCoordSys(coordSys) {
   return dimensions[0] === 'lng' && dimensions[1] === 'lat';
 }
 var HeatmapView = /** @class */function (_super) {
-  __extends$1(HeatmapView, _super);
+  __extends(HeatmapView, _super);
   function HeatmapView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = HeatmapView.type;
@@ -61987,7 +61956,7 @@ var HeatmapView = /** @class */function (_super) {
 const HeatmapView$1 = HeatmapView;
 
 var HeatmapSeriesModel = /** @class */function (_super) {
-  __extends$1(HeatmapSeriesModel, _super);
+  __extends(HeatmapSeriesModel, _super);
   function HeatmapSeriesModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = HeatmapSeriesModel.type;
@@ -62049,7 +62018,7 @@ var LAYOUT_ATTRS = [{
 }];
 var pathForLineWidth = new Circle$1();
 var PictorialBarView = /** @class */function (_super) {
-  __extends$1(PictorialBarView, _super);
+  __extends(PictorialBarView, _super);
   function PictorialBarView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = PictorialBarView.type;
@@ -62611,7 +62580,7 @@ function toIntTimes(times) {
 const PictorialBarView$1 = PictorialBarView;
 
 var PictorialBarSeriesModel = /** @class */function (_super) {
-  __extends$1(PictorialBarSeriesModel, _super);
+  __extends(PictorialBarSeriesModel, _super);
   function PictorialBarSeriesModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = PictorialBarSeriesModel.type;
@@ -62669,7 +62638,7 @@ function install$u(registers) {
 }
 
 var ThemeRiverView = /** @class */function (_super) {
-  __extends$1(ThemeRiverView, _super);
+  __extends(ThemeRiverView, _super);
   function ThemeRiverView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = ThemeRiverView.type;
@@ -62804,7 +62773,7 @@ const ThemeRiverView$1 = ThemeRiverView;
 
 var DATA_NAME_INDEX = 2;
 var ThemeRiverSeriesModel = /** @class */function (_super) {
-  __extends$1(ThemeRiverSeriesModel, _super);
+  __extends(ThemeRiverSeriesModel, _super);
   function ThemeRiverSeriesModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = ThemeRiverSeriesModel.type;
@@ -63135,7 +63104,7 @@ var DEFAULT_TEXT_Z = 4;
  * Sunburstce of Sunburst including Sector, Label, LabelLine
  */
 var SunburstPiece = /** @class */function (_super) {
-  __extends$1(SunburstPiece, _super);
+  __extends(SunburstPiece, _super);
   function SunburstPiece(node, seriesModel, ecModel, api) {
     var _this = _super.call(this) || this;
     _this.z2 = DEFAULT_SECTOR_Z;
@@ -63364,7 +63333,7 @@ function installSunburstAction(registers) {
 }
 
 var SunburstView = /** @class */function (_super) {
-  __extends$1(SunburstView, _super);
+  __extends(SunburstView, _super);
   function SunburstView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = SunburstView.type;
@@ -63521,7 +63490,7 @@ var SunburstView = /** @class */function (_super) {
 const SunburstView$1 = SunburstView;
 
 var SunburstSeriesModel = /** @class */function (_super) {
-  __extends$1(SunburstSeriesModel, _super);
+  __extends(SunburstSeriesModel, _super);
   function SunburstSeriesModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = SunburstSeriesModel.type;
@@ -63906,7 +63875,7 @@ var NON_STYLE_VISUAL_PROPS = {
 };
 var customInnerStore = makeInner();
 var CustomSeriesModel = /** @class */function (_super) {
-  __extends$1(CustomSeriesModel, _super);
+  __extends(CustomSeriesModel, _super);
   function CustomSeriesModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = CustomSeriesModel.type;
@@ -64860,7 +64829,7 @@ function copyElement(sourceEl, targetEl) {
   }
 }
 var CustomChartView = /** @class */function (_super) {
-  __extends$1(CustomChartView, _super);
+  __extends(CustomChartView, _super);
   function CustomChartView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = CustomChartView.type;
@@ -66124,7 +66093,7 @@ function makeSectorShape(cx, cy, r0, r, startAngle, endAngle) {
 }
 
 var CartesianAxisPointer = /** @class */function (_super) {
-  __extends$1(CartesianAxisPointer, _super);
+  __extends(CartesianAxisPointer, _super);
   function CartesianAxisPointer() {
     return _super !== null && _super.apply(this, arguments) || this;
   }
@@ -66226,7 +66195,7 @@ function getAxisDimIndex(axis) {
 const CartesianAxisPointer$1 = CartesianAxisPointer;
 
 var AxisPointerModel = /** @class */function (_super) {
-  __extends$1(AxisPointerModel, _super);
+  __extends(AxisPointerModel, _super);
   function AxisPointerModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = AxisPointerModel.type;
@@ -66387,7 +66356,7 @@ function unregister(key, api) {
 }
 
 var AxisPointerView = /** @class */function (_super) {
-  __extends$1(AxisPointerView, _super);
+  __extends(AxisPointerView, _super);
   function AxisPointerView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = AxisPointerView.type;
@@ -66848,7 +66817,7 @@ function install$p(registers) {
 }
 
 var PolarAxisPointer = /** @class */function (_super) {
-  __extends$1(PolarAxisPointer, _super);
+  __extends(PolarAxisPointer, _super);
   function PolarAxisPointer() {
     return _super !== null && _super.apply(this, arguments) || this;
   }
@@ -66943,7 +66912,7 @@ var pointerShapeBuilder$1 = {
 const PolarAxisPointer$1 = PolarAxisPointer;
 
 var PolarModel = /** @class */function (_super) {
-  __extends$1(PolarModel, _super);
+  __extends(PolarModel, _super);
   function PolarModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = PolarModel.type;
@@ -66972,7 +66941,7 @@ var PolarModel = /** @class */function (_super) {
 const PolarModel$1 = PolarModel;
 
 var PolarAxisModel = /** @class */function (_super) {
-  __extends$1(PolarAxisModel, _super);
+  __extends(PolarAxisModel, _super);
   function PolarAxisModel() {
     return _super !== null && _super.apply(this, arguments) || this;
   }
@@ -66984,7 +66953,7 @@ var PolarAxisModel = /** @class */function (_super) {
 }(ComponentModel$1);
 mixin(PolarAxisModel, AxisModelCommonMixin);
 var AngleAxisModel = /** @class */function (_super) {
-  __extends$1(AngleAxisModel, _super);
+  __extends(AngleAxisModel, _super);
   function AngleAxisModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = AngleAxisModel.type;
@@ -66994,7 +66963,7 @@ var AngleAxisModel = /** @class */function (_super) {
   return AngleAxisModel;
 }(PolarAxisModel);
 var RadiusAxisModel = /** @class */function (_super) {
-  __extends$1(RadiusAxisModel, _super);
+  __extends(RadiusAxisModel, _super);
   function RadiusAxisModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = RadiusAxisModel.type;
@@ -67005,7 +66974,7 @@ var RadiusAxisModel = /** @class */function (_super) {
 }(PolarAxisModel);
 
 var RadiusAxis = /** @class */function (_super) {
-  __extends$1(RadiusAxis, _super);
+  __extends(RadiusAxis, _super);
   function RadiusAxis(scale, radiusExtent) {
     return _super.call(this, 'radius', scale, radiusExtent) || this;
   }
@@ -67020,7 +66989,7 @@ const RadiusAxis$1 = RadiusAxis;
 
 var inner$8 = makeInner();
 var AngleAxis = /** @class */function (_super) {
-  __extends$1(AngleAxis, _super);
+  __extends(AngleAxis, _super);
   function AngleAxis(scale, angleExtent) {
     return _super.call(this, 'angle', scale, angleExtent || [0, 360]) || this;
   }
@@ -67385,7 +67354,7 @@ function fixAngleOverlap(list) {
   }
 }
 var AngleAxisView = /** @class */function (_super) {
-  __extends$1(AngleAxisView, _super);
+  __extends(AngleAxisView, _super);
   function AngleAxisView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = AngleAxisView.type;
@@ -67636,7 +67605,7 @@ const AngleAxisView$1 = AngleAxisView;
 var axisBuilderAttrs$1 = ['axisLine', 'axisTickLabel', 'axisName'];
 var selfBuilderAttrs$1 = ['splitLine', 'splitArea', 'minorSplitLine'];
 var RadiusAxisView = /** @class */function (_super) {
-  __extends$1(RadiusAxisView, _super);
+  __extends(RadiusAxisView, _super);
   function RadiusAxisView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = RadiusAxisView.type;
@@ -68014,7 +67983,7 @@ var radiusAxisExtraOption = {
   splitNumber: 5
 };
 var PolarView = /** @class */function (_super) {
-  __extends$1(PolarView, _super);
+  __extends(PolarView, _super);
   function PolarView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = PolarView.type;
@@ -68085,7 +68054,7 @@ function layout$1(axisModel, opt) {
 var axisBuilderAttrs = ['axisLine', 'axisTickLabel', 'axisName'];
 var selfBuilderAttrs = ['splitArea', 'splitLine'];
 var SingleAxisView = /** @class */function (_super) {
-  __extends$1(SingleAxisView, _super);
+  __extends(SingleAxisView, _super);
   function SingleAxisView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = SingleAxisView.type;
@@ -68180,7 +68149,7 @@ var axisElementBuilders = {
 const SingleAxisView$1 = SingleAxisView;
 
 var SingleAxisModel = /** @class */function (_super) {
-  __extends$1(SingleAxisModel, _super);
+  __extends(SingleAxisModel, _super);
   function SingleAxisModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = SingleAxisModel.type;
@@ -68237,7 +68206,7 @@ mixin(SingleAxisModel, AxisModelCommonMixin.prototype);
 const SingleAxisModel$1 = SingleAxisModel;
 
 var SingleAxis = /** @class */function (_super) {
-  __extends$1(SingleAxis, _super);
+  __extends(SingleAxis, _super);
   function SingleAxis(dim, scale, coordExtent, axisType, position) {
     var _this = _super.call(this, dim, scale, coordExtent) || this;
     _this.type = axisType || 'value';
@@ -68447,7 +68416,7 @@ const singleCreator$1 = singleCreator;
 var XY$1 = ['x', 'y'];
 var WH$1 = ['width', 'height'];
 var SingleAxisPointer = /** @class */function (_super) {
-  __extends$1(SingleAxisPointer, _super);
+  __extends(SingleAxisPointer, _super);
   function SingleAxisPointer() {
     return _super !== null && _super.apply(this, arguments) || this;
   }
@@ -68544,7 +68513,7 @@ function getGlobalExtent(coordSys, dimIndex) {
 const SingleAxisPointer$1 = SingleAxisPointer;
 
 var SingleView = /** @class */function (_super) {
-  __extends$1(SingleView, _super);
+  __extends(SingleView, _super);
   function SingleView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = SingleView.type;
@@ -68565,7 +68534,7 @@ function install$n(registers) {
 }
 
 var CalendarModel = /** @class */function (_super) {
-  __extends$1(CalendarModel, _super);
+  __extends(CalendarModel, _super);
   function CalendarModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = CalendarModel.type;
@@ -68678,7 +68647,7 @@ function mergeAndNormalizeLayoutParams$1(target, raw) {
 const CalendarModel$1 = CalendarModel;
 
 var CalendarView = /** @class */function (_super) {
-  __extends$1(CalendarView, _super);
+  __extends(CalendarView, _super);
   function CalendarView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = CalendarView.type;
@@ -69447,7 +69416,7 @@ function setLayoutInfoToExist(existItem, newElOption) {
   }
 }
 var GraphicComponentModel = /** @class */function (_super) {
-  __extends$1(GraphicComponentModel, _super);
+  __extends(GraphicComponentModel, _super);
   function GraphicComponentModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = GraphicComponentModel.type;
@@ -69552,7 +69521,7 @@ var inner$7 = makeInner();
 // View
 // ------------------------
 var GraphicComponentView = /** @class */function (_super) {
-  __extends$1(GraphicComponentView, _super);
+  __extends(GraphicComponentView, _super);
   function GraphicComponentView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = GraphicComponentView.type;
@@ -70021,7 +69990,7 @@ var DataZoomAxisInfo = /** @class */function () {
   return DataZoomAxisInfo;
 }();
 var DataZoomModel = /** @class */function (_super) {
-  __extends$1(DataZoomModel, _super);
+  __extends(DataZoomModel, _super);
   function DataZoomModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = DataZoomModel.type;
@@ -70383,7 +70352,7 @@ function retrieveRawOption(option) {
 const DataZoomModel$1 = DataZoomModel;
 
 var SelectDataZoomModel = /** @class */function (_super) {
-  __extends$1(SelectDataZoomModel, _super);
+  __extends(SelectDataZoomModel, _super);
   function SelectDataZoomModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = SelectDataZoomModel.type;
@@ -70395,7 +70364,7 @@ var SelectDataZoomModel = /** @class */function (_super) {
 const SelectZoomModel = SelectDataZoomModel;
 
 var DataZoomView = /** @class */function (_super) {
-  __extends$1(DataZoomView, _super);
+  __extends(DataZoomView, _super);
   function DataZoomView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = DataZoomView.type;
@@ -70412,7 +70381,7 @@ var DataZoomView = /** @class */function (_super) {
 const DataZoomView$1 = DataZoomView;
 
 var SelectDataZoomView = /** @class */function (_super) {
-  __extends$1(SelectDataZoomView, _super);
+  __extends(SelectDataZoomView, _super);
   function SelectDataZoomView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = SelectDataZoomView.type;
@@ -70872,7 +70841,7 @@ function getFeature(name) {
 }
 
 var ToolboxModel = /** @class */function (_super) {
-  __extends$1(ToolboxModel, _super);
+  __extends(ToolboxModel, _super);
   function ToolboxModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = ToolboxModel.type;
@@ -70975,7 +70944,7 @@ function makeBackground(rect, componentModel) {
 }
 
 var ToolboxView = /** @class */function (_super) {
-  __extends$1(ToolboxView, _super);
+  __extends(ToolboxView, _super);
   function ToolboxView() {
     return _super !== null && _super.apply(this, arguments) || this;
   }
@@ -71218,7 +71187,7 @@ function isUserFeatureName(featureName) {
 const ToolboxView$1 = ToolboxView;
 
 var SaveAsImage = /** @class */function (_super) {
-  __extends$1(SaveAsImage, _super);
+  __extends(SaveAsImage, _super);
   function SaveAsImage() {
     return _super !== null && _super.apply(this, arguments) || this;
   }
@@ -71319,7 +71288,7 @@ const SaveAsImage$1 = SaveAsImage;
 var INNER_STACK_KEYWORD = '__ec_magicType_stack__';
 var radioTypes = [['line', 'bar'], ['stack']];
 var MagicType = /** @class */function (_super) {
-  __extends$1(MagicType, _super);
+  __extends(MagicType, _super);
   function MagicType() {
     return _super !== null && _super.apply(this, arguments) || this;
   }
@@ -71688,7 +71657,7 @@ function parseContents(str, blockMetaList) {
   return newOption;
 }
 var DataView = /** @class */function (_super) {
-  __extends$1(DataView, _super);
+  __extends(DataView, _super);
   function DataView() {
     return _super !== null && _super.apply(this, arguments) || this;
   }
@@ -71944,7 +71913,7 @@ function getStoreSnapshots(ecModel) {
 }
 
 var RestoreOption = /** @class */function (_super) {
-  __extends$1(RestoreOption, _super);
+  __extends(RestoreOption, _super);
   function RestoreOption() {
     return _super !== null && _super.apply(this, arguments) || this;
   }
@@ -72269,7 +72238,7 @@ const BrushTargetManager$1 = BrushTargetManager;
 var each$5 = each$f;
 var DATA_ZOOM_ID_BASE = makeInternalComponentId('toolbox-dataZoom_');
 var DataZoomFeature = /** @class */function (_super) {
-  __extends$1(DataZoomFeature, _super);
+  __extends(DataZoomFeature, _super);
   function DataZoomFeature() {
     return _super !== null && _super.apply(this, arguments) || this;
   }
@@ -72475,7 +72444,7 @@ function install$j(registers) {
 }
 
 var TooltipModel = /** @class */function (_super) {
-  __extends$1(TooltipModel, _super);
+  __extends(TooltipModel, _super);
   function TooltipModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = TooltipModel.type;
@@ -73110,7 +73079,7 @@ var proxyRect = new Rect$3({
   }
 });
 var TooltipView = /** @class */function (_super) {
-  __extends$1(TooltipView, _super);
+  __extends(TooltipView, _super);
   function TooltipView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = TooltipView.type;
@@ -74388,7 +74357,7 @@ function getBoundingRectFromMinMax(minMax) {
 }
 
 var BrushView = /** @class */function (_super) {
-  __extends$1(BrushView, _super);
+  __extends(BrushView, _super);
   function BrushView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = BrushView.type;
@@ -74452,7 +74421,7 @@ const BrushView$1 = BrushView;
 
 var DEFAULT_OUT_OF_BRUSH_COLOR = '#ddd';
 var BrushModel = /** @class */function (_super) {
-  __extends$1(BrushModel, _super);
+  __extends(BrushModel, _super);
   function BrushModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = BrushModel.type;
@@ -74535,7 +74504,7 @@ const BrushModel$1 = BrushModel;
 
 var ICON_TYPES = ['rect', 'polygon', 'lineX', 'lineY', 'keep', 'clear'];
 var BrushFeature = /** @class */function (_super) {
-  __extends$1(BrushFeature, _super);
+  __extends(BrushFeature, _super);
   function BrushFeature() {
     return _super !== null && _super.apply(this, arguments) || this;
   }
@@ -74672,7 +74641,7 @@ function install$h(registers) {
 }
 
 var TitleModel = /** @class */function (_super) {
-  __extends$1(TitleModel, _super);
+  __extends(TitleModel, _super);
   function TitleModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = TitleModel.type;
@@ -74712,7 +74681,7 @@ var TitleModel = /** @class */function (_super) {
 }(ComponentModel$1);
 // View
 var TitleView = /** @class */function (_super) {
-  __extends$1(TitleView, _super);
+  __extends(TitleView, _super);
   function TitleView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = TitleView.type;
@@ -74846,7 +74815,7 @@ function install$g(registers) {
 }
 
 var TimelineModel = /** @class */function (_super) {
-  __extends$1(TimelineModel, _super);
+  __extends(TimelineModel, _super);
   function TimelineModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = TimelineModel.type;
@@ -74987,7 +74956,7 @@ var TimelineModel = /** @class */function (_super) {
 const TimelineModel$1 = TimelineModel;
 
 var SliderTimelineModel = /** @class */function (_super) {
-  __extends$1(SliderTimelineModel, _super);
+  __extends(SliderTimelineModel, _super);
   function SliderTimelineModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = SliderTimelineModel.type;
@@ -75099,7 +75068,7 @@ mixin(SliderTimelineModel, DataFormatMixin.prototype);
 const SliderTimelineModel$1 = SliderTimelineModel;
 
 var TimelineView = /** @class */function (_super) {
-  __extends$1(TimelineView, _super);
+  __extends(TimelineView, _super);
   function TimelineView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = TimelineView.type;
@@ -75114,7 +75083,7 @@ const TimelineView$1 = TimelineView;
  * Extend axis 2d
  */
 var TimelineAxis = /** @class */function (_super) {
-  __extends$1(TimelineAxis, _super);
+  __extends(TimelineAxis, _super);
   function TimelineAxis(dim, scale, coordExtent, axisType) {
     var _this = _super.call(this, dim, scale, coordExtent) || this;
     _this.type = axisType || 'value';
@@ -75140,7 +75109,7 @@ const TimelineAxis$1 = TimelineAxis;
 var PI = Math.PI;
 var labelDataIndexStore = makeInner();
 var SliderTimelineView = /** @class */function (_super) {
-  __extends$1(SliderTimelineView, _super);
+  __extends(SliderTimelineView, _super);
   function SliderTimelineView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = SliderTimelineView.type;
@@ -75867,7 +75836,7 @@ function fillLabel(opt) {
 // { [componentType]: MarkerModel }
 var inner$5 = makeInner();
 var MarkerModel = /** @class */function (_super) {
-  __extends$1(MarkerModel, _super);
+  __extends(MarkerModel, _super);
   function MarkerModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = MarkerModel.type;
@@ -75984,7 +75953,7 @@ mixin(MarkerModel, DataFormatMixin.prototype);
 const MarkerModel$1 = MarkerModel;
 
 var MarkPointModel = /** @class */function (_super) {
-  __extends$1(MarkPointModel, _super);
+  __extends(MarkPointModel, _super);
   function MarkPointModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = MarkPointModel.type;
@@ -76165,7 +76134,7 @@ function numCalculate(data, valueDataDim, type) {
 
 var inner$4 = makeInner();
 var MarkerView = /** @class */function (_super) {
-  __extends$1(MarkerView, _super);
+  __extends(MarkerView, _super);
   function MarkerView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = MarkerView.type;
@@ -76240,7 +76209,7 @@ function updateMarkerLayout(mpData, seriesModel, api) {
   });
 }
 var MarkPointView = /** @class */function (_super) {
-  __extends$1(MarkPointView, _super);
+  __extends(MarkPointView, _super);
   function MarkPointView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = MarkPointView.type;
@@ -76361,7 +76330,7 @@ function install$e(registers) {
 }
 
 var MarkLineModel = /** @class */function (_super) {
-  __extends$1(MarkLineModel, _super);
+  __extends(MarkLineModel, _super);
   function MarkLineModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = MarkLineModel.type;
@@ -76539,7 +76508,7 @@ function updateSingleMarkerEndLayout(data, idx, isFrom, seriesModel, api) {
   data.setItemLayout(idx, point);
 }
 var MarkLineView = /** @class */function (_super) {
-  __extends$1(MarkLineView, _super);
+  __extends(MarkLineView, _super);
   function MarkLineView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = MarkLineView.type;
@@ -76720,7 +76689,7 @@ function install$d(registers) {
 }
 
 var MarkAreaModel = /** @class */function (_super) {
-  __extends$1(MarkAreaModel, _super);
+  __extends(MarkAreaModel, _super);
   function MarkAreaModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = MarkAreaModel.type;
@@ -76888,7 +76857,7 @@ function getSingleMarkerEndPoint(data, idx, dims, seriesModel, api) {
 }
 var dimPermutations = [['x0', 'y0'], ['x1', 'y0'], ['x1', 'y1'], ['x0', 'y1']];
 var MarkAreaView = /** @class */function (_super) {
-  __extends$1(MarkAreaView, _super);
+  __extends(MarkAreaView, _super);
   function MarkAreaView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = MarkAreaView.type;
@@ -77088,7 +77057,7 @@ var getDefaultSelectorOptions = function (ecModel, type) {
   }
 };
 var LegendModel = /** @class */function (_super) {
-  __extends$1(LegendModel, _super);
+  __extends(LegendModel, _super);
   function LegendModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = LegendModel.type;
@@ -77348,7 +77317,7 @@ var curry = curry$1;
 var each$3 = each$f;
 var Group$1 = Group$4;
 var LegendView = /** @class */function (_super) {
-  __extends$1(LegendView, _super);
+  __extends(LegendView, _super);
   function LegendView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = LegendView.type;
@@ -77949,7 +77918,7 @@ function install$b(registers) {
 }
 
 var ScrollableLegendModel = /** @class */function (_super) {
-  __extends$1(ScrollableLegendModel, _super);
+  __extends(ScrollableLegendModel, _super);
   function ScrollableLegendModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = ScrollableLegendModel.type;
@@ -78010,7 +77979,7 @@ var Group = Group$4;
 var WH = ['width', 'height'];
 var XY = ['x', 'y'];
 var ScrollableLegendView = /** @class */function (_super) {
-  __extends$1(ScrollableLegendView, _super);
+  __extends(ScrollableLegendView, _super);
   function ScrollableLegendView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = ScrollableLegendView.type;
@@ -78431,7 +78400,7 @@ function install$9(registers) {
 }
 
 var InsideZoomModel = /** @class */function (_super) {
-  __extends$1(InsideZoomModel, _super);
+  __extends(InsideZoomModel, _super);
   function InsideZoomModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = InsideZoomModel.type;
@@ -78626,7 +78595,7 @@ function installDataZoomRoamProcessor(registers) {
 }
 
 var InsideZoomView = /** @class */function (_super) {
-  __extends$1(InsideZoomView, _super);
+  __extends(InsideZoomView, _super);
   function InsideZoomView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = 'dataZoom.inside';
@@ -78784,7 +78753,7 @@ function install$8(registers) {
 }
 
 var SliderZoomModel = /** @class */function (_super) {
-  __extends$1(SliderZoomModel, _super);
+  __extends(SliderZoomModel, _super);
   function SliderZoomModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = SliderZoomModel.type;
@@ -78880,7 +78849,7 @@ var REALTIME_ANIMATION_CONFIG = {
   delay: 0
 };
 var SliderZoomView = /** @class */function (_super) {
-  __extends$1(SliderZoomView, _super);
+  __extends(SliderZoomView, _super);
   function SliderZoomView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = SliderZoomView.type;
@@ -79687,7 +79656,7 @@ var each$2 = each$f;
 var asc = asc$2;
 var linearMap$1 = linearMap$2;
 var VisualMapModel = /** @class */function (_super) {
-  __extends$1(VisualMapModel, _super);
+  __extends(VisualMapModel, _super);
   function VisualMapModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = VisualMapModel.type;
@@ -80046,7 +80015,7 @@ const VisualMapModel$1 = VisualMapModel;
 // Constant
 var DEFAULT_BAR_BOUND = [20, 140];
 var ContinuousModel = /** @class */function (_super) {
-  __extends$1(ContinuousModel, _super);
+  __extends(ContinuousModel, _super);
   function ContinuousModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = ContinuousModel.type;
@@ -80253,7 +80222,7 @@ function getColorStopValues(visualMapModel, valueState, dataExtent) {
 const ContinuousModel$1 = ContinuousModel;
 
 var VisualMapView = /** @class */function (_super) {
-  __extends$1(VisualMapView, _super);
+  __extends(VisualMapView, _super);
   function VisualMapView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = VisualMapView.type;
@@ -80418,7 +80387,7 @@ var HOVER_LINK_OUT = 6;
 // high data value: this._dataInterval[1] and has high coord.
 // The logic of transform is implemented in this._createBarGroup.
 var ContinuousView = /** @class */function (_super) {
-  __extends$1(ContinuousView, _super);
+  __extends(ContinuousView, _super);
   function ContinuousView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = ContinuousView.type;
@@ -81209,7 +81178,7 @@ function install$5(registers) {
 }
 
 var PiecewiseModel = /** @class */function (_super) {
-  __extends$1(PiecewiseModel, _super);
+  __extends(PiecewiseModel, _super);
   function PiecewiseModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = PiecewiseModel.type;
@@ -81593,7 +81562,7 @@ function normalizeReverse(thisOption, pieceList) {
 const PiecewiseModel$1 = PiecewiseModel;
 
 var PiecewiseVisualMapView = /** @class */function (_super) {
-  __extends$1(PiecewiseVisualMapView, _super);
+  __extends(PiecewiseVisualMapView, _super);
   function PiecewiseVisualMapView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = PiecewiseVisualMapView.type;
@@ -82302,7 +82271,7 @@ function install$1(registers) {
 }
 
 var DatasetModel = /** @class */function (_super) {
-  __extends$1(DatasetModel, _super);
+  __extends(DatasetModel, _super);
   function DatasetModel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = 'dataset';
@@ -82330,7 +82299,7 @@ var DatasetModel = /** @class */function (_super) {
   return DatasetModel;
 }(ComponentModel$1);
 var DatasetView = /** @class */function (_super) {
-  __extends$1(DatasetView, _super);
+  __extends(DatasetView, _super);
   function DatasetView() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
     _this.type = 'dataset';

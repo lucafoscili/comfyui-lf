@@ -185,9 +185,7 @@ export interface CarouselWidgetOptions extends BaseWidgetOptions<CarouselWidgetD
 export type CarouselWidgetSetter = () => {
     [CustomWidgetName.carousel]: BaseWidgetCallback<CustomWidgetName.carousel>;
 };
-export interface CarouselWidgetDeserializedValue {
-    dataset: KulDataDataset;
-}
+export type CarouselWidgetDeserializedValue = KulDataDataset;
 export interface ChatWidget extends Widget {
     options: ChatWidgetOptions;
     type: [CustomWidgetName.chat];

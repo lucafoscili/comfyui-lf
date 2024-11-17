@@ -1,4 +1,3 @@
-import { KulDataDataset } from '../types/ketchup-lite/components';
 import {
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
@@ -23,15 +22,13 @@ export const carouselFactory: CarouselWidgetFactory = {
         return carousel;
       },
       getValue() {
-        return {
-          dataset: carousel?.kulData || {},
-        };
+        return carousel?.kulData || {};
       },
       setValue(value) {
         const callback: NormalizeValueCallback<
           CustomWidgetDeserializedValuesMap<typeof TYPE> | string
         > = (_, u) => {
-          const { dataset } = u.parsedJson as CarouselWidgetDeserializedValue;
+          const dataset = u.parsedJson as CarouselWidgetDeserializedValue;
           carousel.kulData = dataset || {};
         };
 

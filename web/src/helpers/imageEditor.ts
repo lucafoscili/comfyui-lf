@@ -2,7 +2,7 @@ import {
   KulButtonEventPayload,
   KulImageviewerEventPayload,
   KulSliderEventPayload,
-  KulSwitchEventPayload,
+  KulToggleEventPayload,
   KulTreeEventPayload,
 } from '../types/ketchup-lite/components';
 import {
@@ -123,10 +123,10 @@ export const sliderEventHandler = async (
   }
 };
 //#endregion
-//#region switchEventHandler
-export const switchEventHandler = async (
+//#region toggleEventHandler
+export const toggleEventHandler = async (
   updateCb: ImageEditorWidgetUpdateCallback,
-  e: CustomEvent<KulSwitchEventPayload>,
+  e: CustomEvent<KulToggleEventPayload>,
 ) => {
   const { eventType } = e.detail;
 
@@ -163,8 +163,8 @@ export const prepSettings = (
           value = addSnapshot ? sliderValue.real : sliderValue.display;
           break;
 
-        case 'KUL-SWITCH':
-          const toggle = control as HTMLKulSwitchElement;
+        case 'KUL-TOGGLE':
+          const toggle = control as HTMLKulToggleElement;
           //value = await toggle.getValue();
           break;
       }
@@ -258,12 +258,12 @@ export const createToggle = <ID extends string>(
   data: ImageEditorWidgetToggleConfig<ID>,
   updateCb: ImageEditorWidgetUpdateCallback,
 ) => {
-  const comp = document.createElement('kul-switch');
+  const comp = document.createElement('kul-toggle');
   comp.dataset.id = data.id;
   comp.kulLabel = data.ariaLabel;
   comp.kulValue = false;
 
-  comp.addEventListener('kul-switch-event', sliderEventHandler.bind(switchEventHandler, updateCb));
+  comp.addEventListener('kul-toggle-event', sliderEventHandler.bind(toggleEventHandler, updateCb));
 
   return comp;
 };
@@ -284,8 +284,8 @@ export const resetSettings = async (settings: HTMLElement) => {
         await slider.setValue(slider.kulValue);
         await slider.refresh();
         break;
-      case 'KUL-SWITCH':
-        const toggle = control as HTMLKulSwitchElement;
+      case 'KUL-TOGGLE':
+        const toggle = control as HTMLKulToggleElement;
         toggle.setValue(toggle.kulValue ? 'on' : 'off');
         break;
     }

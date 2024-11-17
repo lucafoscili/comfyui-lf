@@ -14,13 +14,11 @@ export const carouselFactory = {
                 return carousel;
             },
             getValue() {
-                return {
-                    dataset: carousel?.kulData || {},
-                };
+                return carousel?.kulData || {};
             },
             setValue(value) {
                 const callback = (_, u) => {
-                    const { dataset } = u.parsedJson;
+                    const dataset = u.parsedJson;
                     carousel.kulData = dataset || {};
                 };
                 normalizeValue(value, callback, TYPE);

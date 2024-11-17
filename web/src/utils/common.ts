@@ -14,7 +14,7 @@ import { KulButton } from '../types/ketchup-lite/components/kul-button/kul-butto
 import { KulChart } from '../types/ketchup-lite/components/kul-chart/kul-chart';
 import { KulDataDataset } from '../types/ketchup-lite/components';
 import { KulList } from '../types/ketchup-lite/components/kul-list/kul-list';
-import { KulSwitch } from '../types/ketchup-lite/components/kul-switch/kul-switch';
+import { KulToggle } from '../types/ketchup-lite/components/kul-toggle/kul-toggle';
 import { KulComponent, KulComponentName } from '../types/ketchup-lite/types/GenericTypes';
 import { KulDom } from '../types/ketchup-lite/managers/kul-manager/kul-manager-declarations';
 
@@ -155,8 +155,8 @@ export const isChart = (comp: KulComponent<KulComponentName>): comp is KulChart 
 export const isList = (comp: KulComponent<KulComponentName>): comp is KulList => {
   return comp.rootElement.tagName.toLowerCase() === 'kul-list';
 };
-export const isSwitch = (comp: KulComponent<KulComponentName>): comp is KulSwitch => {
-  return comp.rootElement.tagName.toLowerCase() === 'kul-switch';
+export const isToggle = (comp: KulComponent<KulComponentName>): comp is KulToggle => {
+  return comp.rootElement.tagName.toLowerCase() === 'kul-toggle';
 };
 
 export const isValidJSON = (value: unknown) => {

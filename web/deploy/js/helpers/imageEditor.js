@@ -75,8 +75,8 @@ export const sliderEventHandler = async (updateCb, e) => {
     }
 };
 //#endregion
-//#region switchEventHandler
-export const switchEventHandler = async (updateCb, e) => {
+//#region toggleEventHandler
+export const toggleEventHandler = async (updateCb, e) => {
     const { eventType } = e.detail;
     switch (eventType) {
         case 'change':
@@ -102,7 +102,7 @@ export const prepSettings = (settings, node, imageviewer) => {
                     const sliderValue = await slider.getValue();
                     value = addSnapshot ? sliderValue.real : sliderValue.display;
                     break;
-                case 'KUL-SWITCH':
+                case 'KUL-TOGGLE':
                     const toggle = control;
                     //value = await toggle.getValue();
                     break;
@@ -175,11 +175,11 @@ export const createSlider = (data, updateCb) => {
 //#endregion
 //#region createToggle
 export const createToggle = (data, updateCb) => {
-    const comp = document.createElement('kul-switch');
+    const comp = document.createElement('kul-toggle');
     comp.dataset.id = data.id;
     comp.kulLabel = data.ariaLabel;
     comp.kulValue = false;
-    comp.addEventListener('kul-switch-event', sliderEventHandler.bind(switchEventHandler, updateCb));
+    comp.addEventListener('kul-toggle-event', sliderEventHandler.bind(toggleEventHandler, updateCb));
     return comp;
 };
 //#endregion
@@ -199,7 +199,7 @@ export const resetSettings = async (settings) => {
                 await slider.setValue(slider.kulValue);
                 await slider.refresh();
                 break;
-            case 'KUL-SWITCH':
+            case 'KUL-TOGGLE':
                 const toggle = control;
                 toggle.setValue(toggle.kulValue ? 'on' : 'off');
                 break;

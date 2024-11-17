@@ -4,7 +4,7 @@ import { KulButton } from '../types/ketchup-lite/components/kul-button/kul-butto
 import { KulChart } from '../types/ketchup-lite/components/kul-chart/kul-chart';
 import { KulDataDataset } from '../types/ketchup-lite/components';
 import { KulList } from '../types/ketchup-lite/components/kul-list/kul-list';
-import { KulSwitch } from '../types/ketchup-lite/components/kul-switch/kul-switch';
+import { KulToggle } from '../types/ketchup-lite/components/kul-toggle/kul-toggle';
 import { KulComponent, KulComponentName } from '../types/ketchup-lite/types/GenericTypes';
 export declare const areJSONEqual: (a: unknown, b: unknown) => boolean;
 export declare const capitalize: (input: string) => string;
@@ -22,7 +22,7 @@ export declare const getWidget: <T extends ComfyWidgetName>(node: NodeType, type
 export declare const isButton: (comp: KulComponent<KulComponentName>) => comp is KulButton;
 export declare const isChart: (comp: KulComponent<KulComponentName>) => comp is KulChart;
 export declare const isList: (comp: KulComponent<KulComponentName>) => comp is KulList;
-export declare const isSwitch: (comp: KulComponent<KulComponentName>) => comp is KulSwitch;
+export declare const isToggle: (comp: KulComponent<KulComponentName>) => comp is KulToggle;
 export declare const isValidJSON: (value: unknown) => boolean;
 export declare const isValidNumber: (n: number) => boolean;
 export declare const kulManagerExists: () => boolean;

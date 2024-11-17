@@ -1,4 +1,4 @@
-import { KulListEventPayload, KulSwitchEventPayload } from '../types/ketchup-lite/components';
+import { KulListEventPayload, KulToggleEventPayload } from '../types/ketchup-lite/components';
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
 import { KulButton } from '../types/ketchup-lite/components/kul-button/kul-button';
 import {
@@ -6,8 +6,8 @@ import {
   KulButtonEventPayload,
 } from '../types/ketchup-lite/components/kul-button/kul-button-declarations';
 import { KulList } from '../types/ketchup-lite/components/kul-list/kul-list';
-import { KulSwitch } from '../types/ketchup-lite/components/kul-switch/kul-switch';
-import { KulSwitchEvent } from '../types/ketchup-lite/components/kul-switch/kul-switch-declarations';
+import { KulToggle } from '../types/ketchup-lite/components/kul-toggle/kul-toggle';
+import { KulToggleEvent } from '../types/ketchup-lite/components/kul-toggle/kul-toggle-declarations';
 import { BaseAPIPayload } from '../types/manager';
 import {
   getApiRoutes,
@@ -15,7 +15,7 @@ import {
   getKulThemes,
   getLFManager,
   isButton,
-  isSwitch,
+  isToggle,
 } from '../utils/common';
 
 enum Labels {
@@ -76,15 +76,15 @@ let TIMEOUT: NodeJS.Timeout;
 
 export const handleKulEvent = (e: Event) => {
   const { comp } = (
-    e as CustomEvent<KulButtonEventPayload | KulListEventPayload | KulSwitchEventPayload>
+    e as CustomEvent<KulButtonEventPayload | KulListEventPayload | KulToggleEventPayload>
   ).detail;
 
   if (isButton(comp)) {
     handleButtonEvent(e as CustomEvent<KulButtonEventPayload>);
   }
 
-  if (isSwitch(comp)) {
-    handleSwitchEvent(e as CustomEvent<KulSwitchEventPayload>);
+  if (isToggle(comp)) {
+    handleToggleEvent(e as CustomEvent<KulToggleEventPayload>);
   }
 };
 
@@ -190,11 +190,11 @@ const handleListEvent = (e: CustomEvent<KulListEventPayload>) => {
   }
 };
 
-const handleSwitchEvent = (e: CustomEvent<KulSwitchEventPayload>) => {
+const handleToggleEvent = (e: CustomEvent<KulToggleEventPayload>) => {
   const { comp, eventType, value } = e.detail;
-  const c = (comp as KulSwitch).rootElement;
+  const c = (comp as KulToggle).rootElement;
 
-  switch (eventType as KulSwitchEvent) {
+  switch (eventType as KulToggleEvent) {
     case 'change':
       getLFManager().toggleDebug(value === 'on' ? true : false);
       break;
@@ -282,7 +282,7 @@ export const sectionsFactory = {
             {
               id: 'content',
               value:
-                'Toggle this switch to automatically back up the folder <path/to/your/comfyui/user/LF_Nodes> once a day (the first time you open this workflow).',
+                'Toggle this toggle to automatically back up the folder <path/to/your/comfyui/user/LF_Nodes> once a day (the first time you open this workflow).',
             },
             {
               id: 'content',
@@ -293,11 +293,11 @@ export const sectionsFactory = {
               id: 'content',
               value: '',
               cells: {
-                kulSwitch: {
+                kulToggle: {
                   kulLabel: Labels.AUTO_BACKUP,
                   kulLeadingLabel: true,
                   kulStyle: ':host { text-align: center; padding: 16px 0; }',
-                  shape: 'switch',
+                  shape: 'toggle',
                   value: !!getLFManager().isBackupEnabled(),
                 } as any,
               },
@@ -408,11 +408,11 @@ export const sectionsFactory = {
               id: 'content',
               value: '',
               cells: {
-                kulSwitch: {
+                kulToggle: {
                   kulLabel: Labels.DEBUG,
                   kulLeadingLabel: true,
                   kulStyle: ':host { text-align: center; padding: 16px 0; }',
-                  shape: 'switch',
+                  shape: 'toggle',
                   value: !!getLFManager().isDebug(),
                 },
               },
@@ -489,8 +489,8 @@ export const sectionsFactory = {
                             shape: 'button',
                             value: '',
                           },
-                          kulSwitch: {
-                            shape: 'switch',
+                          kulToggle: {
+                            shape: 'toggle',
                             value: !!getKulManager().debug.isEnabled(),
                           },
                         },

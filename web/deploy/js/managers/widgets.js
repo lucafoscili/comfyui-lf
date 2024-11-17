@@ -200,8 +200,8 @@ export class LFWidgets {
                                 widget.options.setValue(value);
                             }
                             break;
-                        case CustomWidgetName.progressbar:
                         case CustomWidgetName.masonry:
+                        case CustomWidgetName.progressbar:
                             if (widget) {
                                 widget.options.setValue(JSON.stringify(payload));
                             }
