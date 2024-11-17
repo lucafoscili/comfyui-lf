@@ -75,6 +75,20 @@ export const sliderEventHandler = async (updateCb, e) => {
     }
 };
 //#endregion
+//#region textfieldEventHandler
+export const textfieldEventHandler = async (updateCb, e) => {
+    const { eventType } = e.detail;
+    switch (eventType) {
+        case 'change':
+            updateCb(true);
+            break;
+        case 'input':
+            const debouncedCallback = debounce(updateCb, 300);
+            debouncedCallback();
+            break;
+    }
+};
+//#endregion
 //#region toggleEventHandler
 export const toggleEventHandler = async (updateCb, e) => {
     const { eventType } = e.detail;
@@ -87,49 +101,69 @@ export const toggleEventHandler = async (updateCb, e) => {
 //#endregion
 //#region prepSettings
 export const prepSettings = (settings, node, imageviewer) => {
+    const lfManager = getLFManager();
     const filterType = node.id;
-    const widgets = unescapeJson(node.cells.kulCode.value)
-        .parsedJson;
+    const widgets = unescapeJson(node.cells.kulCode.value).parsedJson;
     const updateSettings = async (addSnapshot = false) => {
         const settingsValues = {};
         const controls = Array.from(settings.querySelectorAll('[data-id]'));
+        let mandatoryCheck = true;
         for (const control of controls) {
             const id = control.dataset.id;
             let value;
             switch (control.tagName) {
-                case 'KUL-SLIDER':
+                case 'KUL-SLIDER': {
                     const slider = control;
                     const sliderValue = await slider.getValue();
                     value = addSnapshot ? sliderValue.real : sliderValue.display;
                     break;
-                case 'KUL-TOGGLE':
-                    const toggle = control;
-                    //value = await toggle.getValue();
+                }
+                case 'KUL-TEXTFIELD': {
+                    const textfield = control;
+                    const textfieldValue = await textfield.getValue();
+                    value = textfieldValue;
                     break;
+                }
+                case 'KUL-TOGGLE': {
+                    const toggle = control;
+                    const toggleValue = await toggle.getValue();
+                    value = toggleValue === 'on' ? toggle.dataset.on : toggle.dataset.off;
+                    break;
+                }
+                default:
+                    lfManager.log(`Unhandled control type: ${control.tagName}`, { control }, LogSeverity.Warning);
+                    continue;
+            }
+            if (Boolean(control.dataset.mandatory) && !value) {
+                mandatoryCheck = false;
+                break;
             }
             settingsValues[id] = value;
         }
+        if (!mandatoryCheck) {
+            return;
+        }
         const snapshotValue = (await imageviewer.getCurrentSnapshot()).value;
+        requestAnimationFrame(() => imageviewer.setSpinnerStatus(true));
         try {
-            const r = await getApiRoutes().image.process(snapshotValue, filterType, settingsValues);
-            if (r.status === 'success') {
+            const response = await getApiRoutes().image.process(snapshotValue, filterType, settingsValues);
+            if (response.status === 'success') {
                 if (addSnapshot) {
-                    imageviewer.addSnapshot(r.data);
+                    imageviewer.addSnapshot(response.data);
                 }
                 else {
                     const { image } = await imageviewer.getComponents();
-                    requestAnimationFrame(() => (image.kulValue = r.data));
+                    requestAnimationFrame(() => (image.kulValue = response.data));
                 }
             }
             else {
-                console.error('Image processing failed:', r.message);
-                getLFManager().log('Error processing image!', { r }, LogSeverity.Error);
+                lfManager.log('Error processing image!', { response }, LogSeverity.Error);
             }
         }
         catch (error) {
-            console.error('API call failed:', error);
-            getLFManager().log('Error processing image!', { error }, LogSeverity.Error);
+            lfManager.log('Error processing image!', { error }, LogSeverity.Error);
         }
+        requestAnimationFrame(() => imageviewer.setSpinnerStatus(false));
     };
     settings.innerHTML = '';
     const resetButton = document.createElement('kul-button');
@@ -141,13 +175,16 @@ export const prepSettings = (settings, node, imageviewer) => {
     controlNames.forEach((controlName) => {
         const controls = widgets[controlName];
         if (controls) {
-            controls.forEach((controlsData) => {
+            controls.forEach((controlData) => {
                 switch (controlName) {
                     case ImageEditorWidgetControls.Slider:
-                        settings.appendChild(createSlider(controlsData, updateSettings));
+                        settings.appendChild(createSlider(controlData, updateSettings));
+                        break;
+                    case ImageEditorWidgetControls.Textfield:
+                        settings.appendChild(createTextfield(controlData, updateSettings));
                         break;
                     case ImageEditorWidgetControls.Toggle:
-                        settings.appendChild(createToggle(controlsData, updateSettings));
+                        settings.appendChild(createToggle(controlData, updateSettings));
                         break;
                     default:
                         throw new Error(`Unknown control type: ${controlName}`);
@@ -155,13 +192,15 @@ export const prepSettings = (settings, node, imageviewer) => {
             });
         }
     });
-    resetButton.addEventListener('click', resetSettings.bind(resetSettings, settings));
+    // Add Reset Functionality
+    resetButton.addEventListener('click', () => resetSettings(settings));
 };
 //#endregion
 //#region createSlider
 export const createSlider = (data, updateCb) => {
     const comp = document.createElement('kul-slider');
     comp.dataset.id = data.id;
+    comp.dataset.mandatory = data.isMandatory ? 'true' : 'false';
     comp.kulLabel = data.ariaLabel;
     comp.kulLeadingLabel = true;
     comp.kulMax = Number(data.max);
@@ -169,7 +208,21 @@ export const createSlider = (data, updateCb) => {
     comp.kulStep = Number(data.step);
     comp.kulStyle = '.form-field { width: 100%; }';
     comp.kulValue = Number(data.defaultValue);
+    comp.title = data.title;
     comp.addEventListener('kul-slider-event', sliderEventHandler.bind(sliderEventHandler, updateCb));
+    return comp;
+};
+//#endregion
+//#region createTextfield
+export const createTextfield = (data, updateCb) => {
+    const comp = document.createElement('kul-textfield');
+    comp.dataset.id = data.id;
+    comp.dataset.mandatory = data.isMandatory ? 'true' : 'false';
+    comp.kulLabel = data.ariaLabel;
+    comp.kulHtmlAttributes = { type: data.type };
+    comp.kulValue = String(data.defaultValue).valueOf();
+    comp.title = data.title;
+    comp.addEventListener('kul-textfield-event', textfieldEventHandler.bind(textfieldEventHandler, updateCb));
     return comp;
 };
 //#endregion
@@ -177,8 +230,12 @@ export const createSlider = (data, updateCb) => {
 export const createToggle = (data, updateCb) => {
     const comp = document.createElement('kul-toggle');
     comp.dataset.id = data.id;
+    comp.dataset.mandatory = data.isMandatory ? 'true' : 'false';
+    comp.dataset.off = data.off;
+    comp.dataset.on = data.on;
     comp.kulLabel = data.ariaLabel;
     comp.kulValue = false;
+    comp.title = data.title;
     comp.addEventListener('kul-toggle-event', sliderEventHandler.bind(toggleEventHandler, updateCb));
     return comp;
 };

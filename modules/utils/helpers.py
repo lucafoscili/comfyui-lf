@@ -1,5 +1,4 @@
 import base64
-import cv2
 import fnmatch
 import folder_paths
 import hashlib
@@ -51,64 +50,6 @@ def base64_to_tensor(base64_str):
     img_tensor = img_tensor.unsqueeze(0)
     
     return img_tensor
-# endregion
-# region clarity_effect
-def clarity_effect(image_tensor:torch.Tensor, clarity_strength:float, sharpen_amount:float, blur_kernel_size:int):
-    """
-    Processes a single image tensor by applying clarity and sharpen effects.
-
-    Args:
-        image_tensor (torch.Tensor): The input image tensor.
-        clarity_strength (float): The clarity effect strength.
-        sharpen_amount (float): The sharpening amount.
-        blur_kernel_size (int): The kernel size for blurring.
-
-    Returns:
-        torch.Tensor: The processed image tensor.
-    """
-    def apply_clarity(image:torch.Tensor, clarity_strength:float):
-        """
-        Apply clarity enhancement to an image using the LAB color space.
-
-        Args:
-            image (numpy.ndarray): The input image in BGR format.
-            clarity_strength (float): The strength of the clarity effect.
-
-        Returns:
-            numpy.ndarray: The image after applying the clarity effect.
-        """
-        lab_image = cv2.cvtColor(image, cv2.COLOR_BGR2LAB)
-        l_channel, a_channel, b_channel = cv2.split(lab_image)
-        blurred_l_channel = cv2.GaussianBlur(l_channel, (blur_kernel_size, blur_kernel_size), 0)
-        laplacian = cv2.Laplacian(blurred_l_channel, cv2.CV_64F)
-        enhanced_l_channel = l_channel + clarity_strength * laplacian
-        enhanced_l_channel = np.clip(enhanced_l_channel, 0, 255).astype(np.uint8)
-        enhanced_lab_image = cv2.merge([enhanced_l_channel, a_channel, b_channel])
-        final_image = cv2.cvtColor(enhanced_lab_image, cv2.COLOR_LAB2BGR)
-
-        return final_image
-
-    def apply_sharpen(image, sharpen_amount):
-        """
-        Apply sharpening to an image using a weighted sum.
-
-        Args:
-            image (numpy.ndarray): The input image in BGR format.
-            sharpen_amount (float): The amount of sharpening to apply.
-
-        Returns:
-            numpy.ndarray: The image after applying the sharpening effect.
-        """
-        gaussian_blur = cv2.GaussianBlur(image, (9, 9), 10.0)
-        sharpened_image = cv2.addWeighted(image, 1.0 + sharpen_amount, gaussian_blur, -sharpen_amount, 0)
-
-        return sharpened_image
-    
-    image = tensor_to_numpy(image_tensor, True)
-    clarity_image = apply_clarity(image, clarity_strength)
-    final_image = apply_sharpen(clarity_image, sharpen_amount)
-
-    return numpy_to_tensor(final_image)
 # endregion
 # region cleanse_lora_tag
 def cleanse_lora_tag(lora_tag: str, separator: str):
@@ -330,7 +271,7 @@ def create_masonry_node(filename: str, url: str, index: int):
     """
     node = {
         "cells": {
-            "kulImage": {"htmlProps":{"id": filename, "title": filename}, "shape": "image", "kulValue": f"{url}", "value": ''}
+            "kulImage": {"htmlProps":{"id": filename, "title": filename}, "shape": "image", "kulValue": f"{url}", "value": f"{url}"}
         },
         "id": f"{index+1}",
         "value": f"{index+1}"
@@ -709,6 +650,13 @@ def handle_response(response: dict, method: str = "GET"):
                     return response.status_code, method, answer
                 
         return response.status_code, method, "Whoops! Something went wrong."
+# endregion
+# region hex_to_tuple
+def hex_to_tuple(color: string):
+    """
+    Converts a HEX color to a tuple.
+    """
+    return tuple(int(color.lstrip('#')[i:i+2], 16) for i in (0, 2, 4))
 # endregion
 # region not_none
 def is_none(input):
@@ -1180,7 +1128,7 @@ def resize_and_crop_image(image_tensor: torch.Tensor, resize_method: str, target
     if resize_mode == "crop":
         output_image = functional.center_crop(resized_image, (target_height, target_width))
     else:
-        pad_color = tuple(int(pad_color.lstrip('#')[i:i+2], 16) for i in (0, 2, 4))
+        pad_color = hex_to_tuple(pad_color)
         channels = [functional.pad(resized_image[:, i, :, :], (
             (target_width - new_w) // 2,
             (target_height - new_h) // 2,

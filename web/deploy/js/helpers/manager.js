@@ -80,6 +80,7 @@ export const NODE_WIDGET_MAP = {
     LF_UrandomSeedGenerator: [CustomWidgetName.tree],
     LF_VAESelector: [CustomWidgetName.history],
     LF_ViewImages: [CustomWidgetName.masonry],
+    LF_VignetteEffect: [CustomWidgetName.compare],
     LF_WallOfText: [CustomWidgetName.code],
     LF_WriteJSON: [CustomWidgetName.textarea],
 };

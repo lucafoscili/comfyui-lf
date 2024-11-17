@@ -1,14 +1,21 @@
 import { KulDataDataset } from '../types/ketchup-lite/components';
-import { ImageEditorWidgetSettings } from '../types/widgets';
+import {
+  ImageEditorWidgetClarityIds,
+  ImageEditorWidgetControls,
+  ImageEditorWidgetSettings,
+  ImageEditorWidgetVignetteIds,
+} from '../types/widgets';
 
-//#region Settings
 const SETTINGS: ImageEditorWidgetSettings = {
+  //#region Clarity
   clarity: {
     slider: [
       {
         ariaLabel: 'Clarity Strength',
+        controlType: ImageEditorWidgetControls.Slider,
         defaultValue: '0',
-        id: 'clarity_strength',
+        id: ImageEditorWidgetClarityIds.ClarityStrength,
+        isMandatory: true,
         max: '5',
         min: '0',
         step: '0.1',
@@ -16,8 +23,9 @@ const SETTINGS: ImageEditorWidgetSettings = {
       },
       {
         ariaLabel: 'Sharpen Amount',
+        controlType: ImageEditorWidgetControls.Slider,
         defaultValue: '0',
-        id: 'sharpen_amount',
+        id: ImageEditorWidgetClarityIds.SharpenAmount,
         max: '5',
         min: '0',
         step: '0.1',
@@ -25,8 +33,9 @@ const SETTINGS: ImageEditorWidgetSettings = {
       },
       {
         ariaLabel: 'Blur Kernel Size',
-        defaultValue: '0',
-        id: 'blur_kernel_size',
+        controlType: ImageEditorWidgetControls.Slider,
+        defaultValue: '1',
+        id: ImageEditorWidgetClarityIds.BlurKernelSize,
         max: '15',
         min: '1',
         step: '2',
@@ -34,21 +43,58 @@ const SETTINGS: ImageEditorWidgetSettings = {
       },
     ],
   },
+  //#endregion
+  //#region Vignette
   vignette: {
     slider: [
       {
         ariaLabel: 'Vignette Intensity',
+        controlType: ImageEditorWidgetControls.Slider,
         defaultValue: '0',
-        id: 'vignette_intensity',
-        max: '100',
+        id: ImageEditorWidgetVignetteIds.Intensity,
+        isMandatory: true,
+        max: '1',
         min: '0',
-        step: '1',
-        title: 'Controls the intensity of the vignette effect.',
+        step: '0.05',
+        title: 'Controls the darkness of the vignette effect. Higher values mean darker edges.',
+      },
+      {
+        ariaLabel: 'Vignette Radius',
+        controlType: ImageEditorWidgetControls.Slider,
+        defaultValue: '0',
+        id: ImageEditorWidgetVignetteIds.Radius,
+        isMandatory: true,
+        max: '1',
+        min: '0',
+        step: '0.05',
+        title: 'Controls the size of the vignette effect. Lower values mean a smaller vignette.',
+      },
+    ],
+    textfield: [
+      {
+        ariaLabel: 'Color',
+        controlType: ImageEditorWidgetControls.Textfield,
+        defaultValue: '000000',
+        id: ImageEditorWidgetVignetteIds.Color,
+        title: 'Sets the color of the vignette.',
+        type: 'color',
+      },
+    ],
+    toggle: [
+      {
+        ariaLabel: 'Circular',
+        controlType: ImageEditorWidgetControls.Toggle,
+        defaultValue: false,
+        id: ImageEditorWidgetVignetteIds.Shape,
+        off: 'elliptical',
+        on: 'circular',
+        title: 'Selects the shape of the vignette effect, defaults to elliptical.',
       },
     ],
   },
+  //#endregion
 };
-//#endregion
+
 //#region Tree dataset
 export const TREE_DATA: KulDataDataset = {
   nodes: [
