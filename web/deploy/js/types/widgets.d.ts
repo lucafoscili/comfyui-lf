@@ -185,9 +185,7 @@ export interface CarouselWidgetOptions extends BaseWidgetOptions<CarouselWidgetD
 export type CarouselWidgetSetter = () => {
     [CustomWidgetName.carousel]: BaseWidgetCallback<CustomWidgetName.carousel>;
 };
-export interface CarouselWidgetDeserializedValue {
-    dataset: KulDataDataset;
-}
+export type CarouselWidgetDeserializedValue = KulDataDataset;
 export interface ChatWidget extends Widget {
     options: ChatWidgetOptions;
     type: [CustomWidgetName.chat];
@@ -324,6 +322,86 @@ export interface ImageEditorWidgetActionButtons {
     interrupt?: HTMLKulButtonElement;
     resume?: HTMLKulButtonElement;
 }
+export interface ImageEditorWidgetFilterSettings {
+    [key: string]: number | boolean | string;
+}
+export interface ImageEditorWidgetClaritySettings extends ImageEditorWidgetFilterSettings {
+    clarity_strength: number;
+    sharpen_amount: number;
+    blur_kernel_size: number;
+}
+export interface ImageEditorWidgetVignetteSettings extends ImageEditorWidgetFilterSettings {
+    vignette_intensity: number;
+    vignette_radius: number;
+    vignette_shape: boolean;
+}
+export interface ImageEditorWidgetFilterSettingsMap {
+    clarity: ImageEditorWidgetClaritySettings;
+    vignette: ImageEditorWidgetVignetteSettings;
+}
+export type ImageEditorWidgetFilterType = keyof ImageEditorWidgetFilterSettingsMap;
+export declare enum ImageEditorWidgetControls {
+    Slider = "slider",
+    Textfield = "textfield",
+    Toggle = "toggle"
+}
+export interface ImageEditorWidgetBaseConfig<T extends string> {
+    ariaLabel: string;
+    defaultValue: string | number | boolean;
+    id: T;
+    isMandatory?: boolean;
+    title: string;
+}
+export interface ImageEditorWidgetSliderConfig extends ImageEditorWidgetBaseConfig<string> {
+    controlType: ImageEditorWidgetControls.Slider;
+    max: string;
+    min: string;
+    step: string;
+}
+export interface ImageEditorWidgetTextfieldConfig extends ImageEditorWidgetBaseConfig<string> {
+    controlType: ImageEditorWidgetControls.Textfield;
+    type: 'color' | 'number' | 'text';
+}
+export interface ImageEditorWidgetToggleConfig extends ImageEditorWidgetBaseConfig<string> {
+    controlType: ImageEditorWidgetControls.Toggle;
+    off: string;
+    on: string;
+}
+export type ImageEditorWidgetControlConfig = ImageEditorWidgetSliderConfig | ImageEditorWidgetTextfieldConfig | ImageEditorWidgetToggleConfig;
+export type ImageEditorWidgetSettingsFor = Partial<{
+    [ImageEditorWidgetControls.Slider]: ImageEditorWidgetSliderConfig[];
+    [ImageEditorWidgetControls.Textfield]: ImageEditorWidgetTextfieldConfig[];
+    [ImageEditorWidgetControls.Toggle]: ImageEditorWidgetToggleConfig[];
+}>;
+export type ImageEditorWidgetSettings = {
+    [F in ImageEditorWidgetFilterType]: ImageEditorWidgetSettingsFor;
+};
+export declare enum ImageEditorWidgetStatus {
+    Completed = "completed",
+    Pending = "pending"
+}
+export declare enum ImageEditorWidgetIcons {
+    Interrupt = "stop",
+    Reset = "refresh",
+    Resume = "play"
+}
+export declare enum ImageEditorWidgetColumnId {
+    Path = "path",
+    Status = "status"
+}
+export type ImageEditorWidgetIds = ImageEditorWidgetClarityIds | ImageEditorWidgetVignetteIds;
+export declare enum ImageEditorWidgetClarityIds {
+    BlurKernelSize = "blur_kernel_size",
+    ClarityStrength = "clarity_strength",
+    SharpenAmount = "sharpen_amount"
+}
+export declare enum ImageEditorWidgetVignetteIds {
+    Color = "color",
+    Intensity = "intensity",
+    Radius = "radius",
+    Shape = "shape"
+}
+export type ImageEditorWidgetUpdateCallback = (addSnapshot?: boolean) => Promise<void>;
 export interface MasonryWidget extends Widget {
     options: MasonryWidgetOptions;
     type: [CustomWidgetName.masonry];

@@ -1,5 +1,5 @@
-import { h, r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, H as Host } from './index-4ebcb21f.js';
-import { k as kulManagerInstance, R as RIPPLE_SURFACE_CLASS, a as KulDataCyAttributes, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-0684a7cb.js';
+import { h, r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, H as Host } from './index-53f95fee.js';
+import { k as kulManagerInstance, R as RIPPLE_SURFACE_CLASS, a as KulDataCyAttributes, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-9e1be956.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 
 /*-------------------------------------------------*/
@@ -69,7 +69,7 @@ const DEFAULTS = {
             },
         ],
         code: () => [{ kulLanguage: 'markdown' }],
-        switch: () => [
+        toggle: () => [
             {
                 kulLeadingLabel: true,
                 kulLabel: 'Toggle debug',
@@ -216,12 +216,12 @@ function getDebugLayout(adapter) {
     const decorator = kulManagerInstance().data.cell.shapes.decorate;
     const buttons = decorator('button', shapes.button, eventDispatcher, DEFAULTS.debug.button(), buttonEventHandler);
     const codes = decorator('code', shapes.code, eventDispatcher, DEFAULTS.debug.code(), codeEventHandler);
-    const switches = decorator('switch', shapes.switch, eventDispatcher, DEFAULTS.debug.switch(), switchEventHandler);
+    const togglees = decorator('toggle', shapes.toggle, eventDispatcher, DEFAULTS.debug.toggle(), toggleEventHandler);
     const className = {
         [`${card.kulLayout}-layout`]: true,
     };
     return (h("div", { class: className },
-        switches?.element?.length && (h("div", { class: "section-1 switch" }, switches.element[0])),
+        togglees?.element?.length && (h("div", { class: "section-1 toggle" }, togglees.element[0])),
         codes?.element?.length && (h("div", { class: "section-2 code" }, codes.element[0])),
         buttons?.element?.length && (h("div", { class: "section-3 button" }, buttons.element[0])),
         buttons?.element?.length && (h("div", { class: "section-4 button" }, buttons.element[1]))));
@@ -267,7 +267,7 @@ const listEventHandler = (e) => {
             break;
     }
 };
-const switchEventHandler = (e) => {
+const toggleEventHandler = (e) => {
     const { comp, eventType, value } = e.detail;
     const boolValue = value === 'on' ? true : false;
     switch (eventType) {

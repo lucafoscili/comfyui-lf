@@ -1,4 +1,4 @@
-import { getApiRoutes, getKulManager, getKulThemes, getLFManager, isButton, isSwitch, } from '../utils/common.js';
+import { getApiRoutes, getKulManager, getKulThemes, getLFManager, isButton, isToggle, } from '../utils/common.js';
 var Labels;
 (function (Labels) {
     Labels["AUTO_BACKUP"] = "Automatic Backup";
@@ -58,8 +58,8 @@ export const handleKulEvent = (e) => {
     if (isButton(comp)) {
         handleButtonEvent(e);
     }
-    if (isSwitch(comp)) {
-        handleSwitchEvent(e);
+    if (isToggle(comp)) {
+        handleToggleEvent(e);
     }
 };
 const handleButtonEvent = (e) => {
@@ -154,7 +154,7 @@ const handleListEvent = (e) => {
             break;
     }
 };
-const handleSwitchEvent = (e) => {
+const handleToggleEvent = (e) => {
     const { comp, eventType, value } = e.detail;
     const c = comp.rootElement;
     switch (eventType) {
@@ -241,7 +241,7 @@ export const sectionsFactory = {
                     children: [
                         {
                             id: 'content',
-                            value: 'Toggle this switch to automatically back up the folder <path/to/your/comfyui/user/LF_Nodes> once a day (the first time you open this workflow).',
+                            value: 'Toggle this toggle to automatically back up the folder <path/to/your/comfyui/user/LF_Nodes> once a day (the first time you open this workflow).',
                         },
                         {
                             id: 'content',
@@ -252,11 +252,11 @@ export const sectionsFactory = {
                             id: 'content',
                             value: '',
                             cells: {
-                                kulSwitch: {
+                                kulToggle: {
                                     kulLabel: Labels.AUTO_BACKUP,
                                     kulLeadingLabel: true,
                                     kulStyle: ':host { text-align: center; padding: 16px 0; }',
-                                    shape: 'switch',
+                                    shape: 'toggle',
                                     value: !!getLFManager().isBackupEnabled(),
                                 },
                             },
@@ -363,11 +363,11 @@ export const sectionsFactory = {
                             id: 'content',
                             value: '',
                             cells: {
-                                kulSwitch: {
+                                kulToggle: {
                                     kulLabel: Labels.DEBUG,
                                     kulLeadingLabel: true,
                                     kulStyle: ':host { text-align: center; padding: 16px 0; }',
-                                    shape: 'switch',
+                                    shape: 'toggle',
                                     value: !!getLFManager().isDebug(),
                                 },
                             },
@@ -443,8 +443,8 @@ export const sectionsFactory = {
                                                         shape: 'button',
                                                         value: '',
                                                     },
-                                                    kulSwitch: {
-                                                        shape: 'switch',
+                                                    kulToggle: {
+                                                        shape: 'toggle',
                                                         value: !!getKulManager().debug.isEnabled(),
                                                     },
                                                 },

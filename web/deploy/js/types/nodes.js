@@ -79,6 +79,7 @@ export var NodeName;
     NodeName["usageStatistics"] = "LF_UsageStatistics";
     NodeName["vaeSelector"] = "LF_VAESelector";
     NodeName["viewImages"] = "LF_ViewImages";
+    NodeName["vignetteEffect"] = "LF_VignetteEffect";
     NodeName["wallOfText"] = "LF_WallOfText";
     NodeName["writeJson"] = "LF_WriteJSON";
 })(NodeName || (NodeName = {}));

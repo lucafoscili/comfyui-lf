@@ -19,9 +19,3 @@ export var LogSeverity;
     LogSeverity["Warning"] = "warning";
     LogSeverity["Error"] = "error";
 })(LogSeverity || (LogSeverity = {}));
-export var TREE_DATA_IDS;
-(function (TREE_DATA_IDS) {
-    TREE_DATA_IDS["Clarity"] = "clarity";
-    TREE_DATA_IDS["Vignette"] = "vignette";
-})(TREE_DATA_IDS || (TREE_DATA_IDS = {}));
-// endregion

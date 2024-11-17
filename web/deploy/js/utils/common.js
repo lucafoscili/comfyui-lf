@@ -96,8 +96,8 @@ export const isChart = (comp) => {
 export const isList = (comp) => {
     return comp.rootElement.tagName.toLowerCase() === 'kul-list';
 };
-export const isSwitch = (comp) => {
-    return comp.rootElement.tagName.toLowerCase() === 'kul-switch';
+export const isToggle = (comp) => {
+    return comp.rootElement.tagName.toLowerCase() === 'kul-toggle';
 };
 export const isValidJSON = (value) => {
     try {

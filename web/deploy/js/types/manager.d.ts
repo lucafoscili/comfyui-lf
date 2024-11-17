@@ -1,7 +1,7 @@
 import { EventPayload, EventName } from './events';
 import { KulDataDataset } from './ketchup-lite/components';
 import { Extension } from './nodes';
-import { CustomWidgetName } from './widgets';
+import { CustomWidgetName, ImageEditorWidgetFilterSettingsMap, ImageEditorWidgetFilterType } from './widgets';
 export interface ComfyAPIs {
     analytics: AnalyticsAPIs;
     backup: BackupAPIs;
@@ -28,7 +28,7 @@ export interface BackupAPIs {
 }
 export interface ImageAPIs {
     get: (dir: string) => Promise<GetImageAPIPayload>;
-    process: <T extends FilterType>(url: string, type: T, settings: FilterSettingsMap[T]) => Promise<ProcessImageAPIPayload>;
+    process: <T extends ImageEditorWidgetFilterType>(url: string, type: T, settings: ImageEditorWidgetFilterSettingsMap[T]) => Promise<ProcessImageAPIPayload>;
 }
 export interface JSONAPIs {
     get: (path: string) => Promise<GetJSONAPIPayload>;
@@ -90,31 +90,3 @@ export type TooltipUploadCallback = (b64image: string) => void;
 export type TooltipCallbacks = TooltipUploadCallback;
 export type TooltipLayouts = 'upload';
 export type ExtensionCallback = (node: NodeType) => void;
-export interface ClaritySettings {
-    clarity_strength: number;
-    sharpen_amount: number;
-    blur_kernel_size: number;
-}
-export interface VignetteSettings {
-    vignette_intensity: number;
-}
-export interface FilterSettingsMap {
-    clarity: ClaritySettings;
-    vignette: VignetteSettings;
-}
-export type FilterType = keyof FilterSettingsMap;
-export declare enum TREE_DATA_IDS {
-    Clarity = "clarity",
-    Vignette = "vignette"
-}
-export type ClaritySliderID = keyof ClaritySettings;
-export type VignetteSliderID = keyof VignetteSettings;
-export type SliderConfig<ID extends string> = {
-    ariaLabel: string;
-    defaultValue: string;
-    id: ID;
-    max: string;
-    min: string;
-    step: string;
-    title: string;
-};

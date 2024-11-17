@@ -33,3 +33,38 @@ export var CustomWidgetName;
     CustomWidgetName["tree"] = "KUL_TREE";
     CustomWidgetName["upload"] = "KUL_UPLOAD";
 })(CustomWidgetName || (CustomWidgetName = {}));
+export var ImageEditorWidgetControls;
+(function (ImageEditorWidgetControls) {
+    ImageEditorWidgetControls["Slider"] = "slider";
+    ImageEditorWidgetControls["Textfield"] = "textfield";
+    ImageEditorWidgetControls["Toggle"] = "toggle";
+})(ImageEditorWidgetControls || (ImageEditorWidgetControls = {}));
+export var ImageEditorWidgetStatus;
+(function (ImageEditorWidgetStatus) {
+    ImageEditorWidgetStatus["Completed"] = "completed";
+    ImageEditorWidgetStatus["Pending"] = "pending";
+})(ImageEditorWidgetStatus || (ImageEditorWidgetStatus = {}));
+export var ImageEditorWidgetIcons;
+(function (ImageEditorWidgetIcons) {
+    ImageEditorWidgetIcons["Interrupt"] = "stop";
+    ImageEditorWidgetIcons["Reset"] = "refresh";
+    ImageEditorWidgetIcons["Resume"] = "play";
+})(ImageEditorWidgetIcons || (ImageEditorWidgetIcons = {}));
+export var ImageEditorWidgetColumnId;
+(function (ImageEditorWidgetColumnId) {
+    ImageEditorWidgetColumnId["Path"] = "path";
+    ImageEditorWidgetColumnId["Status"] = "status";
+})(ImageEditorWidgetColumnId || (ImageEditorWidgetColumnId = {}));
+export var ImageEditorWidgetClarityIds;
+(function (ImageEditorWidgetClarityIds) {
+    ImageEditorWidgetClarityIds["BlurKernelSize"] = "blur_kernel_size";
+    ImageEditorWidgetClarityIds["ClarityStrength"] = "clarity_strength";
+    ImageEditorWidgetClarityIds["SharpenAmount"] = "sharpen_amount";
+})(ImageEditorWidgetClarityIds || (ImageEditorWidgetClarityIds = {}));
+export var ImageEditorWidgetVignetteIds;
+(function (ImageEditorWidgetVignetteIds) {
+    ImageEditorWidgetVignetteIds["Color"] = "color";
+    ImageEditorWidgetVignetteIds["Intensity"] = "intensity";
+    ImageEditorWidgetVignetteIds["Radius"] = "radius";
+    ImageEditorWidgetVignetteIds["Shape"] = "shape";
+})(ImageEditorWidgetVignetteIds || (ImageEditorWidgetVignetteIds = {}));

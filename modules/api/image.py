@@ -9,7 +9,8 @@ from PIL import Image
 from server import PromptServer
 
 from ..utils.constants import API_ROUTE_PREFIX
-from ..utils.helpers import clarity_effect, create_masonry_node, get_comfy_dir, get_resource_url, pil_to_tensor, resolve_filepath, resolve_url, tensor_to_pil
+from ..utils.filters import clarity_effect, vignette_effect
+from ..utils.helpers import create_masonry_node, get_comfy_dir, get_resource_url, pil_to_tensor, resolve_filepath, resolve_url, tensor_to_pil
 
 # region get-image
 @PromptServer.instance.routes.post(f"{API_ROUTE_PREFIX}/get-image")
@@ -45,7 +46,7 @@ async def get_images_in_directory(request):
 # endregion
 # region process-image
 @PromptServer.instance.routes.post(f"{API_ROUTE_PREFIX}/process-image")
-async def get_images_in_directory(request):
+async def process_image(request):
     try:
         r: dict = await request.post()
 
@@ -67,8 +68,8 @@ async def get_images_in_directory(request):
 
         if filter_type == "clarity":
             processed_tensor = apply_clarity_effect(img_tensor, settings)
-      # elif filter_type == "vignette":
-      #      processed_tensor = apply_vignette_effect(img_tensor, settings)
+        elif filter_type == "vignette":
+            processed_tensor = apply_vignette_effect(img_tensor, settings)
         else:
             return web.Response(status=400, text=f"Unsupported filter type: {filter_type}")
 
@@ -82,12 +83,23 @@ async def get_images_in_directory(request):
         }, status=200)
 
     except Exception as e:
-        return web.Response(status=500, text=f"Error: {str(e)}")       
+        return web.Response(status=500, text=f"Error: {str(e)}")
+# endregion
+
+# region helpers
+def apply_vignette_effect(img_tensor: torch.Tensor, settings: dict):
+    intensity = float(settings.get("intensity", 0))
+    radius = float(settings.get("radius", 0))
+    shape = settings.get("shape", "elliptical")
+    color = settings.get("color", "000000")
+
+    processed_tensor = vignette_effect(img_tensor, intensity, radius, shape, color)
+    return processed_tensor  
 
 def apply_clarity_effect(img_tensor: torch.Tensor, settings: dict):
-    clarity_strength = float(settings.get("clarity_strength", 0.5))
-    sharpen_amount = float(settings.get("sharpen_amount", 1.0))
-    blur_kernel_size = int(settings.get("blur_kernel_size", 7))
+    clarity_strength = float(settings.get("clarity_strength", 0))
+    sharpen_amount = float(settings.get("sharpen_amount", 0))
+    blur_kernel_size = int(settings.get("blur_kernel_size", 1))
 
     processed_tensor = clarity_effect(img_tensor, clarity_strength, sharpen_amount, blur_kernel_size)
     return processed_tensor

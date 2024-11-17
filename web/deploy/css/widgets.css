@@ -203,6 +203,9 @@
   overflow: auto;
   width: 100%;
 }
+.lf-imageeditor kul-toggle {
+  justify-items: center;
+}
 
 .lf-masonry {
   background: var(--kul-background-color);
