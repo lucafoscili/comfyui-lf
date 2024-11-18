@@ -1,4 +1,4 @@
-import { LogSeverity } from '../types/manager.js';
+import { LogSeverity } from '../types/manager/manager.js';
 import { NodeName } from '../types/nodes.js';
 import { ComfyWidgetName, CustomWidgetName } from '../types/widgets.js';
 import { areJSONEqual, getApiRoutes, getCustomWidget, getInput, getLFManager, isValidJSON, refreshChart, unescapeJson, } from '../utils/common.js';
@@ -13,6 +13,7 @@ export const NODE_WIDGET_MAP = {
     LF_ColorAnalysis: [CustomWidgetName.tabBarChart],
     LF_CompareImages: [CustomWidgetName.compare],
     LF_ControlPanel: [CustomWidgetName.controlPanel],
+    LF_DesaturationEffect: [CustomWidgetName.compare],
     LF_DisplayBoolean: [CustomWidgetName.code],
     LF_DisplayFloat: [CustomWidgetName.code],
     LF_DisplayInteger: [CustomWidgetName.code],

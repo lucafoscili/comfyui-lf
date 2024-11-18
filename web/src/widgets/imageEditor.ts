@@ -5,25 +5,27 @@ import {
   imageviewerEventHandler,
   setGridStatus,
 } from '../helpers/imageEditor';
-import { LogSeverity } from '../types/manager';
+import { LogSeverity } from '../types/manager/manager';
 import { NodeName } from '../types/nodes';
 import {
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
   NormalizeValueCallback,
-  ImageEditorWidgetDeserializedValue,
-  ImageEditorWidgetFactory,
-  ImageEditorWidgetActionButtons,
-  ImageEditorWidgetStatus,
-  ImageEditorWidgetIcons,
 } from '../types/widgets';
+import {
+  ImageEditorActionButtons,
+  ImageEditorDeserializedValue,
+  ImageEditorFactory,
+  ImageEditorIcons,
+  ImageEditorStatus,
+} from '../types/widgets/imageEditor';
 import { createDOMWidget, getLFManager, normalizeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-imageeditor';
 const TYPE = CustomWidgetName.imageEditor;
 
 //#region imageEditorFactory
-export const imageEditorFactory: ImageEditorWidgetFactory = {
+export const imageEditorFactory: ImageEditorFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
     actions: `${BASE_CSS_CLASS}__actions`,
@@ -60,9 +62,9 @@ export const imageEditorFactory: ImageEditorWidgetFactory = {
         const callback: NormalizeValueCallback<
           CustomWidgetDeserializedValuesMap<typeof TYPE> | string
         > = (_, u) => {
-          const parsedValue = u.parsedJson as ImageEditorWidgetDeserializedValue;
-          if (getStatusColumn(parsedValue)?.title === ImageEditorWidgetStatus.Pending) {
-            setGridStatus(ImageEditorWidgetStatus.Pending, grid, actionButtons);
+          const parsedValue = u.parsedJson as ImageEditorDeserializedValue;
+          if (getStatusColumn(parsedValue)?.title === ImageEditorStatus.Pending) {
+            setGridStatus(ImageEditorStatus.Pending, grid, actionButtons);
           }
 
           imageviewer.kulData = parsedValue || {};
@@ -91,7 +93,7 @@ export const imageEditorFactory: ImageEditorWidgetFactory = {
     );
     imageviewer.appendChild(settings);
 
-    const actionButtons: ImageEditorWidgetActionButtons = {};
+    const actionButtons: ImageEditorActionButtons = {};
 
     switch (node.comfyClass) {
       case NodeName.imagesEditingBreakpoint:
@@ -102,7 +104,7 @@ export const imageEditorFactory: ImageEditorWidgetFactory = {
         interrupt.classList.add(imageEditorFactory.cssClasses.resume);
         interrupt.classList.add('kul-full-width');
         interrupt.classList.add('kul-danger');
-        interrupt.kulIcon = ImageEditorWidgetIcons.Interrupt;
+        interrupt.kulIcon = ImageEditorIcons.Interrupt;
         interrupt.kulLabel = 'Interrupt workflow';
         interrupt.kulStyling = 'flat';
         interrupt.title = 'Click to interrupt the workflow.';
@@ -110,7 +112,7 @@ export const imageEditorFactory: ImageEditorWidgetFactory = {
         resume.classList.add(imageEditorFactory.cssClasses.resume);
         resume.classList.add('kul-full-width');
         resume.classList.add('kul-success');
-        resume.kulIcon = ImageEditorWidgetIcons.Resume;
+        resume.kulIcon = ImageEditorIcons.Resume;
         resume.kulLabel = 'Resume workflow';
         resume.kulStyling = 'flat';
         resume.title =
@@ -131,7 +133,7 @@ export const imageEditorFactory: ImageEditorWidgetFactory = {
         actionButtons.interrupt = interrupt;
         actionButtons.resume = resume;
 
-        setGridStatus(ImageEditorWidgetStatus.Completed, grid, actionButtons);
+        setGridStatus(ImageEditorStatus.Completed, grid, actionButtons);
     }
 
     grid.classList.add(imageEditorFactory.cssClasses.grid);

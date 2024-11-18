@@ -5,6 +5,7 @@ import { NodeName } from '../types/nodes.js';
 import { cardPlaceholders, fetchModelMetadata } from '../utils/api.js';
 const BASE_CSS_CLASS = 'lf-card';
 const TYPE = CustomWidgetName.card;
+//#region Card factory
 export const cardFactory = {
     cssClasses: {
         content: BASE_CSS_CLASS,
@@ -54,6 +55,8 @@ export const cardFactory = {
         return { widget: createDOMWidget(TYPE, wrapper, node, options) };
     },
 };
+//#endregion
+//#region selectorButton
 const selectorButton = (grid, node) => {
     const cb = (e) => {
         const { comp, eventType } = e.detail;
@@ -113,3 +116,4 @@ const selectorButton = (grid, node) => {
     button.appendChild(spinner);
     return button;
 };
+//#endregion

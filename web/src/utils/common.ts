@@ -9,7 +9,6 @@ import {
   NormalizeValueCallback,
   UnescapeJSONPayload,
 } from '../types/widgets';
-import { LogSeverity } from '../types/manager';
 import { KulButton } from '../types/ketchup-lite/components/kul-button/kul-button';
 import { KulChart } from '../types/ketchup-lite/components/kul-chart/kul-chart';
 import { KulDataDataset } from '../types/ketchup-lite/components';
@@ -17,6 +16,7 @@ import { KulList } from '../types/ketchup-lite/components/kul-list/kul-list';
 import { KulToggle } from '../types/ketchup-lite/components/kul-toggle/kul-toggle';
 import { KulComponent, KulComponentName } from '../types/ketchup-lite/types/GenericTypes';
 import { KulDom } from '../types/ketchup-lite/managers/kul-manager/kul-manager-declarations';
+import { LogSeverity } from '../types/manager/manager';
 
 const DEFAULT_WIDGET_NAME = 'ui_widget';
 const DOM = document.documentElement as KulDom;

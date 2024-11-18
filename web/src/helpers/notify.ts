@@ -1,5 +1,5 @@
 import { NotifyPayload } from '../types/events';
-import { LogSeverity } from '../types/manager';
+import { LogSeverity } from '../types/manager/manager';
 import { getLFManager } from '../utils/common';
 
 export const showNotification = (payload: NotifyPayload) => {

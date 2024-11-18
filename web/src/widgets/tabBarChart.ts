@@ -1,24 +1,24 @@
+import { AnalyticsType } from '../types/api/api';
 import {
   KulDataDataset,
   KulDataNode,
   KulTabbarEventPayload,
   KulTextfieldEventPayload,
 } from '../types/ketchup-lite/components';
-import { AnalyticsType, LogSeverity } from '../types/manager';
+import { LogSeverity } from '../types/manager/manager';
 import { NodeName } from '../types/nodes';
 import {
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
   NormalizeValueCallback,
-  TabBarChartWidgetDeserializedValue,
-  TabBarChartWidgetFactory,
 } from '../types/widgets';
+import { TabBarChartDeserializedValue, TabBarChartFactory } from '../types/widgets/tabBarChart';
 import { createDOMWidget, getLFManager, normalizeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-tabbarchart';
 const TYPE = CustomWidgetName.tabBarChart;
 
-export const tabBarChartFactory: TabBarChartWidgetFactory = {
+export const tabBarChartFactory: TabBarChartFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
     directory: `${BASE_CSS_CLASS}__directory`,
@@ -48,7 +48,7 @@ export const tabBarChartFactory: TabBarChartWidgetFactory = {
         const callback: NormalizeValueCallback<
           CustomWidgetDeserializedValuesMap<typeof TYPE> | string
         > = (_, u) => {
-          const parsedValue = u.parsedJson as TabBarChartWidgetDeserializedValue;
+          const parsedValue = u.parsedJson as TabBarChartDeserializedValue;
 
           switch (node) {
             case NodeName.colorAnalysis:

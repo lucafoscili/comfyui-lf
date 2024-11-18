@@ -1,5 +1,5 @@
 import { KulMessengerDataset } from '../types/ketchup-lite/components';
-import { LogSeverity } from '../types/manager';
+import { LogSeverity } from '../types/manager/manager';
 import { NodeName, NodeWidgetMap } from '../types/nodes';
 import { ComfyWidgetName, CustomWidgetName } from '../types/widgets';
 import {
@@ -24,6 +24,7 @@ export const NODE_WIDGET_MAP: NodeWidgetMap = {
   LF_ColorAnalysis: [CustomWidgetName.tabBarChart],
   LF_CompareImages: [CustomWidgetName.compare],
   LF_ControlPanel: [CustomWidgetName.controlPanel],
+  LF_DesaturationEffect: [CustomWidgetName.compare],
   LF_DisplayBoolean: [CustomWidgetName.code],
   LF_DisplayFloat: [CustomWidgetName.code],
   LF_DisplayInteger: [CustomWidgetName.code],

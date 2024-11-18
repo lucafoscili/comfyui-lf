@@ -1,7 +1,8 @@
+import { APIMetadataEntry, GetMetadataAPIPayload } from '../types/api/api';
 import { KulDataDataset } from '../types/ketchup-lite/components';
 import { KulDataCell } from '../types/ketchup-lite/managers/kul-data/kul-data-declarations';
-import { APIMetadataEntry, GetMetadataAPIPayload } from '../types/manager';
-import { CardsWithChipWidget, CardWidget, CardWidgetDeserializedValue } from '../types/widgets';
+import { Card, CardDeserializedValue } from '../types/widgets/card';
+import { CardsWithChip } from '../types/widgets/cardsWithChip';
 import { getApiRoutes } from './common';
 
 const DUMMY_PROPS: Partial<HTMLKulCardElement> = {
@@ -18,8 +19,8 @@ const DUMMY_PROPS: Partial<HTMLKulCardElement> = {
   },
 };
 
-export const cardPlaceholders = (widget: CardWidget | CardsWithChipWidget, count: number) => {
-  const dummyValue: CardWidgetDeserializedValue = {
+export const cardPlaceholders = (widget: Card | CardsWithChip, count: number) => {
+  const dummyValue: CardDeserializedValue = {
     props: [],
   };
 

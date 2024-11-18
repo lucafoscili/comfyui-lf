@@ -9,7 +9,7 @@ import {
   TooltipCallbacks,
   TooltipLayouts,
   TooltipUploadCallback,
-} from '../types/manager.js';
+} from '../types/manager/manager.js';
 
 /*-------------------------------------------------*/
 /*           T o o l t i p   C l a s s             */

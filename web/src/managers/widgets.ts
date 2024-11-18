@@ -1,13 +1,6 @@
 import { controlPanelFactory } from '../widgets/controlPanel.js';
 import { codeFactory } from '../widgets/code.js';
-import {
-  CardsWithChipWidget,
-  CardsWithChipWidgetDeserializedValue,
-  CardWidget,
-  CustomWidgetName,
-  CustomWidgetOptionsCallbacksMap,
-  ImageEditorWidgetActionButtons,
-} from '../types/widgets.js';
+import { CustomWidgetName, CustomWidgetOptionsCallbacksMap } from '../types/widgets.js';
 import { masonryFactory } from '../widgets/masonry.js';
 import { textareaFactory } from '../widgets/textarea.js';
 import { treeFactory } from '../widgets/tree.js';
@@ -24,12 +17,16 @@ import { compareFactory } from '../widgets/compare.js';
 import { NodeName } from '../types/nodes.js';
 import { CardPayload, NotifyPayload, WidgetPayloadMap } from '../types/events.js';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common.js';
-import { APIMetadataEntry, LogSeverity } from '../types/manager.js';
 import { cardPlaceholders, fetchModelMetadata } from '../utils/api.js';
 import { showNotification } from '../helpers/notify.js';
 import { progressbarFactory } from '../widgets/progressbar.js';
 import { carouselFactory } from '../widgets/carousel.js';
 import { imageEditorFactory } from '../widgets/imageEditor.js';
+import { ImageEditorActionButtons } from '../types/widgets/imageEditor.js';
+import { Card } from '../types/widgets/card.js';
+import { CardsWithChip, CardsWithChipDeserializedValue } from '../types/widgets/cardsWithChip.js';
+import { APIMetadataEntry } from '../types/api/api.js';
+import { LogSeverity } from '../types/manager/manager.js';
 
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
@@ -46,12 +43,12 @@ export class LFWidgets {
   }
 
   decorators = {
-    card: <W extends CardWidget | CardsWithChipWidget>(payload: CardPayload, widget: W) => {
+    card: <W extends Card | CardsWithChip>(payload: CardPayload, widget: W) => {
       const { apiFlags, datasets, hashes, paths, chip } = payload;
 
-      cardPlaceholders(widget as CardWidget, 1);
+      cardPlaceholders(widget as Card, 1);
 
-      const value: CardsWithChipWidgetDeserializedValue = {
+      const value: CardsWithChipDeserializedValue = {
         props: [],
         chip,
       };
@@ -102,7 +99,7 @@ export class LFWidgets {
     [CustomWidgetName.history]: (history: HTMLKulListElement) => historyFactory.options(history),
     [CustomWidgetName.imageEditor]: (
       imageviewer: HTMLKulImageviewerElement,
-      actionButtons: ImageEditorWidgetActionButtons,
+      actionButtons: ImageEditorActionButtons,
       grid: HTMLDivElement,
     ) => imageEditorFactory.options(imageviewer, actionButtons, grid),
     [CustomWidgetName.masonry]: (masonry: HTMLKulMasonryElement) => masonryFactory.options(masonry),
@@ -266,7 +263,7 @@ export class LFWidgets {
           case CustomWidgetName.card:
           case CustomWidgetName.cardsWithChip:
             if (widget && 'apiFlags' in payload) {
-              this.decorators.card(payload, widget as CardWidget | CardsWithChipWidget);
+              this.decorators.card(payload, widget as Card | CardsWithChip);
             }
             break;
           case CustomWidgetName.code:

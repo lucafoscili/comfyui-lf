@@ -12,30 +12,30 @@ import {
   KulDataNode,
 } from '../types/ketchup-lite/managers/kul-data/kul-data-declarations';
 import { KulGenericEvent } from '../types/ketchup-lite/types/GenericTypes';
-import { LogSeverity } from '../types/manager';
+import { LogSeverity } from '../types/manager/manager';
 import { NodeName } from '../types/nodes';
 import {
-  ImageEditorWidgetActionButtons,
-  ImageEditorWidgetColumnId,
-  ImageEditorWidgetControlConfig,
-  ImageEditorWidgetControls,
-  ImageEditorWidgetFilterSettingsMap,
-  ImageEditorWidgetFilterType,
-  ImageEditorWidgetIcons,
-  ImageEditorWidgetSettingsFor,
-  ImageEditorWidgetSliderConfig,
-  ImageEditorWidgetStatus,
-  ImageEditorWidgetTextfieldConfig,
-  ImageEditorWidgetToggleConfig,
-  ImageEditorWidgetUpdateCallback,
-} from '../types/widgets';
+  ImageEditorActionButtons,
+  ImageEditorColumnId,
+  ImageEditorControlConfig,
+  ImageEditorControls,
+  ImageEditorFilter,
+  ImageEditorFilterSettingsMap,
+  ImageEditorFilterType,
+  ImageEditorIcons,
+  ImageEditorSliderConfig,
+  ImageEditorStatus,
+  ImageEditorTextfieldConfig,
+  ImageEditorToggleConfig,
+  ImageEditorUpdateCallback,
+} from '../types/widgets/imageEditor';
 import { debounce, getApiRoutes, getLFManager, unescapeJson } from '../utils/common';
 import { imageEditorFactory } from '../widgets/imageEditor';
 
 //#region buttonEventHandler
 export const buttonEventHandler = async (
   imageviewer: HTMLKulImageviewerElement,
-  actionButtons: ImageEditorWidgetActionButtons,
+  actionButtons: ImageEditorActionButtons,
   grid: HTMLDivElement,
   e: CustomEvent<KulButtonEventPayload>,
 ) => {
@@ -47,12 +47,12 @@ export const buttonEventHandler = async (
       const pathColumn = getPathColumn(dataset);
       const statusColumn = getStatusColumn(dataset);
 
-      if (statusColumn?.title === ImageEditorWidgetStatus.Pending) {
-        statusColumn.title = ImageEditorWidgetStatus.Completed;
+      if (statusColumn?.title === ImageEditorStatus.Pending) {
+        statusColumn.title = ImageEditorStatus.Completed;
         const path = (unescapeJson(pathColumn).parsedJson as KulDataColumn).title;
 
         await getApiRoutes().json.update(path, dataset);
-        setGridStatus(ImageEditorWidgetStatus.Completed, grid, actionButtons);
+        setGridStatus(ImageEditorStatus.Completed, grid, actionButtons);
 
         const { masonry } = await imageviewer.getComponents();
         await imageviewer.reset();
@@ -61,7 +61,7 @@ export const buttonEventHandler = async (
     };
 
     switch (comp.kulIcon) {
-      case ImageEditorWidgetIcons.Interrupt:
+      case ImageEditorIcons.Interrupt:
         getApiRoutes().interrupt();
         break;
     }
@@ -109,7 +109,7 @@ export const imageviewerEventHandler = async (
 //#endregion
 //#region sliderEventHandler
 export const sliderEventHandler = async (
-  updateCb: ImageEditorWidgetUpdateCallback,
+  updateCb: ImageEditorUpdateCallback,
   e: CustomEvent<KulSliderEventPayload>,
 ) => {
   const { eventType } = e.detail;
@@ -127,7 +127,7 @@ export const sliderEventHandler = async (
 //#endregion
 //#region textfieldEventHandler
 export const textfieldEventHandler = async (
-  updateCb: ImageEditorWidgetUpdateCallback,
+  updateCb: ImageEditorUpdateCallback,
   e: CustomEvent<KulTextfieldEventPayload>,
 ) => {
   const { eventType } = e.detail;
@@ -145,7 +145,7 @@ export const textfieldEventHandler = async (
 //#endregion
 //#region toggleEventHandler
 export const toggleEventHandler = async (
-  updateCb: ImageEditorWidgetUpdateCallback,
+  updateCb: ImageEditorUpdateCallback,
   e: CustomEvent<KulToggleEventPayload>,
 ) => {
   const { eventType } = e.detail;
@@ -164,18 +164,18 @@ export const prepSettings = (
   imageviewer: HTMLKulImageviewerElement,
 ) => {
   const lfManager = getLFManager();
-  const filterType = node.id as ImageEditorWidgetFilterType;
-  const widgets = unescapeJson(node.cells.kulCode.value).parsedJson as ImageEditorWidgetSettingsFor;
+  const filterType = node.id as ImageEditorFilterType;
+  const widgets = unescapeJson(node.cells.kulCode.value).parsedJson as ImageEditorFilter;
 
   const updateSettings = async (addSnapshot = false) => {
-    const settingsValues: ImageEditorWidgetFilterSettingsMap[typeof filterType] =
-      {} as ImageEditorWidgetFilterSettingsMap[typeof filterType];
+    const settingsValues: ImageEditorFilterSettingsMap[typeof filterType] =
+      {} as ImageEditorFilterSettingsMap[typeof filterType];
     const controls: HTMLElement[] = Array.from(settings.querySelectorAll('[data-id]'));
 
     let mandatoryCheck = true;
 
     for (const control of controls) {
-      const id = control.dataset.id as keyof ImageEditorWidgetFilterSettingsMap[typeof filterType];
+      const id = control.dataset.id as keyof ImageEditorFilterSettingsMap[typeof filterType];
       let value: number | boolean | string;
 
       switch (control.tagName) {
@@ -246,30 +246,30 @@ export const prepSettings = (
 
   const resetButton = document.createElement('kul-button');
   resetButton.classList.add('kul-full-width');
-  resetButton.kulIcon = ImageEditorWidgetIcons.Reset;
+  resetButton.kulIcon = ImageEditorIcons.Reset;
   resetButton.kulLabel = 'Reset';
   settings.appendChild(resetButton);
 
-  const controlNames = Object.keys(widgets) as Array<ImageEditorWidgetControls>;
+  const controlNames = Object.keys(widgets.configs);
 
   controlNames.forEach((controlName) => {
-    const controls: ImageEditorWidgetControlConfig[] = widgets[controlName];
+    const controls: ImageEditorControlConfig[] = widgets.configs[controlName];
     if (controls) {
       controls.forEach((controlData) => {
         switch (controlName) {
-          case ImageEditorWidgetControls.Slider:
+          case ImageEditorControls.Slider:
             settings.appendChild(
-              createSlider(controlData as ImageEditorWidgetSliderConfig, updateSettings),
+              createSlider(controlData as ImageEditorSliderConfig, updateSettings),
             );
             break;
-          case ImageEditorWidgetControls.Textfield:
+          case ImageEditorControls.Textfield:
             settings.appendChild(
-              createTextfield(controlData as ImageEditorWidgetTextfieldConfig, updateSettings),
+              createTextfield(controlData as ImageEditorTextfieldConfig, updateSettings),
             );
             break;
-          case ImageEditorWidgetControls.Toggle:
+          case ImageEditorControls.Toggle:
             settings.appendChild(
-              createToggle(controlData as ImageEditorWidgetToggleConfig, updateSettings),
+              createToggle(controlData as ImageEditorToggleConfig, updateSettings),
             );
             break;
           default:
@@ -285,8 +285,8 @@ export const prepSettings = (
 //#endregion
 //#region createSlider
 export const createSlider = (
-  data: ImageEditorWidgetSliderConfig,
-  updateCb: ImageEditorWidgetUpdateCallback,
+  data: ImageEditorSliderConfig,
+  updateCb: ImageEditorUpdateCallback,
 ) => {
   const comp = document.createElement('kul-slider');
   comp.dataset.id = data.id;
@@ -307,8 +307,8 @@ export const createSlider = (
 //#endregion
 //#region createTextfield
 export const createTextfield = (
-  data: ImageEditorWidgetTextfieldConfig,
-  updateCb: ImageEditorWidgetUpdateCallback,
+  data: ImageEditorTextfieldConfig,
+  updateCb: ImageEditorUpdateCallback,
 ) => {
   const comp = document.createElement('kul-textfield');
   comp.dataset.id = data.id;
@@ -328,8 +328,8 @@ export const createTextfield = (
 //#endregion
 //#region createToggle
 export const createToggle = (
-  data: ImageEditorWidgetToggleConfig,
-  updateCb: ImageEditorWidgetUpdateCallback,
+  data: ImageEditorToggleConfig,
+  updateCb: ImageEditorUpdateCallback,
 ) => {
   const comp = document.createElement('kul-toggle');
   comp.dataset.id = data.id;
@@ -347,10 +347,10 @@ export const createToggle = (
 //#endregion
 //#region Utils
 export const getPathColumn = (dataset: KulDataDataset): KulDataColumn | null => {
-  return dataset?.columns?.find((c) => c.id === ImageEditorWidgetColumnId.Path) || null;
+  return dataset?.columns?.find((c) => c.id === ImageEditorColumnId.Path) || null;
 };
 export const getStatusColumn = (dataset: KulDataDataset): KulDataColumn | null => {
-  return dataset?.columns?.find((c) => c.id === ImageEditorWidgetColumnId.Status) || null;
+  return dataset?.columns?.find((c) => c.id === ImageEditorColumnId.Status) || null;
 };
 export const resetSettings = async (settings: HTMLElement) => {
   const controls = settings.querySelectorAll('[data-id]');
@@ -369,12 +369,12 @@ export const resetSettings = async (settings: HTMLElement) => {
   }
 };
 export const setGridStatus = (
-  status: ImageEditorWidgetStatus,
+  status: ImageEditorStatus,
   grid: HTMLDivElement,
-  actionButtons: ImageEditorWidgetActionButtons,
+  actionButtons: ImageEditorActionButtons,
 ) => {
   switch (status) {
-    case ImageEditorWidgetStatus.Completed:
+    case ImageEditorStatus.Completed:
       requestAnimationFrame(() => {
         actionButtons.interrupt.kulDisabled = true;
         actionButtons.resume.kulDisabled = true;
@@ -382,7 +382,7 @@ export const setGridStatus = (
       grid.classList.add(imageEditorFactory.cssClasses.gridIsInactive);
       break;
 
-    case ImageEditorWidgetStatus.Pending:
+    case ImageEditorStatus.Pending:
       requestAnimationFrame(() => {
         actionButtons.interrupt.kulDisabled = false;
         actionButtons.resume.kulDisabled = false;

@@ -1,2 +1,2 @@
-import { ProgressbarWidgetFactory } from '../types/widgets';
-export declare const progressbarFactory: ProgressbarWidgetFactory;
+import { ProgressbarFactory } from '../types/widgets/progressBar';
+export declare const progressbarFactory: ProgressbarFactory;

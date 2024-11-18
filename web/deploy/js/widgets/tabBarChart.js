@@ -1,4 +1,4 @@
-import { LogSeverity } from '../types/manager.js';
+import { LogSeverity } from '../types/manager/manager.js';
 import { NodeName } from '../types/nodes.js';
 import { CustomWidgetName, } from '../types/widgets.js';
 import { createDOMWidget, getLFManager, normalizeValue } from '../utils/common.js';

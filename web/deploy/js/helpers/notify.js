@@ -1,4 +1,4 @@
-import { LogSeverity } from '../types/manager.js';
+import { LogSeverity } from '../types/manager/manager.js';
 import { getLFManager } from '../utils/common.js';
 export const showNotification = (payload) => {
     if (Notification.permission !== 'granted') {

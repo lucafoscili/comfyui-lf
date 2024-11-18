@@ -1,16 +1,15 @@
 import {
   CustomWidgetName,
-  MessengerWidgetDeserializedValue,
-  MessengerWidgetFactory,
   CustomWidgetDeserializedValuesMap,
   NormalizeValueCallback,
 } from '../types/widgets';
+import { MessengerDeserializedValue, MessengerFactory } from '../types/widgets/messenger';
 import { createDOMWidget, normalizeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-messenger';
 const TYPE = CustomWidgetName.messenger;
 
-export const messengerFactory: MessengerWidgetFactory = {
+export const messengerFactory: MessengerFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
     messenger: `${BASE_CSS_CLASS}__widget`,
@@ -33,7 +32,7 @@ export const messengerFactory: MessengerWidgetFactory = {
         const callback: NormalizeValueCallback<
           CustomWidgetDeserializedValuesMap<typeof TYPE> | string
         > = (_, u) => {
-          const { config, dataset } = u.parsedJson as MessengerWidgetDeserializedValue;
+          const { config, dataset } = u.parsedJson as MessengerDeserializedValue;
           messenger.kulData = dataset;
 
           if (config && typeof config === 'object') {

@@ -1,2 +1,2 @@
-import { ChatWidgetFactory } from '../types/widgets';
-export declare const chatFactory: ChatWidgetFactory;
+import { ChatFactory } from '../types/widgets/chat';
+export declare const chatFactory: ChatFactory;

@@ -1,2 +1,2 @@
-import { MasonryWidgetFactory } from '../types/widgets';
-export declare const masonryFactory: MasonryWidgetFactory;
+import { MasonryFactory } from '../types/widgets/masonry';
+export declare const masonryFactory: MasonryFactory;

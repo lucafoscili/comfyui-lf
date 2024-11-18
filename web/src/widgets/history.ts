@@ -4,15 +4,15 @@ import {
   ComfyWidgetName,
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
-  HistoryWidgetFactory,
   NormalizeValueCallback,
 } from '../types/widgets';
+import { HistoryFactory } from '../types/widgets/history';
 import { createDOMWidget, getWidget, normalizeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-history';
 const TYPE = CustomWidgetName.history;
 
-export const historyFactory: HistoryWidgetFactory = {
+export const historyFactory: HistoryFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
     history: `${BASE_CSS_CLASS}__widget`,

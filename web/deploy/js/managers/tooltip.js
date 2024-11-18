@@ -11,7 +11,7 @@ var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (
 };
 var _LFTooltip_instances, _LFTooltip_CB, _LFTooltip_CSS_CLASSES, _LFTooltip_LAYOUT, _LFTooltip_TOOLTIP_ELEMENT, _LFTooltip_initialize, _LFTooltip_uploadLayout, _LFTooltip_buttonEventHandler;
 import { getKulManager, getLFManager } from '../utils/common.js';
-import { LogSeverity, } from '../types/manager.js';
+import { LogSeverity, } from '../types/manager/manager.js';
 /*-------------------------------------------------*/
 /*           T o o l t i p   C l a s s             */
 /*-------------------------------------------------*/

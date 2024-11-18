@@ -1,4 +1,4 @@
-import { LogSeverity } from '../types/manager.js';
+import { LogSeverity } from '../types/manager/manager.js';
 import { CustomWidgetName, } from '../types/widgets.js';
 import { createDOMWidget, getLFManager, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-upload';

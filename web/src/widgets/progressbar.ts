@@ -3,16 +3,15 @@ import {
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
   NormalizeValueCallback,
-  ProgressbarWidgetDeserializedValue,
-  ProgressbarWidgetFactory,
 } from '../types/widgets';
+import { ProgressbarDeserializedValue, ProgressbarFactory } from '../types/widgets/progressBar';
 import { createDOMWidget, normalizeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-progressbar';
 const FALLBACK_LABEL = 'N/A';
 const TYPE = CustomWidgetName.progressbar;
 
-export const progressbarFactory: ProgressbarWidgetFactory = {
+export const progressbarFactory: ProgressbarFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
   },
@@ -32,7 +31,7 @@ export const progressbarFactory: ProgressbarWidgetFactory = {
         const callback: NormalizeValueCallback<
           CustomWidgetDeserializedValuesMap<typeof TYPE> | string
         > = (_, u) => {
-          const { bool, roll } = u.parsedJson as ProgressbarWidgetDeserializedValue;
+          const { bool, roll } = u.parsedJson as ProgressbarDeserializedValue;
 
           const isFalse = !!(bool === false);
           const isTrue = !!(bool === true);

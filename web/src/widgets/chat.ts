@@ -1,17 +1,17 @@
-import { LogSeverity } from '../types/manager';
+import { LogSeverity } from '../types/manager/manager';
 import { NodeName } from '../types/nodes';
 import {
-  ChatWidgetFactory,
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
   NormalizeValueCallback,
 } from '../types/widgets';
+import { ChatFactory } from '../types/widgets/chat';
 import { createDOMWidget, findWidget, getLFManager, normalizeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-chat';
 const TYPE = CustomWidgetName.chat;
 
-export const chatFactory: ChatWidgetFactory = {
+export const chatFactory: ChatFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
     chat: `${BASE_CSS_CLASS}__widget`,

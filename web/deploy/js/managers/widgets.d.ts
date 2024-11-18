@@ -1,10 +1,12 @@
-import { CardsWithChipWidget, CardWidget, CustomWidgetName, CustomWidgetOptionsCallbacksMap } from '../types/widgets.js';
+import { CustomWidgetName, CustomWidgetOptionsCallbacksMap } from '../types/widgets.js';
 import { NodeName } from '../types/nodes.js';
 import { CardPayload, WidgetPayloadMap } from '../types/events.js';
+import { Card } from '../types/widgets/card.js';
+import { CardsWithChip } from '../types/widgets/cardsWithChip.js';
 export declare class LFWidgets {
     constructor();
     decorators: {
-        card: <W extends CardWidget | CardsWithChipWidget>(payload: CardPayload, widget: W) => void;
+        card: <W extends Card | CardsWithChip>(payload: CardPayload, widget: W) => void;
     };
     option: {
         [K in CustomWidgetName]: CustomWidgetOptionsCallbacksMap<K>;

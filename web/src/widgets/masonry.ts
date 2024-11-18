@@ -4,16 +4,15 @@ import { NodeName } from '../types/nodes';
 import {
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
-  MasonryWidgetDeserializedValue,
-  MasonryWidgetFactory,
   NormalizeValueCallback,
 } from '../types/widgets';
+import { MasonryDeserializedValue, MasonryFactory } from '../types/widgets/masonry';
 import { createDOMWidget, isValidNumber, normalizeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-masonry';
 const TYPE = CustomWidgetName.masonry;
 
-export const masonryFactory: MasonryWidgetFactory = {
+export const masonryFactory: MasonryFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
     widget: `${BASE_CSS_CLASS}__widget`,
@@ -38,8 +37,7 @@ export const masonryFactory: MasonryWidgetFactory = {
         const callback: NormalizeValueCallback<
           CustomWidgetDeserializedValuesMap<typeof TYPE> | string
         > = (_, u) => {
-          const { columns, dataset, index, name, view } =
-            u.parsedJson as MasonryWidgetDeserializedValue;
+          const { columns, dataset, index, name, view } = u.parsedJson as MasonryDeserializedValue;
           if (columns) {
             masonry.kulColumns = columns;
           }

@@ -1,2 +1,2 @@
-import { CardWidgetFactory } from '../types/widgets';
-export declare const cardFactory: CardWidgetFactory;
+import { CardFactory } from '../types/widgets/card';
+export declare const cardFactory: CardFactory;

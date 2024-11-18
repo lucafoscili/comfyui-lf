@@ -64,6 +64,29 @@ def clarity_effect(image_tensor:torch.Tensor, clarity_strength:float, sharpen_am
 
     return numpy_to_tensor(final_image)
 # endregion
+# region desaturate_effect
+def desaturate_effect(image: torch.Tensor, level: float) -> torch.Tensor:
+    """
+    Applies a desaturation effect to the input image tensor.
+    Args:
+        image (torch.Tensor): Input image tensor with shape (B, H, W, C).
+        level (float): Desaturation level from 0.0 (no effect) to 1.0 (full grayscale).
+    Returns:
+        torch.Tensor: Processed image tensor with shape (B, H, W, C).
+    """
+    if image.ndim != 4 or image.shape[-1] != 3:
+        raise ValueError("Input image must have shape (B, H, W, 3).")
+
+    r, g, b = image[..., 0], image[..., 1], image[..., 2]
+
+    gray_image = 0.299 * r + 0.587 * g + 0.114 * b
+
+    gray_image_expanded = torch.stack([gray_image, gray_image, gray_image], dim=-1)
+
+    desaturated_image = (1 - level) * image + level * gray_image_expanded
+
+    return desaturated_image
+# endregion
 # region vignette_effect
 def vignette_effect(
     image_tensor: torch.Tensor,

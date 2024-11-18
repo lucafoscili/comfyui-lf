@@ -1,6 +1,6 @@
 import { controlPanelFactory } from '../widgets/controlPanel.js';
 import { codeFactory } from '../widgets/code.js';
-import { CustomWidgetName, } from '../types/widgets.js';
+import { CustomWidgetName } from '../types/widgets.js';
 import { masonryFactory } from '../widgets/masonry.js';
 import { textareaFactory } from '../widgets/textarea.js';
 import { treeFactory } from '../widgets/tree.js';
@@ -16,12 +16,12 @@ import { tabBarChartFactory } from '../widgets/tabBarChart.js';
 import { compareFactory } from '../widgets/compare.js';
 import { NodeName } from '../types/nodes.js';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common.js';
-import { LogSeverity } from '../types/manager.js';
 import { cardPlaceholders, fetchModelMetadata } from '../utils/api.js';
 import { showNotification } from '../helpers/notify.js';
 import { progressbarFactory } from '../widgets/progressbar.js';
 import { carouselFactory } from '../widgets/carousel.js';
 import { imageEditorFactory } from '../widgets/imageEditor.js';
+import { LogSeverity } from '../types/manager/manager.js';
 /*-------------------------------------------------*/
 /*            W i d g e t s   C l a s s            */
 /*-------------------------------------------------*/

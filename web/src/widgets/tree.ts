@@ -3,15 +3,14 @@ import {
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
   NormalizeValueCallback,
-  TreeWidgetFactory,
-  TreeWidgetValueDeserializedValue,
 } from '../types/widgets';
+import { TreeFactory, TreeValueDeserializedValue } from '../types/widgets/tree';
 import { createDOMWidget, normalizeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-tree';
 const TYPE = CustomWidgetName.tree;
 
-export const treeFactory: TreeWidgetFactory = {
+export const treeFactory: TreeFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
     tree: `${BASE_CSS_CLASS}__widget`,
@@ -29,7 +28,7 @@ export const treeFactory: TreeWidgetFactory = {
         const callback: NormalizeValueCallback<
           CustomWidgetDeserializedValuesMap<typeof TYPE> | string
         > = (_, u) => {
-          tree.kulData = (u.parsedJson as TreeWidgetValueDeserializedValue) || {};
+          tree.kulData = (u.parsedJson as TreeValueDeserializedValue) || {};
         };
 
         normalizeValue(value, callback, TYPE);

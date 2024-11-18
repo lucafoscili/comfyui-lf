@@ -4,8 +4,6 @@ import {
   KulArticleNode,
 } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
 import {
-  ControlPanelWidgetDeserializedValue,
-  ControlPanelWidgetFactory,
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
   NormalizeValueCallback,
@@ -18,11 +16,12 @@ import {
   normalizeValue,
 } from '../utils/common';
 import { handleKulEvent, sectionsFactory } from '../helpers/control-panel';
+import { ControlPanelDeserializedValue, ControlPanelFactory } from '../types/widgets/controlPanel';
 
 const BASE_CSS_CLASS = 'lf-controlpanel';
 const TYPE = CustomWidgetName.controlPanel;
 
-export const controlPanelFactory: ControlPanelWidgetFactory = {
+export const controlPanelFactory: ControlPanelFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
     article: `${BASE_CSS_CLASS}__article`,
@@ -42,7 +41,7 @@ export const controlPanelFactory: ControlPanelWidgetFactory = {
         const callback: NormalizeValueCallback<
           CustomWidgetDeserializedValuesMap<typeof TYPE> | string
         > = (_, u) => {
-          const { backup, debug, themes } = u.parsedJson as ControlPanelWidgetDeserializedValue;
+          const { backup, debug, themes } = u.parsedJson as ControlPanelDeserializedValue;
 
           const set = () => {
             if (backup === true || backup === false) {

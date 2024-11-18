@@ -1,2 +1,2 @@
-import { CountBarChartWidgetFactory } from '../types/widgets';
-export declare const countBarChartFactory: CountBarChartWidgetFactory;
+import { CountBarChartFactory } from '../types/widgets/countBarChart';
+export declare const countBarChartFactory: CountBarChartFactory;

@@ -15,11 +15,12 @@ import { app } from '/scripts/app.js';
 import { defineCustomElements } from '../ketchup-lite/loader.js';
 import { getKulManager } from '../utils/common.js';
 import { LFWidgets } from './widgets.js';
-import { LFEndpoints, LogSeverity, } from '../types/manager.js';
 import { NodeName } from '../types/nodes.js';
 import { LFTooltip } from './tooltip.js';
 import { CustomWidgetName } from '../types/widgets.js';
 import { NODE_WIDGET_MAP, onConnectionsChange, onDrawBackground, onNodeCreated, } from '../helpers/manager.js';
+import { APIEndpoints, } from '../types/api/api.js';
+import { LogSeverity } from '../types/manager/manager.js';
 const LOG_STYLE = {
     fontFamily: 'var(--kul-font-family-monospace)',
     margin: '0',
@@ -40,7 +41,7 @@ export class LFManager {
                     try {
                         const body = new FormData();
                         body.append('type', type);
-                        const response = await api.fetchApi(LFEndpoints.ClearAnalytics, {
+                        const response = await api.fetchApi(APIEndpoints.ClearAnalytics, {
                             body,
                             method: 'POST',
                         });
@@ -87,7 +88,7 @@ export class LFManager {
                         const body = new FormData();
                         body.append('directory', directory);
                         body.append('type', type);
-                        const response = await api.fetchApi(LFEndpoints.GetAnalytics, {
+                        const response = await api.fetchApi(APIEndpoints.GetAnalytics, {
                             body,
                             method: 'POST',
                         });
@@ -130,7 +131,7 @@ export class LFManager {
                     try {
                         const body = new FormData();
                         body.append('backup_type', backupType);
-                        const response = await api.fetchApi(LFEndpoints.NewBackup, { body, method: 'POST' });
+                        const response = await api.fetchApi(APIEndpoints.NewBackup, { body, method: 'POST' });
                         const code = response.status;
                         switch (code) {
                             case 200:
@@ -164,7 +165,7 @@ export class LFManager {
                     try {
                         const body = new FormData();
                         body.append('directory', directory);
-                        const response = await api.fetchApi(LFEndpoints.GetImage, {
+                        const response = await api.fetchApi(APIEndpoints.GetImage, {
                             body,
                             method: 'POST',
                         });
@@ -204,7 +205,7 @@ export class LFManager {
                         body.append('url', url);
                         body.append('type', type);
                         body.append('settings', JSON.stringify(settings));
-                        const response = await api.fetchApi(LFEndpoints.ProcessImage, {
+                        const response = await api.fetchApi(APIEndpoints.ProcessImage, {
                             body,
                             method: 'POST',
                         });
@@ -243,7 +244,7 @@ export class LFManager {
                     try {
                         const body = new FormData();
                         body.append('file_path', filePath);
-                        const response = await api.fetchApi(LFEndpoints.GetJson, {
+                        const response = await api.fetchApi(APIEndpoints.GetJson, {
                             body,
                             method: 'POST',
                         });
@@ -281,7 +282,7 @@ export class LFManager {
                     body.append('file_path', filePath);
                     body.append('dataset', JSON.stringify(dataset));
                     try {
-                        const response = await api.fetchApi(LFEndpoints.UpdateJson, {
+                        const response = await api.fetchApi(APIEndpoints.UpdateJson, {
                             body,
                             method: 'POST',
                         });
@@ -315,7 +316,7 @@ export class LFManager {
                         status: LogSeverity.Info,
                     };
                     try {
-                        const response = await api.fetchApi(LFEndpoints.ClearMetadata, {
+                        const response = await api.fetchApi(APIEndpoints.ClearMetadata, {
                             method: 'POST',
                         });
                         const code = response.status;
@@ -384,7 +385,7 @@ export class LFManager {
                         body.append('model_path', modelPath);
                         body.append('metadata', JSON.stringify(dataset));
                         body.append('forced_save', String(forcedSave).valueOf());
-                        const response = await api.fetchApi(LFEndpoints.SaveMetadata, {
+                        const response = await api.fetchApi(APIEndpoints.SaveMetadata, {
                             method: 'POST',
                             body,
                         });
@@ -419,7 +420,7 @@ export class LFManager {
                         const body = new FormData();
                         body.append('model_path', modelPath);
                         body.append('base64_image', b64image);
-                        const response = await api.fetchApi(LFEndpoints.UpdateMetadataCover, {
+                        const response = await api.fetchApi(APIEndpoints.UpdateMetadataCover, {
                             method: 'POST',
                             body,
                         });

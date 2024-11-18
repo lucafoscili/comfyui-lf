@@ -1,16 +1,16 @@
 import { NodeName } from '../types/nodes';
 import {
-  CodeWidgetFactory,
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
   NormalizeValueCallback,
 } from '../types/widgets';
+import { CodeFactory } from '../types/widgets/code';
 import { createDOMWidget, normalizeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-code';
 const TYPE = CustomWidgetName.code;
 
-export const codeFactory: CodeWidgetFactory = {
+export const codeFactory: CodeFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
     code: `${BASE_CSS_CLASS}__widget`,

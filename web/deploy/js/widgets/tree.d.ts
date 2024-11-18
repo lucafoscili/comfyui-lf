@@ -1,2 +1,2 @@
-import { TreeWidgetFactory } from '../types/widgets';
-export declare const treeFactory: TreeWidgetFactory;
+import { TreeFactory } from '../types/widgets/tree';
+export declare const treeFactory: TreeFactory;

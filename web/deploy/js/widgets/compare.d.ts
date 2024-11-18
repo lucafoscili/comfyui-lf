@@ -1,2 +1,2 @@
-import { CompareWidgetFactory } from '../types/widgets';
-export declare const compareFactory: CompareWidgetFactory;
+import { CompareFactory } from '../types/widgets/compare';
+export declare const compareFactory: CompareFactory;

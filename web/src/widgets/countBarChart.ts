@@ -1,12 +1,14 @@
 import { KulButtonEventPayload } from '../types/ketchup-lite/components';
 import { KulButton } from '../types/ketchup-lite/components/kul-button/kul-button';
 import {
-  CountBarChartWidgetDeserializedValue,
-  CountBarChartWidgetFactory,
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
   NormalizeValueCallback,
 } from '../types/widgets';
+import {
+  CountBarChartDeserializedValue,
+  CountBarChartFactory,
+} from '../types/widgets/countBarChart';
 import { createDOMWidget, normalizeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-countbarchart';
@@ -15,7 +17,7 @@ const DEF_ICON = 'content_copy';
 const DEF_LABEL = 'Copy selected';
 let TIMEOUT: NodeJS.Timeout;
 
-export const countBarChartFactory: CountBarChartWidgetFactory = {
+export const countBarChartFactory: CountBarChartFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
     grid: `${BASE_CSS_CLASS}__grid`,
@@ -40,7 +42,7 @@ export const countBarChartFactory: CountBarChartWidgetFactory = {
         const callback: NormalizeValueCallback<
           CustomWidgetDeserializedValuesMap<typeof TYPE> | string
         > = (_, u) => {
-          const json = u.parsedJson as CountBarChartWidgetDeserializedValue;
+          const json = u.parsedJson as CountBarChartDeserializedValue;
           chart.kulData = json.chart || {};
           chip.kulData = json.chip || {};
           button.classList.remove(countBarChartFactory.cssClasses.buttonHidden);

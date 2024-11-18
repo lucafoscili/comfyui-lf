@@ -1,17 +1,17 @@
 import { KulUploadEventPayload } from '../types/ketchup-lite/components';
-import { LogSeverity } from '../types/manager';
+import { LogSeverity } from '../types/manager/manager';
 import {
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
   NormalizeValueCallback,
-  UploadWidgetFactory,
 } from '../types/widgets';
+import { UploadFactory } from '../types/widgets/upload';
 import { createDOMWidget, getLFManager, normalizeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-upload';
 const TYPE = CustomWidgetName.upload;
 
-export const uploadFactory: UploadWidgetFactory = {
+export const uploadFactory: UploadFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
     upload: `${BASE_CSS_CLASS}__widget`,

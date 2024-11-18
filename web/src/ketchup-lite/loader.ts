@@ -1,4 +1,2 @@
 // Hardwired Ketchup Lite loader - for compilation
-export const defineCustomElements = (window: Window) => {
-  console.log(window);
-};
+export const defineCustomElements = (_window: Window) => {};
