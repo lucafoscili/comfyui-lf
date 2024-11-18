@@ -1,6 +1,10 @@
 import { controlPanelFactory } from '../widgets/controlPanel.js';
 import { codeFactory } from '../widgets/code.js';
-import { CustomWidgetName, CustomWidgetOptionsCallbacksMap } from '../types/widgets.js';
+import {
+  CustomWidgetName,
+  CustomWidgetOptionsCallbacksMap,
+  NodeName,
+} from '../types/widgets/_common.js';
 import { masonryFactory } from '../widgets/masonry.js';
 import { textareaFactory } from '../widgets/textarea.js';
 import { treeFactory } from '../widgets/tree.js';
@@ -14,8 +18,7 @@ import { cardFactory } from '../widgets/card.js';
 import { cardsWithChipFactory } from '../widgets/cardsWithChip.js';
 import { tabBarChartFactory } from '../widgets/tabBarChart.js';
 import { compareFactory } from '../widgets/compare.js';
-import { NodeName } from '../types/nodes.js';
-import { CardPayload, NotifyPayload, WidgetPayloadMap } from '../types/events.js';
+import { CardPayload, NotifyPayload, WidgetPayloadMap } from '../types/events/events.js';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common.js';
 import { cardPlaceholders, fetchModelMetadata } from '../utils/api.js';
 import { showNotification } from '../helpers/notify.js';
@@ -28,10 +31,6 @@ import { CardsWithChip, CardsWithChipDeserializedValue } from '../types/widgets/
 import { APIMetadataEntry } from '../types/api/api.js';
 import { LogSeverity } from '../types/manager/manager.js';
 
-/*-------------------------------------------------*/
-/*            W i d g e t s   C l a s s            */
-/*-------------------------------------------------*/
-
 export class LFWidgets {
   constructor() {
     const link = document.createElement('link');
@@ -42,6 +41,7 @@ export class LFWidgets {
     document.head.appendChild(link);
   }
 
+  //#region Decorators
   decorators = {
     card: <W extends Card | CardsWithChip>(payload: CardPayload, widget: W) => {
       const { apiFlags, datasets, hashes, paths, chip } = payload;
@@ -80,7 +80,8 @@ export class LFWidgets {
       });
     },
   };
-
+  //#endregion
+  //#region Options
   option: { [K in CustomWidgetName]: CustomWidgetOptionsCallbacksMap<K> } = {
     [CustomWidgetName.card]: (grid: HTMLDivElement) => cardFactory.options(grid),
     [CustomWidgetName.cardsWithChip]: (grid: HTMLDivElement) => cardsWithChipFactory.options(grid),
@@ -119,7 +120,8 @@ export class LFWidgets {
     [CustomWidgetName.tree]: (tree: HTMLKulTreeElement) => treeFactory.options(tree),
     [CustomWidgetName.upload]: (upload: HTMLKulUploadElement) => uploadFactory.options(upload),
   };
-
+  //#endregion
+  //#region Setters
   set = {
     [CustomWidgetName.card]: (nodeType: NodeType) => {
       return cardFactory.render(nodeType, CustomWidgetName.card);
@@ -176,7 +178,8 @@ export class LFWidgets {
       return uploadFactory.render(nodeType, CustomWidgetName.upload);
     },
   };
-
+  //#endregion
+  //#region onEvent
   onEvent = <N extends NodeName, W extends CustomWidgetName>(
     name: N,
     event: CustomEvent<WidgetPayloadMap[W]>,
@@ -304,4 +307,5 @@ export class LFWidgets {
       );
     }
   };
+  //#endregion
 }

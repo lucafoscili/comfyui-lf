@@ -4,7 +4,7 @@ import {
   BaseWidgetFactory,
   BaseWidgetOptions,
   CustomWidgetName,
-} from '../widgets';
+} from './_common';
 
 //#region Image editor
 export interface ImageEditor extends Widget {

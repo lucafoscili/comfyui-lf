@@ -1,4 +1,4 @@
-import { BaseWidgetCallback, BaseWidgetFactory, BaseWidgetOptions, CustomWidgetName } from '../widgets';
+import { BaseWidgetCallback, BaseWidgetFactory, BaseWidgetOptions, CustomWidgetName } from './_common';
 export interface Progressbar extends Widget {
     options: ProgressbarOptions;
     type: [CustomWidgetName.progressbar];

@@ -1,8 +1,7 @@
 import { TREE_DATA } from '../fixtures/imageEditor.js';
 import { buttonEventHandler, getStatusColumn, imageviewerEventHandler, setGridStatus, } from '../helpers/imageEditor.js';
 import { LogSeverity } from '../types/manager/manager.js';
-import { NodeName } from '../types/nodes.js';
-import { CustomWidgetName, } from '../types/widgets.js';
+import { CustomWidgetName, NodeName, } from '../types/widgets/_common.js';
 import { ImageEditorIcons, ImageEditorStatus, } from '../types/widgets/imageEditor.js';
 import { createDOMWidget, getLFManager, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-imageeditor';

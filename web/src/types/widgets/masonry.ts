@@ -5,7 +5,7 @@ import {
   BaseWidgetFactory,
   BaseWidgetOptions,
   CustomWidgetName,
-} from '../widgets';
+} from './_common';
 
 //#region Masonry
 export interface Masonry extends Widget {

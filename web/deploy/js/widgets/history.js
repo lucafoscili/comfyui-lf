@@ -1,5 +1,4 @@
-import { NodeName } from '../types/nodes.js';
-import { ComfyWidgetName, CustomWidgetName, } from '../types/widgets.js';
+import { ComfyWidgetName, CustomWidgetName, NodeName, } from '../types/widgets/_common.js';
 import { createDOMWidget, getWidget, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-history';
 const TYPE = CustomWidgetName.history;

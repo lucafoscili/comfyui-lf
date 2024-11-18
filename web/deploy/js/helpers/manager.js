@@ -1,8 +1,8 @@
 import { LogSeverity } from '../types/manager/manager.js';
-import { NodeName } from '../types/nodes.js';
-import { ComfyWidgetName, CustomWidgetName } from '../types/widgets.js';
+import { ComfyWidgetName, CustomWidgetName, NodeName, } from '../types/widgets/_common.js';
 import { areJSONEqual, getApiRoutes, getCustomWidget, getInput, getLFManager, isValidJSON, refreshChart, unescapeJson, } from '../utils/common.js';
 import { messengerFactory } from '../widgets/messenger.js';
+//#region Node-Widget map
 export const NODE_WIDGET_MAP = {
     LF_BlurImages: [CustomWidgetName.masonry],
     LF_Boolean: [CustomWidgetName.history],
@@ -85,6 +85,8 @@ export const NODE_WIDGET_MAP = {
     LF_WallOfText: [CustomWidgetName.code],
     LF_WriteJSON: [CustomWidgetName.textarea],
 };
+//#endregion
+//#region onConnectionsChange
 export const onConnectionsChange = async (nodeType) => {
     const onConnectionsChange = nodeType.prototype.onConnectionsChange;
     nodeType.prototype.onConnectionsChange = function () {
@@ -101,6 +103,8 @@ export const onConnectionsChange = async (nodeType) => {
         return r;
     };
 };
+//#endregion
+//#region onDrawBackground
 export const onDrawBackground = async (nodeType) => {
     const onDrawBackground = nodeType.prototype.onDrawBackground;
     nodeType.prototype.onDrawBackground = function () {
@@ -110,6 +114,8 @@ export const onDrawBackground = async (nodeType) => {
         return r;
     };
 };
+//#endregion
+//#region onNodeCreated
 export const onNodeCreated = async (nodeType) => {
     const onNodeCreated = nodeType.prototype.onNodeCreated;
     nodeType.prototype.onNodeCreated = function () {
@@ -131,6 +137,8 @@ export const onNodeCreated = async (nodeType) => {
         return r;
     };
 };
+//#endregion
+//#region chipCb
 const chipCb = (node) => {
     const lfManager = getLFManager();
     const textarea = getInput(node, ComfyWidgetName.json);
@@ -168,6 +176,8 @@ const chipCb = (node) => {
         lfManager.log('Error processing chip data', { dataset, error }, LogSeverity.Error);
     }
 };
+//#endregion
+//#region messengerCb
 const messengerCb = (node) => {
     const lfManager = getLFManager();
     const textarea = getInput(node, ComfyWidgetName.json);
@@ -214,3 +224,16 @@ const messengerCb = (node) => {
         getLFManager().log('Error processing messenger data', { dataset, error }, LogSeverity.Error);
     }
 };
+//#endregion
+//#region logStyle
+export const getLogStyle = () => {
+    return {
+        fontFamily: 'var(--kul-font-family-monospace)',
+        margin: '0',
+        maxWidth: '100%',
+        overflow: 'hidden',
+        padding: '4px 8px',
+        textOverflow: 'ellipsis',
+    };
+};
+//#endregion

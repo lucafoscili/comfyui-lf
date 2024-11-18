@@ -1,4 +1,4 @@
-import { BaseWidgetCallback, BaseWidgetFactory, BaseWidgetOptions, CustomWidgetName } from '../widgets';
+import { BaseWidgetCallback, BaseWidgetFactory, BaseWidgetOptions, CustomWidgetName } from './_common';
 export interface ControlPanel extends Widget {
     options: ControlPanelOptions;
     type: [CustomWidgetName.controlPanel];

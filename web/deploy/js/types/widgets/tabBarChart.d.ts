@@ -1,7 +1,6 @@
 import { AnalyticsType } from '../api/api';
 import { KulDataDataset } from '../ketchup-lite/components';
-import { NodeName } from '../nodes';
-import { BaseWidgetCallback, BaseWidgetFactory, BaseWidgetOptions, CustomWidgetName } from '../widgets';
+import { BaseWidgetCallback, BaseWidgetFactory, BaseWidgetOptions, CustomWidgetName, NodeName } from './_common';
 export interface TabBarChart extends Widget {
     options: TabBarChartOptions;
     type: [CustomWidgetName.tabBarChart];

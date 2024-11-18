@@ -1,10 +1,10 @@
 import { LogSeverity } from '../types/manager/manager';
-import { NodeName } from '../types/nodes';
 import {
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
+  NodeName,
   NormalizeValueCallback,
-} from '../types/widgets';
+} from '../types/widgets/_common';
 import { ChatFactory } from '../types/widgets/chat';
 import { createDOMWidget, findWidget, getLFManager, normalizeValue } from '../utils/common';
 

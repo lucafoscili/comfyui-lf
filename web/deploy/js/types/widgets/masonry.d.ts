@@ -1,6 +1,6 @@
 import { KulDataDataset } from '../ketchup-lite/components';
 import { KulMasonry } from '../ketchup-lite/components/kul-masonry/kul-masonry';
-import { BaseWidgetCallback, BaseWidgetFactory, BaseWidgetOptions, CustomWidgetName } from '../widgets';
+import { BaseWidgetCallback, BaseWidgetFactory, BaseWidgetOptions, CustomWidgetName } from './_common';
 export interface Masonry extends Widget {
     options: MasonryOptions;
     type: [CustomWidgetName.masonry];

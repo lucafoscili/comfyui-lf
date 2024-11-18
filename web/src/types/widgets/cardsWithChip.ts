@@ -4,7 +4,7 @@ import {
   BaseWidgetFactory,
   BaseWidgetOptions,
   CustomWidgetName,
-} from '../widgets';
+} from './_common';
 import { CardDeserializedValue } from './card';
 
 //#region Cards with chip

@@ -1,7 +1,11 @@
 import { KulMessengerDataset } from '../types/ketchup-lite/components';
 import { LogSeverity } from '../types/manager/manager';
-import { NodeName, NodeWidgetMap } from '../types/nodes';
-import { ComfyWidgetName, CustomWidgetName } from '../types/widgets';
+import {
+  ComfyWidgetName,
+  CustomWidgetName,
+  NodeName,
+  NodeWidgetMap,
+} from '../types/widgets/_common';
 import {
   areJSONEqual,
   getApiRoutes,
@@ -14,6 +18,7 @@ import {
 } from '../utils/common';
 import { messengerFactory } from '../widgets/messenger';
 
+//#region Node-Widget map
 export const NODE_WIDGET_MAP: NodeWidgetMap = {
   LF_BlurImages: [CustomWidgetName.masonry],
   LF_Boolean: [CustomWidgetName.history],
@@ -96,7 +101,8 @@ export const NODE_WIDGET_MAP: NodeWidgetMap = {
   LF_WallOfText: [CustomWidgetName.code],
   LF_WriteJSON: [CustomWidgetName.textarea],
 };
-
+//#endregion
+//#region onConnectionsChange
 export const onConnectionsChange = async (nodeType: NodeType) => {
   const onConnectionsChange = nodeType.prototype.onConnectionsChange;
   nodeType.prototype.onConnectionsChange = function () {
@@ -116,7 +122,8 @@ export const onConnectionsChange = async (nodeType: NodeType) => {
     return r;
   };
 };
-
+//#endregion
+//#region onDrawBackground
 export const onDrawBackground = async (nodeType: NodeType) => {
   const onDrawBackground = nodeType.prototype.onDrawBackground;
   nodeType.prototype.onDrawBackground = function () {
@@ -128,7 +135,8 @@ export const onDrawBackground = async (nodeType: NodeType) => {
     return r;
   };
 };
-
+//#endregion
+//#region onNodeCreated
 export const onNodeCreated = async (nodeType: NodeType) => {
   const onNodeCreated = nodeType.prototype.onNodeCreated;
 
@@ -153,7 +161,8 @@ export const onNodeCreated = async (nodeType: NodeType) => {
     return r;
   };
 };
-
+//#endregion
+//#region chipCb
 const chipCb = (node: NodeType) => {
   const lfManager = getLFManager();
   const textarea = getInput(node, ComfyWidgetName.json);
@@ -191,7 +200,8 @@ const chipCb = (node: NodeType) => {
     lfManager.log('Error processing chip data', { dataset, error }, LogSeverity.Error);
   }
 };
-
+//#endregion
+//#region messengerCb
 const messengerCb = (node: NodeType) => {
   const lfManager = getLFManager();
   const textarea = getInput(node, ComfyWidgetName.json);
@@ -243,3 +253,16 @@ const messengerCb = (node: NodeType) => {
     getLFManager().log('Error processing messenger data', { dataset, error }, LogSeverity.Error);
   }
 };
+//#endregion
+//#region logStyle
+export const getLogStyle = () => {
+  return {
+    fontFamily: 'var(--kul-font-family-monospace)',
+    margin: '0',
+    maxWidth: '100%',
+    overflow: 'hidden',
+    padding: '4px 8px',
+    textOverflow: 'ellipsis',
+  };
+};
+//#endregion

@@ -2,7 +2,7 @@ import {
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
   NormalizeValueCallback,
-} from '../types/widgets';
+} from '../types/widgets/_common';
 import { CarouselDeserializedValue, CarouselFactory } from '../types/widgets/carousel';
 import { createDOMWidget, normalizeValue } from '../utils/common';
 

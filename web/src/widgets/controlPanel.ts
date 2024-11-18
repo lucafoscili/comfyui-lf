@@ -7,7 +7,7 @@ import {
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
   NormalizeValueCallback,
-} from '../types/widgets';
+} from '../types/widgets/_common';
 import {
   createDOMWidget,
   getApiRoutes,

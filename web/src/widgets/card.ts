@@ -1,11 +1,11 @@
 import {
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
+  NodeName,
   NormalizeValueCallback,
-} from '../types/widgets';
+} from '../types/widgets/_common';
 import { cardHandler, getCardProps } from '../helpers/card';
 import { createDOMWidget, getCustomWidget, normalizeValue } from '../utils/common';
-import { NodeName } from '../types/nodes';
 import { cardPlaceholders, fetchModelMetadata } from '../utils/api';
 import { KulButton } from '../types/ketchup-lite/components/kul-button/kul-button';
 import { KulButtonEventPayload } from '../types/ketchup-lite/components';

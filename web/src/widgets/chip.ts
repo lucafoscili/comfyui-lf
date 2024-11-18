@@ -1,11 +1,11 @@
 import { KulChipEventPayload } from '../types/ketchup-lite/components';
 import { KulChip } from '../types/ketchup-lite/components/kul-chip/kul-chip';
-import { NodeName } from '../types/nodes';
 import {
   CustomWidgetName,
   CustomWidgetDeserializedValuesMap,
   NormalizeValueCallback,
-} from '../types/widgets';
+  NodeName,
+} from '../types/widgets/_common';
 import { ChipFactory } from '../types/widgets/chip';
 import { createDOMWidget, normalizeValue } from '../utils/common';
 

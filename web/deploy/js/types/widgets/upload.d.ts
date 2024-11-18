@@ -1,4 +1,4 @@
-import { BaseWidgetCallback, BaseWidgetFactory, BaseWidgetOptions, CustomWidgetName } from '../widgets';
+import { BaseWidgetCallback, BaseWidgetFactory, BaseWidgetOptions, CustomWidgetName } from './_common';
 export interface Upload extends Widget {
     options: UploadOptions;
     type: [CustomWidgetName.upload];

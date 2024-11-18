@@ -1,4 +1,5 @@
 import { getApiRoutes } from './common.js';
+//#region Placeholders
 const DUMMY_PROPS = {
     kulData: {
         nodes: [
@@ -21,6 +22,8 @@ export const cardPlaceholders = (widget, count) => {
     }
     widget.options.setValue(JSON.stringify(dummyValue));
 };
+//#endregion
+//#region API call
 export const fetchModelMetadata = async (models, forcedSave = false) => {
     const promises = models.map(async ({ dataset, hash, path, apiFlag }) => {
         if (apiFlag) {
@@ -33,6 +36,8 @@ export const fetchModelMetadata = async (models, forcedSave = false) => {
     });
     return Promise.all(promises);
 };
+//#endregion
+//#region API response
 const onResponse = async (dataset, path, forcedSave, payload) => {
     const r = payload?.data;
     const id = r?.id;
@@ -66,6 +71,8 @@ const onResponse = async (dataset, path, forcedSave, payload) => {
     }
     return props;
 };
+//#endregion
+//#region prepareValidDataset
 const prepareValidDataset = (r, code) => {
     const dataset = {
         nodes: [
@@ -106,3 +113,4 @@ Thumbs up: ${r.stats?.thumbsUpCount ? r.stats.thumbsUpCount : 'N/A'}
     };
     return dataset;
 };
+//#endregion

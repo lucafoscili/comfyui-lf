@@ -1,10 +1,10 @@
 import { KulDataDataset } from '../types/ketchup-lite/components';
-import { NodeName } from '../types/nodes';
 import {
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
+  NodeName,
   NormalizeValueCallback,
-} from '../types/widgets';
+} from '../types/widgets/_common';
 import { CompareFactory } from '../types/widgets/compare';
 import { createDOMWidget, normalizeValue } from '../utils/common';
 

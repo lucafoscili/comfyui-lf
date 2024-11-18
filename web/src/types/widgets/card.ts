@@ -3,7 +3,7 @@ import {
   BaseWidgetFactory,
   BaseWidgetOptions,
   CustomWidgetName,
-} from '../widgets';
+} from './_common';
 
 //#region Card
 export interface Card extends Widget {

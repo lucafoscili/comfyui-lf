@@ -1,5 +1,5 @@
 import { KulDataDataset } from '../ketchup-lite/components';
-import { BaseWidgetCallback, BaseWidgetFactory, BaseWidgetOptions, CustomWidgetName } from '../widgets';
+import { BaseWidgetCallback, BaseWidgetFactory, BaseWidgetOptions, CustomWidgetName } from './_common';
 export interface Tree extends Widget {
     options: TreeOptions;
     type: [CustomWidgetName.tree];

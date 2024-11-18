@@ -1,4 +1,14 @@
-//#region Manager
+import { CustomWidgetName } from '../widgets/_common';
+
+//#region Comfy extension
+type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> & U[keyof U];
+export type CustomWidgetGetter = Record<CustomWidgetName, Function>;
+export interface Extension {
+  beforeRegisterNodeDef?: (node: NodeType, data: NodeData, name: string) => void;
+  getCustomWidgets?: () => AtLeastOne<Partial<CustomWidgetGetter>>;
+  name: string;
+  nodeCreated?: (node: NodeType) => void;
+}
 export type ExtensionCallback = (node: NodeType) => void;
 //#endregion
 //#region Log

@@ -1,4 +1,4 @@
-import { CustomWidgetName, } from '../types/widgets.js';
+import { CustomWidgetName, } from '../types/widgets/_common.js';
 import { createDOMWidget, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-messenger';
 const TYPE = CustomWidgetName.messenger;

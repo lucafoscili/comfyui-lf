@@ -1,5 +1,5 @@
 import { KulDataDataset } from '../ketchup-lite/components';
-import { BaseWidgetCallback, BaseWidgetFactory, BaseWidgetOptions, CustomWidgetName } from '../widgets';
+import { BaseWidgetCallback, BaseWidgetFactory, BaseWidgetOptions, CustomWidgetName } from './_common';
 export interface Compare extends Widget {
     options: CompareOptions;
     type: [CustomWidgetName.compare];

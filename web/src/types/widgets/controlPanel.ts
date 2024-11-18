@@ -3,7 +3,7 @@ import {
   BaseWidgetFactory,
   BaseWidgetOptions,
   CustomWidgetName,
-} from '../widgets';
+} from './_common';
 
 //#region Control panel
 export interface ControlPanel extends Widget {

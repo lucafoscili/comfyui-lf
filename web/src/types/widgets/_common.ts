@@ -1,114 +1,84 @@
-import { Card, CardDeserializedValue, CardOptions, CardOptionsCallback } from './widgets/card';
+import { EventPayload } from '../events/events';
+import { Card, CardDeserializedValue, CardOptions, CardOptionsCallback } from './card';
 import {
   CardsWithChip,
   CardsWithChipDeserializedValue,
   CardsWithChipOptions,
   CardsWithChipOptionsCallback,
-} from './widgets/cardsWithChip';
+} from './cardsWithChip';
 import {
   Carousel,
   CarouselDeserializedValue,
   CarouselOptions,
   CarouselOptionsCallback,
-} from './widgets/carousel';
-import { Chat, ChatOptions, ChatOptionsCallback, ChatValueDeserializedValue } from './widgets/chat';
-import { Chip, ChipOptions, ChipOptionsCallback, ChipValueDeserializedValue } from './widgets/chip';
-import { Code, CodeOptions, CodeOptionsCallback, CodeValueDeserializedValue } from './widgets/code';
+} from './carousel';
+import { Chat, ChatOptions, ChatOptionsCallback, ChatValueDeserializedValue } from './chat';
+import { Chip, ChipOptions, ChipOptionsCallback, ChipValueDeserializedValue } from './chip';
+import { Code, CodeOptions, CodeOptionsCallback, CodeValueDeserializedValue } from './code';
 import {
   Compare,
   CompareOptions,
   CompareOptionsCallback,
   CompareValueDeserializedValue,
-} from './widgets/compare';
+} from './compare';
 import {
   ControlPanel,
   ControlPanelDeserializedValue,
   ControlPanelOptions,
   ControlPanelOptionsCallback,
-} from './widgets/controlPanel';
+} from './controlPanel';
 import {
   CountBarChart,
   CountBarChartDeserializedValue,
   CountBarChartOptions,
   CountBarChartOptionsCallback,
-} from './widgets/countBarChart';
+} from './countBarChart';
 import {
   History,
   HistoryOptions,
   HistoryOptionsCallback,
   HistoryDeserializedValue,
-} from './widgets/history';
+} from './history';
 import {
   ImageEditor,
   ImageEditorDeserializedValue,
   ImageEditorOptions,
   ImageEditorOptionsCallback,
-} from './widgets/imageEditor';
+} from './imageEditor';
 import {
   Masonry,
   MasonryDeserializedValue,
   MasonryOptions,
   MasonryOptionsCallback,
-} from './widgets/masonry';
+} from './masonry';
 import {
   Messenger,
   MessengerDeserializedValue,
   MessengerOptions,
   MessengerOptionsCallback,
-} from './widgets/messenger';
+} from './messenger';
 import {
   Progressbar,
   ProgressbarDeserializedValue,
   ProgressbarOptions,
   ProgressbarOptionsCallback,
-} from './widgets/progressBar';
+} from './progressBar';
 import {
   TabBarChart,
   TabBarChartDeserializedValue,
   TabBarChartOptions,
   TabBarChartOptionsCallback,
-} from './widgets/tabBarChart';
+} from './tabBarChart';
 import {
   Textarea,
   TextareaDeserializedValue,
   TextareaOptions,
   TextareaOptionsCallback,
-} from './widgets/textarea';
-import { Tree, TreeOptions, TreeOptionsCallback, TreeValueDeserializedValue } from './widgets/tree';
-import {
-  Upload,
-  UploadDeserializedValue,
-  UploadOptions,
-  UploadOptionsCallback,
-} from './widgets/upload';
+} from './textarea';
+import { Tree, TreeOptions, TreeOptionsCallback, TreeValueDeserializedValue } from './tree';
+import { Upload, UploadDeserializedValue, UploadOptions, UploadOptionsCallback } from './upload';
 
-//#region Widgets
-export type UnescapeJSONPayload = {
-  validJson: boolean;
-  parsedJson?: {};
-  unescapedStr: string;
-};
-export type NormalizeValueCallback<V extends CustomWidgetDeserializedValuesMap<CustomWidgetName>> =
-  (origValue: V, unescaped: UnescapeJSONPayload) => void;
-export type BaseWidgetCallback<T extends CustomWidgetName> = (
-  node: NodeType,
-  name: T,
-) => { widget: Widget };
-export type ComfyWidgetCallback = <T extends ComfyWidgetName>(
-  node: NodeType,
-  name: T,
-) => { widget: Widget };
-export interface BaseWidgetFactory<T extends CustomWidgetOptions> {
-  cssClasses: Record<string, string>;
-  options: BaseWidgetOptionsCallback<T>;
-  render: BaseWidgetCallback<CustomWidgetName>;
-}
-export interface BaseWidgetOptions<V extends CustomWidgetDeserializedValuesMap<CustomWidgetName>> {
-  hideOnZoom: boolean;
-  getValue: () => V;
-  setValue(value: string | V): void;
-}
-export type BaseWidgetOptionsCallback<T extends CustomWidgetOptions> = (...args: any[]) => T;
+//#region Enums
 export enum ComfyWidgetName {
   boolean = 'BOOLEAN',
   combo = 'COMBO',
@@ -142,6 +112,90 @@ export enum CustomWidgetName {
   tree = 'KUL_TREE',
   upload = 'KUL_UPLOAD',
 }
+export enum NodeName {
+  blurImages = 'LF_BlurImages',
+  boolean = 'LF_Boolean',
+  characterImpersonator = 'LF_CharacterImpersonator',
+  checkpointSelector = 'LF_CheckpointSelector',
+  civitaiMetadataSetup = 'LF_CivitAIMetadataSetup',
+  clarityEffect = 'LF_ClarityEffect',
+  colorAnalysis = 'LF_ColorAnalysis',
+  compareImages = 'LF_CompareImages',
+  controlPanel = 'LF_ControlPanel',
+  desaturationEffect = 'LF_DesaturationEffect',
+  displayBoolean = 'LF_DisplayBoolean',
+  displayFloat = 'LF_DisplayFloat',
+  displayInteger = 'LF_DisplayInteger',
+  displayJson = 'LF_DisplayJSON',
+  displayPrimitiveAsJson = 'LF_DisplayPrimitiveAsJSON',
+  displayString = 'LF_DisplayString',
+  markdownDocGenerator = 'LF_MarkdownDocGenerator',
+  float = 'LF_Float',
+  embeddingSelector = 'LF_EmbeddingSelector',
+  extractString = 'LF_ExtractString',
+  extractPromptFromLoraTag = 'LF_ExtractPromptFromLoraTag',
+  getValueFromJson = 'LF_GetValueFromJSON',
+  getRandomKeyFromJson = 'LF_GetRandomKeyFromJSON',
+  imageClassifier = 'LF_ImageClassifier',
+  imageListFromJSON = 'LF_ImageListFromJSON',
+  imageHistogram = 'LF_ImageHistogram',
+  imagesEditingBreakpoint = 'LF_ImagesEditingBreakpoint',
+  integer = 'LF_Integer',
+  isLandscape = 'LF_IsLandscape',
+  keywordCounter = 'LF_KeywordCounter',
+  keywordToggleFromJson = 'LF_KeywordToggleFromJSON',
+  llmChat = 'LF_LLMChat',
+  llmMessenger = 'LF_LLMMessenger',
+  loadAndEditImages = 'LF_LoadAndEditImages',
+  loadFileOnce = 'LF_LoadFileOnce',
+  loadImages = 'LF_LoadImages',
+  loadLoraTags = 'LF_LoadLoraTags',
+  loadMetadata = 'LF_LoadMetadata',
+  loraAndEmbeddingSelector = 'LF_LoraAndEmbeddingSelector',
+  loraSelector = 'LF_LoraSelector',
+  lutApplication = 'LF_LUTApplication',
+  lutGeneration = 'LF_LUTGeneration',
+  mathOperation = 'LF_MathOperation',
+  multipleImageResizeForWeb = 'LF_MultipleImageResizeForWeb',
+  notify = 'LF_Notify',
+  parsePromptWithLoraTags = 'LF_ParsePromptWithLoraTags',
+  randomBoolean = 'LF_RandomBoolean',
+  regionExtractor = 'LF_RegionExtractor',
+  resizeImageByEdge = 'LF_ResizeImageByEdge',
+  resizeImageToDimension = 'LF_ResizeImageToDimension',
+  resizeImageToSquare = 'LF_ResizeImageToSquare',
+  resolutionSwitcher = 'LF_ResolutionSwitcher',
+  samplerSelector = 'LF_SamplerSelector',
+  saveImageForCivitai = 'LF_SaveImageForCivitAI',
+  saveJson = 'LF_SaveJSON',
+  saveMarkdown = 'LF_SaveMarkdown',
+  schedulerSelector = 'LF_SchedulerSelector',
+  sequentialSeedsGenerator = 'LF_SequentialSeedsGenerator',
+  setValueInJson = 'LF_SetValueInJSON',
+  shuffleJsonKeys = 'LF_ShuffleJSONKeys',
+  imagesSlideshow = 'LF_ImagesSlideshow',
+  something2Number = 'LF_Something2Number',
+  something2String = 'LF_Something2String',
+  sortJsonKeys = 'LF_SortJSONKeys',
+  string = 'LF_String',
+  stringToJson = 'LF_StringToJSON',
+  switchFloat = 'LF_SwitchFloat',
+  switchImage = 'LF_SwitchImage',
+  switchInteger = 'LF_SwitchInteger',
+  switchJson = 'LF_SwitchJSON',
+  switchString = 'LF_SwitchString',
+  updateUsageStatistics = 'LF_UpdateUsageStatistics',
+  upscaleModelSelector = 'LF_UpscaleModelSelector',
+  urandomSeedGenerator = 'LF_UrandomSeedGenerator',
+  usageStatistics = 'LF_UsageStatistics',
+  vaeSelector = 'LF_VAESelector',
+  viewImages = 'LF_ViewImages',
+  vignetteEffect = 'LF_VignetteEffect',
+  wallOfText = 'LF_WallOfText',
+  writeJson = 'LF_WriteJSON',
+}
+//#endregion
+//#region Unions
 export type CustomWidgetDeserializedValues =
   | CardDeserializedValue
   | CardsWithChipDeserializedValue
@@ -197,6 +251,7 @@ export type CustomWidgetOptionsCallbacks =
   | TextareaOptionsCallback
   | TreeOptionsCallback
   | UploadOptionsCallback;
+//#region Maps
 export type ComfyWidgetMap = {
   [ComfyWidgetName.boolean]: Widget;
   [ComfyWidgetName.combo]: Widget;
@@ -270,4 +325,38 @@ export type CustomWidgetOptionsCallbacksMap<Name extends CustomWidgetName> = {
   [CustomWidgetName.tree]: TreeOptionsCallback;
   [CustomWidgetName.upload]: UploadOptionsCallback;
 }[Name];
+export type NodePayloadMap = {
+  [N in NodeName]: EventPayload<CustomWidgetName>;
+};
+export type NodeWidgetMap = {
+  [N in NodeName]: CustomWidgetName[];
+};
+//#endregion
+//#region Helpers
+export type UnescapeJSONPayload = {
+  validJson: boolean;
+  parsedJson?: {};
+  unescapedStr: string;
+};
+export type NormalizeValueCallback<V extends CustomWidgetDeserializedValuesMap<CustomWidgetName>> =
+  (origValue: V, unescaped: UnescapeJSONPayload) => void;
+export type BaseWidgetCallback<T extends CustomWidgetName> = (
+  node: NodeType,
+  name: T,
+) => { widget: Widget };
+export type ComfyWidgetCallback = <T extends ComfyWidgetName>(
+  node: NodeType,
+  name: T,
+) => { widget: Widget };
+export interface BaseWidgetFactory<T extends CustomWidgetOptions> {
+  cssClasses: Record<string, string>;
+  options: BaseWidgetOptionsCallback<T>;
+  render: BaseWidgetCallback<CustomWidgetName>;
+}
+export interface BaseWidgetOptions<V extends CustomWidgetDeserializedValuesMap<CustomWidgetName>> {
+  hideOnZoom: boolean;
+  getValue: () => V;
+  setValue(value: string | V): void;
+}
+export type BaseWidgetOptionsCallback<T extends CustomWidgetOptions> = (...args: any[]) => T;
 //#endregion

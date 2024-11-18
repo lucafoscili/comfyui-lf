@@ -1,5 +1,5 @@
 import { LogSeverity } from '../types/manager/manager.js';
-import { NodeName } from '../types/nodes.js';
+import { NodeName } from '../types/widgets/_common.js';
 import { ImageEditorColumnId, ImageEditorControls, ImageEditorIcons, ImageEditorStatus, } from '../types/widgets/imageEditor.js';
 import { debounce, getApiRoutes, getLFManager, unescapeJson } from '../utils/common.js';
 import { imageEditorFactory } from '../widgets/imageEditor.js';

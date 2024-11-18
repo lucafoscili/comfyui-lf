@@ -1,8 +1,7 @@
-import { EventName, EventPayload } from '../events';
+import { EventName, EventPayload } from '../events/events';
 import { KulDataDataset } from '../ketchup-lite/components';
-import { LogSeverity } from '../manager/manager';
-import { Extension } from '../nodes';
-import { CustomWidgetName } from '../widgets';
+import { Extension, LogSeverity } from '../manager/manager';
+import { CustomWidgetName } from '../widgets/_common';
 import { ImageEditorFilterSettingsMap, ImageEditorFilterType } from '../widgets/imageEditor';
 export interface APIRoutes {
     analytics: AnalyticsAPIs;

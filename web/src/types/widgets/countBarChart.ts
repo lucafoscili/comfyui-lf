@@ -4,7 +4,7 @@ import {
   BaseWidgetFactory,
   BaseWidgetOptions,
   CustomWidgetName,
-} from '../widgets';
+} from './_common';
 
 //#region Count bar chart
 export interface CountBarChart extends Widget {

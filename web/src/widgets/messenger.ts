@@ -2,7 +2,7 @@ import {
   CustomWidgetName,
   CustomWidgetDeserializedValuesMap,
   NormalizeValueCallback,
-} from '../types/widgets';
+} from '../types/widgets/_common';
 import { MessengerDeserializedValue, MessengerFactory } from '../types/widgets/messenger';
 import { createDOMWidget, normalizeValue } from '../utils/common';
 

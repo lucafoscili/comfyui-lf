@@ -2,7 +2,7 @@ import {
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
   NormalizeValueCallback,
-} from '../types/widgets';
+} from '../types/widgets/_common';
 import { cardHandler, getCardProps } from '../helpers/card';
 import { createDOMWidget, normalizeValue } from '../utils/common';
 import {

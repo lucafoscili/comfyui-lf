@@ -13,7 +13,7 @@ import {
 } from '../types/ketchup-lite/managers/kul-data/kul-data-declarations';
 import { KulGenericEvent } from '../types/ketchup-lite/types/GenericTypes';
 import { LogSeverity } from '../types/manager/manager';
-import { NodeName } from '../types/nodes';
+import { NodeName } from '../types/widgets/_common';
 import {
   ImageEditorActionButtons,
   ImageEditorColumnId,

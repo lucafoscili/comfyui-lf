@@ -1,9 +1,9 @@
-import { NodeName } from '../types/nodes';
 import {
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
+  NodeName,
   NormalizeValueCallback,
-} from '../types/widgets';
+} from '../types/widgets/_common';
 import { TreeFactory, TreeValueDeserializedValue } from '../types/widgets/tree';
 import { createDOMWidget, normalizeValue } from '../utils/common';
 

@@ -1,4 +1,4 @@
-import { CustomWidgetName, } from '../widgets.js';
+import { CustomWidgetName, } from './_common.js';
 //#endregion
 //#region Dataset
 export var ImageEditorStatus;

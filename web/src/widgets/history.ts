@@ -1,11 +1,11 @@
 import { KulDataDataset, KulListEventPayload } from '../types/ketchup-lite/components';
-import { NodeName } from '../types/nodes';
 import {
   ComfyWidgetName,
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
+  NodeName,
   NormalizeValueCallback,
-} from '../types/widgets';
+} from '../types/widgets/_common';
 import { HistoryFactory } from '../types/widgets/history';
 import { createDOMWidget, getWidget, normalizeValue } from '../utils/common';
 

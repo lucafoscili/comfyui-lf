@@ -1,2 +1,2 @@
-import { CustomWidgetName, } from '../widgets.js';
+import { CustomWidgetName, } from './_common.js';
 //#endregion

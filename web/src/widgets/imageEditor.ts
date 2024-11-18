@@ -6,12 +6,12 @@ import {
   setGridStatus,
 } from '../helpers/imageEditor';
 import { LogSeverity } from '../types/manager/manager';
-import { NodeName } from '../types/nodes';
 import {
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
+  NodeName,
   NormalizeValueCallback,
-} from '../types/widgets';
+} from '../types/widgets/_common';
 import {
   ImageEditorActionButtons,
   ImageEditorDeserializedValue,

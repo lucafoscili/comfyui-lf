@@ -1,4 +1,4 @@
-import { NotifyPayload } from '../types/events';
+import { NotifyPayload } from '../types/events/events';
 import { LogSeverity } from '../types/manager/manager';
 import { getLFManager } from '../utils/common';
 

@@ -1,5 +1,5 @@
 import { KulDataDataset } from '../ketchup-lite/components';
-import { BaseWidgetCallback, BaseWidgetFactory, BaseWidgetOptions, CustomWidgetName } from '../widgets';
+import { BaseWidgetCallback, BaseWidgetFactory, BaseWidgetOptions, CustomWidgetName } from './_common';
 export interface History extends Widget {
     options: HistoryOptions;
     type: [CustomWidgetName.history];

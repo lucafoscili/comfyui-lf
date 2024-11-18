@@ -5,6 +5,7 @@ import { Card, CardDeserializedValue } from '../types/widgets/card';
 import { CardsWithChip } from '../types/widgets/cardsWithChip';
 import { getApiRoutes } from './common';
 
+//#region Placeholders
 const DUMMY_PROPS: Partial<HTMLKulCardElement> = {
   kulData: {
     nodes: [
@@ -18,7 +19,6 @@ const DUMMY_PROPS: Partial<HTMLKulCardElement> = {
     ],
   },
 };
-
 export const cardPlaceholders = (widget: Card | CardsWithChip, count: number) => {
   const dummyValue: CardDeserializedValue = {
     props: [],
@@ -29,7 +29,8 @@ export const cardPlaceholders = (widget: Card | CardsWithChip, count: number) =>
   }
   widget.options.setValue(JSON.stringify(dummyValue));
 };
-
+//#endregion
+//#region API call
 export const fetchModelMetadata = async (
   models: APIMetadataEntry[],
   forcedSave = false,
@@ -47,7 +48,8 @@ export const fetchModelMetadata = async (
 
   return Promise.all(promises);
 };
-
+//#endregion
+//#region API response
 const onResponse = async (
   dataset: KulDataDataset,
   path: string,
@@ -88,7 +90,8 @@ const onResponse = async (
 
   return props;
 };
-
+//#endregion
+//#region prepareValidDataset
 const prepareValidDataset = (r: CivitAIModelData, code: KulDataCell<'code'>) => {
   const dataset: KulDataDataset = {
     nodes: [
@@ -129,3 +132,4 @@ Thumbs up: ${r.stats?.thumbsUpCount ? r.stats.thumbsUpCount : 'N/A'}
   };
   return dataset;
 };
+//#endregion

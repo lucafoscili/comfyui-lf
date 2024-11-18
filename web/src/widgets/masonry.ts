@@ -1,11 +1,11 @@
 import { KulImageEventPayload, KulMasonryEventPayload } from '../types/ketchup-lite/components';
 import { KulDataCell } from '../types/ketchup-lite/managers/kul-data/kul-data-declarations';
-import { NodeName } from '../types/nodes';
 import {
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
+  NodeName,
   NormalizeValueCallback,
-} from '../types/widgets';
+} from '../types/widgets/_common';
 import { MasonryDeserializedValue, MasonryFactory } from '../types/widgets/masonry';
 import { createDOMWidget, isValidNumber, normalizeValue } from '../utils/common';
 

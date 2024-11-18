@@ -1,12 +1,12 @@
 import { AnalyticsType } from '../api/api';
 import { KulDataDataset } from '../ketchup-lite/components';
-import { NodeName } from '../nodes';
 import {
   BaseWidgetCallback,
   BaseWidgetFactory,
   BaseWidgetOptions,
   CustomWidgetName,
-} from '../widgets';
+  NodeName,
+} from './_common';
 
 //#region Tab bar chart
 export interface TabBarChart extends Widget {

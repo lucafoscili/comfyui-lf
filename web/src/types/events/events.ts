@@ -1,6 +1,5 @@
-import { KulDataDataset } from './ketchup-lite/components';
-import { NodeName } from './nodes';
-import { CustomWidgetName } from './widgets';
+import { KulDataDataset } from '../ketchup-lite/components';
+import { CustomWidgetName, NodeName } from '../widgets/_common';
 
 // #region Common declarations
 export interface BaseEventPayload {
