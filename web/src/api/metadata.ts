@@ -9,6 +9,7 @@ import { LogSeverity } from '../types/manager/manager';
 import { getLFManager } from '../utils/common';
 
 export const METADATA_API: MetadataAPIs = {
+  //#region clear
   clear: async () => {
     const lfManager = getLFManager();
 
@@ -45,6 +46,8 @@ export const METADATA_API: MetadataAPIs = {
     lfManager.log(payload.message, { payload }, payload.status);
     return payload;
   },
+  //#region get
+  //#endregion
   get: async (hash) => {
     const lfManager = getLFManager();
 
@@ -83,6 +86,8 @@ export const METADATA_API: MetadataAPIs = {
     lfManager.log(payload.message, { payload }, payload.status);
     return payload;
   },
+  //#region save
+  //#endregion
   save: async (modelPath, dataset, forcedSave = false) => {
     const lfManager = getLFManager();
 
@@ -126,6 +131,8 @@ export const METADATA_API: MetadataAPIs = {
     lfManager.log(payload.message, { payload }, payload.status);
     return payload;
   },
+  //#region updateCover
+  //#endregion
   updateCover: async (modelPath, b64image) => {
     const lfManager = getLFManager();
 
@@ -167,4 +174,5 @@ export const METADATA_API: MetadataAPIs = {
     lfManager.log(payload.message, { payload }, payload.status);
     return payload;
   },
+  //#endregion
 };

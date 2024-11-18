@@ -9,6 +9,7 @@ import { LogSeverity } from '../types/manager/manager';
 import { getLFManager } from '../utils/common';
 
 export const ANALYTICS_API: AnalyticsAPIs = {
+  //#region clear
   clear: async (type) => {
     const lfManager = getLFManager();
 
@@ -54,6 +55,8 @@ export const ANALYTICS_API: AnalyticsAPIs = {
     lfManager.log(payload.message, { payload }, payload.status);
     return payload;
   },
+  //#endregion
+  //#region get
   get: async (directory, type) => {
     const lfManager = getLFManager();
 
@@ -110,4 +113,5 @@ export const ANALYTICS_API: AnalyticsAPIs = {
     lfManager.log(payload.message, { payload }, payload.status);
     return payload;
   },
+  //#endregion
 };

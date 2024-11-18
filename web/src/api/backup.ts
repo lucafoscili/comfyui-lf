@@ -4,6 +4,7 @@ import { LogSeverity } from '../types/manager/manager';
 import { getLFManager } from '../utils/common';
 
 export const BACKUP_API: BackupAPIs = {
+  //#region new
   new: async (backupType = 'automatic') => {
     const lfManager = getLFManager();
 
@@ -40,4 +41,5 @@ export const BACKUP_API: BackupAPIs = {
     lfManager.log(payload.message, { payload }, payload.status);
     return payload;
   },
+  //#endregion
 };

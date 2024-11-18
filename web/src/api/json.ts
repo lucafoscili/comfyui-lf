@@ -4,6 +4,7 @@ import { LogSeverity } from '../types/manager/manager';
 import { getLFManager } from '../utils/common';
 
 export const JSON_API: JSONAPIs = {
+  //#region get
   get: async (filePath) => {
     const lfManager = getLFManager();
 
@@ -48,6 +49,8 @@ export const JSON_API: JSONAPIs = {
     lfManager.log(payload.message, { payload }, payload.status);
     return payload;
   },
+  //#region update
+  //#endregion
   update: async (filePath, dataset) => {
     const lfManager = getLFManager();
 
@@ -89,4 +92,5 @@ export const JSON_API: JSONAPIs = {
     lfManager.log(payload.message, { payload }, payload.status);
     return payload;
   },
+  //#endregion
 };
