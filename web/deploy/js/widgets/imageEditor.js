@@ -6,7 +6,7 @@ import { ImageEditorIcons, ImageEditorStatus, } from '../types/widgets/imageEdit
 import { createDOMWidget, getLFManager, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-imageeditor';
 const TYPE = CustomWidgetName.imageEditor;
-//#region imageEditorFactory
+//#region Image editor
 export const imageEditorFactory = {
     cssClasses: {
         content: BASE_CSS_CLASS,

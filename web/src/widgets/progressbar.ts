@@ -11,6 +11,7 @@ const BASE_CSS_CLASS = 'lf-progressbar';
 const FALLBACK_LABEL = 'N/A';
 const TYPE = CustomWidgetName.progressbar;
 
+//#region Progress bar
 export const progressbarFactory: ProgressbarFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
@@ -86,3 +87,4 @@ export const progressbarFactory: ProgressbarFactory = {
     return { widget: createDOMWidget(TYPE, wrapper, node, options) };
   },
 };
+//#endregion

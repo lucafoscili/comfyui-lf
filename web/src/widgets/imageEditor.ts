@@ -24,7 +24,7 @@ import { createDOMWidget, getLFManager, normalizeValue } from '../utils/common';
 const BASE_CSS_CLASS = 'lf-imageeditor';
 const TYPE = CustomWidgetName.imageEditor;
 
-//#region imageEditorFactory
+//#region Image editor
 export const imageEditorFactory: ImageEditorFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,

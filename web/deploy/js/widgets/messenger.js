@@ -2,6 +2,7 @@ import { CustomWidgetName, } from '../types/widgets/_common.js';
 import { createDOMWidget, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-messenger';
 const TYPE = CustomWidgetName.messenger;
+//#region Messenger
 export const messengerFactory = {
     cssClasses: {
         content: BASE_CSS_CLASS,
@@ -67,3 +68,4 @@ to connect as input a valid JSON dataset. Check the repository's workflows to se
         return { widget: createDOMWidget(TYPE, wrapper, node, options) };
     },
 };
+//#endregion

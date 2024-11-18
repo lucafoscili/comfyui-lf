@@ -2,6 +2,7 @@ import { CustomWidgetName, NodeName, } from '../types/widgets/_common.js';
 import { createDOMWidget, isValidNumber, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-masonry';
 const TYPE = CustomWidgetName.masonry;
+//#region Masonry
 export const masonryFactory = {
     cssClasses: {
         content: BASE_CSS_CLASS,
@@ -9,7 +10,7 @@ export const masonryFactory = {
     },
     options: (masonry) => {
         return {
-            hideOnZoom: true,
+            hideOnZoom: false,
             getComp() {
                 return masonry;
             },
@@ -63,6 +64,8 @@ export const masonryFactory = {
         return { widget: createDOMWidget(TYPE, wrapper, node, options) };
     },
 };
+//#endregion
+//#region eventHandler
 const masonryEventHandler = (e) => {
     const { comp, eventType, originalEvent, selectedShape } = e.detail;
     const masonry = comp.rootElement;
@@ -81,3 +84,4 @@ const masonryEventHandler = (e) => {
             break;
     }
 };
+//#endregion

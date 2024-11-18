@@ -12,6 +12,7 @@ import { createDOMWidget, getWidget, normalizeValue } from '../utils/common';
 const BASE_CSS_CLASS = 'lf-history';
 const TYPE = CustomWidgetName.history;
 
+//#region History
 export const historyFactory: HistoryFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
@@ -122,3 +123,4 @@ const handleEvent = (e: CustomEvent<KulListEventPayload>, comfyNode: NodeType) =
     }
   }
 };
+//#endregion

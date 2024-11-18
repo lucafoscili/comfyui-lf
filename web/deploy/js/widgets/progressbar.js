@@ -3,6 +3,7 @@ import { createDOMWidget, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-progressbar';
 const FALLBACK_LABEL = 'N/A';
 const TYPE = CustomWidgetName.progressbar;
+//#region Progress bar
 export const progressbarFactory = {
     cssClasses: {
         content: BASE_CSS_CLASS,
@@ -73,3 +74,4 @@ export const progressbarFactory = {
         return { widget: createDOMWidget(TYPE, wrapper, node, options) };
     },
 };
+//#endregion

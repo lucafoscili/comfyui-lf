@@ -39,7 +39,7 @@ export const NODE_WIDGET_MAP: NodeWidgetMap = {
   LF_EmbeddingSelector: [CustomWidgetName.card],
   LF_ExtractString: [CustomWidgetName.code],
   LF_ExtractPromptFromLoraTag: [CustomWidgetName.code],
-  LF_Float: [CustomWidgetName.code],
+  LF_Float: [CustomWidgetName.history],
   LF_GetRandomKeyFromJSON: [CustomWidgetName.code],
   LF_GetValueFromJSON: [CustomWidgetName.code],
   LF_ImageClassifier: [CustomWidgetName.code],
