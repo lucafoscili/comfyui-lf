@@ -9,7 +9,7 @@ from PIL import Image
 from server import PromptServer
 
 from ..utils.constants import API_ROUTE_PREFIX
-from ..utils.filters import clarity_effect, vignette_effect
+from ..utils.filters import clarity_effect, desaturate_effect, vignette_effect
 from ..utils.helpers import create_masonry_node, get_comfy_dir, get_resource_url, pil_to_tensor, resolve_filepath, resolve_url, tensor_to_pil
 
 # region get-image
@@ -68,6 +68,8 @@ async def process_image(request):
 
         if filter_type == "clarity":
             processed_tensor = apply_clarity_effect(img_tensor, settings)
+        elif filter_type == "desaturate":
+            processed_tensor = apply_desaturate_effect(img_tensor, settings)
         elif filter_type == "vignette":
             processed_tensor = apply_vignette_effect(img_tensor, settings)
         else:
@@ -87,22 +89,25 @@ async def process_image(request):
 # endregion
 
 # region helpers
-def apply_vignette_effect(img_tensor: torch.Tensor, settings: dict):
-    intensity = float(settings.get("intensity", 0))
-    radius = float(settings.get("radius", 0))
-    shape = settings.get("shape", "elliptical")
-    color = settings.get("color", "000000")
-
-    processed_tensor = vignette_effect(img_tensor, intensity, radius, shape, color)
-    return processed_tensor  
-
 def apply_clarity_effect(img_tensor: torch.Tensor, settings: dict):
-    clarity_strength = float(settings.get("clarity_strength", 0))
-    sharpen_amount = float(settings.get("sharpen_amount", 0))
-    blur_kernel_size = int(settings.get("blur_kernel_size", 1))
+    clarity_strength: float = float(settings.get("clarity_strength", 0))
+    sharpen_amount: float = float(settings.get("sharpen_amount", 0))
+    blur_kernel_size: int = int(settings.get("blur_kernel_size", 1))
 
-    processed_tensor = clarity_effect(img_tensor, clarity_strength, sharpen_amount, blur_kernel_size)
-    return processed_tensor
+    return clarity_effect(img_tensor, clarity_strength, sharpen_amount, blur_kernel_size)
+
+def apply_desaturate_effect(img_tensor: torch.Tensor, settings: dict):
+    desaturation_level: float = float(settings.get("desaturation_level", 0))
+
+    return desaturate_effect(img_tensor, desaturation_level)
+
+def apply_vignette_effect(img_tensor: torch.Tensor, settings: dict):
+    intensity: float = float(settings.get("intensity", 0))
+    radius: float = float(settings.get("radius", 0))
+    shape: str = settings.get("shape", "elliptical")
+    color: str = settings.get("color", "000000")
+
+    return vignette_effect(img_tensor, intensity, radius, shape, color)  
 
 def load_image_tensor(image_path: str) -> torch.Tensor:
     try:

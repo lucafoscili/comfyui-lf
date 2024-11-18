@@ -1,2 +1,2 @@
-import { CodeWidgetFactory } from '../types/widgets';
-export declare const codeFactory: CodeWidgetFactory;
+import { CodeFactory } from '../types/widgets/code';
+export declare const codeFactory: CodeFactory;

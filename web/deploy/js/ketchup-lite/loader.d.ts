@@ -1,1 +1,1 @@
-export declare const defineCustomElements: (window: Window) => void;
+export declare const defineCustomElements: (_window: Window) => void;

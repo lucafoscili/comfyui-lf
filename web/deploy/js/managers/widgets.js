@@ -1,6 +1,6 @@
 import { controlPanelFactory } from '../widgets/controlPanel.js';
 import { codeFactory } from '../widgets/code.js';
-import { CustomWidgetName, } from '../types/widgets.js';
+import { CustomWidgetName, NodeName, } from '../types/widgets/_common.js';
 import { masonryFactory } from '../widgets/masonry.js';
 import { textareaFactory } from '../widgets/textarea.js';
 import { treeFactory } from '../widgets/tree.js';
@@ -14,19 +14,16 @@ import { cardFactory } from '../widgets/card.js';
 import { cardsWithChipFactory } from '../widgets/cardsWithChip.js';
 import { tabBarChartFactory } from '../widgets/tabBarChart.js';
 import { compareFactory } from '../widgets/compare.js';
-import { NodeName } from '../types/nodes.js';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common.js';
-import { LogSeverity } from '../types/manager.js';
 import { cardPlaceholders, fetchModelMetadata } from '../utils/api.js';
 import { showNotification } from '../helpers/notify.js';
 import { progressbarFactory } from '../widgets/progressbar.js';
 import { carouselFactory } from '../widgets/carousel.js';
 import { imageEditorFactory } from '../widgets/imageEditor.js';
-/*-------------------------------------------------*/
-/*            W i d g e t s   C l a s s            */
-/*-------------------------------------------------*/
+import { LogSeverity } from '../types/manager/manager.js';
 export class LFWidgets {
     constructor() {
+        //#region Decorators
         this.decorators = {
             card: (payload, widget) => {
                 const { apiFlags, datasets, hashes, paths, chip } = payload;
@@ -61,6 +58,8 @@ export class LFWidgets {
                 });
             },
         };
+        //#endregion
+        //#region Options
         this.option = {
             [CustomWidgetName.card]: (grid) => cardFactory.options(grid),
             [CustomWidgetName.cardsWithChip]: (grid) => cardsWithChipFactory.options(grid),
@@ -81,6 +80,8 @@ export class LFWidgets {
             [CustomWidgetName.tree]: (tree) => treeFactory.options(tree),
             [CustomWidgetName.upload]: (upload) => uploadFactory.options(upload),
         };
+        //#endregion
+        //#region Setters
         this.set = {
             [CustomWidgetName.card]: (nodeType) => {
                 return cardFactory.render(nodeType, CustomWidgetName.card);
@@ -137,6 +138,8 @@ export class LFWidgets {
                 return uploadFactory.render(nodeType, CustomWidgetName.upload);
             },
         };
+        //#endregion
+        //#region onEvent
         this.onEvent = (name, event, widgets) => {
             const lfManager = getLFManager();
             const payload = event.detail;

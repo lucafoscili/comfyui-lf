@@ -1,2 +1,2 @@
-import { UploadWidgetFactory } from '../types/widgets';
-export declare const uploadFactory: UploadWidgetFactory;
+import { UploadFactory } from '../types/widgets/upload';
+export declare const uploadFactory: UploadFactory;

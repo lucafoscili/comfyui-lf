@@ -1,2 +1,2 @@
-import { ChipWidgetFactory } from '../types/widgets';
-export declare const chipFactory: ChipWidgetFactory;
+import { ChipFactory } from '../types/widgets/chip';
+export declare const chipFactory: ChipFactory;

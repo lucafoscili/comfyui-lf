@@ -1,11 +1,12 @@
 import { LFWidgets } from './widgets.js';
-import { ComfyAPIs, LogSeverity } from '../types/manager.js';
-import { NodeName } from '../types/nodes.js';
-import { EventName } from '../types/events.js';
+import { EventName } from '../types/events/events.js';
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
 import { LFTooltip } from './tooltip';
 import { KulDataDataset } from '../types/ketchup-lite/components.js';
 import { KulManager } from '../types/ketchup-lite/managers/kul-manager/kul-manager.js';
+import { NodeName } from '../types/widgets/_common.js';
+import { APIRoutes } from '../types/api/api.js';
+import { LogSeverity } from '../types/manager/manager.js';
 export interface LFWindow extends Window {
     comfyAPI: ComfyUI;
     lfManager: LFManager;
@@ -13,7 +14,8 @@ export interface LFWindow extends Window {
 export declare class LFManager {
     #private;
     constructor();
-    getApiRoutes(): ComfyAPIs;
+    initialize(): void;
+    getApiRoutes(): APIRoutes;
     getCachedDatasets(): {
         usage: KulDataDataset;
     };
@@ -27,7 +29,6 @@ export declare class LFManager {
         tooltip?: LFTooltip;
         widgets?: LFWidgets;
     };
-    initialize(): void;
     isBackupEnabled(): boolean;
     isDebug(): boolean;
     log(message: string, args?: Record<string, unknown>, severity?: LogSeverity): void;

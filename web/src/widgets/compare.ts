@@ -1,17 +1,17 @@
 import { KulDataDataset } from '../types/ketchup-lite/components';
-import { NodeName } from '../types/nodes';
 import {
-  CompareWidgetFactory,
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
+  NodeName,
   NormalizeValueCallback,
-} from '../types/widgets';
+} from '../types/widgets/_common';
+import { CompareFactory } from '../types/widgets/compare';
 import { createDOMWidget, normalizeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-compare';
 const TYPE = CustomWidgetName.compare;
 
-export const compareFactory: CompareWidgetFactory = {
+export const compareFactory: CompareFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
     compare: `${BASE_CSS_CLASS}__widget`,

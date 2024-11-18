@@ -10,6 +10,7 @@ export declare enum NodeName {
     colorAnalysis = "LF_ColorAnalysis",
     compareImages = "LF_CompareImages",
     controlPanel = "LF_ControlPanel",
+    desaturationEffect = "LF_DesaturationEffect",
     displayBoolean = "LF_DisplayBoolean",
     displayFloat = "LF_DisplayFloat",
     displayInteger = "LF_DisplayInteger",

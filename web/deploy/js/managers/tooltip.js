@@ -11,10 +11,7 @@ var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (
 };
 var _LFTooltip_instances, _LFTooltip_CB, _LFTooltip_CSS_CLASSES, _LFTooltip_LAYOUT, _LFTooltip_TOOLTIP_ELEMENT, _LFTooltip_initialize, _LFTooltip_uploadLayout, _LFTooltip_buttonEventHandler;
 import { getKulManager, getLFManager } from '../utils/common.js';
-import { LogSeverity, } from '../types/manager.js';
-/*-------------------------------------------------*/
-/*           T o o l t i p   C l a s s             */
-/*-------------------------------------------------*/
+import { LogSeverity, } from '../types/manager/manager.js';
 export class LFTooltip {
     constructor() {
         _LFTooltip_instances.add(this);
@@ -25,6 +22,8 @@ export class LFTooltip {
         });
         _LFTooltip_LAYOUT.set(this, void 0); // more in the future?
         _LFTooltip_TOOLTIP_ELEMENT.set(this, void 0);
+        //#endregion
+        //#region Button event handler
         _LFTooltip_buttonEventHandler.set(this, async (upload, e) => {
             const { eventType } = e.detail;
             switch (eventType) {
@@ -61,6 +60,8 @@ export class LFTooltip {
         link.href = `extensions/comfyui-lf/css/tooltip.css`;
         document.head.appendChild(link);
     }
+    //#endregion
+    //#region Create
     create(anchor, layout, cb) {
         const kulManager = getKulManager();
         if (__classPrivateFieldGet(this, _LFTooltip_TOOLTIP_ELEMENT, "f")) {
@@ -80,6 +81,8 @@ export class LFTooltip {
         kulManager.addClickCallback({ cb: () => this.destroy(), el: __classPrivateFieldGet(this, _LFTooltip_TOOLTIP_ELEMENT, "f") });
         requestAnimationFrame(() => document.body.appendChild(__classPrivateFieldGet(this, _LFTooltip_TOOLTIP_ELEMENT, "f")));
     }
+    //#endregion
+    //#region Destroy
     destroy() {
         __classPrivateFieldGet(this, _LFTooltip_instances, "m", _LFTooltip_initialize).call(this);
     }

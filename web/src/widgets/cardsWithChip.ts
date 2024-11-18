@@ -1,17 +1,19 @@
 import {
-  CardsWithChipWidgetDeserializedValue,
-  CardsWithChipWidgetFactory,
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
   NormalizeValueCallback,
-} from '../types/widgets';
+} from '../types/widgets/_common';
 import { cardHandler, getCardProps } from '../helpers/card';
 import { createDOMWidget, normalizeValue } from '../utils/common';
+import {
+  CardsWithChipDeserializedValue,
+  CardsWithChipFactory,
+} from '../types/widgets/cardsWithChip';
 
 const BASE_CSS_CLASS = 'lf-cardswithchip';
 const TYPE = CustomWidgetName.cardsWithChip;
 
-export const cardsWithChipFactory: CardsWithChipWidgetFactory = {
+export const cardsWithChipFactory: CardsWithChipFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
     cards: `${BASE_CSS_CLASS}__cards`,
@@ -36,7 +38,7 @@ export const cardsWithChipFactory: CardsWithChipWidgetFactory = {
         const callback: NormalizeValueCallback<
           CustomWidgetDeserializedValuesMap<typeof TYPE> | string
         > = (v, u) => {
-          const { props, chip } = u.parsedJson as CardsWithChipWidgetDeserializedValue;
+          const { props, chip } = u.parsedJson as CardsWithChipDeserializedValue;
           const cardsCount = cardHandler(
             grid.querySelector(`.${cardsWithChipFactory.cssClasses.cards}`),
             props,

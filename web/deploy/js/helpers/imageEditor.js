@@ -1,6 +1,6 @@
-import { LogSeverity } from '../types/manager.js';
-import { NodeName } from '../types/nodes.js';
-import { ImageEditorWidgetColumnId, ImageEditorWidgetControls, ImageEditorWidgetIcons, ImageEditorWidgetStatus, } from '../types/widgets.js';
+import { LogSeverity } from '../types/manager/manager.js';
+import { NodeName } from '../types/widgets/_common.js';
+import { ImageEditorColumnId, ImageEditorControls, ImageEditorIcons, ImageEditorStatus, } from '../types/widgets/imageEditor.js';
 import { debounce, getApiRoutes, getLFManager, unescapeJson } from '../utils/common.js';
 import { imageEditorFactory } from '../widgets/imageEditor.js';
 //#region buttonEventHandler
@@ -11,18 +11,18 @@ export const buttonEventHandler = async (imageviewer, actionButtons, grid, e) =>
             const dataset = imageviewer.kulData;
             const pathColumn = getPathColumn(dataset);
             const statusColumn = getStatusColumn(dataset);
-            if (statusColumn?.title === ImageEditorWidgetStatus.Pending) {
-                statusColumn.title = ImageEditorWidgetStatus.Completed;
+            if (statusColumn?.title === ImageEditorStatus.Pending) {
+                statusColumn.title = ImageEditorStatus.Completed;
                 const path = unescapeJson(pathColumn).parsedJson.title;
                 await getApiRoutes().json.update(path, dataset);
-                setGridStatus(ImageEditorWidgetStatus.Completed, grid, actionButtons);
+                setGridStatus(ImageEditorStatus.Completed, grid, actionButtons);
                 const { masonry } = await imageviewer.getComponents();
                 await imageviewer.reset();
                 await masonry.setSelectedShape(null);
             }
         };
         switch (comp.kulIcon) {
-            case ImageEditorWidgetIcons.Interrupt:
+            case ImageEditorIcons.Interrupt:
                 getApiRoutes().interrupt();
                 break;
         }
@@ -168,22 +168,22 @@ export const prepSettings = (settings, node, imageviewer) => {
     settings.innerHTML = '';
     const resetButton = document.createElement('kul-button');
     resetButton.classList.add('kul-full-width');
-    resetButton.kulIcon = ImageEditorWidgetIcons.Reset;
+    resetButton.kulIcon = ImageEditorIcons.Reset;
     resetButton.kulLabel = 'Reset';
     settings.appendChild(resetButton);
-    const controlNames = Object.keys(widgets);
+    const controlNames = Object.keys(widgets.configs);
     controlNames.forEach((controlName) => {
-        const controls = widgets[controlName];
+        const controls = widgets.configs[controlName];
         if (controls) {
             controls.forEach((controlData) => {
                 switch (controlName) {
-                    case ImageEditorWidgetControls.Slider:
+                    case ImageEditorControls.Slider:
                         settings.appendChild(createSlider(controlData, updateSettings));
                         break;
-                    case ImageEditorWidgetControls.Textfield:
+                    case ImageEditorControls.Textfield:
                         settings.appendChild(createTextfield(controlData, updateSettings));
                         break;
-                    case ImageEditorWidgetControls.Toggle:
+                    case ImageEditorControls.Toggle:
                         settings.appendChild(createToggle(controlData, updateSettings));
                         break;
                     default:
@@ -242,10 +242,10 @@ export const createToggle = (data, updateCb) => {
 //#endregion
 //#region Utils
 export const getPathColumn = (dataset) => {
-    return dataset?.columns?.find((c) => c.id === ImageEditorWidgetColumnId.Path) || null;
+    return dataset?.columns?.find((c) => c.id === ImageEditorColumnId.Path) || null;
 };
 export const getStatusColumn = (dataset) => {
-    return dataset?.columns?.find((c) => c.id === ImageEditorWidgetColumnId.Status) || null;
+    return dataset?.columns?.find((c) => c.id === ImageEditorColumnId.Status) || null;
 };
 export const resetSettings = async (settings) => {
     const controls = settings.querySelectorAll('[data-id]');
@@ -265,14 +265,14 @@ export const resetSettings = async (settings) => {
 };
 export const setGridStatus = (status, grid, actionButtons) => {
     switch (status) {
-        case ImageEditorWidgetStatus.Completed:
+        case ImageEditorStatus.Completed:
             requestAnimationFrame(() => {
                 actionButtons.interrupt.kulDisabled = true;
                 actionButtons.resume.kulDisabled = true;
             });
             grid.classList.add(imageEditorFactory.cssClasses.gridIsInactive);
             break;
-        case ImageEditorWidgetStatus.Pending:
+        case ImageEditorStatus.Pending:
             requestAnimationFrame(() => {
                 actionButtons.interrupt.kulDisabled = false;
                 actionButtons.resume.kulDisabled = false;

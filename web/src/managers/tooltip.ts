@@ -9,11 +9,7 @@ import {
   TooltipCallbacks,
   TooltipLayouts,
   TooltipUploadCallback,
-} from '../types/manager.js';
-
-/*-------------------------------------------------*/
-/*           T o o l t i p   C l a s s             */
-/*-------------------------------------------------*/
+} from '../types/manager/manager.js';
 
 export class LFTooltip {
   #CB: {
@@ -34,14 +30,15 @@ export class LFTooltip {
     link.href = `extensions/comfyui-lf/css/tooltip.css`;
     document.head.appendChild(link);
   }
-
+  //#region Initialize
   #initialize() {
     this.#TOOLTIP_ELEMENT?.remove();
     this.#TOOLTIP_ELEMENT = null;
     this.#CB = {};
     this.#LAYOUT = null;
   }
-
+  //#endregion
+  //#region Upload layout
   #uploadLayout() {
     const content = document.createElement('div');
     const upload = document.createElement('kul-upload');
@@ -63,7 +60,8 @@ export class LFTooltip {
 
     return content;
   }
-
+  //#endregion
+  //#region Button event handler
   #buttonEventHandler = async (
     upload: HTMLKulUploadElement,
     e: CustomEvent<KulButtonEventPayload>,
@@ -99,7 +97,8 @@ export class LFTooltip {
         }
     }
   };
-
+  //#endregion
+  //#region Create
   create<T extends TooltipLayouts>(
     anchor: KulDynamicPositionAnchor,
     layout: T,
@@ -133,8 +132,10 @@ export class LFTooltip {
 
     requestAnimationFrame(() => document.body.appendChild(this.#TOOLTIP_ELEMENT));
   }
-
+  //#endregion
+  //#region Destroy
   destroy() {
     this.#initialize();
   }
+  //#endregion
 }

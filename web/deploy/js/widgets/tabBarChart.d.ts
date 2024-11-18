@@ -1,2 +1,2 @@
-import { TabBarChartWidgetFactory } from '../types/widgets';
-export declare const tabBarChartFactory: TabBarChartWidgetFactory;
+import { TabBarChartFactory } from '../types/widgets/tabBarChart';
+export declare const tabBarChartFactory: TabBarChartFactory;

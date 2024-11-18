@@ -1,2 +1,2 @@
-import { ImageEditorWidgetFactory } from '../types/widgets';
-export declare const imageEditorFactory: ImageEditorWidgetFactory;
+import { ImageEditorFactory } from '../types/widgets/imageEditor';
+export declare const imageEditorFactory: ImageEditorFactory;

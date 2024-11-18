@@ -1,2 +1,2 @@
-import { MessengerWidgetFactory } from '../types/widgets';
-export declare const messengerFactory: MessengerWidgetFactory;
+import { MessengerFactory } from '../types/widgets/messenger';
+export declare const messengerFactory: MessengerFactory;

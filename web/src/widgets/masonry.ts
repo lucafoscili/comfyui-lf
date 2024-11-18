@@ -1,26 +1,26 @@
 import { KulImageEventPayload, KulMasonryEventPayload } from '../types/ketchup-lite/components';
 import { KulDataCell } from '../types/ketchup-lite/managers/kul-data/kul-data-declarations';
-import { NodeName } from '../types/nodes';
 import {
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
-  MasonryWidgetDeserializedValue,
-  MasonryWidgetFactory,
+  NodeName,
   NormalizeValueCallback,
-} from '../types/widgets';
+} from '../types/widgets/_common';
+import { MasonryDeserializedValue, MasonryFactory } from '../types/widgets/masonry';
 import { createDOMWidget, isValidNumber, normalizeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-masonry';
 const TYPE = CustomWidgetName.masonry;
 
-export const masonryFactory: MasonryWidgetFactory = {
+//#region Masonry
+export const masonryFactory: MasonryFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
     widget: `${BASE_CSS_CLASS}__widget`,
   },
   options: (masonry) => {
     return {
-      hideOnZoom: true,
+      hideOnZoom: false,
       getComp() {
         return masonry;
       },
@@ -38,8 +38,7 @@ export const masonryFactory: MasonryWidgetFactory = {
         const callback: NormalizeValueCallback<
           CustomWidgetDeserializedValuesMap<typeof TYPE> | string
         > = (_, u) => {
-          const { columns, dataset, index, name, view } =
-            u.parsedJson as MasonryWidgetDeserializedValue;
+          const { columns, dataset, index, name, view } = u.parsedJson as MasonryDeserializedValue;
           if (columns) {
             masonry.kulColumns = columns;
           }
@@ -82,7 +81,8 @@ export const masonryFactory: MasonryWidgetFactory = {
     return { widget: createDOMWidget(TYPE, wrapper, node, options) };
   },
 };
-
+//#endregion
+//#region eventHandler
 const masonryEventHandler = (e: CustomEvent<KulMasonryEventPayload>) => {
   const { comp, eventType, originalEvent, selectedShape } = e.detail;
   const masonry = comp.rootElement as HTMLKulMasonryElement;
@@ -103,3 +103,4 @@ const masonryEventHandler = (e: CustomEvent<KulMasonryEventPayload>) => {
       break;
   }
 };
+//#endregion

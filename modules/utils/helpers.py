@@ -1084,6 +1084,25 @@ def process_model(model_type, model_name, folder):
         "saved_info": saved_info
     }
 # endregion
+# region randomize_from_history
+def randomize_from_history(nodes: list[dict], seed: int) -> bool:
+    """
+    Randomly selects a previously used boolean value from the history using a given seed.
+    
+    Args:
+        nodes (list[dict]): List of nodes containing the history.
+        seed (int): Seed to control the randomness.
+
+    Returns:
+        bool: Randomly selected boolean value.
+    """
+    values = list({node["value"] for node in nodes})
+    if not values:
+        return False
+
+    random.seed(seed)
+    return random.choice([value.lower() == 'true' for value in values])
+# endregion
 # region resize_and_crop_image
 def resize_and_crop_image(image_tensor: torch.Tensor, resize_method: str, target_height: int, target_width: int, resize_mode: str, pad_color: tuple):
     """

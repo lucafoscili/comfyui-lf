@@ -1,16 +1,15 @@
 import {
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
-  CarouselWidgetFactory,
   NormalizeValueCallback,
-  CarouselWidgetDeserializedValue,
-} from '../types/widgets';
+} from '../types/widgets/_common';
+import { CarouselDeserializedValue, CarouselFactory } from '../types/widgets/carousel';
 import { createDOMWidget, normalizeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-carousel';
 const TYPE = CustomWidgetName.carousel;
 
-export const carouselFactory: CarouselWidgetFactory = {
+export const carouselFactory: CarouselFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
     widget: `${BASE_CSS_CLASS}__widget`,
@@ -28,7 +27,7 @@ export const carouselFactory: CarouselWidgetFactory = {
         const callback: NormalizeValueCallback<
           CustomWidgetDeserializedValuesMap<typeof TYPE> | string
         > = (_, u) => {
-          const dataset = u.parsedJson as CarouselWidgetDeserializedValue;
+          const dataset = u.parsedJson as CarouselDeserializedValue;
           carousel.kulData = dataset || {};
         };
 

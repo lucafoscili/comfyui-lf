@@ -1,2 +1,2 @@
-import { HistoryWidgetFactory } from '../types/widgets';
-export declare const historyFactory: HistoryWidgetFactory;
+import { HistoryFactory } from '../types/widgets/history';
+export declare const historyFactory: HistoryFactory;

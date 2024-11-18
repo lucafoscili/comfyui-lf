@@ -1,3 +1,4 @@
+import { BaseAPIPayload } from '../types/api/api';
 import { KulListEventPayload, KulToggleEventPayload } from '../types/ketchup-lite/components';
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
 import { KulButton } from '../types/ketchup-lite/components/kul-button/kul-button';
@@ -8,7 +9,6 @@ import {
 import { KulList } from '../types/ketchup-lite/components/kul-list/kul-list';
 import { KulToggle } from '../types/ketchup-lite/components/kul-toggle/kul-toggle';
 import { KulToggleEvent } from '../types/ketchup-lite/components/kul-toggle/kul-toggle-declarations';
-import { BaseAPIPayload } from '../types/manager';
 import {
   getApiRoutes,
   getKulManager,

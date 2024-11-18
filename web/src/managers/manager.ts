@@ -3,509 +3,45 @@ import { app } from '/scripts/app.js';
 import { defineCustomElements } from '../ketchup-lite/loader.js';
 import { getKulManager } from '../utils/common.js';
 import { LFWidgets } from './widgets.js';
-import {
-  BaseAPIPayload,
-  ComfyAPIs,
-  ExtensionCallback,
-  GetAnalyticsAPIPayload,
-  GetImageAPIPayload,
-  GetMetadataAPIPayload,
-  LFEndpoints,
-  LogSeverity,
-  ProcessImageAPIPayload,
-} from '../types/manager.js';
-import { CustomWidgetGetter, Extension, NodeName } from '../types/nodes.js';
-import { EventName } from '../types/events.js';
+import { EventName } from '../types/events/events.js';
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
 import { LFTooltip } from './tooltip';
 import { KulDataDataset } from '../types/ketchup-lite/components.js';
 import { KulDom } from '../types/ketchup-lite/managers/kul-manager/kul-manager-declarations.js';
 import { KulManager } from '../types/ketchup-lite/managers/kul-manager/kul-manager.js';
-import { CustomWidgetName } from '../types/widgets.js';
+import { CustomWidgetName, NodeName } from '../types/widgets/_common.js';
 import {
+  getLogStyle,
   NODE_WIDGET_MAP,
   onConnectionsChange,
   onDrawBackground,
   onNodeCreated,
 } from '../helpers/manager.js';
-
-/*-------------------------------------------------*/
-/*                 L F   C l a s s                 */
-/*-------------------------------------------------*/
+import { APIRoutes } from '../types/api/api.js';
+import {
+  CustomWidgetGetter,
+  Extension,
+  ExtensionCallback,
+  LogSeverity,
+} from '../types/manager/manager.js';
+import { ANALYTICS_API } from '../api/analytics.js';
+import { BACKUP_API } from '../api/backup.js';
+import { IMAGE_API } from '../api/image.js';
+import { JSON_API } from '../api/json.js';
+import { METADATA_API } from '../api/metadata.js';
 
 export interface LFWindow extends Window {
   comfyAPI: ComfyUI;
   lfManager: LFManager;
 }
 
-const LOG_STYLE = {
-  fontFamily: 'var(--kul-font-family-monospace)',
-  margin: '0',
-  maxWidth: '100%',
-  overflow: 'hidden',
-  padding: '4px 8px',
-  textOverflow: 'ellipsis',
-};
-
 export class LFManager {
-  #APIS: ComfyAPIs = {
-    analytics: {
-      clear: async (type) => {
-        const payload: BaseAPIPayload = {
-          message: '',
-          status: LogSeverity.Info,
-        };
-
-        try {
-          const body = new FormData();
-          body.append('type', type);
-
-          const response: Response = await api.fetchApi(LFEndpoints.ClearAnalytics, {
-            body,
-            method: 'POST',
-          });
-
-          const code = response.status;
-
-          switch (code) {
-            case 200:
-              const p: BaseAPIPayload = await response.json();
-              if (p.status === 'success') {
-                payload.message = p.message;
-                payload.status = LogSeverity.Error;
-                this.#CACHED_DATASETS.usage = {};
-              }
-              break;
-            case 404:
-              payload.message = `Analytics not found: ${type}. Skipping deletion.`;
-              payload.status = LogSeverity.Info;
-              break;
-            default:
-              payload.message = `Unexpected response from the clear-analytics ${type} API: ${p.message}`;
-              payload.status = LogSeverity.Error;
-              break;
-          }
-        } catch (error) {
-          payload.message = error;
-          payload.status = LogSeverity.Error;
-        }
-
-        this.log(payload.message, { payload }, payload.status);
-        return payload;
-      },
-      get: async (directory, type) => {
-        const payload: GetAnalyticsAPIPayload = {
-          data: {},
-          message: '',
-          status: LogSeverity.Info,
-        };
-
-        if (!directory || !type) {
-          payload.message = `Missing directory (received ${directory}) or  (received ${type}).`;
-          payload.status = LogSeverity.Error;
-          this.log(payload.message, { payload }, LogSeverity.Error);
-          return payload;
-        }
-
-        try {
-          const body = new FormData();
-          body.append('directory', directory);
-          body.append('type', type);
-
-          const response = await api.fetchApi(LFEndpoints.GetAnalytics, {
-            body,
-            method: 'POST',
-          });
-
-          const code = response.status;
-
-          switch (code) {
-            case 200:
-              const p: GetAnalyticsAPIPayload = await response.json();
-              if (p.status === 'success') {
-                payload.data = p.data;
-                payload.message = 'Analytics data fetched successfully.';
-                payload.status = LogSeverity.Success;
-                this.log(payload.message, { payload }, payload.status);
-                this.#CACHED_DATASETS.usage = payload.data;
-              }
-              break;
-            case 404:
-              payload.status = LogSeverity.Info;
-              this.log(`${type} analytics file not found.`, { payload }, payload.status);
-              break;
-            default:
-              payload.message = `Unexpected response from the get-analytics ${type} API: ${p.message}`;
-              payload.status = LogSeverity.Error;
-              break;
-          }
-        } catch (error) {
-          payload.message = error;
-          payload.status = LogSeverity.Error;
-        }
-
-        this.log(payload.message, { payload }, payload.status);
-        return payload;
-      },
-    },
-    backup: {
-      new: async (backupType = 'automatic') => {
-        const payload: BaseAPIPayload = {
-          message: '',
-          status: LogSeverity.Info,
-        };
-
-        try {
-          const body = new FormData();
-          body.append('backup_type', backupType);
-          const response = await api.fetchApi(LFEndpoints.NewBackup, { body, method: 'POST' });
-
-          const code = response.status;
-
-          switch (code) {
-            case 200:
-              const p: BaseAPIPayload = await response.json();
-              if (p.status === 'success') {
-                payload.message = p.message;
-                payload.status = LogSeverity.Success;
-              }
-              break;
-            default:
-              payload.message = 'Unexpected response from the API!';
-              payload.status = LogSeverity.Error;
-              break;
-          }
-        } catch (error) {
-          payload.message = error;
-          payload.status = LogSeverity.Error;
-        }
-
-        this.log(payload.message, { payload }, payload.status);
-        return payload;
-      },
-    },
-    image: {
-      get: async (directory) => {
-        const payload: GetImageAPIPayload = {
-          data: {},
-          message: '',
-          status: LogSeverity.Info,
-        };
-
-        try {
-          const body = new FormData();
-          body.append('directory', directory);
-
-          const response = await api.fetchApi(LFEndpoints.GetImage, {
-            body,
-            method: 'POST',
-          });
-
-          const code = response.status;
-
-          switch (code) {
-            case 200:
-              const p: GetImageAPIPayload = await response.json();
-              if (p.status === 'success') {
-                payload.data = p.data;
-                payload.message = 'Analytics data fetched successfully.';
-                payload.status = LogSeverity.Success;
-                this.log(payload.message, { payload }, payload.status);
-                this.#CACHED_DATASETS.usage = payload.data;
-              }
-              break;
-            default:
-              payload.message = `Unexpected response from the get-image API: ${response.text}`;
-              payload.status = LogSeverity.Error;
-              break;
-          }
-        } catch (error) {
-          payload.message = error;
-          payload.status = LogSeverity.Error;
-        }
-
-        this.log(payload.message, { payload }, payload.status);
-        return payload;
-      },
-      process: async (url, type, settings) => {
-        const payload: ProcessImageAPIPayload = {
-          data: '',
-          message: '',
-          status: LogSeverity.Info,
-        };
-
-        try {
-          const body = new FormData();
-          body.append('url', url);
-          body.append('type', type);
-          body.append('settings', JSON.stringify(settings));
-
-          const response = await api.fetchApi(LFEndpoints.ProcessImage, {
-            body,
-            method: 'POST',
-          });
-
-          const code = response.status;
-
-          switch (code) {
-            case 200:
-              const p: ProcessImageAPIPayload = await response.json();
-              if (p.status === 'success') {
-                payload.data = p.data;
-                payload.message = 'Image processed successfully.';
-                payload.status = LogSeverity.Success;
-                this.log(payload.message, { payload }, payload.status);
-              }
-              break;
-            default:
-              payload.message = `Unexpected response from the process-image API: ${response.text}`;
-              payload.status = LogSeverity.Error;
-              break;
-          }
-        } catch (error) {
-          payload.message = error;
-          payload.status = LogSeverity.Error;
-        }
-
-        this.log(payload.message, { payload }, payload.status);
-        return payload;
-      },
-    },
-    json: {
-      get: async (filePath) => {
-        const payload = {
-          data: {},
-          message: '',
-          status: LogSeverity.Info,
-        };
-
-        try {
-          const body = new FormData();
-          body.append('file_path', filePath);
-
-          const response = await api.fetchApi(LFEndpoints.GetJson, {
-            body,
-            method: 'POST',
-          });
-
-          const code = response.status;
-
-          switch (code) {
-            case 200:
-              const p = await response.json();
-              if (p.status === 'success') {
-                payload.data = p.data;
-                payload.message = 'JSON data fetched successfully.';
-                payload.status = LogSeverity.Success;
-                this.log(payload.message, { payload }, payload.status);
-                this.#CACHED_DATASETS.usage = payload.data;
-              }
-              break;
-            default:
-              payload.message = `Unexpected response from the get-json API: ${await response.text()}`;
-              payload.status = LogSeverity.Error;
-              break;
-          }
-        } catch (error) {
-          payload.message = error.toString();
-          payload.status = LogSeverity.Error;
-        }
-
-        this.log(payload.message, { payload }, payload.status);
-        return payload;
-      },
-      update: async (filePath, dataset) => {
-        const payload: BaseAPIPayload = {
-          message: '',
-          status: LogSeverity.Info,
-        };
-
-        const body = new FormData();
-        body.append('file_path', filePath);
-        body.append('dataset', JSON.stringify(dataset));
-
-        try {
-          const response = await api.fetchApi(LFEndpoints.UpdateJson, {
-            body,
-            method: 'POST',
-          });
-
-          const code = response.status;
-
-          switch (code) {
-            case 200:
-              const p: BaseAPIPayload = await response.json();
-              if (p.status === 'success') {
-                payload.message = p.message;
-                payload.status = LogSeverity.Success;
-              }
-              break;
-            default:
-              payload.message = 'Unexpected response from the API!';
-              payload.status = LogSeverity.Error;
-              break;
-          }
-        } catch (error) {
-          payload.message = error;
-          payload.status = LogSeverity.Error;
-        }
-
-        this.log(payload.message, { payload }, payload.status);
-        return payload;
-      },
-    },
-    metadata: {
-      clear: async () => {
-        const payload: BaseAPIPayload = {
-          message: '',
-          status: LogSeverity.Info,
-        };
-
-        try {
-          const response = await api.fetchApi(LFEndpoints.ClearMetadata, {
-            method: 'POST',
-          });
-
-          const code = response.status;
-
-          switch (code) {
-            case 200:
-              const p: BaseAPIPayload = await response.json();
-              if (p.status === 'success') {
-                payload.message = p.message;
-                payload.status = LogSeverity.Success;
-              }
-              break;
-            default:
-              payload.message = 'Unexpected response from the API!';
-              payload.status = LogSeverity.Error;
-              break;
-          }
-        } catch (error) {
-          payload.message = error;
-          payload.status = LogSeverity.Error;
-        }
-
-        this.log(payload.message, { payload }, payload.status);
-        return payload;
-      },
-      get: async (hash) => {
-        const payload: GetMetadataAPIPayload = {
-          data: null,
-          message: '',
-          status: LogSeverity.Info,
-        };
-
-        try {
-          const response = await fetch(`https://civitai.com/api/v1/model-versions/by-hash/${hash}`);
-
-          const code = response.status;
-
-          switch (code) {
-            case 200:
-              const p: GetMetadataAPIPayload['data'] = await response.json();
-              payload.data = p;
-              payload.message = 'Metadata succesfully fetched from CivitAI.';
-              payload.status = LogSeverity.Success;
-              break;
-            case 404:
-              payload.message = 'Model not found on CivitAI!';
-              payload.status = LogSeverity.Info;
-              break;
-            default:
-              payload.message = 'Unexpected response from the API!';
-              payload.status = LogSeverity.Error;
-              break;
-          }
-        } catch (error) {
-          payload.message = error;
-          payload.status = LogSeverity.Error;
-        }
-
-        this.log(payload.message, { payload }, payload.status);
-        return payload;
-      },
-      save: async (modelPath, dataset, forcedSave = false) => {
-        const payload: GetMetadataAPIPayload = {
-          data: null,
-          message: '',
-          status: LogSeverity.Info,
-        };
-
-        try {
-          const body = new FormData();
-          body.append('model_path', modelPath);
-          body.append('metadata', JSON.stringify(dataset));
-          body.append('forced_save', String(forcedSave).valueOf());
-
-          const response = await api.fetchApi(LFEndpoints.SaveMetadata, {
-            method: 'POST',
-            body,
-          });
-
-          const code = response.status;
-
-          switch (code) {
-            case 200:
-              const p: BaseAPIPayload = await response.json();
-              if (p.status === 'success') {
-                payload.message = p.message;
-                payload.status = LogSeverity.Success;
-              }
-              break;
-            default:
-              payload.message = 'Unexpected response from the API!';
-              payload.status = LogSeverity.Error;
-              break;
-          }
-        } catch (error) {
-          payload.message = error;
-          payload.status = LogSeverity.Error;
-        }
-
-        this.log(payload.message, { payload }, payload.status);
-        return payload;
-      },
-      updateCover: async (modelPath, b64image) => {
-        const payload: BaseAPIPayload = {
-          message: '',
-          status: LogSeverity.Info,
-        };
-
-        try {
-          const body = new FormData();
-          body.append('model_path', modelPath);
-          body.append('base64_image', b64image);
-
-          const response = await api.fetchApi(LFEndpoints.UpdateMetadataCover, {
-            method: 'POST',
-            body,
-          });
-
-          const code = response.status;
-
-          switch (code) {
-            case 200:
-              const p: BaseAPIPayload = await response.json();
-              if (p.status === 'success') {
-                payload.message = p.message;
-                payload.status = LogSeverity.Success;
-              }
-              break;
-            default:
-              payload.message = 'Unexpected response from the API!';
-              payload.status = LogSeverity.Error;
-              break;
-          }
-        } catch (error) {
-          payload.message = error;
-          payload.status = LogSeverity.Error;
-        }
-
-        this.log(payload.message, { payload }, payload.status);
-        return payload;
-      },
-    },
+  #APIS: APIRoutes = {
+    analytics: ANALYTICS_API,
+    backup: BACKUP_API,
+    image: IMAGE_API,
+    json: JSON_API,
+    metadata: METADATA_API,
     comfyUi: () => (window as unknown as LFWindow).comfyAPI,
     event: (name, callback) => {
       api.addEventListener(name, callback);
@@ -574,27 +110,7 @@ export class LFManager {
     this.#MANAGERS.tooltip = new LFTooltip();
     this.#MANAGERS.widgets = new LFWidgets();
   }
-
-  getApiRoutes(): ComfyAPIs {
-    return this.#APIS;
-  }
-
-  getCachedDatasets() {
-    return this.#CACHED_DATASETS;
-  }
-
-  getDebugDataset() {
-    return { article: this.#DEBUG_ARTICLE, dataset: this.#DEBUG_DATASET };
-  }
-
-  getEventName(node: NodeName) {
-    return node.toLowerCase().replace('_', '-') as EventName;
-  }
-
-  getManagers() {
-    return this.#MANAGERS;
-  }
-
+  //#region Initialize
   initialize() {
     if (this.#INITIALIZED) {
       this.log(
@@ -652,7 +168,27 @@ export class LFManager {
 
     this.#INITIALIZED = true;
   }
+  //#endregion
+  //#region Getters
+  getApiRoutes(): APIRoutes {
+    return this.#APIS;
+  }
 
+  getCachedDatasets() {
+    return this.#CACHED_DATASETS;
+  }
+
+  getDebugDataset() {
+    return { article: this.#DEBUG_ARTICLE, dataset: this.#DEBUG_DATASET };
+  }
+
+  getEventName(node: NodeName) {
+    return node.toLowerCase().replace('_', '-') as EventName;
+  }
+
+  getManagers() {
+    return this.#MANAGERS;
+  }
   isBackupEnabled() {
     return this.#AUTOMATIC_BACKUP;
   }
@@ -660,11 +196,13 @@ export class LFManager {
   isDebug() {
     return this.#DEBUG;
   }
-
+  //#endregion
+  //#region Log
   log(message: string, args?: Record<string, unknown>, severity = LogSeverity.Info) {
     if (!this.#DEBUG) {
       return;
     }
+
     let colorCode = '';
 
     switch (severity) {
@@ -698,7 +236,7 @@ export class LFManager {
           ? '🟠 '
           : '🔵 ';
       this.#DEBUG_DATASET.unshift({
-        cssStyle: LOG_STYLE,
+        cssStyle: getLogStyle(),
         id,
         tagName: 'pre',
         value: icon + message,
@@ -711,7 +249,8 @@ export class LFManager {
       args,
     );
   }
-
+  //#endregion
+  //#region Setters
   setDebugDataset(article: HTMLKulArticleElement, dataset: KulArticleNode[]) {
     this.#DEBUG_ARTICLE = article;
     this.#DEBUG_DATASET = dataset;
@@ -738,6 +277,7 @@ export class LFManager {
 
     return this.#DEBUG;
   }
+  //#endregion
 }
 
 const WINDOW = window as unknown as LFWindow;

@@ -1,18 +1,18 @@
 import { KulChipEventPayload } from '../types/ketchup-lite/components';
 import { KulChip } from '../types/ketchup-lite/components/kul-chip/kul-chip';
-import { NodeName } from '../types/nodes';
 import {
   CustomWidgetName,
-  ChipWidgetFactory,
   CustomWidgetDeserializedValuesMap,
   NormalizeValueCallback,
-} from '../types/widgets';
+  NodeName,
+} from '../types/widgets/_common';
+import { ChipFactory } from '../types/widgets/chip';
 import { createDOMWidget, normalizeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-chip';
 const TYPE = CustomWidgetName.chip;
 
-export const chipFactory: ChipWidgetFactory = {
+export const chipFactory: ChipFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
     chip: `${BASE_CSS_CLASS}__widget`,

@@ -12,6 +12,7 @@ export var NodeName;
     NodeName["colorAnalysis"] = "LF_ColorAnalysis";
     NodeName["compareImages"] = "LF_CompareImages";
     NodeName["controlPanel"] = "LF_ControlPanel";
+    NodeName["desaturationEffect"] = "LF_DesaturationEffect";
     NodeName["displayBoolean"] = "LF_DisplayBoolean";
     NodeName["displayFloat"] = "LF_DisplayFloat";
     NodeName["displayInteger"] = "LF_DisplayInteger";

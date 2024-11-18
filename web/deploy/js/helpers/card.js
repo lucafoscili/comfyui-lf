@@ -1,4 +1,4 @@
-import { LogSeverity } from '../types/manager.js';
+import { LogSeverity } from '../types/manager/manager.js';
 import { getLFManager, getApiRoutes, unescapeJson } from '../utils/common.js';
 export const CARD_PROPS_TO_SERIALIZE = ['kulData', 'kulStyle'];
 export const cardHandler = (container, propsArray) => {

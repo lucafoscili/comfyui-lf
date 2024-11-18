@@ -1,19 +1,18 @@
-import { LogSeverity } from '../types/manager';
-import { NodeName } from '../types/nodes';
+import { LogSeverity } from '../types/manager/manager';
 import {
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
-  TextareaWidgetDeserializedValue,
-  TextareaWidgetFactory,
+  NodeName,
   NormalizeValueCallback,
-} from '../types/widgets';
+} from '../types/widgets/_common';
+import { TextareaDeserializedValue, TextareaFactory } from '../types/widgets/textarea';
 import { createDOMWidget, findWidget, getLFManager, normalizeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-textarea';
 const TYPE = CustomWidgetName.textarea;
 let VALIDATION_TIMEOUT: NodeJS.Timeout;
 
-export const textareaFactory: TextareaWidgetFactory = {
+export const textareaFactory: TextareaFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
     widget: `${BASE_CSS_CLASS}__widget`,
@@ -33,7 +32,7 @@ export const textareaFactory: TextareaWidgetFactory = {
         const callback: NormalizeValueCallback<
           CustomWidgetDeserializedValuesMap<typeof TYPE> | string
         > = (_, u) => {
-          const parsedJson = u.parsedJson as TextareaWidgetDeserializedValue;
+          const parsedJson = u.parsedJson as TextareaDeserializedValue;
           textarea.value = JSON.stringify(parsedJson, null, 2) || '{}';
         };
 

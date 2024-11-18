@@ -1,22 +1,22 @@
 import {
-  CardWidgetDeserializedValue,
-  CardWidgetFactory,
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
+  NodeName,
   NormalizeValueCallback,
-} from '../types/widgets';
+} from '../types/widgets/_common';
 import { cardHandler, getCardProps } from '../helpers/card';
 import { createDOMWidget, getCustomWidget, normalizeValue } from '../utils/common';
-import { NodeName } from '../types/nodes';
 import { cardPlaceholders, fetchModelMetadata } from '../utils/api';
 import { KulButton } from '../types/ketchup-lite/components/kul-button/kul-button';
-import { APIMetadataEntry } from '../types/manager';
 import { KulButtonEventPayload } from '../types/ketchup-lite/components';
+import { CardDeserializedValue, CardFactory } from '../types/widgets/card';
+import { APIMetadataEntry } from '../types/api/api';
 
 const BASE_CSS_CLASS = 'lf-card';
 const TYPE = CustomWidgetName.card;
 
-export const cardFactory: CardWidgetFactory = {
+//#region Card factory
+export const cardFactory: CardFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
     contentHasButton: `${BASE_CSS_CLASS}--has-button`,
@@ -37,7 +37,7 @@ export const cardFactory: CardWidgetFactory = {
         const callback: NormalizeValueCallback<
           CustomWidgetDeserializedValuesMap<typeof TYPE> | string
         > = (_, u) => {
-          const { props } = u.parsedJson as CardWidgetDeserializedValue;
+          const { props } = u.parsedJson as CardDeserializedValue;
           const len = props?.length > 1 ? 2 : 1;
           grid.style.setProperty('--card-grid', `repeat(1, 1fr) / repeat(${len}, 1fr)`);
           cardHandler(grid, props);
@@ -72,7 +72,9 @@ export const cardFactory: CardWidgetFactory = {
     return { widget: createDOMWidget(TYPE, wrapper, node, options) };
   },
 };
+//#endregion
 
+//#region selectorButton
 const selectorButton = (grid: HTMLDivElement, node: NodeType) => {
   const cb = (e: CustomEvent<KulButtonEventPayload>) => {
     const { comp, eventType } = e.detail;
@@ -96,7 +98,7 @@ const selectorButton = (grid: HTMLDivElement, node: NodeType) => {
           });
 
           if (models.length) {
-            const value: CardWidgetDeserializedValue = {
+            const value: CardDeserializedValue = {
               props: [],
             };
             cardPlaceholders(widget, cards.length);
@@ -137,3 +139,4 @@ const selectorButton = (grid: HTMLDivElement, node: NodeType) => {
 
   return button;
 };
+//#endregion

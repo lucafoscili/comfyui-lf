@@ -1,2 +1,2 @@
-import { TextareaWidgetFactory } from '../types/widgets';
-export declare const textareaFactory: TextareaWidgetFactory;
+import { TextareaFactory } from '../types/widgets/textarea';
+export declare const textareaFactory: TextareaFactory;

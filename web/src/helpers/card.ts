@@ -1,6 +1,6 @@
 import { KulCardEventPayload } from '../types/ketchup-lite/components';
 import { KulCard } from '../types/ketchup-lite/components/kul-card/kul-card';
-import { LogSeverity, TooltipUploadCallback } from '../types/manager';
+import { LogSeverity, TooltipUploadCallback } from '../types/manager/manager';
 import { getLFManager, getApiRoutes, unescapeJson } from '../utils/common';
 
 export const CARD_PROPS_TO_SERIALIZE = ['kulData', 'kulStyle'];
