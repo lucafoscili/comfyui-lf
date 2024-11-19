@@ -162,6 +162,10 @@
 
 .lf-imageeditor {
   & {
+    --kul-slider-label-min-width: 128px;
+    --kul-slider-label-overflow: hidden;
+    --kul-slider-label-white-space: pre;
+
     @include lf-root($max: false);
     position: relative;
   }
@@ -206,7 +210,7 @@
     display: grid;
     grid-area: settings;
     height: 100%;
-    padding: 1.25em;
+    padding: 12px 24px;
     width: 100%;
   }
 

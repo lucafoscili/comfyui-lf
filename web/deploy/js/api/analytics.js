@@ -3,6 +3,7 @@ import { APIEndpoints, } from '../types/api/api.js';
 import { LogSeverity } from '../types/manager/manager.js';
 import { getLFManager } from '../utils/common.js';
 export const ANALYTICS_API = {
+    //#region clear
     clear: async (type) => {
         const lfManager = getLFManager();
         const payload = {
@@ -43,6 +44,8 @@ export const ANALYTICS_API = {
         lfManager.log(payload.message, { payload }, payload.status);
         return payload;
     },
+    //#endregion
+    //#region get
     get: async (directory, type) => {
         const lfManager = getLFManager();
         const payload = {
@@ -93,4 +96,5 @@ export const ANALYTICS_API = {
         lfManager.log(payload.message, { payload }, payload.status);
         return payload;
     },
+    //#endregion
 };

@@ -10,7 +10,6 @@ from server import PromptServer
 from urllib.parse import urlparse, parse_qs
 
 from ..utils.constants import BLUE_CHANNEL_ID, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, GREEN_CHANNEL_ID, Input, RED_CHANNEL_ID, RESAMPLERS
-from ..utils.filters import clarity_effect, desaturate_effect, vignette_effect
 from ..utils.helpers import create_compare_node, create_masonry_node, create_resize_node, get_comfy_dir, get_resource_url, normalize_input_image, normalize_input_list, normalize_json_input, normalize_list_item, normalize_list_to_value, normalize_output_image, not_none, numpy_to_tensor, pil_to_tensor, resize_and_crop_image, resize_image, resize_to_square, resolve_filepath, tensor_to_numpy, tensor_to_pil
 
 CATEGORY = f"{CATEGORY_PREFIX}/Image"
@@ -105,96 +104,6 @@ class LF_BlurImages:
 
         return (image_batch[0], image_list, blurred_file_names, len(image_list))
 # endregion
-# region LF_ClarityEffect
-class LF_ClarityEffect:
-    @classmethod
-    def INPUT_TYPES(self):
-        return {
-            "required": {
-                "image": (Input.IMAGE, {
-                    "tooltip": "Input image tensor or a list of image tensors."
-                }),
-                "clarity_strength": (Input.FLOAT, {
-                    "default": 0.5, 
-                    "min": 0.0, 
-                    "max": 5.0, 
-                    "step": 0.1, 
-                    "tooltip": "Controls the amount of contrast enhancement in midtones."
-                }),
-                "sharpen_amount": (Input.FLOAT, {
-                    "default": 1.0, 
-                    "min": 0.0, 
-                    "max": 5.0, 
-                    "step": 0.1, 
-                    "tooltip": "Controls how much sharpening is applied to the image."
-                }),
-                "blur_kernel_size": (Input.INTEGER, {
-                    "default": 7, 
-                    "min": 1, 
-                    "max": 15, 
-                    "step": 2, 
-                    "tooltip": "Controls the size of the Gaussian blur kernel. Higher values mean more smoothing."
-                }),
-            },
-            "optional": {
-                "ui_widget": (Input.KUL_COMPARE, {
-                    "default": {}
-                })
-            },
-            "hidden": {
-                "node_id": "UNIQUE_ID"
-            }
-        }
-
-    CATEGORY = CATEGORY
-    FUNCTION = FUNCTION
-    OUTPUT_IS_LIST = (False, True)
-    RETURN_NAMES = ("image", "image_list")
-    RETURN_TYPES = ("IMAGE", "IMAGE")
-
-    def on_exec(self, **kwargs: dict):
-        image: list[torch.Tensor] = normalize_input_image(kwargs.get("image"))
-        clarity_strength: float = normalize_list_to_value(kwargs.get("clarity_strength"))
-        sharpen_amount: float = normalize_list_to_value(kwargs.get("sharpen_amount"))
-        blur_kernel_size: int = normalize_list_to_value(kwargs.get("blur_kernel_size"))
-
-        nodes: list[dict] = []
-        dataset: dict = { "nodes": nodes }
-        
-        processed_images: list[torch.Tensor] = []
-
-        for index, img in enumerate(image):
-            pil_image = tensor_to_pil(img)
-
-            output_file_s, subfolder_s, filename_s = resolve_filepath(
-                    filename_prefix="clarity_s",
-                    image=img,
-            )
-            pil_image.save(output_file_s, format="PNG")
-            filename_s = get_resource_url(subfolder_s, filename_s, "temp")
-
-            processed = clarity_effect(img, clarity_strength, sharpen_amount, blur_kernel_size)
-            pil_image = tensor_to_pil(processed)
-
-            output_file_t, subfolder_t, filename_t = resolve_filepath(
-                    filename_prefix="clarity_t",
-                    image=processed,
-            )
-            pil_image.save(output_file_t, format="PNG")
-            filename_t = get_resource_url(subfolder_t, filename_t, "temp")
-
-            nodes.append(create_compare_node(filename_s, filename_t, index))
-            processed_images.append(processed)
-        
-        batch_list, image_list = normalize_output_image(processed_images)
-
-        PromptServer.instance.send_sync(f"{EVENT_PREFIX}clarityeffect", {
-            "node": kwargs.get("node_id"),
-            "dataset": dataset,
-        })
-        
-        return (batch_list[0], image_list)
-# endregion
 # region LF_CompareImages
 class LF_CompareImages:
     @classmethod
@@ -272,79 +181,6 @@ class LF_CompareImages:
 
         return (image_batch[0], image_list, all_images_list, dataset)
 # endregion
-# region LF_DesaturationEffect
-class LF_DesaturationEffect:
-    @classmethod
-    def INPUT_TYPES(self):
-        return {
-            "required": {
-                "image": (Input.IMAGE, {
-                    "tooltip": "Input image tensor or a list of image tensors."
-                }),
-                "desaturation_level": (Input.FLOAT, {
-                    "default": 0.5, 
-                    "min": 0.0, 
-                    "max": 1.0, 
-                    "step": 0.1, 
-                    "tooltip": "Controls the intensity of desaturation. 0 is no effect, 1 is fully desaturated."
-                }),
-            },
-            "optional": {
-                "ui_widget": (Input.KUL_COMPARE, {
-                    "default": {}
-                })
-            },
-            "hidden": {
-                "node_id": "UNIQUE_ID"
-            }
-        }
-
-    CATEGORY = CATEGORY
-    FUNCTION = FUNCTION
-    OUTPUT_IS_LIST = (False, True)
-    RETURN_NAMES = ("image", "image_list")
-    RETURN_TYPES = ("IMAGE", "IMAGE")
-
-    def on_exec(self, **kwargs: dict):
-        image: list[torch.Tensor] = normalize_input_image(kwargs.get("image"))
-        desaturation_level: float = normalize_list_to_value(kwargs.get("desaturation_level"))
-
-        nodes: list[dict] = []
-        dataset: dict = { "nodes": nodes }
-        
-        processed_images: list[torch.Tensor] = []
-
-        for index, img in enumerate(image):
-            pil_image = tensor_to_pil(img)
-
-            output_file_s, subfolder_s, filename_s = resolve_filepath(
-                filename_prefix="desaturation_s",
-                image=img,
-            )
-            pil_image.save(output_file_s, format="PNG")
-            filename_s = get_resource_url(subfolder_s, filename_s, "temp")
-
-            processed = desaturate_effect(img, desaturation_level)
-            pil_image = tensor_to_pil(processed)
-
-            output_file_t, subfolder_t, filename_t = resolve_filepath(
-                filename_prefix="desaturation_t",
-                image=processed,
-            )
-            pil_image.save(output_file_t, format="PNG")
-            filename_t = get_resource_url(subfolder_t, filename_t, "temp")
-
-            nodes.append(create_compare_node(filename_s, filename_t, index))
-            processed_images.append(processed)
-
-        batch_list, image_list = normalize_output_image(processed_images)
-
-        PromptServer.instance.send_sync(f"{EVENT_PREFIX}desaturationeffect", {
-            "node": kwargs.get("node_id"),
-            "dataset": dataset,
-        })
-        
-        return (batch_list[0], image_list)
 # region LF_ImagesEditingBreakpoint
 class LF_ImagesEditingBreakpoint:
     @classmethod
@@ -1026,103 +862,9 @@ class LF_ViewImages:
         
         return (batch_list[0], image_list)
 # endregion
-# region LF_VignetteEffect
-class LF_VignetteEffect:
-    @classmethod
-    def INPUT_TYPES(self):
-        return {
-            "required": {
-                "image": (Input.IMAGE, {
-                    "tooltip": "Input image tensor or a list of image tensors."
-                }),
-                "intensity": (Input.FLOAT, {
-                    "default": 0.5,
-                    "min": 0.0,
-                    "max": 1.0,
-                    "step": 0.05,
-                    "tooltip": "Controls the darkness of the vignette effect. Higher values mean darker edges."
-                }),
-                "radius": (Input.FLOAT, {
-                    "default": 0.75,
-                    "min": 0.0,
-                    "max": 1.0,
-                    "step": 0.05,
-                    "tooltip": "Controls the size of the vignette effect. Lower values mean a smaller vignette."
-                }),
-                "shape": (["elliptical", "circular"], {
-                    "default": "elliptical",
-                    "tooltip": "Selects the shape of the vignette effect."
-                }),
-                "color": (Input.STRING, {
-                    "default": "000000", 
-                    "tooltip": "Color to use for padding if 'pad' mode is selected (hexadecimal)."
-                })
-            },
-            "optional": {
-                "ui_widget": (Input.KUL_COMPARE, {
-                    "default": {}
-                })
-            },
-            "hidden": {
-                "node_id": "UNIQUE_ID"
-            }
-        }
-
-    CATEGORY = CATEGORY
-    FUNCTION = FUNCTION
-    OUTPUT_IS_LIST = (False, True)
-    RETURN_NAMES = ("image", "image_list")
-    RETURN_TYPES = ("IMAGE", "IMAGE")
-
-    def on_exec(self, **kwargs: dict):
-        image: list[torch.Tensor] = normalize_input_image(kwargs.get("image"))
-        intensity: float = normalize_list_to_value(kwargs.get("intensity"))
-        radius: float = normalize_list_to_value(kwargs.get("radius"))
-        shape: str = normalize_list_to_value(kwargs.get("shape", "elliptical"))
-        color: str = normalize_list_to_value(kwargs.get("color", "000000"))
-
-        nodes: list[dict] = []
-        dataset: dict = { "nodes": nodes }
-
-        processed_images: list[torch.Tensor] = []
-
-        for index, img in enumerate(image):
-            pil_image = tensor_to_pil(img)
-
-            output_file_s, subfolder_s, filename_s = resolve_filepath(
-                filename_prefix="vignette_s",
-                image=img,
-            )
-            pil_image.save(output_file_s, format="PNG")
-            filename_s = get_resource_url(subfolder_s, filename_s, "temp")
-
-            processed = vignette_effect(img, intensity, radius, shape, color)
-            pil_image = tensor_to_pil(processed)
-
-            output_file_t, subfolder_t, filename_t = resolve_filepath(
-                filename_prefix="vignette_t",
-                image=processed,
-            )
-            pil_image.save(output_file_t, format="PNG")
-            filename_t = get_resource_url(subfolder_t, filename_t, "temp")
-
-            nodes.append(create_compare_node(filename_s, filename_t, index))
-            processed_images.append(processed)
-        
-        batch_list, image_list = normalize_output_image(processed_images)
-
-        PromptServer.instance.send_sync(f"{EVENT_PREFIX}vignetteeffect", {
-            "node": kwargs.get("node_id"),
-            "dataset": dataset,
-        })
-        
-        return (batch_list[0], image_list)
-# endregion
 NODE_CLASS_MAPPINGS = {
     "LF_BlurImages": LF_BlurImages,
-    "LF_ClarityEffect": LF_ClarityEffect,
     "LF_CompareImages": LF_CompareImages,
-    "LF_DesaturationEffect": LF_DesaturationEffect,
     "LF_ImagesEditingBreakpoint": LF_ImagesEditingBreakpoint,
     "LF_ImagesSlideshow": LF_ImagesSlideshow,
     "LF_LUTApplication": LF_LUTApplication,
@@ -1131,13 +873,10 @@ NODE_CLASS_MAPPINGS = {
     "LF_ResizeImageToSquare": LF_ResizeImageToSquare,
     "LF_ResizeImageByEdge": LF_ResizeImageByEdge,
     "LF_ViewImages": LF_ViewImages,
-    "LF_VignetteEffect": LF_VignetteEffect
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_BlurImages": "Blur images",
-    "LF_ClarityEffect": "Clarity effect",
     "LF_CompareImages": "Compare images",
-    "LF_DesaturationEffect": "Desaturation effect",
     "LF_ImagesEditingBreakpoint": "Images editing breakpoint",
     "LF_ImagesSlideshow": "Images slideshow",
     "LF_LUTApplication": "LUT Application (filter)",
@@ -1146,5 +885,4 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_ResizeImageToSquare": "Resize image to square",
     "LF_ResizeImageByEdge": "Resize image by edge",
     "LF_ViewImages": "View images",
-    "LF_VignetteEffect": "Vignette effect"
 }

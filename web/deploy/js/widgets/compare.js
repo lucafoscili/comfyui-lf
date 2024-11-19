@@ -1,4 +1,4 @@
-import { CustomWidgetName, NodeName, } from '../types/widgets/_common.js';
+import { CustomWidgetName, } from '../types/widgets/_common.js';
 import { createDOMWidget, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-compare';
 const TYPE = CustomWidgetName.compare;
@@ -32,7 +32,7 @@ export const compareFactory = {
         content.classList.add(compareFactory.cssClasses.content);
         compare.classList.add(compareFactory.cssClasses.compare);
         switch (node.comfyClass) {
-            case NodeName.clarityEffect:
+            default:
                 compare.kulShape = 'image';
                 break;
         }

@@ -46,7 +46,7 @@ export const compareFactory: CompareFactory = {
     compare.classList.add(compareFactory.cssClasses.compare);
 
     switch (node.comfyClass) {
-      case NodeName.clarityEffect:
+      default:
         compare.kulShape = 'image';
         break;
     }
