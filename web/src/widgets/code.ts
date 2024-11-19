@@ -3,6 +3,7 @@ import {
   CustomWidgetName,
   NodeName,
   NormalizeValueCallback,
+  TagName,
 } from '../types/widgets/_common';
 import { CodeFactory } from '../types/widgets/code';
 import { createDOMWidget, normalizeValue } from '../utils/common';
@@ -10,6 +11,7 @@ import { createDOMWidget, normalizeValue } from '../utils/common';
 const BASE_CSS_CLASS = 'lf-code';
 const TYPE = CustomWidgetName.code;
 
+//#region Code
 export const codeFactory: CodeFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
@@ -48,9 +50,9 @@ export const codeFactory: CodeFactory = {
     };
   },
   render: (node) => {
-    const wrapper = document.createElement('div');
-    const content = document.createElement('div');
-    const code = document.createElement('kul-code');
+    const wrapper = document.createElement(TagName.Div);
+    const content = document.createElement(TagName.Div);
+    const code = document.createElement(TagName.KulCode);
     const options = codeFactory.options(code);
 
     content.classList.add(codeFactory.cssClasses.content);
@@ -77,3 +79,4 @@ export const codeFactory: CodeFactory = {
     return { widget: createDOMWidget(TYPE, wrapper, node, options) };
   },
 };
+//#endregion

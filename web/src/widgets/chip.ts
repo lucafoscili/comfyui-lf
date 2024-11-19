@@ -1,3 +1,4 @@
+import { KulEventName } from '../types/events/events';
 import { KulChipEventPayload } from '../types/ketchup-lite/components';
 import { KulChip } from '../types/ketchup-lite/components/kul-chip/kul-chip';
 import {
@@ -5,6 +6,7 @@ import {
   CustomWidgetDeserializedValuesMap,
   NormalizeValueCallback,
   NodeName,
+  TagName,
 } from '../types/widgets/_common';
 import { ChipFactory } from '../types/widgets/chip';
 import { createDOMWidget, normalizeValue } from '../utils/common';
@@ -12,6 +14,7 @@ import { createDOMWidget, normalizeValue } from '../utils/common';
 const BASE_CSS_CLASS = 'lf-chip';
 const TYPE = CustomWidgetName.chip;
 
+//#region Chip
 export const chipFactory: ChipFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
@@ -39,14 +42,14 @@ export const chipFactory: ChipFactory = {
     };
   },
   render: (node) => {
-    const wrapper = document.createElement('div');
-    const content = document.createElement('div');
-    const chip = document.createElement('kul-chip');
+    const wrapper = document.createElement(TagName.Div);
+    const content = document.createElement(TagName.Div);
+    const chip = document.createElement(TagName.KulChip);
     const options = chipFactory.options(chip);
 
     content.classList.add(chipFactory.cssClasses.content);
     chip.classList.add(chipFactory.cssClasses.chip);
-    chip.addEventListener('kul-chip-event', eventHandler);
+    chip.addEventListener(KulEventName.KulChip, eventHandler);
 
     switch (node.comfyClass) {
       case NodeName.keywordToggleFromJson:
@@ -74,3 +77,4 @@ const eventHandler = async (e: CustomEvent<KulChipEventPayload>) => {
       break;
   }
 };
+//#endregion

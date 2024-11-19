@@ -1,4 +1,5 @@
 import { getApiRoutes, getKulManager, getKulThemes, getLFManager, isButton, isToggle, } from '../utils/common.js';
+//#region Labels
 var Labels;
 (function (Labels) {
     Labels["AUTO_BACKUP"] = "Automatic Backup";
@@ -11,6 +12,8 @@ var Labels;
     Labels["OPEN_ISSUE"] = "Open an issue";
     Labels["THEME"] = "Random theme";
 })(Labels || (Labels = {}));
+//#endregion
+//#region Styles
 const STYLES = {
     customization: () => {
         return {
@@ -52,7 +55,9 @@ const STYLES = {
         };
     },
 };
+//#endregion
 let TIMEOUT;
+//#region handleKulEvent
 export const handleKulEvent = (e) => {
     const { comp } = e.detail;
     if (isButton(comp)) {
@@ -140,6 +145,8 @@ const handleButtonEvent = (e) => {
             }
     }
 };
+//#endregion
+//#region handleListEvent
 const handleListEvent = (e) => {
     const { comp, eventType, node } = e.detail;
     const c = comp.rootElement;
@@ -154,6 +161,8 @@ const handleListEvent = (e) => {
             break;
     }
 };
+//#endregion
+//#region handleToggleEvent
 const handleToggleEvent = (e) => {
     const { comp, eventType, value } = e.detail;
     const c = comp.rootElement;
@@ -165,7 +174,9 @@ const handleToggleEvent = (e) => {
             c.title = 'Activate verbose console logging';
     }
 };
+//#endregion
 export const sectionsFactory = {
+    //#region Analytics
     analytics: () => {
         return {
             id: 'section',
@@ -230,6 +241,8 @@ export const sectionsFactory = {
             ],
         };
     },
+    //#endregion
+    //#region Backup
     backup: () => {
         return {
             id: 'section',
@@ -304,6 +317,8 @@ export const sectionsFactory = {
             ],
         };
     },
+    //#endregion
+    //#region Bug
     bug: () => {
         return {
             id: 'section',
@@ -345,6 +360,8 @@ export const sectionsFactory = {
             ],
         };
     },
+    //#endregion
+    //#region Debug
     debug: (logsData) => {
         return {
             id: 'section',
@@ -464,6 +481,102 @@ export const sectionsFactory = {
             ],
         };
     },
+    //#endregion
+    //#region GitHub
+    github: () => {
+        const lfManager = getLFManager();
+        const releaseData = lfManager.getLatestRelease();
+        return {
+            id: 'section',
+            value: 'GitHub',
+            children: [
+                {
+                    id: 'paragraph',
+                    value: 'Latest Release',
+                    children: [
+                        {
+                            cells: {
+                                kulCode: {
+                                    shape: 'code',
+                                    kulLanguage: 'plaintext',
+                                    value: `Version: ${releaseData?.tag_name || 'N/A'}`,
+                                },
+                            },
+                            id: 'release-version',
+                        },
+                        {
+                            cssStyle: {
+                                backgroundColor: 'var(--kul-light-bg-color)',
+                                padding: '0.5em',
+                                borderRadius: '0.25em',
+                                marginBottom: '1em',
+                            },
+                            cells: {
+                                kulCode: {
+                                    kulLanguage: 'markdown',
+                                    shape: 'code',
+                                    value: releaseData?.body || 'No changelog available',
+                                },
+                            },
+                            id: 'release-description',
+                        },
+                        {
+                            cssStyle: {
+                                fontSize: '0.9em',
+                                color: 'var(--kul-secondary-color)',
+                                fontStyle: 'italic',
+                                marginBottom: '1em',
+                            },
+                            id: 'release-date',
+                            value: `Published on: ${releaseData?.published_at
+                                ? new Date(releaseData.published_at).toLocaleDateString()
+                                : 'Unknown'}`,
+                        },
+                        {
+                            id: 'release-author',
+                            children: [
+                                {
+                                    id: 'author-avatar',
+                                    value: '',
+                                    cssStyle: {
+                                        backgroundImage: `url(${releaseData?.author?.avatar_url || ''})`,
+                                        width: '32px',
+                                        height: '32px',
+                                        backgroundSize: 'cover',
+                                        borderRadius: '50%',
+                                        display: 'inline-block',
+                                        verticalAlign: 'middle',
+                                        marginRight: '0.5em',
+                                    },
+                                },
+                                {
+                                    id: 'author-name',
+                                    value: `Author: ${releaseData?.author?.login || 'Unknown'}`,
+                                    cssStyle: {
+                                        fontSize: '0.9em',
+                                        color: 'var(--kul-secondary-color)',
+                                        verticalAlign: 'middle',
+                                    },
+                                },
+                            ],
+                            cssStyle: {
+                                marginBottom: '1em',
+                                display: 'flex',
+                                alignItems: 'center',
+                            },
+                        },
+                        {
+                            cssStyle: STYLES.separator(),
+                            id: 'content_separator',
+                            value: '',
+                        },
+                    ],
+                },
+            ],
+        };
+    },
+    //#endregion
+    //#region Metadata
     metadata: () => {
         return {
             id: 'section',
@@ -519,6 +632,8 @@ export const sectionsFactory = {
             ],
         };
     },
+    //#endregion
+    //#region Theme
     theme: () => {
         return {
             id: 'section',
@@ -555,4 +670,5 @@ export const sectionsFactory = {
             ],
         };
     },
+    //#endregion
 };

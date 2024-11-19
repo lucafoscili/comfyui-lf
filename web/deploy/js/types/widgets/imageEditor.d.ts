@@ -50,7 +50,7 @@ export declare enum ImageEditorSliderIds {
     RedChannel = "r_channel",
     GreenChannel = "g_channel",
     BlueChannel = "b_channel",
-    DesaturationLevel = "desaturation_level"
+    DesaturationStrength = "desaturation_strength"
 }
 export declare enum ImageEditorTextfieldIds {
     Color = "color"
@@ -105,7 +105,7 @@ export interface ImageEditorDesaturateSettings extends ImageEditorFilterSettings
     r_channel: number;
     g_channel: number;
     b_channel: number;
-    desaturation_level: number;
+    desaturation_strength: number;
 }
 export interface ImageEditorVignetteSettings extends ImageEditorFilterSettings {
     intensity: number;
@@ -121,7 +121,7 @@ export declare enum ImageEditorDesaturateIds {
     RedChannel = "r_channel",
     GreenChannel = "g_channel",
     BlueChannel = "b_channel",
-    DesaturationLevels = "desaturation_level"
+    DesaturationStrength = "desaturation_strength"
 }
 export declare enum ImageEditorVignetteIds {
     Color = "color",

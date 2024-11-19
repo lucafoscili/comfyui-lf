@@ -1,4 +1,5 @@
-import { CustomWidgetName, NodeName, } from '../types/widgets/_common.js';
+import { KulEventName } from '../types/events/events.js';
+import { CustomWidgetName, NodeName, TagName, } from '../types/widgets/_common.js';
 import { createDOMWidget, isValidNumber, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-masonry';
 const TYPE = CustomWidgetName.masonry;
@@ -47,13 +48,13 @@ export const masonryFactory = {
         };
     },
     render: (node) => {
-        const wrapper = document.createElement('div');
-        const content = document.createElement('div');
-        const masonry = document.createElement('kul-masonry');
+        const wrapper = document.createElement(TagName.Div);
+        const content = document.createElement(TagName.Div);
+        const masonry = document.createElement(TagName.KulMasonry);
         const options = masonryFactory.options(masonry);
         content.classList.add(masonryFactory.cssClasses.content);
         masonry.classList.add(masonryFactory.cssClasses.widget);
-        masonry.addEventListener('kul-masonry-event', masonryEventHandler);
+        masonry.addEventListener(KulEventName.KulMasonry, masonryEventHandler);
         switch (node.comfyClass) {
             case NodeName.loadImages:
                 masonry.kulSelectable = true;

@@ -1,5 +1,7 @@
-import { ComfyWidgetName, CustomWidgetName, NodeName, } from '../types/widgets/_common.js';
-import { createDOMWidget, getWidget, normalizeValue } from '../utils/common.js';
+import { listEventHandler } from '../helpers/history.js';
+import { KulEventName } from '../types/events/events.js';
+import { CustomWidgetName, NodeName, TagName, } from '../types/widgets/_common.js';
+import { createDOMWidget, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-history';
 const TYPE = CustomWidgetName.history;
 //#region History
@@ -26,9 +28,9 @@ export const historyFactory = {
         };
     },
     render: (node) => {
-        const wrapper = document.createElement('div');
-        const content = document.createElement('div');
-        const history = document.createElement('kul-list');
+        const wrapper = document.createElement(TagName.Div);
+        const content = document.createElement(TagName.Div);
+        const history = document.createElement(TagName.KulList);
         const options = historyFactory.options(history);
         content.classList.add(historyFactory.cssClasses.content);
         history.classList.add(historyFactory.cssClasses.history);
@@ -41,71 +43,12 @@ export const historyFactory = {
                 history.kulSelectable = true;
                 break;
         }
-        history.addEventListener('kul-list-event', (e) => {
-            handleEvent(e, node);
+        history.addEventListener(KulEventName.KulList, (e) => {
+            listEventHandler(e, node);
         });
         content.appendChild(history);
         wrapper.appendChild(content);
         return { widget: createDOMWidget(TYPE, wrapper, node, options) };
     },
-};
-const handleEvent = (e, comfyNode) => {
-    const { eventType, node } = e.detail;
-    const strValue = node ? String(node.value).valueOf() : '';
-    if (eventType === 'click' && strValue) {
-        const boolW = getWidget(comfyNode, ComfyWidgetName.boolean);
-        const comboW = getWidget(comfyNode, ComfyWidgetName.combo);
-        const customtextW = getWidget(comfyNode, ComfyWidgetName.customtext);
-        const floatW = getWidget(comfyNode, ComfyWidgetName.float);
-        const intW = getWidget(comfyNode, ComfyWidgetName.integer);
-        const numberW = getWidget(comfyNode, ComfyWidgetName.number);
-        const seedW = getWidget(comfyNode, ComfyWidgetName.seed);
-        const stringW = getWidget(comfyNode, ComfyWidgetName.string);
-        const toggleW = getWidget(comfyNode, ComfyWidgetName.toggle);
-        switch (comfyNode.comfyClass) {
-            case NodeName.boolean:
-                if (boolW) {
-                    boolW.value = String(node.value).toLowerCase() === 'true' ? true : false;
-                }
-                else if (toggleW) {
-                    toggleW.value = String(node.value).toLowerCase() === 'true' ? true : false;
-                }
-                break;
-            case NodeName.float:
-                if (numberW) {
-                    numberW.value = Number(node.value).valueOf();
-                }
-                else if (intW) {
-                    floatW.value = Number(node.value).valueOf();
-                }
-                break;
-            case NodeName.integer:
-            case NodeName.sequentialSeedsGenerator:
-                if (numberW) {
-                    numberW.value = Number(node.value).valueOf();
-                }
-                else if (intW) {
-                    intW.value = Number(node.value).valueOf();
-                }
-                else if (seedW) {
-                    seedW.value = Number(node.value).valueOf();
-                }
-                break;
-            case NodeName.samplerSelector:
-            case NodeName.schedulerSelector:
-            case NodeName.upscaleModelSelector:
-            case NodeName.vaeSelector:
-                comboW.value = node.value;
-                break;
-            case NodeName.string:
-                if (stringW) {
-                    stringW.options.setValue(node.value);
-                }
-                else if (customtextW) {
-                    customtextW.options.setValue(node.value);
-                }
-                break;
-        }
-    }
 };
 //#endregion

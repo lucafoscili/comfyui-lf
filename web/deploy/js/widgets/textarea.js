@@ -1,9 +1,9 @@
-import { LogSeverity } from '../types/manager/manager.js';
-import { CustomWidgetName, NodeName, } from '../types/widgets/_common.js';
-import { createDOMWidget, findWidget, getLFManager, normalizeValue } from '../utils/common.js';
+import { handleInputChange } from '../helpers/textarea.js';
+import { CustomWidgetName, NodeName, TagName, } from '../types/widgets/_common.js';
+import { createDOMWidget, findWidget, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-textarea';
 const TYPE = CustomWidgetName.textarea;
-let VALIDATION_TIMEOUT;
+//#region Textarea
 export const textareaFactory = {
     cssClasses: {
         content: BASE_CSS_CLASS,
@@ -35,9 +35,9 @@ export const textareaFactory = {
         if (findWidget(node, TYPE) && node.comfyClass === NodeName.writeJson) {
             return w.element;
         }
-        const wrapper = document.createElement('div');
-        const content = document.createElement('div');
-        const textarea = document.createElement('textarea');
+        const wrapper = document.createElement(TagName.Div);
+        const content = document.createElement(TagName.Div);
+        const textarea = document.createElement(TagName.Textarea);
         const options = textareaFactory.options(textarea);
         content.classList.add(textareaFactory.cssClasses.content);
         textarea.classList.add(textareaFactory.cssClasses.widget);
@@ -49,27 +49,4 @@ export const textareaFactory = {
         return { widget: createDOMWidget(TYPE, wrapper, node, options) };
     },
 };
-function handleInputChange(e) {
-    const textarea = e.currentTarget;
-    const startValidationTimer = () => {
-        const validateAndFormatJSON = async () => {
-            try {
-                const jsonObject = JSON.parse(textarea.value);
-                const formattedJson = JSON.stringify(jsonObject, null, 2);
-                if (formattedJson !== '{}') {
-                    textarea.title = '';
-                    textarea.value = formattedJson;
-                    textarea.classList.remove(textareaFactory.cssClasses.widgetError);
-                }
-            }
-            catch (error) {
-                getLFManager().log('Error parsing JSON', { error }, LogSeverity.Warning);
-                textarea.classList.add(textareaFactory.cssClasses.widgetError);
-                textarea.title = error;
-            }
-        };
-        VALIDATION_TIMEOUT = setTimeout(validateAndFormatJSON, 2500);
-    };
-    clearTimeout(VALIDATION_TIMEOUT);
-    startValidationTimer();
-}
+//#endregion

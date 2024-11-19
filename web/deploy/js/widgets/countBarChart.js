@@ -1,10 +1,12 @@
-import { CustomWidgetName, } from '../types/widgets/_common.js';
+import { KulEventName } from '../types/events/events.js';
+import { CustomWidgetName, TagName, } from '../types/widgets/_common.js';
 import { createDOMWidget, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-countbarchart';
 const TYPE = CustomWidgetName.countBarChart;
 const DEF_ICON = 'content_copy';
 const DEF_LABEL = 'Copy selected';
 let TIMEOUT;
+//#region Count bar chart
 export const countBarChartFactory = {
     cssClasses: {
         content: BASE_CSS_CLASS,
@@ -41,12 +43,12 @@ export const countBarChartFactory = {
         };
     },
     render: (node) => {
-        const wrapper = document.createElement('div');
-        const content = document.createElement('div');
-        const grid = document.createElement('div');
-        const chart = document.createElement('kul-chart');
-        const chip = document.createElement('kul-chip');
-        const button = document.createElement('kul-button');
+        const wrapper = document.createElement(TagName.Div);
+        const content = document.createElement(TagName.Div);
+        const grid = document.createElement(TagName.Div);
+        const chart = document.createElement(TagName.KulChart);
+        const chip = document.createElement(TagName.KulChip);
+        const button = document.createElement(TagName.KulButton);
         const options = countBarChartFactory.options(chart, chip, button);
         content.classList.add(countBarChartFactory.cssClasses.content);
         grid.classList.add(countBarChartFactory.cssClasses.grid);
@@ -64,7 +66,7 @@ export const countBarChartFactory = {
         button.kulIcon = DEF_ICON;
         button.kulLabel = DEF_LABEL;
         button.kulStyling = 'flat';
-        button.addEventListener('kul-button-event', (e) => {
+        button.addEventListener(KulEventName.KulButton, (e) => {
             copy(e, chip);
         });
         grid.appendChild(chart);
@@ -96,3 +98,4 @@ const copy = async (e, chip) => {
         }, 1000);
     }
 };
+//#endregion

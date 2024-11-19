@@ -35,7 +35,7 @@ export var ImageEditorSliderIds;
     ImageEditorSliderIds["RedChannel"] = "r_channel";
     ImageEditorSliderIds["GreenChannel"] = "g_channel";
     ImageEditorSliderIds["BlueChannel"] = "b_channel";
-    ImageEditorSliderIds["DesaturationLevel"] = "desaturation_level";
+    ImageEditorSliderIds["DesaturationStrength"] = "desaturation_strength";
 })(ImageEditorSliderIds || (ImageEditorSliderIds = {}));
 export var ImageEditorTextfieldIds;
 (function (ImageEditorTextfieldIds) {
@@ -56,7 +56,7 @@ export var ImageEditorDesaturateIds;
     ImageEditorDesaturateIds["RedChannel"] = "r_channel";
     ImageEditorDesaturateIds["GreenChannel"] = "g_channel";
     ImageEditorDesaturateIds["BlueChannel"] = "b_channel";
-    ImageEditorDesaturateIds["DesaturationLevels"] = "desaturation_level";
+    ImageEditorDesaturateIds["DesaturationStrength"] = "desaturation_strength";
 })(ImageEditorDesaturateIds || (ImageEditorDesaturateIds = {}));
 export var ImageEditorVignetteIds;
 (function (ImageEditorVignetteIds) {

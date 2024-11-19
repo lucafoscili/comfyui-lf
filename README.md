@@ -19,14 +19,6 @@
 
 </div>
 
-## Version 5.1.0 [BREAKING CHANGES] *(2024-11-01)*
-
-Versions 5.0.0 and 5.1.0 have seen a major refactoring that completely overhauled the code to make it more DRY and maintainable. This was necessary to guarantee smooth maintenance and upgrades of the features.
-
-The documentation below was written prior to the release of the aforementioned versions, so it's outdated—it will be updated in the future.
-
-![LoRA tester workflow](https://github.com/lucafoscili/comfyui-lf/blob/0b438784ecce5bb2a3bde66cf3029d91ced61911/docs/images/Screenshot%202024-11-01%20204059.png "Screenshot taken from the LoRA tester workflow")
-
 ## Overview
 
 A suite of custom nodes for [ComfyUI](https://github.com/comfyanonymous/ComfyUI) aimed at enhancing user experience with more interactive and visually engaging widgets.
@@ -34,6 +26,8 @@ A suite of custom nodes for [ComfyUI](https://github.com/comfyanonymous/ComfyUI)
 Whether you're after quality-of-life improvements or specific functionalities, this collection has something for everyone.
 
 Most UI elements used by the widgets come from the  [Ketchup Lite web components library](https://github.com/lucafoscili/ketchup-lite).
+
+![LoRA tester workflow](https://github.com/lucafoscili/comfyui-lf/blob/0b438784ecce5bb2a3bde66cf3029d91ced61911/docs/images/Screenshot%202024-11-01%20204059.png "Screenshot taken from the LoRA tester workflow")
 
 ## What kind of nodes does it offer?
 
@@ -55,7 +49,6 @@ That's a tough one—the nodes span quite a few categories. Here's a quick break
 ## Table of Contents
 
 - [LF Nodes for ComfyUI](#lf-nodes-for-comfyui)
-  - [Version 5.1.0 \[BREAKING CHANGES\] *(2024-11-01)*](#version-510-breaking-changes-2024-11-01)
   - [Overview](#overview)
   - [What kind of nodes does it offer?](#what-kind-of-nodes-does-it-offer)
   - [Table of Contents](#table-of-contents)

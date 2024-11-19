@@ -1,16 +1,17 @@
-import { AnalyticsType } from '../types/api/api';
 import {
-  KulDataDataset,
-  KulDataNode,
-  KulTabbarEventPayload,
-  KulTextfieldEventPayload,
-} from '../types/ketchup-lite/components';
+  prepareTabbarDataset,
+  tabbarEventHandler,
+  textfieldEventHandler,
+} from '../helpers/tabBarChart';
+import { AnalyticsType } from '../types/api/api';
+import { KulEventName } from '../types/events/events';
 import { LogSeverity } from '../types/manager/manager';
 import {
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
   NodeName,
   NormalizeValueCallback,
+  TagName,
 } from '../types/widgets/_common';
 import { TabBarChartDeserializedValue, TabBarChartFactory } from '../types/widgets/tabBarChart';
 import { createDOMWidget, getLFManager, normalizeValue } from '../utils/common';
@@ -18,6 +19,7 @@ import { createDOMWidget, getLFManager, normalizeValue } from '../utils/common';
 const BASE_CSS_CLASS = 'lf-tabbarchart';
 const TYPE = CustomWidgetName.tabBarChart;
 
+//#region Tab bar chart
 export const tabBarChartFactory: TabBarChartFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
@@ -109,12 +111,12 @@ export const tabBarChartFactory: TabBarChartFactory = {
     };
   },
   render: (node) => {
-    const wrapper = document.createElement('div');
-    const content = document.createElement('div');
-    const grid = document.createElement('div');
-    const textfield = document.createElement('kul-textfield');
-    const chart = document.createElement('kul-chart');
-    const tabbar = document.createElement('kul-tabbar');
+    const wrapper = document.createElement(TagName.Div);
+    const content = document.createElement(TagName.Div);
+    const grid = document.createElement(TagName.Div);
+    const textfield = document.createElement(TagName.KulTextfield);
+    const chart = document.createElement(TagName.KulChart);
+    const tabbar = document.createElement(TagName.KulTabbar);
     const options = tabBarChartFactory.options(
       chart,
       tabbar,
@@ -150,7 +152,7 @@ export const tabBarChartFactory: TabBarChartFactory = {
 
     grid.classList.add(tabBarChartFactory.cssClasses.grid);
     tabbar.addEventListener(
-      'kul-tabbar-event',
+      KulEventName.KulTabbar,
       tabbarEventHandler.bind(tabbarEventHandler, chart, node.comfyClass),
     );
     tabbar.kulValue = null;
@@ -161,7 +163,7 @@ export const tabBarChartFactory: TabBarChartFactory = {
     textfield.kulLabel = 'Directory';
     textfield.kulStyling = 'flat';
     textfield.addEventListener(
-      'kul-textfield-event',
+      KulEventName.KulTextfield,
       textfieldEventHandler.bind(textfieldEventHandler, chart, options.refresh),
     );
     grid.appendChild(textfield);
@@ -175,55 +177,4 @@ export const tabBarChartFactory: TabBarChartFactory = {
     return { widget: createDOMWidget(TYPE, wrapper, node, options) };
   },
 };
-
-const prepareTabbarDataset = (data: Record<string, KulDataDataset>) => {
-  const dataset: KulDataDataset = { nodes: [] };
-  for (const filename in data) {
-    if (Object.prototype.hasOwnProperty.call(data, filename)) {
-      const node: KulDataNode = {
-        cells: { kulChart: { kulData: data[filename], shape: 'chart', value: '' } },
-        id: filename,
-        value: filename.split('_')?.[0] || filename,
-      };
-      dataset.nodes.push(node);
-    }
-  }
-  return dataset;
-};
-
-const tabbarEventHandler = (
-  chart: HTMLKulChartElement,
-  nodeName: NodeName,
-  e: CustomEvent<KulTabbarEventPayload>,
-) => {
-  const { eventType, node } = e.detail;
-
-  switch (eventType) {
-    case 'click':
-      switch (nodeName) {
-        case NodeName.colorAnalysis:
-        case NodeName.imageHistogram:
-          chart.kulData = node.cells.kulChart.kulData;
-          break;
-        case NodeName.usageStatistics:
-          chart.kulData = getLFManager().getCachedDatasets().usage[node.id];
-          break;
-      }
-      break;
-  }
-};
-
-const textfieldEventHandler = (
-  chart: HTMLKulChartElement,
-  refreshCb: () => Promise<void>,
-  e: CustomEvent<KulTextfieldEventPayload>,
-) => {
-  const { eventType, value } = e.detail;
-
-  switch (eventType) {
-    case 'change':
-      chart.dataset.directory = value;
-      refreshCb();
-      break;
-  }
-};
+//#endregion

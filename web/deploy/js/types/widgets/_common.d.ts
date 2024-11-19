@@ -132,6 +132,32 @@ export declare enum NodeName {
     wallOfText = "LF_WallOfText",
     writeJson = "LF_WriteJSON"
 }
+export declare enum TagName {
+    Div = "div",
+    KulAccordion = "kul-accordion",
+    KulArticle = "kul-article",
+    KulButton = "kul-button",
+    KulCard = "kul-card",
+    KulCarousel = "kul-carousel",
+    KulChat = "kul-chat",
+    KulChart = "kul-chart",
+    KulChip = "kul-chip",
+    KulCode = "kul-code",
+    KulCompare = "kul-compare",
+    KulImageviewer = "kul-imageviewer",
+    KulList = "kul-list",
+    KulMasonry = "kul-masonry",
+    KulMessenger = "kul-messenger",
+    KulProgressbar = "kul-progressbar",
+    KulSlider = "kul-slider",
+    KulSpinner = "kul-spinner",
+    KulTabbar = "kul-tabbar",
+    KulTextfield = "kul-textfield",
+    KulToggle = "kul-toggle",
+    KulTree = "kul-tree",
+    KulUpload = "kul-upload",
+    Textarea = "textarea"
+}
 export type CustomWidgetDeserializedValues = CardDeserializedValue | CardsWithChipDeserializedValue | CarouselDeserializedValue | ChatValueDeserializedValue | ChipValueDeserializedValue | CodeValueDeserializedValue | CompareValueDeserializedValue | ControlPanelDeserializedValue | CountBarChartDeserializedValue | HistoryDeserializedValue | ImageEditorDeserializedValue | MasonryDeserializedValue | MessengerDeserializedValue | ProgressbarDeserializedValue | TabBarChartDeserializedValue | TextareaDeserializedValue | TreeValueDeserializedValue | UploadDeserializedValue;
 export type CustomWidgetOptions = CardOptions | CardsWithChipOptions | CarouselOptions | ChatOptions | ChipOptions | CodeOptions | CompareOptions | ControlPanelOptions | CountBarChartOptions | HistoryOptions | ImageEditorOptions | MasonryOptions | MessengerOptions | ProgressbarOptions | TabBarChartOptions | TextareaOptions | TreeOptions | UploadOptions;
 export type CustomWidgetOptionsCallbacks = CardOptionsCallback | CarouselOptionsCallback | ChatOptionsCallback | ChipOptionsCallback | CodeOptionsCallback | CompareOptionsCallback | ControlPanelOptionsCallback | HistoryOptionsCallback | ImageEditorOptionsCallback | MasonryOptionsCallback | MessengerOptionsCallback | ProgressbarOptionsCallback | TabBarChartOptionsCallback | TextareaOptionsCallback | TreeOptionsCallback | UploadOptionsCallback;

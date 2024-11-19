@@ -1101,7 +1101,7 @@ def randomize_from_history(nodes: list[dict], seed: int) -> bool:
         return False
 
     random.seed(seed)
-    return random.choice([value.lower() == 'true' for value in values])
+    return random.choice([value for value in values])
 # endregion
 # region resize_and_crop_image
 def resize_and_crop_image(image_tensor: torch.Tensor, resize_method: str, target_height: int, target_width: int, resize_mode: str, pad_color: tuple):

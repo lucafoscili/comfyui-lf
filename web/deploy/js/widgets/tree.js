@@ -1,7 +1,8 @@
-import { CustomWidgetName, NodeName, } from '../types/widgets/_common.js';
+import { CustomWidgetName, NodeName, TagName, } from '../types/widgets/_common.js';
 import { createDOMWidget, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-tree';
 const TYPE = CustomWidgetName.tree;
+//#region Tree
 export const treeFactory = {
     cssClasses: {
         content: BASE_CSS_CLASS,
@@ -25,9 +26,9 @@ export const treeFactory = {
         };
     },
     render: (node) => {
-        const wrapper = document.createElement('div');
-        const content = document.createElement('div');
-        const tree = document.createElement('kul-tree');
+        const wrapper = document.createElement(TagName.Div);
+        const content = document.createElement(TagName.Div);
+        const tree = document.createElement(TagName.KulTree);
         const options = treeFactory.options(tree);
         switch (node.comfyClass) {
             case NodeName.isLandscape:
@@ -46,3 +47,4 @@ export const treeFactory = {
         return { widget: createDOMWidget(TYPE, wrapper, node, options) };
     },
 };
+//#endregion

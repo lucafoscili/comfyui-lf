@@ -1,5 +1,7 @@
 import { KulDataDataset } from '../ketchup-lite/components';
 import { CustomWidgetName, NodeName } from '../widgets/_common';
+export type GenericPayload = WidgetPayloadFor<CustomWidgetName>;
+export type GenericEvent = CustomEvent<GenericPayload>;
 export interface BaseEventPayload {
     id: string;
 }
@@ -14,6 +16,31 @@ export type WidgetPayloadFor<T extends CustomWidgetName> = WidgetPayloadMap[T];
 export type WidgetPayloadMap = {
     [W in CustomWidgetName]: W extends CustomWidgetName.card ? CardPayload : W extends CustomWidgetName.cardsWithChip ? CardPayload : W extends CustomWidgetName.code ? StringPayload : W extends CustomWidgetName.compare ? SingleDatasetPayload : W extends CustomWidgetName.countBarChart ? MultiDatasetPayload : W extends CustomWidgetName.history ? SingleDatasetPayload : W extends CustomWidgetName.masonry ? MasonryPayload : W extends CustomWidgetName.progressbar ? ProgressbarPayload : W extends CustomWidgetName.tabBarChart ? MultiDatasetPayload : W extends CustomWidgetName.tree ? SingleDatasetPayload : W extends CustomWidgetName.upload ? StringPayload : BaseEventPayload;
 };
+export declare enum KulEventName {
+    KulAccordion = "kul-accordion-event",
+    KulArticle = "kul-article-event",
+    KulButton = "kul-button-event",
+    KulCard = "kul-card-event",
+    KulCarousel = "kul-carousel-event",
+    KulChat = "kul-chat-event",
+    KulChart = "kul-chart-event",
+    KulChip = "kul-chip-event",
+    KulCode = "kul-code-event",
+    KulCompare = "kul-compare-event",
+    KulImageviewer = "kul-imageviewer-event",
+    KulList = "kul-list-event",
+    KulMasonry = "kul-masonry-event",
+    KulMessenger = "kul-messenger-event",
+    KulProgressbar = "kul-progressbar-event",
+    KulSlider = "kul-slider-event",
+    KulSpinner = "kul-spinner-event",
+    KulTabbar = "kul-tabbar-event",
+    KulTextfield = "kul-textfield-event",
+    KulToggle = "kul-toggle-event",
+    KulTree = "kul-tree-event",
+    KulUpload = "kul-upload-event",
+    Textarea = "textarea-event"
+}
 export interface CardPayload extends BaseEventPayload {
     datasets: KulDataDataset[];
     apiFlags: boolean[];

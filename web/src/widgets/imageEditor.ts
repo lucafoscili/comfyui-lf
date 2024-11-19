@@ -5,12 +5,14 @@ import {
   imageviewerEventHandler,
   setGridStatus,
 } from '../helpers/imageEditor';
+import { KulEventName } from '../types/events/events';
 import { LogSeverity } from '../types/manager/manager';
 import {
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
   NodeName,
   NormalizeValueCallback,
+  TagName,
 } from '../types/widgets/_common';
 import {
   ImageEditorActionButtons,
@@ -75,11 +77,11 @@ export const imageEditorFactory: ImageEditorFactory = {
     };
   },
   render: (node) => {
-    const wrapper = document.createElement('div');
-    const content = document.createElement('div');
-    const grid = document.createElement('div');
-    const settings = document.createElement('div');
-    const imageviewer = document.createElement('kul-imageviewer');
+    const wrapper = document.createElement(TagName.Div);
+    const content = document.createElement(TagName.Div);
+    const grid = document.createElement(TagName.Div);
+    const settings = document.createElement(TagName.Div);
+    const imageviewer = document.createElement(TagName.KulImageviewer);
 
     settings.classList.add(imageEditorFactory.cssClasses.settings);
     settings.slot = 'settings';
@@ -88,7 +90,7 @@ export const imageEditorFactory: ImageEditorFactory = {
     imageviewer.kulLoadCallback = async (_, value) => await options.refresh(value);
     imageviewer.kulValue = TREE_DATA;
     imageviewer.addEventListener(
-      'kul-imageviewer-event',
+      KulEventName.KulImageviewer,
       imageviewerEventHandler.bind(imageviewerEventHandler, settings, node),
     );
     imageviewer.appendChild(settings);
@@ -97,9 +99,9 @@ export const imageEditorFactory: ImageEditorFactory = {
 
     switch (node.comfyClass) {
       case NodeName.imagesEditingBreakpoint:
-        const actions = document.createElement('div');
-        const interrupt = document.createElement('kul-button');
-        const resume = document.createElement('kul-button');
+        const actions = document.createElement(TagName.Div);
+        const interrupt = document.createElement(TagName.KulButton);
+        const resume = document.createElement(TagName.KulButton);
 
         interrupt.classList.add(imageEditorFactory.cssClasses.resume);
         interrupt.classList.add('kul-full-width');
@@ -122,7 +124,7 @@ export const imageEditorFactory: ImageEditorFactory = {
         actions.appendChild(interrupt);
         actions.appendChild(resume);
         actions.addEventListener(
-          'kul-button-event',
+          KulEventName.KulButton,
           buttonEventHandler.bind(buttonEventHandler, imageviewer, actionButtons, grid),
         );
 

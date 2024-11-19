@@ -1,7 +1,8 @@
 import { NotifyPayload } from '../types/events/events';
 import { LogSeverity } from '../types/manager/manager';
-import { getLFManager } from '../utils/common';
+import { getApiRoutes, getLFManager } from '../utils/common';
 
+//#region Show
 export const showNotification = (payload: NotifyPayload) => {
   if (Notification.permission !== 'granted') {
     Notification.requestPermission().then(function (permission) {
@@ -15,7 +16,8 @@ export const showNotification = (payload: NotifyPayload) => {
     decorateNotification(payload);
   }
 };
-
+//#endregion
+//#region Decorate
 export const decorateNotification = (payload: NotifyPayload) => {
   const { action, image, message, silent, tag, title } = payload;
 
@@ -46,7 +48,7 @@ export const decorateNotification = (payload: NotifyPayload) => {
     const notification = new Notification(title, options);
 
     notification.addEventListener('click', function () {
-      const routes = getLFManager().getApiRoutes();
+      const routes = getApiRoutes().comfy;
       switch (action) {
         case 'focus tab':
           window.focus();
@@ -71,3 +73,4 @@ export const decorateNotification = (payload: NotifyPayload) => {
     });
   }
 };
+//#endregion

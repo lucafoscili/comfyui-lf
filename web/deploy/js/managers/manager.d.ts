@@ -1,7 +1,7 @@
+import { LFTooltip } from './tooltip';
 import { LFWidgets } from './widgets.js';
 import { EventName } from '../types/events/events.js';
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
-import { LFTooltip } from './tooltip';
 import { KulDataDataset } from '../types/ketchup-lite/components.js';
 import { KulManager } from '../types/ketchup-lite/managers/kul-manager/kul-manager.js';
 import { NodeName } from '../types/widgets/_common.js';
@@ -24,6 +24,7 @@ export declare class LFManager {
         dataset: KulArticleNode[];
     };
     getEventName(node: NodeName): EventName;
+    getLatestRelease(): GitHubRelease;
     getManagers(): {
         ketchupLite?: KulManager;
         tooltip?: LFTooltip;

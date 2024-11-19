@@ -1,4 +1,4 @@
-import { CustomWidgetName, NodeName, } from '../types/widgets/_common.js';
+import { CustomWidgetName, NodeName, TagName, } from '../types/widgets/_common.js';
 import { createDOMWidget, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-progressbar';
 const FALLBACK_LABEL = 'N/A';
@@ -62,9 +62,9 @@ export const progressbarFactory = {
         };
     },
     render: (node) => {
-        const wrapper = document.createElement('div');
-        const content = document.createElement('div');
-        const progressbar = document.createElement('kul-progressbar');
+        const wrapper = document.createElement(TagName.Div);
+        const content = document.createElement(TagName.Div);
+        const progressbar = document.createElement(TagName.KulProgressbar);
         const options = progressbarFactory.options(progressbar, node);
         content.classList.add(progressbarFactory.cssClasses.content);
         progressbar.kulIsRadial = true;

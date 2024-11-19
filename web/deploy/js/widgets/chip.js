@@ -1,7 +1,9 @@
-import { CustomWidgetName, NodeName, } from '../types/widgets/_common.js';
+import { KulEventName } from '../types/events/events.js';
+import { CustomWidgetName, NodeName, TagName, } from '../types/widgets/_common.js';
 import { createDOMWidget, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-chip';
 const TYPE = CustomWidgetName.chip;
+//#region Chip
 export const chipFactory = {
     cssClasses: {
         content: BASE_CSS_CLASS,
@@ -26,13 +28,13 @@ export const chipFactory = {
         };
     },
     render: (node) => {
-        const wrapper = document.createElement('div');
-        const content = document.createElement('div');
-        const chip = document.createElement('kul-chip');
+        const wrapper = document.createElement(TagName.Div);
+        const content = document.createElement(TagName.Div);
+        const chip = document.createElement(TagName.KulChip);
         const options = chipFactory.options(chip);
         content.classList.add(chipFactory.cssClasses.content);
         chip.classList.add(chipFactory.cssClasses.chip);
-        chip.addEventListener('kul-chip-event', eventHandler);
+        chip.addEventListener(KulEventName.KulChip, eventHandler);
         switch (node.comfyClass) {
             case NodeName.keywordToggleFromJson:
                 chip.kulStyling = 'filter';
@@ -56,3 +58,4 @@ const eventHandler = async (e) => {
             break;
     }
 };
+//#endregion
