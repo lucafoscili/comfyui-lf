@@ -158,6 +158,9 @@
 }
 
 .lf-imageeditor {
+  --kul-slider-label-min-width: 128px;
+  --kul-slider-label-overflow: hidden;
+  --kul-slider-label-white-space: pre;
   background: var(--kul-background-color);
   height: 100%;
   width: 100%;
@@ -195,7 +198,7 @@
   display: grid;
   grid-area: settings;
   height: 100%;
-  padding: 1.25em;
+  padding: 12px 24px;
   width: 100%;
 }
 .lf-imageeditor__widget {

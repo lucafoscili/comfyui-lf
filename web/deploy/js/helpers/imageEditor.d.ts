@@ -1,6 +1,6 @@
 import { KulButtonEventPayload, KulImageviewerEventPayload, KulSliderEventPayload, KulTextfieldEventPayload, KulToggleEventPayload } from '../types/ketchup-lite/components';
 import { KulDataColumn, KulDataDataset, KulDataNode } from '../types/ketchup-lite/managers/kul-data/kul-data-declarations';
-import { ImageEditorActionButtons, ImageEditorSliderConfig, ImageEditorStatus, ImageEditorTextfieldConfig, ImageEditorToggleConfig, ImageEditorUpdateCallback } from '../types/widgets/imageEditor';
+import { ImageEditorActionButtons, ImageEditorControlConfig, ImageEditorSliderConfig, ImageEditorStatus, ImageEditorTextfieldConfig, ImageEditorToggleConfig, ImageEditorUpdateCallback } from '../types/widgets/imageEditor';
 export declare const buttonEventHandler: (imageviewer: HTMLKulImageviewerElement, actionButtons: ImageEditorActionButtons, grid: HTMLDivElement, e: CustomEvent<KulButtonEventPayload>) => Promise<void>;
 export declare const imageviewerEventHandler: (settings: HTMLDivElement, node: NodeType, e: CustomEvent<KulImageviewerEventPayload>) => Promise<void>;
 export declare const sliderEventHandler: (updateCb: ImageEditorUpdateCallback, e: CustomEvent<KulSliderEventPayload>) => Promise<void>;
@@ -12,5 +12,6 @@ export declare const createTextfield: (data: ImageEditorTextfieldConfig, updateC
 export declare const createToggle: (data: ImageEditorToggleConfig, updateCb: ImageEditorUpdateCallback) => HTMLKulToggleElement;
 export declare const getPathColumn: (dataset: KulDataDataset) => KulDataColumn | null;
 export declare const getStatusColumn: (dataset: KulDataDataset) => KulDataColumn | null;
+export declare const parseLabel: (data: ImageEditorControlConfig) => string;
 export declare const resetSettings: (settings: HTMLElement) => Promise<void>;
 export declare const setGridStatus: (status: ImageEditorStatus, grid: HTMLDivElement, actionButtons: ImageEditorActionButtons) => void;

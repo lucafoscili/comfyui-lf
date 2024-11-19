@@ -3,6 +3,7 @@ import { APIEndpoints, } from '../types/api/api.js';
 import { getLFManager } from '../utils/common.js';
 import { LogSeverity } from '../types/manager/manager.js';
 export const IMAGE_API = {
+    //#region get
     get: async (directory) => {
         const lfManager = getLFManager();
         const payload = {
@@ -42,6 +43,8 @@ export const IMAGE_API = {
         lfManager.log(payload.message, { payload }, payload.status);
         return payload;
     },
+    //#endregion
+    //#region process
     process: async (url, type, settings) => {
         const lfManager = getLFManager();
         const payload = {
@@ -82,4 +85,5 @@ export const IMAGE_API = {
         lfManager.log(payload.message, { payload }, payload.status);
         return payload;
     },
+    //#endregion
 };

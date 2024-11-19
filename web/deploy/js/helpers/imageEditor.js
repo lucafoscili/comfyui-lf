@@ -134,7 +134,7 @@ export const prepSettings = (settings, node, imageviewer) => {
                     lfManager.log(`Unhandled control type: ${control.tagName}`, { control }, LogSeverity.Warning);
                     continue;
             }
-            if (Boolean(control.dataset.mandatory) && !value) {
+            if (control.dataset.mandatory === 'true' && !value) {
                 mandatoryCheck = false;
                 break;
             }
@@ -201,7 +201,7 @@ export const createSlider = (data, updateCb) => {
     const comp = document.createElement('kul-slider');
     comp.dataset.id = data.id;
     comp.dataset.mandatory = data.isMandatory ? 'true' : 'false';
-    comp.kulLabel = data.ariaLabel;
+    comp.kulLabel = parseLabel(data);
     comp.kulLeadingLabel = true;
     comp.kulMax = Number(data.max);
     comp.kulMin = Number(data.min);
@@ -218,7 +218,7 @@ export const createTextfield = (data, updateCb) => {
     const comp = document.createElement('kul-textfield');
     comp.dataset.id = data.id;
     comp.dataset.mandatory = data.isMandatory ? 'true' : 'false';
-    comp.kulLabel = data.ariaLabel;
+    comp.kulLabel = parseLabel(data);
     comp.kulHtmlAttributes = { type: data.type };
     comp.kulValue = String(data.defaultValue).valueOf();
     comp.title = data.title;
@@ -233,7 +233,7 @@ export const createToggle = (data, updateCb) => {
     comp.dataset.mandatory = data.isMandatory ? 'true' : 'false';
     comp.dataset.off = data.off;
     comp.dataset.on = data.on;
-    comp.kulLabel = data.ariaLabel;
+    comp.kulLabel = parseLabel(data);
     comp.kulValue = false;
     comp.title = data.title;
     comp.addEventListener('kul-toggle-event', sliderEventHandler.bind(toggleEventHandler, updateCb));
@@ -246,6 +246,9 @@ export const getPathColumn = (dataset) => {
 };
 export const getStatusColumn = (dataset) => {
     return dataset?.columns?.find((c) => c.id === ImageEditorColumnId.Status) || null;
+};
+export const parseLabel = (data) => {
+    return data.isMandatory ? `${data.ariaLabel}*` : data.ariaLabel;
 };
 export const resetSettings = async (settings) => {
     const controls = settings.querySelectorAll('[data-id]');

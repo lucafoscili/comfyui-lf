@@ -62,6 +62,9 @@ export enum ImageEditorSliderIds {
   SharpenAmount = 'sharpen_amount',
   Intensity = 'intensity',
   Radius = 'radius',
+  RedChannel = 'r_channel',
+  GreenChannel = 'g_channel',
+  BlueChannel = 'b_channel',
   DesaturationLevel = 'desaturation_level',
 }
 export enum ImageEditorTextfieldIds {
@@ -128,6 +131,9 @@ export interface ImageEditorClaritySettings extends ImageEditorFilterSettings {
   blur_kernel_size: number;
 }
 export interface ImageEditorDesaturateSettings extends ImageEditorFilterSettings {
+  r_channel: number;
+  g_channel: number;
+  b_channel: number;
   desaturation_level: number;
 }
 export interface ImageEditorVignetteSettings extends ImageEditorFilterSettings {
@@ -141,6 +147,9 @@ export enum ImageEditorClarityIds {
   SharpenAmount = 'sharpen_amount',
 }
 export enum ImageEditorDesaturateIds {
+  RedChannel = 'r_channel',
+  GreenChannel = 'g_channel',
+  BlueChannel = 'b_channel',
   DesaturationLevels = 'desaturation_level',
 }
 export enum ImageEditorVignetteIds {

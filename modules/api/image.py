@@ -97,9 +97,12 @@ def apply_clarity_effect(img_tensor: torch.Tensor, settings: dict):
     return clarity_effect(img_tensor, clarity_strength, sharpen_amount, blur_kernel_size)
 
 def apply_desaturate_effect(img_tensor: torch.Tensor, settings: dict):
-    desaturation_level: float = float(settings.get("desaturation_level", 0))
+    desaturation_strength: float = float(settings.get("desaturation_strength", 0))
+    r: float = float(settings.get("r_channel", 0))
+    g: float = float(settings.get("g_channel", 0))
+    b: float = float(settings.get("b_channel", 0))
 
-    return desaturate_effect(img_tensor, desaturation_level)
+    return desaturate_effect(img_tensor, desaturation_strength, [r, g, b])
 
 def apply_vignette_effect(img_tensor: torch.Tensor, settings: dict):
     intensity: float = float(settings.get("intensity", 0))

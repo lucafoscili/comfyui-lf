@@ -56,11 +56,11 @@ export declare enum NodeName {
     characterImpersonator = "LF_CharacterImpersonator",
     checkpointSelector = "LF_CheckpointSelector",
     civitaiMetadataSetup = "LF_CivitAIMetadataSetup",
-    clarityEffect = "LF_ClarityEffect",
+    clarity = "LF_Clarity",
     colorAnalysis = "LF_ColorAnalysis",
     compareImages = "LF_CompareImages",
     controlPanel = "LF_ControlPanel",
-    desaturationEffect = "LF_DesaturationEffect",
+    desaturation = "LF_Desaturation",
     displayBoolean = "LF_DisplayBoolean",
     displayFloat = "LF_DisplayFloat",
     displayInteger = "LF_DisplayInteger",
@@ -128,7 +128,7 @@ export declare enum NodeName {
     usageStatistics = "LF_UsageStatistics",
     vaeSelector = "LF_VAESelector",
     viewImages = "LF_ViewImages",
-    vignetteEffect = "LF_VignetteEffect",
+    vignette = "LF_Vignette",
     wallOfText = "LF_WallOfText",
     writeJson = "LF_WriteJSON"
 }

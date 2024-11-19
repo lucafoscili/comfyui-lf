@@ -3,6 +3,7 @@ import { APIEndpoints } from '../types/api/api.js';
 import { LogSeverity } from '../types/manager/manager.js';
 import { getLFManager } from '../utils/common.js';
 export const BACKUP_API = {
+    //#region new
     new: async (backupType = 'automatic') => {
         const lfManager = getLFManager();
         const payload = {
@@ -35,4 +36,5 @@ export const BACKUP_API = {
         lfManager.log(payload.message, { payload }, payload.status);
         return payload;
     },
+    //#endregion
 };

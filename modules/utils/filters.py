@@ -65,25 +65,31 @@ def clarity_effect(image_tensor:torch.Tensor, clarity_strength:float, sharpen_am
     return numpy_to_tensor(final_image)
 # endregion
 # region desaturate_effect
-def desaturate_effect(image: torch.Tensor, level: float) -> torch.Tensor:
+def desaturate_effect(image: torch.Tensor, global_level: float, channel_levels: list[float]) -> torch.Tensor:
     """
-    Applies a desaturation effect to the input image tensor.
+    Applies partial desaturation per channel to the input image tensor.
     Args:
         image (torch.Tensor): Input image tensor with shape (B, H, W, C).
-        level (float): Desaturation level from 0.0 (no effect) to 1.0 (full grayscale).
+        global_level (float): Global desaturation level (0.0 to 1.0).
+        channel_levels (list[float]): List of desaturation levels for [R, G, B].
     Returns:
-        torch.Tensor: Processed image tensor with shape (B, H, W, C).
+        torch.Tensor: Partially desaturated image tensor with shape (B, H, W, C).
     """
     if image.ndim != 4 or image.shape[-1] != 3:
         raise ValueError("Input image must have shape (B, H, W, 3).")
+
+    if len(channel_levels) != 3:
+        raise ValueError("channel_levels must have exactly 3 values for R, G, and B.")
 
     r, g, b = image[..., 0], image[..., 1], image[..., 2]
 
     gray_image = 0.299 * r + 0.587 * g + 0.114 * b
 
-    gray_image_expanded = torch.stack([gray_image, gray_image, gray_image], dim=-1)
+    desaturated_r = (1 - (global_level * channel_levels[0])) * r + (global_level * channel_levels[0]) * gray_image
+    desaturated_g = (1 - (global_level * channel_levels[1])) * g + (global_level * channel_levels[1]) * gray_image
+    desaturated_b = (1 - (global_level * channel_levels[2])) * b + (global_level * channel_levels[2]) * gray_image
 
-    desaturated_image = (1 - level) * image + level * gray_image_expanded
+    desaturated_image = torch.stack([desaturated_r, desaturated_g, desaturated_b], dim=-1)
 
     return desaturated_image
 # endregion
