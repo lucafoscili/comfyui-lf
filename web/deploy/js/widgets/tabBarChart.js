@@ -1,5 +1,5 @@
 import { LogSeverity } from '../types/manager/manager.js';
-import { CustomWidgetName, NodeName, } from '../types/widgets/_common.js';
+import { CustomWidgetName, NodeName, TagName, } from '../types/widgets/_common.js';
 import { createDOMWidget, getLFManager, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-tabbarchart';
 const TYPE = CustomWidgetName.tabBarChart;
@@ -92,12 +92,12 @@ export const tabBarChartFactory = {
         };
     },
     render: (node) => {
-        const wrapper = document.createElement('div');
-        const content = document.createElement('div');
-        const grid = document.createElement('div');
-        const textfield = document.createElement('kul-textfield');
-        const chart = document.createElement('kul-chart');
-        const tabbar = document.createElement('kul-tabbar');
+        const wrapper = document.createElement(TagName.Div);
+        const content = document.createElement(TagName.Div);
+        const grid = document.createElement(TagName.Div);
+        const textfield = document.createElement(TagName.KulTextfield);
+        const chart = document.createElement(TagName.KulChart);
+        const tabbar = document.createElement(TagName.KulTabbar);
         const options = tabBarChartFactory.options(chart, tabbar, textfield, node.comfyClass);
         switch (node.comfyClass) {
             case NodeName.colorAnalysis:

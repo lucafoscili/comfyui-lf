@@ -2,6 +2,7 @@ import {
   CustomWidgetName,
   CustomWidgetDeserializedValuesMap,
   NormalizeValueCallback,
+  TagName,
 } from '../types/widgets/_common';
 import { MessengerDeserializedValue, MessengerFactory } from '../types/widgets/messenger';
 import { createDOMWidget, normalizeValue } from '../utils/common';
@@ -52,10 +53,10 @@ export const messengerFactory: MessengerFactory = {
     };
   },
   render: (node) => {
-    const wrapper = document.createElement('div');
-    const content = document.createElement('div');
-    const placeholder = document.createElement('div');
-    const messenger = document.createElement('kul-messenger');
+    const wrapper = document.createElement(TagName.Div);
+    const content = document.createElement(TagName.Div);
+    const placeholder = document.createElement(TagName.Div);
+    const messenger = document.createElement(TagName.KulMessenger);
     const options = messengerFactory.options(messenger, placeholder);
 
     content.classList.add(messengerFactory.cssClasses.content);

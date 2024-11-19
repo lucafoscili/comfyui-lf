@@ -2,6 +2,7 @@ import {
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
   NormalizeValueCallback,
+  TagName,
 } from '../types/widgets/_common';
 import { cardHandler, getCardProps } from '../helpers/card';
 import { createDOMWidget, normalizeValue } from '../utils/common';
@@ -59,11 +60,11 @@ export const cardsWithChipFactory: CardsWithChipFactory = {
     };
   },
   render: (node) => {
-    const wrapper = document.createElement('div');
-    const content = document.createElement('div');
-    const grid = document.createElement('div');
-    const cards = document.createElement('div');
-    const chip = document.createElement('kul-chip');
+    const wrapper = document.createElement(TagName.Div);
+    const content = document.createElement(TagName.Div);
+    const grid = document.createElement(TagName.Div);
+    const cards = document.createElement(TagName.Div);
+    const chip = document.createElement(TagName.KulChip);
     const options = cardsWithChipFactory.options(grid);
 
     content.classList.add(cardsWithChipFactory.cssClasses.content);

@@ -1,5 +1,5 @@
 import { LogSeverity } from '../types/manager/manager.js';
-import { CustomWidgetName, NodeName, } from '../types/widgets/_common.js';
+import { CustomWidgetName, NodeName, TagName, } from '../types/widgets/_common.js';
 import { createDOMWidget, findWidget, getLFManager, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-chat';
 const TYPE = CustomWidgetName.chat;
@@ -30,9 +30,9 @@ export const chatFactory = {
         if (findWidget(node, TYPE) && node.comfyClass === NodeName.llmChat) {
             return w.element;
         }
-        const wrapper = document.createElement('div');
-        const content = document.createElement('div');
-        const chat = document.createElement('kul-chat');
+        const wrapper = document.createElement(TagName.Div);
+        const content = document.createElement(TagName.Div);
+        const chat = document.createElement(TagName.KulChat);
         const options = chatFactory.options(chat);
         content.classList.add(chatFactory.cssClasses.content);
         chat.classList.add(chatFactory.cssClasses.chat);

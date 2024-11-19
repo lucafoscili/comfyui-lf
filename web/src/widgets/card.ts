@@ -3,6 +3,7 @@ import {
   CustomWidgetName,
   NodeName,
   NormalizeValueCallback,
+  TagName,
 } from '../types/widgets/_common';
 import { cardHandler, cardPlaceholders, fetchModelMetadata, getCardProps } from '../helpers/card';
 import { createDOMWidget, getCustomWidget, normalizeValue } from '../utils/common';
@@ -47,9 +48,9 @@ export const cardFactory: CardFactory = {
     };
   },
   render: (node) => {
-    const wrapper = document.createElement('div');
-    const content = document.createElement('div');
-    const grid = document.createElement('div');
+    const wrapper = document.createElement(TagName.Div);
+    const content = document.createElement(TagName.Div);
+    const grid = document.createElement(TagName.Div);
     const options = cardFactory.options(grid);
 
     content.classList.add(cardFactory.cssClasses.content);
@@ -122,14 +123,14 @@ const selectorButton = (grid: HTMLDivElement, node: NodeType) => {
     }
   };
 
-  const button = document.createElement('kul-button');
+  const button = document.createElement(TagName.KulButton);
   button.classList.add('kul-full-width');
   button.kulIcon = 'cloud_download';
   button.kulLabel = 'Refresh';
   button.title = 'Attempts to manually ownload fresh metadata from CivitAI';
   button.addEventListener('kul-button-event', cb);
 
-  const spinner = document.createElement('kul-spinner');
+  const spinner = document.createElement(TagName.KulSpinner);
   spinner.kulActive = true;
   spinner.kulDimensions = '0.6em';
   spinner.kulLayout = 2;

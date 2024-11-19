@@ -5,6 +5,7 @@ import {
   CustomWidgetDeserializedValuesMap,
   NormalizeValueCallback,
   NodeName,
+  TagName,
 } from '../types/widgets/_common';
 import { ChipFactory } from '../types/widgets/chip';
 import { createDOMWidget, normalizeValue } from '../utils/common';
@@ -39,9 +40,9 @@ export const chipFactory: ChipFactory = {
     };
   },
   render: (node) => {
-    const wrapper = document.createElement('div');
-    const content = document.createElement('div');
-    const chip = document.createElement('kul-chip');
+    const wrapper = document.createElement(TagName.Div);
+    const content = document.createElement(TagName.Div);
+    const chip = document.createElement(TagName.KulChip);
     const options = chipFactory.options(chip);
 
     content.classList.add(chipFactory.cssClasses.content);

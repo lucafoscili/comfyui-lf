@@ -11,6 +11,7 @@ import {
   CustomWidgetName,
   NodeName,
   NormalizeValueCallback,
+  TagName,
 } from '../types/widgets/_common';
 import {
   ImageEditorActionButtons,
@@ -75,11 +76,11 @@ export const imageEditorFactory: ImageEditorFactory = {
     };
   },
   render: (node) => {
-    const wrapper = document.createElement('div');
-    const content = document.createElement('div');
-    const grid = document.createElement('div');
-    const settings = document.createElement('div');
-    const imageviewer = document.createElement('kul-imageviewer');
+    const wrapper = document.createElement(TagName.Div);
+    const content = document.createElement(TagName.Div);
+    const grid = document.createElement(TagName.Div);
+    const settings = document.createElement(TagName.Div);
+    const imageviewer = document.createElement(TagName.KulImageviewer);
 
     settings.classList.add(imageEditorFactory.cssClasses.settings);
     settings.slot = 'settings';
@@ -97,9 +98,9 @@ export const imageEditorFactory: ImageEditorFactory = {
 
     switch (node.comfyClass) {
       case NodeName.imagesEditingBreakpoint:
-        const actions = document.createElement('div');
-        const interrupt = document.createElement('kul-button');
-        const resume = document.createElement('kul-button');
+        const actions = document.createElement(TagName.Div);
+        const interrupt = document.createElement(TagName.KulButton);
+        const resume = document.createElement(TagName.KulButton);
 
         interrupt.classList.add(imageEditorFactory.cssClasses.resume);
         interrupt.classList.add('kul-full-width');

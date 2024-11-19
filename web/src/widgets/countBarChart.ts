@@ -4,6 +4,7 @@ import {
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
   NormalizeValueCallback,
+  TagName,
 } from '../types/widgets/_common';
 import {
   CountBarChartDeserializedValue,
@@ -56,12 +57,12 @@ export const countBarChartFactory: CountBarChartFactory = {
     };
   },
   render: (node) => {
-    const wrapper = document.createElement('div');
-    const content = document.createElement('div');
-    const grid = document.createElement('div');
-    const chart = document.createElement('kul-chart');
-    const chip = document.createElement('kul-chip');
-    const button = document.createElement('kul-button');
+    const wrapper = document.createElement(TagName.Div);
+    const content = document.createElement(TagName.Div);
+    const grid = document.createElement(TagName.Div);
+    const chart = document.createElement(TagName.KulChart);
+    const chip = document.createElement(TagName.KulChip);
+    const button = document.createElement(TagName.KulButton);
     const options = countBarChartFactory.options(chart, chip, button);
 
     content.classList.add(countBarChartFactory.cssClasses.content);

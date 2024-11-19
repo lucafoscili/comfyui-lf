@@ -4,6 +4,7 @@ import {
   CustomWidgetName,
   NodeName,
   NormalizeValueCallback,
+  TagName,
 } from '../types/widgets/_common';
 import { TextareaDeserializedValue, TextareaFactory } from '../types/widgets/textarea';
 import { createDOMWidget, findWidget, getLFManager, normalizeValue } from '../utils/common';
@@ -46,9 +47,9 @@ export const textareaFactory: TextareaFactory = {
       return w.element;
     }
 
-    const wrapper = document.createElement('div');
-    const content = document.createElement('div');
-    const textarea = document.createElement('textarea');
+    const wrapper = document.createElement(TagName.Div);
+    const content = document.createElement(TagName.Div);
+    const textarea = document.createElement(TagName.Textarea);
     const options = textareaFactory.options(textarea);
 
     content.classList.add(textareaFactory.cssClasses.content);

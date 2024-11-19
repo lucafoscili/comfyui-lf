@@ -4,6 +4,7 @@ import {
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
   NormalizeValueCallback,
+  TagName,
 } from '../types/widgets/_common';
 import { UploadFactory } from '../types/widgets/upload';
 import { createDOMWidget, getApiRoutes, getLFManager, normalizeValue } from '../utils/common';
@@ -39,9 +40,9 @@ export const uploadFactory: UploadFactory = {
   },
 
   render: (node) => {
-    const wrapper = document.createElement('div');
-    const content = document.createElement('div');
-    const upload = document.createElement('kul-upload');
+    const wrapper = document.createElement(TagName.Div);
+    const content = document.createElement(TagName.Div);
+    const upload = document.createElement(TagName.KulUpload);
     const options = uploadFactory.options(upload);
 
     content.classList.add(uploadFactory.cssClasses.content);

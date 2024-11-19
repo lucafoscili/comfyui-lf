@@ -1,4 +1,4 @@
-import { CustomWidgetName, } from '../types/widgets/_common.js';
+import { CustomWidgetName, TagName, } from '../types/widgets/_common.js';
 import { createDOMWidget, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-compare';
 const TYPE = CustomWidgetName.compare;
@@ -25,9 +25,9 @@ export const compareFactory = {
         };
     },
     render: (node) => {
-        const wrapper = document.createElement('div');
-        const content = document.createElement('div');
-        const compare = document.createElement('kul-compare');
+        const wrapper = document.createElement(TagName.Div);
+        const content = document.createElement(TagName.Div);
+        const compare = document.createElement(TagName.KulCompare);
         const options = compareFactory.options(compare);
         content.classList.add(compareFactory.cssClasses.content);
         compare.classList.add(compareFactory.cssClasses.compare);

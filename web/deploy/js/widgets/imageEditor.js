@@ -1,7 +1,7 @@
 import { TREE_DATA } from '../fixtures/imageEditor.js';
 import { buttonEventHandler, getStatusColumn, imageviewerEventHandler, setGridStatus, } from '../helpers/imageEditor.js';
 import { LogSeverity } from '../types/manager/manager.js';
-import { CustomWidgetName, NodeName, } from '../types/widgets/_common.js';
+import { CustomWidgetName, NodeName, TagName, } from '../types/widgets/_common.js';
 import { ImageEditorIcons, ImageEditorStatus, } from '../types/widgets/imageEditor.js';
 import { createDOMWidget, getLFManager, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-imageeditor';
@@ -54,11 +54,11 @@ export const imageEditorFactory = {
         };
     },
     render: (node) => {
-        const wrapper = document.createElement('div');
-        const content = document.createElement('div');
-        const grid = document.createElement('div');
-        const settings = document.createElement('div');
-        const imageviewer = document.createElement('kul-imageviewer');
+        const wrapper = document.createElement(TagName.Div);
+        const content = document.createElement(TagName.Div);
+        const grid = document.createElement(TagName.Div);
+        const settings = document.createElement(TagName.Div);
+        const imageviewer = document.createElement(TagName.KulImageviewer);
         settings.classList.add(imageEditorFactory.cssClasses.settings);
         settings.slot = 'settings';
         imageviewer.classList.add(imageEditorFactory.cssClasses.imageviewer);
@@ -69,9 +69,9 @@ export const imageEditorFactory = {
         const actionButtons = {};
         switch (node.comfyClass) {
             case NodeName.imagesEditingBreakpoint:
-                const actions = document.createElement('div');
-                const interrupt = document.createElement('kul-button');
-                const resume = document.createElement('kul-button');
+                const actions = document.createElement(TagName.Div);
+                const interrupt = document.createElement(TagName.KulButton);
+                const resume = document.createElement(TagName.KulButton);
                 interrupt.classList.add(imageEditorFactory.cssClasses.resume);
                 interrupt.classList.add('kul-full-width');
                 interrupt.classList.add('kul-danger');

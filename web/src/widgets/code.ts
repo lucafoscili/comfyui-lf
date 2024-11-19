@@ -3,6 +3,7 @@ import {
   CustomWidgetName,
   NodeName,
   NormalizeValueCallback,
+  TagName,
 } from '../types/widgets/_common';
 import { CodeFactory } from '../types/widgets/code';
 import { createDOMWidget, normalizeValue } from '../utils/common';
@@ -48,9 +49,9 @@ export const codeFactory: CodeFactory = {
     };
   },
   render: (node) => {
-    const wrapper = document.createElement('div');
-    const content = document.createElement('div');
-    const code = document.createElement('kul-code');
+    const wrapper = document.createElement(TagName.Div);
+    const content = document.createElement(TagName.Div);
+    const code = document.createElement(TagName.KulCode);
     const options = codeFactory.options(code);
 
     content.classList.add(codeFactory.cssClasses.content);

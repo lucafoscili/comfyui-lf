@@ -1,5 +1,5 @@
 import { LogSeverity } from '../types/manager/manager.js';
-import { CustomWidgetName, } from '../types/widgets/_common.js';
+import { CustomWidgetName, TagName, } from '../types/widgets/_common.js';
 import { createDOMWidget, getApiRoutes, getLFManager, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-upload';
 const TYPE = CustomWidgetName.upload;
@@ -26,9 +26,9 @@ export const uploadFactory = {
         };
     },
     render: (node) => {
-        const wrapper = document.createElement('div');
-        const content = document.createElement('div');
-        const upload = document.createElement('kul-upload');
+        const wrapper = document.createElement(TagName.Div);
+        const content = document.createElement(TagName.Div);
+        const upload = document.createElement(TagName.KulUpload);
         const options = uploadFactory.options(upload);
         content.classList.add(uploadFactory.cssClasses.content);
         upload.classList.add(uploadFactory.cssClasses.upload);

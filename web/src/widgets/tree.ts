@@ -3,6 +3,7 @@ import {
   CustomWidgetName,
   NodeName,
   NormalizeValueCallback,
+  TagName,
 } from '../types/widgets/_common';
 import { TreeFactory, TreeValueDeserializedValue } from '../types/widgets/tree';
 import { createDOMWidget, normalizeValue } from '../utils/common';
@@ -36,9 +37,9 @@ export const treeFactory: TreeFactory = {
     };
   },
   render: (node) => {
-    const wrapper = document.createElement('div');
-    const content = document.createElement('div');
-    const tree = document.createElement('kul-tree');
+    const wrapper = document.createElement(TagName.Div);
+    const content = document.createElement(TagName.Div);
+    const tree = document.createElement(TagName.KulTree);
     const options = treeFactory.options(tree);
 
     switch (node.comfyClass as NodeName) {

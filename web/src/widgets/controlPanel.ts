@@ -7,6 +7,7 @@ import {
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
   NormalizeValueCallback,
+  TagName,
 } from '../types/widgets/_common';
 import {
   createDOMWidget,
@@ -152,7 +153,7 @@ const createArticle = () => {
     }
   };
 
-  const article = document.createElement('kul-article');
+  const article = document.createElement(TagName.KulArticle);
   article.kulData = articleData;
   article.addEventListener('kul-article-event', cb);
 

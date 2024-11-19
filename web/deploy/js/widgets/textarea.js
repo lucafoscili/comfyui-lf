@@ -1,5 +1,5 @@
 import { LogSeverity } from '../types/manager/manager.js';
-import { CustomWidgetName, NodeName, } from '../types/widgets/_common.js';
+import { CustomWidgetName, NodeName, TagName, } from '../types/widgets/_common.js';
 import { createDOMWidget, findWidget, getLFManager, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-textarea';
 const TYPE = CustomWidgetName.textarea;
@@ -35,9 +35,9 @@ export const textareaFactory = {
         if (findWidget(node, TYPE) && node.comfyClass === NodeName.writeJson) {
             return w.element;
         }
-        const wrapper = document.createElement('div');
-        const content = document.createElement('div');
-        const textarea = document.createElement('textarea');
+        const wrapper = document.createElement(TagName.Div);
+        const content = document.createElement(TagName.Div);
+        const textarea = document.createElement(TagName.Textarea);
         const options = textareaFactory.options(textarea);
         content.classList.add(textareaFactory.cssClasses.content);
         textarea.classList.add(textareaFactory.cssClasses.widget);

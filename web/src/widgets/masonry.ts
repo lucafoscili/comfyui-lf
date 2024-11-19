@@ -5,6 +5,7 @@ import {
   CustomWidgetName,
   NodeName,
   NormalizeValueCallback,
+  TagName,
 } from '../types/widgets/_common';
 import { MasonryDeserializedValue, MasonryFactory } from '../types/widgets/masonry';
 import { createDOMWidget, isValidNumber, normalizeValue } from '../utils/common';
@@ -60,9 +61,9 @@ export const masonryFactory: MasonryFactory = {
     };
   },
   render: (node) => {
-    const wrapper = document.createElement('div');
-    const content = document.createElement('div');
-    const masonry = document.createElement('kul-masonry');
+    const wrapper = document.createElement(TagName.Div);
+    const content = document.createElement(TagName.Div);
+    const masonry = document.createElement(TagName.KulMasonry);
     const options = masonryFactory.options(masonry);
 
     content.classList.add(masonryFactory.cssClasses.content);

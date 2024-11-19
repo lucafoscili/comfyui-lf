@@ -4,6 +4,7 @@ import {
   CustomWidgetName,
   NodeName,
   NormalizeValueCallback,
+  TagName,
 } from '../types/widgets/_common';
 import { CompareFactory } from '../types/widgets/compare';
 import { createDOMWidget, normalizeValue } from '../utils/common';
@@ -37,9 +38,9 @@ export const compareFactory: CompareFactory = {
     };
   },
   render: (node) => {
-    const wrapper = document.createElement('div');
-    const content = document.createElement('div');
-    const compare = document.createElement('kul-compare');
+    const wrapper = document.createElement(TagName.Div);
+    const content = document.createElement(TagName.Div);
+    const compare = document.createElement(TagName.KulCompare);
     const options = compareFactory.options(compare);
 
     content.classList.add(compareFactory.cssClasses.content);

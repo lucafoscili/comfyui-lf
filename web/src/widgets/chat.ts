@@ -4,6 +4,7 @@ import {
   CustomWidgetName,
   NodeName,
   NormalizeValueCallback,
+  TagName,
 } from '../types/widgets/_common';
 import { ChatFactory } from '../types/widgets/chat';
 import { createDOMWidget, findWidget, getLFManager, normalizeValue } from '../utils/common';
@@ -42,9 +43,9 @@ export const chatFactory: ChatFactory = {
       return w.element;
     }
 
-    const wrapper = document.createElement('div');
-    const content = document.createElement('div');
-    const chat = document.createElement('kul-chat');
+    const wrapper = document.createElement(TagName.Div);
+    const content = document.createElement(TagName.Div);
+    const chat = document.createElement(TagName.KulChat);
     const options = chatFactory.options(chat);
 
     content.classList.add(chatFactory.cssClasses.content);

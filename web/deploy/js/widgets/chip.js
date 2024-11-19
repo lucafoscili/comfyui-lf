@@ -1,4 +1,4 @@
-import { CustomWidgetName, NodeName, } from '../types/widgets/_common.js';
+import { CustomWidgetName, NodeName, TagName, } from '../types/widgets/_common.js';
 import { createDOMWidget, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-chip';
 const TYPE = CustomWidgetName.chip;
@@ -26,9 +26,9 @@ export const chipFactory = {
         };
     },
     render: (node) => {
-        const wrapper = document.createElement('div');
-        const content = document.createElement('div');
-        const chip = document.createElement('kul-chip');
+        const wrapper = document.createElement(TagName.Div);
+        const content = document.createElement(TagName.Div);
+        const chip = document.createElement(TagName.KulChip);
         const options = chipFactory.options(chip);
         content.classList.add(chipFactory.cssClasses.content);
         chip.classList.add(chipFactory.cssClasses.chip);

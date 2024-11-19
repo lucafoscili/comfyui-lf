@@ -1,4 +1,4 @@
-import { CustomWidgetName, NodeName, } from '../types/widgets/_common.js';
+import { CustomWidgetName, NodeName, TagName, } from '../types/widgets/_common.js';
 import { createDOMWidget, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-code';
 const TYPE = CustomWidgetName.code;
@@ -37,9 +37,9 @@ export const codeFactory = {
         };
     },
     render: (node) => {
-        const wrapper = document.createElement('div');
-        const content = document.createElement('div');
-        const code = document.createElement('kul-code');
+        const wrapper = document.createElement(TagName.Div);
+        const content = document.createElement(TagName.Div);
+        const code = document.createElement(TagName.KulCode);
         const options = codeFactory.options(code);
         content.classList.add(codeFactory.cssClasses.content);
         code.classList.add(codeFactory.cssClasses.code);

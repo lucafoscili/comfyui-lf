@@ -1,4 +1,4 @@
-import { CustomWidgetName, } from '../types/widgets/_common.js';
+import { CustomWidgetName, TagName, } from '../types/widgets/_common.js';
 import { cardHandler, getCardProps } from '../helpers/card.js';
 import { createDOMWidget, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-cardswithchip';
@@ -43,11 +43,11 @@ export const cardsWithChipFactory = {
         };
     },
     render: (node) => {
-        const wrapper = document.createElement('div');
-        const content = document.createElement('div');
-        const grid = document.createElement('div');
-        const cards = document.createElement('div');
-        const chip = document.createElement('kul-chip');
+        const wrapper = document.createElement(TagName.Div);
+        const content = document.createElement(TagName.Div);
+        const grid = document.createElement(TagName.Div);
+        const cards = document.createElement(TagName.Div);
+        const chip = document.createElement(TagName.KulChip);
         const options = cardsWithChipFactory.options(grid);
         content.classList.add(cardsWithChipFactory.cssClasses.content);
         grid.classList.add(cardsWithChipFactory.cssClasses.grid);

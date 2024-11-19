@@ -194,6 +194,31 @@ export enum NodeName {
   wallOfText = 'LF_WallOfText',
   writeJson = 'LF_WriteJSON',
 }
+export enum TagName {
+  Div = 'div',
+  KulArticle = 'kul-article',
+  KulButton = 'kul-button',
+  KulCard = 'kul-card',
+  KulCarousel = 'kul-carousel',
+  KulChat = 'kul-chat',
+  KulChart = 'kul-chart',
+  KulChip = 'kul-chip',
+  KulCode = 'kul-code',
+  KulCompare = 'kul-compare',
+  KulImageviewer = 'kul-imageviewer',
+  KulList = 'kul-list',
+  KulMasonry = 'kul-masonry',
+  KulMessenger = 'kul-messenger',
+  KulProgressbar = 'kul-progressbar',
+  KulSlider = 'kul-slider',
+  KulSpinner = 'kul-spinner',
+  KulTabbar = 'kul-tabbar',
+  KulTextfield = 'kul-textfield',
+  KulToggle = 'kul-toggle',
+  KulTree = 'kul-tree',
+  KulUpload = 'kul-upload',
+  Textarea = 'textarea',
+}
 //#endregion
 //#region Unions
 export type CustomWidgetDeserializedValues =

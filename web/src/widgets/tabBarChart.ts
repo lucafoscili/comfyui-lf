@@ -11,6 +11,7 @@ import {
   CustomWidgetName,
   NodeName,
   NormalizeValueCallback,
+  TagName,
 } from '../types/widgets/_common';
 import { TabBarChartDeserializedValue, TabBarChartFactory } from '../types/widgets/tabBarChart';
 import { createDOMWidget, getLFManager, normalizeValue } from '../utils/common';
@@ -109,12 +110,12 @@ export const tabBarChartFactory: TabBarChartFactory = {
     };
   },
   render: (node) => {
-    const wrapper = document.createElement('div');
-    const content = document.createElement('div');
-    const grid = document.createElement('div');
-    const textfield = document.createElement('kul-textfield');
-    const chart = document.createElement('kul-chart');
-    const tabbar = document.createElement('kul-tabbar');
+    const wrapper = document.createElement(TagName.Div);
+    const content = document.createElement(TagName.Div);
+    const grid = document.createElement(TagName.Div);
+    const textfield = document.createElement(TagName.KulTextfield);
+    const chart = document.createElement(TagName.KulChart);
+    const tabbar = document.createElement(TagName.KulTabbar);
     const options = tabBarChartFactory.options(
       chart,
       tabbar,

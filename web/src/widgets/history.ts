@@ -5,6 +5,7 @@ import {
   CustomWidgetName,
   NodeName,
   NormalizeValueCallback,
+  TagName,
 } from '../types/widgets/_common';
 import { HistoryFactory } from '../types/widgets/history';
 import { createDOMWidget, getWidget, normalizeValue } from '../utils/common';
@@ -39,9 +40,9 @@ export const historyFactory: HistoryFactory = {
     };
   },
   render: (node) => {
-    const wrapper = document.createElement('div');
-    const content = document.createElement('div');
-    const history = document.createElement('kul-list');
+    const wrapper = document.createElement(TagName.Div);
+    const content = document.createElement(TagName.Div);
+    const history = document.createElement(TagName.KulList);
     const options = historyFactory.options(history);
 
     content.classList.add(historyFactory.cssClasses.content);

@@ -2,6 +2,7 @@ import {
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
   NormalizeValueCallback,
+  TagName,
 } from '../types/widgets/_common';
 import { CarouselDeserializedValue, CarouselFactory } from '../types/widgets/carousel';
 import { createDOMWidget, normalizeValue } from '../utils/common';
@@ -36,9 +37,9 @@ export const carouselFactory: CarouselFactory = {
     };
   },
   render: (node) => {
-    const wrapper = document.createElement('div');
-    const content = document.createElement('div');
-    const carousel = document.createElement('kul-carousel');
+    const wrapper = document.createElement(TagName.Div);
+    const content = document.createElement(TagName.Div);
+    const carousel = document.createElement(TagName.KulCarousel);
     const options = carouselFactory.options(carousel);
 
     carousel.kulAutoPlay = true;
