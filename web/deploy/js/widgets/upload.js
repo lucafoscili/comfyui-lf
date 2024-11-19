@@ -1,8 +1,10 @@
-import { LogSeverity } from '../types/manager/manager.js';
+import { handleUpload } from '../helpers/upload.js';
+import { KulEventName } from '../types/events/events.js';
 import { CustomWidgetName, TagName, } from '../types/widgets/_common.js';
-import { createDOMWidget, getApiRoutes, getLFManager, normalizeValue } from '../utils/common.js';
+import { createDOMWidget, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-upload';
 const TYPE = CustomWidgetName.upload;
+//#region Upload
 export const uploadFactory = {
     cssClasses: {
         content: BASE_CSS_CLASS,
@@ -32,7 +34,7 @@ export const uploadFactory = {
         const options = uploadFactory.options(upload);
         content.classList.add(uploadFactory.cssClasses.content);
         upload.classList.add(uploadFactory.cssClasses.upload);
-        upload.addEventListener('kul-upload-event', (e) => {
+        upload.addEventListener(KulEventName.KulUpload, (e) => {
             handleUpload(e, upload);
         });
         content.appendChild(upload);
@@ -40,45 +42,4 @@ export const uploadFactory = {
         return { widget: createDOMWidget(TYPE, wrapper, node, options) };
     },
 };
-const handleUpload = async (e, upload) => {
-    const { eventType, selectedFiles } = e.detail;
-    switch (eventType) {
-        case 'delete':
-            upload.dataset.files = Array.from(selectedFiles, (file) => file.name).join(';') || '';
-            return;
-        case 'upload':
-            const fileNames = new Set();
-            for (let index = 0; index < selectedFiles.length; index++) {
-                const file = selectedFiles[index];
-                try {
-                    const body = new FormData();
-                    const i = file.webkitRelativePath.lastIndexOf('/');
-                    const subfolder = file.webkitRelativePath.slice(0, i + 1);
-                    const new_file = new File([file], file.name, {
-                        type: file.type,
-                        lastModified: file.lastModified,
-                    });
-                    body.append('image', new_file);
-                    if (i > 0) {
-                        body.append('subfolder', subfolder);
-                    }
-                    const resp = await getApiRoutes().comfy.upload(body);
-                    if (resp.status === 200 || resp.status === 201) {
-                        getLFManager().log('POST result', { json: resp.json }, LogSeverity.Success);
-                        fileNames.add(file.name);
-                        upload.dataset.files = upload.dataset.files + ';' + file.name;
-                    }
-                    else {
-                        getLFManager().log('POST failed', { statusText: resp.statusText }, LogSeverity.Error);
-                    }
-                }
-                catch (error) {
-                    alert(`Upload failed: ${error}`);
-                }
-            }
-            upload.dataset.files = Array.from(fileNames)?.join(';') || '';
-            break;
-        default:
-            return;
-    }
-};
+//#endregion

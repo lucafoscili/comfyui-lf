@@ -1,4 +1,4 @@
-import { LogSeverity } from '../types/manager/manager';
+import { handleInputChange } from '../helpers/textarea';
 import {
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
@@ -7,12 +7,12 @@ import {
   TagName,
 } from '../types/widgets/_common';
 import { TextareaDeserializedValue, TextareaFactory } from '../types/widgets/textarea';
-import { createDOMWidget, findWidget, getLFManager, normalizeValue } from '../utils/common';
+import { createDOMWidget, findWidget, normalizeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-textarea';
 const TYPE = CustomWidgetName.textarea;
-let VALIDATION_TIMEOUT: NodeJS.Timeout;
 
+//#region Textarea
 export const textareaFactory: TextareaFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
@@ -65,30 +65,4 @@ export const textareaFactory: TextareaFactory = {
     return { widget: createDOMWidget(TYPE, wrapper, node, options) };
   },
 };
-
-function handleInputChange(e: Event) {
-  const textarea = e.currentTarget as HTMLTextAreaElement;
-
-  const startValidationTimer = () => {
-    const validateAndFormatJSON = async () => {
-      try {
-        const jsonObject = JSON.parse(textarea.value);
-        const formattedJson = JSON.stringify(jsonObject, null, 2);
-        if (formattedJson !== '{}') {
-          textarea.title = '';
-          textarea.value = formattedJson;
-          textarea.classList.remove(textareaFactory.cssClasses.widgetError);
-        }
-      } catch (error) {
-        getLFManager().log('Error parsing JSON', { error }, LogSeverity.Warning);
-        textarea.classList.add(textareaFactory.cssClasses.widgetError);
-        textarea.title = error;
-      }
-    };
-
-    VALIDATION_TIMEOUT = setTimeout(validateAndFormatJSON, 2500);
-  };
-
-  clearTimeout(VALIDATION_TIMEOUT);
-  startValidationTimer();
-}
+//#endregion

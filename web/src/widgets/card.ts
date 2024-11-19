@@ -7,10 +7,10 @@ import {
 } from '../types/widgets/_common';
 import { cardHandler, cardPlaceholders, fetchModelMetadata, getCardProps } from '../helpers/card';
 import { createDOMWidget, getCustomWidget, normalizeValue } from '../utils/common';
-import { KulButton } from '../types/ketchup-lite/components/kul-button/kul-button';
 import { KulButtonEventPayload } from '../types/ketchup-lite/components';
 import { CardDeserializedValue, CardFactory } from '../types/widgets/card';
 import { APIMetadataEntry } from '../types/api/api';
+import { KulEventName } from '../types/events/events';
 
 const BASE_CSS_CLASS = 'lf-card';
 const TYPE = CustomWidgetName.card;
@@ -26,7 +26,7 @@ export const cardFactory: CardFactory = {
     return {
       hideOnZoom: false,
       getComp() {
-        return Array.from(grid.querySelectorAll('kul-card'));
+        return Array.from(grid.querySelectorAll(TagName.KulCard));
       },
       getValue() {
         return {
@@ -78,11 +78,11 @@ export const cardFactory: CardFactory = {
 const selectorButton = (grid: HTMLDivElement, node: NodeType) => {
   const cb = (e: CustomEvent<KulButtonEventPayload>) => {
     const { comp, eventType } = e.detail;
-    const button = comp as KulButton;
+    const button = comp;
 
     switch (eventType) {
       case 'click':
-        const cards = Array.from(grid.querySelectorAll('kul-card'));
+        const cards = Array.from(grid.querySelectorAll(TagName.KulCard));
         if (cards?.length) {
           const models: APIMetadataEntry[] = [];
           const widget = getCustomWidget(node, CustomWidgetName.card);
@@ -128,7 +128,7 @@ const selectorButton = (grid: HTMLDivElement, node: NodeType) => {
   button.kulIcon = 'cloud_download';
   button.kulLabel = 'Refresh';
   button.title = 'Attempts to manually ownload fresh metadata from CivitAI';
-  button.addEventListener('kul-button-event', cb);
+  button.addEventListener(KulEventName.KulButton, cb);
 
   const spinner = document.createElement(TagName.KulSpinner);
   spinner.kulActive = true;

@@ -28,6 +28,7 @@ import {
   ExtensionCallback,
   LogSeverity,
 } from '../types/manager/manager.js';
+import { GITHUB_API } from '../api/github.js';
 
 export interface LFWindow extends Window {
   comfyAPI: ComfyUI;
@@ -39,6 +40,7 @@ export class LFManager {
     analytics: ANALYTICS_API,
     backup: BACKUP_API,
     comfy: COMFY_API,
+    github: GITHUB_API,
     image: IMAGE_API,
     json: JSON_API,
     metadata: METADATA_API,
@@ -52,6 +54,7 @@ export class LFManager {
   #DEBUG_DATASET: KulArticleNode[];
   #DOM = document.documentElement as KulDom;
   #INITIALIZED = false;
+  #LATEST_RELEASE: GitHubRelease;
   #MANAGERS: {
     ketchupLite?: KulManager;
     tooltip?: LFTooltip;
@@ -60,6 +63,8 @@ export class LFManager {
 
   constructor() {
     const managerCb = async () => {
+      const lastRelease = await this.#APIS.github.getLatestRelease();
+      this.#LATEST_RELEASE = lastRelease.data || null;
       this.#MANAGERS.ketchupLite = getKulManager();
       this.log('KulManager ready', { kulManager: this.#MANAGERS.ketchupLite }, LogSeverity.Success);
       document.removeEventListener('kul-manager-ready', managerCb);
@@ -86,7 +91,7 @@ export class LFManager {
 
     for (const key in NodeName) {
       if (Object.prototype.hasOwnProperty.call(NodeName, key)) {
-        const name: NodeName = NodeName[key];
+        const name: NodeName = NodeName[key as keyof typeof NodeName];
         const eventName = this.getEventName(name);
         const widgets = NODE_WIDGET_MAP[name];
         const customWidgets: Partial<CustomWidgetGetter> = {};
@@ -144,6 +149,9 @@ export class LFManager {
   }
   getEventName(node: NodeName) {
     return node.toLowerCase().replace('_', '-') as EventName;
+  }
+  getLatestRelease() {
+    return this.#LATEST_RELEASE;
   }
   getManagers() {
     return this.#MANAGERS;
@@ -213,7 +221,6 @@ export class LFManager {
     this.#DEBUG_ARTICLE = article;
     this.#DEBUG_DATASET = dataset;
   }
-
   toggleBackup(value?: boolean) {
     if (value === false || value === true) {
       this.#AUTOMATIC_BACKUP = value;
@@ -224,7 +231,6 @@ export class LFManager {
 
     return this.#DEBUG;
   }
-
   toggleDebug(value?: boolean) {
     if (value === false || value === true) {
       this.#DEBUG = value;

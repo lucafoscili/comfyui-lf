@@ -1,8 +1,10 @@
+import { KulEventName } from '../types/events/events.js';
 import { LogSeverity } from '../types/manager/manager.js';
 import { CustomWidgetName, NodeName, TagName, } from '../types/widgets/_common.js';
 import { createDOMWidget, findWidget, getLFManager, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-chat';
 const TYPE = CustomWidgetName.chat;
+//#region Chat
 export const chatFactory = {
     cssClasses: {
         content: BASE_CSS_CLASS,
@@ -36,7 +38,7 @@ export const chatFactory = {
         const options = chatFactory.options(chat);
         content.classList.add(chatFactory.cssClasses.content);
         chat.classList.add(chatFactory.cssClasses.chat);
-        chat.addEventListener('kul-chat-event', (e) => {
+        chat.addEventListener(KulEventName.KulChat, (e) => {
             const { eventType, history, status } = e.detail;
             switch (eventType) {
                 case 'polling':
@@ -58,3 +60,4 @@ export const chatFactory = {
         return { widget: createDOMWidget(TYPE, wrapper, node, options) };
     },
 };
+//#endregion

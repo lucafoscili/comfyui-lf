@@ -120,6 +120,7 @@ export var NodeName;
 export var TagName;
 (function (TagName) {
     TagName["Div"] = "div";
+    TagName["KulAccordion"] = "kul-accordion";
     TagName["KulArticle"] = "kul-article";
     TagName["KulButton"] = "kul-button";
     TagName["KulCard"] = "kul-card";

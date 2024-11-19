@@ -1,9 +1,13 @@
 import { CustomWidgetName, } from '../types/widgets/_common.js';
 import { LogSeverity } from '../types/manager/manager.js';
+//#region Constants
 const DEFAULT_WIDGET_NAME = 'ui_widget';
 const DOM = document.documentElement;
 const WINDOW = window;
+//#endregion
+//#region Variables
 let timer;
+//#endregion
 //#region Components
 export const isButton = (comp) => {
     return comp.rootElement.tagName.toLowerCase() === 'kul-button';

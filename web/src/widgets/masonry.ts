@@ -1,3 +1,4 @@
+import { KulEventName } from '../types/events/events';
 import { KulImageEventPayload, KulMasonryEventPayload } from '../types/ketchup-lite/components';
 import { KulDataCell } from '../types/ketchup-lite/managers/kul-data/kul-data-declarations';
 import {
@@ -68,7 +69,7 @@ export const masonryFactory: MasonryFactory = {
 
     content.classList.add(masonryFactory.cssClasses.content);
     masonry.classList.add(masonryFactory.cssClasses.widget);
-    masonry.addEventListener('kul-masonry-event', masonryEventHandler);
+    masonry.addEventListener(KulEventName.KulMasonry, masonryEventHandler);
 
     switch (node.comfyClass) {
       case NodeName.loadImages:

@@ -9,7 +9,7 @@ var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
     return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
 };
-var _LFManager_APIS, _LFManager_AUTOMATIC_BACKUP, _LFManager_CACHED_DATASETS, _LFManager_DEBUG, _LFManager_DEBUG_ARTICLE, _LFManager_DEBUG_DATASET, _LFManager_DOM, _LFManager_INITIALIZED, _LFManager_MANAGERS;
+var _LFManager_APIS, _LFManager_AUTOMATIC_BACKUP, _LFManager_CACHED_DATASETS, _LFManager_DEBUG, _LFManager_DEBUG_ARTICLE, _LFManager_DEBUG_DATASET, _LFManager_DOM, _LFManager_INITIALIZED, _LFManager_LATEST_RELEASE, _LFManager_MANAGERS;
 import { ANALYTICS_API } from '../api/analytics.js';
 import { BACKUP_API } from '../api/backup.js';
 import { COMFY_API } from '../api/comfy.js';
@@ -23,12 +23,14 @@ import { LFWidgets } from './widgets.js';
 import { CustomWidgetName, NodeName } from '../types/widgets/_common.js';
 import { getLogStyle, NODE_WIDGET_MAP, onConnectionsChange, onDrawBackground, onNodeCreated, } from '../helpers/manager.js';
 import { LogSeverity, } from '../types/manager/manager.js';
+import { GITHUB_API } from '../api/github.js';
 export class LFManager {
     constructor() {
         _LFManager_APIS.set(this, {
             analytics: ANALYTICS_API,
             backup: BACKUP_API,
             comfy: COMFY_API,
+            github: GITHUB_API,
             image: IMAGE_API,
             json: JSON_API,
             metadata: METADATA_API,
@@ -42,8 +44,11 @@ export class LFManager {
         _LFManager_DEBUG_DATASET.set(this, void 0);
         _LFManager_DOM.set(this, document.documentElement);
         _LFManager_INITIALIZED.set(this, false);
+        _LFManager_LATEST_RELEASE.set(this, void 0);
         _LFManager_MANAGERS.set(this, {});
         const managerCb = async () => {
+            const lastRelease = await __classPrivateFieldGet(this, _LFManager_APIS, "f").github.getLatestRelease();
+            __classPrivateFieldSet(this, _LFManager_LATEST_RELEASE, lastRelease.data || null, "f");
             __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").ketchupLite = getKulManager();
             this.log('KulManager ready', { kulManager: __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").ketchupLite }, LogSeverity.Success);
             document.removeEventListener('kul-manager-ready', managerCb);
@@ -112,6 +117,9 @@ export class LFManager {
     }
     getEventName(node) {
         return node.toLowerCase().replace('_', '-');
+    }
+    getLatestRelease() {
+        return __classPrivateFieldGet(this, _LFManager_LATEST_RELEASE, "f");
     }
     getManagers() {
         return __classPrivateFieldGet(this, _LFManager_MANAGERS, "f");
@@ -193,7 +201,7 @@ export class LFManager {
         return __classPrivateFieldGet(this, _LFManager_DEBUG, "f");
     }
 }
-_LFManager_APIS = new WeakMap(), _LFManager_AUTOMATIC_BACKUP = new WeakMap(), _LFManager_CACHED_DATASETS = new WeakMap(), _LFManager_DEBUG = new WeakMap(), _LFManager_DEBUG_ARTICLE = new WeakMap(), _LFManager_DEBUG_DATASET = new WeakMap(), _LFManager_DOM = new WeakMap(), _LFManager_INITIALIZED = new WeakMap(), _LFManager_MANAGERS = new WeakMap();
+_LFManager_APIS = new WeakMap(), _LFManager_AUTOMATIC_BACKUP = new WeakMap(), _LFManager_CACHED_DATASETS = new WeakMap(), _LFManager_DEBUG = new WeakMap(), _LFManager_DEBUG_ARTICLE = new WeakMap(), _LFManager_DEBUG_DATASET = new WeakMap(), _LFManager_DOM = new WeakMap(), _LFManager_INITIALIZED = new WeakMap(), _LFManager_LATEST_RELEASE = new WeakMap(), _LFManager_MANAGERS = new WeakMap();
 const WINDOW = window;
 if (!WINDOW.lfManager) {
     WINDOW.lfManager = new LFManager();

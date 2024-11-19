@@ -18,6 +18,7 @@ import {
 } from '../utils/common';
 import { handleKulEvent, sectionsFactory } from '../helpers/control-panel';
 import { ControlPanelDeserializedValue, ControlPanelFactory } from '../types/widgets/controlPanel';
+import { KulEventName } from '../types/events/events';
 
 const BASE_CSS_CLASS = 'lf-controlpanel';
 const TYPE = CustomWidgetName.controlPanel;
@@ -74,7 +75,7 @@ export const controlPanelFactory: ControlPanelFactory = {
     };
   },
   render: (node) => {
-    const wrapper = document.createElement('div');
+    const wrapper = document.createElement(TagName.Div);
     const options = controlPanelFactory.options();
 
     contentCb(wrapper, false);
@@ -93,10 +94,10 @@ const readyCb = (domWidget: HTMLDivElement) => {
 //#endregion
 //#region contentCb
 const contentCb = (domWidget: HTMLDivElement, isReady: boolean) => {
-  const content = document.createElement('div');
+  const content = document.createElement(TagName.Div);
 
   const createSpinner = () => {
-    const spinner = document.createElement('kul-spinner');
+    const spinner = document.createElement(TagName.KulSpinner);
     spinner.classList.add(controlPanelFactory.cssClasses.spinner);
     spinner.kulActive = true;
     spinner.kulLayout = 11;
@@ -121,8 +122,43 @@ const contentCb = (domWidget: HTMLDivElement, isReady: boolean) => {
 //#endregion
 //#region Create
 const createArticle = () => {
-  const { analytics, backup, bug, debug, metadata, theme } = sectionsFactory;
+  const container = document.createElement(TagName.Div);
+  const accordion = document.createElement(TagName.KulAccordion);
+  const ghArticle = document.createElement(TagName.KulArticle);
+  const article = document.createElement(TagName.KulArticle);
+
+  const { analytics, backup, bug, debug, github, metadata, theme } = sectionsFactory;
   const logsData: KulArticleNode[] = [];
+
+  const cb = (e: Event | KulArticleEventPayload) => {
+    const { eventType, originalEvent } = (e as CustomEvent<KulArticleEventPayload>).detail;
+
+    switch (eventType) {
+      case 'kul-event':
+        handleKulEvent(originalEvent);
+        break;
+    }
+  };
+
+  ghArticle.kulData = {
+    nodes: [
+      {
+        children: [
+          {
+            children: [github()],
+            id: 'section',
+          },
+        ],
+        id: 'root',
+        value: '',
+      },
+    ],
+  };
+  ghArticle.slot = 'gh-article';
+
+  accordion.kulData = { nodes: [{ icon: 'github', id: 'gh-article', value: 'Latest release' }] };
+  accordion.appendChild(ghArticle);
+
   const articleData: KulArticleDataset = {
     nodes: [
       {
@@ -142,23 +178,14 @@ const createArticle = () => {
       },
     ],
   };
-
-  const cb = (e: Event | KulArticleEventPayload) => {
-    const { eventType, originalEvent } = (e as CustomEvent<KulArticleEventPayload>).detail;
-
-    switch (eventType) {
-      case 'kul-event':
-        handleKulEvent(originalEvent);
-        break;
-    }
-  };
-
-  const article = document.createElement(TagName.KulArticle);
   article.kulData = articleData;
-  article.addEventListener('kul-article-event', cb);
+  article.addEventListener(KulEventName.KulArticle, cb);
 
   getLFManager().setDebugDataset(article, logsData);
 
-  return article;
+  container.appendChild(accordion);
+  container.appendChild(article);
+
+  return container;
 };
 //#endregion

@@ -24,6 +24,7 @@ export declare class LFManager {
         dataset: KulArticleNode[];
     };
     getEventName(node: NodeName): EventName;
+    getLatestRelease(): GitHubRelease;
     getManagers(): {
         ketchupLite?: KulManager;
         tooltip?: LFTooltip;

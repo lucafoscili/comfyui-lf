@@ -134,6 +134,7 @@ export declare enum NodeName {
 }
 export declare enum TagName {
     Div = "div",
+    KulAccordion = "kul-accordion",
     KulArticle = "kul-article",
     KulButton = "kul-button",
     KulCard = "kul-card",

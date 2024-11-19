@@ -10,6 +10,7 @@ import { createDOMWidget, normalizeValue } from '../utils/common';
 const BASE_CSS_CLASS = 'lf-carousel';
 const TYPE = CustomWidgetName.carousel;
 
+//#region Carousel
 export const carouselFactory: CarouselFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
@@ -53,3 +54,4 @@ export const carouselFactory: CarouselFactory = {
     return { widget: createDOMWidget(TYPE, wrapper, node, options) };
   },
 };
+//#endregion

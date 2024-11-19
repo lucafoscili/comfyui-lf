@@ -1,3 +1,4 @@
+import { KulEventName } from '../types/events/events.js';
 import { CustomWidgetName, TagName, } from '../types/widgets/_common.js';
 import { createDOMWidget, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-countbarchart';
@@ -5,6 +6,7 @@ const TYPE = CustomWidgetName.countBarChart;
 const DEF_ICON = 'content_copy';
 const DEF_LABEL = 'Copy selected';
 let TIMEOUT;
+//#region Count bar chart
 export const countBarChartFactory = {
     cssClasses: {
         content: BASE_CSS_CLASS,
@@ -64,7 +66,7 @@ export const countBarChartFactory = {
         button.kulIcon = DEF_ICON;
         button.kulLabel = DEF_LABEL;
         button.kulStyling = 'flat';
-        button.addEventListener('kul-button-event', (e) => {
+        button.addEventListener(KulEventName.KulButton, (e) => {
             copy(e, chip);
         });
         grid.appendChild(chart);
@@ -96,3 +98,4 @@ const copy = async (e, chip) => {
         }, 1000);
     }
 };
+//#endregion

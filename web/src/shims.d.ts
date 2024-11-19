@@ -4,6 +4,39 @@
 /*   Mostly A.I. generated, not reliable           */
 /*-------------------------------------------------*/
 
+declare module '/scripts/api.js' {
+  export const api: {
+    fetchApi(endpoint: string, options?: { body?: FormData; method?: string }): Promise<Response>;
+  };
+}
+
+declare interface GitHubRelease {
+  target_commitish: string;
+  url: string;
+  author: {
+    avatar_url: string;
+    login: string;
+  };
+  html_url: string;
+  tag_name: string;
+  name: string;
+  body: string; // This is the changelog/description of the release
+  draft: boolean;
+  prerelease: boolean;
+  created_at: string;
+  published_at: string;
+  tarball_url: string;
+  zipball_url: string;
+  assets: {
+    url: string;
+    name: string;
+    content_type: string;
+    size: number;
+    download_count: number;
+    browser_download_url: string;
+  }[];
+}
+
 declare interface ComfyUI {
   api: {
     api: ComfyApi;

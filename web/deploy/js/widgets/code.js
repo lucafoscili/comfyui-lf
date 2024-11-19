@@ -2,6 +2,7 @@ import { CustomWidgetName, NodeName, TagName, } from '../types/widgets/_common.j
 import { createDOMWidget, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-code';
 const TYPE = CustomWidgetName.code;
+//#region Code
 export const codeFactory = {
     cssClasses: {
         content: BASE_CSS_CLASS,
@@ -62,3 +63,4 @@ export const codeFactory = {
         return { widget: createDOMWidget(TYPE, wrapper, node, options) };
     },
 };
+//#endregion

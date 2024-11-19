@@ -5,6 +5,7 @@ import {
   imageviewerEventHandler,
   setGridStatus,
 } from '../helpers/imageEditor';
+import { KulEventName } from '../types/events/events';
 import { LogSeverity } from '../types/manager/manager';
 import {
   CustomWidgetDeserializedValuesMap,
@@ -89,7 +90,7 @@ export const imageEditorFactory: ImageEditorFactory = {
     imageviewer.kulLoadCallback = async (_, value) => await options.refresh(value);
     imageviewer.kulValue = TREE_DATA;
     imageviewer.addEventListener(
-      'kul-imageviewer-event',
+      KulEventName.KulImageviewer,
       imageviewerEventHandler.bind(imageviewerEventHandler, settings, node),
     );
     imageviewer.appendChild(settings);
@@ -123,7 +124,7 @@ export const imageEditorFactory: ImageEditorFactory = {
         actions.appendChild(interrupt);
         actions.appendChild(resume);
         actions.addEventListener(
-          'kul-button-event',
+          KulEventName.KulButton,
           buttonEventHandler.bind(buttonEventHandler, imageviewer, actionButtons, grid),
         );
 

@@ -5,6 +5,7 @@ export declare const sectionsFactory: {
     backup: () => KulArticleNode;
     bug: () => KulArticleNode;
     debug: (logsData: KulArticleNode[]) => KulArticleNode;
+    github: () => KulArticleNode;
     metadata: () => KulArticleNode;
     theme: () => KulArticleNode;
 };

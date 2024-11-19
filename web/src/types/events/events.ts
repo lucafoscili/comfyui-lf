@@ -44,6 +44,31 @@ export type WidgetPayloadMap = {
     ? StringPayload
     : BaseEventPayload;
 };
+export enum KulEventName {
+  KulAccordion = 'kul-accordion-event',
+  KulArticle = 'kul-article-event',
+  KulButton = 'kul-button-event',
+  KulCard = 'kul-card-event',
+  KulCarousel = 'kul-carousel-event',
+  KulChat = 'kul-chat-event',
+  KulChart = 'kul-chart-event',
+  KulChip = 'kul-chip-event',
+  KulCode = 'kul-code-event',
+  KulCompare = 'kul-compare-event',
+  KulImageviewer = 'kul-imageviewer-event',
+  KulList = 'kul-list-event',
+  KulMasonry = 'kul-masonry-event',
+  KulMessenger = 'kul-messenger-event',
+  KulProgressbar = 'kul-progressbar-event',
+  KulSlider = 'kul-slider-event',
+  KulSpinner = 'kul-spinner-event',
+  KulTabbar = 'kul-tabbar-event',
+  KulTextfield = 'kul-textfield-event',
+  KulToggle = 'kul-toggle-event',
+  KulTree = 'kul-tree-event',
+  KulUpload = 'kul-upload-event',
+  Textarea = 'textarea-event',
+}
 // #endregion
 // #region Card payload
 export interface CardPayload extends BaseEventPayload {

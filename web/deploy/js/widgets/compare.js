@@ -2,6 +2,7 @@ import { CustomWidgetName, TagName, } from '../types/widgets/_common.js';
 import { createDOMWidget, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-compare';
 const TYPE = CustomWidgetName.compare;
+//#region Compare
 export const compareFactory = {
     cssClasses: {
         content: BASE_CSS_CLASS,
@@ -41,3 +42,4 @@ export const compareFactory = {
         return { widget: createDOMWidget(TYPE, wrapper, node, options) };
     },
 };
+//#endregion

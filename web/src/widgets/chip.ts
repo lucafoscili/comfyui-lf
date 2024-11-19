@@ -1,3 +1,4 @@
+import { KulEventName } from '../types/events/events';
 import { KulChipEventPayload } from '../types/ketchup-lite/components';
 import { KulChip } from '../types/ketchup-lite/components/kul-chip/kul-chip';
 import {
@@ -13,6 +14,7 @@ import { createDOMWidget, normalizeValue } from '../utils/common';
 const BASE_CSS_CLASS = 'lf-chip';
 const TYPE = CustomWidgetName.chip;
 
+//#region Chip
 export const chipFactory: ChipFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
@@ -47,7 +49,7 @@ export const chipFactory: ChipFactory = {
 
     content.classList.add(chipFactory.cssClasses.content);
     chip.classList.add(chipFactory.cssClasses.chip);
-    chip.addEventListener('kul-chip-event', eventHandler);
+    chip.addEventListener(KulEventName.KulChip, eventHandler);
 
     switch (node.comfyClass) {
       case NodeName.keywordToggleFromJson:
@@ -75,3 +77,4 @@ const eventHandler = async (e: CustomEvent<KulChipEventPayload>) => {
       break;
   }
 };
+//#endregion

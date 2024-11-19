@@ -11,6 +11,7 @@ import { createDOMWidget, normalizeValue } from '../utils/common';
 const BASE_CSS_CLASS = 'lf-code';
 const TYPE = CustomWidgetName.code;
 
+//#region Code
 export const codeFactory: CodeFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
@@ -78,3 +79,4 @@ export const codeFactory: CodeFactory = {
     return { widget: createDOMWidget(TYPE, wrapper, node, options) };
   },
 };
+//#endregion

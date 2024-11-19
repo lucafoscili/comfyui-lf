@@ -524,6 +524,102 @@ export const sectionsFactory = {
     };
   },
   //#endregion
+  //#region GitHub
+  github: (): KulArticleNode => {
+    const lfManager = getLFManager();
+    const releaseData = lfManager.getLatestRelease();
+    return {
+      id: 'section',
+      value: 'GitHub',
+      children: [
+        {
+          id: 'paragraph',
+          value: 'Latest Release',
+          children: [
+            {
+              cells: {
+                kulCode: {
+                  shape: 'code',
+                  kulLanguage: 'plaintext',
+                  value: `Version: ${releaseData?.tag_name || 'N/A'}`,
+                },
+              },
+              id: 'release-version',
+            },
+            {
+              cssStyle: {
+                backgroundColor: 'var(--kul-light-bg-color)',
+                padding: '0.5em',
+                borderRadius: '0.25em',
+                marginBottom: '1em',
+              },
+              cells: {
+                kulCode: {
+                  kulLanguage: 'markdown',
+                  shape: 'code',
+                  value: releaseData?.body || 'No changelog available',
+                },
+              },
+              id: 'release-description',
+            },
+            {
+              cssStyle: {
+                fontSize: '0.9em',
+                color: 'var(--kul-secondary-color)',
+                fontStyle: 'italic',
+                marginBottom: '1em',
+              },
+              id: 'release-date',
+              value: `Published on: ${
+                releaseData?.published_at
+                  ? new Date(releaseData.published_at).toLocaleDateString()
+                  : 'Unknown'
+              }`,
+            },
+            {
+              id: 'release-author',
+              children: [
+                {
+                  id: 'author-avatar',
+                  value: '',
+                  cssStyle: {
+                    backgroundImage: `url(${releaseData?.author?.avatar_url || ''})`,
+                    width: '32px',
+                    height: '32px',
+                    backgroundSize: 'cover',
+                    borderRadius: '50%',
+                    display: 'inline-block',
+                    verticalAlign: 'middle',
+                    marginRight: '0.5em',
+                  },
+                },
+                {
+                  id: 'author-name',
+                  value: `Author: ${releaseData?.author?.login || 'Unknown'}`,
+                  cssStyle: {
+                    fontSize: '0.9em',
+                    color: 'var(--kul-secondary-color)',
+                    verticalAlign: 'middle',
+                  },
+                },
+              ],
+              cssStyle: {
+                marginBottom: '1em',
+                display: 'flex',
+                alignItems: 'center',
+              },
+            },
+            {
+              cssStyle: STYLES.separator(),
+              id: 'content_separator',
+              value: '',
+            },
+          ],
+        },
+      ],
+    };
+  },
+  //#endregion
   //#region Metadata
   metadata: (): KulArticleNode => {
     return {

@@ -1,3 +1,4 @@
+import { KulEventName } from '../types/events/events.js';
 import { CustomWidgetName, TagName, } from '../types/widgets/_common.js';
 import { createDOMWidget, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-messenger';
@@ -51,7 +52,7 @@ export const messengerFactory = {
         placeholder.innerHTML = `The setup of this node must be done client-side. Use either <strong>LF_WriteJSON</strong> or <strong>LF_DisplayJSON</strong>
 to connect as input a valid JSON dataset. Check the repository's workflows to see a 
 <a target="_blank" href="https://github.com/lucafoscili/comfyui-lf/blob/fd52deb44d199e222833fbc159628aceeac48ab9/workflows/LLMMessenger.png">working example here.</a>.`;
-        messenger.addEventListener('kul-messenger-event', (e) => {
+        messenger.addEventListener(KulEventName.KulMessenger, (e) => {
             const { eventType, config } = e.detail;
             switch (eventType) {
                 case 'save':
@@ -64,7 +65,6 @@ to connect as input a valid JSON dataset. Check the repository's workflows to se
         content.appendChild(placeholder);
         content.appendChild(messenger);
         wrapper.appendChild(content);
-        wrapper.dataset.isInVisibleNodes = 'true';
         return { widget: createDOMWidget(TYPE, wrapper, node, options) };
     },
 };

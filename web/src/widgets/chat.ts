@@ -1,3 +1,4 @@
+import { KulEventName } from '../types/events/events';
 import { LogSeverity } from '../types/manager/manager';
 import {
   CustomWidgetDeserializedValuesMap,
@@ -12,6 +13,7 @@ import { createDOMWidget, findWidget, getLFManager, normalizeValue } from '../ut
 const BASE_CSS_CLASS = 'lf-chat';
 const TYPE = CustomWidgetName.chat;
 
+//#region Chat
 export const chatFactory: ChatFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
@@ -51,7 +53,7 @@ export const chatFactory: ChatFactory = {
     content.classList.add(chatFactory.cssClasses.content);
     chat.classList.add(chatFactory.cssClasses.chat);
 
-    chat.addEventListener('kul-chat-event', (e) => {
+    chat.addEventListener(KulEventName.KulChat, (e) => {
       const { eventType, history, status } = e.detail;
 
       switch (eventType) {
@@ -81,3 +83,4 @@ export const chatFactory: ChatFactory = {
     return { widget: createDOMWidget(TYPE, wrapper, node, options) };
   },
 };
+//#endregion

@@ -1,3 +1,4 @@
+import { KulEventName } from '../types/events/events';
 import { KulButtonEventPayload } from '../types/ketchup-lite/components';
 import { KulButton } from '../types/ketchup-lite/components/kul-button/kul-button';
 import {
@@ -16,8 +17,10 @@ const BASE_CSS_CLASS = 'lf-countbarchart';
 const TYPE = CustomWidgetName.countBarChart;
 const DEF_ICON = 'content_copy';
 const DEF_LABEL = 'Copy selected';
+
 let TIMEOUT: NodeJS.Timeout;
 
+//#region Count bar chart
 export const countBarChartFactory: CountBarChartFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
@@ -84,7 +87,7 @@ export const countBarChartFactory: CountBarChartFactory = {
     button.kulIcon = DEF_ICON;
     button.kulLabel = DEF_LABEL;
     button.kulStyling = 'flat';
-    button.addEventListener('kul-button-event', (e) => {
+    button.addEventListener(KulEventName.KulButton, (e) => {
       copy(e, chip);
     });
 
@@ -103,7 +106,7 @@ const copy = async (e: CustomEvent<KulButtonEventPayload>, chip: HTMLKulChipElem
   const { comp, eventType } = e.detail;
 
   if (eventType === 'pointerdown') {
-    const button = comp as KulButton;
+    const button = comp;
     const selectedChips: string[] = [];
     (await chip.getSelectedNodes()).forEach((n) => {
       selectedChips.push(n.id);
@@ -124,3 +127,4 @@ const copy = async (e: CustomEvent<KulButtonEventPayload>, chip: HTMLKulChipElem
     }, 1000);
   }
 };
+//#endregion

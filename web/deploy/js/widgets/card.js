@@ -1,6 +1,7 @@
 import { CustomWidgetName, NodeName, TagName, } from '../types/widgets/_common.js';
 import { cardHandler, cardPlaceholders, fetchModelMetadata, getCardProps } from '../helpers/card.js';
 import { createDOMWidget, getCustomWidget, normalizeValue } from '../utils/common.js';
+import { KulEventName } from '../types/events/events.js';
 const BASE_CSS_CLASS = 'lf-card';
 const TYPE = CustomWidgetName.card;
 //#region Card factory
@@ -14,7 +15,7 @@ export const cardFactory = {
         return {
             hideOnZoom: false,
             getComp() {
-                return Array.from(grid.querySelectorAll('kul-card'));
+                return Array.from(grid.querySelectorAll(TagName.KulCard));
             },
             getValue() {
                 return {
@@ -61,7 +62,7 @@ const selectorButton = (grid, node) => {
         const button = comp;
         switch (eventType) {
             case 'click':
-                const cards = Array.from(grid.querySelectorAll('kul-card'));
+                const cards = Array.from(grid.querySelectorAll(TagName.KulCard));
                 if (cards?.length) {
                     const models = [];
                     const widget = getCustomWidget(node, CustomWidgetName.card);
@@ -105,7 +106,7 @@ const selectorButton = (grid, node) => {
     button.kulIcon = 'cloud_download';
     button.kulLabel = 'Refresh';
     button.title = 'Attempts to manually ownload fresh metadata from CivitAI';
-    button.addEventListener('kul-button-event', cb);
+    button.addEventListener(KulEventName.KulButton, cb);
     const spinner = document.createElement(TagName.KulSpinner);
     spinner.kulActive = true;
     spinner.kulDimensions = '0.6em';

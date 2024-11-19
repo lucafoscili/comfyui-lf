@@ -8,6 +8,7 @@ export interface APIRoutes {
   analytics: AnalyticsAPIs;
   backup: BackupAPIs;
   comfy: ComfyAPIs;
+  github: GitHubAPIs;
   image: ImageAPIs;
   json: JSONAPIs;
   metadata: MetadataAPIs;
@@ -33,6 +34,9 @@ export interface ComfyAPIs {
   redraw: () => void;
   register: (extension: Extension) => void;
   upload: (body: FormData) => Promise<Response>;
+}
+export interface GitHubAPIs {
+  getLatestRelease: () => Promise<GetGitHubLatestReleaseAPIPayload>;
 }
 export interface ImageAPIs {
   get: (dir: string) => Promise<GetImageAPIPayload>;
@@ -70,6 +74,9 @@ export interface BaseAPIPayload {
 }
 export interface GetAnalyticsAPIPayload extends BaseAPIPayload {
   data: Record<string, KulDataDataset>;
+}
+export interface GetGitHubLatestReleaseAPIPayload extends BaseAPIPayload {
+  data: GitHubRelease;
 }
 export interface GetImageAPIPayload extends BaseAPIPayload {
   data: KulDataDataset;

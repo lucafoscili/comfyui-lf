@@ -1,3 +1,4 @@
+import { KulEventName } from '../types/events/events';
 import {
   CustomWidgetName,
   CustomWidgetDeserializedValuesMap,
@@ -67,7 +68,7 @@ export const messengerFactory: MessengerFactory = {
 to connect as input a valid JSON dataset. Check the repository's workflows to see a 
 <a target="_blank" href="https://github.com/lucafoscili/comfyui-lf/blob/fd52deb44d199e222833fbc159628aceeac48ab9/workflows/LLMMessenger.png">working example here.</a>.`;
 
-    messenger.addEventListener('kul-messenger-event', (e) => {
+    messenger.addEventListener(KulEventName.KulMessenger, (e) => {
       const { eventType, config } = e.detail;
 
       switch (eventType) {
@@ -83,7 +84,6 @@ to connect as input a valid JSON dataset. Check the repository's workflows to se
     content.appendChild(messenger);
     wrapper.appendChild(content);
 
-    wrapper.dataset.isInVisibleNodes = 'true';
     return { widget: createDOMWidget(TYPE, wrapper, node, options) };
   },
 };

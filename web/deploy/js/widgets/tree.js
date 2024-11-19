@@ -2,6 +2,7 @@ import { CustomWidgetName, NodeName, TagName, } from '../types/widgets/_common.j
 import { createDOMWidget, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-tree';
 const TYPE = CustomWidgetName.tree;
+//#region Tree
 export const treeFactory = {
     cssClasses: {
         content: BASE_CSS_CLASS,
@@ -46,3 +47,4 @@ export const treeFactory = {
         return { widget: createDOMWidget(TYPE, wrapper, node, options) };
     },
 };
+//#endregion
