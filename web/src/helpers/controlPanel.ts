@@ -563,20 +563,6 @@ export const sectionsFactory = {
               id: 'release-description',
             },
             {
-              cssStyle: {
-                fontSize: '0.9em',
-                color: 'var(--kul-secondary-color)',
-                fontStyle: 'italic',
-                marginBottom: '1em',
-              },
-              id: 'release-date',
-              value: `Published on: ${
-                releaseData?.published_at
-                  ? new Date(releaseData.published_at).toLocaleDateString()
-                  : 'Unknown'
-              }`,
-            },
-            {
               id: 'release-author',
               children: [
                 {
@@ -584,13 +570,13 @@ export const sectionsFactory = {
                   value: '',
                   cssStyle: {
                     backgroundImage: `url(${releaseData?.author?.avatar_url || ''})`,
-                    width: '32px',
-                    height: '32px',
                     backgroundSize: 'cover',
                     borderRadius: '50%',
                     display: 'inline-block',
-                    verticalAlign: 'middle',
+                    height: '32px',
                     marginRight: '0.5em',
+                    verticalAlign: 'middle',
+                    width: '32px',
                   },
                 },
                 {
@@ -604,15 +590,29 @@ export const sectionsFactory = {
                 },
               ],
               cssStyle: {
-                marginBottom: '1em',
-                display: 'flex',
                 alignItems: 'center',
+                display: 'flex',
+                justifyContent: 'center',
+                marginBottom: '1em',
+                paddingTop: '1em',
               },
             },
             {
-              cssStyle: STYLES.separator(),
-              id: 'content_separator',
-              value: '',
+              cssStyle: {
+                color: 'var(--kul-secondary-color)',
+                display: 'block',
+                fontSize: '0.9em',
+                fontStyle: 'italic',
+                marginBottom: '1em',
+                textAlign: 'center',
+                width: '100%',
+              },
+              id: 'release-date',
+              value: `Published on: ${
+                releaseData?.published_at
+                  ? new Date(releaseData.published_at).toLocaleDateString()
+                  : 'Unknown'
+              }`,
             },
           ],
         },

@@ -16,7 +16,7 @@ import {
   getLFManager,
   normalizeValue,
 } from '../utils/common';
-import { handleKulEvent, sectionsFactory } from '../helpers/control-panel';
+import { handleKulEvent, sectionsFactory } from '../helpers/controlPanel';
 import { ControlPanelDeserializedValue, ControlPanelFactory } from '../types/widgets/controlPanel';
 import { KulEventName } from '../types/events/events';
 

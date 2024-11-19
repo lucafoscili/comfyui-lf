@@ -1,6 +1,6 @@
 import { CustomWidgetName, TagName, } from '../types/widgets/_common.js';
 import { createDOMWidget, getApiRoutes, getKulManager, getLFManager, normalizeValue, } from '../utils/common.js';
-import { handleKulEvent, sectionsFactory } from '../helpers/control-panel.js';
+import { handleKulEvent, sectionsFactory } from '../helpers/controlPanel.js';
 import { KulEventName } from '../types/events/events.js';
 const BASE_CSS_CLASS = 'lf-controlpanel';
 const TYPE = CustomWidgetName.controlPanel;
