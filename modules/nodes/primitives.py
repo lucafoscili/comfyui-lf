@@ -66,7 +66,7 @@ class LF_Boolean:
             create_history_node(str(boolean), nodes)
 
         if randomize:
-            boolean = randomize_from_history(nodes, seed)            
+            boolean = bool(randomize_from_history(nodes, seed))
             
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}boolean", {
             "node": kwargs.get("node_id"),
@@ -405,7 +405,7 @@ class LF_Float:
             create_history_node(str(float_input), nodes)
 
         if randomize:
-            float_input = randomize_from_history(nodes, seed)        
+            float_input = float(randomize_from_history(nodes, seed))
                 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}float", {
             "node": kwargs.get("node_id"),
@@ -471,7 +471,7 @@ class LF_Integer:
             create_history_node(str(integer_input), nodes)
 
         if randomize:
-            integer_input = randomize_from_history(nodes, seed)        
+            integer_input = int(randomize_from_history(nodes, seed))
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}integer", {
             "node": kwargs.get("node_id"),
