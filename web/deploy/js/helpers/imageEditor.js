@@ -23,7 +23,7 @@ export const buttonEventHandler = async (imageviewer, actionButtons, grid, e) =>
         };
         switch (comp.kulIcon) {
             case ImageEditorIcons.Interrupt:
-                getApiRoutes().interrupt();
+                getApiRoutes().comfy.interrupt();
                 break;
         }
         await update();

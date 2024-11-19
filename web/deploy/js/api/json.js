@@ -43,8 +43,8 @@ export const JSON_API = {
         lfManager.log(payload.message, { payload }, payload.status);
         return payload;
     },
-    //#region update
     //#endregion
+    //#region update
     update: async (filePath, dataset) => {
         const lfManager = getLFManager();
         const payload = {

@@ -152,7 +152,7 @@ export const onNodeCreated = async (nodeType: NodeType) => {
         case ComfyWidgetName.string:
         case ComfyWidgetName.text:
           w.serializeValue = () => {
-            const comfy = getApiRoutes().comfyUi();
+            const comfy = getApiRoutes().comfy.comfyUi();
             return comfy.utils.applyTextReplacements(comfy, w.value);
           };
           break;
@@ -165,9 +165,10 @@ export const onNodeCreated = async (nodeType: NodeType) => {
 //#region chipCb
 const chipCb = (node: NodeType) => {
   const lfManager = getLFManager();
+  const routes = getApiRoutes().comfy;
   const textarea = getInput(node, ComfyWidgetName.json);
-  const linkInput = lfManager.getApiRoutes().getLinkById(textarea?.link?.toString());
-  const nodeInput = lfManager.getApiRoutes().getNodeById(linkInput?.origin_id?.toString());
+  const linkInput = routes.getLinkById(textarea?.link?.toString());
+  const nodeInput = routes.getNodeById(linkInput?.origin_id?.toString());
   if (!textarea || !linkInput || !nodeInput) {
     return;
   }
@@ -203,10 +204,9 @@ const chipCb = (node: NodeType) => {
 //#endregion
 //#region messengerCb
 const messengerCb = (node: NodeType) => {
-  const lfManager = getLFManager();
   const textarea = getInput(node, ComfyWidgetName.json);
-  const linkInput = lfManager.getApiRoutes().getLinkById(textarea?.link?.toString());
-  const nodeInput = lfManager.getApiRoutes().getNodeById(linkInput?.origin_id?.toString());
+  const linkInput = getApiRoutes().comfy.getLinkById(textarea?.link?.toString());
+  const nodeInput = getApiRoutes().comfy.getNodeById(linkInput?.origin_id?.toString());
   if (!textarea || !linkInput || !nodeInput) {
     return;
   }

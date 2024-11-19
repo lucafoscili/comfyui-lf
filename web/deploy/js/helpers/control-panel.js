@@ -1,4 +1,5 @@
 import { getApiRoutes, getKulManager, getKulThemes, getLFManager, isButton, isToggle, } from '../utils/common.js';
+//#region Labels
 var Labels;
 (function (Labels) {
     Labels["AUTO_BACKUP"] = "Automatic Backup";
@@ -11,6 +12,8 @@ var Labels;
     Labels["OPEN_ISSUE"] = "Open an issue";
     Labels["THEME"] = "Random theme";
 })(Labels || (Labels = {}));
+//#endregion
+//#region Styles
 const STYLES = {
     customization: () => {
         return {
@@ -52,7 +55,9 @@ const STYLES = {
         };
     },
 };
+//#endregion
 let TIMEOUT;
+//#region handleKulEvent
 export const handleKulEvent = (e) => {
     const { comp } = e.detail;
     if (isButton(comp)) {
@@ -140,6 +145,8 @@ const handleButtonEvent = (e) => {
             }
     }
 };
+//#endregion
+//#region handleListEvent
 const handleListEvent = (e) => {
     const { comp, eventType, node } = e.detail;
     const c = comp.rootElement;
@@ -154,6 +161,8 @@ const handleListEvent = (e) => {
             break;
     }
 };
+//#endregion
+//#region handleToggleEvent
 const handleToggleEvent = (e) => {
     const { comp, eventType, value } = e.detail;
     const c = comp.rootElement;
@@ -165,7 +174,9 @@ const handleToggleEvent = (e) => {
             c.title = 'Activate verbose console logging';
     }
 };
+//#endregion
 export const sectionsFactory = {
+    //#region Analytics
     analytics: () => {
         return {
             id: 'section',
@@ -230,6 +241,8 @@ export const sectionsFactory = {
             ],
         };
     },
+    //#endregion
+    //#region Backup
     backup: () => {
         return {
             id: 'section',
@@ -304,6 +317,8 @@ export const sectionsFactory = {
             ],
         };
     },
+    //#endregion
+    //#region Bug
     bug: () => {
         return {
             id: 'section',
@@ -345,6 +360,8 @@ export const sectionsFactory = {
             ],
         };
     },
+    //#endregion
+    //#region Debug
     debug: (logsData) => {
         return {
             id: 'section',
@@ -464,6 +481,8 @@ export const sectionsFactory = {
             ],
         };
     },
+    //#endregion
+    //#region Metadata
     metadata: () => {
         return {
             id: 'section',
@@ -519,6 +538,8 @@ export const sectionsFactory = {
             ],
         };
     },
+    //#endregion
+    //#region Theme
     theme: () => {
         return {
             id: 'section',
@@ -555,4 +576,5 @@ export const sectionsFactory = {
             ],
         };
     },
+    //#endregion
 };

@@ -1,6 +1,6 @@
 import { LogSeverity } from '../types/manager/manager.js';
 import { CustomWidgetName, } from '../types/widgets/_common.js';
-import { createDOMWidget, getLFManager, normalizeValue } from '../utils/common.js';
+import { createDOMWidget, getApiRoutes, getLFManager, normalizeValue } from '../utils/common.js';
 const BASE_CSS_CLASS = 'lf-upload';
 const TYPE = CustomWidgetName.upload;
 export const uploadFactory = {
@@ -62,7 +62,7 @@ const handleUpload = async (e, upload) => {
                     if (i > 0) {
                         body.append('subfolder', subfolder);
                     }
-                    const resp = await getLFManager().getApiRoutes().fetch(body);
+                    const resp = await getApiRoutes().comfy.upload(body);
                     if (resp.status === 200 || resp.status === 201) {
                         getLFManager().log('POST result', { json: resp.json }, LogSeverity.Success);
                         fileNames.add(file.name);

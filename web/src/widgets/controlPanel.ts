@@ -21,6 +21,7 @@ import { ControlPanelDeserializedValue, ControlPanelFactory } from '../types/wid
 const BASE_CSS_CLASS = 'lf-controlpanel';
 const TYPE = CustomWidgetName.controlPanel;
 
+//#region Control panel
 export const controlPanelFactory: ControlPanelFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
@@ -80,14 +81,16 @@ export const controlPanelFactory: ControlPanelFactory = {
     return { widget: createDOMWidget(TYPE, wrapper, node, options) };
   },
 };
-
+//#endregion
+//#region readyCb
 const readyCb = (domWidget: HTMLDivElement) => {
   setTimeout(() => {
     getApiRoutes().backup.new();
     contentCb(domWidget, true);
   }, 750);
 };
-
+//#endregion
+//#region contentCb
 const contentCb = (domWidget: HTMLDivElement, isReady: boolean) => {
   const content = document.createElement('div');
 
@@ -114,7 +117,8 @@ const contentCb = (domWidget: HTMLDivElement, isReady: boolean) => {
 
   content.classList.add(controlPanelFactory.cssClasses.content);
 };
-
+//#endregion
+//#region Create
 const createArticle = () => {
   const { analytics, backup, bug, debug, metadata, theme } = sectionsFactory;
   const logsData: KulArticleNode[] = [];
@@ -156,3 +160,4 @@ const createArticle = () => {
 
   return article;
 };
+//#endregion

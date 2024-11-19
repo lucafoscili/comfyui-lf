@@ -3,6 +3,7 @@ import { createDOMWidget, getApiRoutes, getKulManager, getLFManager, normalizeVa
 import { handleKulEvent, sectionsFactory } from '../helpers/control-panel.js';
 const BASE_CSS_CLASS = 'lf-controlpanel';
 const TYPE = CustomWidgetName.controlPanel;
+//#region Control panel
 export const controlPanelFactory = {
     cssClasses: {
         content: BASE_CSS_CLASS,
@@ -56,12 +57,16 @@ export const controlPanelFactory = {
         return { widget: createDOMWidget(TYPE, wrapper, node, options) };
     },
 };
+//#endregion
+//#region readyCb
 const readyCb = (domWidget) => {
     setTimeout(() => {
         getApiRoutes().backup.new();
         contentCb(domWidget, true);
     }, 750);
 };
+//#endregion
+//#region contentCb
 const contentCb = (domWidget, isReady) => {
     const content = document.createElement('div');
     const createSpinner = () => {
@@ -84,6 +89,8 @@ const contentCb = (domWidget, isReady) => {
     }
     content.classList.add(controlPanelFactory.cssClasses.content);
 };
+//#endregion
+//#region Create
 const createArticle = () => {
     const { analytics, backup, bug, debug, metadata, theme } = sectionsFactory;
     const logsData = [];
@@ -120,3 +127,4 @@ const createArticle = () => {
     getLFManager().setDebugDataset(article, logsData);
     return article;
 };
+//#endregion

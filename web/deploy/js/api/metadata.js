@@ -36,8 +36,8 @@ export const METADATA_API = {
         lfManager.log(payload.message, { payload }, payload.status);
         return payload;
     },
-    //#region get
     //#endregion
+    //#region get
     get: async (hash) => {
         const lfManager = getLFManager();
         const payload = {
@@ -72,8 +72,8 @@ export const METADATA_API = {
         lfManager.log(payload.message, { payload }, payload.status);
         return payload;
     },
-    //#region save
     //#endregion
+    //#region save
     save: async (modelPath, dataset, forcedSave = false) => {
         const lfManager = getLFManager();
         const payload = {
@@ -112,8 +112,8 @@ export const METADATA_API = {
         lfManager.log(payload.message, { payload }, payload.status);
         return payload;
     },
-    //#region updateCover
     //#endregion
+    //#region updateCover
     updateCover: async (modelPath, b64image) => {
         const lfManager = getLFManager();
         const payload = {

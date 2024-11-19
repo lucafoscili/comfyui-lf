@@ -1,4 +1,3 @@
-import type { LFWindow } from '../managers/manager';
 import {
   ComfyWidgetMap,
   ComfyWidgetName,
@@ -17,6 +16,7 @@ import { KulToggle } from '../types/ketchup-lite/components/kul-toggle/kul-toggl
 import { KulComponent, KulComponentName } from '../types/ketchup-lite/types/GenericTypes';
 import { KulDom } from '../types/ketchup-lite/managers/kul-manager/kul-manager-declarations';
 import { LogSeverity } from '../types/manager/manager';
+import { LFWindow } from '../managers/manager';
 
 const DEFAULT_WIDGET_NAME = 'ui_widget';
 const DOM = document.documentElement as KulDom;

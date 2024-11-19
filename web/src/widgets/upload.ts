@@ -6,7 +6,7 @@ import {
   NormalizeValueCallback,
 } from '../types/widgets/_common';
 import { UploadFactory } from '../types/widgets/upload';
-import { createDOMWidget, getLFManager, normalizeValue } from '../utils/common';
+import { createDOMWidget, getApiRoutes, getLFManager, normalizeValue } from '../utils/common';
 
 const BASE_CSS_CLASS = 'lf-upload';
 const TYPE = CustomWidgetName.upload;
@@ -84,7 +84,7 @@ const handleUpload = async (
           if (i > 0) {
             body.append('subfolder', subfolder);
           }
-          const resp = await getLFManager().getApiRoutes().fetch(body);
+          const resp = await getApiRoutes().comfy.upload(body);
 
           if (resp.status === 200 || resp.status === 201) {
             getLFManager().log('POST result', { json: resp.json }, LogSeverity.Success);

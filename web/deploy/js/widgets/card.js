@@ -1,7 +1,6 @@
 import { CustomWidgetName, NodeName, } from '../types/widgets/_common.js';
-import { cardHandler, getCardProps } from '../helpers/card.js';
+import { cardHandler, cardPlaceholders, fetchModelMetadata, getCardProps } from '../helpers/card.js';
 import { createDOMWidget, getCustomWidget, normalizeValue } from '../utils/common.js';
-import { cardPlaceholders, fetchModelMetadata } from '../utils/api.js';
 const BASE_CSS_CLASS = 'lf-card';
 const TYPE = CustomWidgetName.card;
 //#region Card factory

@@ -1,29 +1,16 @@
-import { EventName, EventPayload } from '../events/events';
+import { EventName, GenericEvent } from '../events/events';
 import { KulDataDataset } from '../ketchup-lite/components';
 import { Extension, LogSeverity } from '../manager/manager';
-import { CustomWidgetName } from '../widgets/_common';
 import { ImageEditorFilterSettingsMap, ImageEditorFilterType } from '../widgets/imageEditor';
 
 //#region API
 export interface APIRoutes {
   analytics: AnalyticsAPIs;
   backup: BackupAPIs;
+  comfy: ComfyAPIs;
   image: ImageAPIs;
   json: JSONAPIs;
   metadata: MetadataAPIs;
-  event: <P extends EventPayload<CustomWidgetName>>(
-    name: EventName,
-    callback: (event: CustomEvent<P>) => void,
-  ) => void;
-  comfyUi: () => ComfyUI;
-  fetch: (body: unknown) => Promise<Response>;
-  getLinkById: (id: string) => LinkInfo;
-  getNodeById: (id: string) => NodeType;
-  interrupt: () => Promise<void>;
-  queuePrompt: () => Promise<void>;
-  redraw: () => void;
-  register: (extension: Extension) => void;
-  getResourceUrl: (subfolder: string, filename: string, type?: ComfyFolderTypes) => string;
 }
 export type AnalyticsType = 'usage';
 export interface AnalyticsAPIs {
@@ -33,6 +20,19 @@ export interface AnalyticsAPIs {
 export type BackupType = 'automatic' | 'manual';
 export interface BackupAPIs {
   new: (backupType?: BackupType) => Promise<BaseAPIPayload>;
+}
+export type ComfyURLType = 'input' | 'output' | 'temp';
+export interface ComfyAPIs {
+  comfyUi: () => ComfyUI;
+  event: (name: EventName, callback: (e: GenericEvent) => void) => void;
+  getLinkById: (id: string) => LinkInfo;
+  getNodeById: (id: string) => NodeType;
+  getResourceUrl: (subfolder: string, filename: string, type: ComfyURLType) => void;
+  interrupt: () => void;
+  queuePrompt: () => Promise<void>;
+  redraw: () => void;
+  register: (extension: Extension) => void;
+  upload: (body: FormData) => Promise<Response>;
 }
 export interface ImageAPIs {
   get: (dir: string) => Promise<GetImageAPIPayload>;

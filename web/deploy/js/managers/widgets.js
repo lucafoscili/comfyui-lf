@@ -15,12 +15,12 @@ import { cardsWithChipFactory } from '../widgets/cardsWithChip.js';
 import { tabBarChartFactory } from '../widgets/tabBarChart.js';
 import { compareFactory } from '../widgets/compare.js';
 import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common.js';
-import { cardPlaceholders, fetchModelMetadata } from '../utils/api.js';
 import { showNotification } from '../helpers/notify.js';
 import { progressbarFactory } from '../widgets/progressbar.js';
 import { carouselFactory } from '../widgets/carousel.js';
 import { imageEditorFactory } from '../widgets/imageEditor.js';
 import { LogSeverity } from '../types/manager/manager.js';
+import { cardPlaceholders, fetchModelMetadata } from '../helpers/card.js';
 export class LFWidgets {
     constructor() {
         //#region Decorators
@@ -54,7 +54,7 @@ export class LFWidgets {
                         }
                     }
                     widget.options.setValue(JSON.stringify(value));
-                    getApiRoutes().redraw();
+                    getApiRoutes().comfy.redraw();
                 });
             },
         };
@@ -143,7 +143,7 @@ export class LFWidgets {
         this.onEvent = (name, event, widgets) => {
             const lfManager = getLFManager();
             const payload = event.detail;
-            const node = lfManager.getApiRoutes().getNodeById(payload.id);
+            const node = lfManager.getApiRoutes().comfy.getNodeById(payload.id);
             if (node) {
                 lfManager.log(`${node.comfyClass} (#${node.id}): event '${name}' fired`, { payload, node }, LogSeverity.Info);
                 switch (name) {
@@ -224,7 +224,7 @@ export class LFWidgets {
                             break;
                     }
                 }
-                lfManager.getApiRoutes().redraw();
+                lfManager.getApiRoutes().comfy.redraw();
             }
             else {
                 lfManager.log(`Event '${name}' was fired but its related node (#${payload.id}) wasn't found in the graph! Skipping handling the event.`, { payload, name }, LogSeverity.Warning);

@@ -10,65 +10,28 @@ var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (
     return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
 };
 var _LFManager_APIS, _LFManager_AUTOMATIC_BACKUP, _LFManager_CACHED_DATASETS, _LFManager_DEBUG, _LFManager_DEBUG_ARTICLE, _LFManager_DEBUG_DATASET, _LFManager_DOM, _LFManager_INITIALIZED, _LFManager_MANAGERS;
-import { api } from '/scripts/api.js';
-import { app } from '/scripts/app.js';
-import { defineCustomElements } from '../ketchup-lite/loader.js';
-import { getKulManager } from '../utils/common.js';
-import { LFWidgets } from './widgets.js';
-import { LFTooltip } from './tooltip.js';
-import { CustomWidgetName, NodeName } from '../types/widgets/_common.js';
-import { getLogStyle, NODE_WIDGET_MAP, onConnectionsChange, onDrawBackground, onNodeCreated, } from '../helpers/manager.js';
-import { LogSeverity, } from '../types/manager/manager.js';
 import { ANALYTICS_API } from '../api/analytics.js';
 import { BACKUP_API } from '../api/backup.js';
+import { COMFY_API } from '../api/comfy.js';
 import { IMAGE_API } from '../api/image.js';
 import { JSON_API } from '../api/json.js';
 import { METADATA_API } from '../api/metadata.js';
+import { defineCustomElements } from '../ketchup-lite/loader.js';
+import { getKulManager } from '../utils/common.js';
+import { LFTooltip } from './tooltip.js';
+import { LFWidgets } from './widgets.js';
+import { CustomWidgetName, NodeName } from '../types/widgets/_common.js';
+import { getLogStyle, NODE_WIDGET_MAP, onConnectionsChange, onDrawBackground, onNodeCreated, } from '../helpers/manager.js';
+import { LogSeverity, } from '../types/manager/manager.js';
 export class LFManager {
     constructor() {
         _LFManager_APIS.set(this, {
             analytics: ANALYTICS_API,
             backup: BACKUP_API,
+            comfy: COMFY_API,
             image: IMAGE_API,
             json: JSON_API,
             metadata: METADATA_API,
-            comfyUi: () => window.comfyAPI,
-            event: (name, callback) => {
-                api.addEventListener(name, callback);
-            },
-            fetch: async (body) => {
-                return await api.fetchApi('/upload/image', {
-                    method: 'POST',
-                    body,
-                });
-            },
-            getLinkById: (id) => {
-                return app.graph.links[String(id).valueOf()];
-            },
-            getNodeById: (id) => {
-                return app.graph.getNodeById(+(id || app.runningNodeId));
-            },
-            getResourceUrl: (subfolder, filename, type = 'output') => {
-                const params = [
-                    'filename=' + encodeURIComponent(filename),
-                    'type=' + type,
-                    'subfolder=' + subfolder,
-                    app.getRandParam().substring(1),
-                ].join('&');
-                return `/view?${params}`;
-            },
-            interrupt: () => {
-                return api.interrupt();
-            },
-            queuePrompt: async () => {
-                app.queuePrompt(0);
-            },
-            redraw: () => {
-                app.graph.setDirtyCanvas(true, false);
-            },
-            register: (extension) => {
-                app.registerExtension(extension);
-            },
         });
         _LFManager_AUTOMATIC_BACKUP.set(this, true);
         _LFManager_CACHED_DATASETS.set(this, {
@@ -128,8 +91,8 @@ export class LFManager {
                         };
                     }, customWidgets),
                 };
-                this.getApiRoutes().register(extension);
-                __classPrivateFieldGet(this, _LFManager_APIS, "f").event(eventName, (e) => {
+                __classPrivateFieldGet(this, _LFManager_APIS, "f").comfy.register(extension);
+                __classPrivateFieldGet(this, _LFManager_APIS, "f").comfy.event(eventName, (e) => {
                     __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").widgets.onEvent(name, e, widgets);
                 });
             }

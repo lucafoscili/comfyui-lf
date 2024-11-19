@@ -52,7 +52,7 @@ const SETTINGS = {
             r_channel: 1,
             g_channel: 1,
             b_channel: 1,
-            desaturation_level: 0,
+            desaturation_strength: 0,
         },
         configs: {
             slider: [
@@ -60,7 +60,7 @@ const SETTINGS = {
                     ariaLabel: 'Desaturation strength',
                     controlType: ImageEditorControls.Slider,
                     defaultValue: 0,
-                    id: ImageEditorSliderIds.DesaturationLevel,
+                    id: ImageEditorSliderIds.DesaturationStrength,
                     isMandatory: true,
                     max: '1',
                     min: '0',

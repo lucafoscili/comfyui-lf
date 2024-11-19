@@ -18,6 +18,7 @@ import {
   isToggle,
 } from '../utils/common';
 
+//#region Labels
 enum Labels {
   AUTO_BACKUP = 'Automatic Backup',
   BACKUP = 'Backup now',
@@ -29,7 +30,8 @@ enum Labels {
   OPEN_ISSUE = 'Open an issue',
   THEME = 'Random theme',
 }
-
+//#endregion
+//#region Styles
 const STYLES = {
   customization: () => {
     return {
@@ -71,9 +73,11 @@ const STYLES = {
     };
   },
 };
+//#endregion
 
 let TIMEOUT: NodeJS.Timeout;
 
+//#region handleKulEvent
 export const handleKulEvent = (e: Event) => {
   const { comp } = (
     e as CustomEvent<KulButtonEventPayload | KulListEventPayload | KulToggleEventPayload>
@@ -173,7 +177,8 @@ const handleButtonEvent = (e: CustomEvent<KulButtonEventPayload>) => {
       }
   }
 };
-
+//#endregion
+//#region handleListEvent
 const handleListEvent = (e: CustomEvent<KulListEventPayload>) => {
   const { comp, eventType, node } = e.detail;
   const c = (comp as KulList).rootElement;
@@ -189,7 +194,8 @@ const handleListEvent = (e: CustomEvent<KulListEventPayload>) => {
       break;
   }
 };
-
+//#endregion
+//#region handleToggleEvent
 const handleToggleEvent = (e: CustomEvent<KulToggleEventPayload>) => {
   const { comp, eventType, value } = e.detail;
   const c = (comp as KulToggle).rootElement;
@@ -202,8 +208,9 @@ const handleToggleEvent = (e: CustomEvent<KulToggleEventPayload>) => {
       c.title = 'Activate verbose console logging';
   }
 };
-
+//#endregion
 export const sectionsFactory = {
+  //#region Analytics
   analytics: (): KulArticleNode => {
     return {
       id: 'section',
@@ -270,6 +277,8 @@ export const sectionsFactory = {
       ],
     };
   },
+  //#endregion
+  //#region Backup
   backup: (): KulArticleNode => {
     return {
       id: 'section',
@@ -347,6 +356,8 @@ export const sectionsFactory = {
       ],
     };
   },
+  //#endregion
+  //#region Bug
   bug: (): KulArticleNode => {
     return {
       id: 'section',
@@ -390,6 +401,8 @@ export const sectionsFactory = {
       ],
     };
   },
+  //#endregion
+  //#region Debug
   debug: (logsData: KulArticleNode[]): KulArticleNode => {
     return {
       id: 'section',
@@ -510,6 +523,8 @@ export const sectionsFactory = {
       ],
     };
   },
+  //#endregion
+  //#region Metadata
   metadata: (): KulArticleNode => {
     return {
       id: 'section',
@@ -567,6 +582,8 @@ export const sectionsFactory = {
       ],
     };
   },
+  //#endregion
+  //#region Theme
   theme: (): KulArticleNode => {
     return {
       id: 'section',
@@ -604,4 +621,5 @@ export const sectionsFactory = {
       ],
     };
   },
+  //#endregion
 };

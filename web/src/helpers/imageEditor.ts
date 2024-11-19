@@ -62,7 +62,7 @@ export const buttonEventHandler = async (
 
     switch (comp.kulIcon) {
       case ImageEditorIcons.Interrupt:
-        getApiRoutes().interrupt();
+        getApiRoutes().comfy.interrupt();
         break;
     }
 

@@ -1,11 +1,15 @@
-import { api } from '/scripts/api.js';
-import { app } from '/scripts/app.js';
+import { ANALYTICS_API } from '../api/analytics.js';
+import { BACKUP_API } from '../api/backup.js';
+import { COMFY_API } from '../api/comfy.js';
+import { IMAGE_API } from '../api/image.js';
+import { JSON_API } from '../api/json.js';
+import { METADATA_API } from '../api/metadata.js';
 import { defineCustomElements } from '../ketchup-lite/loader.js';
 import { getKulManager } from '../utils/common.js';
+import { LFTooltip } from './tooltip';
 import { LFWidgets } from './widgets.js';
 import { EventName } from '../types/events/events.js';
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
-import { LFTooltip } from './tooltip';
 import { KulDataDataset } from '../types/ketchup-lite/components.js';
 import { KulDom } from '../types/ketchup-lite/managers/kul-manager/kul-manager-declarations.js';
 import { KulManager } from '../types/ketchup-lite/managers/kul-manager/kul-manager.js';
@@ -24,11 +28,6 @@ import {
   ExtensionCallback,
   LogSeverity,
 } from '../types/manager/manager.js';
-import { ANALYTICS_API } from '../api/analytics.js';
-import { BACKUP_API } from '../api/backup.js';
-import { IMAGE_API } from '../api/image.js';
-import { JSON_API } from '../api/json.js';
-import { METADATA_API } from '../api/metadata.js';
 
 export interface LFWindow extends Window {
   comfyAPI: ComfyUI;
@@ -39,46 +38,10 @@ export class LFManager {
   #APIS: APIRoutes = {
     analytics: ANALYTICS_API,
     backup: BACKUP_API,
+    comfy: COMFY_API,
     image: IMAGE_API,
     json: JSON_API,
     metadata: METADATA_API,
-    comfyUi: () => (window as unknown as LFWindow).comfyAPI,
-    event: (name, callback) => {
-      api.addEventListener(name, callback);
-    },
-    fetch: async (body) => {
-      return await api.fetchApi('/upload/image', {
-        method: 'POST',
-        body,
-      });
-    },
-    getLinkById: (id: string) => {
-      return app.graph.links[String(id).valueOf()];
-    },
-    getNodeById: (id: string) => {
-      return app.graph.getNodeById(+(id || app.runningNodeId));
-    },
-    getResourceUrl: (subfolder, filename, type = 'output') => {
-      const params = [
-        'filename=' + encodeURIComponent(filename),
-        'type=' + type,
-        'subfolder=' + subfolder,
-        app.getRandParam().substring(1),
-      ].join('&');
-      return `/view?${params}`;
-    },
-    interrupt: () => {
-      return api.interrupt();
-    },
-    queuePrompt: async () => {
-      app.queuePrompt(0);
-    },
-    redraw: () => {
-      app.graph.setDirtyCanvas(true, false);
-    },
-    register: (extension: Extension) => {
-      app.registerExtension(extension);
-    },
   };
   #AUTOMATIC_BACKUP = true;
   #CACHED_DATASETS: { usage: KulDataDataset } = {
@@ -158,9 +121,9 @@ export class LFManager {
             }, customWidgets),
         };
 
-        this.getApiRoutes().register(extension);
+        this.#APIS.comfy.register(extension);
 
-        this.#APIS.event(eventName, (e) => {
+        this.#APIS.comfy.event(eventName, (e) => {
           this.#MANAGERS.widgets.onEvent(name, e, widgets as CustomWidgetName[]);
         });
       }
@@ -173,26 +136,21 @@ export class LFManager {
   getApiRoutes(): APIRoutes {
     return this.#APIS;
   }
-
   getCachedDatasets() {
     return this.#CACHED_DATASETS;
   }
-
   getDebugDataset() {
     return { article: this.#DEBUG_ARTICLE, dataset: this.#DEBUG_DATASET };
   }
-
   getEventName(node: NodeName) {
     return node.toLowerCase().replace('_', '-') as EventName;
   }
-
   getManagers() {
     return this.#MANAGERS;
   }
   isBackupEnabled() {
     return this.#AUTOMATIC_BACKUP;
   }
-
   isDebug() {
     return this.#DEBUG;
   }
