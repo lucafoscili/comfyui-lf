@@ -12,6 +12,7 @@ export var KulEventName;
     KulEventName["KulCompare"] = "kul-compare-event";
     KulEventName["KulImageviewer"] = "kul-imageviewer-event";
     KulEventName["KulList"] = "kul-list-event";
+    KulEventName["KulManager"] = "kul-manager-ready";
     KulEventName["KulMasonry"] = "kul-masonry-event";
     KulEventName["KulMessenger"] = "kul-messenger-event";
     KulEventName["KulProgressbar"] = "kul-progressbar-event";

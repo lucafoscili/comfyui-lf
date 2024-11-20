@@ -1,9 +1,4 @@
 import {
-  KulArticleDataset,
-  KulArticleEventPayload,
-  KulArticleNode,
-} from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
-import {
   CustomWidgetDeserializedValuesMap,
   CustomWidgetName,
   NormalizeValueCallback,
@@ -16,7 +11,7 @@ import {
   getLFManager,
   normalizeValue,
 } from '../utils/common';
-import { handleKulEvent, sectionsFactory } from '../helpers/controlPanel';
+import { createContent } from '../helpers/controlPanel';
 import { ControlPanelDeserializedValue, ControlPanelFactory } from '../types/widgets/controlPanel';
 import { KulEventName } from '../types/events/events';
 
@@ -27,7 +22,7 @@ const TYPE = CustomWidgetName.controlPanel;
 export const controlPanelFactory: ControlPanelFactory = {
   cssClasses: {
     content: BASE_CSS_CLASS,
-    article: `${BASE_CSS_CLASS}__article`,
+    grid: `${BASE_CSS_CLASS}__grid`,
     spinner: `${BASE_CSS_CLASS}__spinner`,
   },
   options: () => {
@@ -64,9 +59,9 @@ export const controlPanelFactory: ControlPanelFactory = {
           } else {
             const managerCb = () => {
               set();
-              document.removeEventListener('kul-manager-ready', managerCb);
+              document.removeEventListener(KulEventName.KulManager, managerCb);
             };
-            document.addEventListener('kul-manager-ready', managerCb);
+            document.addEventListener(KulEventName.KulManager, managerCb);
           }
         };
 
@@ -75,6 +70,38 @@ export const controlPanelFactory: ControlPanelFactory = {
     };
   },
   render: (node) => {
+    const contentCb = (domWidget: HTMLDivElement, isReady: boolean) => {
+      const readyCb = (domWidget: HTMLDivElement) => {
+        setTimeout(() => {
+          getApiRoutes().backup.new();
+          contentCb(domWidget, true);
+        }, 750);
+      };
+
+      const createSpinner = () => {
+        const spinner = document.createElement(TagName.KulSpinner);
+        spinner.classList.add(controlPanelFactory.cssClasses.spinner);
+        spinner.kulActive = true;
+        spinner.kulLayout = 11;
+
+        return spinner;
+      };
+
+      const content = document.createElement(TagName.Div);
+
+      if (isReady) {
+        content.appendChild(createContent());
+        domWidget.replaceChild(content, domWidget.firstChild);
+      } else {
+        const spinner = createSpinner();
+        spinner.addEventListener(KulEventName.KulSpinner, readyCb.bind(null, domWidget));
+        content.appendChild(spinner);
+        domWidget.appendChild(content);
+      }
+
+      content.classList.add(controlPanelFactory.cssClasses.content);
+    };
+
     const wrapper = document.createElement(TagName.Div);
     const options = controlPanelFactory.options();
 
@@ -82,110 +109,5 @@ export const controlPanelFactory: ControlPanelFactory = {
 
     return { widget: createDOMWidget(TYPE, wrapper, node, options) };
   },
-};
-//#endregion
-//#region readyCb
-const readyCb = (domWidget: HTMLDivElement) => {
-  setTimeout(() => {
-    getApiRoutes().backup.new();
-    contentCb(domWidget, true);
-  }, 750);
-};
-//#endregion
-//#region contentCb
-const contentCb = (domWidget: HTMLDivElement, isReady: boolean) => {
-  const content = document.createElement(TagName.Div);
-
-  const createSpinner = () => {
-    const spinner = document.createElement(TagName.KulSpinner);
-    spinner.classList.add(controlPanelFactory.cssClasses.spinner);
-    spinner.kulActive = true;
-    spinner.kulLayout = 11;
-
-    return spinner;
-  };
-
-  if (isReady) {
-    const article = createArticle();
-
-    content.appendChild(article);
-    domWidget.replaceChild(content, domWidget.firstChild);
-  } else {
-    const spinner = createSpinner();
-    spinner.addEventListener('kul-spinner-event', readyCb.bind(null, domWidget));
-    content.appendChild(spinner);
-    domWidget.appendChild(content);
-  }
-
-  content.classList.add(controlPanelFactory.cssClasses.content);
-};
-//#endregion
-//#region Create
-const createArticle = () => {
-  const container = document.createElement(TagName.Div);
-  const accordion = document.createElement(TagName.KulAccordion);
-  const ghArticle = document.createElement(TagName.KulArticle);
-  const article = document.createElement(TagName.KulArticle);
-
-  const { analytics, backup, bug, debug, github, metadata, theme } = sectionsFactory;
-  const logsData: KulArticleNode[] = [];
-
-  const cb = (e: Event | KulArticleEventPayload) => {
-    const { eventType, originalEvent } = (e as CustomEvent<KulArticleEventPayload>).detail;
-
-    switch (eventType) {
-      case 'kul-event':
-        handleKulEvent(originalEvent);
-        break;
-    }
-  };
-
-  ghArticle.kulData = {
-    nodes: [
-      {
-        children: [
-          {
-            children: [github()],
-            id: 'section',
-          },
-        ],
-        id: 'root',
-        value: '',
-      },
-    ],
-  };
-  ghArticle.slot = 'gh-article';
-
-  accordion.kulData = { nodes: [{ icon: 'github', id: 'gh-article', value: 'Latest release' }] };
-  accordion.appendChild(ghArticle);
-
-  const articleData: KulArticleDataset = {
-    nodes: [
-      {
-        children: [
-          {
-            children: [theme(), analytics(), metadata(), backup(), bug()],
-            id: 'section',
-          },
-          {
-            children: [debug(logsData)],
-            id: 'section',
-          },
-        ],
-        cssStyle: { display: 'grid', gridTemplateColumns: '1fr 1fr' },
-        id: 'root',
-        value: '',
-      },
-    ],
-  };
-  article.kulData = articleData;
-  article.addEventListener(KulEventName.KulArticle, cb);
-
-  getLFManager().setDebugDataset(article, logsData);
-
-  container.appendChild(accordion);
-  container.appendChild(article);
-
-  return container;
 };
 //#endregion

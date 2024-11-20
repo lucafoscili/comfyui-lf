@@ -112,6 +112,12 @@
   --kul-article-padding: 12px 24px;
   display: grid;
 }
+.lf-controlpanel__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  height: 100%;
+  width: 100%;
+}
 .lf-controlpanel__spinner {
   height: 100%;
   width: 100%;
