@@ -1,11 +1,4 @@
 import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
+export declare const createContent: () => HTMLDivElement;
+export declare const prepArticle: (key: string, node: KulArticleNode) => HTMLKulArticleElement;
 export declare const handleKulEvent: (e: Event) => void;
-export declare const sectionsFactory: {
-    analytics: () => KulArticleNode;
-    backup: () => KulArticleNode;
-    bug: () => KulArticleNode;
-    debug: (logsData: KulArticleNode[]) => KulArticleNode;
-    github: () => KulArticleNode;
-    metadata: () => KulArticleNode;
-    theme: () => KulArticleNode;
-};

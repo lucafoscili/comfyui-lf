@@ -1,3 +1,4 @@
+import { KulArticleNode } from '../ketchup-lite/components/kul-article/kul-article-declarations';
 import {
   BaseWidgetCallback,
   BaseWidgetFactory,
@@ -23,4 +24,46 @@ export type ControlPanelDeserializedValue = {
   debug: boolean;
   themes: string;
 };
+export interface ControlPanelFixture {
+  [ControlPanelIds.Analytics]: () => KulArticleNode;
+  [ControlPanelIds.Backup]: () => KulArticleNode;
+  [ControlPanelIds.Debug]: (logsData: KulArticleNode[]) => KulArticleNode;
+  [ControlPanelIds.GitHub]: () => KulArticleNode;
+  [ControlPanelIds.Metadata]: () => KulArticleNode;
+  [ControlPanelIds.Theme]: () => KulArticleNode;
+}
+export enum ControlPanelIcons {
+  Analytics = 'pie_chart',
+  Backup = 'save',
+  Debug = 'bug',
+  GitHub = 'github',
+  Metadata = 'information-variant',
+  Theme = 'style',
+}
+export enum ControlPanelIds {
+  Analytics = 'analytics',
+  Backup = 'backup',
+  Debug = 'debug',
+  GitHub = 'github',
+  Metadata = 'metadata',
+  Theme = 'theme',
+}
+export enum ControlPanelLabels {
+  AutoBackup = 'Automatic Backup',
+  Backup = 'Backup now',
+  ClearLogs = 'Clear logs',
+  Debug = 'Debug',
+  DeleteUsage = 'Delete usage analytics info',
+  DeleteMetadata = 'Delete models info',
+  Done = 'Done!',
+  OpenIssue = 'Open an issue',
+  Theme = 'Random theme',
+}
+export enum ControlPanelSection {
+  Content = 'content',
+  ContentSeparator = 'content_spearator',
+  Paragraph = 'paragraph',
+  Root = 'root',
+  Section = 'section',
+}
 //#endregion

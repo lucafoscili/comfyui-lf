@@ -29,6 +29,7 @@ export declare enum KulEventName {
     KulCompare = "kul-compare-event",
     KulImageviewer = "kul-imageviewer-event",
     KulList = "kul-list-event",
+    KulManager = "kul-manager-ready",
     KulMasonry = "kul-masonry-event",
     KulMessenger = "kul-messenger-event",
     KulProgressbar = "kul-progressbar-event",

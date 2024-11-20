@@ -1,62 +1,63 @@
-import { getApiRoutes, getKulManager, getKulThemes, getLFManager, isButton, isToggle, } from '../utils/common.js';
-//#region Labels
-var Labels;
-(function (Labels) {
-    Labels["AUTO_BACKUP"] = "Automatic Backup";
-    Labels["BACKUP"] = "Backup now";
-    Labels["CLEAR_LOGS"] = "Clear logs";
-    Labels["DEBUG"] = "Debug";
-    Labels["DELETE_USAGE"] = "Delete usage analytics info";
-    Labels["DELETE_METADATA"] = "Delete models info";
-    Labels["DONE"] = "Done!";
-    Labels["OPEN_ISSUE"] = "Open an issue";
-    Labels["THEME"] = "Random theme";
-})(Labels || (Labels = {}));
-//#endregion
-//#region Styles
-const STYLES = {
-    customization: () => {
-        return {
-            margin: '0',
-        };
-    },
-    debugGrid: () => {
-        return {
-            display: 'grid',
-            gridTemplateRows: 'repeat(5, max-content) 1fr',
-            height: '100%',
-            margin: '0',
-        };
-    },
-    debugLogs: () => {
-        return {
-            display: 'grid',
-            gridGap: '12px',
-            gridTemplateRows: 'repeat(2, minmax(250px, 600px))',
-        };
-    },
-    logsArea: () => {
-        return {
-            backgroundColor: 'rgba(var(--kul-text-color-rgb), 0.075)',
-            borderRadius: '8px',
-            display: 'block',
-            height: '100%',
-            marginBottom: '16px',
-            overflow: 'auto',
-        };
-    },
-    separator: () => {
-        return {
-            border: '1px solid var(--kul-border-color)',
-            display: 'block',
-            margin: '12px auto 24px',
-            opacity: '0.25',
-            width: '50%',
-        };
-    },
+import { SECTIONS } from '../fixtures/controlPanel.js';
+import { KulEventName } from '../types/events/events.js';
+import { TagName } from '../types/widgets/_common.js';
+import { ControlPanelIds, ControlPanelLabels, ControlPanelSection, } from '../types/widgets/controlPanel.js';
+import { getApiRoutes, getKulManager, getLFManager, isButton, isToggle } from '../utils/common.js';
+import { controlPanelFactory } from '../widgets/controlPanel.js';
+const INTRO_SECTION = ControlPanelIds.GitHub;
+let TIMEOUT;
+//#region createContent
+export const createContent = () => {
+    const grid = document.createElement(TagName.Div);
+    const accordion = document.createElement(TagName.KulAccordion);
+    const nodes = [];
+    accordion.kulData = { nodes };
+    for (const id in SECTIONS) {
+        if (id !== INTRO_SECTION && Object.prototype.hasOwnProperty.call(SECTIONS, id)) {
+            const section = SECTIONS[id];
+            let article;
+            let node;
+            switch (id) {
+                case ControlPanelIds.Debug:
+                    const logsData = [];
+                    node = section(logsData);
+                    article = prepArticle(id, node);
+                    getLFManager().setDebugDataset(article, logsData);
+                    break;
+                default:
+                    node = section(undefined);
+                    article = prepArticle(id, node);
+                    break;
+            }
+            const { icon, value } = node;
+            nodes.push({ icon, id, value });
+            accordion.appendChild(article);
+        }
+    }
+    const intro = prepArticle(INTRO_SECTION, SECTIONS[INTRO_SECTION]());
+    grid.classList.add(controlPanelFactory.cssClasses.grid);
+    grid.appendChild(intro);
+    grid.appendChild(accordion);
+    return grid;
 };
 //#endregion
-let TIMEOUT;
+//#region prepArticle
+export const prepArticle = (key, node) => {
+    const cb = (e) => {
+        const { eventType, originalEvent } = e.detail;
+        switch (eventType) {
+            case 'kul-event':
+                handleKulEvent(originalEvent);
+                break;
+        }
+    };
+    const article = document.createElement(TagName.KulArticle);
+    article.kulData = { nodes: [{ children: [node], id: ControlPanelSection.Root }] };
+    article.slot = key;
+    article.addEventListener(KulEventName.KulArticle, cb);
+    return article;
+};
+//#endregion
 //#region handleKulEvent
 export const handleKulEvent = (e) => {
     const { comp } = e.detail;
@@ -82,7 +83,7 @@ const handleButtonEvent = (e) => {
         const onResponse = () => {
             c.kulDisabled = true;
             c.kulIcon = 'check';
-            c.kulLabel = Labels.DONE;
+            c.kulLabel = ControlPanelLabels.Done;
             c.kulShowSpinner = false;
         };
         const restore = (label) => {
@@ -103,26 +104,26 @@ const handleButtonEvent = (e) => {
     switch (eventType) {
         case 'click':
             switch (c.kulLabel) {
-                case Labels.BACKUP:
-                    invokeAPI(getApiRoutes().backup.new('manual'), Labels.BACKUP);
+                case ControlPanelLabels.Backup:
+                    invokeAPI(getApiRoutes().backup.new('manual'), ControlPanelLabels.Backup);
                     break;
-                case Labels.CLEAR_LOGS:
+                case ControlPanelLabels.ClearLogs:
                     const { article, dataset } = getLFManager().getDebugDataset();
                     if (dataset?.length > 0) {
                         dataset.splice(0, dataset.length);
                         article.refresh();
                     }
                     break;
-                case Labels.DELETE_METADATA:
-                    invokeAPI(getApiRoutes().metadata.clear(), Labels.DELETE_METADATA);
+                case ControlPanelLabels.DeleteMetadata:
+                    invokeAPI(getApiRoutes().metadata.clear(), ControlPanelLabels.DeleteMetadata);
                     break;
-                case Labels.DELETE_USAGE:
-                    invokeAPI(getApiRoutes().analytics.clear('usage'), Labels.DELETE_USAGE);
+                case ControlPanelLabels.DeleteUsage:
+                    invokeAPI(getApiRoutes().analytics.clear('usage'), ControlPanelLabels.DeleteUsage);
                     break;
-                case Labels.OPEN_ISSUE:
+                case ControlPanelLabels.OpenIssue:
                     window.open('https://github.com/lucafoscili/comfyui-lf/issues/new', '_blank');
                     break;
-                case Labels.THEME:
+                case ControlPanelLabels.Theme:
                     getKulManager().theme.randomTheme();
                     break;
                 default:
@@ -134,11 +135,11 @@ const handleButtonEvent = (e) => {
             break;
         case 'ready':
             switch (c.kulLabel) {
-                case Labels.BACKUP:
+                case ControlPanelLabels.Backup:
                     c.appendChild(createSpinner());
                     break;
-                case Labels.DELETE_METADATA:
-                case Labels.DELETE_USAGE:
+                case ControlPanelLabels.DeleteMetadata:
+                case ControlPanelLabels.DeleteUsage:
                     c.classList.add('kul-danger');
                     c.appendChild(createSpinner());
                     break;
@@ -175,500 +176,3 @@ const handleToggleEvent = (e) => {
     }
 };
 //#endregion
-export const sectionsFactory = {
-    //#region Analytics
-    analytics: () => {
-        return {
-            id: 'section',
-            value: 'Analytics',
-            children: [
-                {
-                    id: 'paragraph',
-                    value: 'Usage',
-                    children: [
-                        {
-                            id: 'content',
-                            value: 'Usage analytics can be enabled by saving datasets through the UpdateUsageStatistics node and displayed with the UsageStatistics node.',
-                        },
-                        {
-                            id: 'content',
-                            tagName: 'br',
-                            value: '',
-                        },
-                        {
-                            id: 'content',
-                            value: 'Once datasets are created (input folder of ComfyUI), the count for each resource used will increase everytime that particular resource is updated.',
-                        },
-                        {
-                            id: 'content',
-                            tagName: 'br',
-                            value: '',
-                        },
-                        {
-                            id: 'content',
-                            value: 'This button will clear all usage analytics data from your input folder.',
-                        },
-                        {
-                            id: 'content',
-                            tagName: 'br',
-                            value: '',
-                        },
-                        {
-                            id: 'content',
-                            value: 'This action is IRREVERSIBLE so use it with caution.',
-                        },
-                        {
-                            id: 'content',
-                            value: '',
-                            cells: {
-                                kulButton: {
-                                    kulIcon: 'delete',
-                                    kulLabel: Labels.DELETE_USAGE,
-                                    kulStyle: ':host { margin: auto; padding:16px 0 }',
-                                    kulStyling: 'outlined',
-                                    shape: 'button',
-                                    value: '',
-                                },
-                            },
-                        },
-                        {
-                            cssStyle: STYLES.separator(),
-                            id: 'content_separator',
-                            value: '',
-                        },
-                    ],
-                },
-            ],
-        };
-    },
-    //#endregion
-    //#region Backup
-    backup: () => {
-        return {
-            id: 'section',
-            value: 'Backup',
-            children: [
-                {
-                    id: 'paragraph',
-                    value: 'Toggle on/off',
-                    children: [
-                        {
-                            id: 'content',
-                            value: 'Toggle this toggle to automatically back up the folder <path/to/your/comfyui/user/LF_Nodes> once a day (the first time you open this workflow).',
-                        },
-                        {
-                            id: 'content',
-                            tagName: 'br',
-                            value: '',
-                        },
-                        {
-                            id: 'content',
-                            value: '',
-                            cells: {
-                                kulToggle: {
-                                    kulLabel: Labels.AUTO_BACKUP,
-                                    kulLeadingLabel: true,
-                                    kulStyle: ':host { text-align: center; padding: 16px 0; }',
-                                    shape: 'toggle',
-                                    value: !!getLFManager().isBackupEnabled(),
-                                },
-                            },
-                        },
-                    ],
-                },
-                {
-                    id: 'paragraph',
-                    value: 'Backup files',
-                    children: [
-                        {
-                            id: 'content',
-                            value: 'This button will create a manual backup of the content in <path/to/your/comfyui/user/LF_Nodes>',
-                        },
-                        {
-                            id: 'content',
-                            tagName: 'br',
-                            value: '',
-                        },
-                        {
-                            id: 'content',
-                            value: "Be sure to include as much information as you can, without sufficient data it's difficult to troubleshoot problems.",
-                        },
-                        {
-                            id: 'content',
-                            value: '',
-                            cells: {
-                                kulButton: {
-                                    kulIcon: 'backup',
-                                    kulLabel: Labels.BACKUP,
-                                    kulStyle: ':host { margin: auto; padding:16px 0 }',
-                                    kulStyling: 'raised',
-                                    shape: 'button',
-                                    value: '',
-                                },
-                            },
-                        },
-                        {
-                            cssStyle: STYLES.separator(),
-                            id: 'content_separator',
-                            value: '',
-                        },
-                    ],
-                },
-            ],
-        };
-    },
-    //#endregion
-    //#region Bug
-    bug: () => {
-        return {
-            id: 'section',
-            value: 'Bug report',
-            children: [
-                {
-                    id: 'paragraph',
-                    value: 'Did you run into a bug?',
-                    children: [
-                        {
-                            id: 'content',
-                            value: 'If you find bugs or odd behaviors feel free to open an issue on GitHub, just follow the link below!',
-                        },
-                        {
-                            id: 'content',
-                            tagName: 'br',
-                            value: '',
-                        },
-                        {
-                            id: 'content',
-                            value: "Be sure to include as much information as you can, without sufficient data it's difficult to troubleshoot problems.",
-                        },
-                        {
-                            id: 'content',
-                            value: '',
-                            cells: {
-                                kulButton: {
-                                    kulIcon: 'github',
-                                    kulLabel: Labels.OPEN_ISSUE,
-                                    kulStyle: ':host { margin: auto; padding:16px 0 }',
-                                    kulStyling: 'raised',
-                                    shape: 'button',
-                                    value: '',
-                                },
-                            },
-                        },
-                    ],
-                },
-            ],
-        };
-    },
-    //#endregion
-    //#region Debug
-    debug: (logsData) => {
-        return {
-            id: 'section',
-            cssStyle: STYLES.debugGrid(),
-            value: 'Debug',
-            children: [
-                {
-                    id: 'paragraph',
-                    value: 'Toggle on/off',
-                    children: [
-                        {
-                            id: 'content',
-                            value: 'Activating the debug will enable the display of verbose logging.',
-                        },
-                        {
-                            id: 'content',
-                            value: '',
-                            cells: {
-                                kulToggle: {
-                                    kulLabel: Labels.DEBUG,
-                                    kulLeadingLabel: true,
-                                    kulStyle: ':host { text-align: center; padding: 16px 0; }',
-                                    shape: 'toggle',
-                                    value: !!getLFManager().isDebug(),
-                                },
-                            },
-                        },
-                    ],
-                },
-                {
-                    id: 'paragraph',
-                    value: 'Logs',
-                    children: [
-                        {
-                            id: 'content',
-                            value: 'Every time the node manager receives a messages, it will be printed below.',
-                        },
-                        {
-                            id: 'content',
-                            tagName: 'br',
-                            value: '',
-                        },
-                        {
-                            id: 'content',
-                            value: 'In the browser console there should be more informations.',
-                        },
-                        {
-                            id: 'content',
-                            tagName: 'br',
-                            value: '',
-                        },
-                        {
-                            id: 'content',
-                            value: 'Further below another widget will display additional Ketchup Lite components information.',
-                        },
-                        {
-                            id: 'content',
-                            value: '',
-                            cells: {
-                                kulButton: {
-                                    htmlProps: { className: 'kul-danger kul-full-width' },
-                                    shape: 'button',
-                                    kulIcon: 'refresh',
-                                    kulLabel: Labels.CLEAR_LOGS,
-                                    kulStyle: ':host { padding-top: 16px; }',
-                                    value: '',
-                                },
-                            },
-                        },
-                    ],
-                },
-                {
-                    id: 'paragraph',
-                    cssStyle: STYLES.debugLogs(),
-                    value: '',
-                    children: [
-                        {
-                            id: 'content-wrapper',
-                            cssStyle: STYLES.logsArea(),
-                            value: '',
-                            children: logsData,
-                        },
-                        {
-                            cells: {
-                                kulCard: {
-                                    kulData: {
-                                        nodes: [
-                                            {
-                                                cells: {
-                                                    kulCode: { shape: 'code', value: '' },
-                                                    kulButton: {
-                                                        shape: 'button',
-                                                        value: '',
-                                                    },
-                                                    kulButton_2: {
-                                                        shape: 'button',
-                                                        value: '',
-                                                    },
-                                                    kulToggle: {
-                                                        shape: 'toggle',
-                                                        value: !!getKulManager().debug.isEnabled(),
-                                                    },
-                                                },
-                                                id: 'debug',
-                                            },
-                                        ],
-                                    },
-                                    kulLayout: 'debug',
-                                    shape: 'card',
-                                    value: '',
-                                },
-                            },
-                            id: 'content-wrapper',
-                        },
-                    ],
-                },
-            ],
-        };
-    },
-    //#endregion
-    //#region GitHub
-    github: () => {
-        const lfManager = getLFManager();
-        const releaseData = lfManager.getLatestRelease();
-        return {
-            id: 'section',
-            value: 'GitHub',
-            children: [
-                {
-                    id: 'paragraph',
-                    value: 'Latest Release',
-                    children: [
-                        {
-                            cells: {
-                                kulCode: {
-                                    shape: 'code',
-                                    kulLanguage: 'plaintext',
-                                    value: `Version: ${releaseData?.tag_name || 'N/A'}`,
-                                },
-                            },
-                            id: 'release-version',
-                        },
-                        {
-                            cssStyle: {
-                                backgroundColor: 'var(--kul-light-bg-color)',
-                                padding: '0.5em',
-                                borderRadius: '0.25em',
-                                marginBottom: '1em',
-                            },
-                            cells: {
-                                kulCode: {
-                                    kulLanguage: 'markdown',
-                                    shape: 'code',
-                                    value: releaseData?.body || 'No changelog available',
-                                },
-                            },
-                            id: 'release-description',
-                        },
-                        {
-                            id: 'release-author',
-                            children: [
-                                {
-                                    id: 'author-avatar',
-                                    value: '',
-                                    cssStyle: {
-                                        backgroundImage: `url(${releaseData?.author?.avatar_url || ''})`,
-                                        backgroundSize: 'cover',
-                                        borderRadius: '50%',
-                                        display: 'inline-block',
-                                        height: '32px',
-                                        marginRight: '0.5em',
-                                        verticalAlign: 'middle',
-                                        width: '32px',
-                                    },
-                                },
-                                {
-                                    id: 'author-name',
-                                    value: `Author: ${releaseData?.author?.login || 'Unknown'}`,
-                                    cssStyle: {
-                                        fontSize: '0.9em',
-                                        color: 'var(--kul-secondary-color)',
-                                        verticalAlign: 'middle',
-                                    },
-                                },
-                            ],
-                            cssStyle: {
-                                alignItems: 'center',
-                                display: 'flex',
-                                justifyContent: 'center',
-                                marginBottom: '1em',
-                                paddingTop: '1em',
-                            },
-                        },
-                        {
-                            cssStyle: {
-                                color: 'var(--kul-secondary-color)',
-                                display: 'block',
-                                fontSize: '0.9em',
-                                fontStyle: 'italic',
-                                marginBottom: '1em',
-                                textAlign: 'center',
-                                width: '100%',
-                            },
-                            id: 'release-date',
-                            value: `Published on: ${releaseData?.published_at
-                                ? new Date(releaseData.published_at).toLocaleDateString()
-                                : 'Unknown'}`,
-                        },
-                    ],
-                },
-            ],
-        };
-    },
-    //#endregion
-    //#region Metadata
-    metadata: () => {
-        return {
-            id: 'section',
-            value: 'Metadata',
-            children: [
-                {
-                    id: 'paragraph',
-                    value: 'Purge metadata files',
-                    children: [
-                        {
-                            id: 'content',
-                            value: 'Metadata pulled from CivitAI are stored in .info files saved in the same folders of the models to avoid unnecessary fetches from the API.',
-                        },
-                        {
-                            id: 'content',
-                            tagName: 'br',
-                            value: '',
-                        },
-                        {
-                            id: 'content',
-                            value: "By pressing this button it's possible to delete every .info file created by fetching the metadata.",
-                        },
-                        {
-                            id: 'content',
-                            tagName: 'br',
-                            value: '',
-                        },
-                        {
-                            id: 'content',
-                            value: 'This action is IRREVERSIBLE so use it with caution.',
-                        },
-                        {
-                            id: 'content',
-                            value: '',
-                            cells: {
-                                kulButton: {
-                                    kulIcon: 'delete',
-                                    kulLabel: Labels.DELETE_METADATA,
-                                    kulStyle: ':host { margin: auto; padding:16px 0 }',
-                                    kulStyling: 'outlined',
-                                    shape: 'button',
-                                    value: '',
-                                },
-                            },
-                        },
-                    ],
-                },
-                {
-                    cssStyle: STYLES.separator(),
-                    id: 'content_separator',
-                    value: '',
-                },
-            ],
-        };
-    },
-    //#endregion
-    //#region Theme
-    theme: () => {
-        return {
-            id: 'section',
-            value: 'Customization',
-            cssStyle: STYLES.customization(),
-            children: [
-                {
-                    id: 'paragraph',
-                    value: 'Theme selector',
-                    children: [
-                        {
-                            id: 'content',
-                            value: "Through the button below it's possible to set a random theme for the Ketchup Lite components, or select one from the dropdown menu.",
-                        },
-                        {
-                            id: 'content',
-                            value: '',
-                            cells: {
-                                kulButton: {
-                                    kulData: getKulThemes(),
-                                    kulStyle: ':host { margin: auto; padding: 16px 0 }',
-                                    shape: 'button',
-                                    value: '',
-                                },
-                            },
-                        },
-                    ],
-                },
-                {
-                    cssStyle: STYLES.separator(),
-                    id: 'content_separator',
-                    value: '',
-                },
-            ],
-        };
-    },
-    //#endregion
-};
