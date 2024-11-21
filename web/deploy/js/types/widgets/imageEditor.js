@@ -29,6 +29,8 @@ export var ImageEditorSliderIds;
 (function (ImageEditorSliderIds) {
     ImageEditorSliderIds["BlurKernelSize"] = "blur_kernel_size";
     ImageEditorSliderIds["ClarityStrength"] = "clarity_strength";
+    ImageEditorSliderIds["ContrastStrength"] = "contrast_strength";
+    ImageEditorSliderIds["Midpoint"] = "midpoint";
     ImageEditorSliderIds["SharpenAmount"] = "sharpen_amount";
     ImageEditorSliderIds["Intensity"] = "intensity";
     ImageEditorSliderIds["Radius"] = "radius";
@@ -43,6 +45,7 @@ export var ImageEditorTextfieldIds;
 })(ImageEditorTextfieldIds || (ImageEditorTextfieldIds = {}));
 export var ImageEditorToggleIds;
 (function (ImageEditorToggleIds) {
+    ImageEditorToggleIds["LocalizedContrast"] = "localized_contrast";
     ImageEditorToggleIds["Shape"] = "shape";
 })(ImageEditorToggleIds || (ImageEditorToggleIds = {}));
 export var ImageEditorClarityIds;
@@ -51,6 +54,12 @@ export var ImageEditorClarityIds;
     ImageEditorClarityIds["ClarityStrength"] = "clarity_strength";
     ImageEditorClarityIds["SharpenAmount"] = "sharpen_amount";
 })(ImageEditorClarityIds || (ImageEditorClarityIds = {}));
+export var ImageEditorContrastIds;
+(function (ImageEditorContrastIds) {
+    ImageEditorContrastIds["ContrastStrength"] = "contrast_strength";
+    ImageEditorContrastIds["LocalizedContrast"] = "localized_contrast";
+    ImageEditorContrastIds["Midpoint"] = "midpoint";
+})(ImageEditorContrastIds || (ImageEditorContrastIds = {}));
 export var ImageEditorDesaturateIds;
 (function (ImageEditorDesaturateIds) {
     ImageEditorDesaturateIds["RedChannel"] = "r_channel";
