@@ -9,7 +9,7 @@ from PIL import Image
 from server import PromptServer
 
 from ..utils.constants import API_ROUTE_PREFIX
-from ..utils.filters import clarity_effect, desaturate_effect, vignette_effect
+from ..utils.filters import clarity_effect, contrast_effect, desaturate_effect, vignette_effect
 from ..utils.helpers import create_masonry_node, get_comfy_dir, get_resource_url, pil_to_tensor, resolve_filepath, resolve_url, tensor_to_pil
 
 # region get-image
@@ -68,6 +68,8 @@ async def process_image(request):
 
         if filter_type == "clarity":
             processed_tensor = apply_clarity_effect(img_tensor, settings)
+        elif filter_type == "contrast":
+            processed_tensor = apply_contrast_effect(img_tensor, settings)
         elif filter_type == "desaturate":
             processed_tensor = apply_desaturate_effect(img_tensor, settings)
         elif filter_type == "vignette":
@@ -95,6 +97,13 @@ def apply_clarity_effect(img_tensor: torch.Tensor, settings: dict):
     blur_kernel_size: int = int(settings.get("blur_kernel_size", 1))
 
     return clarity_effect(img_tensor, clarity_strength, sharpen_amount, blur_kernel_size)
+
+def apply_contrast_effect(img_tensor: torch.Tensor, settings: dict):
+    contrast_strength: float = float(settings.get("contrast_strength", 0))
+    midpoint: float = float(settings.get("midpoint", 0))
+    localized_contrast: bool = bool(settings.get("localized_contrast", 0))
+
+    return contrast_effect(img_tensor, contrast_strength, midpoint, localized_contrast)
 
 def apply_desaturate_effect(img_tensor: torch.Tensor, settings: dict):
     desaturation_strength: float = float(settings.get("desaturation_strength", 0))

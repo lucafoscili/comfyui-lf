@@ -63,8 +63,6 @@ export class LFManager {
 
   constructor() {
     const managerCb = async () => {
-      const lastRelease = await this.#APIS.github.getLatestRelease();
-      this.#LATEST_RELEASE = lastRelease.data || null;
       this.#MANAGERS.ketchupLite = getKulManager();
       this.log('KulManager ready', { kulManager: this.#MANAGERS.ketchupLite }, LogSeverity.Success);
       document.removeEventListener('kul-manager-ready', managerCb);
@@ -80,6 +78,8 @@ export class LFManager {
   }
   //#region Initialize
   initialize() {
+    this.#APIS.github.getLatestRelease().then((r) => (this.#LATEST_RELEASE = r?.data || null));
+
     if (this.#INITIALIZED) {
       this.log(
         'Attempt to initialize LFManager when already ready!',

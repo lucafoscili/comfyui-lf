@@ -1,4 +1,4 @@
-import { ImageEditorClarityIds, ImageEditorControls, ImageEditorDesaturateIds, ImageEditorSliderIds, ImageEditorTextfieldIds, ImageEditorToggleIds, ImageEditorVignetteIds, } from '../types/widgets/imageEditor.js';
+import { ImageEditorClarityIds, ImageEditorContrastIds, ImageEditorControls, ImageEditorDesaturateIds, ImageEditorSliderIds, ImageEditorTextfieldIds, ImageEditorToggleIds, ImageEditorVignetteIds, } from '../types/widgets/imageEditor.js';
 const SETTINGS = {
     //#region Clarity
     clarity: {
@@ -40,6 +40,52 @@ const SETTINGS = {
                     min: '1',
                     step: '2',
                     title: 'Controls the size of the Gaussian blur kernel. Higher values mean more smoothing.',
+                },
+            ],
+        },
+    },
+    //#endregion
+    //#region Contrast
+    contrast: {
+        controlIds: ImageEditorContrastIds,
+        settings: {
+            contrast_strength: 0,
+            localized_contrast: false,
+            midpoint: 0,
+        },
+        configs: {
+            [ImageEditorControls.Slider]: [
+                {
+                    ariaLabel: 'Contrast Strength',
+                    controlType: ImageEditorControls.Slider,
+                    defaultValue: 0,
+                    id: ImageEditorSliderIds.ContrastStrength,
+                    isMandatory: true,
+                    max: '1',
+                    min: '-1',
+                    step: '0.05',
+                    title: 'Controls the intensity of the contrast adjustment. 1.0 is no change, below 1 reduces contrast, above 1 increases contrast.',
+                },
+                {
+                    ariaLabel: 'Midpoint',
+                    controlType: ImageEditorControls.Slider,
+                    defaultValue: 0.5,
+                    id: ImageEditorSliderIds.Midpoint,
+                    max: '1',
+                    min: '0',
+                    step: '0.05',
+                    title: 'Defines the tonal midpoint for contrast scaling.',
+                },
+            ],
+            [ImageEditorControls.Toggle]: [
+                {
+                    ariaLabel: 'Localized Contrast',
+                    controlType: ImageEditorControls.Toggle,
+                    defaultValue: false,
+                    id: ImageEditorToggleIds.LocalizedContrast,
+                    off: 'false',
+                    on: 'true',
+                    title: 'Apply contrast enhancement locally to edges and textures.',
                 },
             ],
         },
@@ -179,6 +225,19 @@ export const TREE_DATA = {
                     },
                     id: 'clarity',
                     value: 'Clarity',
+                },
+                //#endregion
+                //#region Contrast
+                {
+                    description: 'Adjusts the contrast.',
+                    cells: {
+                        kulCode: {
+                            shape: 'code',
+                            value: JSON.stringify(SETTINGS.contrast),
+                        },
+                    },
+                    id: 'contrast',
+                    value: 'Contrast',
                 },
                 //#endregion
                 //#region Desaturate

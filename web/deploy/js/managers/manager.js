@@ -47,8 +47,6 @@ export class LFManager {
         _LFManager_LATEST_RELEASE.set(this, void 0);
         _LFManager_MANAGERS.set(this, {});
         const managerCb = async () => {
-            const lastRelease = await __classPrivateFieldGet(this, _LFManager_APIS, "f").github.getLatestRelease();
-            __classPrivateFieldSet(this, _LFManager_LATEST_RELEASE, lastRelease.data || null, "f");
             __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").ketchupLite = getKulManager();
             this.log('KulManager ready', { kulManager: __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").ketchupLite }, LogSeverity.Success);
             document.removeEventListener('kul-manager-ready', managerCb);
@@ -63,6 +61,7 @@ export class LFManager {
     }
     //#region Initialize
     initialize() {
+        __classPrivateFieldGet(this, _LFManager_APIS, "f").github.getLatestRelease().then((r) => (__classPrivateFieldSet(this, _LFManager_LATEST_RELEASE, r?.data || null, "f")));
         if (__classPrivateFieldGet(this, _LFManager_INITIALIZED, "f")) {
             this.log('Attempt to initialize LFManager when already ready!', { LFManager: this }, LogSeverity.Warning);
             return;

@@ -1348,7 +1348,7 @@ def tensor_to_bytes(tensor: torch.Tensor, format: str):
     return buffer.getvalue()
 # endregion
 # region tensor_to_numpy
-def tensor_to_numpy(image: torch.Tensor, threeD: bool = False):
+def tensor_to_numpy(image: torch.Tensor, threeD: bool = False) -> np.ndarray:
     """
     Convert a tensor to a NumPy array for OpenCV processing.
     

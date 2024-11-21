@@ -59,6 +59,8 @@ export enum ImageEditorControls {
 export enum ImageEditorSliderIds {
   BlurKernelSize = 'blur_kernel_size',
   ClarityStrength = 'clarity_strength',
+  ContrastStrength = 'contrast_strength',
+  Midpoint = 'midpoint',
   SharpenAmount = 'sharpen_amount',
   Intensity = 'intensity',
   Radius = 'radius',
@@ -71,6 +73,7 @@ export enum ImageEditorTextfieldIds {
   Color = 'color',
 }
 export enum ImageEditorToggleIds {
+  LocalizedContrast = 'localized_contrast',
   Shape = 'shape',
 }
 export type ImageEditorControlIds =
@@ -122,6 +125,7 @@ export type ImageEditorSettingsFor = Partial<{
 //#region Filters
 export interface ImageEditorFilterSettingsMap {
   clarity: ImageEditorClaritySettings;
+  contrast: ImageEditorContrastSettings;
   desaturate: ImageEditorDesaturateSettings;
   vignette: ImageEditorVignetteSettings;
 }
@@ -129,6 +133,11 @@ export interface ImageEditorClaritySettings extends ImageEditorFilterSettings {
   clarity_strength: number;
   sharpen_amount: number;
   blur_kernel_size: number;
+}
+export interface ImageEditorContrastSettings extends ImageEditorFilterSettings {
+  contrast_strength: number;
+  localized_contrast: boolean;
+  midpoint: number;
 }
 export interface ImageEditorDesaturateSettings extends ImageEditorFilterSettings {
   r_channel: number;
@@ -145,6 +154,11 @@ export enum ImageEditorClarityIds {
   BlurKernelSize = 'blur_kernel_size',
   ClarityStrength = 'clarity_strength',
   SharpenAmount = 'sharpen_amount',
+}
+export enum ImageEditorContrastIds {
+  ContrastStrength = 'contrast_strength',
+  LocalizedContrast = 'localized_contrast',
+  Midpoint = 'midpoint',
 }
 export enum ImageEditorDesaturateIds {
   RedChannel = 'r_channel',
@@ -175,6 +189,14 @@ export type ImageEditorClarityFilter = ImageEditorFilterDefinition<
     [ImageEditorControls.Slider]: ImageEditorSliderConfig[];
   }
 >;
+export type ImageEditorContrastFilter = ImageEditorFilterDefinition<
+  typeof ImageEditorContrastIds,
+  ImageEditorContrastSettings,
+  {
+    [ImageEditorControls.Slider]: ImageEditorSliderConfig[];
+    [ImageEditorControls.Toggle]: ImageEditorToggleConfig[];
+  }
+>;
 export type ImageEditorDesaturateFilter = ImageEditorFilterDefinition<
   typeof ImageEditorDesaturateIds,
   ImageEditorDesaturateSettings,
@@ -193,11 +215,13 @@ export type ImageEditorVignetteFilter = ImageEditorFilterDefinition<
 >;
 export type ImageEditorFilters = {
   clarity: ImageEditorClarityFilter;
+  contrast: ImageEditorContrastFilter;
   desaturate: ImageEditorDesaturateFilter;
   vignette: ImageEditorVignetteFilter;
 };
 export type ImageEditorFilter =
   | ImageEditorClarityFilter
+  | ImageEditorContrastFilter
   | ImageEditorDesaturateFilter
   | ImageEditorVignetteFilter;
 //#endregion

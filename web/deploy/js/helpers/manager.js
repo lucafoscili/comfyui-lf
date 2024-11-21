@@ -12,6 +12,7 @@ export const NODE_WIDGET_MAP = {
     LF_Clarity: [CustomWidgetName.compare],
     LF_ColorAnalysis: [CustomWidgetName.tabBarChart],
     LF_CompareImages: [CustomWidgetName.compare],
+    LF_Contrast: [CustomWidgetName.compare],
     LF_ControlPanel: [CustomWidgetName.controlPanel],
     LF_Desaturation: [CustomWidgetName.compare],
     LF_DisplayBoolean: [CustomWidgetName.code],

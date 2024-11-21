@@ -85,7 +85,9 @@ export const imageviewerEventHandler = async (
       if (ogEv.detail.eventType === 'click') {
         if ((ogEv.detail.comp.rootElement as HTMLElement).tagName === 'KUL-TREE') {
           const { node } = ogEv.detail as KulTreeEventPayload;
-          prepSettings(settings, node, comp.rootElement as HTMLKulImageviewerElement);
+          if (node.cells?.kulCode) {
+            prepSettings(settings, node, comp.rootElement as HTMLKulImageviewerElement);
+          }
         }
       }
       break;
