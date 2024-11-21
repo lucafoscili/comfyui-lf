@@ -40,7 +40,9 @@ export const imageviewerEventHandler = async (settings, node, e) => {
             if (ogEv.detail.eventType === 'click') {
                 if (ogEv.detail.comp.rootElement.tagName === 'KUL-TREE') {
                     const { node } = ogEv.detail;
-                    prepSettings(settings, node, comp.rootElement);
+                    if (node.cells?.kulCode) {
+                        prepSettings(settings, node, comp.rootElement);
+                    }
                 }
             }
             break;
