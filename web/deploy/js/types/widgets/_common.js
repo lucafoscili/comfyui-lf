@@ -44,6 +44,7 @@ export var NodeName;
     NodeName["clarity"] = "LF_Clarity";
     NodeName["colorAnalysis"] = "LF_ColorAnalysis";
     NodeName["compareImages"] = "LF_CompareImages";
+    NodeName["contrast"] = "LF_Contrast";
     NodeName["controlPanel"] = "LF_ControlPanel";
     NodeName["desaturation"] = "LF_Desaturation";
     NodeName["displayBoolean"] = "LF_DisplayBoolean";
