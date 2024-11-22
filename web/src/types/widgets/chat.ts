@@ -5,6 +5,8 @@ import {
   CustomWidgetName,
 } from './_common';
 
+const BASE_CSS_CLASS = 'lf-chat';
+
 //#region Chat
 export interface Chat extends Widget {
   options: ChatOptions;
@@ -21,4 +23,8 @@ export type ChatSetter = () => {
   [CustomWidgetName.chat]: BaseWidgetCallback<CustomWidgetName.chat>;
 };
 export type ChatValueDeserializedValue = string;
+export enum ChatCSS {
+  Content = BASE_CSS_CLASS,
+  Widget = `${BASE_CSS_CLASS}__widget`,
+}
 //#endregion

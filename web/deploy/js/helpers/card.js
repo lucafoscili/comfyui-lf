@@ -1,5 +1,7 @@
+import { KulEventName } from '../types/events/events.js';
 import { LogSeverity } from '../types/manager/manager.js';
-import { getLFManager, getApiRoutes, unescapeJson } from '../utils/common.js';
+import { CustomWidgetName, TagName } from '../types/widgets/_common.js';
+import { getLFManager, getApiRoutes, unescapeJson, getCustomWidget } from '../utils/common.js';
 export const CARD_PROPS_TO_SERIALIZE = ['kulData', 'kulStyle'];
 //#region Placeholders
 const DUMMY_PROPS = {
@@ -150,6 +152,67 @@ export const cardEventHandler = (e) => {
             }
             break;
     }
+};
+//#endregion
+//#region selectorButton
+export const selectorButton = (grid, node) => {
+    const cb = (e) => {
+        const { comp, eventType } = e.detail;
+        const button = comp;
+        switch (eventType) {
+            case 'click':
+                const cards = Array.from(grid.querySelectorAll(TagName.KulCard));
+                if (cards?.length) {
+                    const models = [];
+                    const widget = getCustomWidget(node, CustomWidgetName.card);
+                    cards.forEach((card) => {
+                        const hashCell = card.kulData?.nodes?.[0]?.cells?.kulCode;
+                        if (hashCell) {
+                            const { hash, path } = JSON.parse(JSON.stringify(hashCell.value));
+                            const dataset = card.kulData;
+                            button.kulShowSpinner = true;
+                            models.push({ apiFlag: true, dataset, hash, path });
+                        }
+                    });
+                    if (models.length) {
+                        const value = {
+                            props: [],
+                        };
+                        cardPlaceholders(widget, cards.length);
+                        fetchModelMetadata(models, true).then((r) => {
+                            for (let index = 0; index < r.length; index++) {
+                                const cardProps = r[index];
+                                if (cardProps.kulData) {
+                                    value.props.push(cardProps);
+                                }
+                                else {
+                                    value.props.push({
+                                        ...cardProps,
+                                        kulData: models[index].dataset,
+                                    });
+                                }
+                            }
+                            widget.options.setValue(JSON.stringify(value));
+                            requestAnimationFrame(() => (button.kulShowSpinner = false));
+                        });
+                    }
+                }
+                break;
+        }
+    };
+    const button = document.createElement(TagName.KulButton);
+    button.classList.add('kul-full-width');
+    button.kulIcon = 'cloud_download';
+    button.kulLabel = 'Refresh';
+    button.title = 'Attempts to manually ownload fresh metadata from CivitAI';
+    button.addEventListener(KulEventName.KulButton, cb);
+    const spinner = document.createElement(TagName.KulSpinner);
+    spinner.kulActive = true;
+    spinner.kulDimensions = '0.6em';
+    spinner.kulLayout = 2;
+    spinner.slot = 'spinner';
+    button.appendChild(spinner);
+    return button;
 };
 //#endregion
 //#region contextMenuHandler

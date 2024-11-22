@@ -5,23 +5,21 @@ import {
   NormalizeValueCallback,
   TagName,
 } from '../types/widgets/_common';
-import { cardHandler, cardPlaceholders, fetchModelMetadata, getCardProps } from '../helpers/card';
+import {
+  cardHandler,
+  cardPlaceholders,
+  fetchModelMetadata,
+  getCardProps,
+  selectorButton,
+} from '../helpers/card';
 import { createDOMWidget, getCustomWidget, normalizeValue } from '../utils/common';
 import { KulButtonEventPayload } from '../types/ketchup-lite/components';
-import { CardDeserializedValue, CardFactory } from '../types/widgets/card';
+import { CardCSS, CardDeserializedValue, CardFactory } from '../types/widgets/card';
 import { APIMetadataEntry } from '../types/api/api';
 import { KulEventName } from '../types/events/events';
 
-const BASE_CSS_CLASS = 'lf-card';
-const TYPE = CustomWidgetName.card;
-
 //#region Card factory
 export const cardFactory: CardFactory = {
-  cssClasses: {
-    content: BASE_CSS_CLASS,
-    contentHasButton: `${BASE_CSS_CLASS}--has-button`,
-    grid: `${BASE_CSS_CLASS}__grid`,
-  },
   options: (grid) => {
     return {
       hideOnZoom: false,
@@ -35,7 +33,7 @@ export const cardFactory: CardFactory = {
       },
       setValue(value) {
         const callback: NormalizeValueCallback<
-          CustomWidgetDeserializedValuesMap<typeof TYPE> | string
+          CustomWidgetDeserializedValuesMap<typeof CustomWidgetName.card> | string
         > = (_, u) => {
           const { props } = u.parsedJson as CardDeserializedValue;
           const len = props?.length > 1 ? 2 : 1;
@@ -43,7 +41,7 @@ export const cardFactory: CardFactory = {
           cardHandler(grid, props);
         };
 
-        normalizeValue(value, callback, TYPE);
+        normalizeValue(value, callback, CustomWidgetName.card);
       },
     };
   },
@@ -53,8 +51,8 @@ export const cardFactory: CardFactory = {
     const grid = document.createElement(TagName.Div);
     const options = cardFactory.options(grid);
 
-    content.classList.add(cardFactory.cssClasses.content);
-    grid.classList.add(cardFactory.cssClasses.grid);
+    content.classList.add(CardCSS.Content);
+    grid.classList.add(CardCSS.Grid);
 
     content.appendChild(grid);
     wrapper.appendChild(content);
@@ -64,79 +62,12 @@ export const cardFactory: CardFactory = {
       case NodeName.embeddingSelector:
       case NodeName.loraAndEmbeddingSelector:
       case NodeName.loraSelector:
-        content.classList.add(cardFactory.cssClasses.contentHasButton);
+        content.classList.add(CardCSS.ContentHasButton);
         content.appendChild(selectorButton(grid, node));
         break;
     }
 
-    return { widget: createDOMWidget(TYPE, wrapper, node, options) };
+    return { widget: createDOMWidget(CustomWidgetName.card, wrapper, node, options) };
   },
-};
-//#endregion
-
-//#region selectorButton
-const selectorButton = (grid: HTMLDivElement, node: NodeType) => {
-  const cb = (e: CustomEvent<KulButtonEventPayload>) => {
-    const { comp, eventType } = e.detail;
-    const button = comp;
-
-    switch (eventType) {
-      case 'click':
-        const cards = Array.from(grid.querySelectorAll(TagName.KulCard));
-        if (cards?.length) {
-          const models: APIMetadataEntry[] = [];
-          const widget = getCustomWidget(node, CustomWidgetName.card);
-
-          cards.forEach((card) => {
-            const hashCell = card.kulData?.nodes?.[0]?.cells?.kulCode;
-            if (hashCell) {
-              const { hash, path } = JSON.parse(JSON.stringify(hashCell.value));
-              const dataset = card.kulData;
-              button.kulShowSpinner = true;
-              models.push({ apiFlag: true, dataset, hash, path });
-            }
-          });
-
-          if (models.length) {
-            const value: CardDeserializedValue = {
-              props: [],
-            };
-            cardPlaceholders(widget, cards.length);
-            fetchModelMetadata(models, true).then((r) => {
-              for (let index = 0; index < r.length; index++) {
-                const cardProps = r[index];
-                if (cardProps.kulData) {
-                  value.props.push(cardProps);
-                } else {
-                  value.props.push({
-                    ...cardProps,
-                    kulData: models[index].dataset,
-                  });
-                }
-              }
-              widget.options.setValue(JSON.stringify(value));
-              requestAnimationFrame(() => (button.kulShowSpinner = false));
-            });
-          }
-        }
-        break;
-    }
-  };
-
-  const button = document.createElement(TagName.KulButton);
-  button.classList.add('kul-full-width');
-  button.kulIcon = 'cloud_download';
-  button.kulLabel = 'Refresh';
-  button.title = 'Attempts to manually ownload fresh metadata from CivitAI';
-  button.addEventListener(KulEventName.KulButton, cb);
-
-  const spinner = document.createElement(TagName.KulSpinner);
-  spinner.kulActive = true;
-  spinner.kulDimensions = '0.6em';
-  spinner.kulLayout = 2;
-  spinner.slot = 'spinner';
-  button.appendChild(spinner);
-
-  return button;
 };
 //#endregion

@@ -6,6 +6,7 @@ import {
   NodeName,
   NodeWidgetMap,
 } from '../types/widgets/_common';
+import { MessengerCSS } from '../types/widgets/messenger';
 import {
   areJSONEqual,
   getApiRoutes,
@@ -16,7 +17,6 @@ import {
   refreshChart,
   unescapeJson,
 } from '../utils/common';
-import { messengerFactory } from '../widgets/messenger';
 
 //#region Node-Widget map
 export const NODE_WIDGET_MAP: NodeWidgetMap = {
@@ -245,11 +245,9 @@ const messengerCb = (node: NodeType) => {
     }
     const placeholder = messenger.nextSibling || messenger.previousSibling;
     if (messenger.kulData?.nodes?.[0]) {
-      (placeholder as HTMLDivElement).classList.add(messengerFactory.cssClasses.placeholderHidden);
+      (placeholder as HTMLDivElement).classList.add(MessengerCSS.PlaceholderHidden);
     } else {
-      (placeholder as HTMLDivElement).classList.remove(
-        messengerFactory.cssClasses.placeholderHidden,
-      );
+      (placeholder as HTMLDivElement).classList.remove(MessengerCSS.PlaceholderHidden);
     }
   } catch (error) {
     getLFManager().log('Error processing messenger data', { dataset, error }, LogSeverity.Error);

@@ -1,4 +1,15 @@
 import { CustomWidgetName, } from './_common.js';
+const BASE_CSS_CLASS = 'lf-imageeditor';
+export var ImageEditorCSS;
+(function (ImageEditorCSS) {
+    ImageEditorCSS["Content"] = "lf-imageeditor";
+    ImageEditorCSS["Widget"] = "lf-imageeditor__widget";
+    ImageEditorCSS["Actions"] = "lf-imageeditor__actions";
+    ImageEditorCSS["Grid"] = "lf-imageeditor__grid";
+    ImageEditorCSS["GridHasActions"] = "lf-imageeditor__grid--has-actions";
+    ImageEditorCSS["GridIsInactive"] = "lf-imageeditor__grid--is-inactive";
+    ImageEditorCSS["Settings"] = "lf-imageeditor__settings";
+})(ImageEditorCSS || (ImageEditorCSS = {}));
 //#endregion
 //#region Dataset
 export var ImageEditorStatus;

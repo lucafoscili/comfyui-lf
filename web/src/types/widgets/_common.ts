@@ -377,7 +377,6 @@ export type ComfyWidgetCallback = <T extends ComfyWidgetName>(
   name: T,
 ) => { widget: Widget };
 export interface BaseWidgetFactory<T extends CustomWidgetOptions> {
-  cssClasses: Record<string, string>;
   options: BaseWidgetOptionsCallback<T>;
   render: BaseWidgetCallback<CustomWidgetName>;
 }

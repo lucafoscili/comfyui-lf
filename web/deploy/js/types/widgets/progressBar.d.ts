@@ -17,3 +17,6 @@ export type ProgressbarDeserializedValue = {
     bool: boolean;
     roll: number;
 };
+export declare enum ProgressbarCSS {
+    Content = "lf-progressbar"
+}

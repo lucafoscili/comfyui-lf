@@ -1,7 +1,7 @@
 import { LogSeverity } from '../types/manager/manager.js';
 import { ComfyWidgetName, CustomWidgetName, NodeName, } from '../types/widgets/_common.js';
+import { MessengerCSS } from '../types/widgets/messenger.js';
 import { areJSONEqual, getApiRoutes, getCustomWidget, getInput, getLFManager, isValidJSON, refreshChart, unescapeJson, } from '../utils/common.js';
-import { messengerFactory } from '../widgets/messenger.js';
 //#region Node-Widget map
 export const NODE_WIDGET_MAP = {
     LF_BlurImages: [CustomWidgetName.masonry],
@@ -216,10 +216,10 @@ const messengerCb = (node) => {
         }
         const placeholder = messenger.nextSibling || messenger.previousSibling;
         if (messenger.kulData?.nodes?.[0]) {
-            placeholder.classList.add(messengerFactory.cssClasses.placeholderHidden);
+            placeholder.classList.add(MessengerCSS.PlaceholderHidden);
         }
         else {
-            placeholder.classList.remove(messengerFactory.cssClasses.placeholderHidden);
+            placeholder.classList.remove(MessengerCSS.PlaceholderHidden);
         }
     }
     catch (error) {

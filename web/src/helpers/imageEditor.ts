@@ -19,6 +19,7 @@ import {
   ImageEditorColumnId,
   ImageEditorControlConfig,
   ImageEditorControls,
+  ImageEditorCSS,
   ImageEditorFilter,
   ImageEditorFilterSettingsMap,
   ImageEditorFilterType,
@@ -30,7 +31,6 @@ import {
   ImageEditorUpdateCallback,
 } from '../types/widgets/imageEditor';
 import { debounce, getApiRoutes, getLFManager, unescapeJson } from '../utils/common';
-import { imageEditorFactory } from '../widgets/imageEditor';
 
 //#region buttonEventHandler
 export const buttonEventHandler = async (
@@ -384,7 +384,7 @@ export const setGridStatus = (
         actionButtons.interrupt.kulDisabled = true;
         actionButtons.resume.kulDisabled = true;
       });
-      grid.classList.add(imageEditorFactory.cssClasses.gridIsInactive);
+      grid.classList.add(ImageEditorCSS.GridIsInactive);
       break;
 
     case ImageEditorStatus.Pending:
@@ -392,7 +392,7 @@ export const setGridStatus = (
         actionButtons.interrupt.kulDisabled = false;
         actionButtons.resume.kulDisabled = false;
       });
-      grid.classList.remove(imageEditorFactory.cssClasses.gridIsInactive);
+      grid.classList.remove(ImageEditorCSS.GridIsInactive);
       break;
   }
 };

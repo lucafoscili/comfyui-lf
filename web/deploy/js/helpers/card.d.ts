@@ -9,4 +9,5 @@ export declare const cardHandler: (container: HTMLDivElement, propsArray: Partia
 export declare const getCardProps: (container: HTMLDivElement) => Partial<HTMLKulCardElement>[];
 export declare const createCard: () => HTMLKulCardElement;
 export declare const cardEventHandler: (e: CustomEvent<KulCardEventPayload>) => void;
+export declare const selectorButton: (grid: HTMLDivElement, node: NodeType) => HTMLKulButtonElement;
 export declare const contextMenuHandler: (card: HTMLKulCardElement, e: MouseEvent) => void;

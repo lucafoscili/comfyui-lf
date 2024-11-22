@@ -1,6 +1,6 @@
 import { LogSeverity } from '../types/manager/manager.js';
+import { TextareaCSS } from '../types/widgets/textarea.js';
 import { getLFManager } from '../utils/common.js';
-import { textareaFactory } from '../widgets/textarea.js';
 let VALIDATION_TIMEOUT;
 export const handleInputChange = (e) => {
     const textarea = e.currentTarget;
@@ -12,12 +12,12 @@ export const handleInputChange = (e) => {
                 if (formattedJson !== '{}') {
                     textarea.title = '';
                     textarea.value = formattedJson;
-                    textarea.classList.remove(textareaFactory.cssClasses.widgetError);
+                    textarea.classList.remove(TextareaCSS.WidgetError);
                 }
             }
             catch (error) {
                 getLFManager().log('Error parsing JSON', { error }, LogSeverity.Warning);
-                textarea.classList.add(textareaFactory.cssClasses.widgetError);
+                textarea.classList.add(TextareaCSS.WidgetError);
                 textarea.title = error;
             }
         };

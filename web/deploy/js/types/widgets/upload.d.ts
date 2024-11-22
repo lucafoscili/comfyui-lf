@@ -14,3 +14,7 @@ export type UploadSetter = () => {
     [CustomWidgetName.upload]: BaseWidgetCallback<CustomWidgetName.upload>;
 };
 export type UploadDeserializedValue = string;
+export declare enum UploadCSS {
+    Content = "lf-upload",
+    Widget = "lf-upload__widget"
+}

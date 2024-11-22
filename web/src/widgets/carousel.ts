@@ -4,18 +4,11 @@ import {
   NormalizeValueCallback,
   TagName,
 } from '../types/widgets/_common';
-import { CarouselDeserializedValue, CarouselFactory } from '../types/widgets/carousel';
+import { CarouselCSS, CarouselDeserializedValue, CarouselFactory } from '../types/widgets/carousel';
 import { createDOMWidget, normalizeValue } from '../utils/common';
-
-const BASE_CSS_CLASS = 'lf-carousel';
-const TYPE = CustomWidgetName.carousel;
 
 //#region Carousel
 export const carouselFactory: CarouselFactory = {
-  cssClasses: {
-    content: BASE_CSS_CLASS,
-    widget: `${BASE_CSS_CLASS}__widget`,
-  },
   options: (carousel) => {
     return {
       hideOnZoom: true,
@@ -27,13 +20,13 @@ export const carouselFactory: CarouselFactory = {
       },
       setValue(value) {
         const callback: NormalizeValueCallback<
-          CustomWidgetDeserializedValuesMap<typeof TYPE> | string
+          CustomWidgetDeserializedValuesMap<typeof CustomWidgetName.carousel> | string
         > = (_, u) => {
           const dataset = u.parsedJson as CarouselDeserializedValue;
           carousel.kulData = dataset || {};
         };
 
-        normalizeValue(value, callback, TYPE);
+        normalizeValue(value, callback, CustomWidgetName.carousel);
       },
     };
   },
@@ -45,13 +38,13 @@ export const carouselFactory: CarouselFactory = {
 
     carousel.kulAutoPlay = true;
 
-    content.classList.add(carouselFactory.cssClasses.content);
-    carousel.classList.add(carouselFactory.cssClasses.widget);
+    content.classList.add(CarouselCSS.Content);
+    carousel.classList.add(CarouselCSS.Widget);
 
     content.appendChild(carousel);
     wrapper.appendChild(content);
 
-    return { widget: createDOMWidget(TYPE, wrapper, node, options) };
+    return { widget: createDOMWidget(CustomWidgetName.carousel, wrapper, node, options) };
   },
 };
 //#endregion

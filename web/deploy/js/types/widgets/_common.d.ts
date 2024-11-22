@@ -255,7 +255,6 @@ export type ComfyWidgetCallback = <T extends ComfyWidgetName>(node: NodeType, na
     widget: Widget;
 };
 export interface BaseWidgetFactory<T extends CustomWidgetOptions> {
-    cssClasses: Record<string, string>;
     options: BaseWidgetOptionsCallback<T>;
     render: BaseWidgetCallback<CustomWidgetName>;
 }

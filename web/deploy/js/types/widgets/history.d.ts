@@ -15,3 +15,7 @@ export type HistorySetter = () => {
     [CustomWidgetName.history]: BaseWidgetCallback<CustomWidgetName.history>;
 };
 export type HistoryDeserializedValue = KulDataDataset;
+export declare enum HistoryCSS {
+    Content = "lf-history",
+    Widget = "lf-history__widget"
+}

@@ -14,3 +14,7 @@ export type CodeSetter = () => {
     [CustomWidgetName.code]: BaseWidgetCallback<CustomWidgetName.code>;
 };
 export type CodeValueDeserializedValue = string;
+export declare enum CodeCSS {
+    Content = "lf-code",
+    Widget = "lf-code__widget"
+}

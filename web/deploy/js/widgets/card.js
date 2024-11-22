@@ -1,16 +1,9 @@
 import { CustomWidgetName, NodeName, TagName, } from '../types/widgets/_common.js';
-import { cardHandler, cardPlaceholders, fetchModelMetadata, getCardProps } from '../helpers/card.js';
-import { createDOMWidget, getCustomWidget, normalizeValue } from '../utils/common.js';
-import { KulEventName } from '../types/events/events.js';
-const BASE_CSS_CLASS = 'lf-card';
-const TYPE = CustomWidgetName.card;
+import { cardHandler, getCardProps, selectorButton, } from '../helpers/card.js';
+import { createDOMWidget, normalizeValue } from '../utils/common.js';
+import { CardCSS } from '../types/widgets/card.js';
 //#region Card factory
 export const cardFactory = {
-    cssClasses: {
-        content: BASE_CSS_CLASS,
-        contentHasButton: `${BASE_CSS_CLASS}--has-button`,
-        grid: `${BASE_CSS_CLASS}__grid`,
-    },
     options: (grid) => {
         return {
             hideOnZoom: false,
@@ -29,7 +22,7 @@ export const cardFactory = {
                     grid.style.setProperty('--card-grid', `repeat(1, 1fr) / repeat(${len}, 1fr)`);
                     cardHandler(grid, props);
                 };
-                normalizeValue(value, callback, TYPE);
+                normalizeValue(value, callback, CustomWidgetName.card);
             },
         };
     },
@@ -38,8 +31,8 @@ export const cardFactory = {
         const content = document.createElement(TagName.Div);
         const grid = document.createElement(TagName.Div);
         const options = cardFactory.options(grid);
-        content.classList.add(cardFactory.cssClasses.content);
-        grid.classList.add(cardFactory.cssClasses.grid);
+        content.classList.add(CardCSS.Content);
+        grid.classList.add(CardCSS.Grid);
         content.appendChild(grid);
         wrapper.appendChild(content);
         switch (node.comfyClass) {
@@ -47,72 +40,11 @@ export const cardFactory = {
             case NodeName.embeddingSelector:
             case NodeName.loraAndEmbeddingSelector:
             case NodeName.loraSelector:
-                content.classList.add(cardFactory.cssClasses.contentHasButton);
+                content.classList.add(CardCSS.ContentHasButton);
                 content.appendChild(selectorButton(grid, node));
                 break;
         }
-        return { widget: createDOMWidget(TYPE, wrapper, node, options) };
+        return { widget: createDOMWidget(CustomWidgetName.card, wrapper, node, options) };
     },
-};
-//#endregion
-//#region selectorButton
-const selectorButton = (grid, node) => {
-    const cb = (e) => {
-        const { comp, eventType } = e.detail;
-        const button = comp;
-        switch (eventType) {
-            case 'click':
-                const cards = Array.from(grid.querySelectorAll(TagName.KulCard));
-                if (cards?.length) {
-                    const models = [];
-                    const widget = getCustomWidget(node, CustomWidgetName.card);
-                    cards.forEach((card) => {
-                        const hashCell = card.kulData?.nodes?.[0]?.cells?.kulCode;
-                        if (hashCell) {
-                            const { hash, path } = JSON.parse(JSON.stringify(hashCell.value));
-                            const dataset = card.kulData;
-                            button.kulShowSpinner = true;
-                            models.push({ apiFlag: true, dataset, hash, path });
-                        }
-                    });
-                    if (models.length) {
-                        const value = {
-                            props: [],
-                        };
-                        cardPlaceholders(widget, cards.length);
-                        fetchModelMetadata(models, true).then((r) => {
-                            for (let index = 0; index < r.length; index++) {
-                                const cardProps = r[index];
-                                if (cardProps.kulData) {
-                                    value.props.push(cardProps);
-                                }
-                                else {
-                                    value.props.push({
-                                        ...cardProps,
-                                        kulData: models[index].dataset,
-                                    });
-                                }
-                            }
-                            widget.options.setValue(JSON.stringify(value));
-                            requestAnimationFrame(() => (button.kulShowSpinner = false));
-                        });
-                    }
-                }
-                break;
-        }
-    };
-    const button = document.createElement(TagName.KulButton);
-    button.classList.add('kul-full-width');
-    button.kulIcon = 'cloud_download';
-    button.kulLabel = 'Refresh';
-    button.title = 'Attempts to manually ownload fresh metadata from CivitAI';
-    button.addEventListener(KulEventName.KulButton, cb);
-    const spinner = document.createElement(TagName.KulSpinner);
-    spinner.kulActive = true;
-    spinner.kulDimensions = '0.6em';
-    spinner.kulLayout = 2;
-    spinner.slot = 'spinner';
-    button.appendChild(spinner);
-    return button;
 };
 //#endregion

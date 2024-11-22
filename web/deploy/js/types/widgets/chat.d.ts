@@ -14,3 +14,7 @@ export type ChatSetter = () => {
     [CustomWidgetName.chat]: BaseWidgetCallback<CustomWidgetName.chat>;
 };
 export type ChatValueDeserializedValue = string;
+export declare enum ChatCSS {
+    Content = "lf-chat",
+    Widget = "lf-chat__widget"
+}

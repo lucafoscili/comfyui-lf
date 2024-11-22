@@ -6,18 +6,11 @@ import {
   NormalizeValueCallback,
   TagName,
 } from '../types/widgets/_common';
-import { CompareFactory } from '../types/widgets/compare';
+import { CompareCSS, CompareFactory } from '../types/widgets/compare';
 import { createDOMWidget, normalizeValue } from '../utils/common';
-
-const BASE_CSS_CLASS = 'lf-compare';
-const TYPE = CustomWidgetName.compare;
 
 //#region Compare
 export const compareFactory: CompareFactory = {
-  cssClasses: {
-    content: BASE_CSS_CLASS,
-    compare: `${BASE_CSS_CLASS}__widget`,
-  },
   options: (compare) => {
     return {
       hideOnZoom: false,
@@ -29,12 +22,12 @@ export const compareFactory: CompareFactory = {
       },
       setValue(value) {
         const callback: NormalizeValueCallback<
-          CustomWidgetDeserializedValuesMap<typeof TYPE> | string
+          CustomWidgetDeserializedValuesMap<typeof CustomWidgetName.compare> | string
         > = (_, u) => {
           compare.kulData = (u.parsedJson as KulDataDataset) || {};
         };
 
-        normalizeValue(value, callback, TYPE);
+        normalizeValue(value, callback, CustomWidgetName.compare);
       },
     };
   },
@@ -44,8 +37,8 @@ export const compareFactory: CompareFactory = {
     const compare = document.createElement(TagName.KulCompare);
     const options = compareFactory.options(compare);
 
-    content.classList.add(compareFactory.cssClasses.content);
-    compare.classList.add(compareFactory.cssClasses.compare);
+    content.classList.add(CompareCSS.Content);
+    compare.classList.add(CompareCSS.Widget);
 
     switch (node.comfyClass) {
       default:
@@ -56,7 +49,7 @@ export const compareFactory: CompareFactory = {
     content.appendChild(compare);
     wrapper.appendChild(content);
 
-    return { widget: createDOMWidget(TYPE, wrapper, node, options) };
+    return { widget: createDOMWidget(CustomWidgetName.compare, wrapper, node, options) };
   },
 };
 //#endregion

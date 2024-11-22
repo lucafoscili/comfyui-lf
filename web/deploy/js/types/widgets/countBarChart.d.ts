@@ -21,3 +21,11 @@ export type CountBarChartDeserializedValue = {
     chart: KulDataDataset;
     chip: KulDataDataset;
 };
+export declare enum CountBarChartCSS {
+    Content = "lf-countbarchart",
+    Grid = "lf-countbarchart__grid",
+    Chart = "lf-countbarchart__chart",
+    Chip = "lf-countbarchart__chip",
+    Button = "lf-countbarchart__button",
+    ButtonHidden = "lf-countbarchart__button--hidden"
+}

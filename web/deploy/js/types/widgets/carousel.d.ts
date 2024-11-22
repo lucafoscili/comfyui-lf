@@ -15,3 +15,7 @@ export type CarouselSetter = () => {
     [CustomWidgetName.carousel]: BaseWidgetCallback<CustomWidgetName.carousel>;
 };
 export type CarouselDeserializedValue = KulDataDataset;
+export declare enum CarouselCSS {
+    Content = "lf-carousel",
+    Widget = "lf-carousel__widget"
+}

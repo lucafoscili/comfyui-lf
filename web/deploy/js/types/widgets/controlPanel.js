@@ -1,4 +1,5 @@
 import { CustomWidgetName, } from './_common.js';
+const BASE_CSS_CLASS = 'lf-controlpanel';
 export var ControlPanelIcons;
 (function (ControlPanelIcons) {
     ControlPanelIcons["Analytics"] = "pie_chart";
@@ -37,4 +38,10 @@ export var ControlPanelSection;
     ControlPanelSection["Root"] = "root";
     ControlPanelSection["Section"] = "section";
 })(ControlPanelSection || (ControlPanelSection = {}));
+export var ControlPanelCSS;
+(function (ControlPanelCSS) {
+    ControlPanelCSS["Content"] = "lf-controlpanel";
+    ControlPanelCSS["Grid"] = "lf-controlpanel__grid";
+    ControlPanelCSS["Spinner"] = "lf-controlpanel__spinner";
+})(ControlPanelCSS || (ControlPanelCSS = {}));
 //#endregion

@@ -6,6 +6,8 @@ import {
   CustomWidgetName,
 } from './_common';
 
+const BASE_CSS_CLASS = 'lf-history';
+
 //#region History
 export interface History extends Widget {
   options: HistoryOptions;
@@ -22,4 +24,8 @@ export type HistorySetter = () => {
   [CustomWidgetName.history]: BaseWidgetCallback<CustomWidgetName.history>;
 };
 export type HistoryDeserializedValue = KulDataDataset;
+export enum HistoryCSS {
+  Content = BASE_CSS_CLASS,
+  Widget = `${BASE_CSS_CLASS}__widget`,
+}
 //#endregion

@@ -14,3 +14,7 @@ export type ChipSetter = () => {
     [CustomWidgetName.chip]: BaseWidgetCallback<CustomWidgetName.chip>;
 };
 export type ChipValueDeserializedValue = string;
+export declare enum ChipCSS {
+    Content = "lf-chip",
+    Widget = "lf-chip__widget"
+}

@@ -24,3 +24,12 @@ export type TabBarChartDeserializedValue = {
 } & {
     [index: string]: KulDataDataset;
 };
+export declare enum TabBarChartCSS {
+    Content = "lf-tabbarchart",
+    Directory = "lf-tabbarchart__directory",
+    DirectoryHidden = "lf-tabbarchart__directory--hidden",
+    Grid = "lf-tabbarchart__grid",
+    GridNoDirectory = "lf-tabbarchart__grid--no-directory",
+    Spinner = "lf-tabbarchart__spinner",
+    Tabbar = "lf-tabbarchart__tabbar"
+}

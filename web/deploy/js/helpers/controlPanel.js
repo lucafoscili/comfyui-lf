@@ -1,9 +1,8 @@
 import { SECTIONS } from '../fixtures/controlPanel.js';
 import { KulEventName } from '../types/events/events.js';
 import { TagName } from '../types/widgets/_common.js';
-import { ControlPanelIds, ControlPanelLabels, ControlPanelSection, } from '../types/widgets/controlPanel.js';
+import { ControlPanelCSS, ControlPanelIds, ControlPanelLabels, ControlPanelSection, } from '../types/widgets/controlPanel.js';
 import { getApiRoutes, getKulManager, getLFManager, isButton, isToggle } from '../utils/common.js';
-import { controlPanelFactory } from '../widgets/controlPanel.js';
 const INTRO_SECTION = ControlPanelIds.GitHub;
 let TIMEOUT;
 //#region createContent
@@ -35,7 +34,7 @@ export const createContent = () => {
         }
     }
     const intro = prepArticle(INTRO_SECTION, SECTIONS[INTRO_SECTION]());
-    grid.classList.add(controlPanelFactory.cssClasses.grid);
+    grid.classList.add(ControlPanelCSS.Grid);
     grid.appendChild(intro);
     grid.appendChild(accordion);
     return grid;

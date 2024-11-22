@@ -8,6 +8,8 @@ import {
   NodeName,
 } from './_common';
 
+const BASE_CSS_CLASS = 'lf-tabbarchart';
+
 //#region Tab bar chart
 export interface TabBarChart extends Widget {
   options: TabBarChartOptions;
@@ -34,4 +36,13 @@ export type TabBarChartDeserializedValue = {
 } & {
   [index: string]: KulDataDataset;
 };
+export enum TabBarChartCSS {
+  Content = BASE_CSS_CLASS,
+  Directory = `${BASE_CSS_CLASS}__directory`,
+  DirectoryHidden = `${BASE_CSS_CLASS}__directory--hidden`,
+  Grid = `${BASE_CSS_CLASS}__grid`,
+  GridNoDirectory = `${BASE_CSS_CLASS}__grid--no-directory`,
+  Spinner = `${BASE_CSS_CLASS}__spinner`,
+  Tabbar = `${BASE_CSS_CLASS}__tabbar`,
+}
 //#endregion

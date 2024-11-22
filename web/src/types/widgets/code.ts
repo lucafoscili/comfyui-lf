@@ -5,6 +5,8 @@ import {
   CustomWidgetName,
 } from './_common';
 
+const BASE_CSS_CLASS = 'lf-code';
+
 //#region Code
 export interface Code extends Widget {
   options: CodeOptions;
@@ -21,4 +23,8 @@ export type CodeSetter = () => {
   [CustomWidgetName.code]: BaseWidgetCallback<CustomWidgetName.code>;
 };
 export type CodeValueDeserializedValue = string;
+export enum CodeCSS {
+  Content = BASE_CSS_CLASS,
+  Widget = `${BASE_CSS_CLASS}__widget`,
+}
 //#endregion

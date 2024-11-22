@@ -22,3 +22,7 @@ export interface MasonryDeserializedValue {
     name?: string;
     view?: KulMasonry['kulView'];
 }
+export declare enum MasonryCSS {
+    Content = "lf-masonry",
+    Widget = "lf-masonry__widget"
+}

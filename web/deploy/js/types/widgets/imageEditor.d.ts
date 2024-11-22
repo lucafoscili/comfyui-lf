@@ -19,6 +19,15 @@ export type ImageEditorSetter = () => {
 };
 export type ImageEditorDeserializedValue = KulDataDataset;
 export type ImageEditorUpdateCallback = (addSnapshot?: boolean) => Promise<void>;
+export declare enum ImageEditorCSS {
+    Content = "lf-imageeditor",
+    Widget = "lf-imageeditor__widget",
+    Actions = "lf-imageeditor__actions",
+    Grid = "lf-imageeditor__grid",
+    GridHasActions = "lf-imageeditor__grid--has-actions",
+    GridIsInactive = "lf-imageeditor__grid--is-inactive",
+    Settings = "lf-imageeditor__settings"
+}
 export declare enum ImageEditorStatus {
     Completed = "completed",
     Pending = "pending"

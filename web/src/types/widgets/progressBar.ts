@@ -5,6 +5,8 @@ import {
   CustomWidgetName,
 } from './_common';
 
+const BASE_CSS_CLASS = 'lf-progressbar';
+
 //#region Progress bar
 export interface Progressbar extends Widget {
   options: ProgressbarOptions;
@@ -24,4 +26,7 @@ export type ProgressbarSetter = () => {
   [CustomWidgetName.progressbar]: BaseWidgetCallback<CustomWidgetName.progressbar>;
 };
 export type ProgressbarDeserializedValue = { bool: boolean; roll: number };
+export enum ProgressbarCSS {
+  Content = BASE_CSS_CLASS,
+}
 //#endregion

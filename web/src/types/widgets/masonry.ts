@@ -7,6 +7,8 @@ import {
   CustomWidgetName,
 } from './_common';
 
+const BASE_CSS_CLASS = 'lf-masonry';
+
 //#region Masonry
 export interface Masonry extends Widget {
   options: MasonryOptions;
@@ -28,5 +30,9 @@ export interface MasonryDeserializedValue {
   index?: number;
   name?: string;
   view?: KulMasonry['kulView'];
+}
+export enum MasonryCSS {
+  Content = BASE_CSS_CLASS,
+  Widget = `${BASE_CSS_CLASS}__widget`,
 }
 //#endregion

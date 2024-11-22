@@ -1,13 +1,8 @@
 import { CustomWidgetName, TagName, } from '../types/widgets/_common.js';
+import { CarouselCSS } from '../types/widgets/carousel.js';
 import { createDOMWidget, normalizeValue } from '../utils/common.js';
-const BASE_CSS_CLASS = 'lf-carousel';
-const TYPE = CustomWidgetName.carousel;
 //#region Carousel
 export const carouselFactory = {
-    cssClasses: {
-        content: BASE_CSS_CLASS,
-        widget: `${BASE_CSS_CLASS}__widget`,
-    },
     options: (carousel) => {
         return {
             hideOnZoom: true,
@@ -22,7 +17,7 @@ export const carouselFactory = {
                     const dataset = u.parsedJson;
                     carousel.kulData = dataset || {};
                 };
-                normalizeValue(value, callback, TYPE);
+                normalizeValue(value, callback, CustomWidgetName.carousel);
             },
         };
     },
@@ -32,11 +27,11 @@ export const carouselFactory = {
         const carousel = document.createElement(TagName.KulCarousel);
         const options = carouselFactory.options(carousel);
         carousel.kulAutoPlay = true;
-        content.classList.add(carouselFactory.cssClasses.content);
-        carousel.classList.add(carouselFactory.cssClasses.widget);
+        content.classList.add(CarouselCSS.Content);
+        carousel.classList.add(CarouselCSS.Widget);
         content.appendChild(carousel);
         wrapper.appendChild(content);
-        return { widget: createDOMWidget(TYPE, wrapper, node, options) };
+        return { widget: createDOMWidget(CustomWidgetName.carousel, wrapper, node, options) };
     },
 };
 //#endregion

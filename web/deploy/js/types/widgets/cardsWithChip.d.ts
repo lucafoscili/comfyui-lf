@@ -21,3 +21,9 @@ export type CardsWithChipSetter = () => {
 export interface CardsWithChipDeserializedValue extends CardDeserializedValue {
     chip: KulDataDataset;
 }
+export declare enum CardsWithChipCSS {
+    Content = "lf-cardswithchip",
+    Cards = "lf-cardswithchip__cards",
+    Chip = "lf-cardswithchip__chip",
+    Grid = "lf-cardswithchip__grid"
+}

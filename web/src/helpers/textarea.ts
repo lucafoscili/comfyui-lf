@@ -1,6 +1,6 @@
 import { LogSeverity } from '../types/manager/manager';
+import { TextareaCSS } from '../types/widgets/textarea';
 import { getLFManager } from '../utils/common';
-import { textareaFactory } from '../widgets/textarea';
 
 let VALIDATION_TIMEOUT: NodeJS.Timeout;
 
@@ -15,11 +15,11 @@ export const handleInputChange = (e: Event) => {
         if (formattedJson !== '{}') {
           textarea.title = '';
           textarea.value = formattedJson;
-          textarea.classList.remove(textareaFactory.cssClasses.widgetError);
+          textarea.classList.remove(TextareaCSS.WidgetError);
         }
       } catch (error) {
         getLFManager().log('Error parsing JSON', { error }, LogSeverity.Warning);
-        textarea.classList.add(textareaFactory.cssClasses.widgetError);
+        textarea.classList.add(TextareaCSS.WidgetError);
         textarea.title = error;
       }
     };

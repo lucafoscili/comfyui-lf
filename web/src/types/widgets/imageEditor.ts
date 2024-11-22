@@ -6,6 +6,8 @@ import {
   CustomWidgetName,
 } from './_common';
 
+const BASE_CSS_CLASS = 'lf-imageeditor';
+
 //#region Image editor
 export interface ImageEditor extends Widget {
   options: ImageEditorOptions;
@@ -28,6 +30,15 @@ export type ImageEditorSetter = () => {
 };
 export type ImageEditorDeserializedValue = KulDataDataset;
 export type ImageEditorUpdateCallback = (addSnapshot?: boolean) => Promise<void>;
+export enum ImageEditorCSS {
+  Content = BASE_CSS_CLASS,
+  Widget = `${BASE_CSS_CLASS}__widget`,
+  Actions = `${BASE_CSS_CLASS}__actions`,
+  Grid = `${BASE_CSS_CLASS}__grid`,
+  GridHasActions = `${BASE_CSS_CLASS}__grid--has-actions`,
+  GridIsInactive = `${BASE_CSS_CLASS}__grid--is-inactive`,
+  Settings = `${BASE_CSS_CLASS}__settings`,
+}
 //#endregion
 //#region Dataset
 export enum ImageEditorStatus {

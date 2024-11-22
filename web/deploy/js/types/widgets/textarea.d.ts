@@ -13,3 +13,8 @@ export type TextareaSetter = () => {
     [CustomWidgetName.textarea]: BaseWidgetCallback<CustomWidgetName.textarea>;
 };
 export type TextareaDeserializedValue = Record<string, unknown>;
+export declare enum TextareaCSS {
+    Content = "lf-textarea",
+    Widget = "lf-textarea__widget",
+    WidgetError = "lf-textarea__widget--error"
+}

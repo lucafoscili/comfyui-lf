@@ -15,3 +15,7 @@ export type TreeSetter = () => {
     [CustomWidgetName.tree]: BaseWidgetCallback<CustomWidgetName.tree>;
 };
 export type TreeValueDeserializedValue = KulDataDataset;
+export declare enum TreeCSS {
+    Content = "lf-tree",
+    Widget = "lf-tree__widget"
+}

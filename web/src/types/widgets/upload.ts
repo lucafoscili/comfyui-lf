@@ -5,6 +5,8 @@ import {
   CustomWidgetName,
 } from './_common';
 
+const BASE_CSS_CLASS = 'lf-upload';
+
 //#region Upload
 export interface Upload extends Widget {
   options: UploadOptions;
@@ -21,4 +23,8 @@ export type UploadSetter = () => {
   [CustomWidgetName.upload]: BaseWidgetCallback<CustomWidgetName.upload>;
 };
 export type UploadDeserializedValue = string;
+export enum UploadCSS {
+  Content = BASE_CSS_CLASS,
+  Widget = `${BASE_CSS_CLASS}__widget`,
+}
 //#endregion

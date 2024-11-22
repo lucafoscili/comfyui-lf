@@ -5,20 +5,17 @@ import {
   NormalizeValueCallback,
   TagName,
 } from '../types/widgets/_common';
-import { MessengerDeserializedValue, MessengerFactory } from '../types/widgets/messenger';
+import {
+  MessengerCSS,
+  MessengerDeserializedValue,
+  MessengerFactory,
+} from '../types/widgets/messenger';
 import { createDOMWidget, normalizeValue } from '../utils/common';
 
-const BASE_CSS_CLASS = 'lf-messenger';
 const TYPE = CustomWidgetName.messenger;
 
 //#region Messenger
 export const messengerFactory: MessengerFactory = {
-  cssClasses: {
-    content: BASE_CSS_CLASS,
-    messenger: `${BASE_CSS_CLASS}__widget`,
-    placeholder: `${BASE_CSS_CLASS}__placeholder`,
-    placeholderHidden: `${BASE_CSS_CLASS}__placeholder--hidden`,
-  },
   options: (messenger, placeholder) => {
     return {
       hideOnZoom: false,
@@ -43,10 +40,10 @@ export const messengerFactory: MessengerFactory = {
             messenger.kulValue = config;
           }
 
-          placeholder.classList.add(messengerFactory.cssClasses.placeholderHidden);
+          placeholder.classList.add(MessengerCSS.PlaceholderHidden);
         };
         const onException = () => {
-          placeholder.classList.remove(messengerFactory.cssClasses.placeholderHidden);
+          placeholder.classList.remove(MessengerCSS.PlaceholderHidden);
         };
 
         normalizeValue(value, callback, TYPE, onException);
@@ -60,9 +57,9 @@ export const messengerFactory: MessengerFactory = {
     const messenger = document.createElement(TagName.KulMessenger);
     const options = messengerFactory.options(messenger, placeholder);
 
-    content.classList.add(messengerFactory.cssClasses.content);
-    messenger.classList.add(messengerFactory.cssClasses.messenger);
-    placeholder.classList.add(messengerFactory.cssClasses.placeholder);
+    content.classList.add(MessengerCSS.Content);
+    messenger.classList.add(MessengerCSS.Widget);
+    placeholder.classList.add(MessengerCSS.Placeholder);
 
     placeholder.innerHTML = `The setup of this node must be done client-side. Use either <strong>LF_WriteJSON</strong> or <strong>LF_DisplayJSON</strong>
 to connect as input a valid JSON dataset. Check the repository's workflows to see a 
