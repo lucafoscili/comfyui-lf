@@ -12,19 +12,15 @@ import {
   normalizeValue,
 } from '../utils/common';
 import { createContent } from '../helpers/controlPanel';
-import { ControlPanelDeserializedValue, ControlPanelFactory } from '../types/widgets/controlPanel';
+import {
+  ControlPanelCSS,
+  ControlPanelDeserializedValue,
+  ControlPanelFactory,
+} from '../types/widgets/controlPanel';
 import { KulEventName } from '../types/events/events';
-
-const BASE_CSS_CLASS = 'lf-controlpanel';
-const TYPE = CustomWidgetName.controlPanel;
 
 //#region Control panel
 export const controlPanelFactory: ControlPanelFactory = {
-  cssClasses: {
-    content: BASE_CSS_CLASS,
-    grid: `${BASE_CSS_CLASS}__grid`,
-    spinner: `${BASE_CSS_CLASS}__spinner`,
-  },
   options: () => {
     return {
       hideOnZoom: false,
@@ -37,7 +33,7 @@ export const controlPanelFactory: ControlPanelFactory = {
       },
       setValue(value) {
         const callback: NormalizeValueCallback<
-          CustomWidgetDeserializedValuesMap<typeof TYPE> | string
+          CustomWidgetDeserializedValuesMap<typeof CustomWidgetName.controlPanel> | string
         > = (_, u) => {
           const { backup, debug, themes } = u.parsedJson as ControlPanelDeserializedValue;
 
@@ -65,7 +61,7 @@ export const controlPanelFactory: ControlPanelFactory = {
           }
         };
 
-        normalizeValue(value, callback, TYPE);
+        normalizeValue(value, callback, CustomWidgetName.controlPanel);
       },
     };
   },
@@ -80,7 +76,7 @@ export const controlPanelFactory: ControlPanelFactory = {
 
       const createSpinner = () => {
         const spinner = document.createElement(TagName.KulSpinner);
-        spinner.classList.add(controlPanelFactory.cssClasses.spinner);
+        spinner.classList.add(ControlPanelCSS.Spinner);
         spinner.kulActive = true;
         spinner.kulLayout = 11;
 
@@ -99,7 +95,7 @@ export const controlPanelFactory: ControlPanelFactory = {
         domWidget.appendChild(content);
       }
 
-      content.classList.add(controlPanelFactory.cssClasses.content);
+      content.classList.add(ControlPanelCSS.Content);
     };
 
     const wrapper = document.createElement(TagName.Div);
@@ -107,7 +103,7 @@ export const controlPanelFactory: ControlPanelFactory = {
 
     contentCb(wrapper, false);
 
-    return { widget: createDOMWidget(TYPE, wrapper, node, options) };
+    return { widget: createDOMWidget(CustomWidgetName.controlPanel, wrapper, node, options) };
   },
 };
 //#endregion

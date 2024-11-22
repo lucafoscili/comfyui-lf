@@ -1,13 +1,10 @@
 import { CustomWidgetName, NodeName, TagName, } from '../types/widgets/_common.js';
+import { ProgressbarCSS, } from '../types/widgets/progressBar.js';
 import { createDOMWidget, normalizeValue } from '../utils/common.js';
-const BASE_CSS_CLASS = 'lf-progressbar';
 const FALLBACK_LABEL = 'N/A';
 const TYPE = CustomWidgetName.progressbar;
 //#region Progress bar
 export const progressbarFactory = {
-    cssClasses: {
-        content: BASE_CSS_CLASS,
-    },
     options: (progressbar, nodeType) => {
         return {
             hideOnZoom: false,
@@ -66,7 +63,7 @@ export const progressbarFactory = {
         const content = document.createElement(TagName.Div);
         const progressbar = document.createElement(TagName.KulProgressbar);
         const options = progressbarFactory.options(progressbar, node);
-        content.classList.add(progressbarFactory.cssClasses.content);
+        content.classList.add(ProgressbarCSS.Content);
         progressbar.kulIsRadial = true;
         progressbar.kulLabel = FALLBACK_LABEL;
         content.appendChild(progressbar);

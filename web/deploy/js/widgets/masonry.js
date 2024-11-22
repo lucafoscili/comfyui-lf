@@ -1,14 +1,9 @@
 import { KulEventName } from '../types/events/events.js';
 import { CustomWidgetName, NodeName, TagName, } from '../types/widgets/_common.js';
+import { MasonryCSS } from '../types/widgets/masonry.js';
 import { createDOMWidget, isValidNumber, normalizeValue } from '../utils/common.js';
-const BASE_CSS_CLASS = 'lf-masonry';
-const TYPE = CustomWidgetName.masonry;
 //#region Masonry
 export const masonryFactory = {
-    cssClasses: {
-        content: BASE_CSS_CLASS,
-        widget: `${BASE_CSS_CLASS}__widget`,
-    },
     options: (masonry) => {
         return {
             hideOnZoom: false,
@@ -43,7 +38,7 @@ export const masonryFactory = {
                         masonry.setSelectedShape(index);
                     }
                 };
-                normalizeValue(value, callback, TYPE);
+                normalizeValue(value, callback, CustomWidgetName.masonry);
             },
         };
     },
@@ -52,8 +47,8 @@ export const masonryFactory = {
         const content = document.createElement(TagName.Div);
         const masonry = document.createElement(TagName.KulMasonry);
         const options = masonryFactory.options(masonry);
-        content.classList.add(masonryFactory.cssClasses.content);
-        masonry.classList.add(masonryFactory.cssClasses.widget);
+        content.classList.add(MasonryCSS.Content);
+        masonry.classList.add(MasonryCSS.Widget);
         masonry.addEventListener(KulEventName.KulMasonry, masonryEventHandler);
         switch (node.comfyClass) {
             case NodeName.loadImages:
@@ -62,7 +57,7 @@ export const masonryFactory = {
         }
         content.appendChild(masonry);
         wrapper.appendChild(content);
-        return { widget: createDOMWidget(TYPE, wrapper, node, options) };
+        return { widget: createDOMWidget(CustomWidgetName.masonry, wrapper, node, options) };
     },
 };
 //#endregion

@@ -5,6 +5,8 @@ import {
   CustomWidgetName,
 } from './_common';
 
+const BASE_CSS_CLASS = 'lf-card';
+
 //#region Card
 export interface Card extends Widget {
   options: CardOptions;
@@ -22,5 +24,10 @@ export type CardSetter = () => {
 };
 export interface CardDeserializedValue {
   props: Partial<HTMLKulCardElement>[];
+}
+export enum CardCSS {
+  Content = BASE_CSS_CLASS,
+  ContentHasButton = `${BASE_CSS_CLASS}--has-button`,
+  Grid = `${BASE_CSS_CLASS}__grid`,
 }
 //#endregion

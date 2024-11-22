@@ -1,16 +1,10 @@
 import { CustomWidgetName, TagName, } from '../types/widgets/_common.js';
 import { createDOMWidget, getApiRoutes, getKulManager, getLFManager, normalizeValue, } from '../utils/common.js';
 import { createContent } from '../helpers/controlPanel.js';
+import { ControlPanelCSS, } from '../types/widgets/controlPanel.js';
 import { KulEventName } from '../types/events/events.js';
-const BASE_CSS_CLASS = 'lf-controlpanel';
-const TYPE = CustomWidgetName.controlPanel;
 //#region Control panel
 export const controlPanelFactory = {
-    cssClasses: {
-        content: BASE_CSS_CLASS,
-        grid: `${BASE_CSS_CLASS}__grid`,
-        spinner: `${BASE_CSS_CLASS}__spinner`,
-    },
     options: () => {
         return {
             hideOnZoom: false,
@@ -47,7 +41,7 @@ export const controlPanelFactory = {
                         document.addEventListener(KulEventName.KulManager, managerCb);
                     }
                 };
-                normalizeValue(value, callback, TYPE);
+                normalizeValue(value, callback, CustomWidgetName.controlPanel);
             },
         };
     },
@@ -61,7 +55,7 @@ export const controlPanelFactory = {
             };
             const createSpinner = () => {
                 const spinner = document.createElement(TagName.KulSpinner);
-                spinner.classList.add(controlPanelFactory.cssClasses.spinner);
+                spinner.classList.add(ControlPanelCSS.Spinner);
                 spinner.kulActive = true;
                 spinner.kulLayout = 11;
                 return spinner;
@@ -77,12 +71,12 @@ export const controlPanelFactory = {
                 content.appendChild(spinner);
                 domWidget.appendChild(content);
             }
-            content.classList.add(controlPanelFactory.cssClasses.content);
+            content.classList.add(ControlPanelCSS.Content);
         };
         const wrapper = document.createElement(TagName.Div);
         const options = controlPanelFactory.options();
         contentCb(wrapper, false);
-        return { widget: createDOMWidget(TYPE, wrapper, node, options) };
+        return { widget: createDOMWidget(CustomWidgetName.controlPanel, wrapper, node, options) };
     },
 };
 //#endregion

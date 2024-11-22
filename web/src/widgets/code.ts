@@ -5,18 +5,11 @@ import {
   NormalizeValueCallback,
   TagName,
 } from '../types/widgets/_common';
-import { CodeFactory } from '../types/widgets/code';
+import { CodeCSS, CodeFactory } from '../types/widgets/code';
 import { createDOMWidget, normalizeValue } from '../utils/common';
-
-const BASE_CSS_CLASS = 'lf-code';
-const TYPE = CustomWidgetName.code;
 
 //#region Code
 export const codeFactory: CodeFactory = {
-  cssClasses: {
-    content: BASE_CSS_CLASS,
-    code: `${BASE_CSS_CLASS}__widget`,
-  },
   options: (code) => {
     return {
       hideOnZoom: false,
@@ -33,7 +26,7 @@ export const codeFactory: CodeFactory = {
       },
       setValue(value) {
         const callback: NormalizeValueCallback<
-          CustomWidgetDeserializedValuesMap<typeof TYPE> | string
+          CustomWidgetDeserializedValuesMap<typeof CustomWidgetName.code> | string
         > = (v, u) => {
           switch (code.kulLanguage) {
             case 'json':
@@ -45,7 +38,7 @@ export const codeFactory: CodeFactory = {
           }
         };
 
-        normalizeValue(value, callback, TYPE);
+        normalizeValue(value, callback, CustomWidgetName.code);
       },
     };
   },
@@ -55,8 +48,8 @@ export const codeFactory: CodeFactory = {
     const code = document.createElement(TagName.KulCode);
     const options = codeFactory.options(code);
 
-    content.classList.add(codeFactory.cssClasses.content);
-    code.classList.add(codeFactory.cssClasses.code);
+    content.classList.add(CodeCSS.Content);
+    code.classList.add(CodeCSS.Widget);
 
     switch (node.comfyClass) {
       case NodeName.displayJson:
@@ -76,7 +69,7 @@ export const codeFactory: CodeFactory = {
     content.appendChild(code);
     wrapper.appendChild(content);
 
-    return { widget: createDOMWidget(TYPE, wrapper, node, options) };
+    return { widget: createDOMWidget(CustomWidgetName.code, wrapper, node, options) };
   },
 };
 //#endregion

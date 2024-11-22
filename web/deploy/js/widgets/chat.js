@@ -1,15 +1,10 @@
 import { KulEventName } from '../types/events/events.js';
 import { LogSeverity } from '../types/manager/manager.js';
 import { CustomWidgetName, NodeName, TagName, } from '../types/widgets/_common.js';
+import { ChatCSS } from '../types/widgets/chat.js';
 import { createDOMWidget, findWidget, getLFManager, normalizeValue } from '../utils/common.js';
-const BASE_CSS_CLASS = 'lf-chat';
-const TYPE = CustomWidgetName.chat;
 //#region Chat
 export const chatFactory = {
-    cssClasses: {
-        content: BASE_CSS_CLASS,
-        chat: `${BASE_CSS_CLASS}__widget`,
-    },
     options: (chat) => {
         return {
             hideOnZoom: false,
@@ -23,21 +18,21 @@ export const chatFactory = {
                 const callback = (v) => {
                     chat.setHistory(v);
                 };
-                normalizeValue(value, callback, TYPE);
+                normalizeValue(value, callback, CustomWidgetName.chat);
             },
         };
     },
     render: (node) => {
-        const w = findWidget(node, TYPE);
-        if (findWidget(node, TYPE) && node.comfyClass === NodeName.llmChat) {
+        const w = findWidget(node, CustomWidgetName.chat);
+        if (findWidget(node, CustomWidgetName.chat) && node.comfyClass === NodeName.llmChat) {
             return w.element;
         }
         const wrapper = document.createElement(TagName.Div);
         const content = document.createElement(TagName.Div);
         const chat = document.createElement(TagName.KulChat);
         const options = chatFactory.options(chat);
-        content.classList.add(chatFactory.cssClasses.content);
-        chat.classList.add(chatFactory.cssClasses.chat);
+        content.classList.add(ChatCSS.Content);
+        chat.classList.add(ChatCSS.Widget);
         chat.addEventListener(KulEventName.KulChat, (e) => {
             const { eventType, history, status } = e.detail;
             switch (eventType) {
@@ -57,7 +52,7 @@ export const chatFactory = {
         });
         content.appendChild(chat);
         wrapper.appendChild(content);
-        return { widget: createDOMWidget(TYPE, wrapper, node, options) };
+        return { widget: createDOMWidget(CustomWidgetName.chat, wrapper, node, options) };
     },
 };
 //#endregion

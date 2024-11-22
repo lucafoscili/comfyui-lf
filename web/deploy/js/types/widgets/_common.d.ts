@@ -53,6 +53,7 @@ export declare enum CustomWidgetName {
 export declare enum NodeName {
     blurImages = "LF_BlurImages",
     boolean = "LF_Boolean",
+    brightness = "LF_Brightness",
     characterImpersonator = "LF_CharacterImpersonator",
     checkpointSelector = "LF_CheckpointSelector",
     civitaiMetadataSetup = "LF_CivitAIMetadataSetup",
@@ -73,6 +74,7 @@ export declare enum NodeName {
     embeddingSelector = "LF_EmbeddingSelector",
     extractString = "LF_ExtractString",
     extractPromptFromLoraTag = "LF_ExtractPromptFromLoraTag",
+    gaussianBlur = "LF_GaussianBlur",
     getValueFromJson = "LF_GetValueFromJSON",
     getRandomKeyFromJson = "LF_GetRandomKeyFromJSON",
     imageClassifier = "LF_ImageClassifier",
@@ -254,7 +256,6 @@ export type ComfyWidgetCallback = <T extends ComfyWidgetName>(node: NodeType, na
     widget: Widget;
 };
 export interface BaseWidgetFactory<T extends CustomWidgetOptions> {
-    cssClasses: Record<string, string>;
     options: BaseWidgetOptionsCallback<T>;
     render: BaseWidgetCallback<CustomWidgetName>;
 }

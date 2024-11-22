@@ -6,6 +6,8 @@ import {
   CustomWidgetName,
 } from './_common';
 
+const BASE_CSS_CLASS = 'lf-carousel';
+
 //#region Carousel
 export interface Carousel extends Widget {
   options: CarouselOptions;
@@ -22,4 +24,8 @@ export type CarouselSetter = () => {
   [CustomWidgetName.carousel]: BaseWidgetCallback<CustomWidgetName.carousel>;
 };
 export type CarouselDeserializedValue = KulDataDataset;
+export enum CarouselCSS {
+  Content = BASE_CSS_CLASS,
+  Widget = `${BASE_CSS_CLASS}__widget`,
+}
 //#endregion

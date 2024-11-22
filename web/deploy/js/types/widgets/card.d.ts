@@ -16,3 +16,8 @@ export type CardSetter = () => {
 export interface CardDeserializedValue {
     props: Partial<HTMLKulCardElement>[];
 }
+export declare enum CardCSS {
+    Content = "lf-card",
+    ContentHasButton = "lf-card--has-button",
+    Grid = "lf-card__grid"
+}

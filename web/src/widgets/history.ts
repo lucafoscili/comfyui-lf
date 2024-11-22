@@ -8,18 +8,11 @@ import {
   NormalizeValueCallback,
   TagName,
 } from '../types/widgets/_common';
-import { HistoryFactory } from '../types/widgets/history';
+import { HistoryCSS, HistoryFactory } from '../types/widgets/history';
 import { createDOMWidget, normalizeValue } from '../utils/common';
-
-const BASE_CSS_CLASS = 'lf-history';
-const TYPE = CustomWidgetName.history;
 
 //#region History
 export const historyFactory: HistoryFactory = {
-  cssClasses: {
-    content: BASE_CSS_CLASS,
-    history: `${BASE_CSS_CLASS}__widget`,
-  },
   options: (list) => {
     return {
       hideOnZoom: true,
@@ -31,12 +24,12 @@ export const historyFactory: HistoryFactory = {
       },
       setValue(value) {
         const callback: NormalizeValueCallback<
-          CustomWidgetDeserializedValuesMap<typeof TYPE> | string
+          CustomWidgetDeserializedValuesMap<typeof CustomWidgetName.history> | string
         > = (_, u) => {
           list.kulData = (u.parsedJson as KulDataDataset) || {};
         };
 
-        normalizeValue(value, callback, TYPE);
+        normalizeValue(value, callback, CustomWidgetName.history);
       },
     };
   },
@@ -46,8 +39,8 @@ export const historyFactory: HistoryFactory = {
     const history = document.createElement(TagName.KulList);
     const options = historyFactory.options(history);
 
-    content.classList.add(historyFactory.cssClasses.content);
-    history.classList.add(historyFactory.cssClasses.history);
+    content.classList.add(HistoryCSS.Content);
+    history.classList.add(HistoryCSS.Widget);
     history.kulEmptyLabel = 'History is empty!';
     history.kulEnableDeletions = true;
 
@@ -66,7 +59,7 @@ export const historyFactory: HistoryFactory = {
     content.appendChild(history);
     wrapper.appendChild(content);
 
-    return { widget: createDOMWidget(TYPE, wrapper, node, options) };
+    return { widget: createDOMWidget(CustomWidgetName.history, wrapper, node, options) };
   },
 };
 //#endregion

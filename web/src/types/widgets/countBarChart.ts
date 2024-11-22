@@ -6,6 +6,8 @@ import {
   CustomWidgetName,
 } from './_common';
 
+const BASE_CSS_CLASS = 'lf-countbarchart';
+
 //#region Count bar chart
 export interface CountBarChart extends Widget {
   options: CountBarChartOptions;
@@ -29,4 +31,12 @@ export type CountBarChartDeserializedValue = {
   chart: KulDataDataset;
   chip: KulDataDataset;
 };
+export enum CountBarChartCSS {
+  Content = BASE_CSS_CLASS,
+  Grid = `${BASE_CSS_CLASS}__grid`,
+  Chart = `${BASE_CSS_CLASS}__chart`,
+  Chip = `${BASE_CSS_CLASS}__chip`,
+  Button = `${BASE_CSS_CLASS}__button`,
+  ButtonHidden = `${BASE_CSS_CLASS}__button--hidden`,
+}
 //#endregion

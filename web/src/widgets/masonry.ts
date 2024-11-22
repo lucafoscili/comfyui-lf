@@ -8,18 +8,11 @@ import {
   NormalizeValueCallback,
   TagName,
 } from '../types/widgets/_common';
-import { MasonryDeserializedValue, MasonryFactory } from '../types/widgets/masonry';
+import { MasonryCSS, MasonryDeserializedValue, MasonryFactory } from '../types/widgets/masonry';
 import { createDOMWidget, isValidNumber, normalizeValue } from '../utils/common';
-
-const BASE_CSS_CLASS = 'lf-masonry';
-const TYPE = CustomWidgetName.masonry;
 
 //#region Masonry
 export const masonryFactory: MasonryFactory = {
-  cssClasses: {
-    content: BASE_CSS_CLASS,
-    widget: `${BASE_CSS_CLASS}__widget`,
-  },
   options: (masonry) => {
     return {
       hideOnZoom: false,
@@ -38,7 +31,7 @@ export const masonryFactory: MasonryFactory = {
       },
       setValue(value) {
         const callback: NormalizeValueCallback<
-          CustomWidgetDeserializedValuesMap<typeof TYPE> | string
+          CustomWidgetDeserializedValuesMap<typeof CustomWidgetName.masonry> | string
         > = (_, u) => {
           const { columns, dataset, index, name, view } = u.parsedJson as MasonryDeserializedValue;
           if (columns) {
@@ -57,7 +50,7 @@ export const masonryFactory: MasonryFactory = {
           }
         };
 
-        normalizeValue(value, callback, TYPE);
+        normalizeValue(value, callback, CustomWidgetName.masonry);
       },
     };
   },
@@ -67,8 +60,8 @@ export const masonryFactory: MasonryFactory = {
     const masonry = document.createElement(TagName.KulMasonry);
     const options = masonryFactory.options(masonry);
 
-    content.classList.add(masonryFactory.cssClasses.content);
-    masonry.classList.add(masonryFactory.cssClasses.widget);
+    content.classList.add(MasonryCSS.Content);
+    masonry.classList.add(MasonryCSS.Widget);
     masonry.addEventListener(KulEventName.KulMasonry, masonryEventHandler);
 
     switch (node.comfyClass) {
@@ -80,7 +73,7 @@ export const masonryFactory: MasonryFactory = {
     content.appendChild(masonry);
     wrapper.appendChild(content);
 
-    return { widget: createDOMWidget(TYPE, wrapper, node, options) };
+    return { widget: createDOMWidget(CustomWidgetName.masonry, wrapper, node, options) };
   },
 };
 //#endregion

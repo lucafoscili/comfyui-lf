@@ -1,14 +1,9 @@
 import { KulEventName } from '../types/events/events.js';
 import { CustomWidgetName, NodeName, TagName, } from '../types/widgets/_common.js';
+import { ChipCSS } from '../types/widgets/chip.js';
 import { createDOMWidget, normalizeValue } from '../utils/common.js';
-const BASE_CSS_CLASS = 'lf-chip';
-const TYPE = CustomWidgetName.chip;
 //#region Chip
 export const chipFactory = {
-    cssClasses: {
-        content: BASE_CSS_CLASS,
-        chip: `${BASE_CSS_CLASS}__widget`,
-    },
     options: (chip) => {
         return {
             hideOnZoom: true,
@@ -23,7 +18,7 @@ export const chipFactory = {
                     chip.dataset.selectedChips = v;
                     chip.setSelectedNodes(v.split(', '));
                 };
-                normalizeValue(value, callback, TYPE);
+                normalizeValue(value, callback, CustomWidgetName.chip);
             },
         };
     },
@@ -32,8 +27,8 @@ export const chipFactory = {
         const content = document.createElement(TagName.Div);
         const chip = document.createElement(TagName.KulChip);
         const options = chipFactory.options(chip);
-        content.classList.add(chipFactory.cssClasses.content);
-        chip.classList.add(chipFactory.cssClasses.chip);
+        content.classList.add(ChipCSS.Content);
+        chip.classList.add(ChipCSS.Widget);
         chip.addEventListener(KulEventName.KulChip, eventHandler);
         switch (node.comfyClass) {
             case NodeName.keywordToggleFromJson:
@@ -42,7 +37,7 @@ export const chipFactory = {
         }
         content.appendChild(chip);
         wrapper.appendChild(content);
-        return { widget: createDOMWidget(TYPE, wrapper, node, options) };
+        return { widget: createDOMWidget(CustomWidgetName.chip, wrapper, node, options) };
     },
 };
 const eventHandler = async (e) => {

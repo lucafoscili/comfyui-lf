@@ -1,5 +1,62 @@
-import { ImageEditorClarityIds, ImageEditorContrastIds, ImageEditorControls, ImageEditorDesaturateIds, ImageEditorSliderIds, ImageEditorTextfieldIds, ImageEditorToggleIds, ImageEditorVignetteIds, } from '../types/widgets/imageEditor.js';
+import { ImageEditorBrightnessIds, ImageEditorClarityIds, ImageEditorContrastIds, ImageEditorControls, ImageEditorDesaturateIds, ImageEditorGaussianBlurIds, ImageEditorSliderIds, ImageEditorTextfieldIds, ImageEditorToggleIds, ImageEditorVignetteIds, } from '../types/widgets/imageEditor.js';
 const SETTINGS = {
+    //#region Brightness
+    brightness: {
+        controlIds: ImageEditorBrightnessIds,
+        settings: {
+            brightness_strength: 0,
+            gamma: 0,
+            localized_brightness: false,
+            midpoint: 0.5,
+        },
+        configs: {
+            [ImageEditorControls.Slider]: [
+                {
+                    ariaLabel: 'Brightness Strength',
+                    controlType: ImageEditorControls.Slider,
+                    defaultValue: 0,
+                    id: ImageEditorSliderIds.BrightnessStrength,
+                    isMandatory: true,
+                    max: '1',
+                    min: '-1',
+                    step: '0.05',
+                    title: 'Adjust the brightness of the image. Negative values darken, positive values brighten.',
+                },
+                {
+                    ariaLabel: 'Gamma',
+                    controlType: ImageEditorControls.Slider,
+                    defaultValue: 1,
+                    id: ImageEditorSliderIds.Gamma,
+                    max: '3',
+                    min: '0.1',
+                    step: '0.1',
+                    title: 'Adjust the gamma correction. Values < 1 brighten shadows, > 1 darken highlights.',
+                },
+                {
+                    ariaLabel: 'Midpoint',
+                    controlType: ImageEditorControls.Slider,
+                    defaultValue: 0.5,
+                    id: ImageEditorSliderIds.Midpoint,
+                    max: '1',
+                    min: '0',
+                    step: '0.05',
+                    title: 'Defines the tonal midpoint for brightness scaling.',
+                },
+            ],
+            [ImageEditorControls.Toggle]: [
+                {
+                    ariaLabel: 'Localized Brightness',
+                    controlType: ImageEditorControls.Toggle,
+                    defaultValue: false,
+                    id: ImageEditorToggleIds.LocalizedContrast,
+                    off: 'false',
+                    on: 'true',
+                    title: 'Enhance brightness locally in darker regions.',
+                },
+            ],
+        },
+    },
+    //#endregion
     //#region Clarity
     clarity: {
         controlIds: ImageEditorClarityIds,
@@ -34,7 +91,7 @@ const SETTINGS = {
                 {
                     ariaLabel: 'Blur Kernel Size',
                     controlType: ImageEditorControls.Slider,
-                    defaultValue: 1,
+                    defaultValue: 7,
                     id: ImageEditorSliderIds.BlurKernelSize,
                     max: '15',
                     min: '1',
@@ -147,6 +204,39 @@ const SETTINGS = {
         },
     },
     //#endregion
+    //#region Gaussian blur
+    gaussianBlur: {
+        controlIds: ImageEditorGaussianBlurIds,
+        settings: {
+            blur_kernel_size: 1,
+            blur_sigma: 0,
+        },
+        configs: {
+            [ImageEditorControls.Slider]: [
+                {
+                    ariaLabel: 'Blur Sigma',
+                    controlType: ImageEditorControls.Slider,
+                    defaultValue: 0,
+                    id: ImageEditorSliderIds.BlurSigma,
+                    max: '10',
+                    min: '0.1',
+                    step: '0.1',
+                    title: 'Standard deviation for the Gaussian kernel. Controls blur intensity.',
+                },
+                {
+                    ariaLabel: 'Blur Kernel Size',
+                    controlType: ImageEditorControls.Slider,
+                    defaultValue: 7,
+                    id: ImageEditorSliderIds.BlurKernelSize,
+                    max: '51',
+                    min: '1',
+                    step: '2',
+                    title: 'Controls the size of the Gaussian blur kernel. Higher values mean more smoothing.',
+                },
+            ],
+        },
+    },
+    //#endregion
     //#region Vignette
     vignette: {
         controlIds: ImageEditorVignetteIds,
@@ -214,6 +304,19 @@ export const TREE_DATA = {
             value: 'Basic Adjustments',
             icon: 'settings',
             children: [
+                //#region Brightness
+                {
+                    description: 'Adjusts the brightness.',
+                    cells: {
+                        kulCode: {
+                            shape: 'code',
+                            value: JSON.stringify(SETTINGS.brightness),
+                        },
+                    },
+                    id: 'brightness',
+                    value: 'Brightness',
+                },
+                //#endregion
                 //#region Clarity
                 {
                     description: 'Simulates the Lightroom clarity effect.',
@@ -256,11 +359,24 @@ export const TREE_DATA = {
             ],
         },
         {
-            description: 'Artistic filters, such as vignette effect.',
+            description: 'Artistic filters, such as vignette effect and gaussian blur.',
             id: 'creative_effects',
             icon: 'palette',
             value: 'Creative Effects',
             children: [
+                //#region Gaussian blur
+                {
+                    description: 'Blurs the image.',
+                    cells: {
+                        kulCode: {
+                            shape: 'code',
+                            value: JSON.stringify(SETTINGS.gaussianBlur),
+                        },
+                    },
+                    id: 'gaussian_blur',
+                    value: 'Gaussian blur',
+                },
+                //#endregion
                 //#region Vignette
                 {
                     cells: {

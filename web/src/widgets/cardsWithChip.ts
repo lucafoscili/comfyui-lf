@@ -7,21 +7,13 @@ import {
 import { cardHandler, getCardProps } from '../helpers/card';
 import { createDOMWidget, normalizeValue } from '../utils/common';
 import {
+  CardsWithChipCSS,
   CardsWithChipDeserializedValue,
   CardsWithChipFactory,
 } from '../types/widgets/cardsWithChip';
 
-const BASE_CSS_CLASS = 'lf-cardswithchip';
-const TYPE = CustomWidgetName.cardsWithChip;
-
 //#region Cards with chip
 export const cardsWithChipFactory: CardsWithChipFactory = {
-  cssClasses: {
-    content: BASE_CSS_CLASS,
-    cards: `${BASE_CSS_CLASS}__cards`,
-    chip: `${BASE_CSS_CLASS}__chip`,
-    grid: `${BASE_CSS_CLASS}__grid`,
-  },
   options: (grid) => {
     return {
       hideOnZoom: false,
@@ -38,13 +30,10 @@ export const cardsWithChipFactory: CardsWithChipFactory = {
       },
       setValue(value) {
         const callback: NormalizeValueCallback<
-          CustomWidgetDeserializedValuesMap<typeof TYPE> | string
+          CustomWidgetDeserializedValuesMap<typeof CustomWidgetName.cardsWithChip> | string
         > = (v, u) => {
           const { props, chip } = u.parsedJson as CardsWithChipDeserializedValue;
-          const cardsCount = cardHandler(
-            grid.querySelector(`.${cardsWithChipFactory.cssClasses.cards}`),
-            props,
-          );
+          const cardsCount = cardHandler(grid.querySelector(`.${CardsWithChipCSS.Cards}`), props);
           if (!cardsCount || !v) {
             return;
           }
@@ -56,7 +45,7 @@ export const cardsWithChipFactory: CardsWithChipFactory = {
           }
         };
 
-        normalizeValue(value, callback, TYPE);
+        normalizeValue(value, callback, CustomWidgetName.cardsWithChip);
       },
     };
   },
@@ -68,10 +57,10 @@ export const cardsWithChipFactory: CardsWithChipFactory = {
     const chip = document.createElement(TagName.KulChip);
     const options = cardsWithChipFactory.options(grid);
 
-    content.classList.add(cardsWithChipFactory.cssClasses.content);
-    grid.classList.add(cardsWithChipFactory.cssClasses.grid);
-    cards.classList.add(cardsWithChipFactory.cssClasses.cards);
-    chip.classList.add(cardsWithChipFactory.cssClasses.chip);
+    content.classList.add(CardsWithChipCSS.Content);
+    grid.classList.add(CardsWithChipCSS.Grid);
+    cards.classList.add(CardsWithChipCSS.Cards);
+    chip.classList.add(CardsWithChipCSS.Chip);
 
     chip.kulStyle = '#kul-component .chip-set { height: auto; }';
 
@@ -81,7 +70,7 @@ export const cardsWithChipFactory: CardsWithChipFactory = {
     content.appendChild(grid);
     wrapper.appendChild(content);
 
-    return { widget: createDOMWidget(TYPE, wrapper, node, options) };
+    return { widget: createDOMWidget(CustomWidgetName.cardsWithChip, wrapper, node, options) };
   },
 };
 //#endregion

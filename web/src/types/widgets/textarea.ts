@@ -5,6 +5,8 @@ import {
   CustomWidgetName,
 } from './_common';
 
+const BASE_CSS_CLASS = 'lf-textarea';
+
 //#region Textarea
 export interface Textarea extends Widget {
   options: TextareaOptions;
@@ -19,4 +21,9 @@ export type TextareaSetter = () => {
   [CustomWidgetName.textarea]: BaseWidgetCallback<CustomWidgetName.textarea>;
 };
 export type TextareaDeserializedValue = Record<string, unknown>;
+export enum TextareaCSS {
+  Content = BASE_CSS_CLASS,
+  Widget = `${BASE_CSS_CLASS}__widget`,
+  WidgetError = `${BASE_CSS_CLASS}__widget--error`,
+}
 //#endregion

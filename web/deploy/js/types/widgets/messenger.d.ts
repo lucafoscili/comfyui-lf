@@ -18,3 +18,9 @@ export type MessengerDeserializedValue = {
     dataset: KulMessengerDataset;
     config: KulMessengerConfig;
 };
+export declare enum MessengerCSS {
+    Content = "lf-messenger",
+    Widget = "lf-messenger__widget",
+    Placeholder = "lf-messenger__placeholder",
+    PlaceholderHidden = "lf-messenger__placeholder--hidden"
+}

@@ -1,8 +1,7 @@
 import { LogSeverity } from '../types/manager/manager.js';
 import { NodeName } from '../types/widgets/_common.js';
-import { ImageEditorColumnId, ImageEditorControls, ImageEditorIcons, ImageEditorStatus, } from '../types/widgets/imageEditor.js';
+import { ImageEditorColumnId, ImageEditorControls, ImageEditorCSS, ImageEditorIcons, ImageEditorStatus, } from '../types/widgets/imageEditor.js';
 import { debounce, getApiRoutes, getLFManager, unescapeJson } from '../utils/common.js';
-import { imageEditorFactory } from '../widgets/imageEditor.js';
 //#region buttonEventHandler
 export const buttonEventHandler = async (imageviewer, actionButtons, grid, e) => {
     const { comp, eventType } = e.detail;
@@ -275,14 +274,14 @@ export const setGridStatus = (status, grid, actionButtons) => {
                 actionButtons.interrupt.kulDisabled = true;
                 actionButtons.resume.kulDisabled = true;
             });
-            grid.classList.add(imageEditorFactory.cssClasses.gridIsInactive);
+            grid.classList.add(ImageEditorCSS.GridIsInactive);
             break;
         case ImageEditorStatus.Pending:
             requestAnimationFrame(() => {
                 actionButtons.interrupt.kulDisabled = false;
                 actionButtons.resume.kulDisabled = false;
             });
-            grid.classList.remove(imageEditorFactory.cssClasses.gridIsInactive);
+            grid.classList.remove(ImageEditorCSS.GridIsInactive);
             break;
     }
 };

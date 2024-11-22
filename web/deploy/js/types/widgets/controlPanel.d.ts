@@ -60,3 +60,8 @@ export declare enum ControlPanelSection {
     Root = "root",
     Section = "section"
 }
+export declare enum ControlPanelCSS {
+    Content = "lf-controlpanel",
+    Grid = "lf-controlpanel__grid",
+    Spinner = "lf-controlpanel__spinner"
+}

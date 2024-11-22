@@ -3,11 +3,94 @@ import torch
 from server import PromptServer
 
 from ..utils.constants import CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, Input
-from ..utils.filters import clarity_effect, contrast_effect, desaturate_effect, vignette_effect
-from ..utils.helpers import create_compare_node, get_resource_url, normalize_input_image, normalize_list_to_value, normalize_output_image, resolve_filepath, tensor_to_pil
+from ..utils.filters import brightness_effect, clarity_effect, contrast_effect, desaturate_effect, gaussian_blur_effect, vignette_effect
+from ..utils.helpers import normalize_input_image, normalize_list_to_value, normalize_output_image, process_and_save_image
 
 CATEGORY = f"{CATEGORY_PREFIX}/Filters"
 
+# region LF_Brightness
+class LF_Brightness:
+    @classmethod
+    def INPUT_TYPES(self):
+        return {
+            "required": {
+                "image": (Input.IMAGE, {
+                    "tooltip": "Input image tensor or a list of image tensors."
+                }),
+                "brightness_strength": (Input.FLOAT, {
+                    "default": 0.0, 
+                    "min": -1.0, 
+                    "max": 1.0, 
+                    "step": 0.05, 
+                    "tooltip": "Adjust the brightness of the image. Negative values darken, positive values brighten."
+                }),
+                "gamma": (Input.FLOAT, {
+                    "default": 1.0, 
+                    "min": 0.1, 
+                    "max": 3.0, 
+                    "step": 0.1, 
+                    "tooltip": "Adjust the gamma correction. Values < 1 brighten shadows, > 1 darken highlights."
+                }),
+            },
+            "optional": {
+                "midpoint": (Input.FLOAT, {
+                    "default": 0.5, 
+                    "min": 0.0, 
+                    "max": 1.0, 
+                    "step": 0.05, 
+                    "tooltip": "Defines the tonal midpoint for brightness scaling."
+                }),
+                "localized_brightness": (Input.BOOLEAN, {
+                    "default": False,
+                    "tooltip": "Enhance brightness locally in darker regions."
+                }),
+                "ui_widget": (Input.KUL_COMPARE, {
+                    "default": {}
+                })
+            },
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
+        }
+
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    OUTPUT_IS_LIST = (False, True)
+    RETURN_NAMES = ("image", "image_list")
+    RETURN_TYPES = ("IMAGE", "IMAGE")
+
+    def on_exec(self, **kwargs: dict):
+        image: list[torch.Tensor] = normalize_input_image(kwargs.get("image"))
+        brightness_strength: float = normalize_list_to_value(kwargs.get("brightness_strength"))
+        gamma: float = normalize_list_to_value(kwargs.get("gamma"))
+        midpoint: float = normalize_list_to_value(kwargs.get("midpoint", 0.5))
+        localized_brightness: bool = kwargs.get("localized_brightness", False)
+
+        nodes: list[dict] = []
+        dataset: dict = {"nodes": nodes}
+
+        processed_images = process_and_save_image(
+            images=image,
+            filter_function=brightness_effect,
+            filter_args={
+                'brightness_strength': brightness_strength,
+                'gamma': gamma,
+                'midpoint': midpoint,
+                'localized_brightness': localized_brightness,
+            },
+            filename_prefix="brightness",
+            nodes=nodes,
+        )
+
+        batch_list, image_list = normalize_output_image(processed_images)
+
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}brightness", {
+            "node": kwargs.get("node_id"),
+            "dataset": dataset,
+        })
+
+        return (batch_list[0], image_list)
+# endregion
 # region LF_Clarity
 class LF_Clarity:
     @classmethod
@@ -62,40 +145,27 @@ class LF_Clarity:
         blur_kernel_size: int = normalize_list_to_value(kwargs.get("blur_kernel_size"))
 
         nodes: list[dict] = []
-        dataset: dict = { "nodes": nodes }
-        
-        processed_images: list[torch.Tensor] = []
+        dataset: dict = {"nodes": nodes}
 
-        for index, img in enumerate(image):
-            pil_image = tensor_to_pil(img)
+        processed_images = process_and_save_image(
+            images=image,
+            filter_function=clarity_effect,
+            filter_args={
+                'clarity_strength': clarity_strength,
+                'sharpen_amount': sharpen_amount,
+                'blur_kernel_size': blur_kernel_size,
+            },
+            filename_prefix="clarity",
+            nodes=nodes,
+        )
 
-            output_file_s, subfolder_s, filename_s = resolve_filepath(
-                    filename_prefix="clarity_s",
-                    image=img,
-            )
-            pil_image.save(output_file_s, format="PNG")
-            filename_s = get_resource_url(subfolder_s, filename_s, "temp")
-
-            processed = clarity_effect(img, clarity_strength, sharpen_amount, blur_kernel_size)
-            pil_image = tensor_to_pil(processed)
-
-            output_file_t, subfolder_t, filename_t = resolve_filepath(
-                    filename_prefix="clarity_t",
-                    image=processed,
-            )
-            pil_image.save(output_file_t, format="PNG")
-            filename_t = get_resource_url(subfolder_t, filename_t, "temp")
-
-            nodes.append(create_compare_node(filename_s, filename_t, index))
-            processed_images.append(processed)
-        
         batch_list, image_list = normalize_output_image(processed_images)
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}clarity", {
             "node": kwargs.get("node_id"),
             "dataset": dataset,
         })
-        
+
         return (batch_list[0], image_list)
 # endregion
 # region LF_Contrast
@@ -142,7 +212,7 @@ class LF_Contrast:
     RETURN_NAMES = ("image", "image_list")
     RETURN_TYPES = ("IMAGE", "IMAGE")
 
-    def on_exec(self, **kwargs: dict):
+    def on_exec(self, **kwargs: dict) -> None:
         image: list[torch.Tensor] = normalize_input_image(kwargs.get("image"))
         contrast_strength: float = normalize_list_to_value(kwargs.get("contrast_strength"))
         midpoint: float = normalize_list_to_value(kwargs.get("midpoint"))
@@ -151,11 +221,17 @@ class LF_Contrast:
         nodes: list[dict] = []
         dataset: dict = {"nodes": nodes}
 
-        processed_images: list[torch.Tensor] = []
-
-        for _, img in enumerate(image):
-            processed = contrast_effect(img, contrast_strength, midpoint, localized_contrast)
-            processed_images.append(processed)
+        processed_images = process_and_save_image(
+            images=image,
+            filter_function=contrast_effect,
+            filter_args={
+                'contrast_strength': contrast_strength,
+                'midpoint': midpoint,
+                'localized_contrast': localized_contrast,
+            },
+            filename_prefix="contrast",
+            nodes=nodes,
+        )
 
         batch_list, image_list = normalize_output_image(processed_images)
 
@@ -175,7 +251,7 @@ class LF_Desaturation:
                 "image": (Input.IMAGE, {
                     "tooltip": "Input image tensor or a list of image tensors."
                 }),
-                "desaturation_strength": (Input.FLOAT, {
+                "global_level": (Input.FLOAT, {
                     "default": 0.5, 
                     "min": 0.0, 
                     "max": 1.0, 
@@ -222,38 +298,24 @@ class LF_Desaturation:
 
     def on_exec(self, **kwargs: dict):
         image: list[torch.Tensor] = normalize_input_image(kwargs.get("image"))
-        desaturation_strength: float = normalize_list_to_value(kwargs.get("desaturation_strength"))
-        r: float = normalize_list_to_value(kwargs.get("r_channel", 0))
-        g: float = normalize_list_to_value(kwargs.get("g_channel", 0))
-        b: float = normalize_list_to_value(kwargs.get("b_channel", 0))
+        global_level: float = normalize_list_to_value(kwargs.get("global_level"))
+        r: float = normalize_list_to_value(kwargs.get("r_channel", 1))
+        g: float = normalize_list_to_value(kwargs.get("g_channel", 1))
+        b: float = normalize_list_to_value(kwargs.get("b_channel", 1))
 
         nodes: list[dict] = []
-        dataset: dict = { "nodes": nodes }
-        
-        processed_images: list[torch.Tensor] = []
+        dataset: dict = {"nodes": nodes}
 
-        for index, img in enumerate(image):
-            pil_image = tensor_to_pil(img)
-
-            output_file_s, subfolder_s, filename_s = resolve_filepath(
-                filename_prefix="desaturation_s",
-                image=img,
-            )
-            pil_image.save(output_file_s, format="PNG")
-            filename_s = get_resource_url(subfolder_s, filename_s, "temp")
-
-            processed = desaturate_effect(img, desaturation_strength, [r, g, b])
-            pil_image = tensor_to_pil(processed)
-
-            output_file_t, subfolder_t, filename_t = resolve_filepath(
-                filename_prefix="desaturation_t",
-                image=processed,
-            )
-            pil_image.save(output_file_t, format="PNG")
-            filename_t = get_resource_url(subfolder_t, filename_t, "temp")
-
-            nodes.append(create_compare_node(filename_s, filename_t, index))
-            processed_images.append(processed)
+        processed_images = process_and_save_image(
+            images=image,
+            filter_function=desaturate_effect,
+            filter_args={
+                'global_level': global_level,
+                'channel_levels': [r, g, b],
+            },
+            filename_prefix="desaturation",
+            nodes=nodes,
+        )
 
         batch_list, image_list = normalize_output_image(processed_images)
 
@@ -261,7 +323,75 @@ class LF_Desaturation:
             "node": kwargs.get("node_id"),
             "dataset": dataset,
         })
-        
+
+        return (batch_list[0], image_list)
+# endregion
+# region LF_GaussianBlur
+class LF_GaussianBlur:
+    @classmethod
+    def INPUT_TYPES(self):
+        return {
+            "required": {
+                "image": (Input.IMAGE, {
+                    "tooltip": "Input image tensor or a list of image tensors."
+                }),
+                "blur_kernel_size": (Input.INTEGER, {
+                    "default": 7, 
+                    "min": 1, 
+                    "max": 51, 
+                    "step": 2, 
+                    "tooltip": "Controls the size of the Gaussian blur kernel. Higher values mean more smoothing."
+                }),
+                "blur_sigma": (Input.FLOAT, {
+                    "default": 1.0, 
+                    "min": 0.0, 
+                    "max": 10.0, 
+                    "step": 0.1, 
+                    "tooltip": "Standard deviation for the Gaussian kernel. Controls blur intensity."
+                }),
+            },
+            "optional": {
+                "ui_widget": (Input.KUL_COMPARE, {
+                    "default": {}
+                })
+            },
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
+        }
+
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    OUTPUT_IS_LIST = (False, True)
+    RETURN_NAMES = ("image", "image_list")
+    RETURN_TYPES = ("IMAGE", "IMAGE")
+
+    def on_exec(self, **kwargs: dict):
+        image: list[torch.Tensor] = normalize_input_image(kwargs.get("image"))
+        blur_kernel_size: int = normalize_list_to_value(kwargs.get("blur_kernel_size"))
+        blur_sigma: float = normalize_list_to_value(kwargs.get("blur_sigma"))
+
+        nodes: list[dict] = []
+        dataset: dict = {"nodes": nodes}
+
+        processed_images = process_and_save_image(
+            images=image,
+            filter_function=gaussian_blur_effect,
+            filter_args={
+                'blur_kernel_size': blur_kernel_size,
+                'blur_sigma': blur_sigma,
+            },
+            filename_prefix="vignette",
+            nodes=nodes,
+        )
+
+        batch_list, image_list = normalize_output_image(processed_images)
+
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}vignette", {
+            "node": kwargs.get("node_id"),
+            "dataset": dataset,
+        })
+
         return (batch_list[0], image_list)
 # endregion
 # region LF_Vignette
@@ -320,51 +450,43 @@ class LF_Vignette:
         color: str = normalize_list_to_value(kwargs.get("color", "000000"))
 
         nodes: list[dict] = []
-        dataset: dict = { "nodes": nodes }
+        dataset: dict = {"nodes": nodes}
 
-        processed_images: list[torch.Tensor] = []
+        processed_images = process_and_save_image(
+            images=image,
+            filter_function=vignette_effect,
+            filter_args={
+                'intensity': intensity,
+                'radius': radius,
+                'shape': shape,
+                'color': color,
+            },
+            filename_prefix="vignette",
+            nodes=nodes,
+        )
 
-        for index, img in enumerate(image):
-            pil_image = tensor_to_pil(img)
-
-            output_file_s, subfolder_s, filename_s = resolve_filepath(
-                filename_prefix="vignette_s",
-                image=img,
-            )
-            pil_image.save(output_file_s, format="PNG")
-            filename_s = get_resource_url(subfolder_s, filename_s, "temp")
-
-            processed = vignette_effect(img, intensity, radius, shape, color)
-            pil_image = tensor_to_pil(processed)
-
-            output_file_t, subfolder_t, filename_t = resolve_filepath(
-                filename_prefix="vignette_t",
-                image=processed,
-            )
-            pil_image.save(output_file_t, format="PNG")
-            filename_t = get_resource_url(subfolder_t, filename_t, "temp")
-
-            nodes.append(create_compare_node(filename_s, filename_t, index))
-            processed_images.append(processed)
-        
         batch_list, image_list = normalize_output_image(processed_images)
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}vignette", {
             "node": kwargs.get("node_id"),
             "dataset": dataset,
         })
-        
+
         return (batch_list[0], image_list)
 # endregion
 NODE_CLASS_MAPPINGS = {
+    "LF_Brightness": LF_Brightness,
     "LF_Clarity": LF_Clarity,
     "LF_Contrast": LF_Contrast,
     "LF_Desaturation": LF_Desaturation,
+    "LF_GaussianBlur": LF_GaussianBlur,
     "LF_Vignette": LF_Vignette
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
+    "LF_Brightness": "Brightness",
     "LF_Clarity": "Clarity",
     "LF_Contrast": "Contrast",
     "LF_Desaturation": "Desaturation",
+    "LF_GaussianBlur": "Gaussian Blur",
     "LF_Vignette": "Vignette"
 }

@@ -6,6 +6,8 @@ import {
   CustomWidgetName,
 } from './_common';
 
+const BASE_CSS_CLASS = 'lf-messenger';
+
 //#region Messenger
 export interface Messenger extends Widget {
   options: MessengerOptions;
@@ -28,4 +30,10 @@ export type MessengerDeserializedValue = {
   dataset: KulMessengerDataset;
   config: KulMessengerConfig;
 };
+export enum MessengerCSS {
+  Content = BASE_CSS_CLASS,
+  Widget = `${BASE_CSS_CLASS}__widget`,
+  Placeholder = `${BASE_CSS_CLASS}__placeholder`,
+  PlaceholderHidden = `${BASE_CSS_CLASS}__placeholder--hidden`,
+}
 //#endregion

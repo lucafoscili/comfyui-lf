@@ -7,6 +7,8 @@ import {
 } from './_common';
 import { CardDeserializedValue } from './card';
 
+const BASE_CSS_CLASS = 'lf-cardswithchip';
+
 //#region Cards with chip
 export interface CardsWithChip extends Widget {
   options: CardsWithChipOptions;
@@ -24,5 +26,11 @@ export type CardsWithChipSetter = () => {
 };
 export interface CardsWithChipDeserializedValue extends CardDeserializedValue {
   chip: KulDataDataset;
+}
+export enum CardsWithChipCSS {
+  Content = BASE_CSS_CLASS,
+  Cards = `${BASE_CSS_CLASS}__cards`,
+  Chip = `${BASE_CSS_CLASS}__chip`,
+  Grid = `${BASE_CSS_CLASS}__grid`,
 }
 //#endregion

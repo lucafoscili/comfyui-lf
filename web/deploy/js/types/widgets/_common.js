@@ -38,6 +38,7 @@ export var NodeName;
 (function (NodeName) {
     NodeName["blurImages"] = "LF_BlurImages";
     NodeName["boolean"] = "LF_Boolean";
+    NodeName["brightness"] = "LF_Brightness";
     NodeName["characterImpersonator"] = "LF_CharacterImpersonator";
     NodeName["checkpointSelector"] = "LF_CheckpointSelector";
     NodeName["civitaiMetadataSetup"] = "LF_CivitAIMetadataSetup";
@@ -58,6 +59,7 @@ export var NodeName;
     NodeName["embeddingSelector"] = "LF_EmbeddingSelector";
     NodeName["extractString"] = "LF_ExtractString";
     NodeName["extractPromptFromLoraTag"] = "LF_ExtractPromptFromLoraTag";
+    NodeName["gaussianBlur"] = "LF_GaussianBlur";
     NodeName["getValueFromJson"] = "LF_GetValueFromJSON";
     NodeName["getRandomKeyFromJson"] = "LF_GetRandomKeyFromJSON";
     NodeName["imageClassifier"] = "LF_ImageClassifier";

@@ -1,13 +1,8 @@
 import { CustomWidgetName, NodeName, TagName, } from '../types/widgets/_common.js';
+import { TreeCSS } from '../types/widgets/tree.js';
 import { createDOMWidget, normalizeValue } from '../utils/common.js';
-const BASE_CSS_CLASS = 'lf-tree';
-const TYPE = CustomWidgetName.tree;
 //#region Tree
 export const treeFactory = {
-    cssClasses: {
-        content: BASE_CSS_CLASS,
-        tree: `${BASE_CSS_CLASS}__widget`,
-    },
     options: (tree) => {
         return {
             hideOnZoom: true,
@@ -21,7 +16,7 @@ export const treeFactory = {
                 const callback = (_, u) => {
                     tree.kulData = u.parsedJson || {};
                 };
-                normalizeValue(value, callback, TYPE);
+                normalizeValue(value, callback, CustomWidgetName.tree);
             },
         };
     },
@@ -40,11 +35,11 @@ export const treeFactory = {
                 tree.kulSelectable = false;
                 break;
         }
-        content.classList.add(treeFactory.cssClasses.content);
-        tree.classList.add(treeFactory.cssClasses.tree);
+        content.classList.add(TreeCSS.Content);
+        tree.classList.add(TreeCSS.Widget);
         content.appendChild(tree);
         wrapper.appendChild(content);
-        return { widget: createDOMWidget(TYPE, wrapper, node, options) };
+        return { widget: createDOMWidget(CustomWidgetName.tree, wrapper, node, options) };
     },
 };
 //#endregion

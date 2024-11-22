@@ -20,6 +20,7 @@ import { KulToggle } from '../types/ketchup-lite/components/kul-toggle/kul-toggl
 import { KulToggleEvent } from '../types/ketchup-lite/components/kul-toggle/kul-toggle-declarations';
 import { TagName } from '../types/widgets/_common';
 import {
+  ControlPanelCSS,
   ControlPanelFixture,
   ControlPanelIds,
   ControlPanelLabels,
@@ -69,7 +70,7 @@ export const createContent = () => {
 
   const intro = prepArticle(INTRO_SECTION, SECTIONS[INTRO_SECTION]());
 
-  grid.classList.add(controlPanelFactory.cssClasses.grid);
+  grid.classList.add(ControlPanelCSS.Grid);
   grid.appendChild(intro);
   grid.appendChild(accordion);
 

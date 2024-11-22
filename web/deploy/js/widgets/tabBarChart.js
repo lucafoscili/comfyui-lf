@@ -2,20 +2,10 @@ import { prepareTabbarDataset, tabbarEventHandler, textfieldEventHandler, } from
 import { KulEventName } from '../types/events/events.js';
 import { LogSeverity } from '../types/manager/manager.js';
 import { CustomWidgetName, NodeName, TagName, } from '../types/widgets/_common.js';
+import { TabBarChartCSS, } from '../types/widgets/tabBarChart.js';
 import { createDOMWidget, getLFManager, normalizeValue } from '../utils/common.js';
-const BASE_CSS_CLASS = 'lf-tabbarchart';
-const TYPE = CustomWidgetName.tabBarChart;
 //#region Tab bar chart
 export const tabBarChartFactory = {
-    cssClasses: {
-        content: BASE_CSS_CLASS,
-        directory: `${BASE_CSS_CLASS}__directory`,
-        directoryHidden: `${BASE_CSS_CLASS}__directory--hidden`,
-        grid: `${BASE_CSS_CLASS}__grid`,
-        gridNoDirectory: `${BASE_CSS_CLASS}__grid--no-directory`,
-        spinner: `${BASE_CSS_CLASS}__spinner`,
-        tabbar: `${BASE_CSS_CLASS}__tabbar`,
-    },
     options: (chart, tabbar, textfield, node) => {
         return {
             hideOnZoom: false,
@@ -70,7 +60,7 @@ export const tabBarChartFactory = {
                             break;
                     }
                 };
-                normalizeValue(value, callback, TYPE);
+                normalizeValue(value, callback, CustomWidgetName.tabBarChart);
             },
             refresh: async () => {
                 const currentTab = (await tabbar?.getValue())?.node?.id;
@@ -108,8 +98,8 @@ export const tabBarChartFactory = {
                 chart.kulColors = ['red', 'green', 'blue'];
                 chart.kulSeries = ['red', 'green', 'blue'];
                 chart.kulTypes = ['scatter'];
-                grid.classList.add(tabBarChartFactory.cssClasses.gridNoDirectory);
-                textfield.classList.add(tabBarChartFactory.cssClasses.directoryHidden);
+                grid.classList.add(TabBarChartCSS.GridNoDirectory);
+                textfield.classList.add(TabBarChartCSS.DirectoryHidden);
                 break;
             case NodeName.imageHistogram:
             case NodeName.lutGeneration:
@@ -117,8 +107,8 @@ export const tabBarChartFactory = {
                 chart.kulColors = ['red', 'green', 'blue'];
                 chart.kulSeries = ['red', 'green', 'blue'];
                 chart.kulTypes = ['area'];
-                grid.classList.add(tabBarChartFactory.cssClasses.gridNoDirectory);
-                textfield.classList.add(tabBarChartFactory.cssClasses.directoryHidden);
+                grid.classList.add(TabBarChartCSS.GridNoDirectory);
+                textfield.classList.add(TabBarChartCSS.DirectoryHidden);
                 break;
             case NodeName.usageStatistics:
                 chart.kulAxis = ['name'];
@@ -127,22 +117,22 @@ export const tabBarChartFactory = {
                 chart.kulTypes = ['area'];
                 break;
         }
-        grid.classList.add(tabBarChartFactory.cssClasses.grid);
         tabbar.addEventListener(KulEventName.KulTabbar, tabbarEventHandler.bind(tabbarEventHandler, chart, node.comfyClass));
         tabbar.kulValue = null;
-        tabbar.classList.add(tabBarChartFactory.cssClasses.tabbar);
-        textfield.classList.add(tabBarChartFactory.cssClasses.directory);
+        tabbar.classList.add(TabBarChartCSS.Tabbar);
+        textfield.classList.add(TabBarChartCSS.Directory);
         textfield.kulIcon = 'folder';
         textfield.kulLabel = 'Directory';
         textfield.kulStyling = 'flat';
         textfield.addEventListener(KulEventName.KulTextfield, textfieldEventHandler.bind(textfieldEventHandler, chart, options.refresh));
+        grid.classList.add(TabBarChartCSS.Grid);
         grid.appendChild(textfield);
         grid.appendChild(tabbar);
         grid.appendChild(chart);
-        content.classList.add(tabBarChartFactory.cssClasses.content);
+        content.classList.add(TabBarChartCSS.Content);
         content.appendChild(grid);
         wrapper.appendChild(content);
-        return { widget: createDOMWidget(TYPE, wrapper, node, options) };
+        return { widget: createDOMWidget(CustomWidgetName.tabBarChart, wrapper, node, options) };
     },
 };
 //#endregion

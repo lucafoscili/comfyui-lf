@@ -6,6 +6,8 @@ import {
   CustomWidgetName,
 } from './_common';
 
+const BASE_CSS_CLASS = 'lf-controlpanel';
+
 //#region Control panel
 export interface ControlPanel extends Widget {
   options: ControlPanelOptions;
@@ -65,5 +67,10 @@ export enum ControlPanelSection {
   Paragraph = 'paragraph',
   Root = 'root',
   Section = 'section',
+}
+export enum ControlPanelCSS {
+  Content = BASE_CSS_CLASS,
+  Grid = `${BASE_CSS_CLASS}__grid`,
+  Spinner = `${BASE_CSS_CLASS}__spinner`,
 }
 //#endregion

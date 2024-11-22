@@ -6,6 +6,7 @@ import {
   NodeName,
   NodeWidgetMap,
 } from '../types/widgets/_common';
+import { MessengerCSS } from '../types/widgets/messenger';
 import {
   areJSONEqual,
   getApiRoutes,
@@ -16,12 +17,12 @@ import {
   refreshChart,
   unescapeJson,
 } from '../utils/common';
-import { messengerFactory } from '../widgets/messenger';
 
 //#region Node-Widget map
 export const NODE_WIDGET_MAP: NodeWidgetMap = {
   LF_BlurImages: [CustomWidgetName.masonry],
   LF_Boolean: [CustomWidgetName.history],
+  LF_Brightness: [CustomWidgetName.compare],
   LF_CharacterImpersonator: [CustomWidgetName.code],
   LF_CheckpointSelector: [CustomWidgetName.card],
   LF_CivitAIMetadataSetup: [CustomWidgetName.code],
@@ -41,6 +42,7 @@ export const NODE_WIDGET_MAP: NodeWidgetMap = {
   LF_ExtractString: [CustomWidgetName.code],
   LF_ExtractPromptFromLoraTag: [CustomWidgetName.code],
   LF_Float: [CustomWidgetName.history],
+  LF_GaussianBlur: [CustomWidgetName.compare],
   LF_GetRandomKeyFromJSON: [CustomWidgetName.code],
   LF_GetValueFromJSON: [CustomWidgetName.code],
   LF_ImageClassifier: [CustomWidgetName.code],
@@ -244,11 +246,9 @@ const messengerCb = (node: NodeType) => {
     }
     const placeholder = messenger.nextSibling || messenger.previousSibling;
     if (messenger.kulData?.nodes?.[0]) {
-      (placeholder as HTMLDivElement).classList.add(messengerFactory.cssClasses.placeholderHidden);
+      (placeholder as HTMLDivElement).classList.add(MessengerCSS.PlaceholderHidden);
     } else {
-      (placeholder as HTMLDivElement).classList.remove(
-        messengerFactory.cssClasses.placeholderHidden,
-      );
+      (placeholder as HTMLDivElement).classList.remove(MessengerCSS.PlaceholderHidden);
     }
   } catch (error) {
     getLFManager().log('Error processing messenger data', { dataset, error }, LogSeverity.Error);

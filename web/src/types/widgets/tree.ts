@@ -6,6 +6,8 @@ import {
   CustomWidgetName,
 } from './_common';
 
+const BASE_CSS_CLASS = 'lf-tree';
+
 //#region Tree
 export interface Tree extends Widget {
   options: TreeOptions;
@@ -22,4 +24,8 @@ export type TreeSetter = () => {
   [CustomWidgetName.tree]: BaseWidgetCallback<CustomWidgetName.tree>;
 };
 export type TreeValueDeserializedValue = KulDataDataset;
+export enum TreeCSS {
+  Content = BASE_CSS_CLASS,
+  Widget = `${BASE_CSS_CLASS}__widget`,
+}
 //#endregion

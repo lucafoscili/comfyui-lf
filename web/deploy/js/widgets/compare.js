@@ -1,13 +1,8 @@
 import { CustomWidgetName, TagName, } from '../types/widgets/_common.js';
+import { CompareCSS } from '../types/widgets/compare.js';
 import { createDOMWidget, normalizeValue } from '../utils/common.js';
-const BASE_CSS_CLASS = 'lf-compare';
-const TYPE = CustomWidgetName.compare;
 //#region Compare
 export const compareFactory = {
-    cssClasses: {
-        content: BASE_CSS_CLASS,
-        compare: `${BASE_CSS_CLASS}__widget`,
-    },
     options: (compare) => {
         return {
             hideOnZoom: false,
@@ -21,7 +16,7 @@ export const compareFactory = {
                 const callback = (_, u) => {
                     compare.kulData = u.parsedJson || {};
                 };
-                normalizeValue(value, callback, TYPE);
+                normalizeValue(value, callback, CustomWidgetName.compare);
             },
         };
     },
@@ -30,8 +25,8 @@ export const compareFactory = {
         const content = document.createElement(TagName.Div);
         const compare = document.createElement(TagName.KulCompare);
         const options = compareFactory.options(compare);
-        content.classList.add(compareFactory.cssClasses.content);
-        compare.classList.add(compareFactory.cssClasses.compare);
+        content.classList.add(CompareCSS.Content);
+        compare.classList.add(CompareCSS.Widget);
         switch (node.comfyClass) {
             default:
                 compare.kulShape = 'image';
@@ -39,7 +34,7 @@ export const compareFactory = {
         }
         content.appendChild(compare);
         wrapper.appendChild(content);
-        return { widget: createDOMWidget(TYPE, wrapper, node, options) };
+        return { widget: createDOMWidget(CustomWidgetName.compare, wrapper, node, options) };
     },
 };
 //#endregion

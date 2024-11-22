@@ -3,21 +3,10 @@ import { buttonEventHandler, getStatusColumn, imageviewerEventHandler, setGridSt
 import { KulEventName } from '../types/events/events.js';
 import { LogSeverity } from '../types/manager/manager.js';
 import { CustomWidgetName, NodeName, TagName, } from '../types/widgets/_common.js';
-import { ImageEditorIcons, ImageEditorStatus, } from '../types/widgets/imageEditor.js';
+import { ImageEditorCSS, ImageEditorIcons, ImageEditorStatus, } from '../types/widgets/imageEditor.js';
 import { createDOMWidget, getLFManager, normalizeValue } from '../utils/common.js';
-const BASE_CSS_CLASS = 'lf-imageeditor';
-const TYPE = CustomWidgetName.imageEditor;
 //#region Image editor
 export const imageEditorFactory = {
-    cssClasses: {
-        content: BASE_CSS_CLASS,
-        actions: `${BASE_CSS_CLASS}__actions`,
-        grid: `${BASE_CSS_CLASS}__grid`,
-        gridHasActions: `${BASE_CSS_CLASS}__grid--has-actions`,
-        gridIsInactive: `${BASE_CSS_CLASS}__grid--is-inactive`,
-        imageviewer: `${BASE_CSS_CLASS}__widget`,
-        settings: `${BASE_CSS_CLASS}__settings`,
-    },
     options: (imageviewer, actionButtons, grid) => {
         return {
             hideOnZoom: false,
@@ -50,7 +39,7 @@ export const imageEditorFactory = {
                     }
                     imageviewer.kulData = parsedValue || {};
                 };
-                normalizeValue(value, callback, TYPE);
+                normalizeValue(value, callback, CustomWidgetName.imageEditor);
             },
         };
     },
@@ -60,9 +49,9 @@ export const imageEditorFactory = {
         const grid = document.createElement(TagName.Div);
         const settings = document.createElement(TagName.Div);
         const imageviewer = document.createElement(TagName.KulImageviewer);
-        settings.classList.add(imageEditorFactory.cssClasses.settings);
+        settings.classList.add(ImageEditorCSS.Settings);
         settings.slot = 'settings';
-        imageviewer.classList.add(imageEditorFactory.cssClasses.imageviewer);
+        imageviewer.classList.add(ImageEditorCSS.Widget);
         imageviewer.kulLoadCallback = async (_, value) => await options.refresh(value);
         imageviewer.kulValue = TREE_DATA;
         imageviewer.addEventListener(KulEventName.KulImageviewer, imageviewerEventHandler.bind(imageviewerEventHandler, settings, node));
@@ -73,14 +62,12 @@ export const imageEditorFactory = {
                 const actions = document.createElement(TagName.Div);
                 const interrupt = document.createElement(TagName.KulButton);
                 const resume = document.createElement(TagName.KulButton);
-                interrupt.classList.add(imageEditorFactory.cssClasses.resume);
                 interrupt.classList.add('kul-full-width');
                 interrupt.classList.add('kul-danger');
                 interrupt.kulIcon = ImageEditorIcons.Interrupt;
                 interrupt.kulLabel = 'Interrupt workflow';
                 interrupt.kulStyling = 'flat';
                 interrupt.title = 'Click to interrupt the workflow.';
-                resume.classList.add(imageEditorFactory.cssClasses.resume);
                 resume.classList.add('kul-full-width');
                 resume.classList.add('kul-success');
                 resume.kulIcon = ImageEditorIcons.Resume;
@@ -88,24 +75,24 @@ export const imageEditorFactory = {
                 resume.kulStyling = 'flat';
                 resume.title =
                     'Click to resume the workflow. Remember to save your snapshots after editing the images!';
-                actions.classList.add(imageEditorFactory.cssClasses.actions);
+                actions.classList.add(ImageEditorCSS.Actions);
                 actions.appendChild(interrupt);
                 actions.appendChild(resume);
                 actions.addEventListener(KulEventName.KulButton, buttonEventHandler.bind(buttonEventHandler, imageviewer, actionButtons, grid));
-                grid.classList.add(imageEditorFactory.cssClasses.gridIsInactive);
-                grid.classList.add(imageEditorFactory.cssClasses.gridHasActions);
+                grid.classList.add(ImageEditorCSS.GridIsInactive);
+                grid.classList.add(ImageEditorCSS.GridHasActions);
                 grid.appendChild(actions);
                 actionButtons.interrupt = interrupt;
                 actionButtons.resume = resume;
                 setGridStatus(ImageEditorStatus.Completed, grid, actionButtons);
         }
-        grid.classList.add(imageEditorFactory.cssClasses.grid);
+        grid.classList.add(ImageEditorCSS.Grid);
         grid.appendChild(imageviewer);
-        content.classList.add(imageEditorFactory.cssClasses.content);
+        content.classList.add(ImageEditorCSS.Content);
         content.appendChild(grid);
         wrapper.appendChild(content);
         const options = imageEditorFactory.options(imageviewer, actionButtons, grid);
-        return { widget: createDOMWidget(TYPE, wrapper, node, options) };
+        return { widget: createDOMWidget(CustomWidgetName.imageEditor, wrapper, node, options) };
     },
 };
 //#endregion

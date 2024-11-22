@@ -15,3 +15,7 @@ export type CompareSetter = () => {
     [CustomWidgetName.compare]: BaseWidgetCallback<CustomWidgetName.compare>;
 };
 export type CompareValueDeserializedValue = KulDataDataset;
+export declare enum CompareCSS {
+    Content = "lf-compare",
+    Widget = "lf-compare__widget"
+}

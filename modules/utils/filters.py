@@ -6,13 +6,48 @@ from PIL import Image, ImageFilter
 
 from ..utils.helpers import hex_to_tuple, numpy_to_tensor, pil_to_tensor, tensor_to_numpy, tensor_to_pil
 
+# region brightness_effect
+def brightness_effect(image: torch.Tensor, brightness_strength: float, gamma: float, midpoint: float, localized_brightness: bool) -> torch.Tensor:
+    """
+    Adjusts the brightness of the input image tensor with gamma correction and optional localized enhancement.
+
+    Args:
+        image (torch.Tensor): Input image tensor with shape (1, H, W, C).
+        brightness_strength (float): Brightness adjustment factor (-1 to 1).
+        gamma (float): Gamma correction factor.
+        midpoint (float): Tonal midpoint for brightness scaling.
+        localized_brightness (bool): Whether to enhance brightness locally in darker regions.
+
+    Returns:
+        torch.Tensor: Adjusted image tensor with shape (1, H, W, C).
+    """
+    validate_image(image, expected_shape=(3,))
+
+    image_np = tensor_to_numpy(image, True) / 255.0
+
+    adjusted_image = midpoint + (image_np - midpoint) + brightness_strength
+
+    adjusted_image = np.power(adjusted_image, gamma)
+
+    if localized_brightness:
+        gray = cv2.cvtColor((image_np * 255).astype(np.uint8), cv2.COLOR_RGB2GRAY)
+        darkness_map = 1 - (gray / 255.0)
+        adjusted_image += darkness_map[:, :, np.newaxis] * 0.1
+        adjusted_image = np.clip(adjusted_image, 0, 1)
+
+    adjusted_image = np.clip(adjusted_image, 0, 1)
+
+    final_tensor = torch.tensor(adjusted_image, dtype=image.dtype, device=image.device)
+
+    return final_tensor
+# endregion
 # region clarity_effect
-def clarity_effect(image_tensor: torch.Tensor, clarity_strength: float, sharpen_amount: float, blur_kernel_size: int) -> torch.Tensor:
+def clarity_effect(image: torch.Tensor, clarity_strength: float, sharpen_amount: float, blur_kernel_size: int) -> torch.Tensor:
     """
     Processes a single image tensor by applying clarity and sharpen effects.
 
     Args:
-        image_tensor (torch.Tensor): The input image tensor.
+        image (torch.Tensor): The input image tensor.
         clarity_strength (float): The clarity effect strength.
         sharpen_amount (float): The sharpening amount.
         blur_kernel_size (int): The kernel size for blurring.
@@ -20,7 +55,7 @@ def clarity_effect(image_tensor: torch.Tensor, clarity_strength: float, sharpen_
     Returns:
         torch.Tensor: The processed image tensor.
     """
-    image_np = tensor_to_numpy(image_tensor, True)
+    image_np = tensor_to_numpy(image, True)
 
     l_channel, a_channel, b_channel = split_channels(image_np, color_space="LAB")
 
@@ -53,17 +88,14 @@ def contrast_effect(image: torch.Tensor, contrast_strength: float, midpoint: flo
     validate_image(image, expected_shape=(3,))
 
     image_np = tensor_to_numpy(image, True) / 255.0
-    print(f"NumPy conversion successful. Min: {image_np.min()}, Max: {image_np.max()}, Mean: {image_np.mean()}")
 
     scale_factor = 1 + contrast_strength
     adjusted_image = midpoint + scale_factor * (image_np - midpoint)
 
     adjusted_image = np.clip(adjusted_image, 0, 1)
-    print(f"Global contrast adjustment successful. Min: {adjusted_image.min()}, Max: {adjusted_image.max()}, Mean: {adjusted_image.mean()}")
 
     if localized_contrast:
         gray = cv2.cvtColor((image_np * 255).astype(np.uint8), cv2.COLOR_RGB2GRAY)
-        print(f"Grayscale conversion successful. Shape: {gray.shape}")
         edges = detect_edges(gray, method='sobel')
 
         edges_3ch = np.repeat(edges[:, :, np.newaxis], 3, axis=2) / 255.0
@@ -71,10 +103,8 @@ def contrast_effect(image: torch.Tensor, contrast_strength: float, midpoint: flo
 
         adjusted_image += edges_3ch * edge_contrast_factor
         adjusted_image = np.clip(adjusted_image, 0, 1)
-        print(f"Localized contrast adjustment successful. Min: {adjusted_image.min()}, Max: {adjusted_image.max()}, Mean: {adjusted_image.mean()}")
 
     final_tensor = torch.tensor(adjusted_image, dtype=image.dtype, device=image.device)
-    print(f"Final tensor conversion successful. Min: {final_tensor.min()}, Max: {final_tensor.max()}, Mean: {final_tensor.mean()}")
     return final_tensor
 # endregion
 # region desaturate_effect
@@ -101,13 +131,34 @@ def desaturate_effect(image: torch.Tensor, global_level: float, channel_levels: 
 
     return torch.stack([desaturated_r, desaturated_g, desaturated_b], dim=-1)
 # endregion
+# region gaussian_blur_effect
+def gaussian_blur_effect(image: torch.Tensor, blur_kernel_size: int, blur_sigma: float) -> torch.Tensor:
+    """
+    Applies Gaussian Blur to an image tensor.
+
+    Args:
+        image (torch.Tensor): The input image tensor.
+        blur_kernel_size (int): Kernel size for the Gaussian blur (must be odd).
+        blur_sigma (float): Standard deviation of the Gaussian kernel.
+
+    Returns:
+        torch.Tensor: The blurred image tensor.
+    """
+    validate_image(image, expected_shape=(3,))
+
+    image_np = tensor_to_numpy(image, True)
+
+    blurred_image = apply_gaussian_blur(image_np, kernel_size=blur_kernel_size, sigma=blur_sigma)
+
+    return numpy_to_tensor(blurred_image)
+# endregion
 # region vignette_effect
-def vignette_effect(image_tensor: torch.Tensor, intensity: float, radius: float, shape: str, color: str = '000000') -> torch.Tensor:
+def vignette_effect(image: torch.Tensor, intensity: float, radius: float, shape: str, color: str = '000000') -> torch.Tensor:
     """
     Apply a vignette effect to an image tensor with a specified color.
 
     Args:
-        image_tensor (torch.Tensor): Input image tensor.
+        image (torch.Tensor): Input image tensor.
         intensity (float): Intensity of the vignette effect (0 to 1).
         radius (float): Size of the vignette effect (0 to 1). Lower values create a smaller vignette.
         shape (str): Shape of the vignette, either 'elliptical' or 'circular'.
@@ -116,7 +167,7 @@ def vignette_effect(image_tensor: torch.Tensor, intensity: float, radius: float,
     Returns:
         torch.Tensor: Image tensor with the vignette effect applied.
     """
-    pil_image = tensor_to_pil(image_tensor).convert('RGB')
+    pil_image = tensor_to_pil(image).convert('RGB')
     width, height = pil_image.size
 
     color = hex_to_tuple(color)
