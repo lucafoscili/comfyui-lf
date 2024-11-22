@@ -1014,6 +1014,40 @@ def prepare_model_dataset (model_name, model_hash, model_base64, model_path):
 
     return dataset
 # endregion
+# region process_and_save_image
+def process_and_save_image(
+    images: list[torch.Tensor],
+    filter_function: callable,
+    filter_args: dict,
+    filename_prefix: str,
+    nodes: list[dict],
+):
+    processed_images = []
+    
+    for index, img in enumerate(images):
+        pil_image = tensor_to_pil(img)
+        output_file_s, subfolder_s, filename_s = resolve_filepath(
+            filename_prefix=f"{filename_prefix}_s",
+            image=img,
+        )
+        pil_image.save(output_file_s, format="PNG")
+        filename_s = get_resource_url(subfolder_s, filename_s, "temp")
+
+        processed = filter_function(img, **filter_args)
+
+        pil_image = tensor_to_pil(processed)
+        output_file_t, subfolder_t, filename_t = resolve_filepath(
+            filename_prefix=f"{filename_prefix}_t",
+            image=processed,
+        )
+        pil_image.save(output_file_t, format="PNG")
+        filename_t = get_resource_url(subfolder_t, filename_t, "temp")
+
+        nodes.append(create_compare_node(filename_s, filename_t, index))
+        processed_images.append(processed)
+
+    return processed_images
+# endregion
 # region process_model
 def process_model(model_type, model_name, folder):
     """

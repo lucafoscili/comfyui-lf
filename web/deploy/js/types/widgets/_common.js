@@ -59,6 +59,7 @@ export var NodeName;
     NodeName["embeddingSelector"] = "LF_EmbeddingSelector";
     NodeName["extractString"] = "LF_ExtractString";
     NodeName["extractPromptFromLoraTag"] = "LF_ExtractPromptFromLoraTag";
+    NodeName["gaussianBlur"] = "LF_GaussianBlur";
     NodeName["getValueFromJson"] = "LF_GetValueFromJSON";
     NodeName["getRandomKeyFromJson"] = "LF_GetRandomKeyFromJSON";
     NodeName["imageClassifier"] = "LF_ImageClassifier";

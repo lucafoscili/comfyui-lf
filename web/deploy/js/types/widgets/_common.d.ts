@@ -74,6 +74,7 @@ export declare enum NodeName {
     embeddingSelector = "LF_EmbeddingSelector",
     extractString = "LF_ExtractString",
     extractPromptFromLoraTag = "LF_ExtractPromptFromLoraTag",
+    gaussianBlur = "LF_GaussianBlur",
     getValueFromJson = "LF_GetValueFromJSON",
     getRandomKeyFromJson = "LF_GetRandomKeyFromJSON",
     imageClassifier = "LF_ImageClassifier",

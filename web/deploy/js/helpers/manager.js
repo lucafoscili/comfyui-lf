@@ -26,6 +26,7 @@ export const NODE_WIDGET_MAP = {
     LF_ExtractString: [CustomWidgetName.code],
     LF_ExtractPromptFromLoraTag: [CustomWidgetName.code],
     LF_Float: [CustomWidgetName.history],
+    LF_GaussianBlur: [CustomWidgetName.compare],
     LF_GetRandomKeyFromJSON: [CustomWidgetName.code],
     LF_GetValueFromJSON: [CustomWidgetName.code],
     LF_ImageClassifier: [CustomWidgetName.code],
