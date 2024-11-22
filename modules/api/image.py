@@ -9,7 +9,7 @@ from PIL import Image
 from server import PromptServer
 
 from ..utils.constants import API_ROUTE_PREFIX
-from ..utils.filters import clarity_effect, contrast_effect, desaturate_effect, vignette_effect
+from ..utils.filters import brightness_effect, clarity_effect, contrast_effect, desaturate_effect, vignette_effect
 from ..utils.helpers import create_masonry_node, get_comfy_dir, get_resource_url, pil_to_tensor, resolve_filepath, resolve_url, tensor_to_pil
 
 # region get-image
@@ -66,7 +66,9 @@ async def process_image(request):
         
         img_tensor = load_image_tensor(images_dir)
 
-        if filter_type == "clarity":
+        if filter_type == "brightness":
+            processed_tensor = apply_brightness_effect(img_tensor, settings)
+        elif filter_type == "clarity":
             processed_tensor = apply_clarity_effect(img_tensor, settings)
         elif filter_type == "contrast":
             processed_tensor = apply_contrast_effect(img_tensor, settings)
@@ -91,6 +93,14 @@ async def process_image(request):
 # endregion
 
 # region helpers
+def apply_brightness_effect(img_tensor: torch.Tensor, settings: dict):
+    brightness_strength: float = float(settings.get("brightness_strength", 0))
+    gamma: float = float(settings.get("gamma", 0))
+    midpoint: float = float(settings.get("midpoint", 0))
+    localized_brightness: bool = bool(settings.get("localized_brightness", False))
+
+    return brightness_effect(img_tensor, brightness_strength, gamma, midpoint, localized_brightness)
+
 def apply_clarity_effect(img_tensor: torch.Tensor, settings: dict):
     clarity_strength: float = float(settings.get("clarity_strength", 0))
     sharpen_amount: float = float(settings.get("sharpen_amount", 0))
@@ -101,7 +111,7 @@ def apply_clarity_effect(img_tensor: torch.Tensor, settings: dict):
 def apply_contrast_effect(img_tensor: torch.Tensor, settings: dict):
     contrast_strength: float = float(settings.get("contrast_strength", 0))
     midpoint: float = float(settings.get("midpoint", 0))
-    localized_contrast: bool = bool(settings.get("localized_contrast", 0))
+    localized_contrast: bool = bool(settings.get("localized_contrast", False))
 
     return contrast_effect(img_tensor, contrast_strength, midpoint, localized_contrast)
 

@@ -27,17 +27,19 @@ export var ImageEditorControls;
 })(ImageEditorControls || (ImageEditorControls = {}));
 export var ImageEditorSliderIds;
 (function (ImageEditorSliderIds) {
+    ImageEditorSliderIds["BlueChannel"] = "b_channel";
     ImageEditorSliderIds["BlurKernelSize"] = "blur_kernel_size";
+    ImageEditorSliderIds["BrightnessStrength"] = "brightness_strength";
     ImageEditorSliderIds["ClarityStrength"] = "clarity_strength";
     ImageEditorSliderIds["ContrastStrength"] = "contrast_strength";
-    ImageEditorSliderIds["Midpoint"] = "midpoint";
-    ImageEditorSliderIds["SharpenAmount"] = "sharpen_amount";
+    ImageEditorSliderIds["DesaturationStrength"] = "desaturation_strength";
+    ImageEditorSliderIds["Gamma"] = "gamma";
+    ImageEditorSliderIds["GreenChannel"] = "g_channel";
     ImageEditorSliderIds["Intensity"] = "intensity";
+    ImageEditorSliderIds["Midpoint"] = "midpoint";
     ImageEditorSliderIds["Radius"] = "radius";
     ImageEditorSliderIds["RedChannel"] = "r_channel";
-    ImageEditorSliderIds["GreenChannel"] = "g_channel";
-    ImageEditorSliderIds["BlueChannel"] = "b_channel";
-    ImageEditorSliderIds["DesaturationStrength"] = "desaturation_strength";
+    ImageEditorSliderIds["SharpenAmount"] = "sharpen_amount";
 })(ImageEditorSliderIds || (ImageEditorSliderIds = {}));
 export var ImageEditorTextfieldIds;
 (function (ImageEditorTextfieldIds) {
@@ -45,9 +47,17 @@ export var ImageEditorTextfieldIds;
 })(ImageEditorTextfieldIds || (ImageEditorTextfieldIds = {}));
 export var ImageEditorToggleIds;
 (function (ImageEditorToggleIds) {
+    ImageEditorToggleIds["LocalizedBrightness"] = "localized_brightness";
     ImageEditorToggleIds["LocalizedContrast"] = "localized_contrast";
     ImageEditorToggleIds["Shape"] = "shape";
 })(ImageEditorToggleIds || (ImageEditorToggleIds = {}));
+export var ImageEditorBrightnessIds;
+(function (ImageEditorBrightnessIds) {
+    ImageEditorBrightnessIds["BrightnessStrength"] = "brightness_strength";
+    ImageEditorBrightnessIds["Gamma"] = "gamma";
+    ImageEditorBrightnessIds["Midpoint"] = "midpoint";
+    ImageEditorBrightnessIds["LocalizedBrightness"] = "localized_brightness";
+})(ImageEditorBrightnessIds || (ImageEditorBrightnessIds = {}));
 export var ImageEditorClarityIds;
 (function (ImageEditorClarityIds) {
     ImageEditorClarityIds["BlurKernelSize"] = "blur_kernel_size";

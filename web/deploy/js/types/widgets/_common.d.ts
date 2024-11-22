@@ -53,6 +53,7 @@ export declare enum CustomWidgetName {
 export declare enum NodeName {
     blurImages = "LF_BlurImages",
     boolean = "LF_Boolean",
+    brightness = "LF_Brightness",
     characterImpersonator = "LF_CharacterImpersonator",
     checkpointSelector = "LF_CheckpointSelector",
     civitaiMetadataSetup = "LF_CivitAIMetadataSetup",

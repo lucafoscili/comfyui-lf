@@ -6,6 +6,41 @@ from PIL import Image, ImageFilter
 
 from ..utils.helpers import hex_to_tuple, numpy_to_tensor, pil_to_tensor, tensor_to_numpy, tensor_to_pil
 
+# region brightness_effect
+def brightness_effect(image: torch.Tensor, brightness_strength: float, gamma: float, midpoint: float, localized_brightness: bool) -> torch.Tensor:
+    """
+    Adjusts the brightness of the input image tensor with gamma correction and optional localized enhancement.
+
+    Args:
+        image (torch.Tensor): Input image tensor with shape (1, H, W, C).
+        brightness_strength (float): Brightness adjustment factor (-1 to 1).
+        gamma (float): Gamma correction factor.
+        midpoint (float): Tonal midpoint for brightness scaling.
+        localized_brightness (bool): Whether to enhance brightness locally in darker regions.
+
+    Returns:
+        torch.Tensor: Adjusted image tensor with shape (1, H, W, C).
+    """
+    validate_image(image, expected_shape=(3,))
+
+    image_np = tensor_to_numpy(image, True) / 255.0
+
+    adjusted_image = midpoint + (image_np - midpoint) + brightness_strength
+
+    adjusted_image = np.power(adjusted_image, gamma)
+
+    if localized_brightness:
+        gray = cv2.cvtColor((image_np * 255).astype(np.uint8), cv2.COLOR_RGB2GRAY)
+        darkness_map = 1 - (gray / 255.0)
+        adjusted_image += darkness_map[:, :, np.newaxis] * 0.1
+        adjusted_image = np.clip(adjusted_image, 0, 1)
+
+    adjusted_image = np.clip(adjusted_image, 0, 1)
+
+    final_tensor = torch.tensor(adjusted_image, dtype=image.dtype, device=image.device)
+
+    return final_tensor
+# endregion
 # region clarity_effect
 def clarity_effect(image_tensor: torch.Tensor, clarity_strength: float, sharpen_amount: float, blur_kernel_size: int) -> torch.Tensor:
     """
@@ -53,17 +88,14 @@ def contrast_effect(image: torch.Tensor, contrast_strength: float, midpoint: flo
     validate_image(image, expected_shape=(3,))
 
     image_np = tensor_to_numpy(image, True) / 255.0
-    print(f"NumPy conversion successful. Min: {image_np.min()}, Max: {image_np.max()}, Mean: {image_np.mean()}")
 
     scale_factor = 1 + contrast_strength
     adjusted_image = midpoint + scale_factor * (image_np - midpoint)
 
     adjusted_image = np.clip(adjusted_image, 0, 1)
-    print(f"Global contrast adjustment successful. Min: {adjusted_image.min()}, Max: {adjusted_image.max()}, Mean: {adjusted_image.mean()}")
 
     if localized_contrast:
         gray = cv2.cvtColor((image_np * 255).astype(np.uint8), cv2.COLOR_RGB2GRAY)
-        print(f"Grayscale conversion successful. Shape: {gray.shape}")
         edges = detect_edges(gray, method='sobel')
 
         edges_3ch = np.repeat(edges[:, :, np.newaxis], 3, axis=2) / 255.0
@@ -71,10 +103,8 @@ def contrast_effect(image: torch.Tensor, contrast_strength: float, midpoint: flo
 
         adjusted_image += edges_3ch * edge_contrast_factor
         adjusted_image = np.clip(adjusted_image, 0, 1)
-        print(f"Localized contrast adjustment successful. Min: {adjusted_image.min()}, Max: {adjusted_image.max()}, Mean: {adjusted_image.mean()}")
 
     final_tensor = torch.tensor(adjusted_image, dtype=image.dtype, device=image.device)
-    print(f"Final tensor conversion successful. Min: {final_tensor.min()}, Max: {final_tensor.max()}, Mean: {final_tensor.mean()}")
     return final_tensor
 # endregion
 # region desaturate_effect

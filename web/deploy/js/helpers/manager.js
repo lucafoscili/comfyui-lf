@@ -6,6 +6,7 @@ import { messengerFactory } from '../widgets/messenger.js';
 export const NODE_WIDGET_MAP = {
     LF_BlurImages: [CustomWidgetName.masonry],
     LF_Boolean: [CustomWidgetName.history],
+    LF_Brightness: [CustomWidgetName.compare],
     LF_CharacterImpersonator: [CustomWidgetName.code],
     LF_CheckpointSelector: [CustomWidgetName.card],
     LF_CivitAIMetadataSetup: [CustomWidgetName.code],

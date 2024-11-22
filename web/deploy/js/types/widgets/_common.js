@@ -38,6 +38,7 @@ export var NodeName;
 (function (NodeName) {
     NodeName["blurImages"] = "LF_BlurImages";
     NodeName["boolean"] = "LF_Boolean";
+    NodeName["brightness"] = "LF_Brightness";
     NodeName["characterImpersonator"] = "LF_CharacterImpersonator";
     NodeName["checkpointSelector"] = "LF_CheckpointSelector";
     NodeName["civitaiMetadataSetup"] = "LF_CivitAIMetadataSetup";
