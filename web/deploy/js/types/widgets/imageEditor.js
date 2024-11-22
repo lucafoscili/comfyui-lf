@@ -40,6 +40,7 @@ export var ImageEditorSliderIds;
 (function (ImageEditorSliderIds) {
     ImageEditorSliderIds["BlueChannel"] = "b_channel";
     ImageEditorSliderIds["BlurKernelSize"] = "blur_kernel_size";
+    ImageEditorSliderIds["BlurSigma"] = "blur_sigma";
     ImageEditorSliderIds["BrightnessStrength"] = "brightness_strength";
     ImageEditorSliderIds["ClarityStrength"] = "clarity_strength";
     ImageEditorSliderIds["ContrastStrength"] = "contrast_strength";
@@ -88,6 +89,11 @@ export var ImageEditorDesaturateIds;
     ImageEditorDesaturateIds["BlueChannel"] = "b_channel";
     ImageEditorDesaturateIds["DesaturationStrength"] = "desaturation_strength";
 })(ImageEditorDesaturateIds || (ImageEditorDesaturateIds = {}));
+export var ImageEditorGaussianBlurIds;
+(function (ImageEditorGaussianBlurIds) {
+    ImageEditorGaussianBlurIds["BlurKernelSize"] = "blur_kernel_size";
+    ImageEditorGaussianBlurIds["BlurSigma"] = "blur_sigma";
+})(ImageEditorGaussianBlurIds || (ImageEditorGaussianBlurIds = {}));
 export var ImageEditorVignetteIds;
 (function (ImageEditorVignetteIds) {
     ImageEditorVignetteIds["Color"] = "color";

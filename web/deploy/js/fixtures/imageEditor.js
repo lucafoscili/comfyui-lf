@@ -1,4 +1,4 @@
-import { ImageEditorBrightnessIds, ImageEditorClarityIds, ImageEditorContrastIds, ImageEditorControls, ImageEditorDesaturateIds, ImageEditorSliderIds, ImageEditorTextfieldIds, ImageEditorToggleIds, ImageEditorVignetteIds, } from '../types/widgets/imageEditor.js';
+import { ImageEditorBrightnessIds, ImageEditorClarityIds, ImageEditorContrastIds, ImageEditorControls, ImageEditorDesaturateIds, ImageEditorGaussianBlurIds, ImageEditorSliderIds, ImageEditorTextfieldIds, ImageEditorToggleIds, ImageEditorVignetteIds, } from '../types/widgets/imageEditor.js';
 const SETTINGS = {
     //#region Brightness
     brightness: {
@@ -91,7 +91,7 @@ const SETTINGS = {
                 {
                     ariaLabel: 'Blur Kernel Size',
                     controlType: ImageEditorControls.Slider,
-                    defaultValue: 1,
+                    defaultValue: 7,
                     id: ImageEditorSliderIds.BlurKernelSize,
                     max: '15',
                     min: '1',
@@ -199,6 +199,39 @@ const SETTINGS = {
                     min: '0',
                     step: '0.05',
                     title: 'Controls the intensity of the blue channel desaturation relative to the total strength of the filter.',
+                },
+            ],
+        },
+    },
+    //#endregion
+    //#region Gaussian blur
+    gaussianBlur: {
+        controlIds: ImageEditorGaussianBlurIds,
+        settings: {
+            blur_kernel_size: 1,
+            blur_sigma: 0,
+        },
+        configs: {
+            [ImageEditorControls.Slider]: [
+                {
+                    ariaLabel: 'Blur Sigma',
+                    controlType: ImageEditorControls.Slider,
+                    defaultValue: 0,
+                    id: ImageEditorSliderIds.BlurSigma,
+                    max: '10',
+                    min: '0.1',
+                    step: '0.1',
+                    title: 'Standard deviation for the Gaussian kernel. Controls blur intensity.',
+                },
+                {
+                    ariaLabel: 'Blur Kernel Size',
+                    controlType: ImageEditorControls.Slider,
+                    defaultValue: 7,
+                    id: ImageEditorSliderIds.BlurKernelSize,
+                    max: '51',
+                    min: '1',
+                    step: '2',
+                    title: 'Controls the size of the Gaussian blur kernel. Higher values mean more smoothing.',
                 },
             ],
         },
@@ -326,11 +359,24 @@ export const TREE_DATA = {
             ],
         },
         {
-            description: 'Artistic filters, such as vignette effect.',
+            description: 'Artistic filters, such as vignette effect and gaussian blur.',
             id: 'creative_effects',
             icon: 'palette',
             value: 'Creative Effects',
             children: [
+                //#region Gaussian blur
+                {
+                    description: 'Blurs the image.',
+                    cells: {
+                        kulCode: {
+                            shape: 'code',
+                            value: JSON.stringify(SETTINGS.gaussianBlur),
+                        },
+                    },
+                    id: 'gaussian_blur',
+                    value: 'Gaussian blur',
+                },
+                //#endregion
                 //#region Vignette
                 {
                     cells: {

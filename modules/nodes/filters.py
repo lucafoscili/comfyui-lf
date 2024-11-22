@@ -340,7 +340,7 @@ class LF_GaussianBlur:
                     "min": 1, 
                     "max": 51, 
                     "step": 2, 
-                    "tooltip": "Size of the Gaussian blur kernel. Must be odd."
+                    "tooltip": "Controls the size of the Gaussian blur kernel. Higher values mean more smoothing."
                 }),
                 "blur_sigma": (Input.FLOAT, {
                     "default": 1.0, 

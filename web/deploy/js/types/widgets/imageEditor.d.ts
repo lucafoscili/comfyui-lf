@@ -53,6 +53,7 @@ export declare enum ImageEditorControls {
 export declare enum ImageEditorSliderIds {
     BlueChannel = "b_channel",
     BlurKernelSize = "blur_kernel_size",
+    BlurSigma = "blur_sigma",
     BrightnessStrength = "brightness_strength",
     ClarityStrength = "clarity_strength",
     ContrastStrength = "contrast_strength",
@@ -106,17 +107,19 @@ export type ImageEditorSettingsFor = Partial<{
     [ImageEditorControls.Textfield]: ImageEditorTextfieldConfig[];
     [ImageEditorControls.Toggle]: ImageEditorToggleConfig[];
 }>;
+export interface ImageEditorFilterSettingsMap {
+    brightness: ImageEditorBrightnessSettings;
+    clarity: ImageEditorClaritySettings;
+    contrast: ImageEditorContrastSettings;
+    desaturate: ImageEditorDesaturateSettings;
+    gaussianBlur: ImageEditorGaussianBlurSettings;
+    vignette: ImageEditorVignetteSettings;
+}
 export interface ImageEditorBrightnessSettings extends ImageEditorFilterSettings {
     brightness_strength: number;
     gamma: number;
     localized_brightness: boolean;
     midpoint: number;
-}
-export interface ImageEditorFilterSettingsMap {
-    clarity: ImageEditorClaritySettings;
-    contrast: ImageEditorContrastSettings;
-    desaturate: ImageEditorDesaturateSettings;
-    vignette: ImageEditorVignetteSettings;
 }
 export interface ImageEditorClaritySettings extends ImageEditorFilterSettings {
     clarity_strength: number;
@@ -133,6 +136,10 @@ export interface ImageEditorDesaturateSettings extends ImageEditorFilterSettings
     g_channel: number;
     b_channel: number;
     desaturation_strength: number;
+}
+export interface ImageEditorGaussianBlurSettings extends ImageEditorFilterSettings {
+    blur_sigma: number;
+    blur_kernel_size: number;
 }
 export interface ImageEditorVignetteSettings extends ImageEditorFilterSettings {
     intensity: number;
@@ -160,6 +167,10 @@ export declare enum ImageEditorDesaturateIds {
     GreenChannel = "g_channel",
     BlueChannel = "b_channel",
     DesaturationStrength = "desaturation_strength"
+}
+export declare enum ImageEditorGaussianBlurIds {
+    BlurKernelSize = "blur_kernel_size",
+    BlurSigma = "blur_sigma"
 }
 export declare enum ImageEditorVignetteIds {
     Color = "color",
@@ -189,6 +200,9 @@ export type ImageEditorContrastFilter = ImageEditorFilterDefinition<typeof Image
 export type ImageEditorDesaturateFilter = ImageEditorFilterDefinition<typeof ImageEditorDesaturateIds, ImageEditorDesaturateSettings, {
     [ImageEditorControls.Slider]: ImageEditorSliderConfig[];
 }>;
+export type ImageEditorGaussianBlurFilter = ImageEditorFilterDefinition<typeof ImageEditorGaussianBlurIds, ImageEditorGaussianBlurSettings, {
+    [ImageEditorControls.Slider]: ImageEditorSliderConfig[];
+}>;
 export type ImageEditorVignetteFilter = ImageEditorFilterDefinition<typeof ImageEditorVignetteIds, ImageEditorVignetteSettings, {
     [ImageEditorControls.Slider]: ImageEditorSliderConfig[];
     [ImageEditorControls.Textfield]: ImageEditorTextfieldConfig[];
@@ -199,6 +213,7 @@ export type ImageEditorFilters = {
     clarity: ImageEditorClarityFilter;
     contrast: ImageEditorContrastFilter;
     desaturate: ImageEditorDesaturateFilter;
+    gaussianBlur: ImageEditorGaussianBlurFilter;
     vignette: ImageEditorVignetteFilter;
 };
 export type ImageEditorFilter = ImageEditorBrightnessFilter | ImageEditorClarityFilter | ImageEditorContrastFilter | ImageEditorDesaturateFilter | ImageEditorVignetteFilter;

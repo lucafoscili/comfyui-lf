@@ -9,7 +9,7 @@ from PIL import Image
 from server import PromptServer
 
 from ..utils.constants import API_ROUTE_PREFIX
-from ..utils.filters import brightness_effect, clarity_effect, contrast_effect, desaturate_effect, vignette_effect
+from ..utils.filters import brightness_effect, clarity_effect, contrast_effect, desaturate_effect, gaussian_blur_effect, vignette_effect
 from ..utils.helpers import create_masonry_node, get_comfy_dir, get_resource_url, pil_to_tensor, resolve_filepath, resolve_url, tensor_to_pil
 
 # region get-image
@@ -74,6 +74,8 @@ async def process_image(request):
             processed_tensor = apply_contrast_effect(img_tensor, settings)
         elif filter_type == "desaturate":
             processed_tensor = apply_desaturate_effect(img_tensor, settings)
+        elif filter_type == "gaussian_blur":
+            processed_tensor = apply_gaussian_blur_effect(img_tensor, settings)
         elif filter_type == "vignette":
             processed_tensor = apply_vignette_effect(img_tensor, settings)
         else:
@@ -122,6 +124,12 @@ def apply_desaturate_effect(img_tensor: torch.Tensor, settings: dict):
     b: float = float(settings.get("b_channel", 0))
 
     return desaturate_effect(img_tensor, desaturation_strength, [r, g, b])
+
+def apply_gaussian_blur_effect(img_tensor: torch.Tensor, settings: dict):
+    blur_sigma: float = float(settings.get("blur_sigma", 0))
+    blur_kernel_size: int = int(settings.get("blur_kernel_size", 1))
+
+    return gaussian_blur_effect(img_tensor, blur_kernel_size, blur_sigma)
 
 def apply_vignette_effect(img_tensor: torch.Tensor, settings: dict):
     intensity: float = float(settings.get("intensity", 0))
