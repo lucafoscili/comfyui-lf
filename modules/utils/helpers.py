@@ -652,7 +652,7 @@ def handle_response(response: dict, method: str = "GET"):
         return response.status_code, method, "Whoops! Something went wrong."
 # endregion
 # region hex_to_tuple
-def hex_to_tuple(color: string):
+def hex_to_tuple(color: str):
     """
     Converts a HEX color to a tuple.
     """
@@ -1382,15 +1382,17 @@ def tensor_to_bytes(tensor: torch.Tensor, format: str):
     return buffer.getvalue()
 # endregion
 # region tensor_to_numpy
-def tensor_to_numpy(image: torch.Tensor, threeD: bool = False) -> np.ndarray:
+def tensor_to_numpy(image: torch.Tensor, threeD: bool = False, dtype: type = np.uint8) -> np.ndarray:
     """
     Convert a tensor to a NumPy array for OpenCV processing.
     
     Args:
         image (torch.Tensor): 4D (1, H, W, C) or 3D (H, W, C) tensor.
         threeD (bool): If True, returns a 3D array (H, W, C).
+        dtype (type): Desired NumPy array data type. Defaults to np.uint8.
+    
     Returns:
-        np.ndarray: Converted NumPy array in uint8 format.
+        np.ndarray: Converted NumPy array in the specified data type.
     """
     if image.dim() == 4:
         if image.shape[0] != 1:
@@ -1400,7 +1402,14 @@ def tensor_to_numpy(image: torch.Tensor, threeD: bool = False) -> np.ndarray:
         raise ValueError(f"Unexpected tensor shape for conversion: {image.shape}")
 
     try:
-        numpy_array = (image.cpu().numpy() * 255).astype(np.uint8)
+        # Normalize the image and scale according to the target dtype
+        if dtype == np.uint8:
+            numpy_array = (image.cpu().numpy() * 255).astype(dtype)
+        elif dtype == np.float32 or dtype == np.float64:
+            numpy_array = image.cpu().numpy().astype(dtype)
+        else:
+            raise ValueError(f"Unsupported dtype: {dtype}")
+
         return numpy_array
     except Exception as e:
         print(f"Error converting tensor to NumPy array: {e}")

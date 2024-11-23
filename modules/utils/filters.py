@@ -41,6 +41,65 @@ def brightness_effect(image: torch.Tensor, brightness_strength: float, gamma: fl
 
     return final_tensor
 # endregion
+# region brush_effect
+def brush_effect(image: torch.Tensor, brush_position: tuple, brush_size: int, brush_color: str, opacity: float) -> torch.Tensor:
+    """
+    Applies a single brush stroke to an image tensor.
+
+    Args:
+        image (torch.Tensor): The input image tensor.
+        brush_position (tuple): Normalized (x, y) position of the brush stroke.
+        brush_size (int): Diameter of the brush stroke in pixels.
+        brush_color (str): Hex color of the brush stroke.
+        opacity (float): Opacity of the brush stroke (0.0 to 1.0).
+
+    Returns:
+        torch.Tensor: The image tensor with the applied brush stroke.
+    """
+    validate_image(image, expected_shape=(3,))
+    
+    # Convert tensor to numpy array and normalize to [0, 1]
+    image_np = tensor_to_numpy(image, True, dtype=np.float32) / 255.0
+    height, width, _ = image_np.shape
+
+    # Convert brush position to pixel coordinates
+    brush_x = int(brush_position[0] * width)
+    brush_y = int(brush_position[1] * height)
+
+    # Convert hex color to RGB tuple and normalize to [0, 1]
+    brush_rgb = tuple(c / 255.0 for c in hex_to_tuple(brush_color))
+
+    # Create brush mask with the specified color
+    brush_mask = np.zeros_like(image_np, dtype=np.float32)
+    cv2.circle(brush_mask, (brush_x, brush_y), brush_size // 2, brush_rgb, thickness=-1)
+
+    # Create binary alpha mask for the brush stroke
+    alpha_mask = np.zeros((height, width), dtype=np.float32)
+    cv2.circle(alpha_mask, (brush_x, brush_y), brush_size // 2, 1.0, thickness=-1)
+
+    # Ensure alpha_mask has 3 channels to match image_np
+    alpha_mask = np.repeat(alpha_mask[:, :, np.newaxis], 3, axis=2)
+
+    # Blend only the affected area
+    blended_region = (
+        image_np * (1 - alpha_mask * opacity) + brush_mask * alpha_mask * opacity
+    )
+
+    # Debug: Log blended region stats
+    print("Blended region min/max:", blended_region.min(), blended_region.max())
+
+    # Combine the blended region with the original image
+    final_image_np = np.where(alpha_mask > 0, blended_region, image_np)
+
+    # Rescale final image to [0, 255] for output
+    final_image_np = (final_image_np * 255).astype(np.uint8)
+
+    # Debug: Log final image stats
+    print("Final image min/max:", final_image_np.min(), final_image_np.max())
+
+    return numpy_to_tensor(final_image_np)
+
+# endregion
 # region clarity_effect
 def clarity_effect(image: torch.Tensor, clarity_strength: float, sharpen_amount: float, blur_kernel_size: int) -> torch.Tensor:
     """
