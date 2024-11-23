@@ -162,7 +162,7 @@ class LF_Brush:
             images=image,
             filter_function=brush_effect,
             filter_args={
-                'brush_position': (x, y),
+                'brush_positions': [(x, y)],
                 'brush_size': brush_size,
                 'brush_color': brush_color,
                 'opacity': opacity,
