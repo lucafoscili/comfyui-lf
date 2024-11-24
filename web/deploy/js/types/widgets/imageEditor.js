@@ -49,9 +49,11 @@ export var ImageEditorSliderIds;
     ImageEditorSliderIds["GreenChannel"] = "g_channel";
     ImageEditorSliderIds["Intensity"] = "intensity";
     ImageEditorSliderIds["Midpoint"] = "midpoint";
+    ImageEditorSliderIds["Opacity"] = "opacity";
     ImageEditorSliderIds["Radius"] = "radius";
     ImageEditorSliderIds["RedChannel"] = "r_channel";
     ImageEditorSliderIds["SharpenAmount"] = "sharpen_amount";
+    ImageEditorSliderIds["Size"] = "size";
 })(ImageEditorSliderIds || (ImageEditorSliderIds = {}));
 export var ImageEditorTextfieldIds;
 (function (ImageEditorTextfieldIds) {

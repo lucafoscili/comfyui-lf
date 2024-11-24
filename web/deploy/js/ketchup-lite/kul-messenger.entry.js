@@ -991,7 +991,7 @@ const KulMessenger = class {
         return !!this.kulData?.nodes?.length;
     }
     #initStates() {
-        if (this.#hasNodes) {
+        if (this.#hasNodes()) {
             const imageRootGetter = this.#adapter.get.image.root;
             for (let index = 0; index < this.kulData.nodes.length; index++) {
                 const character = this.kulData.nodes[index];
@@ -1020,8 +1020,8 @@ const KulMessenger = class {
         }
         if (this.kulValue) {
             const currentCharacter = this.kulValue.currentCharacter;
-            const filters = this.kulValue.ui.filters;
-            const panels = this.kulValue.ui.panels;
+            const filters = this.kulValue.ui?.filters || {};
+            const panels = this.kulValue.ui?.panels || {};
             if (currentCharacter) {
                 this.currentCharacter =
                     this.#adapter.get.character.byId(currentCharacter);

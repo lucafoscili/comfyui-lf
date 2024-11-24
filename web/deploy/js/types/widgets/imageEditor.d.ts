@@ -62,9 +62,11 @@ export declare enum ImageEditorSliderIds {
     GreenChannel = "g_channel",
     Intensity = "intensity",
     Midpoint = "midpoint",
+    Opacity = "opacity",
     Radius = "radius",
     RedChannel = "r_channel",
-    SharpenAmount = "sharpen_amount"
+    SharpenAmount = "sharpen_amount",
+    Size = "size"
 }
 export declare enum ImageEditorTextfieldIds {
     Color = "color"
@@ -109,6 +111,7 @@ export type ImageEditorSettingsFor = Partial<{
 }>;
 export interface ImageEditorFilterSettingsMap {
     brightness: ImageEditorBrightnessSettings;
+    brush: ImageEditorClaritySettings;
     clarity: ImageEditorClaritySettings;
     contrast: ImageEditorContrastSettings;
     desaturate: ImageEditorDesaturateSettings;

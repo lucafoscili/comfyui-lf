@@ -77,7 +77,8 @@ export class LFManager {
                     widgets.includes(CustomWidgetName.tabBarChart)) {
                     callbacks.push(onDrawBackground);
                 }
-                if (widgets.includes(CustomWidgetName.chip)) {
+                if (widgets.includes(CustomWidgetName.chip) ||
+                    widgets.includes(CustomWidgetName.messenger)) {
                     callbacks.push(onConnectionsChange);
                 }
                 callbacks.push(onNodeCreated);

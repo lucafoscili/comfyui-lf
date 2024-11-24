@@ -3,7 +3,7 @@ import torch
 from server import PromptServer
 
 from ..utils.constants import CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, Input
-from ..utils.filters import brightness_effect, clarity_effect, contrast_effect, desaturate_effect, gaussian_blur_effect, vignette_effect
+from ..utils.filters import brightness_effect, brush_effect, clarity_effect, contrast_effect, desaturate_effect, gaussian_blur_effect, vignette_effect
 from ..utils.helpers import normalize_input_image, normalize_list_to_value, normalize_output_image, process_and_save_image
 
 CATEGORY = f"{CATEGORY_PREFIX}/Filters"
@@ -85,6 +85,95 @@ class LF_Brightness:
         batch_list, image_list = normalize_output_image(processed_images)
 
         PromptServer.instance.send_sync(f"{EVENT_PREFIX}brightness", {
+            "node": kwargs.get("node_id"),
+            "dataset": dataset,
+        })
+
+        return (batch_list[0], image_list)
+# endregion
+# region LF_Brush
+class LF_Brush:
+    @classmethod
+    def INPUT_TYPES(self):
+        return {
+            "required": {
+                "image": (Input.IMAGE, {
+                    "tooltip": "Input image tensor to paint on."
+                }),
+                "x": (Input.FLOAT, {
+                    "default": 0.5, 
+                    "min": 0, 
+                    "max": 1, 
+                    "tooltip": "X position of the brush stroke, with values between 0 and 1."
+                }),
+                "y": (Input.FLOAT, {
+                    "default": 0.5, 
+                    "min": 0, 
+                    "max": 1, 
+                    "tooltip": "Y position of the brush stroke, with values between 0 and 1."
+                }),
+                "brush_size": (Input.INTEGER, {
+                    "default": 10, 
+                    "min": 1, 
+                    "max": 100, 
+                    "step": 1, 
+                    "tooltip": "Diameter of the brush stroke in pixels."
+                }),
+                "brush_color": (Input.STRING, {
+                    "default": "FFFFFF", 
+                    "tooltip": "Hex color of the brush stroke."
+                }),
+                "opacity": (Input.FLOAT, {
+                    "default": 1.0, 
+                    "min": 0.0, 
+                    "max": 1.0, 
+                    "step": 0.01, 
+                    "tooltip": "Opacity of the brush stroke."
+                }),
+            },
+            "optional": {
+                "ui_widget": (Input.KUL_COMPARE, {
+                    "default": {}
+                })
+            },
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
+        }
+
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    OUTPUT_IS_LIST = (False, True)
+    RETURN_NAMES = ("image", "image_list")
+    RETURN_TYPES = ("IMAGE", "IMAGE")
+
+    def on_exec(self, **kwargs: dict):
+        image: list[torch.Tensor] = normalize_input_image(kwargs.get("image"))
+        x: float = normalize_list_to_value(kwargs.get("x"))
+        y: float = normalize_list_to_value(kwargs.get("y"))
+        brush_size: int = normalize_list_to_value(kwargs.get("brush_size"))
+        brush_color: str = normalize_list_to_value(kwargs.get("brush_color"))
+        opacity: float = normalize_list_to_value(kwargs.get("opacity"))
+
+        nodes: list[dict] = []
+        dataset: dict = {"nodes": nodes}
+
+        processed_images = process_and_save_image(
+            images=image,
+            filter_function=brush_effect,
+            filter_args={
+                'brush_positions': [(x, y)],
+                'brush_size': brush_size,
+                'brush_color': brush_color,
+                'opacity': opacity,
+            },
+            filename_prefix="brush",
+            nodes=nodes,
+        )
+
+        batch_list, image_list = normalize_output_image(processed_images)
+
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}brush", {
             "node": kwargs.get("node_id"),
             "dataset": dataset,
         })
@@ -476,6 +565,7 @@ class LF_Vignette:
 # endregion
 NODE_CLASS_MAPPINGS = {
     "LF_Brightness": LF_Brightness,
+    "LF_Brush": LF_Brush,
     "LF_Clarity": LF_Clarity,
     "LF_Contrast": LF_Contrast,
     "LF_Desaturation": LF_Desaturation,
@@ -484,6 +574,7 @@ NODE_CLASS_MAPPINGS = {
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_Brightness": "Brightness",
+    "LF_Brush": "Brush",
     "LF_Clarity": "Clarity",
     "LF_Contrast": "Contrast",
     "LF_Desaturation": "Desaturation",

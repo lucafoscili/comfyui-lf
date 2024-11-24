@@ -41,6 +41,61 @@ def brightness_effect(image: torch.Tensor, brightness_strength: float, gamma: fl
 
     return final_tensor
 # endregion
+# region brush_effect
+def brush_effect(
+    image: torch.Tensor,
+    brush_positions: list[tuple],
+    brush_size: int,
+    brush_color: str,
+    opacity: float
+) -> torch.Tensor:
+    """
+    Applies multiple brush strokes to an image tensor.
+
+    Args:
+        image (torch.Tensor): The input image tensor of shape (1, H, W, C), with values in [0, 1].
+        brush_positions (list[tuple]): List of normalized (x, y) positions for brush strokes.
+        brush_size (int): Diameter of the brush stroke in pixels.
+        brush_color (str): Hex color of the brush stroke.
+        opacity (float): Opacity of the brush stroke (0.0 to 1.0).
+
+    Returns:
+        torch.Tensor: The image tensor with the applied brush strokes, same shape as input.
+    """
+    validate_image(image, expected_shape=(3,))
+
+    device = image.device
+
+    _, height, width, channels = image.shape
+
+    brush_rgb = torch.tensor([c / 255.0 for c in hex_to_tuple(brush_color)], dtype=torch.float32, device=device)
+    brush_rgb = brush_rgb.view(1, 1, channels)
+
+    alpha_mask = torch.zeros((height, width), dtype=torch.float32, device=device)
+
+    for position in brush_positions:
+        brush_x = int(position[0] * width)
+        brush_y = int(position[1] * height)
+
+        y_grid, x_grid = torch.meshgrid(
+            torch.arange(height, dtype=torch.float32, device=device),
+            torch.arange(width, dtype=torch.float32, device=device),
+            indexing='ij'
+        )
+        dist_squared = (x_grid - brush_x) ** 2 + (y_grid - brush_y) ** 2
+        radius_squared = (brush_size / 2) ** 2
+
+        stroke_mask = torch.zeros_like(alpha_mask)
+        stroke_mask[dist_squared <= radius_squared] = opacity
+
+        alpha_mask = torch.clamp(alpha_mask + stroke_mask, max=1.0)
+
+    image = image.squeeze(0)
+    blended_image = image * (1 - alpha_mask.unsqueeze(-1)) + brush_rgb * alpha_mask.unsqueeze(-1)
+    blended_image = blended_image.unsqueeze(0)
+
+    return blended_image
+# endregion
 # region clarity_effect
 def clarity_effect(image: torch.Tensor, clarity_strength: float, sharpen_amount: float, blur_kernel_size: int) -> torch.Tensor:
     """
@@ -55,6 +110,8 @@ def clarity_effect(image: torch.Tensor, clarity_strength: float, sharpen_amount:
     Returns:
         torch.Tensor: The processed image tensor.
     """
+    validate_image(image, expected_shape=(3,))
+
     image_np = tensor_to_numpy(image, True)
 
     l_channel, a_channel, b_channel = split_channels(image_np, color_space="LAB")
