@@ -104,7 +104,10 @@ export class LFManager {
           callbacks.push(onDrawBackground);
         }
 
-        if (widgets.includes(CustomWidgetName.chip)) {
+        if (
+          widgets.includes(CustomWidgetName.chip) ||
+          widgets.includes(CustomWidgetName.messenger)
+        ) {
           callbacks.push(onConnectionsChange);
         }
 
