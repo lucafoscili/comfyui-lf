@@ -156,9 +156,9 @@ const KulSlider = class {
             'form-field': true,
             'form-field--align-end': this.kulLeadingLabel,
         };
-        return (h(Host, { key: '1a0c465d8bcd4dc650286c1410ede71e6320582b' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '4b56e37708a33e1f2da6e62d377beae1d0db14f5', id: KUL_WRAPPER_ID }, h("div", { key: '9f00ff1a1d782be7993a9f71690d46cefcfa0352', class: formClassName }, h("div", { key: 'ea1d12d0f02aea834557323c5e66a552f4fda063', class: className, style: {
+        return (h(Host, { key: '4034ed083518ac0ff927394e10d6c68a16d19241' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '93172d44337f961115048c5713122ff8d727036e', id: KUL_WRAPPER_ID }, h("div", { key: 'a2b9dae214a79265803ef988a74ae415dc7930cd', class: formClassName }, h("div", { key: 'cf4f9a4b4a11a485d8f5da974cb12f3ca3470f62', class: className, style: {
                 '--kul_slider_value': `${((this.value.display - this.kulMin) / (this.kulMax - this.kulMin)) * 100}%`,
-            } }, h("input", { key: 'b4f2c27db4041f6b35a6e553241fccf3af4cebdd', type: "range", class: "slider__native-control", "data-cy": KulDataCyAttributes.INPUT, min: this.kulMin, max: this.kulMax, step: this.kulStep, value: this.value.real, disabled: this.kulDisabled, onBlur: (e) => {
+            } }, h("input", { key: 'ec310b8a5329afa9272fc806868ff305643462fa', type: "range", class: "slider__native-control", "data-cy": KulDataCyAttributes.INPUT, min: this.kulMin, max: this.kulMax, step: this.kulStep, value: this.value.real, disabled: this.kulDisabled, onBlur: (e) => {
                 this.onKulEvent(e, 'blur');
             }, onChange: (e) => {
                 this.onKulEvent(e, 'change');
@@ -172,11 +172,11 @@ const KulSlider = class {
                 if (el) {
                     this.#input = el;
                 }
-            } }), h("div", { key: '904f7a4b5913426d0c49d4f1e833a3aa6fc1407a', class: "slider__track" }, h("div", { key: '2c5753f082354a088ad54689789262888418b747', class: "slider__thumb-underlay" }, h("div", { key: '709e4393cee771cec32c8875091bd20202ba647c', class: "slider__thumb", ref: (el) => {
+            } }), h("div", { key: '51b330fb5580809eb9b554194f523f95ccdfbdf7', class: "slider__track" }, h("div", { key: '32d1e45077d38afaa9184900e13237bbc033cc44', class: "slider__thumb-underlay" }, h("div", { key: '8ac29418b409a2d1e6445de137a77db8c08a6887', class: "slider__thumb", ref: (el) => {
                 if (this.kulRipple) {
                     this.#rippleSurface = el;
                 }
-            } }))), h("span", { key: 'a2c0a7778696722a8f8982032c7aade8315091d1', class: "slider__value" }, this.value.display)), h("label", { key: 'abe8cfa5869108ff10e7f3a6c7aadd8e4724ce17', class: "form-field__label" }, this.kulLabel)))));
+            } }))), h("span", { key: '4de65aad6f39729e7b7b29c8bc1ca79be9701184', class: "slider__value" }, this.value.display)), h("label", { key: 'c0ad7e8498c7e608d7135037f5092447c5f074d3', class: "form-field__label" }, this.kulLabel)))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

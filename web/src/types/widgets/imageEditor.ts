@@ -63,15 +63,20 @@ export enum ImageEditorIcons {
 //#endregion
 //#region Controls
 export enum ImageEditorControls {
+  Canvas = 'canvas',
   Slider = 'slider',
   Textfield = 'textfield',
   Toggle = 'toggle',
+}
+export enum ImageEditorCanvasIds {
+  BrushPositions = 'brush_positions',
 }
 export enum ImageEditorSliderIds {
   BlueChannel = 'b_channel',
   BlurKernelSize = 'blur_kernel_size',
   BlurSigma = 'blur_sigma',
   BrightnessStrength = 'brightness_strength',
+  BrushSize = 'brush_size',
   ClarityStrength = 'clarity_strength',
   ContrastStrength = 'contrast_strength',
   DesaturationStrength = 'desaturation_strength',
@@ -86,6 +91,7 @@ export enum ImageEditorSliderIds {
   Size = 'size',
 }
 export enum ImageEditorTextfieldIds {
+  BrushColor = 'brush_color',
   Color = 'color',
 }
 export enum ImageEditorToggleIds {
@@ -99,7 +105,7 @@ export type ImageEditorControlIds =
   | ImageEditorToggleIds;
 export type ImageEditorControlValue = string | number | boolean;
 export interface ImageEditorFilterSettings {
-  [key: string]: number | boolean | string;
+  [key: string]: number | boolean | string | Array<{ x: number; y: number }>;
 }
 export interface ImageEditorBaseConfig<
   ID extends ImageEditorControlIds,
@@ -110,6 +116,10 @@ export interface ImageEditorBaseConfig<
   id: ID;
   isMandatory?: boolean;
   title: string;
+}
+export interface ImageEditorCanvasConfig
+  extends ImageEditorBaseConfig<ImageEditorSliderIds, number> {
+  positions: Array<{ x: number; y: number }>;
 }
 export interface ImageEditorSliderConfig
   extends ImageEditorBaseConfig<ImageEditorSliderIds, number> {
@@ -130,6 +140,7 @@ export interface ImageEditorToggleConfig
   on: string;
 }
 export type ImageEditorControlConfig =
+  | ImageEditorCanvasConfig
   | ImageEditorSliderConfig
   | ImageEditorTextfieldConfig
   | ImageEditorToggleConfig;
@@ -142,7 +153,7 @@ export type ImageEditorSettingsFor = Partial<{
 //#region Filters
 export interface ImageEditorFilterSettingsMap {
   brightness: ImageEditorBrightnessSettings;
-  brush: ImageEditorClaritySettings;
+  brush: ImageEditorBrushSettings;
   clarity: ImageEditorClaritySettings;
   contrast: ImageEditorContrastSettings;
   desaturate: ImageEditorDesaturateSettings;
@@ -154,6 +165,12 @@ export interface ImageEditorBrightnessSettings extends ImageEditorFilterSettings
   gamma: number;
   localized_brightness: boolean;
   midpoint: number;
+}
+export interface ImageEditorBrushSettings extends ImageEditorFilterSettings {
+  brush_positions: Array<{ x: number; y: number }>;
+  brush_size: number;
+  brush_color: string;
+  opacity: number;
 }
 export interface ImageEditorClaritySettings extends ImageEditorFilterSettings {
   clarity_strength: number;
@@ -185,6 +202,12 @@ export enum ImageEditorBrightnessIds {
   Gamma = 'gamma',
   Midpoint = 'midpoint',
   LocalizedBrightness = 'localized_brightness',
+}
+export enum ImageEditorBrushIds {
+  BrushPositions = 'brush_positions',
+  BrushSize = 'brush_size',
+  BrushColor = 'brush_color',
+  Opacity = 'opacity',
 }
 export enum ImageEditorClarityIds {
   BlurKernelSize = 'blur_kernel_size',
@@ -230,6 +253,15 @@ export type ImageEditorBrightnessFilter = ImageEditorFilterDefinition<
     [ImageEditorControls.Toggle]: ImageEditorToggleConfig[];
   }
 >;
+export type ImageEditorBrushFilter = ImageEditorFilterDefinition<
+  typeof ImageEditorBrushIds,
+  ImageEditorBrushSettings,
+  {
+    [ImageEditorControls.Canvas]: ImageEditorCanvasConfig[];
+    [ImageEditorControls.Slider]: ImageEditorSliderConfig[];
+    [ImageEditorControls.Textfield]: ImageEditorTextfieldConfig[];
+  }
+>;
 export type ImageEditorClarityFilter = ImageEditorFilterDefinition<
   typeof ImageEditorClarityIds,
   ImageEditorClaritySettings,
@@ -270,6 +302,7 @@ export type ImageEditorVignetteFilter = ImageEditorFilterDefinition<
 >;
 export type ImageEditorFilters = {
   brightness: ImageEditorBrightnessFilter;
+  brush: ImageEditorBrushFilter;
   clarity: ImageEditorClarityFilter;
   contrast: ImageEditorContrastFilter;
   desaturate: ImageEditorDesaturateFilter;
@@ -278,8 +311,10 @@ export type ImageEditorFilters = {
 };
 export type ImageEditorFilter =
   | ImageEditorBrightnessFilter
+  | ImageEditorBrushFilter
   | ImageEditorClarityFilter
   | ImageEditorContrastFilter
   | ImageEditorDesaturateFilter
+  | ImageEditorGaussianBlurFilter
   | ImageEditorVignetteFilter;
 //#endregion

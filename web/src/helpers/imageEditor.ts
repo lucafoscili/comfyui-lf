@@ -1,5 +1,6 @@
 import {
   KulButtonEventPayload,
+  KulCanvasEventPayload,
   KulImageviewerEventPayload,
   KulSliderEventPayload,
   KulTextfieldEventPayload,
@@ -16,6 +17,7 @@ import { LogSeverity } from '../types/manager/manager';
 import { NodeName } from '../types/widgets/_common';
 import {
   ImageEditorActionButtons,
+  ImageEditorBrushSettings,
   ImageEditorColumnId,
   ImageEditorControlConfig,
   ImageEditorControls,
@@ -72,6 +74,24 @@ export const buttonEventHandler = async (
 };
 //#endregion
 //#region imageviewerEventHandler
+export const canvasviewerEventHandler = async (
+  imageviewer: HTMLKulImageviewerElement,
+  e: CustomEvent<KulCanvasEventPayload>,
+) => {
+  const { comp, eventType, points } = e.detail;
+
+  switch (eventType) {
+    case 'stroke':
+      callApi(imageviewer, 'brush', true, {
+        brush_color: comp.kulColor,
+        brush_positions: points,
+        brush_size: comp.kulSize,
+      } as ImageEditorBrushSettings);
+      break;
+  }
+};
+//#endregion
+//#region imageviewerEventHandler
 export const imageviewerEventHandler = async (
   settings: HTMLDivElement,
   node: NodeType,
@@ -82,13 +102,15 @@ export const imageviewerEventHandler = async (
   switch (eventType) {
     case 'kul-event':
       const ogEv = originalEvent as KulGenericEvent;
-      if (ogEv.detail.eventType === 'click') {
-        if ((ogEv.detail.comp.rootElement as HTMLElement).tagName === 'KUL-TREE') {
-          const { node } = ogEv.detail as KulTreeEventPayload;
-          if (node.cells?.kulCode) {
-            prepSettings(settings, node, comp.rootElement as HTMLKulImageviewerElement);
+      switch (ogEv.detail.eventType) {
+        case 'click':
+          if ((ogEv.detail.comp.rootElement as HTMLElement).tagName === 'KUL-TREE') {
+            const { node } = ogEv.detail as KulTreeEventPayload;
+            if (node.cells?.kulCode) {
+              prepSettings(settings, node, comp.rootElement as HTMLKulImageviewerElement);
+            }
           }
-        }
+          break;
       }
       break;
 
@@ -159,6 +181,36 @@ export const toggleEventHandler = async (
   }
 };
 //#endregion
+//#region callApi
+export const callApi = async (
+  imageviewer: HTMLKulImageviewerElement,
+  filterType: keyof ImageEditorFilterSettingsMap,
+  addSnapshot: boolean,
+  settingsValues: ImageEditorFilterSettingsMap[typeof filterType],
+) => {
+  const lfManager = getLFManager();
+
+  const snapshotValue = (await imageviewer.getCurrentSnapshot()).value;
+  requestAnimationFrame(() => imageviewer.setSpinnerStatus(true));
+  try {
+    const response = await getApiRoutes().image.process(snapshotValue, filterType, settingsValues);
+    if (response.status === 'success') {
+      if (addSnapshot) {
+        imageviewer.addSnapshot(response.data);
+      } else {
+        const { canvas } = await imageviewer.getComponents();
+        const image = await canvas.getImage();
+        requestAnimationFrame(() => (image.kulValue = response.data));
+      }
+    } else {
+      lfManager.log('Error processing image!', { response }, LogSeverity.Error);
+    }
+  } catch (error) {
+    lfManager.log('Error processing image!', { error }, LogSeverity.Error);
+  }
+  requestAnimationFrame(() => imageviewer.setSpinnerStatus(false));
+};
+//#endregion
 //#region prepSettings
 export const prepSettings = (
   settings: HTMLDivElement,
@@ -220,28 +272,7 @@ export const prepSettings = (
       return;
     }
 
-    const snapshotValue = (await imageviewer.getCurrentSnapshot()).value;
-    requestAnimationFrame(() => imageviewer.setSpinnerStatus(true));
-    try {
-      const response = await getApiRoutes().image.process(
-        snapshotValue,
-        filterType,
-        settingsValues,
-      );
-      if (response.status === 'success') {
-        if (addSnapshot) {
-          imageviewer.addSnapshot(response.data);
-        } else {
-          const { image } = await imageviewer.getComponents();
-          requestAnimationFrame(() => (image.kulValue = response.data));
-        }
-      } else {
-        lfManager.log('Error processing image!', { response }, LogSeverity.Error);
-      }
-    } catch (error) {
-      lfManager.log('Error processing image!', { error }, LogSeverity.Error);
-    }
-    requestAnimationFrame(() => imageviewer.setSpinnerStatus(false));
+    callApi(imageviewer, filterType, addSnapshot, settingsValues);
   };
 
   settings.innerHTML = '';

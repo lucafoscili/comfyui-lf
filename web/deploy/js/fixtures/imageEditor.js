@@ -1,4 +1,4 @@
-import { ImageEditorBrightnessIds, ImageEditorClarityIds, ImageEditorContrastIds, ImageEditorControls, ImageEditorDesaturateIds, ImageEditorGaussianBlurIds, ImageEditorSliderIds, ImageEditorTextfieldIds, ImageEditorToggleIds, ImageEditorVignetteIds, } from '../types/widgets/imageEditor.js';
+import { ImageEditorBrightnessIds, ImageEditorBrushIds, ImageEditorClarityIds, ImageEditorContrastIds, ImageEditorControls, ImageEditorDesaturateIds, ImageEditorGaussianBlurIds, ImageEditorSliderIds, ImageEditorTextfieldIds, ImageEditorToggleIds, ImageEditorVignetteIds, } from '../types/widgets/imageEditor.js';
 const SETTINGS = {
     //#region Brightness
     brightness: {
@@ -57,6 +57,15 @@ const SETTINGS = {
         },
     },
     //#endregion
+    brush: {
+        controlIds: ImageEditorBrushIds,
+        settings: { brush_color: '000000', brush_positions: [], brush_size: 10, opacity: 1 },
+        configs: {
+            [ImageEditorControls.Canvas]: [],
+            [ImageEditorControls.Slider]: [],
+            [ImageEditorControls.Textfield]: [],
+        },
+    },
     //#region Clarity
     clarity: {
         controlIds: ImageEditorClarityIds,

@@ -1,6 +1,7 @@
 import { KulDataDataset } from '../types/ketchup-lite/components';
 import {
   ImageEditorBrightnessIds,
+  ImageEditorBrushIds,
   ImageEditorClarityIds,
   ImageEditorContrastIds,
   ImageEditorControls,
@@ -72,6 +73,15 @@ const SETTINGS: ImageEditorFilters = {
     },
   },
   //#endregion
+  brush: {
+    controlIds: ImageEditorBrushIds,
+    settings: { brush_color: '000000', brush_positions: [], brush_size: 10, opacity: 1 },
+    configs: {
+      [ImageEditorControls.Canvas]: [],
+      [ImageEditorControls.Slider]: [],
+      [ImageEditorControls.Textfield]: [],
+    },
+  },
   //#region Clarity
   clarity: {
     controlIds: ImageEditorClarityIds,

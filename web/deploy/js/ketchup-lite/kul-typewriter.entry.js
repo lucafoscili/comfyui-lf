@@ -165,7 +165,7 @@ const KulTypewriter = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: 'f2e7a7397e2d1dee101ee0ab1c4127ac312c1ccf' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'ede2788cfa49db8eaeb3bb710abd6932cdc9769b', id: KUL_WRAPPER_ID }, this.#prepText())));
+        return (h(Host, { key: '89c8610164a15b4a392ea6949c7537450675d68f' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '62fdde208e2be2930679051e60c43e1b1f1ce142', id: KUL_WRAPPER_ID }, this.#prepText())));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

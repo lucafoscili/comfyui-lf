@@ -1,6 +1,7 @@
 import { TREE_DATA } from '../fixtures/imageEditor';
 import {
   buttonEventHandler,
+  canvasviewerEventHandler,
   getStatusColumn,
   imageviewerEventHandler,
   setGridStatus,
@@ -81,6 +82,10 @@ export const imageEditorFactory: ImageEditorFactory = {
     imageviewer.addEventListener(
       KulEventName.KulImageviewer,
       imageviewerEventHandler.bind(imageviewerEventHandler, settings, node),
+    );
+    imageviewer.addEventListener(
+      KulEventName.KulCanvas,
+      canvasviewerEventHandler.bind(imageviewerEventHandler, imageviewer),
     );
     imageviewer.appendChild(settings);
 

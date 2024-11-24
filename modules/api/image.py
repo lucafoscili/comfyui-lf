@@ -9,7 +9,7 @@ from PIL import Image
 from server import PromptServer
 
 from ..utils.constants import API_ROUTE_PREFIX
-from ..utils.filters import brightness_effect, clarity_effect, contrast_effect, desaturate_effect, gaussian_blur_effect, vignette_effect
+from ..utils.filters import brightness_effect, brush_effect, clarity_effect, contrast_effect, desaturate_effect, gaussian_blur_effect, vignette_effect
 from ..utils.helpers import create_masonry_node, get_comfy_dir, get_resource_url, pil_to_tensor, resolve_filepath, resolve_url, tensor_to_pil
 
 # region get-image
@@ -68,6 +68,8 @@ async def process_image(request):
 
         if filter_type == "brightness":
             processed_tensor = apply_brightness_effect(img_tensor, settings)
+        elif filter_type == "brush":
+            processed_tensor = apply_brush_effect(img_tensor, settings)
         elif filter_type == "clarity":
             processed_tensor = apply_clarity_effect(img_tensor, settings)
         elif filter_type == "contrast":
@@ -103,6 +105,17 @@ def apply_brightness_effect(img_tensor: torch.Tensor, settings: dict):
 
     return brightness_effect(img_tensor, brightness_strength, gamma, midpoint, localized_brightness)
 
+def apply_brush_effect(img_tensor: torch.Tensor, settings: dict):
+    brush_positions = settings.get("brush_positions", [])
+    brush_positions = [(point["x"], point["y"]) for point in brush_positions]
+    
+    brush_size = int(settings.get("brush_size", 0))
+    brush_color = settings.get("brush_color", "")
+    opacity = float(settings.get("opacity", 1))
+
+    return brush_effect(img_tensor, brush_positions, brush_size, brush_color, opacity)
+
+
 def apply_clarity_effect(img_tensor: torch.Tensor, settings: dict):
     clarity_strength: float = float(settings.get("clarity_strength", 0))
     sharpen_amount: float = float(settings.get("sharpen_amount", 0))
@@ -119,9 +132,9 @@ def apply_contrast_effect(img_tensor: torch.Tensor, settings: dict):
 
 def apply_desaturate_effect(img_tensor: torch.Tensor, settings: dict):
     desaturation_strength: float = float(settings.get("desaturation_strength", 0))
-    r: float = float(settings.get("r_channel", 0))
-    g: float = float(settings.get("g_channel", 0))
-    b: float = float(settings.get("b_channel", 0))
+    r: float = float(settings.get("r_channel", 1))
+    g: float = float(settings.get("g_channel", 1))
+    b: float = float(settings.get("b_channel", 1))
 
     return desaturate_effect(img_tensor, desaturation_strength, [r, g, b])
 

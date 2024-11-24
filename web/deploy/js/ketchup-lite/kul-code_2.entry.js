@@ -3210,7 +3210,7 @@ const KulProgressbar = class {
             ['--kul_progressbar_percentage_width']: `${this.kulValue}%`,
             ['--kul_progressbar_transform']: `rotate(${this.kulValue * 3.6}deg)`,
         };
-        return (h(Host, { key: 'c39e9107828672dbddaa21e48d46e63b9266d7be' }, this.kulStyle && (h("style", { key: '7b1a7ea9ae8f3437150d9af590aa5aa5713e0ac3', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: '649022702f454002dd5c1ec743475bc3beeee6c0', id: KUL_WRAPPER_ID, style: style }, this.kulIsRadial
+        return (h(Host, { key: 'd57cbc84d1dc6c0f991beab3458b01a05e8cbd31' }, this.kulStyle && (h("style", { key: 'f955bf5ed637cb3a42e09f9a038a4aa82ed28867', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: '4e3c5d7301832966304df31689a6e8a46a13e225', id: KUL_WRAPPER_ID, style: style }, this.kulIsRadial
             ? this.#prepRadialBar()
             : this.#prepProgressBar())));
     }

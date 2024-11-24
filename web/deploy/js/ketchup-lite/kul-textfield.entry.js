@@ -279,7 +279,7 @@ const KulTextfield = class {
         this.status.forEach((status) => {
             classList.push(`textfield--${status}`);
         });
-        return (h(Host, { key: 'c4bb07b334f01a1f83cc47ce94ebbe2a8b28995c' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '2103e1ffba83230209b85ec8805aa2d889c17ef3', id: KUL_WRAPPER_ID }, h("div", { key: '086785ebd564be5416a9bdbdce069e9d93734f63', class: classList.join(' ') }, this.kulStyling === 'textarea'
+        return (h(Host, { key: '344a5fd0455eca62c861bd05ca591ecc7e1933a1' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'dbcf6b59d9cfba3b6ba3bed456ba8a7fb399497e', id: KUL_WRAPPER_ID }, h("div", { key: '191eb08f80a32bc91039cda31aed1238bca4747e', class: classList.join(' ') }, this.kulStyling === 'textarea'
             ? [
                 this.#prepCounter(),
                 this.#prepIcon(),

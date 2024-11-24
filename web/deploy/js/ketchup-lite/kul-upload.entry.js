@@ -169,15 +169,15 @@ const KulUpload = class {
     }
     render() {
         const hasSelectedFiles = this.selectedFiles && this.selectedFiles.length;
-        return (h(Host, { key: 'f8c93ce37e58d91ace1fc72cdc58f25a1c9ec9cf' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'b5959d089715c104b716d0faeb624ed3ec33b8e7', id: KUL_WRAPPER_ID }, h("div", { key: 'd00417adaf57374bd0e19533bf661bdbd7a696c7', class: `wrapper ${this.selectedFiles && this.selectedFiles.length
+        return (h(Host, { key: '77bee2ccbb4fb30ca0675acfa4b99b6957adc792' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'c84ce70f3b59ff9a78b3e22c09675aa0890d7653', id: KUL_WRAPPER_ID }, h("div", { key: 'b5b36c1c23a815ff8ef19848eee537234a82b06b', class: `wrapper ${this.selectedFiles && this.selectedFiles.length
                 ? 'wrapper--with-info'
-                : ''}` }, h("div", { key: 'c3d38c769302bf5bad7a2048a53ab3399f0e5db0', class: "file-upload", onPointerDown: (e) => this.onKulEvent(e, 'pointerdown') }, h("input", { key: 'fa23ab4fa2f7636ef63361e28dc617719919949c', class: "file-upload__input", id: "upload-input", multiple: true, onChange: () => this.#handleFileChange(), ref: (el) => {
+                : ''}` }, h("div", { key: 'c6ce284e9854b5cd5be370a04aafe398c4376a49', class: "file-upload", onPointerDown: (e) => this.onKulEvent(e, 'pointerdown') }, h("input", { key: '2fc2bb7f439fe14a1922b73c48cefbd9cb746deb', class: "file-upload__input", id: "upload-input", multiple: true, onChange: () => this.#handleFileChange(), ref: (el) => {
                 this.#input = el;
-            }, type: "file" }), h("label", { key: '702ccc06f8e9a6abd70eca20e8a7fa57b20888ab', class: "file-upload__label", htmlFor: "upload-input", ref: (el) => {
+            }, type: "file" }), h("label", { key: 'd81ec27bc65964d541f4628b0b1fc35a31bf1aa7', class: "file-upload__label", htmlFor: "upload-input", ref: (el) => {
                 if (this.kulRipple) {
                     this.#rippleSurface = el;
                 }
-            } }, h("div", { key: 'ced80b475861f1eae937cbd532421665df7bcf61', class: "file-upload__text" }, this.kulLabel))), h("div", { key: '1acca3a39ebbc4c3955e07ddd0058d4ccc663711', class: "file-info" }, hasSelectedFiles
+            } }, h("div", { key: 'f0e8eafbfa41ec144008612163c47d0b4e55eb83', class: "file-upload__text" }, this.kulLabel))), h("div", { key: '34c342d8b8eb2c2762705973d478a32db31f87ac', class: "file-info" }, hasSelectedFiles
             ? this.#prepFileInfo()
             : undefined)))));
     }

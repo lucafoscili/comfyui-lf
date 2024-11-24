@@ -48,6 +48,7 @@ export enum KulEventName {
   KulAccordion = 'kul-accordion-event',
   KulArticle = 'kul-article-event',
   KulButton = 'kul-button-event',
+  KulCanvas = 'kul-canvas-event',
   KulCard = 'kul-card-event',
   KulCarousel = 'kul-carousel-event',
   KulChat = 'kul-chat-event',
