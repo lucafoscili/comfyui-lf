@@ -73,7 +73,7 @@ export const buttonEventHandler = async (
   }
 };
 //#endregion
-//#region imageviewerEventHandler
+//#region canvasviewerEventHandler
 export const canvasviewerEventHandler = async (
   imageviewer: HTMLKulImageviewerElement,
   e: CustomEvent<KulCanvasEventPayload>,
@@ -86,6 +86,7 @@ export const canvasviewerEventHandler = async (
         brush_color: comp.kulColor,
         brush_positions: points,
         brush_size: comp.kulSize,
+        opacity: comp.kulOpacity,
       } as ImageEditorBrushSettings);
       break;
   }
@@ -272,7 +273,15 @@ export const prepSettings = (
       return;
     }
 
-    callApi(imageviewer, filterType, addSnapshot, settingsValues);
+    switch (filterType) {
+      case 'brush':
+        updateCanvasConfig(imageviewer, settingsValues as ImageEditorFilterSettingsMap['brush']);
+        break;
+
+      default:
+        callApi(imageviewer, filterType, addSnapshot, settingsValues);
+        break;
+    }
   };
 
   settings.innerHTML = '';
@@ -397,6 +406,10 @@ export const resetSettings = async (settings: HTMLElement) => {
         await slider.setValue(slider.kulValue);
         await slider.refresh();
         break;
+      case 'KUL-TEXTFIELD':
+        const textfield = control as HTMLKulTextfieldElement;
+        await textfield.setValue(textfield.kulValue);
+        break;
       case 'KUL-TOGGLE':
         const toggle = control as HTMLKulToggleElement;
         toggle.setValue(toggle.kulValue ? 'on' : 'off');
@@ -426,5 +439,15 @@ export const setGridStatus = (
       grid.classList.remove(ImageEditorCSS.GridIsInactive);
       break;
   }
+};
+export const updateCanvasConfig = async (
+  imageviewer: HTMLKulImageviewerElement,
+  settingsValues: ImageEditorFilterSettingsMap['brush'],
+) => {
+  const { canvas } = await imageviewer.getComponents();
+  const { brush_color, brush_size, opacity } = settingsValues;
+  canvas.kulColor = brush_color;
+  canvas.kulSize = brush_size;
+  canvas.kulOpacity = opacity;
 };
 //#endregion

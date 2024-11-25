@@ -17,3 +17,4 @@ export declare const getStatusColumn: (dataset: KulDataDataset) => KulDataColumn
 export declare const parseLabel: (data: ImageEditorControlConfig) => string;
 export declare const resetSettings: (settings: HTMLElement) => Promise<void>;
 export declare const setGridStatus: (status: ImageEditorStatus, grid: HTMLDivElement, actionButtons: ImageEditorActionButtons) => void;
+export declare const updateCanvasConfig: (imageviewer: HTMLKulImageviewerElement, settingsValues: ImageEditorFilterSettingsMap["brush"]) => Promise<void>;
