@@ -9,7 +9,7 @@ from PIL import Image
 from server import PromptServer
 
 from ..utils.constants import API_ROUTE_PREFIX
-from ..utils.filters import brightness_effect, brush_effect, clarity_effect, contrast_effect, desaturate_effect, gaussian_blur_effect, vignette_effect
+from ..utils.filters import brightness_effect, clarity_effect, contrast_effect, desaturate_effect, gaussian_blur_effect, line_effect, vignette_effect
 from ..utils.helpers import create_masonry_node, get_comfy_dir, get_resource_url, pil_to_tensor, resolve_filepath, resolve_url, tensor_to_pil
 
 # region get-image
@@ -68,8 +68,6 @@ async def process_image(request):
 
         if filter_type == "brightness":
             processed_tensor = apply_brightness_effect(img_tensor, settings)
-        elif filter_type == "brush":
-            processed_tensor = apply_brush_effect(img_tensor, settings)
         elif filter_type == "clarity":
             processed_tensor = apply_clarity_effect(img_tensor, settings)
         elif filter_type == "contrast":
@@ -78,6 +76,8 @@ async def process_image(request):
             processed_tensor = apply_desaturate_effect(img_tensor, settings)
         elif filter_type == "gaussian_blur":
             processed_tensor = apply_gaussian_blur_effect(img_tensor, settings)
+        elif filter_type == "line":
+            processed_tensor = apply_line_effect(img_tensor, settings)
         elif filter_type == "vignette":
             processed_tensor = apply_vignette_effect(img_tensor, settings)
         else:
@@ -104,16 +104,6 @@ def apply_brightness_effect(img_tensor: torch.Tensor, settings: dict):
     localized_brightness: bool = bool(settings.get("localized_brightness", False))
 
     return brightness_effect(img_tensor, brightness_strength, gamma, midpoint, localized_brightness)
-
-def apply_brush_effect(img_tensor: torch.Tensor, settings: dict):
-    brush_positions = settings.get("brush_positions", [])
-    brush_positions = [(point["x"], point["y"]) for point in brush_positions]
-    
-    brush_size = int(settings.get("brush_size", 0))
-    brush_color = settings.get("brush_color", "")
-    opacity = float(settings.get("opacity", 1))
-
-    return brush_effect(img_tensor, brush_positions, brush_size, brush_color, opacity)
 
 
 def apply_clarity_effect(img_tensor: torch.Tensor, settings: dict):
@@ -143,6 +133,17 @@ def apply_gaussian_blur_effect(img_tensor: torch.Tensor, settings: dict):
     blur_kernel_size: int = int(settings.get("blur_kernel_size", 1))
 
     return gaussian_blur_effect(img_tensor, blur_kernel_size, blur_sigma)
+
+def apply_line_effect(img_tensor: torch.Tensor, settings: dict):
+    points: list = settings.get("points", [])
+    points: list[tuple] = [(point["x"], point["y"]) for point in points]
+    
+    size: int = int(settings.get("size", 0))
+    color: str = settings.get("color", "FF0000")
+    opacity: float = float(settings.get("opacity", 1))
+    smooth: bool = bool(settings.get("smoooth", False))
+
+    return line_effect(img_tensor, points, size, color, opacity, smooth)
 
 def apply_vignette_effect(img_tensor: torch.Tensor, settings: dict):
     intensity: float = float(settings.get("intensity", 0))

@@ -111,6 +111,13 @@ const KulCanvas = class {
     //#endregion
     //#region Public methods
     /**
+     * Returns the painting canvas .
+     * @returns {Promise<HTMLCanvasElement>} The painting canvas.
+     */
+    async getCanvas() {
+        return this.#board;
+    }
+    /**
      * Fetches debug information of the component's current state.
      * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves with the debug information object.
      */
@@ -315,19 +322,19 @@ const KulCanvas = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: '8b7749b7cfd2a0c4b1096f22c234594b8311d77b' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '3f796e4c62038e3ece3556929a062998e723d971', id: KUL_WRAPPER_ID }, h("div", { key: '6d4b12dbc50d9fad6b812b693037f99d096827c6', class: "canvas", ref: (el) => {
+        return (h(Host, { key: '84ce4ccc0b2ea4d7b0398874bd5561ae7a0aced7' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'e774d36b96482327e6a187ea893df2470db9aacf', id: KUL_WRAPPER_ID }, h("div", { key: '1bf4b53f746e0bb443b04bfa1958593a30d94f1e', class: "canvas", ref: (el) => {
                 if (el) {
                     this.#container = el;
                 }
-            } }, h("kul-image", { key: 'b62e9f8246bb8173c32a7c3974fb41e2f634c284', class: "canvas__image kul-fit", ...this.kulImageProps, ref: (el) => {
+            } }, h("kul-image", { key: '4adc27a0164e4983ff5a67592ea6c48967656d3c', class: "canvas__image kul-fit", ...this.kulImageProps, ref: (el) => {
                 if (el) {
                     this.#image = el;
                 }
-            } }), h("canvas", { key: 'df60a18abf9b1e49ec1e99d341fee8a8a851f680', class: "canvas__board", onPointerDown: (e) => this.#handlePointerDown(e), onPointerMove: (e) => this.#handlePointerMove(e), onPointerUp: (e) => this.onKulEvent(e, 'stroke'), onPointerOut: (e) => this.#handlePointerOut(e), ref: (el) => {
+            } }), h("canvas", { key: '67113d04ac26ff2b47970fff2f6dc9301abf52bc', class: "canvas__board", onPointerDown: (e) => this.#handlePointerDown(e), onPointerMove: (e) => this.#handlePointerMove(e), onPointerUp: (e) => this.onKulEvent(e, 'stroke'), onPointerOut: (e) => this.#handlePointerOut(e), ref: (el) => {
                 if (el) {
                     this.#board = el;
                 }
-            } }), h("canvas", { key: '5013040a688d257401b4e7176c854689687e7913', class: "canvas__cursor", ref: (el) => {
+            } }), h("canvas", { key: 'e715251adbe0590f010fbdce2b11550f823ab05e', class: "canvas__cursor", ref: (el) => {
                 if (el) {
                     this.#cursor = el;
                 }
