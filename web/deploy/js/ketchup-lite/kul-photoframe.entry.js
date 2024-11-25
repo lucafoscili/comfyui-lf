@@ -131,9 +131,9 @@ const KulPhotoframe = class {
         if (this.isInViewport && !this.#renderValue) {
             this.#renderValue = true;
         }
-        return (h(Host, { key: '13a3b83dd207d2fd61ca9aaaa1d395321d1a16a1' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '33d15efffa4f77322192bd42e0fd57c3280c7b27', id: KUL_WRAPPER_ID, ref: (el) => {
+        return (h(Host, { key: '64d4446e6ad0c5f25806f4789736f8f521f0704b' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '76c7e94630beb9030052039b354e1e1888ae196e', id: KUL_WRAPPER_ID, ref: (el) => {
                 this.#wrapperEl = el;
-            } }, h("img", { key: '90349e7d5159ecb4ecf722b98aa0df98ae74ab8d', ...this.kulPlaceholder, class: "placeholder", ref: (el) => (this.#placeholderEl = el), onLoad: (e) => {
+            } }, h("img", { key: '4769c3ef7a568b993eed08fb2e7331a8769c4844', ...this.kulPlaceholder, class: "placeholder", ref: (el) => (this.#placeholderEl = el), onLoad: (e) => {
                 if (this.#placeholderEl.naturalWidth >
                     this.#placeholderEl.naturalHeight) {
                     this.#wrapperEl.classList.add('horizontal');

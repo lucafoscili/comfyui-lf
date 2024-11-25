@@ -3,6 +3,7 @@ export var KulEventName;
     KulEventName["KulAccordion"] = "kul-accordion-event";
     KulEventName["KulArticle"] = "kul-article-event";
     KulEventName["KulButton"] = "kul-button-event";
+    KulEventName["KulCanvas"] = "kul-canvas-event";
     KulEventName["KulCard"] = "kul-card-event";
     KulEventName["KulCarousel"] = "kul-carousel-event";
     KulEventName["KulChat"] = "kul-chat-event";

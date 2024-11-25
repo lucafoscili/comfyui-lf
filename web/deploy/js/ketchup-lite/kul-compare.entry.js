@@ -246,7 +246,7 @@ const KulCompare = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: 'd55e38c58e152adfcd56f4549706f68d4d55b134' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '1749140f84541b63f3dea10d058ee087c10ed37e', id: KUL_WRAPPER_ID }, h("div", { key: 'e4646da54f0e037927e9b3ca51187e7f5031531d', class: "compare" }, this.#prepCompare()))));
+        return (h(Host, { key: '5539581059594f06f8fc2c3beca7cb2b4abf2559' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'f880683f0bc6386ddc9ba5f3b1dbdd2be923c110', id: KUL_WRAPPER_ID }, h("div", { key: '4302b2773ad7bd06b70cc3df981104b126a9b2e5', class: "compare" }, this.#prepCompare()))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

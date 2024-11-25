@@ -65,28 +65,27 @@ def brush_effect(
     validate_image(image, expected_shape=(3,))
 
     device = image.device
-
     _, height, width, channels = image.shape
 
     brush_rgb = torch.tensor([c / 255.0 for c in hex_to_tuple(brush_color)], dtype=torch.float32, device=device)
     brush_rgb = brush_rgb.view(1, 1, channels)
 
+    y_grid, x_grid = torch.meshgrid(
+        torch.arange(height, dtype=torch.float32, device=device),
+        torch.arange(width, dtype=torch.float32, device=device),
+        indexing='ij'
+    )
+
     alpha_mask = torch.zeros((height, width), dtype=torch.float32, device=device)
 
-    for position in brush_positions:
-        brush_x = int(position[0] * width)
-        brush_y = int(position[1] * height)
+    radius_squared = (brush_size / 2) ** 2
 
-        y_grid, x_grid = torch.meshgrid(
-            torch.arange(height, dtype=torch.float32, device=device),
-            torch.arange(width, dtype=torch.float32, device=device),
-            indexing='ij'
-        )
+    for brush_x, brush_y in brush_positions:
+        brush_x = int(brush_x * width)
+        brush_y = int(brush_y * height)
+
         dist_squared = (x_grid - brush_x) ** 2 + (y_grid - brush_y) ** 2
-        radius_squared = (brush_size / 2) ** 2
-
-        stroke_mask = torch.zeros_like(alpha_mask)
-        stroke_mask[dist_squared <= radius_squared] = opacity
+        stroke_mask = (dist_squared <= radius_squared).float() * opacity
 
         alpha_mask = torch.clamp(alpha_mask + stroke_mask, max=1.0)
 

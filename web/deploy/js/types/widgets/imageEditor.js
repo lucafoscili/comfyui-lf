@@ -32,16 +32,22 @@ export var ImageEditorIcons;
 //#region Controls
 export var ImageEditorControls;
 (function (ImageEditorControls) {
+    ImageEditorControls["Canvas"] = "canvas";
     ImageEditorControls["Slider"] = "slider";
     ImageEditorControls["Textfield"] = "textfield";
     ImageEditorControls["Toggle"] = "toggle";
 })(ImageEditorControls || (ImageEditorControls = {}));
+export var ImageEditorCanvasIds;
+(function (ImageEditorCanvasIds) {
+    ImageEditorCanvasIds["BrushPositions"] = "brush_positions";
+})(ImageEditorCanvasIds || (ImageEditorCanvasIds = {}));
 export var ImageEditorSliderIds;
 (function (ImageEditorSliderIds) {
     ImageEditorSliderIds["BlueChannel"] = "b_channel";
     ImageEditorSliderIds["BlurKernelSize"] = "blur_kernel_size";
     ImageEditorSliderIds["BlurSigma"] = "blur_sigma";
     ImageEditorSliderIds["BrightnessStrength"] = "brightness_strength";
+    ImageEditorSliderIds["BrushSize"] = "brush_size";
     ImageEditorSliderIds["ClarityStrength"] = "clarity_strength";
     ImageEditorSliderIds["ContrastStrength"] = "contrast_strength";
     ImageEditorSliderIds["DesaturationStrength"] = "desaturation_strength";
@@ -57,6 +63,7 @@ export var ImageEditorSliderIds;
 })(ImageEditorSliderIds || (ImageEditorSliderIds = {}));
 export var ImageEditorTextfieldIds;
 (function (ImageEditorTextfieldIds) {
+    ImageEditorTextfieldIds["BrushColor"] = "brush_color";
     ImageEditorTextfieldIds["Color"] = "color";
 })(ImageEditorTextfieldIds || (ImageEditorTextfieldIds = {}));
 export var ImageEditorToggleIds;
@@ -72,6 +79,13 @@ export var ImageEditorBrightnessIds;
     ImageEditorBrightnessIds["Midpoint"] = "midpoint";
     ImageEditorBrightnessIds["LocalizedBrightness"] = "localized_brightness";
 })(ImageEditorBrightnessIds || (ImageEditorBrightnessIds = {}));
+export var ImageEditorBrushIds;
+(function (ImageEditorBrushIds) {
+    ImageEditorBrushIds["BrushPositions"] = "brush_positions";
+    ImageEditorBrushIds["BrushSize"] = "brush_size";
+    ImageEditorBrushIds["BrushColor"] = "brush_color";
+    ImageEditorBrushIds["Opacity"] = "opacity";
+})(ImageEditorBrushIds || (ImageEditorBrushIds = {}));
 export var ImageEditorClarityIds;
 (function (ImageEditorClarityIds) {
     ImageEditorClarityIds["BlurKernelSize"] = "blur_kernel_size";

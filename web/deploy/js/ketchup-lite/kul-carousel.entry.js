@@ -271,7 +271,7 @@ const KulCarousel = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: '55f253cd5b74a3f64c9f878273a19035ff31e5df' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'd11a0bcc21d61d6bd3d8596c8f3459806a74e821', id: KUL_WRAPPER_ID }, h("div", { key: 'f3ff3809b54cc0ef97aea6e314faf25d35b77d55', class: "carousel", onTouchStart: (e) => (this.#touchStartX = e.touches[0].clientX), onTouchMove: () => {
+        return (h(Host, { key: 'f6d944f678072f92251bfd4f49166e009ba6ea4c' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '6478c92b1df27d5454d5cb7b994970078116999d', id: KUL_WRAPPER_ID }, h("div", { key: '632040cdd1c5c342096eeaccbe5a40eec6f10dc7', class: "carousel", onTouchStart: (e) => (this.#touchStartX = e.touches[0].clientX), onTouchMove: () => {
                 const swipeDistance = this.#touchEndX - this.#touchStartX;
                 const swipeThreshold = 50;
                 const currentTime = performance.now();

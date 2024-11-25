@@ -46,15 +46,20 @@ export declare enum ImageEditorIcons {
     Resume = "play"
 }
 export declare enum ImageEditorControls {
+    Canvas = "canvas",
     Slider = "slider",
     Textfield = "textfield",
     Toggle = "toggle"
+}
+export declare enum ImageEditorCanvasIds {
+    BrushPositions = "brush_positions"
 }
 export declare enum ImageEditorSliderIds {
     BlueChannel = "b_channel",
     BlurKernelSize = "blur_kernel_size",
     BlurSigma = "blur_sigma",
     BrightnessStrength = "brightness_strength",
+    BrushSize = "brush_size",
     ClarityStrength = "clarity_strength",
     ContrastStrength = "contrast_strength",
     DesaturationStrength = "desaturation_strength",
@@ -69,6 +74,7 @@ export declare enum ImageEditorSliderIds {
     Size = "size"
 }
 export declare enum ImageEditorTextfieldIds {
+    BrushColor = "brush_color",
     Color = "color"
 }
 export declare enum ImageEditorToggleIds {
@@ -79,7 +85,10 @@ export declare enum ImageEditorToggleIds {
 export type ImageEditorControlIds = ImageEditorSliderIds | ImageEditorTextfieldIds | ImageEditorToggleIds;
 export type ImageEditorControlValue = string | number | boolean;
 export interface ImageEditorFilterSettings {
-    [key: string]: number | boolean | string;
+    [key: string]: number | boolean | string | Array<{
+        x: number;
+        y: number;
+    }>;
 }
 export interface ImageEditorBaseConfig<ID extends ImageEditorControlIds, V extends ImageEditorControlValue> {
     ariaLabel: string;
@@ -87,6 +96,12 @@ export interface ImageEditorBaseConfig<ID extends ImageEditorControlIds, V exten
     id: ID;
     isMandatory?: boolean;
     title: string;
+}
+export interface ImageEditorCanvasConfig extends ImageEditorBaseConfig<ImageEditorSliderIds, number> {
+    positions: Array<{
+        x: number;
+        y: number;
+    }>;
 }
 export interface ImageEditorSliderConfig extends ImageEditorBaseConfig<ImageEditorSliderIds, number> {
     controlType: ImageEditorControls.Slider;
@@ -103,7 +118,7 @@ export interface ImageEditorToggleConfig extends ImageEditorBaseConfig<ImageEdit
     off: string;
     on: string;
 }
-export type ImageEditorControlConfig = ImageEditorSliderConfig | ImageEditorTextfieldConfig | ImageEditorToggleConfig;
+export type ImageEditorControlConfig = ImageEditorCanvasConfig | ImageEditorSliderConfig | ImageEditorTextfieldConfig | ImageEditorToggleConfig;
 export type ImageEditorSettingsFor = Partial<{
     [ImageEditorControls.Slider]: ImageEditorSliderConfig[];
     [ImageEditorControls.Textfield]: ImageEditorTextfieldConfig[];
@@ -111,7 +126,7 @@ export type ImageEditorSettingsFor = Partial<{
 }>;
 export interface ImageEditorFilterSettingsMap {
     brightness: ImageEditorBrightnessSettings;
-    brush: ImageEditorClaritySettings;
+    brush: ImageEditorBrushSettings;
     clarity: ImageEditorClaritySettings;
     contrast: ImageEditorContrastSettings;
     desaturate: ImageEditorDesaturateSettings;
@@ -123,6 +138,15 @@ export interface ImageEditorBrightnessSettings extends ImageEditorFilterSettings
     gamma: number;
     localized_brightness: boolean;
     midpoint: number;
+}
+export interface ImageEditorBrushSettings extends ImageEditorFilterSettings {
+    brush_positions: Array<{
+        x: number;
+        y: number;
+    }>;
+    brush_size: number;
+    brush_color: string;
+    opacity: number;
 }
 export interface ImageEditorClaritySettings extends ImageEditorFilterSettings {
     clarity_strength: number;
@@ -154,6 +178,12 @@ export declare enum ImageEditorBrightnessIds {
     Gamma = "gamma",
     Midpoint = "midpoint",
     LocalizedBrightness = "localized_brightness"
+}
+export declare enum ImageEditorBrushIds {
+    BrushPositions = "brush_positions",
+    BrushSize = "brush_size",
+    BrushColor = "brush_color",
+    Opacity = "opacity"
 }
 export declare enum ImageEditorClarityIds {
     BlurKernelSize = "blur_kernel_size",
@@ -193,6 +223,11 @@ export type ImageEditorBrightnessFilter = ImageEditorFilterDefinition<typeof Ima
     [ImageEditorControls.Slider]: ImageEditorSliderConfig[];
     [ImageEditorControls.Toggle]: ImageEditorToggleConfig[];
 }>;
+export type ImageEditorBrushFilter = ImageEditorFilterDefinition<typeof ImageEditorBrushIds, ImageEditorBrushSettings, {
+    [ImageEditorControls.Canvas]: ImageEditorCanvasConfig[];
+    [ImageEditorControls.Slider]: ImageEditorSliderConfig[];
+    [ImageEditorControls.Textfield]: ImageEditorTextfieldConfig[];
+}>;
 export type ImageEditorClarityFilter = ImageEditorFilterDefinition<typeof ImageEditorClarityIds, ImageEditorClaritySettings, {
     [ImageEditorControls.Slider]: ImageEditorSliderConfig[];
 }>;
@@ -213,10 +248,11 @@ export type ImageEditorVignetteFilter = ImageEditorFilterDefinition<typeof Image
 }>;
 export type ImageEditorFilters = {
     brightness: ImageEditorBrightnessFilter;
+    brush: ImageEditorBrushFilter;
     clarity: ImageEditorClarityFilter;
     contrast: ImageEditorContrastFilter;
     desaturate: ImageEditorDesaturateFilter;
     gaussianBlur: ImageEditorGaussianBlurFilter;
     vignette: ImageEditorVignetteFilter;
 };
-export type ImageEditorFilter = ImageEditorBrightnessFilter | ImageEditorClarityFilter | ImageEditorContrastFilter | ImageEditorDesaturateFilter | ImageEditorVignetteFilter;
+export type ImageEditorFilter = ImageEditorBrightnessFilter | ImageEditorBrushFilter | ImageEditorClarityFilter | ImageEditorContrastFilter | ImageEditorDesaturateFilter | ImageEditorGaussianBlurFilter | ImageEditorVignetteFilter;

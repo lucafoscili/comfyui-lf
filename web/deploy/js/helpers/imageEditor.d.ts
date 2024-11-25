@@ -1,11 +1,13 @@
-import { KulButtonEventPayload, KulImageviewerEventPayload, KulSliderEventPayload, KulTextfieldEventPayload, KulToggleEventPayload } from '../types/ketchup-lite/components';
+import { KulButtonEventPayload, KulCanvasEventPayload, KulImageviewerEventPayload, KulSliderEventPayload, KulTextfieldEventPayload, KulToggleEventPayload } from '../types/ketchup-lite/components';
 import { KulDataColumn, KulDataDataset, KulDataNode } from '../types/ketchup-lite/managers/kul-data/kul-data-declarations';
-import { ImageEditorActionButtons, ImageEditorControlConfig, ImageEditorSliderConfig, ImageEditorStatus, ImageEditorTextfieldConfig, ImageEditorToggleConfig, ImageEditorUpdateCallback } from '../types/widgets/imageEditor';
+import { ImageEditorActionButtons, ImageEditorControlConfig, ImageEditorFilterSettingsMap, ImageEditorSliderConfig, ImageEditorStatus, ImageEditorTextfieldConfig, ImageEditorToggleConfig, ImageEditorUpdateCallback } from '../types/widgets/imageEditor';
 export declare const buttonEventHandler: (imageviewer: HTMLKulImageviewerElement, actionButtons: ImageEditorActionButtons, grid: HTMLDivElement, e: CustomEvent<KulButtonEventPayload>) => Promise<void>;
+export declare const canvasviewerEventHandler: (imageviewer: HTMLKulImageviewerElement, e: CustomEvent<KulCanvasEventPayload>) => Promise<void>;
 export declare const imageviewerEventHandler: (settings: HTMLDivElement, node: NodeType, e: CustomEvent<KulImageviewerEventPayload>) => Promise<void>;
 export declare const sliderEventHandler: (updateCb: ImageEditorUpdateCallback, e: CustomEvent<KulSliderEventPayload>) => Promise<void>;
 export declare const textfieldEventHandler: (updateCb: ImageEditorUpdateCallback, e: CustomEvent<KulTextfieldEventPayload>) => Promise<void>;
 export declare const toggleEventHandler: (updateCb: ImageEditorUpdateCallback, e: CustomEvent<KulToggleEventPayload>) => Promise<void>;
+export declare const callApi: (imageviewer: HTMLKulImageviewerElement, filterType: keyof ImageEditorFilterSettingsMap, addSnapshot: boolean, settingsValues: ImageEditorFilterSettingsMap[typeof filterType]) => Promise<void>;
 export declare const prepSettings: (settings: HTMLDivElement, node: KulDataNode, imageviewer: HTMLKulImageviewerElement) => void;
 export declare const createSlider: (data: ImageEditorSliderConfig, updateCb: ImageEditorUpdateCallback) => HTMLKulSliderElement;
 export declare const createTextfield: (data: ImageEditorTextfieldConfig, updateCb: ImageEditorUpdateCallback) => HTMLKulTextfieldElement;
@@ -15,3 +17,4 @@ export declare const getStatusColumn: (dataset: KulDataDataset) => KulDataColumn
 export declare const parseLabel: (data: ImageEditorControlConfig) => string;
 export declare const resetSettings: (settings: HTMLElement) => Promise<void>;
 export declare const setGridStatus: (status: ImageEditorStatus, grid: HTMLDivElement, actionButtons: ImageEditorActionButtons) => void;
+export declare const updateCanvasConfig: (imageviewer: HTMLKulImageviewerElement, settingsValues: ImageEditorFilterSettingsMap["brush"]) => Promise<void>;

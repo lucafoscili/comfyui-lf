@@ -1,6 +1,7 @@
 import { KulDataDataset } from '../types/ketchup-lite/components';
 import {
   ImageEditorBrightnessIds,
+  ImageEditorBrushIds,
   ImageEditorClarityIds,
   ImageEditorContrastIds,
   ImageEditorControls,
@@ -67,6 +68,49 @@ const SETTINGS: ImageEditorFilters = {
           off: 'false',
           on: 'true',
           title: 'Enhance brightness locally in darker regions.',
+        },
+      ],
+    },
+  },
+  //#endregion
+  //#region Brush
+  brush: {
+    controlIds: ImageEditorBrushIds,
+    settings: { brush_color: 'FF0000', brush_positions: [], brush_size: 10, opacity: 1 },
+    configs: {
+      [ImageEditorControls.Canvas]: [],
+      [ImageEditorControls.Slider]: [
+        {
+          ariaLabel: 'Brush size',
+          controlType: ImageEditorControls.Slider,
+          defaultValue: 10,
+          id: ImageEditorSliderIds.BrushSize,
+          isMandatory: true,
+          max: '500',
+          min: '1',
+          step: '1',
+          title: 'Sets the size of the brush.',
+        },
+        {
+          ariaLabel: 'Opacity',
+          controlType: ImageEditorControls.Slider,
+          defaultValue: 1,
+          id: ImageEditorSliderIds.Opacity,
+          isMandatory: true,
+          max: '1',
+          min: '0.05',
+          step: '0.05',
+          title: 'Sets the opacity of the brush.',
+        },
+      ],
+      [ImageEditorControls.Textfield]: [
+        {
+          ariaLabel: 'Color',
+          controlType: ImageEditorControls.Textfield,
+          defaultValue: 'FF0000',
+          id: ImageEditorTextfieldIds.BrushColor,
+          title: 'Sets the color of the brush stroke.',
+          type: 'color',
         },
       ],
     },
@@ -321,6 +365,27 @@ const SETTINGS: ImageEditorFilters = {
 
 export const TREE_DATA: KulDataDataset = {
   nodes: [
+    {
+      description: 'Tool configuration.',
+      id: 'settings',
+      icon: 'wrench',
+      value: 'Settings',
+      children: [
+        //#region Brush
+        {
+          description: 'Brush settings, such as color and size.',
+          cells: {
+            kulCode: {
+              shape: 'code',
+              value: JSON.stringify(SETTINGS.brush),
+            },
+          },
+          id: 'brush',
+          value: 'Brush',
+        },
+        //#endregion
+      ],
+    },
     {
       description: 'Basic adjustments such as sharpening and color tuning.',
       id: 'basic_adjustments',
