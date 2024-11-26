@@ -1,5 +1,5 @@
 import { TREE_DATA } from '../fixtures/imageEditor.js';
-import { buttonEventHandler, canvasviewerEventHandler, getStatusColumn, imageviewerEventHandler, setGridStatus, } from '../helpers/imageEditor.js';
+import { buttonEventHandler, canvasEventHandler, getStatusColumn, imageviewerEventHandler, setGridStatus, } from '../helpers/imageEditor.js';
 import { KulEventName } from '../types/events/events.js';
 import { LogSeverity } from '../types/manager/manager.js';
 import { CustomWidgetName, NodeName, TagName, } from '../types/widgets/_common.js';
@@ -55,7 +55,7 @@ export const imageEditorFactory = {
         imageviewer.kulLoadCallback = async (_, value) => await options.refresh(value);
         imageviewer.kulValue = TREE_DATA;
         imageviewer.addEventListener(KulEventName.KulImageviewer, imageviewerEventHandler.bind(imageviewerEventHandler, settings, node));
-        imageviewer.addEventListener(KulEventName.KulCanvas, canvasviewerEventHandler.bind(imageviewerEventHandler, imageviewer));
+        imageviewer.addEventListener(KulEventName.KulCanvas, canvasEventHandler.bind(imageviewerEventHandler, imageviewer));
         imageviewer.appendChild(settings);
         const actionButtons = {};
         switch (node.comfyClass) {

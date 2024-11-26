@@ -3,7 +3,7 @@ import torch
 from server import PromptServer
 
 from ..utils.constants import CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, Input
-from ..utils.filters import brightness_effect, brush_effect, clarity_effect, contrast_effect, desaturate_effect, gaussian_blur_effect, vignette_effect
+from ..utils.filters import brightness_effect, clarity_effect, contrast_effect, desaturate_effect, gaussian_blur_effect, line_effect, vignette_effect
 from ..utils.helpers import normalize_input_image, normalize_list_to_value, normalize_output_image, process_and_save_image
 
 CATEGORY = f"{CATEGORY_PREFIX}/Filters"
@@ -91,47 +91,75 @@ class LF_Brightness:
 
         return (batch_list[0], image_list)
 # endregion
-# region LF_Brush
-class LF_Brush:
+# region LF_Line
+class LF_Line:
     @classmethod
     def INPUT_TYPES(self):
         return {
             "required": {
                 "image": (Input.IMAGE, {
-                    "tooltip": "Input image tensor to paint on."
+                    "tooltip": "Input image tensor to draw a line upon."
                 }),
-                "x": (Input.FLOAT, {
-                    "default": 0.5, 
-                    "min": 0, 
-                    "max": 1, 
-                    "tooltip": "X position of the brush stroke, with values between 0 and 1."
+                "start_x": (Input.FLOAT, {
+                    "default": 0.5,
+                    "min": 0,
+                    "max": 1,
+                    "tooltip": "Horizontal position to begin the line drawing, expressed as a value between 0 and 1."
                 }),
-                "y": (Input.FLOAT, {
-                    "default": 0.5, 
-                    "min": 0, 
-                    "max": 1, 
-                    "tooltip": "Y position of the brush stroke, with values between 0 and 1."
+                "start_y": (Input.FLOAT, {
+                    "default": 0.5,
+                    "min": 0,
+                    "max": 1,
+                    "tooltip": "Vertical position to begin the line drawing, expressed as a value between 0 and 1."
                 }),
-                "brush_size": (Input.INTEGER, {
+                "end_x": (Input.FLOAT, {
+                    "default": 0.5,
+                    "min": 0,
+                    "max": 1,
+                    "tooltip": "Horizontal position to end the line drawing, expressed as a value between 0 and 1."
+                }),
+                "end_y": (Input.FLOAT, {
+                    "default": 0.5,
+                    "min": 0,
+                    "max": 1,
+                    "tooltip": "Vertical position to end the line drawing, expressed as a value between 0 and 1."
+                }),
+                "size": (Input.INTEGER, {
                     "default": 10, 
                     "min": 1, 
-                    "max": 100, 
+                    "max": 500, 
                     "step": 1, 
-                    "tooltip": "Diameter of the brush stroke in pixels."
+                    "tooltip": "Diameter of the line in pixels."
                 }),
-                "brush_color": (Input.STRING, {
-                    "default": "FFFFFF", 
-                    "tooltip": "Hex color of the brush stroke."
+                "color": (Input.STRING, {
+                    "default": "FF0000", 
+                    "tooltip": "Hex color of the line."
                 }),
                 "opacity": (Input.FLOAT, {
                     "default": 1.0, 
                     "min": 0.0, 
                     "max": 1.0, 
                     "step": 0.01, 
-                    "tooltip": "Opacity of the brush stroke."
+                    "tooltip": "Opacity of the line."
+                }),
+                "smooth": (Input.BOOLEAN, {
+                    "default": False, 
+                    "tooltip": "Draws a smooth line."
                 }),
             },
             "optional": {
+                "mid_x": (Input.FLOAT, {
+                    "default": 0.5,
+                    "min": 0,
+                    "max": 1,
+                    "tooltip": "Horizontal midpoint of the line, expressed as a value between 0 and 1."
+                }),
+                "mid_y": (Input.FLOAT, {
+                    "default": 0.5,
+                    "min": 0,
+                    "max": 1,
+                    "tooltip": "Vertical midpoint of the line, expressed as a value between 0 and 1."
+                }),
                 "ui_widget": (Input.KUL_COMPARE, {
                     "default": {}
                 })
@@ -149,31 +177,42 @@ class LF_Brush:
 
     def on_exec(self, **kwargs: dict):
         image: list[torch.Tensor] = normalize_input_image(kwargs.get("image"))
-        x: float = normalize_list_to_value(kwargs.get("x"))
-        y: float = normalize_list_to_value(kwargs.get("y"))
-        brush_size: int = normalize_list_to_value(kwargs.get("brush_size"))
-        brush_color: str = normalize_list_to_value(kwargs.get("brush_color"))
+        start_x: float = normalize_list_to_value(kwargs.get("start_x", 0))
+        start_y: float = normalize_list_to_value(kwargs.get("start_y", 0))
+        end_x: float = normalize_list_to_value(kwargs.get("end_x", 1))
+        end_y: float = normalize_list_to_value(kwargs.get("end_y", 1))
+        mid_x: float = normalize_list_to_value(kwargs.get("mid_x", (start_x + end_x) / 2))
+        mid_y: float = normalize_list_to_value(kwargs.get("mid_y", (start_y + end_y) / 2))
+        size: int = normalize_list_to_value(kwargs.get("size"))
+        color: str = normalize_list_to_value(kwargs.get("color"))
+        smooth: bool = normalize_list_to_value(kwargs.get("smooth"))
         opacity: float = normalize_list_to_value(kwargs.get("opacity"))
 
         nodes: list[dict] = []
         dataset: dict = {"nodes": nodes}
 
+        points: list[tuple] = [(start_x, start_y)]
+        if smooth:
+            points.append((mid_x, mid_y))
+        points.append((end_x, end_y))
+
         processed_images = process_and_save_image(
             images=image,
-            filter_function=brush_effect,
+            filter_function=line_effect,
             filter_args={
-                'brush_positions': [(x, y)],
-                'brush_size': brush_size,
-                'brush_color': brush_color,
+                'points': points,
+                'size': size,
+                'color': color,
                 'opacity': opacity,
+                "smooth": smooth
             },
-            filename_prefix="brush",
+            filename_prefix="line",
             nodes=nodes,
         )
 
         batch_list, image_list = normalize_output_image(processed_images)
 
-        PromptServer.instance.send_sync(f"{EVENT_PREFIX}brush", {
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}line", {
             "node": kwargs.get("node_id"),
             "dataset": dataset,
         })
@@ -565,19 +604,19 @@ class LF_Vignette:
 # endregion
 NODE_CLASS_MAPPINGS = {
     "LF_Brightness": LF_Brightness,
-    "LF_Brush": LF_Brush,
     "LF_Clarity": LF_Clarity,
     "LF_Contrast": LF_Contrast,
     "LF_Desaturation": LF_Desaturation,
     "LF_GaussianBlur": LF_GaussianBlur,
+    "LF_Line": LF_Line,
     "LF_Vignette": LF_Vignette
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_Brightness": "Brightness",
-    "LF_Brush": "Brush",
     "LF_Clarity": "Clarity",
     "LF_Contrast": "Contrast",
     "LF_Desaturation": "Desaturation",
     "LF_GaussianBlur": "Gaussian Blur",
+    "LF_Line": "LF_Line",
     "LF_Vignette": "Vignette"
 }

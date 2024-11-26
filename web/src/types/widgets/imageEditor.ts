@@ -38,6 +38,12 @@ export enum ImageEditorCSS {
   GridHasActions = `${BASE_CSS_CLASS}__grid--has-actions`,
   GridIsInactive = `${BASE_CSS_CLASS}__grid--is-inactive`,
   Settings = `${BASE_CSS_CLASS}__settings`,
+  SettingsControls = `${BASE_CSS_CLASS}__settings__controls`,
+}
+export interface ImageEditorData {
+  filter: ImageEditorFilter;
+  filterType: ImageEditorFilterType;
+  settings: HTMLDivElement;
 }
 //#endregion
 //#region Dataset
@@ -69,14 +75,13 @@ export enum ImageEditorControls {
   Toggle = 'toggle',
 }
 export enum ImageEditorCanvasIds {
-  BrushPositions = 'brush_positions',
+  Points = 'points',
 }
 export enum ImageEditorSliderIds {
   BlueChannel = 'b_channel',
   BlurKernelSize = 'blur_kernel_size',
   BlurSigma = 'blur_sigma',
   BrightnessStrength = 'brightness_strength',
-  BrushSize = 'brush_size',
   ClarityStrength = 'clarity_strength',
   ContrastStrength = 'contrast_strength',
   DesaturationStrength = 'desaturation_strength',
@@ -91,22 +96,23 @@ export enum ImageEditorSliderIds {
   Size = 'size',
 }
 export enum ImageEditorTextfieldIds {
-  BrushColor = 'brush_color',
   Color = 'color',
 }
 export enum ImageEditorToggleIds {
   LocalizedBrightness = 'localized_brightness',
   LocalizedContrast = 'localized_contrast',
   Shape = 'shape',
+  Smooth = 'smoooth',
 }
 export type ImageEditorControlIds =
+  | ImageEditorCanvasIds
   | ImageEditorSliderIds
   | ImageEditorTextfieldIds
   | ImageEditorToggleIds;
 export type ImageEditorControlValue = string | number | boolean;
-export interface ImageEditorFilterSettings {
-  [key: string]: number | boolean | string | Array<{ x: number; y: number }>;
-}
+export type ImageEditorFilterSettings = Partial<{
+  [K in ImageEditorControlIds]: number | boolean | string | Array<{ x: number; y: number }>;
+}>;
 export interface ImageEditorBaseConfig<
   ID extends ImageEditorControlIds,
   V extends ImageEditorControlValue,
@@ -119,7 +125,7 @@ export interface ImageEditorBaseConfig<
 }
 export interface ImageEditorCanvasConfig
   extends ImageEditorBaseConfig<ImageEditorSliderIds, number> {
-  positions: Array<{ x: number; y: number }>;
+  points: Array<{ x: number; y: number }>;
 }
 export interface ImageEditorSliderConfig
   extends ImageEditorBaseConfig<ImageEditorSliderIds, number> {
@@ -158,6 +164,7 @@ export interface ImageEditorFilterSettingsMap {
   contrast: ImageEditorContrastSettings;
   desaturate: ImageEditorDesaturateSettings;
   gaussianBlur: ImageEditorGaussianBlurSettings;
+  line: ImageEditorLineSettings;
   vignette: ImageEditorVignetteSettings;
 }
 export interface ImageEditorBrightnessSettings extends ImageEditorFilterSettings {
@@ -167,10 +174,9 @@ export interface ImageEditorBrightnessSettings extends ImageEditorFilterSettings
   midpoint: number;
 }
 export interface ImageEditorBrushSettings extends ImageEditorFilterSettings {
-  brush_positions: Array<{ x: number; y: number }>;
-  brush_size: number;
-  brush_color: string;
+  color: string;
   opacity: number;
+  size: number;
 }
 export interface ImageEditorClaritySettings extends ImageEditorFilterSettings {
   clarity_strength: number;
@@ -189,8 +195,15 @@ export interface ImageEditorDesaturateSettings extends ImageEditorFilterSettings
   desaturation_strength: number;
 }
 export interface ImageEditorGaussianBlurSettings extends ImageEditorFilterSettings {
-  blur_sigma: number;
   blur_kernel_size: number;
+  blur_sigma: number;
+}
+export interface ImageEditorLineSettings extends ImageEditorFilterSettings {
+  color: string;
+  opacity: number;
+  points: Array<{ x: number; y: number }>;
+  size: number;
+  smooth: boolean;
 }
 export interface ImageEditorVignetteSettings extends ImageEditorFilterSettings {
   intensity: number;
@@ -204,10 +217,9 @@ export enum ImageEditorBrightnessIds {
   LocalizedBrightness = 'localized_brightness',
 }
 export enum ImageEditorBrushIds {
-  BrushPositions = 'brush_positions',
-  BrushSize = 'brush_size',
-  BrushColor = 'brush_color',
+  Color = 'color',
   Opacity = 'opacity',
+  Size = 'size',
 }
 export enum ImageEditorClarityIds {
   BlurKernelSize = 'blur_kernel_size',
@@ -229,6 +241,13 @@ export enum ImageEditorGaussianBlurIds {
   BlurKernelSize = 'blur_kernel_size',
   BlurSigma = 'blur_sigma',
 }
+export enum ImageEditorLineIds {
+  Color = 'color',
+  Opacity = 'opacity',
+  Points = 'points',
+  Size = 'size',
+  Smooth = 'smooth',
+}
 export enum ImageEditorVignetteIds {
   Color = 'color',
   Intensity = 'intensity',
@@ -237,13 +256,14 @@ export enum ImageEditorVignetteIds {
 }
 export type ImageEditorFilterType = keyof ImageEditorFilterSettingsMap;
 export interface ImageEditorFilterDefinition<
-  ControlIdsEnum extends { [key: string]: string },
-  Settings extends ImageEditorFilterSettings,
-  Configs extends ImageEditorSettingsFor,
+  ImageEditorControlIdsEnum extends { [key: string]: string },
+  ImageEditorSettings extends ImageEditorFilterSettings,
+  ImageEditorConfigs extends ImageEditorSettingsFor,
 > {
-  controlIds: ControlIdsEnum;
-  settings: Settings;
-  configs: Configs;
+  controlIds: ImageEditorControlIdsEnum;
+  configs: ImageEditorConfigs;
+  hasCanvasAction?: boolean;
+  settings: ImageEditorSettings;
 }
 export type ImageEditorBrightnessFilter = ImageEditorFilterDefinition<
   typeof ImageEditorBrightnessIds,
@@ -257,7 +277,6 @@ export type ImageEditorBrushFilter = ImageEditorFilterDefinition<
   typeof ImageEditorBrushIds,
   ImageEditorBrushSettings,
   {
-    [ImageEditorControls.Canvas]: ImageEditorCanvasConfig[];
     [ImageEditorControls.Slider]: ImageEditorSliderConfig[];
     [ImageEditorControls.Textfield]: ImageEditorTextfieldConfig[];
   }
@@ -291,6 +310,16 @@ export type ImageEditorGaussianBlurFilter = ImageEditorFilterDefinition<
     [ImageEditorControls.Slider]: ImageEditorSliderConfig[];
   }
 >;
+export type ImageEditorLineFilter = ImageEditorFilterDefinition<
+  typeof ImageEditorLineIds,
+  ImageEditorLineSettings,
+  {
+    [ImageEditorControls.Canvas]: ImageEditorCanvasConfig[];
+    [ImageEditorControls.Slider]: ImageEditorSliderConfig[];
+    [ImageEditorControls.Textfield]: ImageEditorTextfieldConfig[];
+    [ImageEditorControls.Toggle]: ImageEditorToggleConfig[];
+  }
+>;
 export type ImageEditorVignetteFilter = ImageEditorFilterDefinition<
   typeof ImageEditorVignetteIds,
   ImageEditorVignetteSettings,
@@ -307,6 +336,7 @@ export type ImageEditorFilters = {
   contrast: ImageEditorContrastFilter;
   desaturate: ImageEditorDesaturateFilter;
   gaussianBlur: ImageEditorGaussianBlurFilter;
+  line: ImageEditorLineFilter;
   vignette: ImageEditorVignetteFilter;
 };
 export type ImageEditorFilter =
@@ -316,5 +346,6 @@ export type ImageEditorFilter =
   | ImageEditorContrastFilter
   | ImageEditorDesaturateFilter
   | ImageEditorGaussianBlurFilter
+  | ImageEditorLineFilter
   | ImageEditorVignetteFilter;
 //#endregion

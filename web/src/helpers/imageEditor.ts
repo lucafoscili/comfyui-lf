@@ -1,3 +1,4 @@
+import { debounce, getApiRoutes, getLFManager, isValidObject, unescapeJson } from '../utils/common';
 import {
   KulButtonEventPayload,
   KulCanvasEventPayload,
@@ -14,15 +15,16 @@ import {
 } from '../types/ketchup-lite/managers/kul-data/kul-data-declarations';
 import { KulGenericEvent } from '../types/ketchup-lite/types/GenericTypes';
 import { LogSeverity } from '../types/manager/manager';
-import { NodeName } from '../types/widgets/_common';
+import { NodeName, TagName } from '../types/widgets/_common';
 import {
   ImageEditorActionButtons,
-  ImageEditorBrushSettings,
   ImageEditorColumnId,
   ImageEditorControlConfig,
   ImageEditorControls,
   ImageEditorCSS,
+  ImageEditorData,
   ImageEditorFilter,
+  ImageEditorFilterSettings,
   ImageEditorFilterSettingsMap,
   ImageEditorFilterType,
   ImageEditorIcons,
@@ -32,7 +34,8 @@ import {
   ImageEditorToggleConfig,
   ImageEditorUpdateCallback,
 } from '../types/widgets/imageEditor';
-import { debounce, getApiRoutes, getLFManager, unescapeJson } from '../utils/common';
+
+const imageviewerDataMap = new WeakMap<HTMLKulImageviewerElement, ImageEditorData>();
 
 //#region buttonEventHandler
 export const buttonEventHandler = async (
@@ -73,8 +76,8 @@ export const buttonEventHandler = async (
   }
 };
 //#endregion
-//#region canvasviewerEventHandler
-export const canvasviewerEventHandler = async (
+//#region canvasEventHandler
+export const canvasEventHandler = async (
   imageviewer: HTMLKulImageviewerElement,
   e: CustomEvent<KulCanvasEventPayload>,
 ) => {
@@ -82,12 +85,18 @@ export const canvasviewerEventHandler = async (
 
   switch (eventType) {
     case 'stroke':
-      callApi(imageviewer, 'brush', true, {
-        brush_color: comp.kulColor,
-        brush_positions: points,
-        brush_size: comp.kulSize,
+      const { filter, filterType, settings } = imageviewerDataMap.get(imageviewer);
+      if (!filter?.hasCanvasAction) {
+        imageviewerDataMap.set(imageviewer, { filter, filterType: 'brush', settings });
+      }
+      await updateCb(imageviewer, true, {
+        color: comp.kulColor,
         opacity: comp.kulOpacity,
-      } as ImageEditorBrushSettings);
+        points,
+        size: comp.kulSize,
+      });
+
+      imageviewerDataMap.set(imageviewer, { filter, filterType, settings });
       break;
   }
 };
@@ -108,7 +117,7 @@ export const imageviewerEventHandler = async (
           if ((ogEv.detail.comp.rootElement as HTMLElement).tagName === 'KUL-TREE') {
             const { node } = ogEv.detail as KulTreeEventPayload;
             if (node.cells?.kulCode) {
-              prepSettings(settings, node, comp.rootElement as HTMLKulImageviewerElement);
+              prepSettings(node, comp.rootElement);
             }
           }
           break;
@@ -117,6 +126,7 @@ export const imageviewerEventHandler = async (
 
     case 'ready':
       const components = await comp.getComponents();
+      imageviewerDataMap.set(comp.rootElement, { filter: null, filterType: null, settings });
       switch (node.comfyClass) {
         case NodeName.imagesEditingBreakpoint:
           components.load.kulDisabled = true;
@@ -185,16 +195,18 @@ export const toggleEventHandler = async (
 //#region callApi
 export const callApi = async (
   imageviewer: HTMLKulImageviewerElement,
-  filterType: keyof ImageEditorFilterSettingsMap,
   addSnapshot: boolean,
-  settingsValues: ImageEditorFilterSettingsMap[typeof filterType],
+  values: unknown,
 ) => {
+  const { filterType } = imageviewerDataMap.get(imageviewer);
   const lfManager = getLFManager();
+
+  const v = values as ImageEditorFilterSettingsMap[typeof filterType];
 
   const snapshotValue = (await imageviewer.getCurrentSnapshot()).value;
   requestAnimationFrame(() => imageviewer.setSpinnerStatus(true));
   try {
-    const response = await getApiRoutes().image.process(snapshotValue, filterType, settingsValues);
+    const response = await getApiRoutes().image.process(snapshotValue, filterType, v);
     if (response.status === 'success') {
       if (addSnapshot) {
         imageviewer.addSnapshot(response.data);
@@ -212,107 +224,95 @@ export const callApi = async (
   requestAnimationFrame(() => imageviewer.setSpinnerStatus(false));
 };
 //#endregion
-//#region prepSettings
-export const prepSettings = (
-  settings: HTMLDivElement,
-  node: KulDataNode,
-  imageviewer: HTMLKulImageviewerElement,
-) => {
+//#region getValues
+export const getValues = async (imageviewer: HTMLKulImageviewerElement, addSnapshot = false) => {
+  const { filter, filterType, settings } = imageviewerDataMap.get(imageviewer);
+
   const lfManager = getLFManager();
-  const filterType = node.id as ImageEditorFilterType;
-  const widgets = unescapeJson(node.cells.kulCode.value).parsedJson as ImageEditorFilter;
+  const values: ImageEditorFilterSettingsMap[typeof filterType] =
+    {} as ImageEditorFilterSettingsMap[typeof filterType];
+  const controls: HTMLElement[] = Array.from(settings.querySelectorAll('[data-id]'));
 
-  const updateSettings = async (addSnapshot = false) => {
-    const settingsValues: ImageEditorFilterSettingsMap[typeof filterType] =
-      {} as ImageEditorFilterSettingsMap[typeof filterType];
-    const controls: HTMLElement[] = Array.from(settings.querySelectorAll('[data-id]'));
+  let mandatoryCheck = true;
 
-    let mandatoryCheck = true;
+  for (const control of controls) {
+    const id = control.dataset.id as keyof ImageEditorFilterSettingsMap[typeof filterType];
+    let value: number | boolean | string;
 
-    for (const control of controls) {
-      const id = control.dataset.id as keyof ImageEditorFilterSettingsMap[typeof filterType];
-      let value: number | boolean | string;
-
-      switch (control.tagName) {
-        case 'KUL-SLIDER': {
-          const slider = control as HTMLKulSliderElement;
-          const sliderValue = await slider.getValue();
-          value = addSnapshot ? sliderValue.real : sliderValue.display;
-          break;
-        }
-        case 'KUL-TEXTFIELD': {
-          const textfield = control as HTMLKulTextfieldElement;
-          const textfieldValue = await textfield.getValue();
-          value = textfieldValue;
-          break;
-        }
-        case 'KUL-TOGGLE': {
-          const toggle = control as HTMLKulToggleElement;
-          const toggleValue = await toggle.getValue();
-          value = toggleValue === 'on' ? toggle.dataset.on : toggle.dataset.off;
-          break;
-        }
-        default:
-          lfManager.log(
-            `Unhandled control type: ${control.tagName}`,
-            { control },
-            LogSeverity.Warning,
-          );
-          continue;
-      }
-
-      if (control.dataset.mandatory === 'true' && !value) {
-        mandatoryCheck = false;
+    switch (control.tagName) {
+      case 'KUL-SLIDER': {
+        const slider = control as HTMLKulSliderElement;
+        const sliderValue = await slider.getValue();
+        value = addSnapshot ? sliderValue.real : sliderValue.display;
         break;
       }
-
-      settingsValues[id] = value;
-    }
-
-    if (!mandatoryCheck) {
-      return;
-    }
-
-    switch (filterType) {
-      case 'brush':
-        updateCanvasConfig(imageviewer, settingsValues as ImageEditorFilterSettingsMap['brush']);
+      case 'KUL-TEXTFIELD': {
+        const textfield = control as HTMLKulTextfieldElement;
+        const textfieldValue = await textfield.getValue();
+        value = textfieldValue;
         break;
-
+      }
+      case 'KUL-TOGGLE': {
+        const toggle = control as HTMLKulToggleElement;
+        const toggleValue = await toggle.getValue();
+        value = toggleValue === 'on' ? toggle.dataset.on : toggle.dataset.off;
+        break;
+      }
       default:
-        callApi(imageviewer, filterType, addSnapshot, settingsValues);
-        break;
+        lfManager.log(
+          `Unhandled control type: ${control.tagName}`,
+          { control },
+          LogSeverity.Warning,
+        );
+        continue;
     }
-  };
 
+    if (control.dataset.mandatory === 'true' && !value) {
+      mandatoryCheck = false;
+      break;
+    }
+
+    values[id] = value;
+  }
+
+  if (!mandatoryCheck) {
+    return null;
+  }
+
+  return values;
+};
+//#endregion
+//#region prepSettings
+export const prepSettings = (node: KulDataNode, imageviewer: HTMLKulImageviewerElement) => {
+  const { settings } = imageviewerDataMap.get(imageviewer);
   settings.innerHTML = '';
 
-  const resetButton = document.createElement('kul-button');
-  resetButton.classList.add('kul-full-width');
-  resetButton.kulIcon = ImageEditorIcons.Reset;
-  resetButton.kulLabel = 'Reset';
-  settings.appendChild(resetButton);
+  const filterType = node.id as ImageEditorFilterType;
+  const filter = unescapeJson(node.cells.kulCode.value).parsedJson as ImageEditorFilter;
+  imageviewerDataMap.set(imageviewer, { filter, filterType, settings });
 
-  const controlNames = Object.keys(widgets.configs);
+  const controlsContainer = document.createElement(TagName.Div);
+  controlsContainer.classList.add(ImageEditorCSS.SettingsControls);
+  settings.appendChild(controlsContainer);
 
+  const cb = updateCb.bind(updateCb, imageviewer);
+
+  const controlNames = Object.keys(filter.configs);
   controlNames.forEach((controlName) => {
-    const controls: ImageEditorControlConfig[] = widgets.configs[controlName];
+    const controls: ImageEditorControlConfig[] = filter.configs[controlName];
     if (controls) {
       controls.forEach((controlData) => {
         switch (controlName) {
           case ImageEditorControls.Slider:
-            settings.appendChild(
-              createSlider(controlData as ImageEditorSliderConfig, updateSettings),
-            );
+            controlsContainer.appendChild(createSlider(controlData as ImageEditorSliderConfig, cb));
             break;
           case ImageEditorControls.Textfield:
-            settings.appendChild(
-              createTextfield(controlData as ImageEditorTextfieldConfig, updateSettings),
+            controlsContainer.appendChild(
+              createTextfield(controlData as ImageEditorTextfieldConfig, cb),
             );
             break;
           case ImageEditorControls.Toggle:
-            settings.appendChild(
-              createToggle(controlData as ImageEditorToggleConfig, updateSettings),
-            );
+            controlsContainer.appendChild(createToggle(controlData as ImageEditorToggleConfig, cb));
             break;
           default:
             throw new Error(`Unknown control type: ${controlName}`);
@@ -321,8 +321,12 @@ export const prepSettings = (
     }
   });
 
-  // Add Reset Functionality
+  const resetButton = document.createElement(TagName.KulButton);
+  resetButton.classList.add('kul-full-width');
+  resetButton.kulIcon = ImageEditorIcons.Reset;
+  resetButton.kulLabel = 'Reset';
   resetButton.addEventListener('click', () => resetSettings(settings));
+  settings.appendChild(resetButton);
 };
 //#endregion
 //#region createSlider
@@ -442,12 +446,36 @@ export const setGridStatus = (
 };
 export const updateCanvasConfig = async (
   imageviewer: HTMLKulImageviewerElement,
-  settingsValues: ImageEditorFilterSettingsMap['brush'],
+  values: ImageEditorFilterSettingsMap['brush'],
 ) => {
   const { canvas } = await imageviewer.getComponents();
-  const { brush_color, brush_size, opacity } = settingsValues;
-  canvas.kulColor = brush_color;
-  canvas.kulSize = brush_size;
+  const { color, size, opacity } = values;
+  canvas.kulColor = color;
+  canvas.kulSize = size;
   canvas.kulOpacity = opacity;
+};
+const updateCb = async (
+  imageviewer: HTMLKulImageviewerElement,
+  addSnapshot = false,
+  defaults?: ImageEditorFilterSettings,
+) => {
+  const { filter } = imageviewerDataMap.get(imageviewer);
+
+  const controls = await getValues(imageviewer, addSnapshot);
+  const validControls = isValidObject(controls);
+
+  const values = { ...defaults, ...controls };
+  const validValues = isValidObject(values);
+
+  const isStroke = !filter || filter.hasCanvasAction;
+
+  if (validControls && isStroke) {
+    updateCanvasConfig(imageviewer, values as ImageEditorFilterSettingsMap['brush']);
+  }
+
+  const shouldUpdate = !!(validValues && (!isStroke || (isStroke && values.points)));
+  if (shouldUpdate) {
+    callApi(imageviewer, addSnapshot, values);
+  }
 };
 //#endregion

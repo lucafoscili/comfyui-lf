@@ -241,6 +241,9 @@ export const getWidget = <T extends ComfyWidgetName>(
     (w) => w.type.toLowerCase() === type.toLowerCase(),
   ) as ComfyWidgetMap[T];
 };
+export const isValidObject = (obj: unknown) => {
+  return obj && typeof obj === 'object' && Object.keys(obj).length > 0;
+};
 export const normalizeValue = <
   W extends CustomWidgetName,
   V extends CustomWidgetDeserializedValuesMap<W>,

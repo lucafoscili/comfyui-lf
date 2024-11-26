@@ -195,6 +195,9 @@ export const getCustomWidget = (node, type) => {
 export const getWidget = (node, type) => {
     return node?.widgets?.find((w) => w.type.toLowerCase() === type.toLowerCase());
 };
+export const isValidObject = (obj) => {
+    return obj && typeof obj === 'object' && Object.keys(obj).length > 0;
+};
 export const normalizeValue = (value, callback, widget, onException) => {
     try {
         callback(value, unescapeJson(value));

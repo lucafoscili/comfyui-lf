@@ -203,7 +203,15 @@
   align-items: center;
   display: grid;
   grid-area: settings;
+  grid-template-rows: 1fr auto;
   height: 100%;
+  width: 100%;
+}
+.lf-imageeditor__settings__controls {
+  align-items: center;
+  display: grid;
+  height: 100%;
+  overflow: auto;
   padding: 12px 24px;
   width: 100%;
 }

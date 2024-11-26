@@ -8,6 +8,7 @@ import {
   ImageEditorDesaturateIds,
   ImageEditorFilters,
   ImageEditorGaussianBlurIds,
+  ImageEditorLineIds,
   ImageEditorSliderIds,
   ImageEditorTextfieldIds,
   ImageEditorToggleIds,
@@ -76,15 +77,15 @@ const SETTINGS: ImageEditorFilters = {
   //#region Brush
   brush: {
     controlIds: ImageEditorBrushIds,
-    settings: { brush_color: 'FF0000', brush_positions: [], brush_size: 10, opacity: 1 },
+    hasCanvasAction: true,
+    settings: { color: '#FF0000', opacity: 1, size: 10 },
     configs: {
-      [ImageEditorControls.Canvas]: [],
       [ImageEditorControls.Slider]: [
         {
-          ariaLabel: 'Brush size',
+          ariaLabel: 'Size',
           controlType: ImageEditorControls.Slider,
           defaultValue: 10,
-          id: ImageEditorSliderIds.BrushSize,
+          id: ImageEditorSliderIds.Size,
           isMandatory: true,
           max: '500',
           min: '1',
@@ -107,8 +108,9 @@ const SETTINGS: ImageEditorFilters = {
         {
           ariaLabel: 'Color',
           controlType: ImageEditorControls.Textfield,
-          defaultValue: 'FF0000',
-          id: ImageEditorTextfieldIds.BrushColor,
+          defaultValue: '#FF0000',
+          id: ImageEditorTextfieldIds.Color,
+          isMandatory: true,
           title: 'Sets the color of the brush stroke.',
           type: 'color',
         },
@@ -303,6 +305,62 @@ const SETTINGS: ImageEditorFilters = {
     },
   },
   //#endregion
+  //#region Line
+  line: {
+    controlIds: ImageEditorLineIds,
+    hasCanvasAction: true,
+    settings: { color: '#FF0000', opacity: 1, points: [], size: 10, smooth: false },
+    configs: {
+      [ImageEditorControls.Canvas]: [],
+      [ImageEditorControls.Slider]: [
+        {
+          ariaLabel: 'Size',
+          controlType: ImageEditorControls.Slider,
+          defaultValue: 10,
+          id: ImageEditorSliderIds.Size,
+          isMandatory: true,
+          max: '500',
+          min: '1',
+          step: '1',
+          title: 'Sets the size of the brush.',
+        },
+        {
+          ariaLabel: 'Opacity',
+          controlType: ImageEditorControls.Slider,
+          defaultValue: 1,
+          id: ImageEditorSliderIds.Opacity,
+          isMandatory: true,
+          max: '1',
+          min: '0.05',
+          step: '0.05',
+          title: 'Sets the opacity of the brush.',
+        },
+      ],
+      [ImageEditorControls.Textfield]: [
+        {
+          ariaLabel: 'Color',
+          controlType: ImageEditorControls.Textfield,
+          defaultValue: '#FF0000',
+          id: ImageEditorTextfieldIds.Color,
+          isMandatory: true,
+          title: 'Sets the color of the brush stroke.',
+          type: 'color',
+        },
+      ],
+      [ImageEditorControls.Toggle]: [
+        {
+          ariaLabel: 'Smooth',
+          controlType: ImageEditorControls.Toggle,
+          defaultValue: false,
+          id: ImageEditorToggleIds.Smooth,
+          title: 'Draws a smooth line.',
+          off: 'false',
+          on: 'true',
+        },
+      ],
+    },
+  },
+  //#endregion
   //#region Vignette
   vignette: {
     controlIds: ImageEditorVignetteIds,
@@ -373,7 +431,7 @@ export const TREE_DATA: KulDataDataset = {
       children: [
         //#region Brush
         {
-          description: 'Brush settings, such as color and size.',
+          description: 'Brush configuration.',
           cells: {
             kulCode: {
               shape: 'code',
@@ -463,6 +521,19 @@ export const TREE_DATA: KulDataDataset = {
           },
           id: 'gaussian_blur',
           value: 'Gaussian blur',
+        },
+        //#endregion
+        //#region Line
+        {
+          description: 'Draws a line.',
+          cells: {
+            kulCode: {
+              shape: 'code',
+              value: JSON.stringify(SETTINGS.line),
+            },
+          },
+          id: 'line',
+          value: 'Line',
         },
         //#endregion
         //#region Vignette
