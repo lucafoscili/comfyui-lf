@@ -1,7 +1,8 @@
-import { debounce, getApiRoutes, getLFManager, unescapeJson } from '../utils/common.js';
+import { debounce, getApiRoutes, getLFManager, isValidObject, unescapeJson } from '../utils/common.js';
 import { LogSeverity } from '../types/manager/manager.js';
 import { NodeName, TagName } from '../types/widgets/_common.js';
 import { ImageEditorColumnId, ImageEditorControls, ImageEditorCSS, ImageEditorIcons, ImageEditorStatus, } from '../types/widgets/imageEditor.js';
+const imageviewerDataMap = new WeakMap();
 //#region buttonEventHandler
 export const buttonEventHandler = async (imageviewer, actionButtons, grid, e) => {
     const { comp, eventType } = e.detail;
@@ -30,17 +31,22 @@ export const buttonEventHandler = async (imageviewer, actionButtons, grid, e) =>
     }
 };
 //#endregion
-//#region canvasviewerEventHandler
-export const canvasviewerEventHandler = async (imageviewer, e) => {
+//#region canvasEventHandler
+export const canvasEventHandler = async (imageviewer, e) => {
     const { comp, eventType, points } = e.detail;
     switch (eventType) {
         case 'stroke':
-            callApi(imageviewer, true, {
+            const { filter, filterType, settings } = imageviewerDataMap.get(imageviewer);
+            if (!filter?.hasCanvasAction) {
+                imageviewerDataMap.set(imageviewer, { filter, filterType: 'brush', settings });
+            }
+            await updateCb(imageviewer, true, {
                 color: comp.kulColor,
+                opacity: comp.kulOpacity,
                 points,
                 size: comp.kulSize,
-                opacity: comp.kulOpacity,
             });
+            imageviewerDataMap.set(imageviewer, { filter, filterType, settings });
             break;
     }
 };
@@ -56,7 +62,7 @@ export const imageviewerEventHandler = async (settings, node, e) => {
                     if (ogEv.detail.comp.rootElement.tagName === 'KUL-TREE') {
                         const { node } = ogEv.detail;
                         if (node.cells?.kulCode) {
-                            prepSettings(settings, node, comp.rootElement);
+                            prepSettings(node, comp.rootElement);
                         }
                     }
                     break;
@@ -64,6 +70,7 @@ export const imageviewerEventHandler = async (settings, node, e) => {
             break;
         case 'ready':
             const components = await comp.getComponents();
+            imageviewerDataMap.set(comp.rootElement, { filter: null, filterType: null, settings });
             switch (node.comfyClass) {
                 case NodeName.imagesEditingBreakpoint:
                     components.load.kulDisabled = true;
@@ -118,14 +125,14 @@ export const toggleEventHandler = async (updateCb, e) => {
 };
 //#endregion
 //#region callApi
-export const callApi = async (imageviewer, addSnapshot, settingsValues) => {
+export const callApi = async (imageviewer, addSnapshot, values) => {
+    const { filterType } = imageviewerDataMap.get(imageviewer);
     const lfManager = getLFManager();
-    const filterType = imageviewer.dataset.filter;
-    const settings = settingsValues;
+    const v = values;
     const snapshotValue = (await imageviewer.getCurrentSnapshot()).value;
     requestAnimationFrame(() => imageviewer.setSpinnerStatus(true));
     try {
-        const response = await getApiRoutes().image.process(snapshotValue, filterType, settings);
+        const response = await getApiRoutes().image.process(snapshotValue, filterType, v);
         if (response.status === 'success') {
             if (addSnapshot) {
                 imageviewer.addSnapshot(response.data);
@@ -147,7 +154,8 @@ export const callApi = async (imageviewer, addSnapshot, settingsValues) => {
 };
 //#endregion
 //#region getValues
-export const getValues = async (imageviewer, settings, widgets, filterType, addSnapshot = false) => {
+export const getValues = async (imageviewer, addSnapshot = false) => {
+    const { filter, filterType, settings } = imageviewerDataMap.get(imageviewer);
     const lfManager = getLFManager();
     const values = {};
     const controls = Array.from(settings.querySelectorAll('[data-id]'));
@@ -184,10 +192,6 @@ export const getValues = async (imageviewer, settings, widgets, filterType, addS
         }
         values[id] = value;
     }
-    if (widgets.hasCanvasAction) {
-        updateCanvasConfig(imageviewer, values);
-        return null;
-    }
     if (!mandatoryCheck) {
         return null;
     }
@@ -195,35 +199,30 @@ export const getValues = async (imageviewer, settings, widgets, filterType, addS
 };
 //#endregion
 //#region prepSettings
-export const prepSettings = (settings, node, imageviewer) => {
+export const prepSettings = (node, imageviewer) => {
+    const { settings } = imageviewerDataMap.get(imageviewer);
     settings.innerHTML = '';
     const filterType = node.id;
-    const widgets = unescapeJson(node.cells.kulCode.value).parsedJson;
-    const updateSettings = async (addSnapshot = false) => {
-        const values = await getValues(imageviewer, settings, widgets, filterType, addSnapshot);
-        if (!values) {
-            return;
-        }
-        callApi(imageviewer, addSnapshot, values);
-    };
-    imageviewer.dataset.filter = node.id;
+    const filter = unescapeJson(node.cells.kulCode.value).parsedJson;
+    imageviewerDataMap.set(imageviewer, { filter, filterType, settings });
     const controlsContainer = document.createElement(TagName.Div);
     controlsContainer.classList.add(ImageEditorCSS.SettingsControls);
     settings.appendChild(controlsContainer);
-    const controlNames = Object.keys(widgets.configs);
+    const cb = updateCb.bind(updateCb, imageviewer);
+    const controlNames = Object.keys(filter.configs);
     controlNames.forEach((controlName) => {
-        const controls = widgets.configs[controlName];
+        const controls = filter.configs[controlName];
         if (controls) {
             controls.forEach((controlData) => {
                 switch (controlName) {
                     case ImageEditorControls.Slider:
-                        controlsContainer.appendChild(createSlider(controlData, updateSettings));
+                        controlsContainer.appendChild(createSlider(controlData, cb));
                         break;
                     case ImageEditorControls.Textfield:
-                        controlsContainer.appendChild(createTextfield(controlData, updateSettings));
+                        controlsContainer.appendChild(createTextfield(controlData, cb));
                         break;
                     case ImageEditorControls.Toggle:
-                        controlsContainer.appendChild(createToggle(controlData, updateSettings));
+                        controlsContainer.appendChild(createToggle(controlData, cb));
                         break;
                     default:
                         throw new Error(`Unknown control type: ${controlName}`);
@@ -331,11 +330,26 @@ export const setGridStatus = (status, grid, actionButtons) => {
             break;
     }
 };
-export const updateCanvasConfig = async (imageviewer, settingsValues) => {
+export const updateCanvasConfig = async (imageviewer, values) => {
     const { canvas } = await imageviewer.getComponents();
-    const { color, size, opacity } = settingsValues;
+    const { color, size, opacity } = values;
     canvas.kulColor = color;
     canvas.kulSize = size;
     canvas.kulOpacity = opacity;
+};
+const updateCb = async (imageviewer, addSnapshot = false, defaults) => {
+    const { filter } = imageviewerDataMap.get(imageviewer);
+    const controls = await getValues(imageviewer, addSnapshot);
+    const validControls = isValidObject(controls);
+    const values = { ...defaults, ...controls };
+    const validValues = isValidObject(values);
+    const isStroke = !filter || filter.hasCanvasAction;
+    if (validControls && isStroke) {
+        updateCanvasConfig(imageviewer, values);
+    }
+    const shouldUpdate = !!(validValues && (!isStroke || (isStroke && values.points)));
+    if (shouldUpdate) {
+        callApi(imageviewer, addSnapshot, values);
+    }
 };
 //#endregion

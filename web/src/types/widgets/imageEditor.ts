@@ -41,14 +41,9 @@ export enum ImageEditorCSS {
   SettingsControls = `${BASE_CSS_CLASS}__settings__controls`,
 }
 export interface ImageEditorData {
-  controls: ImageEditorFilter;
+  filter: ImageEditorFilter;
   filterType: ImageEditorFilterType;
   settings: HTMLDivElement;
-  updateCb: (
-    imageviewer: HTMLKulImageviewerElement,
-    addSnapshot?: boolean,
-    extraArgs?: any,
-  ) => Promise<void>;
 }
 //#endregion
 //#region Dataset
@@ -110,13 +105,14 @@ export enum ImageEditorToggleIds {
   Smooth = 'smoooth',
 }
 export type ImageEditorControlIds =
+  | ImageEditorCanvasIds
   | ImageEditorSliderIds
   | ImageEditorTextfieldIds
   | ImageEditorToggleIds;
 export type ImageEditorControlValue = string | number | boolean;
-export interface ImageEditorFilterSettings {
-  [key: string]: number | boolean | string | Array<{ x: number; y: number }>;
-}
+export type ImageEditorFilterSettings = Partial<{
+  [K in ImageEditorControlIds]: number | boolean | string | Array<{ x: number; y: number }>;
+}>;
 export interface ImageEditorBaseConfig<
   ID extends ImageEditorControlIds,
   V extends ImageEditorControlValue,
@@ -260,14 +256,14 @@ export enum ImageEditorVignetteIds {
 }
 export type ImageEditorFilterType = keyof ImageEditorFilterSettingsMap;
 export interface ImageEditorFilterDefinition<
-  ControlIdsEnum extends { [key: string]: string },
-  Settings extends ImageEditorFilterSettings,
-  Configs extends ImageEditorSettingsFor,
+  ImageEditorControlIdsEnum extends { [key: string]: string },
+  ImageEditorSettings extends ImageEditorFilterSettings,
+  ImageEditorConfigs extends ImageEditorSettingsFor,
 > {
-  controlIds: ControlIdsEnum;
-  configs: Configs;
+  controlIds: ImageEditorControlIdsEnum;
+  configs: ImageEditorConfigs;
   hasCanvasAction?: boolean;
-  settings: Settings;
+  settings: ImageEditorSettings;
 }
 export type ImageEditorBrightnessFilter = ImageEditorFilterDefinition<
   typeof ImageEditorBrightnessIds,

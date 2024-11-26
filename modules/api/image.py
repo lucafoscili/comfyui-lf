@@ -10,7 +10,7 @@ from server import PromptServer
 
 from ..utils.constants import API_ROUTE_PREFIX
 from ..utils.filters import brightness_effect, clarity_effect, contrast_effect, desaturate_effect, gaussian_blur_effect, line_effect, vignette_effect
-from ..utils.helpers import create_masonry_node, get_comfy_dir, get_resource_url, pil_to_tensor, resolve_filepath, resolve_url, tensor_to_pil
+from ..utils.helpers import convert_to_boolean, convert_to_float, convert_to_int, create_masonry_node, get_comfy_dir, get_resource_url, pil_to_tensor, resolve_filepath, resolve_url, tensor_to_pil
 
 # region get-image
 @PromptServer.instance.routes.post(f"{API_ROUTE_PREFIX}/get-image")
@@ -98,39 +98,39 @@ async def process_image(request):
 
 # region helpers
 def apply_brightness_effect(img_tensor: torch.Tensor, settings: dict):
-    brightness_strength: float = float(settings.get("brightness_strength", 0))
-    gamma: float = float(settings.get("gamma", 0))
-    midpoint: float = float(settings.get("midpoint", 0))
-    localized_brightness: bool = bool(settings.get("localized_brightness", False))
+    brightness_strength = convert_to_float(settings.get("brightness_strength", 0))
+    gamma = convert_to_float(settings.get("gamma", 0))
+    midpoint = convert_to_float(settings.get("midpoint", 0))
+    localized_brightness = convert_to_boolean(settings.get("localized_brightness", False))
 
     return brightness_effect(img_tensor, brightness_strength, gamma, midpoint, localized_brightness)
 
 
 def apply_clarity_effect(img_tensor: torch.Tensor, settings: dict):
-    clarity_strength: float = float(settings.get("clarity_strength", 0))
-    sharpen_amount: float = float(settings.get("sharpen_amount", 0))
-    blur_kernel_size: int = int(settings.get("blur_kernel_size", 1))
+    clarity_strength = convert_to_float(settings.get("clarity_strength", 0))
+    sharpen_amount = convert_to_float(settings.get("sharpen_amount", 0))
+    blur_kernel_size = convert_to_int(settings.get("blur_kernel_size", 1))
 
     return clarity_effect(img_tensor, clarity_strength, sharpen_amount, blur_kernel_size)
 
 def apply_contrast_effect(img_tensor: torch.Tensor, settings: dict):
-    contrast_strength: float = float(settings.get("contrast_strength", 0))
-    midpoint: float = float(settings.get("midpoint", 0))
-    localized_contrast: bool = bool(settings.get("localized_contrast", False))
+    contrast_strength = convert_to_float(settings.get("contrast_strength", 0))
+    midpoint = convert_to_float(settings.get("midpoint", 0))
+    localized_contrast = convert_to_boolean(settings.get("localized_contrast", False))
 
     return contrast_effect(img_tensor, contrast_strength, midpoint, localized_contrast)
 
 def apply_desaturate_effect(img_tensor: torch.Tensor, settings: dict):
-    desaturation_strength: float = float(settings.get("desaturation_strength", 0))
-    r: float = float(settings.get("r_channel", 1))
-    g: float = float(settings.get("g_channel", 1))
-    b: float = float(settings.get("b_channel", 1))
+    desaturation_strength = convert_to_float(settings.get("desaturation_strength", 0))
+    r = convert_to_float(settings.get("r_channel", 1))
+    g = convert_to_float(settings.get("g_channel", 1))
+    b = convert_to_float(settings.get("b_channel", 1))
 
     return desaturate_effect(img_tensor, desaturation_strength, [r, g, b])
 
 def apply_gaussian_blur_effect(img_tensor: torch.Tensor, settings: dict):
-    blur_sigma: float = float(settings.get("blur_sigma", 0))
-    blur_kernel_size: int = int(settings.get("blur_kernel_size", 1))
+    blur_sigma = convert_to_float(settings.get("blur_sigma", 0))
+    blur_kernel_size = convert_to_int(settings.get("blur_kernel_size", 1))
 
     return gaussian_blur_effect(img_tensor, blur_kernel_size, blur_sigma)
 
@@ -138,16 +138,16 @@ def apply_line_effect(img_tensor: torch.Tensor, settings: dict):
     points: list = settings.get("points", [])
     points: list[tuple] = [(point["x"], point["y"]) for point in points]
     
-    size: int = int(settings.get("size", 0))
+    size = convert_to_int(settings.get("size", 0))
     color: str = settings.get("color", "FF0000")
-    opacity: float = float(settings.get("opacity", 1))
-    smooth: bool = bool(settings.get("smoooth", False))
+    opacity = convert_to_float(settings.get("opacity", 1))
+    smooth = convert_to_boolean(settings.get("smoooth", False))
 
     return line_effect(img_tensor, points, size, color, opacity, smooth)
 
 def apply_vignette_effect(img_tensor: torch.Tensor, settings: dict):
-    intensity: float = float(settings.get("intensity", 0))
-    radius: float = float(settings.get("radius", 0))
+    intensity = convert_to_float(settings.get("intensity", 0))
+    radius = convert_to_float(settings.get("radius", 0))
     shape: str = settings.get("shape", "elliptical")
     color: str = settings.get("color", "000000")
 

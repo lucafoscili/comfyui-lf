@@ -30,10 +30,9 @@ export declare enum ImageEditorCSS {
     SettingsControls = "lf-imageeditor__settings__controls"
 }
 export interface ImageEditorData {
-    controls: ImageEditorFilter;
+    filter: ImageEditorFilter;
     filterType: ImageEditorFilterType;
     settings: HTMLDivElement;
-    updateCb: (imageviewer: HTMLKulImageviewerElement, addSnapshot?: boolean, extraArgs?: any) => Promise<void>;
 }
 export declare enum ImageEditorStatus {
     Completed = "completed",
@@ -88,14 +87,14 @@ export declare enum ImageEditorToggleIds {
     Shape = "shape",
     Smooth = "smoooth"
 }
-export type ImageEditorControlIds = ImageEditorSliderIds | ImageEditorTextfieldIds | ImageEditorToggleIds;
+export type ImageEditorControlIds = ImageEditorCanvasIds | ImageEditorSliderIds | ImageEditorTextfieldIds | ImageEditorToggleIds;
 export type ImageEditorControlValue = string | number | boolean;
-export interface ImageEditorFilterSettings {
-    [key: string]: number | boolean | string | Array<{
+export type ImageEditorFilterSettings = Partial<{
+    [K in ImageEditorControlIds]: number | boolean | string | Array<{
         x: number;
         y: number;
     }>;
-}
+}>;
 export interface ImageEditorBaseConfig<ID extends ImageEditorControlIds, V extends ImageEditorControlValue> {
     ariaLabel: string;
     defaultValue: V;
@@ -231,13 +230,13 @@ export declare enum ImageEditorVignetteIds {
     Shape = "shape"
 }
 export type ImageEditorFilterType = keyof ImageEditorFilterSettingsMap;
-export interface ImageEditorFilterDefinition<ControlIdsEnum extends {
+export interface ImageEditorFilterDefinition<ImageEditorControlIdsEnum extends {
     [key: string]: string;
-}, Settings extends ImageEditorFilterSettings, Configs extends ImageEditorSettingsFor> {
-    controlIds: ControlIdsEnum;
-    configs: Configs;
+}, ImageEditorSettings extends ImageEditorFilterSettings, ImageEditorConfigs extends ImageEditorSettingsFor> {
+    controlIds: ImageEditorControlIdsEnum;
+    configs: ImageEditorConfigs;
     hasCanvasAction?: boolean;
-    settings: Settings;
+    settings: ImageEditorSettings;
 }
 export type ImageEditorBrightnessFilter = ImageEditorFilterDefinition<typeof ImageEditorBrightnessIds, ImageEditorBrightnessSettings, {
     [ImageEditorControls.Slider]: ImageEditorSliderConfig[];

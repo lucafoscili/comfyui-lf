@@ -29,5 +29,6 @@ export declare const debounce: <T extends (...args: any[]) => void>(func: T, del
 export declare const findWidget: <T extends CustomWidgetName>(node: NodeType, type: T) => CustomWidgetMap[T];
 export declare const getCustomWidget: <T extends CustomWidgetName>(node: NodeType, type: T) => CustomWidgetMap[T];
 export declare const getWidget: <T extends ComfyWidgetName>(node: NodeType, type: T) => ComfyWidgetMap[T];
+export declare const isValidObject: (obj: unknown) => boolean;
 export declare const normalizeValue: <W extends CustomWidgetName, V extends CustomWidgetDeserializedValuesMap<W>>(value: V | string, callback: NormalizeValueCallback<V | string>, widget: W, onException?: () => void) => void;
 export declare const refreshChart: (node: NodeType) => void;
