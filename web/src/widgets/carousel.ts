@@ -1,27 +1,30 @@
+import { CustomWidgetName, TagName } from '../types/widgets/_common';
 import {
-  CustomWidgetDeserializedValuesMap,
-  CustomWidgetName,
-  NormalizeValueCallback,
-  TagName,
-} from '../types/widgets/_common';
-import { CarouselCSS, CarouselDeserializedValue, CarouselFactory } from '../types/widgets/carousel';
+  CarouselCSS,
+  CarouselDeserializedValue,
+  CarouselFactory,
+  CarouselNormalizeCallback,
+  CarouselState,
+} from '../types/widgets/carousel';
 import { createDOMWidget, normalizeValue } from '../utils/common';
 
-//#region Carousel
+const STATE = new WeakMap<HTMLDivElement, CarouselState>();
+
 export const carouselFactory: CarouselFactory = {
-  options: (carousel) => {
+  //#region Options
+  options: (wrapper) => {
     return {
       hideOnZoom: true,
-      getComp() {
-        return carousel;
-      },
+      getState: () => STATE.get(wrapper),
       getValue() {
+        const { carousel } = STATE.get(wrapper);
+
         return carousel?.kulData || {};
       },
       setValue(value) {
-        const callback: NormalizeValueCallback<
-          CustomWidgetDeserializedValuesMap<typeof CustomWidgetName.carousel> | string
-        > = (_, u) => {
+        const { carousel } = STATE.get(wrapper);
+
+        const callback: CarouselNormalizeCallback = (_, u) => {
           const dataset = u.parsedJson as CarouselDeserializedValue;
           carousel.kulData = dataset || {};
         };
@@ -30,11 +33,12 @@ export const carouselFactory: CarouselFactory = {
       },
     };
   },
+  //#endregion
+  //#region Render
   render: (node) => {
     const wrapper = document.createElement(TagName.Div);
     const content = document.createElement(TagName.Div);
     const carousel = document.createElement(TagName.KulCarousel);
-    const options = carouselFactory.options(carousel);
 
     carousel.kulAutoPlay = true;
 
@@ -44,7 +48,14 @@ export const carouselFactory: CarouselFactory = {
     content.appendChild(carousel);
     wrapper.appendChild(content);
 
+    const options = carouselFactory.options(wrapper);
+
+    STATE.set(wrapper, { carousel, node, wrapper });
+
     return { widget: createDOMWidget(CustomWidgetName.carousel, wrapper, node, options) };
   },
+  //#endregion
+  //#region State
+  state: STATE,
+  //#endregion
 };
-//#endregion

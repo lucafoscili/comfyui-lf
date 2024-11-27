@@ -1,40 +1,43 @@
+import { CustomWidgetName, NodeName, TagName } from '../types/widgets/_common';
 import {
-  CustomWidgetDeserializedValuesMap,
-  CustomWidgetName,
-  NodeName,
-  NormalizeValueCallback,
-  TagName,
-} from '../types/widgets/_common';
-import { TreeCSS, TreeFactory, TreeValueDeserializedValue } from '../types/widgets/tree';
+  TreeCSS,
+  TreeDeserializedValue,
+  TreeFactory,
+  TreeNormalizeCallback,
+  TreeState,
+} from '../types/widgets/tree';
 import { createDOMWidget, normalizeValue } from '../utils/common';
 
-//#region Tree
+const STATE = new WeakMap<HTMLDivElement, TreeState>();
+
 export const treeFactory: TreeFactory = {
-  options: (tree) => {
+  //#region Options
+  options: (wrapper) => {
     return {
       hideOnZoom: true,
-      getComp() {
-        return tree;
-      },
+      getState: () => STATE.get(wrapper),
       getValue() {
+        const { tree } = STATE.get(wrapper);
+
         return tree.kulData || {};
       },
       setValue(value) {
-        const callback: NormalizeValueCallback<
-          CustomWidgetDeserializedValuesMap<typeof CustomWidgetName.tree> | string
-        > = (_, u) => {
-          tree.kulData = (u.parsedJson as TreeValueDeserializedValue) || {};
+        const { tree } = STATE.get(wrapper);
+
+        const callback: TreeNormalizeCallback = (_, u) => {
+          tree.kulData = (u.parsedJson as TreeDeserializedValue) || {};
         };
 
         normalizeValue(value, callback, CustomWidgetName.tree);
       },
     };
   },
+  //#endregion
+  //#region Render
   render: (node) => {
     const wrapper = document.createElement(TagName.Div);
     const content = document.createElement(TagName.Div);
     const tree = document.createElement(TagName.KulTree);
-    const options = treeFactory.options(tree);
 
     switch (node.comfyClass as NodeName) {
       case NodeName.isLandscape:
@@ -47,13 +50,21 @@ export const treeFactory: TreeFactory = {
         break;
     }
 
-    content.classList.add(TreeCSS.Content);
     tree.classList.add(TreeCSS.Widget);
 
+    content.classList.add(TreeCSS.Content);
     content.appendChild(tree);
+
     wrapper.appendChild(content);
+
+    const options = treeFactory.options(wrapper);
+
+    STATE.set(wrapper, { node, tree, wrapper });
 
     return { widget: createDOMWidget(CustomWidgetName.tree, wrapper, node, options) };
   },
+  //#endregion
+  //#region State
+  state: STATE,
+  //#endregion
 };
-//#endregion

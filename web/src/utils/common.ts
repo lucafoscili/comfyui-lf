@@ -4,9 +4,9 @@ import {
   CustomWidgetDeserializedValuesMap,
   CustomWidgetMap,
   CustomWidgetName,
-  CustomWidgetOptions,
   NormalizeValueCallback,
   UnescapeJSONPayload,
+  WidgetOptions,
 } from '../types/widgets/_common';
 import { KulButton } from '../types/ketchup-lite/components/kul-button/kul-button';
 import { KulChart } from '../types/ketchup-lite/components/kul-chart/kul-chart';
@@ -177,7 +177,7 @@ export const createDOMWidget = (
   type: CustomWidgetName,
   element: HTMLDivElement,
   node: NodeType,
-  options: CustomWidgetOptions = undefined,
+  options: WidgetOptions,
 ) => {
   getLFManager().log(`Creating '${type}'`, { element });
   try {

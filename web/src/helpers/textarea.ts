@@ -4,7 +4,8 @@ import { getLFManager } from '../utils/common';
 
 let VALIDATION_TIMEOUT: NodeJS.Timeout;
 
-export const handleInputChange = (e: Event) => {
+//#region inputEventHandler
+export const inputEventHandler = (e: Event) => {
   const textarea = e.currentTarget as HTMLTextAreaElement;
 
   const startValidationTimer = () => {
@@ -30,3 +31,4 @@ export const handleInputChange = (e: Event) => {
   clearTimeout(VALIDATION_TIMEOUT);
   startValidationTimer();
 };
+//#endregion

@@ -16,6 +16,7 @@ export const chatFactory = {
             },
             setValue(value) {
                 const callback = (v) => {
+                    chat.dataset.history = v;
                     chat.setHistory(v);
                 };
                 normalizeValue(value, callback, CustomWidgetName.chat);

@@ -1,22 +1,18 @@
-import {
-  CustomWidgetDeserializedValuesMap,
-  CustomWidgetName,
-  NodeName,
-  NormalizeValueCallback,
-  TagName,
-} from '../types/widgets/_common';
-import { CodeCSS, CodeFactory } from '../types/widgets/code';
+import { CustomWidgetName, NodeName, TagName } from '../types/widgets/_common';
+import { CodeCSS, CodeFactory, CodeNormalizeCallback, CodeState } from '../types/widgets/code';
 import { createDOMWidget, normalizeValue } from '../utils/common';
 
-//#region Code
+const STATE = new WeakMap<HTMLDivElement, CodeState>();
+
 export const codeFactory: CodeFactory = {
-  options: (code) => {
+  //#region Options
+  options: (wrapper) => {
     return {
       hideOnZoom: false,
-      getComp() {
-        return code;
-      },
+      getState: () => STATE.get(wrapper),
       getValue() {
+        const { code } = STATE.get(wrapper);
+
         switch (code.kulLanguage) {
           case 'json':
             return code.kulValue || '{}';
@@ -25,9 +21,9 @@ export const codeFactory: CodeFactory = {
         }
       },
       setValue(value) {
-        const callback: NormalizeValueCallback<
-          CustomWidgetDeserializedValuesMap<typeof CustomWidgetName.code> | string
-        > = (v, u) => {
+        const { code } = STATE.get(wrapper);
+
+        const callback: CodeNormalizeCallback = (v, u) => {
           switch (code.kulLanguage) {
             case 'json':
               code.kulValue = u.unescapedStr || '{}';
@@ -42,11 +38,12 @@ export const codeFactory: CodeFactory = {
       },
     };
   },
+  //#endregion
+  //#region Render
   render: (node) => {
     const wrapper = document.createElement(TagName.Div);
     const content = document.createElement(TagName.Div);
     const code = document.createElement(TagName.KulCode);
-    const options = codeFactory.options(code);
 
     content.classList.add(CodeCSS.Content);
     code.classList.add(CodeCSS.Widget);
@@ -69,7 +66,14 @@ export const codeFactory: CodeFactory = {
     content.appendChild(code);
     wrapper.appendChild(content);
 
+    const options = codeFactory.options(wrapper);
+
+    STATE.set(wrapper, { code, node, wrapper });
+
     return { widget: createDOMWidget(CustomWidgetName.code, wrapper, node, options) };
   },
+  //#endregion
+  //#region State
+  state: STATE,
+  //#endregion
 };
-//#endregion

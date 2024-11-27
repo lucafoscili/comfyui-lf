@@ -1,41 +1,14 @@
 import { AnalyticsType } from '../api/api';
 import { KulDataDataset } from '../ketchup-lite/components';
 import {
-  BaseWidgetCallback,
-  BaseWidgetFactory,
-  BaseWidgetOptions,
+  BaseWidgetState,
   CustomWidgetName,
-  NodeName,
+  NormalizeValueCallback,
+  WidgetFactory,
 } from './_common';
 
+//#region CSS
 const BASE_CSS_CLASS = 'lf-tabbarchart';
-
-//#region Tab bar chart
-export interface TabBarChart extends Widget {
-  options: TabBarChartOptions;
-  type: [CustomWidgetName.tabBarChart];
-}
-export interface TabBarChartFactory extends BaseWidgetFactory<TabBarChartOptions> {
-  options: TabBarChartOptionsCallback;
-}
-export type TabBarChartOptionsCallback = (
-  chart: HTMLKulChartElement,
-  tabbar: HTMLKulTabbarElement,
-  textfield: HTMLKulTextfieldElement,
-  node: NodeName,
-) => TabBarChartOptions;
-export interface TabBarChartOptions extends BaseWidgetOptions<TabBarChartDeserializedValue> {
-  getComp(): { chart: HTMLKulChartElement; tabbar: HTMLKulTabbarElement };
-  refresh(type: AnalyticsType): void;
-}
-export type TabBarChartSetter = () => {
-  [CustomWidgetName.tabBarChart]: BaseWidgetCallback<CustomWidgetName.tabBarChart>;
-};
-export type TabBarChartDeserializedValue = {
-  directory?: string;
-} & {
-  [index: string]: KulDataDataset;
-};
 export enum TabBarChartCSS {
   Content = BASE_CSS_CLASS,
   Directory = `${BASE_CSS_CLASS}__directory`,
@@ -44,5 +17,46 @@ export enum TabBarChartCSS {
   GridNoDirectory = `${BASE_CSS_CLASS}__grid--no-directory`,
   Spinner = `${BASE_CSS_CLASS}__spinner`,
   Tabbar = `${BASE_CSS_CLASS}__tabbar`,
+}
+//#endregion
+//#region Widget
+export type TabBarChart = Widget<CustomWidgetName.tabBarChart>;
+export type TabBarChartFactory = WidgetFactory<TabBarChartDeserializedValue, TabBarChartState>;
+export type TabBarChartNormalizeCallback = NormalizeValueCallback<
+  TabBarChartDeserializedValue | string
+>;
+//#endregion
+//#region Value
+export type TabBarChartDeserializedValue = {
+  directory?: string;
+} & {
+  [index: string]: KulDataDataset;
+};
+//#endregion
+//#region State
+export interface TabBarChartState extends BaseWidgetState {
+  directory: string;
+  elements: {
+    chart: HTMLKulChartElement;
+    tabbar: HTMLKulTabbarElement;
+    textfield: HTMLKulTextfieldElement;
+  };
+  selected: string;
+  type: AnalyticsType;
+}
+//#endregion
+//#region Dataset
+export enum TabBarChartColors {
+  Blue = 'blue',
+  Green = 'green',
+  Red = 'red',
+}
+export enum TabBarChartIds {
+  Blue = 'blue',
+  Counter = 'counter',
+  Green = 'green',
+  Intensity = 'intensity',
+  Name = 'name',
+  Red = 'red',
 }
 //#endregion

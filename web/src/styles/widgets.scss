@@ -131,28 +131,9 @@
     position: relative;
   }
 
-  &__grid {
-    display: grid;
-    grid-template-rows: 60% 1fr auto;
+  &__widget {
     height: 100%;
     width: 100%;
-  }
-
-  &__button,
-  &__chip {
-    height: auto;
-
-    &--hidden {
-      visibility: hidden;
-    }
-  }
-
-  &__chip {
-    border-top: 1px solid var(--kul-border-color);
-    border-bottom: 1px solid var(--kul-border-color);
-    box-sizing: border-box;
-    overflow: auto;
-    padding: 4px 0;
   }
 }
 

@@ -1,29 +1,30 @@
 import { KulDataDataset } from '../types/ketchup-lite/components';
+import { CustomWidgetName, TagName } from '../types/widgets/_common';
 import {
-  CustomWidgetDeserializedValuesMap,
-  CustomWidgetName,
-  NodeName,
-  NormalizeValueCallback,
-  TagName,
-} from '../types/widgets/_common';
-import { CompareCSS, CompareFactory } from '../types/widgets/compare';
+  CompareCSS,
+  CompareFactory,
+  CompareNormalizeCallback,
+  CompareState,
+} from '../types/widgets/compare';
 import { createDOMWidget, normalizeValue } from '../utils/common';
 
-//#region Compare
+const STATE = new WeakMap<HTMLDivElement, CompareState>();
+
 export const compareFactory: CompareFactory = {
-  options: (compare) => {
+  //#region Options
+  options: (wrapper) => {
     return {
       hideOnZoom: false,
-      getComp() {
-        return compare;
-      },
+      getState: () => STATE.get(wrapper),
       getValue() {
-        return {};
+        const { compare } = STATE.get(wrapper);
+
+        return compare.kulData || {};
       },
       setValue(value) {
-        const callback: NormalizeValueCallback<
-          CustomWidgetDeserializedValuesMap<typeof CustomWidgetName.compare> | string
-        > = (_, u) => {
+        const { compare } = STATE.get(wrapper);
+
+        const callback: CompareNormalizeCallback = (_, u) => {
           compare.kulData = (u.parsedJson as KulDataDataset) || {};
         };
 
@@ -31,11 +32,12 @@ export const compareFactory: CompareFactory = {
       },
     };
   },
+  //#endregion
+  //#region Render
   render: (node) => {
     const wrapper = document.createElement(TagName.Div);
     const content = document.createElement(TagName.Div);
     const compare = document.createElement(TagName.KulCompare);
-    const options = compareFactory.options(compare);
 
     content.classList.add(CompareCSS.Content);
     compare.classList.add(CompareCSS.Widget);
@@ -49,7 +51,14 @@ export const compareFactory: CompareFactory = {
     content.appendChild(compare);
     wrapper.appendChild(content);
 
+    const options = compareFactory.options(wrapper);
+
+    STATE.set(wrapper, { compare, node, wrapper });
+
     return { widget: createDOMWidget(CustomWidgetName.compare, wrapper, node, options) };
   },
+  //#endregion
+  //#region State
+  state: STATE,
+  //#endregion
 };
-//#endregion

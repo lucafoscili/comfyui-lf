@@ -1,35 +1,13 @@
 import { KulDataDataset } from '../ketchup-lite/components';
 import {
-  BaseWidgetCallback,
-  BaseWidgetFactory,
-  BaseWidgetOptions,
+  BaseWidgetState,
   CustomWidgetName,
+  NormalizeValueCallback,
+  WidgetFactory,
 } from './_common';
 
+//#region CSS
 const BASE_CSS_CLASS = 'lf-imageeditor';
-
-//#region Image editor
-export interface ImageEditor extends Widget {
-  options: ImageEditorOptions;
-  type: [CustomWidgetName.imageEditor];
-}
-export interface ImageEditorFactory extends BaseWidgetFactory<ImageEditorOptions> {
-  options: ImageEditorOptionsCallback;
-}
-export type ImageEditorOptionsCallback = (
-  imageviewer: HTMLKulImageviewerElement,
-  actionButtons: ImageEditorActionButtons,
-  grid: HTMLDivElement,
-) => ImageEditorOptions;
-export interface ImageEditorOptions extends BaseWidgetOptions<ImageEditorDeserializedValue> {
-  getComp(): { imageviewer: HTMLKulImageviewerElement };
-  refresh: (directory: string) => Promise<void>;
-}
-export type ImageEditorSetter = () => {
-  [CustomWidgetName.imageEditor]: BaseWidgetCallback<CustomWidgetName.imageEditor>;
-};
-export type ImageEditorDeserializedValue = KulDataDataset;
-export type ImageEditorUpdateCallback = (addSnapshot?: boolean) => Promise<void>;
 export enum ImageEditorCSS {
   Content = BASE_CSS_CLASS,
   Widget = `${BASE_CSS_CLASS}__widget`,
@@ -40,10 +18,27 @@ export enum ImageEditorCSS {
   Settings = `${BASE_CSS_CLASS}__settings`,
   SettingsControls = `${BASE_CSS_CLASS}__settings__controls`,
 }
-export interface ImageEditorData {
+//#endregion
+//#region Widget
+export type ImageEditor = Widget<CustomWidgetName.imageEditor>;
+export type ImageEditorFactory = WidgetFactory<ImageEditorDeserializedValue, ImageEditorState>;
+export type ImageEditorNormalizeCallback = NormalizeValueCallback<
+  ImageEditorDeserializedValue | string
+>;
+//#endregion
+//#region Value
+export type ImageEditorDeserializedValue = KulDataDataset;
+//#endregion
+//#region State
+export interface ImageEditorState extends BaseWidgetState {
+  elements: {
+    actionButtons: ImageEditorActionButtons;
+    grid: HTMLDivElement;
+    imageviewer: HTMLKulImageviewerElement;
+    settings: HTMLDivElement;
+  };
   filter: ImageEditorFilter;
   filterType: ImageEditorFilterType;
-  settings: HTMLDivElement;
 }
 //#endregion
 //#region Dataset
@@ -68,6 +63,7 @@ export enum ImageEditorIcons {
 }
 //#endregion
 //#region Controls
+export type ImageEditorUpdateCallback = (addSnapshot?: boolean) => Promise<void>;
 export enum ImageEditorControls {
   Canvas = 'canvas',
   Slider = 'slider',

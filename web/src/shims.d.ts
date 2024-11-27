@@ -351,9 +351,9 @@ interface SlotInfo {
   colorOff?: string; // Color to render when it is not connected
   slot_index?: number;
 }
-interface Widget {
+interface Widget<W extends CustomWidgetName | ComfyWidgetName> {
   element?: DOMWidget;
-  type?: CustomWidgetName | ComfyWidgetName;
+  type?: W;
   name?: string;
   value?: any;
   options?: WidgetOptions;

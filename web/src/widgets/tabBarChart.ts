@@ -1,107 +1,71 @@
 import {
+  callApi,
   prepareTabbarDataset,
   tabbarEventHandler,
   textfieldEventHandler,
 } from '../helpers/tabBarChart';
 import { AnalyticsType } from '../types/api/api';
 import { KulEventName } from '../types/events/events';
-import { LogSeverity } from '../types/manager/manager';
+import { CustomWidgetName, NodeName, TagName } from '../types/widgets/_common';
 import {
-  CustomWidgetDeserializedValuesMap,
-  CustomWidgetName,
-  NodeName,
-  NormalizeValueCallback,
-  TagName,
-} from '../types/widgets/_common';
-import {
+  TabBarChartColors,
   TabBarChartCSS,
   TabBarChartDeserializedValue,
   TabBarChartFactory,
+  TabBarChartIds,
+  TabBarChartNormalizeCallback,
+  TabBarChartState,
 } from '../types/widgets/tabBarChart';
-import { createDOMWidget, getLFManager, normalizeValue } from '../utils/common';
+import { createDOMWidget, normalizeValue } from '../utils/common';
 
-//#region Tab bar chart
+const STATE = new WeakMap<HTMLDivElement, TabBarChartState>();
+
 export const tabBarChartFactory: TabBarChartFactory = {
-  options: (chart, tabbar, textfield, node) => {
+  //#region Options
+  options: (wrapper) => {
     return {
       hideOnZoom: false,
-      getComp() {
-        return { chart, tabbar };
-      },
+      getState: () => STATE.get(wrapper),
       getValue: () => {
-        switch (node) {
+        const { directory, node } = STATE.get(wrapper);
+
+        switch (node.comfyClass) {
           case NodeName.usageStatistics:
-            return { directory: chart.dataset.directory || '' };
+            return { directory: directory || '' };
           default:
-          case NodeName.colorAnalysis:
-          case NodeName.imageHistogram:
             return {};
         }
       },
       setValue: (value) => {
-        const callback: NormalizeValueCallback<
-          CustomWidgetDeserializedValuesMap<typeof CustomWidgetName.tabBarChart> | string
-        > = (_, u) => {
+        const state = STATE.get(wrapper);
+        const { chart, tabbar } = state.elements;
+
+        const callback: TabBarChartNormalizeCallback = (_, u) => {
           const parsedValue = u.parsedJson as TabBarChartDeserializedValue;
 
-          switch (node) {
-            case NodeName.colorAnalysis:
-            case NodeName.lutGeneration:
-            case NodeName.imageHistogram:
-              for (const key in parsedValue) {
-                if (Object.prototype.hasOwnProperty.call(parsedValue, key)) {
-                  const dataset = parsedValue[key];
-                  chart.kulData = dataset || {};
-                  tabbar.kulData = prepareTabbarDataset(parsedValue) || {};
-                  requestAnimationFrame(() => tabbar.setValue(0));
-                }
-              }
-              break;
+          switch (state.node.comfyClass) {
             case NodeName.usageStatistics:
-              getLFManager()
-                .getApiRoutes()
-                .analytics.get(parsedValue.directory, 'usage')
-                .then((r) => {
-                  if (r.status === 'success') {
-                    if (r?.data && Object.entries(r.data).length > 0) {
-                      const firstKey = Object.keys(r.data)[0];
-                      chart.dataset.directory = parsedValue.directory || '';
-                      chart.kulData = r.data[firstKey] || {};
-                      tabbar.kulData = prepareTabbarDataset(r.data) || {};
-                      textfield.setValue(parsedValue.directory);
-                      requestAnimationFrame(() => tabbar.setValue(0));
-                    } else {
-                      getLFManager().log('Analytics not found.', { r }, LogSeverity.Info);
-                    }
-                  }
-                });
+              state.directory = parsedValue.directory;
+
+              callApi(state);
+              break;
+            default:
+              for (const key in parsedValue) {
+                const dataset = parsedValue[key];
+                chart.kulData = dataset || {};
+                tabbar.kulData = prepareTabbarDataset(parsedValue) || {};
+                requestAnimationFrame(async () => tabbar.setValue(0));
+              }
               break;
           }
         };
 
         normalizeValue(value, callback, CustomWidgetName.tabBarChart);
       },
-      refresh: async () => {
-        const currentTab = (await tabbar?.getValue())?.node?.id;
-        const directory = chart?.dataset.directory;
-        const type = chart?.dataset.type as AnalyticsType;
-        getLFManager()
-          .getApiRoutes()
-          .analytics.get(directory, type)
-          .then((r) => {
-            if (r.status === 'success') {
-              if (r?.data && Object.entries(r.data).length > 0) {
-                const firstKey = currentTab || Object.keys(r.data)[0];
-                chart.kulData = r.data[firstKey];
-                tabbar.kulData = prepareTabbarDataset(r.data);
-              } else {
-                getLFManager().log('Analytics not found.', { r }, LogSeverity.Info);
-              }
-            }
-          });
-      },
     };
   },
+  //#endregion
+  //#region Render
   render: (node) => {
     const wrapper = document.createElement(TagName.Div);
     const content = document.createElement(TagName.Div);
@@ -109,45 +73,41 @@ export const tabBarChartFactory: TabBarChartFactory = {
     const textfield = document.createElement(TagName.KulTextfield);
     const chart = document.createElement(TagName.KulChart);
     const tabbar = document.createElement(TagName.KulTabbar);
-    const options = tabBarChartFactory.options(
-      chart,
-      tabbar,
-      textfield,
-      node.comfyClass as NodeName,
-    );
+
+    let type: AnalyticsType;
 
     switch (node.comfyClass as NodeName) {
       case NodeName.colorAnalysis:
-        chart.kulAxis = ['intensity'];
-        chart.kulColors = ['red', 'green', 'blue'];
-        chart.kulSeries = ['red', 'green', 'blue'];
+        chart.kulAxis = [TabBarChartIds.Intensity];
+        chart.kulColors = [TabBarChartColors.Red, TabBarChartColors.Green, TabBarChartColors.Blue];
+        chart.kulSeries = [TabBarChartIds.Red, TabBarChartIds.Green, TabBarChartIds.Blue];
         chart.kulTypes = ['scatter'];
         grid.classList.add(TabBarChartCSS.GridNoDirectory);
         textfield.classList.add(TabBarChartCSS.DirectoryHidden);
         break;
       case NodeName.imageHistogram:
       case NodeName.lutGeneration:
-        chart.kulAxis = ['intensity'];
-        chart.kulColors = ['red', 'green', 'blue'];
-        chart.kulSeries = ['red', 'green', 'blue'];
+        chart.kulAxis = [TabBarChartIds.Intensity];
+        chart.kulColors = [TabBarChartIds.Red, TabBarChartIds.Green, TabBarChartIds.Blue];
+        chart.kulSeries = [TabBarChartIds.Red, TabBarChartIds.Green, TabBarChartIds.Blue];
         chart.kulTypes = ['area'];
         grid.classList.add(TabBarChartCSS.GridNoDirectory);
         textfield.classList.add(TabBarChartCSS.DirectoryHidden);
         break;
       case NodeName.usageStatistics:
-        chart.kulAxis = ['name'];
-        chart.dataset.type = 'usage';
-        chart.kulSeries = ['counter', 'counter'];
+        type = 'usage';
+        chart.kulAxis = [TabBarChartIds.Name];
+        chart.kulSeries = [TabBarChartIds.Counter, TabBarChartIds.Counter];
         chart.kulTypes = ['area'];
         break;
     }
 
+    tabbar.classList.add(TabBarChartCSS.Tabbar);
+    tabbar.kulValue = null;
     tabbar.addEventListener(
       KulEventName.KulTabbar,
-      tabbarEventHandler.bind(tabbarEventHandler, chart, node.comfyClass),
+      tabbarEventHandler.bind(tabbarEventHandler, STATE.get(wrapper)),
     );
-    tabbar.kulValue = null;
-    tabbar.classList.add(TabBarChartCSS.Tabbar);
 
     textfield.classList.add(TabBarChartCSS.Directory);
     textfield.kulIcon = 'folder';
@@ -155,7 +115,7 @@ export const tabBarChartFactory: TabBarChartFactory = {
     textfield.kulStyling = 'flat';
     textfield.addEventListener(
       KulEventName.KulTextfield,
-      textfieldEventHandler.bind(textfieldEventHandler, chart, options.refresh),
+      textfieldEventHandler.bind(textfieldEventHandler, STATE.get(wrapper)),
     );
 
     grid.classList.add(TabBarChartCSS.Grid);
@@ -165,9 +125,24 @@ export const tabBarChartFactory: TabBarChartFactory = {
 
     content.classList.add(TabBarChartCSS.Content);
     content.appendChild(grid);
+
     wrapper.appendChild(content);
+
+    const options = tabBarChartFactory.options(wrapper);
+
+    STATE.set(wrapper, {
+      directory: '',
+      elements: { chart, tabbar, textfield },
+      node,
+      selected: '',
+      type,
+      wrapper,
+    });
 
     return { widget: createDOMWidget(CustomWidgetName.tabBarChart, wrapper, node, options) };
   },
+  //#endregion
+  //#region State
+  state: STATE,
+  //#endregion
 };
-//#endregion

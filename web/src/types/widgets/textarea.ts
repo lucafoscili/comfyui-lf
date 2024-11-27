@@ -1,29 +1,28 @@
 import {
-  BaseWidgetCallback,
-  BaseWidgetFactory,
-  BaseWidgetOptions,
+  BaseWidgetState,
   CustomWidgetName,
+  NormalizeValueCallback,
+  WidgetFactory,
 } from './_common';
 
+//#region CSS
 const BASE_CSS_CLASS = 'lf-textarea';
-
-//#region Textarea
-export interface Textarea extends Widget {
-  options: TextareaOptions;
-  type: [CustomWidgetName.textarea];
-}
-export interface TextareaFactory extends BaseWidgetFactory<TextareaOptions> {
-  options: TextareaOptionsCallback;
-}
-export type TextareaOptionsCallback = (textarea: HTMLTextAreaElement) => TextareaOptions;
-export interface TextareaOptions extends BaseWidgetOptions<TextareaDeserializedValue> {}
-export type TextareaSetter = () => {
-  [CustomWidgetName.textarea]: BaseWidgetCallback<CustomWidgetName.textarea>;
-};
-export type TextareaDeserializedValue = Record<string, unknown>;
 export enum TextareaCSS {
   Content = BASE_CSS_CLASS,
   Widget = `${BASE_CSS_CLASS}__widget`,
   WidgetError = `${BASE_CSS_CLASS}__widget--error`,
+}
+//#endregion
+//#region Widget
+export type Textarea = Widget<CustomWidgetName.textarea>;
+export type TextareaFactory = WidgetFactory<TextareaDeserializedValue, TextareaState>;
+export type TextareaNormalizeCallback = NormalizeValueCallback<TextareaDeserializedValue | string>;
+//#endregion
+//#region Value
+export type TextareaDeserializedValue = Record<string, unknown>;
+//#endregion
+//#region State
+export interface TextareaState extends BaseWidgetState {
+  textarea: HTMLTextAreaElement;
 }
 //#endregion

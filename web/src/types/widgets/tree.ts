@@ -1,31 +1,28 @@
 import { KulDataDataset } from '../ketchup-lite/components';
 import {
-  BaseWidgetCallback,
-  BaseWidgetFactory,
-  BaseWidgetOptions,
+  BaseWidgetState,
   CustomWidgetName,
+  NormalizeValueCallback,
+  WidgetFactory,
 } from './_common';
 
+//#region CSS
 const BASE_CSS_CLASS = 'lf-tree';
-
-//#region Tree
-export interface Tree extends Widget {
-  options: TreeOptions;
-  type: [CustomWidgetName.tree];
-}
-export interface TreeFactory extends BaseWidgetFactory<TreeOptions> {
-  options: TreeOptionsCallback;
-}
-export type TreeOptionsCallback = (tree: HTMLKulTreeElement) => TreeOptions;
-export interface TreeOptions extends BaseWidgetOptions<TreeValueDeserializedValue> {
-  getComp(): HTMLKulTreeElement;
-}
-export type TreeSetter = () => {
-  [CustomWidgetName.tree]: BaseWidgetCallback<CustomWidgetName.tree>;
-};
-export type TreeValueDeserializedValue = KulDataDataset;
 export enum TreeCSS {
   Content = BASE_CSS_CLASS,
   Widget = `${BASE_CSS_CLASS}__widget`,
+}
+//#endregion
+//#region Widget
+export type Tree = Widget<CustomWidgetName.tree>;
+export type TreeFactory = WidgetFactory<TreeDeserializedValue, TreeState>;
+export type TreeNormalizeCallback = NormalizeValueCallback<TreeDeserializedValue | string>;
+//#endregion
+//#region Value
+export type TreeDeserializedValue = KulDataDataset;
+//#endregion
+//#region State
+export interface TreeState extends BaseWidgetState {
+  tree: HTMLKulTreeElement;
 }
 //#endregion

@@ -1,32 +1,39 @@
 import {
-  BaseWidgetCallback,
-  BaseWidgetFactory,
-  BaseWidgetOptions,
+  BaseWidgetState,
   CustomWidgetName,
+  NormalizeValueCallback,
+  WidgetFactory,
 } from './_common';
 
+//#region CSS
 const BASE_CSS_CLASS = 'lf-progressbar';
-
-//#region Progress bar
-export interface Progressbar extends Widget {
-  options: ProgressbarOptions;
-  type: [CustomWidgetName.progressbar];
-}
-export interface ProgressbarFactory extends BaseWidgetFactory<ProgressbarOptions> {
-  options: ProgressbarOptionsCallback;
-}
-export type ProgressbarOptionsCallback = (
-  progressbar: HTMLKulProgressbarElement,
-  nodeType: NodeType,
-) => ProgressbarOptions;
-export interface ProgressbarOptions extends BaseWidgetOptions<ProgressbarDeserializedValue> {
-  getComp(): HTMLKulProgressbarElement;
-}
-export type ProgressbarSetter = () => {
-  [CustomWidgetName.progressbar]: BaseWidgetCallback<CustomWidgetName.progressbar>;
-};
-export type ProgressbarDeserializedValue = { bool: boolean; roll: number };
 export enum ProgressbarCSS {
   Content = BASE_CSS_CLASS,
+}
+//#endregion
+//#region Widget
+export type Progressbar = Widget<CustomWidgetName.progressbar>;
+export type ProgressbarFactory = WidgetFactory<ProgressbarDeserializedValue, ProgressbarState>;
+export type ProgressbarNormalizeCallback = NormalizeValueCallback<
+  ProgressbarDeserializedValue | string
+>;
+//#endregion
+//#region Value
+export type ProgressbarDeserializedValue = { bool: boolean; roll: number };
+//#endregion
+//#region State
+export interface ProgressbarState extends BaseWidgetState {
+  progressbar: HTMLKulProgressbarElement;
+}
+//#endregion
+//#region Dataset
+export enum ProgressbarIcons {
+  Landscape = 'landscape',
+  Portrait = 'portrait',
+}
+export enum ProgressbarLabels {
+  Fallback = 'N/A',
+  False = 'false',
+  True = 'true',
 }
 //#endregion

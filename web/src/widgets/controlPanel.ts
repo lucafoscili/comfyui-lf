@@ -1,9 +1,4 @@
-import {
-  CustomWidgetDeserializedValuesMap,
-  CustomWidgetName,
-  NormalizeValueCallback,
-  TagName,
-} from '../types/widgets/_common';
+import { CustomWidgetName, TagName } from '../types/widgets/_common';
 import {
   createDOMWidget,
   getApiRoutes,
@@ -16,14 +11,19 @@ import {
   ControlPanelCSS,
   ControlPanelDeserializedValue,
   ControlPanelFactory,
+  ControlPanelNormalizeCallback,
+  ControlPanelState,
 } from '../types/widgets/controlPanel';
 import { KulEventName } from '../types/events/events';
 
-//#region Control panel
+const STATE = new WeakMap<HTMLDivElement, ControlPanelState>();
+
 export const controlPanelFactory: ControlPanelFactory = {
-  options: () => {
+  //#region Options
+  options: (wrapper) => {
     return {
       hideOnZoom: false,
+      getState: () => STATE.get(wrapper),
       getValue() {
         return {
           backup: getLFManager().isBackupEnabled() || false,
@@ -32,9 +32,7 @@ export const controlPanelFactory: ControlPanelFactory = {
         };
       },
       setValue(value) {
-        const callback: NormalizeValueCallback<
-          CustomWidgetDeserializedValuesMap<typeof CustomWidgetName.controlPanel> | string
-        > = (_, u) => {
+        const callback: ControlPanelNormalizeCallback = (_, u) => {
           const { backup, debug, themes } = u.parsedJson as ControlPanelDeserializedValue;
 
           const set = () => {
@@ -65,6 +63,8 @@ export const controlPanelFactory: ControlPanelFactory = {
       },
     };
   },
+  //#endregion
+  //#region Render
   render: (node) => {
     const contentCb = (domWidget: HTMLDivElement, isReady: boolean) => {
       const readyCb = (domWidget: HTMLDivElement) => {
@@ -99,11 +99,16 @@ export const controlPanelFactory: ControlPanelFactory = {
     };
 
     const wrapper = document.createElement(TagName.Div);
-    const options = controlPanelFactory.options();
-
     contentCb(wrapper, false);
+
+    const options = controlPanelFactory.options(wrapper);
+
+    STATE.set(wrapper, { node, wrapper });
 
     return { widget: createDOMWidget(CustomWidgetName.controlPanel, wrapper, node, options) };
   },
+  //#endregion
+  //#region State
+  state: STATE,
+  //#endregion
 };
-//#endregion
