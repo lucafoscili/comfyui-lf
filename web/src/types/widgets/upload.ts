@@ -12,14 +12,17 @@ export enum UploadCSS {
   Widget = `${BASE_CSS_CLASS}__widget`,
 }
 //#endregion
+
 //#region Widget
 export type Upload = Widget<CustomWidgetName.upload>;
 export type UploadFactory = WidgetFactory<UploadDeserializedValue, UploadState>;
 export type UploadNormalizeCallback = NormalizeValueCallback<UploadDeserializedValue | string>;
 //#endregion
+
 //#region Value
 export type UploadDeserializedValue = string;
 //#endregion
+
 //#region State
 export interface UploadState extends BaseWidgetState {
   files: string;

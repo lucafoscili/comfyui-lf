@@ -59,7 +59,9 @@ export const apiCall = async (state: TabBarChartState) => {
           tabbar.kulData = prepareTabbarDataset(r.data);
 
           requestAnimationFrame(async () => {
-            textfield.setValue(directory);
+            if (directory !== (await textfield.getValue())) {
+              textfield.setValue(directory);
+            }
             tabbar.setValue(0);
           });
         } else {
@@ -69,6 +71,7 @@ export const apiCall = async (state: TabBarChartState) => {
     });
 };
 //#endregion
+
 //#region prepareTabbarDataset
 export const prepareTabbarDataset = (data: Record<string, KulDataDataset>) => {
   const dataset: KulDataDataset = { nodes: [] };

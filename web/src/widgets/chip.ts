@@ -31,6 +31,7 @@ export const chipFactory: ChipFactory = {
     };
   },
   //#endregion
+
   //#region Render
   render: (node) => {
     const wrapper = document.createElement(TagName.Div);
@@ -57,6 +58,7 @@ export const chipFactory: ChipFactory = {
     return { widget: createDOMWidget(CustomWidgetName.chip, wrapper, node, options) };
   },
   //#endregion
+
   //#region State
   state: STATE,
   //#endregion

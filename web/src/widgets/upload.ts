@@ -34,6 +34,7 @@ export const uploadFactory: UploadFactory = {
     };
   },
   //#endregion
+
   //#region Render
   render: (node) => {
     const wrapper = document.createElement(TagName.Div);
@@ -41,9 +42,8 @@ export const uploadFactory: UploadFactory = {
     const upload = document.createElement(TagName.KulUpload);
 
     upload.classList.add(UploadCSS.Widget);
-    upload.addEventListener(
-      KulEventName.KulUpload,
-      EV_HANDLERS.upload.bind(EV_HANDLERS.upload, STATE.get(wrapper)),
+    upload.addEventListener(KulEventName.KulUpload, (e) =>
+      EV_HANDLERS.upload(STATE.get(wrapper), e),
     );
 
     content.classList.add(UploadCSS.Content);
@@ -58,6 +58,7 @@ export const uploadFactory: UploadFactory = {
     return { widget: createDOMWidget(CustomWidgetName.upload, wrapper, node, options) };
   },
   //#endregion
+
   //#region State
   state: STATE,
   //#endregion

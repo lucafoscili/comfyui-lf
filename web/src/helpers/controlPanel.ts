@@ -41,6 +41,7 @@ export const EV_HANDLERS = {
     }
   },
   //#endregion
+
   //#region Button handler
   button: (e: CustomEvent<KulButtonEventPayload>) => {
     const { comp, eventType, originalEvent } = e.detail;
@@ -130,6 +131,7 @@ export const EV_HANDLERS = {
     }
   },
   //#endregion
+
   //#region List handler
   list: (e: CustomEvent<KulListEventPayload>) => {
     const { comp, eventType, node } = e.detail;
@@ -148,6 +150,7 @@ export const EV_HANDLERS = {
     }
   },
   //#endregion
+
   //#region Toggle handler
   toggle: (e: CustomEvent<KulToggleEventPayload>) => {
     const { comp, eventType, value } = e.detail;
@@ -209,6 +212,7 @@ export const createContent = () => {
   return grid;
 };
 //#endregion
+
 //#region prepArticle
 export const prepArticle = (key: string, node: KulArticleNode) => {
   const article = document.createElement(TagName.KulArticle);
@@ -219,6 +223,7 @@ export const prepArticle = (key: string, node: KulArticleNode) => {
   return article;
 };
 //#endregion
+
 //#region handleKulEvent
 export const handleKulEvent = (e: Event) => {
   const { comp } = (

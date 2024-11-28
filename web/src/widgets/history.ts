@@ -35,6 +35,7 @@ export const historyFactory: HistoryFactory = {
     };
   },
   //#endregion
+
   //#region Render
   render: (node) => {
     const wrapper = document.createElement(TagName.Div);
@@ -67,6 +68,7 @@ export const historyFactory: HistoryFactory = {
     return { widget: createDOMWidget(CustomWidgetName.history, wrapper, node, options) };
   },
   //#endregion
+
   //#region State
   state: STATE,
   //#endregion

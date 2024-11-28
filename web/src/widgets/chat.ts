@@ -30,6 +30,7 @@ export const chatFactory: ChatFactory = {
     };
   },
   //#endregion
+
   //#region Render
   render: (node) => {
     const wrapper = document.createElement(TagName.Div);
@@ -51,6 +52,7 @@ export const chatFactory: ChatFactory = {
     return { widget: createDOMWidget(CustomWidgetName.chat, wrapper, node, options) };
   },
   //#endregion
+
   //#region State
   state: STATE,
   //#endregion

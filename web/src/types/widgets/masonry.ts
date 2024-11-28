@@ -14,11 +14,13 @@ export enum MasonryCSS {
   Widget = `${BASE_CSS_CLASS}__widget`,
 }
 //#endregion
+
 //#region Widget
 export type Masonry = Widget<CustomWidgetName.masonry>;
 export type MasonryFactory = WidgetFactory<MasonryDeserializedValue, MasonryState>;
 export type MasonryNormalizeCallback = NormalizeValueCallback<MasonryDeserializedValue | string>;
 //#endregion
+
 //#region Value
 export interface MasonryDeserializedValue {
   columns?: KulMasonry['kulColumns'];
@@ -28,6 +30,7 @@ export interface MasonryDeserializedValue {
   view?: KulMasonry['kulView'];
 }
 //#endregion
+
 //#region State
 export interface MasonryState extends BaseWidgetState {
   masonry: HTMLKulMasonryElement;

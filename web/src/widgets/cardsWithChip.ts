@@ -47,6 +47,7 @@ export const cardsWithChipFactory: CardsWithChipFactory = {
     };
   },
   //#endregion
+
   //#region Render
   render: (node) => {
     const wrapper = document.createElement(TagName.Div);
@@ -75,6 +76,7 @@ export const cardsWithChipFactory: CardsWithChipFactory = {
     return { widget: createDOMWidget(CustomWidgetName.cardsWithChip, wrapper, node, options) };
   },
   //#endregion
+
   //#region State
   state: STATE,
   //#endregion

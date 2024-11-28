@@ -14,6 +14,7 @@ export enum ControlPanelCSS {
   Spinner = `${BASE_CSS_CLASS}__spinner`,
 }
 //#endregion
+
 //#region Control panel
 export type ControlPanel = Widget<CustomWidgetName.controlPanel>;
 export type ControlPanelFactory = WidgetFactory<ControlPanelDeserializedValue, ControlPanelState>;
@@ -21,6 +22,7 @@ export type ControlPanelNormalizeCallback = NormalizeValueCallback<
   ControlPanelDeserializedValue | string
 >;
 //#endregion
+
 //#region Value
 export type ControlPanelDeserializedValue = {
   backup: boolean;
@@ -28,9 +30,11 @@ export type ControlPanelDeserializedValue = {
   themes: string;
 };
 //#endregion
+
 //#region State
 export interface ControlPanelState extends BaseWidgetState {}
 //#endregion
+
 //#region Dataset
 export interface ControlPanelFixture {
   [ControlPanelIds.Analytics]: () => KulArticleNode;

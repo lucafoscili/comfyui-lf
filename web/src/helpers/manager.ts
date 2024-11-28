@@ -6,7 +6,7 @@ import {
   NodeName,
   NodeWidgetMap,
 } from '../types/widgets/widgets';
-import { MessengerCSS } from '../types/widgets/messenger';
+import { MessengerCSS, MessengerState } from '../types/widgets/messenger';
 import {
   areJSONEqual,
   getApiRoutes,
@@ -17,6 +17,7 @@ import {
   refreshChart,
   unescapeJson,
 } from '../utils/common';
+import { ChipState } from '../types/widgets/chip';
 
 //#region Node-Widget map
 export const NODE_WIDGET_MAP: NodeWidgetMap = {
@@ -106,6 +107,7 @@ export const NODE_WIDGET_MAP: NodeWidgetMap = {
   LF_WriteJSON: [CustomWidgetName.textarea],
 };
 //#endregion
+
 //#region onConnectionsChange
 export const onConnectionsChange = async (nodeType: NodeType) => {
   const onConnectionsChange = nodeType.prototype.onConnectionsChange;
@@ -127,6 +129,7 @@ export const onConnectionsChange = async (nodeType: NodeType) => {
   };
 };
 //#endregion
+
 //#region onDrawBackground
 export const onDrawBackground = async (nodeType: NodeType) => {
   const onDrawBackground = nodeType.prototype.onDrawBackground;
@@ -140,6 +143,7 @@ export const onDrawBackground = async (nodeType: NodeType) => {
   };
 };
 //#endregion
+
 //#region onNodeCreated
 export const onNodeCreated = async (nodeType: NodeType) => {
   const onNodeCreated = nodeType.prototype.onNodeCreated;
@@ -166,6 +170,7 @@ export const onNodeCreated = async (nodeType: NodeType) => {
   };
 };
 //#endregion
+
 //#region chipCb
 const chipCb = (node: NodeType) => {
   const lfManager = getLFManager();
@@ -176,7 +181,6 @@ const chipCb = (node: NodeType) => {
   if (!textarea || !linkInput || !nodeInput) {
     return;
   }
-
   const chipW = getCustomWidget(node, CustomWidgetName.chip);
   const datasetW = nodeInput?.widgets?.[linkInput.origin_slot];
   if (!chipW || !datasetW) {
@@ -184,7 +188,7 @@ const chipCb = (node: NodeType) => {
   }
 
   const dataset = datasetW.options.getValue();
-  const chip = chipW.options.getComp();
+  const chip = (chipW.options.getState() as ChipState).chip;
   try {
     const newData = unescapeJson(dataset).parsedJson;
 
@@ -206,6 +210,7 @@ const chipCb = (node: NodeType) => {
   }
 };
 //#endregion
+
 //#region messengerCb
 const messengerCb = (node: NodeType) => {
   const textarea = getInput(node, ComfyWidgetName.json);
@@ -217,12 +222,12 @@ const messengerCb = (node: NodeType) => {
 
   const messengerW = getCustomWidget(node, CustomWidgetName.messenger);
   const datasetW = nodeInput?.widgets?.[linkInput.origin_slot];
-  if (!messengerW?.options?.getComp || !datasetW?.options?.getValue) {
+  if (!datasetW?.options?.getValue) {
     return;
   }
 
   const dataset = datasetW.options.getValue();
-  const messenger = messengerW.options.getComp();
+  const messenger = (messengerW?.options?.getState() as MessengerState).elements.messenger;
   try {
     const newData = unescapeJson(dataset).parsedJson;
 
@@ -256,6 +261,7 @@ const messengerCb = (node: NodeType) => {
   }
 };
 //#endregion
+
 //#region logStyle
 export const getLogStyle = () => {
   return {

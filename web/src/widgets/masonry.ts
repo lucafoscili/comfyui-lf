@@ -57,6 +57,7 @@ export const masonryFactory: MasonryFactory = {
     };
   },
   //#endregion
+
   //#region Render
   render: (node) => {
     const wrapper = document.createElement(TagName.Div);
@@ -87,6 +88,7 @@ export const masonryFactory: MasonryFactory = {
     return { widget: createDOMWidget(CustomWidgetName.masonry, wrapper, node, options) };
   },
   //#endregion
+
   //#region State
   state: STATE,
   //#endregion

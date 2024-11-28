@@ -40,6 +40,7 @@ export const countBarChartFactory: CountBarChartFactory = {
     };
   },
   //#endregion
+
   //#region Render
   render: (node) => {
     const wrapper = document.createElement(TagName.Div);
@@ -94,6 +95,7 @@ export const countBarChartFactory: CountBarChartFactory = {
     return { widget: createDOMWidget(CustomWidgetName.countBarChart, wrapper, node, options) };
   },
   //#endregion
+
   //#region State
   state: STATE,
   //#endregion

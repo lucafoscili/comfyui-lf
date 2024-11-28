@@ -51,6 +51,7 @@ export const messengerFactory: MessengerFactory = {
     };
   },
   //#endregion
+
   //#region Render
   render: (node) => {
     const wrapper = document.createElement(TagName.Div);
@@ -64,9 +65,8 @@ export const messengerFactory: MessengerFactory = {
 
     placeholder.innerHTML = PLACEHOLDER_MESSAGE;
 
-    messenger.addEventListener(
-      KulEventName.KulMessenger,
-      EV_HANDLERS.messenger.bind(EV_HANDLERS.messenger, STATE.get(wrapper)),
+    messenger.addEventListener(KulEventName.KulMessenger, (e) =>
+      EV_HANDLERS.messenger(STATE.get(wrapper), e),
     );
 
     content.appendChild(placeholder);
@@ -81,6 +81,7 @@ export const messengerFactory: MessengerFactory = {
     return { widget: createDOMWidget(CustomWidgetName.messenger, wrapper, node, options) };
   },
   //#endregion
+
   //#region State
   state: STATE,
   //#endregion

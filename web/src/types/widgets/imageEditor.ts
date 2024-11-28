@@ -19,6 +19,7 @@ export enum ImageEditorCSS {
   SettingsControls = `${BASE_CSS_CLASS}__settings__controls`,
 }
 //#endregion
+
 //#region Widget
 export type ImageEditor = Widget<CustomWidgetName.imageEditor>;
 export type ImageEditorFactory = WidgetFactory<ImageEditorDeserializedValue, ImageEditorState>;
@@ -26,9 +27,11 @@ export type ImageEditorNormalizeCallback = NormalizeValueCallback<
   ImageEditorDeserializedValue | string
 >;
 //#endregion
+
 //#region Value
 export type ImageEditorDeserializedValue = KulDataDataset;
 //#endregion
+
 //#region State
 export interface ImageEditorState extends BaseWidgetState {
   elements: {
@@ -48,6 +51,7 @@ export interface ImageEditorState extends BaseWidgetState {
   };
 }
 //#endregion
+
 //#region Dataset
 export enum ImageEditorStatus {
   Completed = 'completed',
@@ -58,6 +62,7 @@ export enum ImageEditorColumnId {
   Status = 'status',
 }
 //#endregion
+
 //#region U.I.
 export interface ImageEditorActionButtons {
   interrupt?: HTMLKulButtonElement;
@@ -69,6 +74,7 @@ export enum ImageEditorIcons {
   Resume = 'play',
 }
 //#endregion
+
 //#region Controls
 export type ImageEditorUpdateCallback = (addSnapshot?: boolean) => Promise<void>;
 export enum ImageEditorControls {
@@ -169,6 +175,7 @@ export type ImageEditorSettingsFor = Partial<{
   [ImageEditorControls.Toggle]: ImageEditorToggleConfig[];
 }>;
 //#endregion
+
 //#region Filters
 export interface ImageEditorFilterSettingsMap {
   brightness: ImageEditorBrightnessSettings;

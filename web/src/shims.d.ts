@@ -379,3 +379,12 @@ interface ConnectionChangePayload {
 }
 
 type ComfyFolderTypes = 'input' | 'output' | 'temp';
+interface WidgetOptions<
+  V extends CustomWidgetDeserializedValuesMap<CustomWidgetName> = CustomWidgetDeserializedValuesMap<CustomWidgetName>,
+  S extends BaseWidgetState = BaseWidgetState,
+> {
+  hideOnZoom: boolean;
+  getState: () => S;
+  getValue: () => V;
+  setValue(value: string | V): void;
+}

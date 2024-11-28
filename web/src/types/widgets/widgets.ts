@@ -164,6 +164,7 @@ export enum TagName {
   Textarea = 'textarea',
 }
 //#endregion
+
 //#region Maps
 export type ComfyWidgetMap = {
   [ComfyWidgetName.boolean]: ComfyWidget;
@@ -222,6 +223,7 @@ export type NodeWidgetMap = {
   [N in NodeName]: CustomWidgetName[];
 };
 //#endregion
+
 //#region Helpers
 export type ComfyWidget = Widget<ComfyWidgetName>;
 export type CustomWidget = Card;

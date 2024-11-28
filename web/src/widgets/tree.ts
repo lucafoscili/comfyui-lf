@@ -33,6 +33,7 @@ export const treeFactory: TreeFactory = {
     };
   },
   //#endregion
+
   //#region Render
   render: (node) => {
     const wrapper = document.createElement(TagName.Div);
@@ -64,6 +65,7 @@ export const treeFactory: TreeFactory = {
     return { widget: createDOMWidget(CustomWidgetName.tree, wrapper, node, options) };
   },
   //#endregion
+
   //#region State
   state: STATE,
   //#endregion

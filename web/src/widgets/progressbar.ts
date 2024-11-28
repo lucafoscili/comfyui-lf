@@ -69,6 +69,7 @@ export const progressbarFactory: ProgressbarFactory = {
     };
   },
   //#endregion
+
   //#region Render
   render: (node) => {
     const wrapper = document.createElement(TagName.Div);
@@ -90,6 +91,7 @@ export const progressbarFactory: ProgressbarFactory = {
     return { widget: createDOMWidget(CustomWidgetName.progressbar, wrapper, node, options) };
   },
   //#endregion
+
   //#region State
   state: STATE,
   //#endregion

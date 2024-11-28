@@ -13,14 +13,17 @@ export enum TextareaCSS {
   WidgetError = `${BASE_CSS_CLASS}__widget--error`,
 }
 //#endregion
+
 //#region Widget
 export type Textarea = Widget<CustomWidgetName.textarea>;
 export type TextareaFactory = WidgetFactory<TextareaDeserializedValue, TextareaState>;
 export type TextareaNormalizeCallback = NormalizeValueCallback<TextareaDeserializedValue | string>;
 //#endregion
+
 //#region Value
 export type TextareaDeserializedValue = Record<string, unknown>;
 //#endregion
+
 //#region State
 export interface TextareaState extends BaseWidgetState {
   textarea: HTMLTextAreaElement;

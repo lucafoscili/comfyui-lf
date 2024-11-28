@@ -83,6 +83,7 @@ export const EV_HANDLERS = {
     }
   },
   //#endregion
+
   //#region Canvas handler
   canvas: async (state: ImageEditorState, e: CustomEvent<KulCanvasEventPayload>) => {
     const { comp, eventType, points } = e.detail;
@@ -120,6 +121,7 @@ export const EV_HANDLERS = {
     }
   },
   //#endregion
+
   //#region Imageviewer handler
   imageviewer: async (state: ImageEditorState, e: CustomEvent<KulImageviewerEventPayload>) => {
     const { comp, eventType, originalEvent } = e.detail;
@@ -162,6 +164,7 @@ export const EV_HANDLERS = {
     }
   },
   //#endregion
+
   //#region Slider handler
   slider: async (updateCb: ImageEditorUpdateCallback, e: CustomEvent<KulSliderEventPayload>) => {
     const { eventType } = e.detail;
@@ -177,6 +180,7 @@ export const EV_HANDLERS = {
     }
   },
   //#endregion
+
   //#region Textfield handler
   textfield: async (
     updateCb: ImageEditorUpdateCallback,
@@ -195,6 +199,7 @@ export const EV_HANDLERS = {
     }
   },
   //#endregion
+
   //#region Toggle
   toggle: async (updateCb: ImageEditorUpdateCallback, e: CustomEvent<KulToggleEventPayload>) => {
     const { eventType } = e.detail;
@@ -235,6 +240,7 @@ export const apiCall = async (state: ImageEditorState, addSnapshot: boolean) => 
   requestAnimationFrame(() => imageviewer.setSpinnerStatus(false));
 };
 //#endregion
+
 //#region refreshValues
 export const refreshValues = async (state: ImageEditorState, addSnapshot = false) => {
   const { elements, filter } = state;
@@ -278,6 +284,7 @@ export const refreshValues = async (state: ImageEditorState, addSnapshot = false
   }
 };
 //#endregion
+
 //#region prepSettings
 export const prepSettings = (state: ImageEditorState, node: KulDataNode) => {
   state.filter = unescapeJson(node.cells.kulCode.value).parsedJson as ImageEditorFilter;
@@ -324,6 +331,7 @@ export const prepSettings = (state: ImageEditorState, node: KulDataNode) => {
   settings.appendChild(resetButton);
 };
 //#endregion
+
 //#region createSlider
 export const createSlider = (state: ImageEditorState, data: ImageEditorSliderConfig) => {
   const comp = document.createElement(TagName.KulSlider);
@@ -345,6 +353,7 @@ export const createSlider = (state: ImageEditorState, data: ImageEditorSliderCon
   return comp;
 };
 //#endregion
+
 //#region createTextfield
 export const createTextfield = (state: ImageEditorState, data: ImageEditorTextfieldConfig) => {
   const comp = document.createElement(TagName.KulTextfield);
@@ -362,6 +371,7 @@ export const createTextfield = (state: ImageEditorState, data: ImageEditorTextfi
   return comp;
 };
 //#endregion
+
 //#region createToggle
 export const createToggle = (state: ImageEditorState, data: ImageEditorToggleConfig) => {
   const comp = document.createElement(TagName.KulToggle);
@@ -380,6 +390,7 @@ export const createToggle = (state: ImageEditorState, data: ImageEditorToggleCon
   return comp;
 };
 //#endregion
+
 //#region Utils
 export const getPathColumn = (dataset: KulDataDataset): KulDataColumn | null => {
   return dataset?.columns?.find((c) => c.id === ImageEditorColumnId.Path) || null;

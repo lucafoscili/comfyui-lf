@@ -80,12 +80,12 @@ export const tabBarChartFactory = {
         }
         tabbar.classList.add(TabBarChartCSS.Tabbar);
         tabbar.kulValue = null;
-        tabbar.addEventListener(KulEventName.KulTabbar, EV_HANDLERS.tabbar.bind(EV_HANDLERS.tabbar, STATE.get(wrapper)));
+        tabbar.addEventListener(KulEventName.KulTabbar, (e) => EV_HANDLERS.tabbar(STATE.get(wrapper), e));
         textfield.classList.add(TabBarChartCSS.Directory);
         textfield.kulIcon = 'folder';
         textfield.kulLabel = 'Directory';
         textfield.kulStyling = 'flat';
-        textfield.addEventListener(KulEventName.KulTextfield, EV_HANDLERS.textfield.bind(EV_HANDLERS.textfield, STATE.get(wrapper)));
+        textfield.addEventListener(KulEventName.KulTextfield, (e) => EV_HANDLERS.textfield(STATE.get(wrapper), e));
         grid.classList.add(TabBarChartCSS.Grid);
         grid.appendChild(textfield);
         grid.appendChild(tabbar);

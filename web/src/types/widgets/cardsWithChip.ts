@@ -16,6 +16,7 @@ export enum CardsWithChipCSS {
   Grid = `${BASE_CSS_CLASS}__grid`,
 }
 //#endregion
+
 //#region Widget
 export type CardsWithChip = Widget<CustomWidgetName.cardsWithChip>;
 export type CardsWithChipFactory = WidgetFactory<
@@ -26,11 +27,13 @@ export type CardsWithChipNormalizeCallback = NormalizeValueCallback<
   CardsWithChipDeserializedValue | string
 >;
 //#endregion
+
 //#region Value
 export interface CardsWithChipDeserializedValue extends CardDeserializedValue {
   chip: KulDataDataset;
 }
 //#endregion
+
 //#region State
 export interface CardsWithChipState extends BaseWidgetState {
   chip: HTMLKulChipElement;

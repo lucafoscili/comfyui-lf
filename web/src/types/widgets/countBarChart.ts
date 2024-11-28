@@ -13,6 +13,7 @@ export enum CountBarChartCSS {
   Widget = `${BASE_CSS_CLASS}__widget`,
 }
 //#endregion
+
 //#region Count bar chart
 export type CountBarChart = Widget<CustomWidgetName.countBarChart>;
 export type CountBarChartFactory = WidgetFactory<
@@ -23,12 +24,14 @@ export type CountBarChartNormalizeCallback = NormalizeValueCallback<
   CountBarChartDeserializedValue | string
 >;
 //#endregion
+
 //#region Value
 export type CountBarChartDeserializedValue = {
   chart: KulDataDataset;
   chip: KulDataDataset;
 };
 //#endregion
+
 //#region State
 export interface CountBarChartState extends BaseWidgetState {
   card: HTMLKulCardElement;

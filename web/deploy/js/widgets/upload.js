@@ -30,7 +30,7 @@ export const uploadFactory = {
         const content = document.createElement(TagName.Div);
         const upload = document.createElement(TagName.KulUpload);
         upload.classList.add(UploadCSS.Widget);
-        upload.addEventListener(KulEventName.KulUpload, EV_HANDLERS.upload.bind(EV_HANDLERS.upload, STATE.get(wrapper)));
+        upload.addEventListener(KulEventName.KulUpload, (e) => EV_HANDLERS.upload(STATE.get(wrapper), e));
         content.classList.add(UploadCSS.Content);
         content.appendChild(upload);
         wrapper.appendChild(content);

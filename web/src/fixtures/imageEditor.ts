@@ -74,6 +74,7 @@ export const SETTINGS: ImageEditorFilters = {
     },
   },
   //#endregion
+
   //#region Brush
   brush: {
     controlIds: ImageEditorBrushIds,
@@ -118,6 +119,7 @@ export const SETTINGS: ImageEditorFilters = {
     },
   },
   //#endregion
+
   //#region Clarity
   clarity: {
     controlIds: ImageEditorClarityIds,
@@ -164,6 +166,7 @@ export const SETTINGS: ImageEditorFilters = {
     },
   },
   //#endregion
+
   //#region Contrast
   contrast: {
     controlIds: ImageEditorContrastIds,
@@ -211,6 +214,7 @@ export const SETTINGS: ImageEditorFilters = {
     },
   },
   //#endregion
+
   //#region Desaturate
   desaturate: {
     controlIds: ImageEditorDesaturateIds,
@@ -271,6 +275,7 @@ export const SETTINGS: ImageEditorFilters = {
     },
   },
   //#endregion
+
   //#region Gaussian blur
   gaussianBlur: {
     controlIds: ImageEditorGaussianBlurIds,
@@ -305,6 +310,7 @@ export const SETTINGS: ImageEditorFilters = {
     },
   },
   //#endregion
+
   //#region Line
   line: {
     controlIds: ImageEditorLineIds,
@@ -361,6 +367,7 @@ export const SETTINGS: ImageEditorFilters = {
     },
   },
   //#endregion
+
   //#region Vignette
   vignette: {
     controlIds: ImageEditorVignetteIds,
@@ -463,6 +470,7 @@ export const TREE_DATA: KulDataDataset = {
           value: 'Brightness',
         },
         //#endregion
+
         //#region Clarity
         {
           description: 'Simulates the Lightroom clarity effect.',
@@ -476,6 +484,7 @@ export const TREE_DATA: KulDataDataset = {
           value: 'Clarity',
         },
         //#endregion
+
         //#region Contrast
         {
           description: 'Adjusts the contrast.',
@@ -489,6 +498,7 @@ export const TREE_DATA: KulDataDataset = {
           value: 'Contrast',
         },
         //#endregion
+
         //#region Desaturate
         {
           description: 'Reduces the saturation.',
@@ -523,6 +533,7 @@ export const TREE_DATA: KulDataDataset = {
           value: 'Gaussian blur',
         },
         //#endregion
+
         //#region Line
         {
           description: 'Draws a line.',
@@ -536,6 +547,7 @@ export const TREE_DATA: KulDataDataset = {
           value: 'Line',
         },
         //#endregion
+
         //#region Vignette
         {
           cells: {

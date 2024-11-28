@@ -39,6 +39,7 @@ export const codeFactory: CodeFactory = {
     };
   },
   //#endregion
+
   //#region Render
   render: (node) => {
     const wrapper = document.createElement(TagName.Div);
@@ -73,6 +74,7 @@ export const codeFactory: CodeFactory = {
     return { widget: createDOMWidget(CustomWidgetName.code, wrapper, node, options) };
   },
   //#endregion
+
   //#region State
   state: STATE,
   //#endregion

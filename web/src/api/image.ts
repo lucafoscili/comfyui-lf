@@ -55,6 +55,7 @@ export const IMAGE_API: ImageAPIs = {
     return payload;
   },
   //#endregion
+
   //#region process
   process: async (url, type, settings) => {
     const lfManager = getLFManager();

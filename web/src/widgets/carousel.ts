@@ -34,6 +34,7 @@ export const carouselFactory: CarouselFactory = {
     };
   },
   //#endregion
+
   //#region Render
   render: (node) => {
     const wrapper = document.createElement(TagName.Div);
@@ -55,6 +56,7 @@ export const carouselFactory: CarouselFactory = {
     return { widget: createDOMWidget(CustomWidgetName.carousel, wrapper, node, options) };
   },
   //#endregion
+
   //#region State
   state: STATE,
   //#endregion

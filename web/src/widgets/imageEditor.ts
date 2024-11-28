@@ -46,6 +46,7 @@ export const imageEditorFactory: ImageEditorFactory = {
     };
   },
   //#endregion
+
   //#region Render
   render: (node) => {
     const wrapper = document.createElement(TagName.Div);
@@ -148,6 +149,7 @@ export const imageEditorFactory: ImageEditorFactory = {
     return { widget: createDOMWidget(CustomWidgetName.imageEditor, wrapper, node, options) };
   },
   //#endregion
+
   //#region State
   state: STATE,
   //#endregion

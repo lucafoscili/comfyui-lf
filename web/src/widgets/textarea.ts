@@ -39,6 +39,7 @@ export const textareaFactory: TextareaFactory = {
     };
   },
   //#endregion
+
   //#region Render
   render: (node) => {
     const wrapper = document.createElement(TagName.Div);
@@ -60,6 +61,7 @@ export const textareaFactory: TextareaFactory = {
     return { widget: createDOMWidget(CustomWidgetName.textarea, wrapper, node, options) };
   },
   //#endregion
+
   //#region State
   state: STATE,
   //#endregion

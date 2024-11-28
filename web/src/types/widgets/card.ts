@@ -13,16 +13,19 @@ export enum CardCSS {
   Grid = `${BASE_CSS_CLASS}__grid`,
 }
 //#endregion
+
 //#region Widget
 export type Card = Widget<CustomWidgetName.card>;
 export type CardFactory = WidgetFactory<CardDeserializedValue, CardState>;
 export type CardNormalizeCallback = NormalizeValueCallback<CardDeserializedValue | string>;
 //#endregion
+
 //#region Value
 export interface CardDeserializedValue {
   props: Partial<HTMLKulCardElement>[];
 }
 //#endregion
+
 //#region State
 export interface CardState extends BaseWidgetState {
   grid: HTMLDivElement;

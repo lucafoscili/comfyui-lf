@@ -48,7 +48,7 @@ export const messengerFactory = {
         messenger.classList.add(MessengerCSS.Widget);
         placeholder.classList.add(MessengerCSS.Placeholder);
         placeholder.innerHTML = PLACEHOLDER_MESSAGE;
-        messenger.addEventListener(KulEventName.KulMessenger, EV_HANDLERS.messenger.bind(EV_HANDLERS.messenger, STATE.get(wrapper)));
+        messenger.addEventListener(KulEventName.KulMessenger, (e) => EV_HANDLERS.messenger(STATE.get(wrapper), e));
         content.appendChild(placeholder);
         content.appendChild(messenger);
         wrapper.appendChild(content);

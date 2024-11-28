@@ -56,6 +56,7 @@ export const ANALYTICS_API: AnalyticsAPIs = {
     return payload;
   },
   //#endregion
+
   //#region get
   get: async (directory, type) => {
     const lfManager = getLFManager();

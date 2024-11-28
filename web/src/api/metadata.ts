@@ -47,6 +47,7 @@ export const METADATA_API: MetadataAPIs = {
     return payload;
   },
   //#endregion
+
   //#region get
   get: async (hash) => {
     const lfManager = getLFManager();
@@ -87,6 +88,7 @@ export const METADATA_API: MetadataAPIs = {
     return payload;
   },
   //#endregion
+
   //#region save
   save: async (modelPath, dataset, forcedSave = false) => {
     const lfManager = getLFManager();
@@ -132,6 +134,7 @@ export const METADATA_API: MetadataAPIs = {
     return payload;
   },
   //#endregion
+
   //#region updateCover
   updateCover: async (modelPath, b64image) => {
     const lfManager = getLFManager();

@@ -64,6 +64,7 @@ export const controlPanelFactory: ControlPanelFactory = {
     };
   },
   //#endregion
+
   //#region Render
   render: (node) => {
     const contentCb = (domWidget: HTMLDivElement, isReady: boolean) => {
@@ -108,6 +109,7 @@ export const controlPanelFactory: ControlPanelFactory = {
     return { widget: createDOMWidget(CustomWidgetName.controlPanel, wrapper, node, options) };
   },
   //#endregion
+
   //#region State
   state: STATE,
   //#endregion

@@ -50,6 +50,7 @@ export class LFWidgets {
   //#region render
   render = (name: CustomWidgetName) => this.#FACTORIES[name].render;
   //#endregion
+
   //#region Decorators
   decorators = {
     card: <W extends Card | CardsWithChip>(payload: CardPayload, widget: W) => {
@@ -90,6 +91,7 @@ export class LFWidgets {
     },
   };
   //#endregion
+
   //#region onEvent
   onEvent = <N extends NodeName, W extends CustomWidgetName>(
     name: N,
@@ -219,6 +221,7 @@ export class LFWidgets {
     }
   };
   //#endregion
+
   //#region Notifications
   #notifications = {
     decorate: (payload: NotifyPayload) => {

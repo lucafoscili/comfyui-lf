@@ -50,6 +50,7 @@ export const isToggle = (comp: KulComponent<KulComponentName>): comp is KulToggl
   return comp.rootElement.tagName.toLowerCase() === 'kul-toggle';
 };
 //#endregion
+
 //#region JSON
 export const areJSONEqual = (a: unknown, b: unknown) => {
   return JSON.stringify(a) === JSON.stringify(b);
@@ -116,6 +117,7 @@ export const unescapeJson = (input: any): UnescapeJSONPayload => {
   return { validJson, parsedJson, unescapedStr };
 };
 //#endregion
+
 //#region Managers
 export const getApiRoutes = () => {
   return WINDOW.lfManager.getApiRoutes();
@@ -149,6 +151,7 @@ export const log = () => {
   return WINDOW.lfManager.log;
 };
 //#endregion
+
 //#region Nodes
 export const getInput = (node: NodeType, type: ComfyWidgetName | CustomWidgetName): SlotInfo => {
   return node?.inputs?.find((w) => w.type.toLowerCase() === type.toLowerCase()) as SlotInfo;
@@ -157,11 +160,13 @@ export const getOutput = (node: NodeType, type: ComfyWidgetName | CustomWidgetNa
   return node?.outputs?.find((w) => w.type.toLowerCase() === type.toLowerCase()) as SlotInfo;
 };
 //#endregion
+
 //#region Number
 export const isValidNumber = (n: number) => {
   return !isNaN(n) && typeof n === 'number';
 };
 //#endregion
+
 //#region String
 export const capitalize = (input: string) => {
   return input
@@ -180,6 +185,7 @@ export const splitByLastSpaceBeforeAnyBracket = (input: string) => {
   return input;
 };
 //#endregion
+
 //#region Widgets
 export const createDOMWidget = (
   type: CustomWidgetName,

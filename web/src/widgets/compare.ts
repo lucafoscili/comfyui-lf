@@ -33,6 +33,7 @@ export const compareFactory: CompareFactory = {
     };
   },
   //#endregion
+
   //#region Render
   render: (node) => {
     const wrapper = document.createElement(TagName.Div);
@@ -58,6 +59,7 @@ export const compareFactory: CompareFactory = {
     return { widget: createDOMWidget(CustomWidgetName.compare, wrapper, node, options) };
   },
   //#endregion
+
   //#region State
   state: STATE,
   //#endregion

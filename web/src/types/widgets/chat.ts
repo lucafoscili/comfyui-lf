@@ -12,14 +12,17 @@ export enum ChatCSS {
   Widget = `${BASE_CSS_CLASS}__widget`,
 }
 //#endregion
+
 //#region Widget
 export type Chat = Widget<CustomWidgetName.chat>;
 export type ChatFactory = WidgetFactory<ChatDeserializedValue, ChatState>;
 export type ChatNormalizeCallback = NormalizeValueCallback<ChatDeserializedValue | string>;
 //#endregion
+
 //#region Value
 export type ChatDeserializedValue = string;
 //#endregion
+
 //#region State
 export interface ChatState extends BaseWidgetState {
   chat: HTMLKulChatElement;

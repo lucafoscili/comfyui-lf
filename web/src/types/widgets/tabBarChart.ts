@@ -19,6 +19,7 @@ export enum TabBarChartCSS {
   Tabbar = `${BASE_CSS_CLASS}__tabbar`,
 }
 //#endregion
+
 //#region Widget
 export type TabBarChart = Widget<CustomWidgetName.tabBarChart>;
 export type TabBarChartFactory = WidgetFactory<TabBarChartDeserializedValue, TabBarChartState>;
@@ -26,6 +27,7 @@ export type TabBarChartNormalizeCallback = NormalizeValueCallback<
   TabBarChartDeserializedValue | string
 >;
 //#endregion
+
 //#region Value
 export type TabBarChartDeserializedValue = {
   directory?: string;
@@ -33,6 +35,7 @@ export type TabBarChartDeserializedValue = {
   [index: string]: KulDataDataset;
 };
 //#endregion
+
 //#region State
 export interface TabBarChartState extends BaseWidgetState {
   directory: string;
@@ -45,6 +48,7 @@ export interface TabBarChartState extends BaseWidgetState {
   type: AnalyticsType;
 }
 //#endregion
+
 //#region Dataset
 export enum TabBarChartColors {
   Blue = 'blue',

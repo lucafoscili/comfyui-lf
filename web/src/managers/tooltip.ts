@@ -32,6 +32,7 @@ export class LFTooltip {
     this.#LAYOUT = null;
   }
   //#endregion
+
   //#region Upload layout
   #uploadLayout() {
     const content = document.createElement(TagName.Div);
@@ -55,6 +56,7 @@ export class LFTooltip {
     return content;
   }
   //#endregion
+
   //#region Button event handler
   #buttonEventHandler = async (
     upload: HTMLKulUploadElement,
@@ -92,6 +94,7 @@ export class LFTooltip {
     }
   };
   //#endregion
+
   //#region Create
   create<T extends TooltipLayouts>(
     anchor: KulDynamicPositionAnchor,
@@ -127,6 +130,7 @@ export class LFTooltip {
     requestAnimationFrame(() => document.body.appendChild(this.#TOOLTIP_ELEMENT));
   }
   //#endregion
+
   //#region Destroy
   destroy() {
     this.#initialize();

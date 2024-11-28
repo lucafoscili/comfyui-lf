@@ -13,14 +13,17 @@ export enum CarouselCSS {
   Widget = `${BASE_CSS_CLASS}__widget`,
 }
 //#endregion
+
 //#region Widget
 export type Carousel = Widget<CustomWidgetName.carousel>;
 export type CarouselFactory = WidgetFactory<CarouselDeserializedValue, CarouselState>;
 export type CarouselNormalizeCallback = NormalizeValueCallback<CarouselDeserializedValue | string>;
 //#endregion
+
 //#region Value
 export type CarouselDeserializedValue = KulDataDataset;
 //#endregion
+
 //#region State
 export interface CarouselState extends BaseWidgetState {
   carousel: HTMLKulCarouselElement;

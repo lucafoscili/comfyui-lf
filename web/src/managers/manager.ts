@@ -84,6 +84,7 @@ export class LFManager {
     this.#MANAGERS.tooltip = new LFTooltip();
     this.#MANAGERS.widgets = new LFWidgets();
   }
+
   //#region Initialize
   initialize() {
     this.#APIS.github.getLatestRelease().then((r) => (this.#LATEST_RELEASE = r?.data || null));
@@ -148,6 +149,7 @@ export class LFManager {
     this.#INITIALIZED = true;
   }
   //#endregion
+
   //#region Getters
   getApiRoutes(): APIRoutes {
     return this.#APIS;
@@ -174,6 +176,7 @@ export class LFManager {
     return this.#DEBUG;
   }
   //#endregion
+
   //#region Log
   log(message: string, args?: Record<string, unknown>, severity = LogSeverity.Info) {
     if (!this.#DEBUG) {
@@ -227,6 +230,7 @@ export class LFManager {
     );
   }
   //#endregion
+
   //#region Setters
   setDebugDataset(article: HTMLKulArticleElement, dataset: KulArticleNode[]) {
     this.#DEBUG_ARTICLE = article;

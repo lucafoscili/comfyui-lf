@@ -158,7 +158,7 @@ const chipCb = (node) => {
         return;
     }
     const dataset = datasetW.options.getValue();
-    const chip = chipW.options.getComp();
+    const chip = chipW.options.getState().chip;
     try {
         const newData = unescapeJson(dataset).parsedJson;
         if (isValidJSON(newData) && isValidJSON(chip.kulData)) {
@@ -192,11 +192,11 @@ const messengerCb = (node) => {
     }
     const messengerW = getCustomWidget(node, CustomWidgetName.messenger);
     const datasetW = nodeInput?.widgets?.[linkInput.origin_slot];
-    if (!messengerW?.options?.getComp || !datasetW?.options?.getValue) {
+    if (!datasetW?.options?.getValue) {
         return;
     }
     const dataset = datasetW.options.getValue();
-    const messenger = messengerW.options.getComp();
+    const messenger = (messengerW?.options?.getState()).elements.messenger;
     try {
         const newData = unescapeJson(dataset).parsedJson;
         if (isValidJSON(newData) && isValidJSON(messenger.kulData)) {

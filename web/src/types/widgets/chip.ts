@@ -12,14 +12,17 @@ export enum ChipCSS {
   Widget = `${BASE_CSS_CLASS}__widget`,
 }
 //#endregion
+
 //#region Widget
 export type Chip = Widget<CustomWidgetName.chip>;
 export type ChipFactory = WidgetFactory<ChipDeserializedValue, ChipState>;
 export type ChipNormalizeCallback = NormalizeValueCallback<ChipDeserializedValue | string>;
 //#endregion
+
 //#region Value
 export type ChipDeserializedValue = string;
 //#endregion
+
 //#region State
 export interface ChipState extends BaseWidgetState {
   chip: HTMLKulChipElement;

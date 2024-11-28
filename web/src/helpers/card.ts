@@ -65,6 +65,7 @@ export const EV_HANDLERS = {
     }
   },
   //#endregion
+
   //#region Card handler
   card: (e: CustomEvent<KulCardEventPayload>) => {
     const { comp, eventType, originalEvent } = e.detail;
@@ -122,6 +123,7 @@ export const EV_HANDLERS = {
   },
   //#endregion
 };
+
 //#region cardPlaceholders
 export const cardPlaceholders = (widget: Card | CardsWithChip, count: number) => {
   const dummyValue: CardDeserializedValue = {
@@ -134,6 +136,7 @@ export const cardPlaceholders = (widget: Card | CardsWithChip, count: number) =>
   widget.options.setValue(JSON.stringify(dummyValue));
 };
 //#endregion
+
 //#region apiCall
 export const apiCall = async (
   models: APIMetadataEntry[],
@@ -153,6 +156,7 @@ export const apiCall = async (
   return Promise.all(promises);
 };
 //#endregion
+
 //#region onResponse
 const onResponse = async (
   dataset: KulDataDataset,
@@ -195,6 +199,7 @@ const onResponse = async (
   return props;
 };
 //#endregion
+
 //#region prepCards
 export const prepCards = (container: HTMLDivElement, propsArray: Partial<HTMLKulCardElement>[]) => {
   let count = 0;
@@ -243,6 +248,7 @@ export const prepCards = (container: HTMLDivElement, propsArray: Partial<HTMLKul
   return count;
 };
 //#endregion
+
 //#region getCardProps
 export const getCardProps = (container: HTMLDivElement) => {
   const propsArray: Partial<HTMLKulCardElement>[] = [];
@@ -271,6 +277,7 @@ export const createCard = () => {
 };
 
 //#endregion
+
 //#region prepareValidDataset
 const prepareValidDataset = (r: CivitAIModelData, code: KulDataCell<'code'>) => {
   const dataset: KulDataDataset = {

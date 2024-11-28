@@ -46,7 +46,9 @@ export const apiCall = async (state) => {
                 chart.kulData = r.data[firstKey];
                 tabbar.kulData = prepareTabbarDataset(r.data);
                 requestAnimationFrame(async () => {
-                    textfield.setValue(directory);
+                    if (directory !== (await textfield.getValue())) {
+                        textfield.setValue(directory);
+                    }
                     tabbar.setValue(0);
                 });
             }

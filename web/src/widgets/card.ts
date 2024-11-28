@@ -40,6 +40,7 @@ export const cardFactory: CardFactory = {
     };
   },
   //#endregion
+
   //#region Render
   render: (node) => {
     const wrapper = document.createElement(TagName.Div);
@@ -86,6 +87,7 @@ export const cardFactory: CardFactory = {
     return { widget: createDOMWidget(CustomWidgetName.card, wrapper, node, options) };
   },
   //#endregion
+
   //#region State
   state: STATE,
   //#endregion
