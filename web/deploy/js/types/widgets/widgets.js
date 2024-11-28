@@ -71,6 +71,7 @@ export var NodeName;
     NodeName["isLandscape"] = "LF_IsLandscape";
     NodeName["keywordCounter"] = "LF_KeywordCounter";
     NodeName["keywordToggleFromJson"] = "LF_KeywordToggleFromJSON";
+    NodeName["line"] = "LF_Line";
     NodeName["llmChat"] = "LF_LLMChat";
     NodeName["llmMessenger"] = "LF_LLMMessenger";
     NodeName["loadAndEditImages"] = "LF_LoadAndEditImages";

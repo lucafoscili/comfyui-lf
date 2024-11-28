@@ -1,48 +1,48 @@
-import { CustomWidgetName, TagName, } from '../types/widgets/_common.js';
-import { cardHandler, getCardProps } from '../helpers/card.js';
-import { createDOMWidget, normalizeValue } from '../utils/common.js';
+import { getCardProps, prepCards } from '../helpers/card.js';
 import { CardsWithChipCSS, } from '../types/widgets/cardsWithChip.js';
+import { CustomWidgetName, TagName } from '../types/widgets/widgets.js';
+import { createDOMWidget, normalizeValue } from '../utils/common.js';
+const STATE = new WeakMap();
 //#region Cards with chip
 export const cardsWithChipFactory = {
-    options: (grid) => {
+    //#region Options
+    options: (wrapper) => {
         return {
             hideOnZoom: false,
-            getComp() {
-                const cards = Array.from(grid.querySelectorAll(TagName.KulCard));
-                const chip = grid.querySelector(TagName.KulChip);
-                return { cards, chip };
-            },
+            getState: () => STATE.get(wrapper),
             getValue() {
+                const { chip, grid } = STATE.get(wrapper);
                 return {
-                    chip: grid.querySelector(TagName.KulChip)?.kulData || {},
+                    chip: chip?.kulData || {},
                     props: getCardProps(grid) || [],
                 };
             },
             setValue(value) {
+                const { chip, grid } = STATE.get(wrapper);
                 const callback = (v, u) => {
-                    const { props, chip } = u.parsedJson;
-                    const cardsCount = cardHandler(grid.querySelector(`.${CardsWithChipCSS.Cards}`), props);
+                    const dataset = u.parsedJson;
+                    const cardsCount = prepCards(grid, dataset.props);
                     if (!cardsCount || !v) {
                         return;
                     }
                     const columns = cardsCount > 1 ? 2 : 1;
                     grid.style.setProperty('--card-grid', String(columns).valueOf());
-                    const chipEl = grid.querySelector(TagName.KulChip);
-                    if (chipEl) {
-                        chipEl.kulData = chip;
+                    if (chip) {
+                        chip.kulData = dataset.chip;
                     }
                 };
                 normalizeValue(value, callback, CustomWidgetName.cardsWithChip);
             },
         };
     },
+    //#endregion
+    //#region Render
     render: (node) => {
         const wrapper = document.createElement(TagName.Div);
         const content = document.createElement(TagName.Div);
         const grid = document.createElement(TagName.Div);
         const cards = document.createElement(TagName.Div);
         const chip = document.createElement(TagName.KulChip);
-        const options = cardsWithChipFactory.options(grid);
         content.classList.add(CardsWithChipCSS.Content);
         grid.classList.add(CardsWithChipCSS.Grid);
         cards.classList.add(CardsWithChipCSS.Cards);
@@ -52,7 +52,12 @@ export const cardsWithChipFactory = {
         grid.appendChild(cards);
         content.appendChild(grid);
         wrapper.appendChild(content);
+        const options = cardsWithChipFactory.options(wrapper);
+        STATE.set(wrapper, { chip, grid, node, wrapper });
         return { widget: createDOMWidget(CustomWidgetName.cardsWithChip, wrapper, node, options) };
     },
+    //#endregion
+    //#region State
+    state: STATE,
+    //#endregion
 };
-//#endregion

@@ -1,35 +1,13 @@
-import { KulDataDataset } from '../ketchup-lite/components';
+import { KulDataDataset } from '../../types/ketchup-lite/components';
 import {
-  BaseWidgetCallback,
-  BaseWidgetFactory,
-  BaseWidgetOptions,
+  BaseWidgetState,
   CustomWidgetName,
-} from './_common';
+  NormalizeValueCallback,
+  WidgetFactory,
+} from './widgets';
 
+//#region CSS
 const BASE_CSS_CLASS = 'lf-imageeditor';
-
-//#region Image editor
-export interface ImageEditor extends Widget {
-  options: ImageEditorOptions;
-  type: [CustomWidgetName.imageEditor];
-}
-export interface ImageEditorFactory extends BaseWidgetFactory<ImageEditorOptions> {
-  options: ImageEditorOptionsCallback;
-}
-export type ImageEditorOptionsCallback = (
-  imageviewer: HTMLKulImageviewerElement,
-  actionButtons: ImageEditorActionButtons,
-  grid: HTMLDivElement,
-) => ImageEditorOptions;
-export interface ImageEditorOptions extends BaseWidgetOptions<ImageEditorDeserializedValue> {
-  getComp(): { imageviewer: HTMLKulImageviewerElement };
-  refresh: (directory: string) => Promise<void>;
-}
-export type ImageEditorSetter = () => {
-  [CustomWidgetName.imageEditor]: BaseWidgetCallback<CustomWidgetName.imageEditor>;
-};
-export type ImageEditorDeserializedValue = KulDataDataset;
-export type ImageEditorUpdateCallback = (addSnapshot?: boolean) => Promise<void>;
 export enum ImageEditorCSS {
   Content = BASE_CSS_CLASS,
   Widget = `${BASE_CSS_CLASS}__widget`,
@@ -40,12 +18,40 @@ export enum ImageEditorCSS {
   Settings = `${BASE_CSS_CLASS}__settings`,
   SettingsControls = `${BASE_CSS_CLASS}__settings__controls`,
 }
-export interface ImageEditorData {
+//#endregion
+
+//#region Widget
+export type ImageEditor = Widget<CustomWidgetName.imageEditor>;
+export type ImageEditorFactory = WidgetFactory<ImageEditorDeserializedValue, ImageEditorState>;
+export type ImageEditorNormalizeCallback = NormalizeValueCallback<
+  ImageEditorDeserializedValue | string
+>;
+//#endregion
+
+//#region Value
+export type ImageEditorDeserializedValue = KulDataDataset;
+//#endregion
+
+//#region State
+export interface ImageEditorState extends BaseWidgetState {
+  elements: {
+    actionButtons: ImageEditorActionButtons;
+    controls: Partial<{
+      [K in ImageEditorControlIds]: ImageEditorControlMap<K>;
+    }>;
+    grid: HTMLDivElement;
+    imageviewer: HTMLKulImageviewerElement;
+    settings: HTMLDivElement;
+  };
   filter: ImageEditorFilter;
   filterType: ImageEditorFilterType;
-  settings: HTMLDivElement;
+  update: {
+    preview: () => Promise<void>;
+    snapshot: () => Promise<void>;
+  };
 }
 //#endregion
+
 //#region Dataset
 export enum ImageEditorStatus {
   Completed = 'completed',
@@ -56,6 +62,7 @@ export enum ImageEditorColumnId {
   Status = 'status',
 }
 //#endregion
+
 //#region U.I.
 export interface ImageEditorActionButtons {
   interrupt?: HTMLKulButtonElement;
@@ -67,7 +74,9 @@ export enum ImageEditorIcons {
   Resume = 'play',
 }
 //#endregion
+
 //#region Controls
+export type ImageEditorUpdateCallback = (addSnapshot?: boolean) => Promise<void>;
 export enum ImageEditorControls {
   Canvas = 'canvas',
   Slider = 'slider',
@@ -109,6 +118,16 @@ export type ImageEditorControlIds =
   | ImageEditorSliderIds
   | ImageEditorTextfieldIds
   | ImageEditorToggleIds;
+export type ImageEditorControlMap<ID extends ImageEditorControlIds> =
+  ID extends ImageEditorCanvasIds
+    ? HTMLKulCanvasElement
+    : ID extends ImageEditorSliderIds
+    ? HTMLKulSliderElement
+    : ID extends ImageEditorTextfieldIds
+    ? HTMLKulTextfieldElement
+    : ID extends ImageEditorToggleIds
+    ? HTMLKulToggleElement
+    : never;
 export type ImageEditorControlValue = string | number | boolean;
 export type ImageEditorFilterSettings = Partial<{
   [K in ImageEditorControlIds]: number | boolean | string | Array<{ x: number; y: number }>;
@@ -156,6 +175,7 @@ export type ImageEditorSettingsFor = Partial<{
   [ImageEditorControls.Toggle]: ImageEditorToggleConfig[];
 }>;
 //#endregion
+
 //#region Filters
 export interface ImageEditorFilterSettingsMap {
   brightness: ImageEditorBrightnessSettings;

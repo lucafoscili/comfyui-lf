@@ -1,5 +1,5 @@
 import { ImageEditorBrightnessIds, ImageEditorBrushIds, ImageEditorClarityIds, ImageEditorContrastIds, ImageEditorControls, ImageEditorDesaturateIds, ImageEditorGaussianBlurIds, ImageEditorLineIds, ImageEditorSliderIds, ImageEditorTextfieldIds, ImageEditorToggleIds, ImageEditorVignetteIds, } from '../types/widgets/imageEditor.js';
-const SETTINGS = {
+export const SETTINGS = {
     //#region Brightness
     brightness: {
         controlIds: ImageEditorBrightnessIds,

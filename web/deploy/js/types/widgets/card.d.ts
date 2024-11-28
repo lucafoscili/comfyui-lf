@@ -1,23 +1,15 @@
-import { BaseWidgetCallback, BaseWidgetFactory, BaseWidgetOptions, CustomWidgetName } from './_common';
-export interface Card extends Widget {
-    options: CardOptions;
-    type: [CustomWidgetName.card];
-}
-export interface CardFactory extends BaseWidgetFactory<CardOptions> {
-    options: CardOptionsCallback;
-}
-export type CardOptionsCallback = (grid: HTMLDivElement) => CardOptions;
-export interface CardOptions extends BaseWidgetOptions<CardDeserializedValue> {
-    getComp(): HTMLKulCardElement[];
-}
-export type CardSetter = () => {
-    [CustomWidgetName.card]: BaseWidgetCallback<CustomWidgetName.card>;
-};
-export interface CardDeserializedValue {
-    props: Partial<HTMLKulCardElement>[];
-}
+import { BaseWidgetState, CustomWidgetName, NormalizeValueCallback, WidgetFactory } from './widgets';
 export declare enum CardCSS {
     Content = "lf-card",
     ContentHasButton = "lf-card--has-button",
     Grid = "lf-card__grid"
+}
+export type Card = Widget<CustomWidgetName.card>;
+export type CardFactory = WidgetFactory<CardDeserializedValue, CardState>;
+export type CardNormalizeCallback = NormalizeValueCallback<CardDeserializedValue | string>;
+export interface CardDeserializedValue {
+    props: Partial<HTMLKulCardElement>[];
+}
+export interface CardState extends BaseWidgetState {
+    grid: HTMLDivElement;
 }

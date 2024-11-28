@@ -1,4 +1,4 @@
-import { CustomWidgetName, } from './_common.js';
+//#region CSS
 const BASE_CSS_CLASS = 'lf-tree';
 export var TreeCSS;
 (function (TreeCSS) {

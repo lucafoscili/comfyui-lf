@@ -45,6 +45,7 @@ async def clear_usage_analytics(request):
     except Exception as e:
         return web.Response(status=500, text=f"Error: {str(e)}")
 # endregion
+
 # region get-analytics
 @PromptServer.instance.routes.post(f"{API_ROUTE_PREFIX}/get-analytics")
 async def get_usage_analytics(request):

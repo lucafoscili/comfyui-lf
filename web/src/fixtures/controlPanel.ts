@@ -117,6 +117,7 @@ export const SECTIONS: ControlPanelFixture = {
     };
   },
   //#endregion
+
   //#region Backup
   [ControlPanelIds.Backup]: (): KulArticleNode => {
     return {
@@ -192,6 +193,7 @@ export const SECTIONS: ControlPanelFixture = {
     };
   },
   //#endregion
+
   //#region Debug
   [ControlPanelIds.Debug]: (logsData: KulArticleNode[]): KulArticleNode => {
     return {
@@ -315,6 +317,7 @@ export const SECTIONS: ControlPanelFixture = {
     };
   },
   //#endregion
+
   //#region GitHub
   [ControlPanelIds.GitHub]: (): KulArticleNode => {
     const lfManager = getLFManager();
@@ -435,6 +438,7 @@ export const SECTIONS: ControlPanelFixture = {
     };
   },
   //#endregion
+
   //#region Metadata
   [ControlPanelIds.Metadata]: (): KulArticleNode => {
     return {
@@ -485,6 +489,7 @@ export const SECTIONS: ControlPanelFixture = {
     };
   },
   //#endregion
+
   //#region Theme
   [ControlPanelIds.Theme]: (): KulArticleNode => {
     return {

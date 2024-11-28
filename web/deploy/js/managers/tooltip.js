@@ -10,8 +10,10 @@ var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (
     return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
 };
 var _LFTooltip_instances, _LFTooltip_CB, _LFTooltip_CSS_CLASSES, _LFTooltip_LAYOUT, _LFTooltip_TOOLTIP_ELEMENT, _LFTooltip_initialize, _LFTooltip_uploadLayout, _LFTooltip_buttonEventHandler;
-import { getKulManager, getLFManager } from '../utils/common.js';
+import { KulEventName } from '../types/events/events.js';
 import { LogSeverity, } from '../types/manager/manager.js';
+import { TagName } from '../types/widgets/widgets.js';
+import { getKulManager, getLFManager } from '../utils/common.js';
 export class LFTooltip {
     constructor() {
         _LFTooltip_instances.add(this);
@@ -53,12 +55,7 @@ export class LFTooltip {
                     }
             }
         });
-        const link = document.createElement('link');
-        link.dataset.filename = 'tooltip';
-        link.rel = 'stylesheet';
-        link.type = 'text/css';
-        link.href = `extensions/comfyui-lf/css/tooltip.css`;
-        document.head.appendChild(link);
+        //#endregion
     }
     //#endregion
     //#region Create
@@ -93,15 +90,15 @@ _LFTooltip_CB = new WeakMap(), _LFTooltip_CSS_CLASSES = new WeakMap(), _LFToolti
     __classPrivateFieldSet(this, _LFTooltip_CB, {}, "f");
     __classPrivateFieldSet(this, _LFTooltip_LAYOUT, null, "f");
 }, _LFTooltip_uploadLayout = function _LFTooltip_uploadLayout() {
-    const content = document.createElement('div');
-    const upload = document.createElement('kul-upload');
-    const button = document.createElement('kul-button');
+    const content = document.createElement(TagName.Div);
+    const upload = document.createElement(TagName.KulUpload);
+    const button = document.createElement(TagName.KulButton);
     content.classList.add(__classPrivateFieldGet(this, _LFTooltip_CSS_CLASSES, "f").content);
     button.classList.add('kul-full-width');
     button.kulIcon = 'upload';
     button.kulLabel = 'Update cover';
     content.appendChild(upload);
     content.appendChild(button);
-    button.addEventListener('kul-button-event', __classPrivateFieldGet(this, _LFTooltip_buttonEventHandler, "f").bind(__classPrivateFieldGet(this, _LFTooltip_buttonEventHandler, "f"), upload));
+    button.addEventListener(KulEventName.KulButton, __classPrivateFieldGet(this, _LFTooltip_buttonEventHandler, "f").bind(__classPrivateFieldGet(this, _LFTooltip_buttonEventHandler, "f"), upload));
     return content;
 };

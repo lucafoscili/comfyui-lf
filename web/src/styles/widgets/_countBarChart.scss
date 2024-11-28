@@ -1,0 +1,13 @@
+@use '../mixins/mixins' as mixins;
+
+.lf-countbarchart {
+  & {
+    @include mixins.lf-root($max: false);
+    position: relative;
+  }
+
+  &__widget {
+    height: 100%;
+    width: 100%;
+  }
+}

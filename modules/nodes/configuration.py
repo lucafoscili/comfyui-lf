@@ -191,6 +191,7 @@ class LF_CivitAIMetadataSetup:
             width, height, hires_upscaler, hires_upscale, analytics_dataset
         )
 # endregion
+
 # region LF_ControlPanel
 class LF_ControlPanel:
     @classmethod
@@ -214,6 +215,7 @@ class LF_ControlPanel:
     def on_exec(self, **kwargs: dict):
         return ()
 # endregion
+
 # region LF_LoadLoraTags
 class LF_LoadLoraTags:
     @classmethod
@@ -361,6 +363,7 @@ class LF_LoadLoraTags:
 
         return (model, clip)
 # endregion
+
 # region LF_Notify
 class LF_Notify:
     @classmethod
@@ -428,6 +431,7 @@ class LF_Notify:
 
         return (any, any)
 # endregion
+
 NODE_CLASS_MAPPINGS = {
     "LF_CivitAIMetadataSetup": LF_CivitAIMetadataSetup,
     "LF_ControlPanel": LF_ControlPanel,

@@ -1,4 +1,4 @@
-import { NodeWidgetMap } from '../types/widgets/_common';
+import { NodeWidgetMap } from '../types/widgets/widgets';
 export declare const NODE_WIDGET_MAP: NodeWidgetMap;
 export declare const onConnectionsChange: (nodeType: NodeType) => Promise<void>;
 export declare const onDrawBackground: (nodeType: NodeType) => Promise<void>;

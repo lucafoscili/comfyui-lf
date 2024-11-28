@@ -65,6 +65,7 @@ class LF_SequentialSeedsGenerator:
 
         return seeds
 # endregion
+
 # region LF_UrandomSeedGenerator
 class LF_UrandomSeedGenerator:
     @classmethod
@@ -155,6 +156,7 @@ class LF_UrandomSeedGenerator:
         if regen_each_run:
             return float("NaN")
 # endregion
+
 NODE_CLASS_MAPPINGS = {
     "LF_SequentialSeedsGenerator": LF_SequentialSeedsGenerator,
     "LF_UrandomSeedGenerator": LF_UrandomSeedGenerator,

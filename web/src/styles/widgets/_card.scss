@@ -1,0 +1,19 @@
+@use '../mixins/mixins' as mixins;
+
+.lf-card {
+  & {
+    @include mixins.lf-root();
+  }
+
+  &--has-button {
+    display: grid;
+    grid-template-rows: 1fr auto;
+  }
+
+  &__grid {
+    display: grid;
+    height: 100%;
+    grid-template: var(--card-grid);
+    width: 100%;
+  }
+}

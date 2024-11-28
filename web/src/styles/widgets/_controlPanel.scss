@@ -1,0 +1,21 @@
+@use '../mixins/mixins' as mixins;
+
+.lf-controlpanel {
+  & {
+    @include mixins.lf-root();
+    --kul-article-padding: 12px 24px;
+    display: grid;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    height: 100%;
+    width: 100%;
+  }
+
+  &__spinner {
+    height: 100%;
+    width: 100%;
+  }
+}

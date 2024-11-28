@@ -1,31 +1,31 @@
-import { KulDataDataset } from '../ketchup-lite/components';
+import { KulDataDataset } from '../../types/ketchup-lite/components';
 import {
-  BaseWidgetCallback,
-  BaseWidgetFactory,
-  BaseWidgetOptions,
+  BaseWidgetState,
   CustomWidgetName,
-} from './_common';
+  NormalizeValueCallback,
+  WidgetFactory,
+} from './widgets';
 
+//#region CSS
 const BASE_CSS_CLASS = 'lf-history';
-
-//#region History
-export interface History extends Widget {
-  options: HistoryOptions;
-  type: [CustomWidgetName.history];
-}
-export interface HistoryFactory extends BaseWidgetFactory<HistoryOptions> {
-  options: HistoryOptionsCallback;
-}
-export type HistoryOptionsCallback = (list: HTMLKulListElement) => HistoryOptions;
-export interface HistoryOptions extends BaseWidgetOptions<HistoryDeserializedValue> {
-  getComp(): HTMLKulListElement;
-}
-export type HistorySetter = () => {
-  [CustomWidgetName.history]: BaseWidgetCallback<CustomWidgetName.history>;
-};
-export type HistoryDeserializedValue = KulDataDataset;
 export enum HistoryCSS {
   Content = BASE_CSS_CLASS,
   Widget = `${BASE_CSS_CLASS}__widget`,
+}
+//#endregion
+
+//#region Widget
+export type History = Widget<CustomWidgetName.history>;
+export type HistoryFactory = WidgetFactory<HistoryDeserializedValue, HistoryState>;
+export type HistoryNormalizeCallback = NormalizeValueCallback<HistoryDeserializedValue | string>;
+//#endregion
+
+//#region Value
+export type HistoryDeserializedValue = KulDataDataset;
+//#endregion
+
+//#region State
+export interface HistoryState extends BaseWidgetState {
+  list: HTMLKulListElement;
 }
 //#endregion

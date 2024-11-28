@@ -1,21 +1,13 @@
-import { KulDataDataset } from '../ketchup-lite/components';
-import { BaseWidgetCallback, BaseWidgetFactory, BaseWidgetOptions, CustomWidgetName } from './_common';
-export interface History extends Widget {
-    options: HistoryOptions;
-    type: [CustomWidgetName.history];
-}
-export interface HistoryFactory extends BaseWidgetFactory<HistoryOptions> {
-    options: HistoryOptionsCallback;
-}
-export type HistoryOptionsCallback = (list: HTMLKulListElement) => HistoryOptions;
-export interface HistoryOptions extends BaseWidgetOptions<HistoryDeserializedValue> {
-    getComp(): HTMLKulListElement;
-}
-export type HistorySetter = () => {
-    [CustomWidgetName.history]: BaseWidgetCallback<CustomWidgetName.history>;
-};
-export type HistoryDeserializedValue = KulDataDataset;
+import { KulDataDataset } from '../../types/ketchup-lite/components';
+import { BaseWidgetState, CustomWidgetName, NormalizeValueCallback, WidgetFactory } from './widgets';
 export declare enum HistoryCSS {
     Content = "lf-history",
     Widget = "lf-history__widget"
+}
+export type History = Widget<CustomWidgetName.history>;
+export type HistoryFactory = WidgetFactory<HistoryDeserializedValue, HistoryState>;
+export type HistoryNormalizeCallback = NormalizeValueCallback<HistoryDeserializedValue | string>;
+export type HistoryDeserializedValue = KulDataDataset;
+export interface HistoryState extends BaseWidgetState {
+    list: HTMLKulListElement;
 }

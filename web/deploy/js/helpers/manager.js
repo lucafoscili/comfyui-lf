@@ -1,5 +1,5 @@
 import { LogSeverity } from '../types/manager/manager.js';
-import { ComfyWidgetName, CustomWidgetName, NodeName, } from '../types/widgets/_common.js';
+import { ComfyWidgetName, CustomWidgetName, NodeName, } from '../types/widgets/widgets.js';
 import { MessengerCSS } from '../types/widgets/messenger.js';
 import { areJSONEqual, getApiRoutes, getCustomWidget, getInput, getLFManager, isValidJSON, refreshChart, unescapeJson, } from '../utils/common.js';
 //#region Node-Widget map
@@ -39,6 +39,7 @@ export const NODE_WIDGET_MAP = {
     LF_IsLandscape: [CustomWidgetName.tree],
     LF_KeywordCounter: [CustomWidgetName.countBarChart],
     LF_KeywordToggleFromJSON: [CustomWidgetName.chip],
+    LF_Line: [CustomWidgetName.compare],
     LF_LLMChat: [CustomWidgetName.chat],
     LF_LLMMessenger: [CustomWidgetName.messenger],
     LF_LoadAndEditImages: [CustomWidgetName.imageEditor],
@@ -158,7 +159,7 @@ const chipCb = (node) => {
         return;
     }
     const dataset = datasetW.options.getValue();
-    const chip = chipW.options.getComp();
+    const chip = chipW.options.getState().chip;
     try {
         const newData = unescapeJson(dataset).parsedJson;
         if (isValidJSON(newData) && isValidJSON(chip.kulData)) {
@@ -192,11 +193,11 @@ const messengerCb = (node) => {
     }
     const messengerW = getCustomWidget(node, CustomWidgetName.messenger);
     const datasetW = nodeInput?.widgets?.[linkInput.origin_slot];
-    if (!messengerW?.options?.getComp || !datasetW?.options?.getValue) {
+    if (!datasetW?.options?.getValue) {
         return;
     }
     const dataset = datasetW.options.getValue();
-    const messenger = messengerW.options.getComp();
+    const messenger = (messengerW?.options?.getState()).elements.messenger;
     try {
         const newData = unescapeJson(dataset).parsedJson;
         if (isValidJSON(newData) && isValidJSON(messenger.kulData)) {

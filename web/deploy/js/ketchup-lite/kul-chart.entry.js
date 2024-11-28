@@ -1,24 +1,6 @@
-import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-53f95fee.js';
-import { k as kulManagerInstance, c as KulThemeColorValues, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-9e1be956.js';
+import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-7cf82e95.js';
+import { k as kulManagerInstance, c as KulThemeColorValues, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-72505221.js';
 import { g as getProps } from './componentUtils-a994b230.js';
-
-/*-------------------------------------------------*/
-/*                    P r o p s                    */
-/*-------------------------------------------------*/
-var KulChartProps;
-(function (KulChartProps) {
-    KulChartProps["kulAxis"] = "Sets the axis of the chart.";
-    KulChartProps["kulColors"] = "Overrides theme's colors.";
-    KulChartProps["kulData"] = "The actual data of the chart.";
-    KulChartProps["kulLegend"] = "Sets the position of the legend. Supported values: bottom, left, right, top. Keep in mind that legend types are tied to chart types, some combinations might not work.";
-    KulChartProps["kulSeries"] = "The data series to be displayed. They must be of the same type.";
-    KulChartProps["kulSizeX"] = "The width of the chart, defaults to 100%. Accepts any valid CSS format (px, %, vw, etc.).";
-    KulChartProps["kulSizeY"] = "The height of the chart, defaults to 100%. Accepts any valid CSS format (px, %, vh, etc.).";
-    KulChartProps["kulStyle"] = "Custom style of the component.";
-    KulChartProps["kulTypes"] = "The type of the chart. Supported formats: Line, Pie, Map, Scatter.";
-    KulChartProps["kulXAxis"] = "Customization options for the x Axis.";
-    KulChartProps["kulYAxis"] = "Customization options for the y Axis.";
-})(KulChartProps || (KulChartProps = {}));
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -84327,6 +84309,7 @@ use(installUniversalTransition);
 // })
 use(installLabelLayout);
 
+//#region Click
 const onClick = (adapter, e) => {
     const chart = adapter.get.chart();
     const dataset = chart.kulData;
@@ -84353,9 +84336,13 @@ const onClick = (adapter, e) => {
         y: yValue,
     });
 };
+//#endregion
 
 const CHART_DESIGN = {
+    //#region Opacity
     applyOpacity: (color, opacity) => `${color}${opacity}`,
+    //#endregion
+    //#region Axis
     axis: (adapter, axisType) => {
         const theme = adapter.get.design.theme;
         if (axisType === 'x') {
@@ -84399,6 +84386,8 @@ const CHART_DESIGN = {
             };
         }
     },
+    //#endregion
+    //#region Colors
     colors: (adapter, count) => {
         const hex = (color) => {
             return adapter.get.manager().theme.colorCheck(color).hexColor;
@@ -84423,6 +84412,8 @@ const CHART_DESIGN = {
         }
         return colorArray.slice(0, count);
     },
+    //#endregion
+    //#region Label
     label: (adapter) => {
         const theme = adapter.get.design.theme;
         const label = {
@@ -84442,6 +84433,8 @@ const CHART_DESIGN = {
         };
         return label;
     },
+    //#endregion
+    //#region Legend
     legend: (adapter) => {
         const chart = adapter.get.chart();
         if (chart.kulLegend === 'hidden') {
@@ -84467,6 +84460,8 @@ const CHART_DESIGN = {
         successColor: '',
         textColor: '',
     },
+    //#endregion
+    //#region Tooltip
     tooltip: (adapter, formatter) => {
         const theme = adapter.get.design.theme;
         const tooltip = {
@@ -84479,9 +84474,11 @@ const CHART_DESIGN = {
         };
         return tooltip;
     },
+    //#endregion
 };
 
 const CHART_OPTIONS = {
+    //#region Bubble
     bubble: (adapter) => {
         const chart = adapter.get.chart();
         const design = adapter.get.design;
@@ -84541,6 +84538,8 @@ const CHART_OPTIONS = {
         };
         return options;
     },
+    //#endregion
+    //#region Calendar
     calendar: (adapter) => {
         const chart = adapter.get.chart();
         const design = adapter.get.design;
@@ -84621,6 +84620,8 @@ const CHART_OPTIONS = {
         };
         return options;
     },
+    //#endregion
+    //#region Candlestick
     candlestick: (adapter) => {
         const chart = adapter.get.chart();
         const design = adapter.get.design;
@@ -84683,6 +84684,8 @@ const CHART_OPTIONS = {
         };
         return options;
     },
+    //#endregion
+    //#region Default
     default: (adapter) => {
         const design = adapter.get.design;
         const colors = design.colors(adapter, adapter.get.seriesData().length);
@@ -84836,6 +84839,8 @@ const CHART_OPTIONS = {
         };
         return options;
     },
+    //#endregion
+    //#region Funnel
     funnel: (adapter) => {
         const chart = adapter.get.chart();
         const design = adapter.get.design;
@@ -84885,6 +84890,8 @@ const CHART_OPTIONS = {
         };
         return options;
     },
+    //#endregion
+    //#region Heatmap
     heatmap: (adapter) => {
         const chart = adapter.get.chart();
         const design = adapter.get.design;
@@ -84969,6 +84976,8 @@ const CHART_OPTIONS = {
         };
         return options;
     },
+    //#endregion
+    //#region Pie
     pie: (adapter) => {
         const chart = adapter.get.chart();
         const design = adapter.get.design;
@@ -84998,6 +85007,8 @@ const CHART_OPTIONS = {
         };
         return options;
     },
+    //#endregion
+    //#region Radar
     radar: (adapter) => {
         const chart = adapter.get.chart();
         const design = adapter.get.design;
@@ -85074,6 +85085,8 @@ const CHART_OPTIONS = {
         };
         return options;
     },
+    //#endregion
+    //#region Sankey
     sankey: (adapter) => {
         const chart = adapter.get.chart();
         const design = adapter.get.design;
@@ -85126,7 +85139,26 @@ const CHART_OPTIONS = {
         };
         return options;
     },
+    //#endregion
 };
+
+//#endregion
+//#region Props
+var KulChartProps;
+(function (KulChartProps) {
+    KulChartProps["kulAxis"] = "Sets the axis of the chart.";
+    KulChartProps["kulColors"] = "Overrides theme's colors.";
+    KulChartProps["kulData"] = "The actual data of the chart.";
+    KulChartProps["kulLegend"] = "Sets the position of the legend. Supported values: bottom, left, right, top. Keep in mind that legend types are tied to chart types, some combinations might not work.";
+    KulChartProps["kulSeries"] = "The data series to be displayed. They must be of the same type.";
+    KulChartProps["kulSizeX"] = "The width of the chart, defaults to 100%. Accepts any valid CSS format (px, %, vw, etc.).";
+    KulChartProps["kulSizeY"] = "The height of the chart, defaults to 100%. Accepts any valid CSS format (px, %, vh, etc.).";
+    KulChartProps["kulStyle"] = "Custom style of the component.";
+    KulChartProps["kulTypes"] = "The type of the chart. Supported formats: Line, Pie, Map, Scatter.";
+    KulChartProps["kulXAxis"] = "Customization options for the x Axis.";
+    KulChartProps["kulYAxis"] = "Customization options for the y Axis.";
+})(KulChartProps || (KulChartProps = {}));
+//#endregion
 
 const kulChartCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}@keyframes fade-in-grid{0%{display:none}1%{display:grid;opacity:0}100%{display:grid;opacity:1}}:host{-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);display:block;height:var(--kul_chart_height, 100%);min-height:var(--kul_chart_height, 100%);min-width:var(--kul_chart_width, 100%);width:var(--kul_chart_width, 100%)}#kul-component{width:100%;height:100%;position:relative}";
 const KulChartStyle0 = kulChartCss;
@@ -85155,9 +85187,8 @@ const KulChart = class {
         this.kulYAxis = null;
     }
     get rootElement() { return getElement(this); }
-    /*-------------------------------------------------*/
-    /*       I n t e r n a l   V a r i a b l e s       */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Internal variables
     #kulManager = kulManagerInstance();
     #findColumn = this.#kulManager.data.column.find;
     #stringify = this.#kulManager.data.cell.stringify;
@@ -85165,9 +85196,8 @@ const KulChart = class {
     #chartEl;
     #axesData = [];
     #seriesData = [];
-    /*-------------------------------------------------*/
-    /*                   E v e n t s                   */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Events
     kulEvent;
     onKulEvent(e, eventType, data) {
         this.kulEvent.emit({
@@ -85178,9 +85208,8 @@ const KulChart = class {
             data,
         });
     }
-    /*-------------------------------------------------*/
-    /*           P u b l i c   M e t h o d s           */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Public methods
     /**
      * Fetches debug information of the component's current state.
      * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves with the debug information object.
@@ -85212,9 +85241,8 @@ const KulChart = class {
             this.rootElement.remove();
         }, ms);
     }
-    /*-------------------------------------------------*/
-    /*           P r i v a t e   M e t h o d s         */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Private methods
     #adapter = {
         actions: {
             mapType: (type) => {
@@ -85319,21 +85347,19 @@ const KulChart = class {
                     }
                 }
                 else {
-                    // For line series
                     const lineDataMap = new Map();
                     for (const node of dataset.nodes) {
                         const xValue = this.#stringify(node.cells[this.kulAxis[0]]?.value);
                         const value = parseFloat(this.#stringify(node.cells[seriesId]?.value) || '0');
                         lineDataMap.set(xValue, value);
                     }
-                    // Ensure data aligns with x-axis categories
                     for (const xValue of xCategories) {
                         seriesValues.push(lineDataMap.get(xValue) ?? 0);
                     }
                 }
                 const seriesName = this.#findColumn(dataset, { id: seriesId })?.[0]?.title ||
                     seriesId;
-                const axisIndex = 0; // Assign to the primary axis or adjust as needed
+                const axisIndex = 0;
                 this.#seriesData.push({
                     name: seriesName,
                     data: seriesValues,
@@ -85375,9 +85401,8 @@ const KulChart = class {
                 return options.default(this.#adapter);
         }
     }
-    /*-------------------------------------------------*/
-    /*          L i f e c y c l e   H o o k s          */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Lifecycle hooks
     componentWillLoad() {
         this.#kulManager.theme.register(this);
         if (typeof this.kulAxis === 'string') {
@@ -85406,7 +85431,7 @@ const KulChart = class {
             '--kul_chart_height': this.kulSizeY || '100%',
             '--kul_chart_width': this.kulSizeX || '100%',
         };
-        return (h(Host, { key: '1c41032f30b09fbfb4ca7a66c98dc474d41fd111', style: style }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '2819379140bab70087df53960d30827a666cbace', id: KUL_WRAPPER_ID, ref: (chartContainer) => (this.#chartContainer = chartContainer) })));
+        return (h(Host, { key: 'b2676fd1f8a066a2b9cbd643baf8d9430d0c625e', style: style }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'a605298feef681cfa37c537494ffe26d2dfeca28', id: KUL_WRAPPER_ID, ref: (chartContainer) => (this.#chartContainer = chartContainer) })));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

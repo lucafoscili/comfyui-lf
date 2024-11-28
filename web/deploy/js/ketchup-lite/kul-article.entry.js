@@ -1,5 +1,5 @@
-import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, F as Fragment, H as Host } from './index-53f95fee.js';
-import { k as kulManagerInstance, K as KUL_WRAPPER_ID, f as KulLanguageGeneric, b as KUL_STYLE_ID } from './kul-manager-9e1be956.js';
+import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, F as Fragment, H as Host } from './index-7cf82e95.js';
+import { k as kulManagerInstance, K as KUL_WRAPPER_ID, f as KulLanguageGeneric, b as KUL_STYLE_ID } from './kul-manager-72505221.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 
 //#endregion
@@ -29,16 +29,11 @@ const KulArticle = class {
         this.kulStyle = '';
     }
     get rootElement() { return getElement(this); }
-    /*-------------------------------------------------*/
-    /*       I n t e r n a l   V a r i a b l e s       */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Internal variables
     #kulManager = kulManagerInstance();
-    /*-------------------------------------------------*/
-    /*                   E v e n t s                   */
-    /*-------------------------------------------------*/
-    /**
-     * Describes event emitted.
-     */
+    //#endregion
+    //#region Events
     kulEvent;
     onKulEvent(e, eventType) {
         this.kulEvent.emit({
@@ -48,9 +43,8 @@ const KulArticle = class {
             originalEvent: e,
         });
     }
-    /*-------------------------------------------------*/
-    /*           P u b l i c   M e t h o d s           */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Public methods
     /**
      * Retrieves the debug information reflecting the current state of the component.
      * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves to a KulDebugLifecycleInfo object containing debug information.
@@ -82,9 +76,8 @@ const KulArticle = class {
             this.rootElement.remove();
         }, ms);
     }
-    /*-------------------------------------------------*/
-    /*           P r i v a t e   M e t h o d s         */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Private methods
     #recursive(node, depth) {
         switch (depth) {
             case 0:
@@ -146,9 +139,8 @@ const KulArticle = class {
         }
         return h(Fragment, null, elements);
     }
-    /*-------------------------------------------------*/
-    /*          L i f e c y c l e   H o o k s          */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Lifecycle hooks
     componentWillLoad() {
         this.#kulManager.theme.register(this);
     }
@@ -163,7 +155,7 @@ const KulArticle = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: '95c96e18ed87aed546593bbdbab4545cb02dedc5' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'ee797c33e97c72150c03879450ef256bba0b94a0', id: KUL_WRAPPER_ID }, this.kulData?.nodes?.length ? (this.#prepArticle()) : (h("div", { class: "empty-data" }, h("div", { class: "empty-data__text" }, this.#kulManager.language.translate(KulLanguageGeneric.EMPTY_DATA)))))));
+        return (h(Host, { key: '73471d26713802a8367261cde07c821e81048596' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '202e0d85d56c60d32e8ce8ff1949e1467d8d161a', id: KUL_WRAPPER_ID }, this.kulData?.nodes?.length ? (this.#prepArticle()) : (h("div", { class: "empty-data" }, h("div", { class: "empty-data__text" }, this.#kulManager.language.translate(KulLanguageGeneric.EMPTY_DATA)))))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

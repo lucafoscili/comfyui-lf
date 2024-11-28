@@ -1,30 +1,35 @@
-import { handleInputChange } from '../helpers/textarea';
+import { EV_HANDLERS } from '../helpers/textarea';
 import {
-  CustomWidgetDeserializedValuesMap,
-  CustomWidgetName,
-  NodeName,
-  NormalizeValueCallback,
-  TagName,
-} from '../types/widgets/_common';
-import { TextareaCSS, TextareaDeserializedValue, TextareaFactory } from '../types/widgets/textarea';
-import { createDOMWidget, findWidget, normalizeValue } from '../utils/common';
+  TextareaCSS,
+  TextareaDeserializedValue,
+  TextareaFactory,
+  TextareaNormalizeCallback,
+  TextareaState,
+} from '../types/widgets/textarea';
+import { CustomWidgetName, TagName } from '../types/widgets/widgets';
+import { createDOMWidget, normalizeValue } from '../utils/common';
 
-//#region Textarea
+const STATE = new WeakMap<HTMLDivElement, TextareaState>();
+
 export const textareaFactory: TextareaFactory = {
-  options: (textarea) => {
+  //#region Options
+  options: (wrapper) => {
     return {
       hideOnZoom: false,
+      getState: () => STATE.get(wrapper),
       getValue() {
+        const { textarea } = STATE.get(wrapper);
+
         try {
           return JSON.parse(textarea?.value || '{}') || {};
         } catch (error) {
-          return { invalid_json: error };
+          return error;
         }
       },
       setValue(value) {
-        const callback: NormalizeValueCallback<
-          CustomWidgetDeserializedValuesMap<typeof CustomWidgetName.textarea> | string
-        > = (_, u) => {
+        const { textarea } = STATE.get(wrapper);
+
+        const callback: TextareaNormalizeCallback = (_, u) => {
           const parsedJson = u.parsedJson as TextareaDeserializedValue;
           textarea.value = JSON.stringify(parsedJson, null, 2) || '{}';
         };
@@ -33,28 +38,31 @@ export const textareaFactory: TextareaFactory = {
       },
     };
   },
-  render: (node) => {
-    const w = findWidget(node, CustomWidgetName.textarea);
-    if (findWidget(node, CustomWidgetName.textarea) && node.comfyClass === NodeName.writeJson) {
-      return w.element;
-    }
+  //#endregion
 
+  //#region Render
+  render: (node) => {
     const wrapper = document.createElement(TagName.Div);
     const content = document.createElement(TagName.Div);
     const textarea = document.createElement(TagName.Textarea);
-    const options = textareaFactory.options(textarea);
 
     content.classList.add(TextareaCSS.Content);
-    textarea.classList.add(TextareaCSS.Widget);
-
     content.appendChild(textarea);
+
+    textarea.classList.add(TextareaCSS.Widget);
+    textarea.addEventListener('input', EV_HANDLERS.input);
+
     wrapper.appendChild(content);
 
-    textarea.addEventListener('input', (e) => {
-      handleInputChange(e);
-    });
+    const options = textareaFactory.options(wrapper);
+
+    STATE.set(wrapper, { node, textarea, wrapper });
 
     return { widget: createDOMWidget(CustomWidgetName.textarea, wrapper, node, options) };
   },
+  //#endregion
+
+  //#region State
+  state: STATE,
+  //#endregion
 };
-//#endregion

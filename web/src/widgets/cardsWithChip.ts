@@ -1,47 +1,44 @@
-import {
-  CustomWidgetDeserializedValuesMap,
-  CustomWidgetName,
-  NormalizeValueCallback,
-  TagName,
-} from '../types/widgets/_common';
-import { cardHandler, getCardProps } from '../helpers/card';
-import { createDOMWidget, normalizeValue } from '../utils/common';
+import { getCardProps, prepCards } from '../helpers/card';
 import {
   CardsWithChipCSS,
   CardsWithChipDeserializedValue,
   CardsWithChipFactory,
+  CardsWithChipNormalizeCallback,
+  CardsWithChipState,
 } from '../types/widgets/cardsWithChip';
+import { CustomWidgetName, TagName } from '../types/widgets/widgets';
+import { createDOMWidget, normalizeValue } from '../utils/common';
+
+const STATE = new WeakMap<HTMLDivElement, CardsWithChipState>();
 
 //#region Cards with chip
 export const cardsWithChipFactory: CardsWithChipFactory = {
-  options: (grid) => {
+  //#region Options
+  options: (wrapper) => {
     return {
       hideOnZoom: false,
-      getComp() {
-        const cards = Array.from(grid.querySelectorAll(TagName.KulCard));
-        const chip = grid.querySelector(TagName.KulChip);
-        return { cards, chip };
-      },
+      getState: () => STATE.get(wrapper),
       getValue() {
+        const { chip, grid } = STATE.get(wrapper);
+
         return {
-          chip: grid.querySelector(TagName.KulChip)?.kulData || {},
+          chip: chip?.kulData || {},
           props: getCardProps(grid) || [],
         };
       },
       setValue(value) {
-        const callback: NormalizeValueCallback<
-          CustomWidgetDeserializedValuesMap<typeof CustomWidgetName.cardsWithChip> | string
-        > = (v, u) => {
-          const { props, chip } = u.parsedJson as CardsWithChipDeserializedValue;
-          const cardsCount = cardHandler(grid.querySelector(`.${CardsWithChipCSS.Cards}`), props);
+        const { chip, grid } = STATE.get(wrapper);
+
+        const callback: CardsWithChipNormalizeCallback = (v, u) => {
+          const dataset = u.parsedJson as CardsWithChipDeserializedValue;
+          const cardsCount = prepCards(grid, dataset.props);
           if (!cardsCount || !v) {
             return;
           }
           const columns = cardsCount > 1 ? 2 : 1;
           grid.style.setProperty('--card-grid', String(columns).valueOf());
-          const chipEl = grid.querySelector(TagName.KulChip);
-          if (chipEl) {
-            chipEl.kulData = chip;
+          if (chip) {
+            chip.kulData = dataset.chip;
           }
         };
 
@@ -49,13 +46,15 @@ export const cardsWithChipFactory: CardsWithChipFactory = {
       },
     };
   },
+  //#endregion
+
+  //#region Render
   render: (node) => {
     const wrapper = document.createElement(TagName.Div);
     const content = document.createElement(TagName.Div);
     const grid = document.createElement(TagName.Div);
     const cards = document.createElement(TagName.Div);
     const chip = document.createElement(TagName.KulChip);
-    const options = cardsWithChipFactory.options(grid);
 
     content.classList.add(CardsWithChipCSS.Content);
     grid.classList.add(CardsWithChipCSS.Grid);
@@ -70,7 +69,15 @@ export const cardsWithChipFactory: CardsWithChipFactory = {
     content.appendChild(grid);
     wrapper.appendChild(content);
 
+    const options = cardsWithChipFactory.options(wrapper);
+
+    STATE.set(wrapper, { chip, grid, node, wrapper });
+
     return { widget: createDOMWidget(CustomWidgetName.cardsWithChip, wrapper, node, options) };
   },
+  //#endregion
+
+  //#region State
+  state: STATE,
+  //#endregion
 };
-//#endregion

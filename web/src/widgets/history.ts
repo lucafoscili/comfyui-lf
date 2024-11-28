@@ -1,31 +1,32 @@
-import { listEventHandler } from '../helpers/history';
+import { EV_HANDLERS } from '../helpers/history';
 import { KulEventName } from '../types/events/events';
 import { KulDataDataset } from '../types/ketchup-lite/components';
 import {
-  CustomWidgetDeserializedValuesMap,
-  CustomWidgetName,
-  NodeName,
-  NormalizeValueCallback,
-  TagName,
-} from '../types/widgets/_common';
-import { HistoryCSS, HistoryFactory } from '../types/widgets/history';
+  HistoryCSS,
+  HistoryFactory,
+  HistoryNormalizeCallback,
+  HistoryState,
+} from '../types/widgets/history';
+import { CustomWidgetName, NodeName, TagName } from '../types/widgets/widgets';
 import { createDOMWidget, normalizeValue } from '../utils/common';
 
-//#region History
+const STATE = new WeakMap<HTMLDivElement, HistoryState>();
+
 export const historyFactory: HistoryFactory = {
-  options: (list) => {
+  //#region Options
+  options: (wrapper) => {
     return {
       hideOnZoom: true,
-      getComp() {
-        return list;
-      },
+      getState: () => STATE.get(wrapper),
       getValue() {
+        const { list } = STATE.get(wrapper);
+
         return list?.kulData || {};
       },
       setValue(value) {
-        const callback: NormalizeValueCallback<
-          CustomWidgetDeserializedValuesMap<typeof CustomWidgetName.history> | string
-        > = (_, u) => {
+        const { list } = STATE.get(wrapper);
+
+        const callback: HistoryNormalizeCallback = (_, u) => {
           list.kulData = (u.parsedJson as KulDataDataset) || {};
         };
 
@@ -33,33 +34,42 @@ export const historyFactory: HistoryFactory = {
       },
     };
   },
+  //#endregion
+
+  //#region Render
   render: (node) => {
     const wrapper = document.createElement(TagName.Div);
     const content = document.createElement(TagName.Div);
-    const history = document.createElement(TagName.KulList);
-    const options = historyFactory.options(history);
+    const list = document.createElement(TagName.KulList);
 
-    content.classList.add(HistoryCSS.Content);
-    history.classList.add(HistoryCSS.Widget);
-    history.kulEmptyLabel = 'History is empty!';
-    history.kulEnableDeletions = true;
+    list.classList.add(HistoryCSS.Widget);
+    list.kulEmptyLabel = 'History is empty!';
+    list.kulEnableDeletions = true;
 
     switch (node.comfyClass) {
       case NodeName.loadFileOnce:
         break;
       default:
-        history.kulSelectable = true;
+        list.kulSelectable = true;
         break;
     }
 
-    history.addEventListener(KulEventName.KulList, (e) => {
-      listEventHandler(e, node);
-    });
+    list.addEventListener(KulEventName.KulList, (e) => EV_HANDLERS.list(STATE.get(wrapper), e));
 
-    content.appendChild(history);
+    content.classList.add(HistoryCSS.Content);
+    content.appendChild(list);
+
     wrapper.appendChild(content);
+
+    const options = historyFactory.options(wrapper);
+
+    STATE.set(wrapper, { list, node, wrapper });
 
     return { widget: createDOMWidget(CustomWidgetName.history, wrapper, node, options) };
   },
+  //#endregion
+
+  //#region State
+  state: STATE,
+  //#endregion
 };
-//#endregion

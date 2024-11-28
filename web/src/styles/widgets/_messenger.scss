@@ -1,0 +1,31 @@
+@use '../mixins/mixins' as mixins;
+
+.lf-messenger {
+  & {
+    @include mixins.lf-root();
+  }
+
+  &__placeholder {
+    background: var(--kul-background-color);
+    color: var(--kul-text-color);
+    font-family: var(--kul-font-family);
+    font-size: var(--kul-font-size);
+    height: 100%;
+    left: 0;
+    position: absolute;
+    text-align: center;
+    top: 0;
+    width: 100%;
+    z-index: 2;
+    justify-self: center;
+
+    &--hidden {
+      display: none;
+    }
+  }
+
+  &__widget {
+    height: 100%;
+    width: 100%;
+  }
+}

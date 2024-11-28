@@ -67,6 +67,7 @@ export interface MetadataAPIs {
   updateCover: (modelPath: string, b64image: string) => Promise<BaseAPIPayload>;
 }
 //#endregion
+
 //#region Payloads
 export interface BaseAPIPayload {
   message: string;
@@ -91,6 +92,7 @@ export interface ProcessImageAPIPayload extends BaseAPIPayload {
   data: string;
 }
 //#endregion
+
 //#region Routes
 export enum APIEndpoints {
   ClearAnalytics = `/comfyui-lf/clear-analytics`,

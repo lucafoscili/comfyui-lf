@@ -1,29 +1,6 @@
 import { AnalyticsType } from '../api/api';
 import { KulDataDataset } from '../ketchup-lite/components';
-import { BaseWidgetCallback, BaseWidgetFactory, BaseWidgetOptions, CustomWidgetName, NodeName } from './_common';
-export interface TabBarChart extends Widget {
-    options: TabBarChartOptions;
-    type: [CustomWidgetName.tabBarChart];
-}
-export interface TabBarChartFactory extends BaseWidgetFactory<TabBarChartOptions> {
-    options: TabBarChartOptionsCallback;
-}
-export type TabBarChartOptionsCallback = (chart: HTMLKulChartElement, tabbar: HTMLKulTabbarElement, textfield: HTMLKulTextfieldElement, node: NodeName) => TabBarChartOptions;
-export interface TabBarChartOptions extends BaseWidgetOptions<TabBarChartDeserializedValue> {
-    getComp(): {
-        chart: HTMLKulChartElement;
-        tabbar: HTMLKulTabbarElement;
-    };
-    refresh(type: AnalyticsType): void;
-}
-export type TabBarChartSetter = () => {
-    [CustomWidgetName.tabBarChart]: BaseWidgetCallback<CustomWidgetName.tabBarChart>;
-};
-export type TabBarChartDeserializedValue = {
-    directory?: string;
-} & {
-    [index: string]: KulDataDataset;
-};
+import { BaseWidgetState, CustomWidgetName, NormalizeValueCallback, WidgetFactory } from './widgets';
 export declare enum TabBarChartCSS {
     Content = "lf-tabbarchart",
     Directory = "lf-tabbarchart__directory",
@@ -32,4 +9,35 @@ export declare enum TabBarChartCSS {
     GridNoDirectory = "lf-tabbarchart__grid--no-directory",
     Spinner = "lf-tabbarchart__spinner",
     Tabbar = "lf-tabbarchart__tabbar"
+}
+export type TabBarChart = Widget<CustomWidgetName.tabBarChart>;
+export type TabBarChartFactory = WidgetFactory<TabBarChartDeserializedValue, TabBarChartState>;
+export type TabBarChartNormalizeCallback = NormalizeValueCallback<TabBarChartDeserializedValue | string>;
+export type TabBarChartDeserializedValue = {
+    directory?: string;
+} & {
+    [index: string]: KulDataDataset;
+};
+export interface TabBarChartState extends BaseWidgetState {
+    directory: string;
+    elements: {
+        chart: HTMLKulChartElement;
+        tabbar: HTMLKulTabbarElement;
+        textfield: HTMLKulTextfieldElement;
+    };
+    selected: string;
+    type: AnalyticsType;
+}
+export declare enum TabBarChartColors {
+    Blue = "blue",
+    Green = "green",
+    Red = "red"
+}
+export declare enum TabBarChartIds {
+    Blue = "blue",
+    Counter = "counter",
+    Green = "green",
+    Intensity = "intensity",
+    Name = "name",
+    Red = "red"
 }

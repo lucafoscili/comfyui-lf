@@ -121,6 +121,7 @@ class LF_CharacterImpersonator:
 
         return (request, response_data, message)
 # endregion
+
 # region LF_ImageClassifier
 class LF_ImageClassifier:
     @classmethod
@@ -231,6 +232,7 @@ class LF_ImageClassifier:
 
         return (request, response_data, message)
 # endregion
+
 # region LF_LLMChat
 class LF_LLMChat:
     @classmethod
@@ -259,6 +261,7 @@ class LF_LLMChat:
 
         return (ui_widget, last_message, last_user_message, last_llm_message, all_messages)
 # endregion
+
 # region LF_LLMMessenger
 class LF_LLMMessenger:
     @classmethod
@@ -295,16 +298,16 @@ class LF_LLMMessenger:
 
     def on_exec(self, **kwargs: dict):
         # Helper functions
-        def find_node_by_id(dataset, target_id):
+        def find_node_by_id(dataset: dict, target_id: str):
             return next((node for node in dataset if isinstance(node, dict) and node.get('id') == target_id), None)
 
-        def get_value_and_description(node):
+        def get_value_and_description(node: dict):
             """Returns the 'value' and 'description' fields from the node for styled prompt usage."""
             return node.get("value", "No data"), node.get("description", "")
         
         ui_widget: dict = normalize_json_input(kwargs.get("ui_widget", {}))
-        dataset = ui_widget.get("dataset", {})
-        config = ui_widget.get("config", {})
+        dataset: dict = ui_widget.get("dataset", {})
+        config: dict = ui_widget.get("config", {})
         
         if not dataset or not config:
             raise ValueError("It looks like the chat is empty!")
@@ -312,22 +315,22 @@ class LF_LLMMessenger:
             raise ValueError("You must choose a character")
 
         # Character data
-        character_data = find_node_by_id(dataset.get("nodes"), config.get("currentCharacter"))
+        character_data: dict = find_node_by_id(dataset.get("nodes"), config.get("currentCharacter"))
         if not character_data:
             raise ValueError(f"Character with id {config['currentCharacter']} not found in dataset")
-        character_name = character_data.get("value")
+        character_name: str = character_data.get("value")
 
         # Process chat data
         try:
-            chat_node = find_node_by_id(character_data.get("children"), "chat")
-            chat_data = chat_node.get("cells")["kulChat"]["value"]
+            chat_node: dict = find_node_by_id(character_data.get("children"), "chat")
+            chat_data: list[dict] = chat_node.get("cells")["kulChat"]["value"]
         except (json.JSONDecodeError, KeyError):
             raise ValueError(f"It looks like the chat with {character_name} is empty")
 
         all_messages = [message.get("content") for message in chat_data]
         last_message = all_messages[-1] if all_messages else ""
         last_user_message = next((msg.get("content") for msg in reversed(chat_data) if msg["role"] == "user"), "")
-        last_llm_message = next((msg.get("content") for msg in reversed(chat_data) if msg["role"] == "llm"), "")
+        last_llm_message = next((msg.get("content") for msg in reversed(chat_data) if msg["role"] == "assistant"), "")
 
         # Chat history
         chat_history_string = "\n".join(
@@ -336,12 +339,12 @@ class LF_LLMMessenger:
         )
 
         # Retrieve additional character settings (style, location, etc.)
-        attributes = ["styles", "locations", "outfits", "timeframes"]
-        settings = {}
-        descriptions = {}  # Separate dictionary for styled prompt descriptions
+        attributes: list[str] = ["styles", "locations", "outfits", "timeframes"]
+        settings: dict = {}
+        descriptions: dict = {}  # Separate dictionary for styled prompt descriptions
 
         for attr in attributes:
-            node = find_node_by_id(character_data.get("children"), attr)
+            node: dict = find_node_by_id(character_data.get("children"), attr)
             if node:
                 children = node.get("children")
                 index = node.get("value")
@@ -351,7 +354,7 @@ class LF_LLMMessenger:
                     descriptions[attr[:-1]] = f"{value}, {description}" if description else value  # 'value, description' for styled prompt
 
         # Construct the styled prompt
-        styled_prompt = (
+        styled_prompt: str = (
             f"Envision the scene described below from the viewer's point of view.\n"
             f"{character_name} said to the viewer:\n\"{last_llm_message}\"\n"
             + (f"Style of the image: {descriptions['style']}\n" if descriptions.get("style") else "")
@@ -368,6 +371,7 @@ class LF_LLMMessenger:
             settings.get("location"), settings.get("style"), settings.get("timeframe")
         )
 # endregion
+
 # region LF_MarkdownDocGenerator
 class LF_MarkdownDocGenerator:
     @classmethod
@@ -464,6 +468,7 @@ class LF_MarkdownDocGenerator:
 
         return (request, response_data, message, [message])
 # endregion
+
 NODE_CLASS_MAPPINGS = {
     "LF_CharacterImpersonator": LF_CharacterImpersonator,
     "LF_ImageClassifier": LF_ImageClassifier,

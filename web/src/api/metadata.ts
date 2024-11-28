@@ -1,4 +1,3 @@
-import { api } from '/scripts/api.js';
 import {
   APIEndpoints,
   BaseAPIPayload,
@@ -7,6 +6,7 @@ import {
 } from '../types/api/api';
 import { LogSeverity } from '../types/manager/manager';
 import { getLFManager } from '../utils/common';
+import { api } from '/scripts/api.js';
 
 export const METADATA_API: MetadataAPIs = {
   //#region clear
@@ -47,6 +47,7 @@ export const METADATA_API: MetadataAPIs = {
     return payload;
   },
   //#endregion
+
   //#region get
   get: async (hash) => {
     const lfManager = getLFManager();
@@ -87,6 +88,7 @@ export const METADATA_API: MetadataAPIs = {
     return payload;
   },
   //#endregion
+
   //#region save
   save: async (modelPath, dataset, forcedSave = false) => {
     const lfManager = getLFManager();
@@ -132,6 +134,7 @@ export const METADATA_API: MetadataAPIs = {
     return payload;
   },
   //#endregion
+
   //#region updateCover
   updateCover: async (modelPath, b64image) => {
     const lfManager = getLFManager();

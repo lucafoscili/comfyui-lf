@@ -1,5 +1,5 @@
 import { KulDataDataset } from '../ketchup-lite/components';
-import { CustomWidgetName, NodeName } from '../widgets/_common';
+import { CustomWidgetName, NodeName } from '../widgets/widgets';
 
 // #region Common declarations
 export type GenericPayload = WidgetPayloadFor<CustomWidgetName>;
@@ -72,6 +72,7 @@ export enum KulEventName {
   Textarea = 'textarea-event',
 }
 // #endregion
+
 // #region Card payload
 export interface CardPayload extends BaseEventPayload {
   datasets: KulDataDataset[];
@@ -81,17 +82,20 @@ export interface CardPayload extends BaseEventPayload {
   chip?: KulDataDataset;
 }
 // #endregion
+
 // #region Masonry payload
 export interface MasonryPayload extends SingleDatasetPayload {
   index: number;
   name: string;
 }
 // #endregion
+
 // #region Multi dataset payload
 export interface MultiDatasetPayload extends BaseEventPayload {
   datasets: { [index: string]: KulDataDataset };
 }
 // #endregion
+
 // #region Notify payload
 export interface NotifyPayload extends BaseEventPayload {
   action: 'none' | 'focus tab' | 'interrupt' | 'interrupt and queue' | 'queue prompt';
@@ -102,17 +106,20 @@ export interface NotifyPayload extends BaseEventPayload {
   title: string;
 }
 // #endregion
+
 // #region Progressbar payload
 export interface ProgressbarPayload extends BaseEventPayload {
   bool: boolean;
   roll?: number;
 }
 // #endregion
+
 // #region Dataset payload
 export interface SingleDatasetPayload extends BaseEventPayload {
   dataset: KulDataDataset;
 }
 // #endregion
+
 // #region String payload
 export interface StringPayload extends BaseEventPayload {
   value: string;

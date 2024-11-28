@@ -38,13 +38,14 @@ async function copyKetchupLiteFiles() {
     const assetsDestDir = path.join(__dirname, '..', '..', 'deploy', 'assets');
 
     console.log(logColor, '*---*');
-    console.log(logColor, 'Source dir:' + sourceDir);
-    console.log(logColor, 'Destination dir:' + destDir);
-    console.log(logColor, 'Assets source dir:' + assetsSourceDir);
-    console.log(logColor, 'Assets destination dir:' + assetsDestDir);
+    console.log(logColor, 'Source dir:', sourceDir);
+    console.log(logColor, 'Destination dir:', destDir);
+    console.log(logColor, 'Assets source dir:', assetsSourceDir);
+    console.log(logColor, 'Assets destination dir:', assetsDestDir);
 
-    // Ensure the destination directory exists
+    // Ensure the destination directories exist
     await fs.ensureDir(destDir);
+    await fs.ensureDir(assetsDestDir);
 
     // Copy all files from the source directory to the destination directory,
     // overwriting any existing files
@@ -52,13 +53,19 @@ async function copyKetchupLiteFiles() {
       overwrite: true, // Overwrite existing files
     });
 
-    // Copy the assets directory to the destination directory
+    // Copy the assets directory to the destination directory, excluding "prism"
     await fs.copy(assetsSourceDir, assetsDestDir, {
       overwrite: true, // Overwrite existing files
+      filter: (src, dest) => {
+        // Exclude any paths that include "/prism" or end with "\prism" (cross-platform)
+        const relativePath = path.relative(assetsSourceDir, src);
+        const pathSegments = relativePath.split(path.sep);
+        return !pathSegments.includes('prism');
+      },
     });
 
     console.log(logColor, '*---*');
-    console.log(logColor, 'Successfully copied ketchup-lite files and assets.');
+    console.log(logColor, 'Successfully copied ketchup-lite files and assets without "prism".');
   } catch (error) {
     console.log(logColor, '*---*');
     console.error(logColor, 'Failed to copy ketchup-lite files or assets:', error);

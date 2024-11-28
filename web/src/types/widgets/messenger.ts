@@ -1,39 +1,42 @@
-import { KulMessengerConfig, KulMessengerDataset } from '../ketchup-lite/components';
+import { KulMessengerConfig, KulMessengerDataset } from '../../types/ketchup-lite/components';
 import {
-  BaseWidgetCallback,
-  BaseWidgetFactory,
-  BaseWidgetOptions,
+  BaseWidgetState,
   CustomWidgetName,
-} from './_common';
+  NormalizeValueCallback,
+  WidgetFactory,
+} from './widgets';
 
+//#region CSS
 const BASE_CSS_CLASS = 'lf-messenger';
-
-//#region Messenger
-export interface Messenger extends Widget {
-  options: MessengerOptions;
-  type: [CustomWidgetName.messenger];
-}
-export interface MessengerFactory extends BaseWidgetFactory<MessengerOptions> {
-  options: MessengerOptionsCallback;
-}
-export type MessengerOptionsCallback = (
-  messenger: HTMLKulMessengerElement,
-  placeholder: HTMLDivElement,
-) => MessengerOptions;
-export interface MessengerOptions extends BaseWidgetOptions<MessengerDeserializedValue> {
-  getComp(): HTMLKulMessengerElement;
-}
-export type MessengerSetter = () => {
-  [CustomWidgetName.messenger]: BaseWidgetCallback<CustomWidgetName.messenger>;
-};
-export type MessengerDeserializedValue = {
-  dataset: KulMessengerDataset;
-  config: KulMessengerConfig;
-};
 export enum MessengerCSS {
   Content = BASE_CSS_CLASS,
   Widget = `${BASE_CSS_CLASS}__widget`,
   Placeholder = `${BASE_CSS_CLASS}__placeholder`,
   PlaceholderHidden = `${BASE_CSS_CLASS}__placeholder--hidden`,
+}
+//#endregion
+
+//#region Widget
+export type Messenger = Widget<CustomWidgetName.messenger>;
+export type MessengerFactory = WidgetFactory<MessengerDeserializedValue, MessengerState>;
+export type MessengerNormalizeCallback = NormalizeValueCallback<
+  MessengerDeserializedValue | string
+>;
+//#endregion
+
+//#region Value
+export type MessengerDeserializedValue = {
+  dataset: KulMessengerDataset;
+  config: KulMessengerConfig;
+};
+//#endregion
+
+//#region State
+export interface MessengerState extends BaseWidgetState {
+  config: KulMessengerConfig;
+  elements: {
+    messenger: HTMLKulMessengerElement;
+    placeholder: HTMLDivElement;
+  };
 }
 //#endregion

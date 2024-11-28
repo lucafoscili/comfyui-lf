@@ -1,20 +1,21 @@
-import { listEventHandler } from '../helpers/history.js';
+import { EV_HANDLERS } from '../helpers/history.js';
 import { KulEventName } from '../types/events/events.js';
-import { CustomWidgetName, NodeName, TagName, } from '../types/widgets/_common.js';
-import { HistoryCSS } from '../types/widgets/history.js';
+import { HistoryCSS, } from '../types/widgets/history.js';
+import { CustomWidgetName, NodeName, TagName } from '../types/widgets/widgets.js';
 import { createDOMWidget, normalizeValue } from '../utils/common.js';
-//#region History
+const STATE = new WeakMap();
 export const historyFactory = {
-    options: (list) => {
+    //#region Options
+    options: (wrapper) => {
         return {
             hideOnZoom: true,
-            getComp() {
-                return list;
-            },
+            getState: () => STATE.get(wrapper),
             getValue() {
+                const { list } = STATE.get(wrapper);
                 return list?.kulData || {};
             },
             setValue(value) {
+                const { list } = STATE.get(wrapper);
                 const callback = (_, u) => {
                     list.kulData = u.parsedJson || {};
                 };
@@ -22,28 +23,32 @@ export const historyFactory = {
             },
         };
     },
+    //#endregion
+    //#region Render
     render: (node) => {
         const wrapper = document.createElement(TagName.Div);
         const content = document.createElement(TagName.Div);
-        const history = document.createElement(TagName.KulList);
-        const options = historyFactory.options(history);
-        content.classList.add(HistoryCSS.Content);
-        history.classList.add(HistoryCSS.Widget);
-        history.kulEmptyLabel = 'History is empty!';
-        history.kulEnableDeletions = true;
+        const list = document.createElement(TagName.KulList);
+        list.classList.add(HistoryCSS.Widget);
+        list.kulEmptyLabel = 'History is empty!';
+        list.kulEnableDeletions = true;
         switch (node.comfyClass) {
             case NodeName.loadFileOnce:
                 break;
             default:
-                history.kulSelectable = true;
+                list.kulSelectable = true;
                 break;
         }
-        history.addEventListener(KulEventName.KulList, (e) => {
-            listEventHandler(e, node);
-        });
-        content.appendChild(history);
+        list.addEventListener(KulEventName.KulList, (e) => EV_HANDLERS.list(STATE.get(wrapper), e));
+        content.classList.add(HistoryCSS.Content);
+        content.appendChild(list);
         wrapper.appendChild(content);
+        const options = historyFactory.options(wrapper);
+        STATE.set(wrapper, { list, node, wrapper });
         return { widget: createDOMWidget(CustomWidgetName.history, wrapper, node, options) };
     },
+    //#endregion
+    //#region State
+    state: STATE,
+    //#endregion
 };
-//#endregion

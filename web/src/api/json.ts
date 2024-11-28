@@ -1,7 +1,7 @@
-import { api } from '/scripts/api.js';
 import { APIEndpoints, BaseAPIPayload, JSONAPIs } from '../types/api/api';
 import { LogSeverity } from '../types/manager/manager';
 import { getLFManager } from '../utils/common';
+import { api } from '/scripts/api.js';
 
 export const JSON_API: JSONAPIs = {
   //#region get
@@ -50,6 +50,7 @@ export const JSON_API: JSONAPIs = {
     return payload;
   },
   //#endregion
+
   //#region update
   update: async (filePath, dataset) => {
     const lfManager = getLFManager();

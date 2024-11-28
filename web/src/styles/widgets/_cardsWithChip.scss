@@ -1,0 +1,22 @@
+@use '../mixins/mixins' as mixins;
+
+.lf-cardswithchip {
+  & {
+    @include mixins.lf-root();
+  }
+
+  &__cards,
+  &__grid {
+    display: grid;
+    height: 100%;
+    width: 100%;
+  }
+
+  &__cards {
+    grid-template-columns: repeat(var(--card-grid), 1fr);
+  }
+
+  &__grid {
+    grid-template-rows: minmax(0, auto) 1fr;
+  }
+}

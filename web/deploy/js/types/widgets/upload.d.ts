@@ -1,20 +1,13 @@
-import { BaseWidgetCallback, BaseWidgetFactory, BaseWidgetOptions, CustomWidgetName } from './_common';
-export interface Upload extends Widget {
-    options: UploadOptions;
-    type: [CustomWidgetName.upload];
-}
-export interface UploadFactory extends BaseWidgetFactory<UploadOptions> {
-    options: UploadOptionsCallback;
-}
-export type UploadOptionsCallback = (upload: HTMLKulUploadElement) => UploadOptions;
-export interface UploadOptions extends BaseWidgetOptions<UploadDeserializedValue> {
-    getComp(): HTMLKulUploadElement;
-}
-export type UploadSetter = () => {
-    [CustomWidgetName.upload]: BaseWidgetCallback<CustomWidgetName.upload>;
-};
-export type UploadDeserializedValue = string;
+import { BaseWidgetState, CustomWidgetName, NormalizeValueCallback, WidgetFactory } from './widgets';
 export declare enum UploadCSS {
     Content = "lf-upload",
     Widget = "lf-upload__widget"
+}
+export type Upload = Widget<CustomWidgetName.upload>;
+export type UploadFactory = WidgetFactory<UploadDeserializedValue, UploadState>;
+export type UploadNormalizeCallback = NormalizeValueCallback<UploadDeserializedValue | string>;
+export type UploadDeserializedValue = string;
+export interface UploadState extends BaseWidgetState {
+    files: string;
+    upload: HTMLKulUploadElement;
 }

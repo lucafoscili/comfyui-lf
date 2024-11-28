@@ -1,4 +1,4 @@
-import { CustomWidgetName, } from './_common.js';
+//#region CSS
 const BASE_CSS_CLASS = 'lf-imageeditor';
 export var ImageEditorCSS;
 (function (ImageEditorCSS) {
@@ -29,8 +29,6 @@ export var ImageEditorIcons;
     ImageEditorIcons["Reset"] = "refresh";
     ImageEditorIcons["Resume"] = "play";
 })(ImageEditorIcons || (ImageEditorIcons = {}));
-//#endregion
-//#region Controls
 export var ImageEditorControls;
 (function (ImageEditorControls) {
     ImageEditorControls["Canvas"] = "canvas";

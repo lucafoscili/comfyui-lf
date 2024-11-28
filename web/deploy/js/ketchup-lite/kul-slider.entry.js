@@ -1,5 +1,5 @@
-import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-53f95fee.js';
-import { k as kulManagerInstance, K as KUL_WRAPPER_ID, a as KulDataCyAttributes, b as KUL_STYLE_ID } from './kul-manager-9e1be956.js';
+import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-7cf82e95.js';
+import { k as kulManagerInstance, K as KUL_WRAPPER_ID, a as KulDataCyAttributes, b as KUL_STYLE_ID } from './kul-manager-72505221.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 
 //#endregion
@@ -51,9 +51,6 @@ const KulSlider = class {
     #rippleSurface;
     //#endregion
     //#region Events
-    /**
-     * Describes event emitted for various slider interactions like click, focus, blur.
-     */
     kulEvent;
     onKulEvent(e, eventType) {
         switch (eventType) {
@@ -156,9 +153,9 @@ const KulSlider = class {
             'form-field': true,
             'form-field--align-end': this.kulLeadingLabel,
         };
-        return (h(Host, { key: '4034ed083518ac0ff927394e10d6c68a16d19241' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '93172d44337f961115048c5713122ff8d727036e', id: KUL_WRAPPER_ID }, h("div", { key: 'a2b9dae214a79265803ef988a74ae415dc7930cd', class: formClassName }, h("div", { key: 'cf4f9a4b4a11a485d8f5da974cb12f3ca3470f62', class: className, style: {
+        return (h(Host, { key: '36a77e2ea1a33f64cbe508cdf8c7bde8352f586e' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'd99c609832e9a707ca920893d1257790624392c5', id: KUL_WRAPPER_ID }, h("div", { key: 'e2985bfb7f278101164d25899c5d54a511f3eff2', class: formClassName }, h("div", { key: 'c99b6504d7337e5ca92962602c502367667dd228', class: className, style: {
                 '--kul_slider_value': `${((this.value.display - this.kulMin) / (this.kulMax - this.kulMin)) * 100}%`,
-            } }, h("input", { key: 'ec310b8a5329afa9272fc806868ff305643462fa', type: "range", class: "slider__native-control", "data-cy": KulDataCyAttributes.INPUT, min: this.kulMin, max: this.kulMax, step: this.kulStep, value: this.value.real, disabled: this.kulDisabled, onBlur: (e) => {
+            } }, h("input", { key: '3344d45b82db17c9b4428f8c892204d44fc5de64', type: "range", class: "slider__native-control", "data-cy": KulDataCyAttributes.INPUT, min: this.kulMin, max: this.kulMax, step: this.kulStep, value: this.value.real, disabled: this.kulDisabled, onBlur: (e) => {
                 this.onKulEvent(e, 'blur');
             }, onChange: (e) => {
                 this.onKulEvent(e, 'change');
@@ -172,11 +169,11 @@ const KulSlider = class {
                 if (el) {
                     this.#input = el;
                 }
-            } }), h("div", { key: '51b330fb5580809eb9b554194f523f95ccdfbdf7', class: "slider__track" }, h("div", { key: '32d1e45077d38afaa9184900e13237bbc033cc44', class: "slider__thumb-underlay" }, h("div", { key: '8ac29418b409a2d1e6445de137a77db8c08a6887', class: "slider__thumb", ref: (el) => {
+            } }), h("div", { key: '8526845fa2eb910f4a362e978f871a047872befa', class: "slider__track" }, h("div", { key: 'c2eb522bc75c1450c02a21fab6a393a8ad962eb3', class: "slider__thumb-underlay" }, h("div", { key: '3103e29bb6ceb83441cf659bbeb998e34a46e0e1', class: "slider__thumb", ref: (el) => {
                 if (this.kulRipple) {
                     this.#rippleSurface = el;
                 }
-            } }))), h("span", { key: '4de65aad6f39729e7b7b29c8bc1ca79be9701184', class: "slider__value" }, this.value.display)), h("label", { key: 'c0ad7e8498c7e608d7135037f5092447c5f074d3', class: "form-field__label" }, this.kulLabel)))));
+            } }))), h("span", { key: 'a193e1381e0a453294bc1fd88fa9fb781251a82f', class: "slider__value" }, this.value.display)), h("label", { key: '01489c63f83780376f16e228165b77af370d6fb0', class: "form-field__label" }, this.kulLabel)))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

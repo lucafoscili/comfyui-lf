@@ -1,58 +1,46 @@
+import { EV_HANDLERS } from '../helpers/chat.js';
 import { KulEventName } from '../types/events/events.js';
-import { LogSeverity } from '../types/manager/manager.js';
-import { CustomWidgetName, NodeName, TagName, } from '../types/widgets/_common.js';
 import { ChatCSS } from '../types/widgets/chat.js';
-import { createDOMWidget, findWidget, getLFManager, normalizeValue } from '../utils/common.js';
-//#region Chat
+import { CustomWidgetName, TagName } from '../types/widgets/widgets.js';
+import { createDOMWidget, normalizeValue } from '../utils/common.js';
+const STATE = new WeakMap();
 export const chatFactory = {
-    options: (chat) => {
+    //#region Options
+    options: (wrapper) => {
         return {
             hideOnZoom: false,
-            getComp() {
-                return chat;
-            },
+            getState: () => STATE.get(wrapper),
             getValue() {
-                return chat?.dataset.history || '';
+                const { history } = STATE.get(wrapper);
+                return history || '';
             },
             setValue(value) {
+                const state = STATE.get(wrapper);
                 const callback = (v) => {
-                    chat.setHistory(v);
+                    state.history = v || '';
+                    state.chat.setHistory(v);
                 };
                 normalizeValue(value, callback, CustomWidgetName.chat);
             },
         };
     },
+    //#endregion
+    //#region Render
     render: (node) => {
-        const w = findWidget(node, CustomWidgetName.chat);
-        if (findWidget(node, CustomWidgetName.chat) && node.comfyClass === NodeName.llmChat) {
-            return w.element;
-        }
         const wrapper = document.createElement(TagName.Div);
         const content = document.createElement(TagName.Div);
         const chat = document.createElement(TagName.KulChat);
-        const options = chatFactory.options(chat);
         content.classList.add(ChatCSS.Content);
         chat.classList.add(ChatCSS.Widget);
-        chat.addEventListener(KulEventName.KulChat, (e) => {
-            const { eventType, history, status } = e.detail;
-            switch (eventType) {
-                case 'polling':
-                    const severity = status === 'ready'
-                        ? LogSeverity.Info
-                        : status === 'offline'
-                            ? LogSeverity.Error
-                            : LogSeverity.Warning;
-                    getLFManager().log('Chat widget, polling status: ' + status, { chat: e.detail }, severity);
-                    break;
-                case 'update':
-                    getLFManager().log('Chat widget: updating...', { chat: e.detail }, LogSeverity.Success);
-                    chat.dataset.history = history;
-                    break;
-            }
-        });
+        chat.addEventListener(KulEventName.KulChat, (e) => EV_HANDLERS.chat(STATE.get(wrapper), e));
         content.appendChild(chat);
         wrapper.appendChild(content);
+        const options = chatFactory.options(wrapper);
+        STATE.set(wrapper, { chat, history: '', node, wrapper });
         return { widget: createDOMWidget(CustomWidgetName.chat, wrapper, node, options) };
     },
+    //#endregion
+    //#region State
+    state: STATE,
+    //#endregion
 };
-//#endregion

@@ -1,34 +1,113 @@
+import { DOWNLOAD_PLACEHOLDERS } from '../fixtures/card.js';
 import { KulEventName } from '../types/events/events.js';
 import { LogSeverity } from '../types/manager/manager.js';
-import { CustomWidgetName, TagName } from '../types/widgets/_common.js';
-import { getLFManager, getApiRoutes, unescapeJson, getCustomWidget } from '../utils/common.js';
+import { CustomWidgetName, TagName } from '../types/widgets/widgets.js';
+import { getApiRoutes, getCustomWidget, getLFManager, unescapeJson } from '../utils/common.js';
 export const CARD_PROPS_TO_SERIALIZE = ['kulData', 'kulStyle'];
-//#region Placeholders
-const DUMMY_PROPS = {
-    kulData: {
-        nodes: [
-            {
-                cells: {
-                    kulImage: { shape: 'image', value: 'cloud_download' },
-                    kulText: { shape: 'text', value: 'Fetching metadata from CivitAI...' },
-                },
-                id: '0',
-            },
-        ],
+export const EV_HANDLERS = {
+    //#region Button handler
+    button: (state, e) => {
+        const { comp, eventType } = e.detail;
+        const { grid, node } = state;
+        switch (eventType) {
+            case 'click':
+                const cards = Array.from(grid.querySelectorAll(TagName.KulCard));
+                if (cards?.length) {
+                    const models = [];
+                    const widget = getCustomWidget(node, CustomWidgetName.card);
+                    cards.forEach((card) => {
+                        const hashCell = card.kulData?.nodes?.[0]?.cells?.kulCode;
+                        if (hashCell) {
+                            const { hash, path } = JSON.parse(JSON.stringify(hashCell.value));
+                            const dataset = card.kulData;
+                            comp.kulShowSpinner = true;
+                            models.push({ apiFlag: true, dataset, hash, path });
+                        }
+                    });
+                    if (models.length) {
+                        const value = {
+                            props: [],
+                        };
+                        cardPlaceholders(widget, cards.length);
+                        apiCall(models, true).then((r) => {
+                            for (let index = 0; index < r.length; index++) {
+                                const cardProps = r[index];
+                                if (cardProps.kulData) {
+                                    value.props.push(cardProps);
+                                }
+                                else {
+                                    value.props.push({
+                                        ...cardProps,
+                                        kulData: models[index].dataset,
+                                    });
+                                }
+                            }
+                            widget.options.setValue(JSON.stringify(value));
+                            requestAnimationFrame(() => (comp.kulShowSpinner = false));
+                        });
+                    }
+                }
+                break;
+        }
     },
+    //#endregion
+    //#region Card handler
+    card: (e) => {
+        const { comp, eventType, originalEvent } = e.detail;
+        const node = comp.kulData?.nodes?.[0];
+        switch (eventType) {
+            case 'click':
+                if (node?.value) {
+                    window.open(String(node.value).valueOf(), '_blank');
+                }
+                break;
+            case 'contextmenu':
+                const ogEv = originalEvent;
+                const lfManager = getLFManager();
+                ogEv.preventDefault();
+                ogEv.stopPropagation();
+                const tip = lfManager.getManagers().tooltip;
+                const cb = async (b64image) => {
+                    const node = comp.kulData?.nodes?.[0];
+                    if (node) {
+                        const code = node?.cells?.kulCode;
+                        if (code) {
+                            try {
+                                const path = JSON.parse(JSON.stringify(code.value)).path;
+                                lfManager.log(`Updating cover for model with path: ${path}`, { b64image }, LogSeverity.Info);
+                                getApiRoutes().metadata.updateCover(path, b64image);
+                                const image = node?.cells?.kulImage;
+                                if (image) {
+                                    image.value = `data:image/png;charset=utf-8;base64,${b64image}`;
+                                    comp.refresh();
+                                    tip.destroy();
+                                }
+                            }
+                            catch (error) {
+                                lfManager.log("Failed to fetch the model's path from .info file", { b64image }, LogSeverity.Error);
+                            }
+                        }
+                    }
+                };
+                tip.create({ x: ogEv.x, y: ogEv.y }, 'upload', cb);
+                break;
+        }
+    },
+    //#endregion
 };
+//#region cardPlaceholders
 export const cardPlaceholders = (widget, count) => {
     const dummyValue = {
         props: [],
     };
     for (let index = 0; index < count; index++) {
-        dummyValue.props.push(DUMMY_PROPS);
+        dummyValue.props.push(DOWNLOAD_PLACEHOLDERS);
     }
     widget.options.setValue(JSON.stringify(dummyValue));
 };
 //#endregion
-//#region API call
-export const fetchModelMetadata = async (models, forcedSave = false) => {
+//#region apiCall
+export const apiCall = async (models, forcedSave = false) => {
     const promises = models.map(async ({ dataset, hash, path, apiFlag }) => {
         if (apiFlag) {
             const payload = await getApiRoutes().metadata.get(hash);
@@ -41,7 +120,7 @@ export const fetchModelMetadata = async (models, forcedSave = false) => {
     return Promise.all(promises);
 };
 //#endregion
-//#region API response
+//#region onResponse
 const onResponse = async (dataset, path, forcedSave, payload) => {
     const r = payload?.data;
     const id = r?.id;
@@ -76,8 +155,8 @@ const onResponse = async (dataset, path, forcedSave, payload) => {
     return props;
 };
 //#endregion
-//#region cardHandler
-export const cardHandler = (container, propsArray) => {
+//#region prepCards
+export const prepCards = (container, propsArray) => {
     let count = 0;
     const cards = container.querySelectorAll('kul-card');
     cards.forEach((c) => c.remove());
@@ -136,114 +215,9 @@ export const getCardProps = (container) => {
     return propsArray;
 };
 export const createCard = () => {
-    const card = document.createElement('kul-card');
-    card.addEventListener('kul-card-event', cardEventHandler);
-    card.addEventListener('contextmenu', contextMenuHandler.bind(contextMenuHandler, card));
+    const card = document.createElement(TagName.KulCard);
+    card.addEventListener(KulEventName.KulCard, EV_HANDLERS.card);
     return card;
-};
-export const cardEventHandler = (e) => {
-    const { comp, eventType } = e.detail;
-    const card = comp;
-    const node = card.kulData?.nodes?.[0];
-    switch (eventType) {
-        case 'click':
-            if (node?.value) {
-                window.open(String(node.value).valueOf(), '_blank');
-            }
-            break;
-    }
-};
-//#endregion
-//#region selectorButton
-export const selectorButton = (grid, node) => {
-    const cb = (e) => {
-        const { comp, eventType } = e.detail;
-        const button = comp;
-        switch (eventType) {
-            case 'click':
-                const cards = Array.from(grid.querySelectorAll(TagName.KulCard));
-                if (cards?.length) {
-                    const models = [];
-                    const widget = getCustomWidget(node, CustomWidgetName.card);
-                    cards.forEach((card) => {
-                        const hashCell = card.kulData?.nodes?.[0]?.cells?.kulCode;
-                        if (hashCell) {
-                            const { hash, path } = JSON.parse(JSON.stringify(hashCell.value));
-                            const dataset = card.kulData;
-                            button.kulShowSpinner = true;
-                            models.push({ apiFlag: true, dataset, hash, path });
-                        }
-                    });
-                    if (models.length) {
-                        const value = {
-                            props: [],
-                        };
-                        cardPlaceholders(widget, cards.length);
-                        fetchModelMetadata(models, true).then((r) => {
-                            for (let index = 0; index < r.length; index++) {
-                                const cardProps = r[index];
-                                if (cardProps.kulData) {
-                                    value.props.push(cardProps);
-                                }
-                                else {
-                                    value.props.push({
-                                        ...cardProps,
-                                        kulData: models[index].dataset,
-                                    });
-                                }
-                            }
-                            widget.options.setValue(JSON.stringify(value));
-                            requestAnimationFrame(() => (button.kulShowSpinner = false));
-                        });
-                    }
-                }
-                break;
-        }
-    };
-    const button = document.createElement(TagName.KulButton);
-    button.classList.add('kul-full-width');
-    button.kulIcon = 'cloud_download';
-    button.kulLabel = 'Refresh';
-    button.title = 'Attempts to manually ownload fresh metadata from CivitAI';
-    button.addEventListener(KulEventName.KulButton, cb);
-    const spinner = document.createElement(TagName.KulSpinner);
-    spinner.kulActive = true;
-    spinner.kulDimensions = '0.6em';
-    spinner.kulLayout = 2;
-    spinner.slot = 'spinner';
-    button.appendChild(spinner);
-    return button;
-};
-//#endregion
-//#region contextMenuHandler
-export const contextMenuHandler = (card, e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const lfManager = getLFManager();
-    const tip = lfManager.getManagers().tooltip;
-    const cb = async (b64image) => {
-        const node = card.kulData?.nodes?.[0];
-        if (node) {
-            const code = node?.cells?.kulCode;
-            if (code) {
-                try {
-                    const path = JSON.parse(JSON.stringify(code.value)).path;
-                    lfManager.log(`Updating cover for model with path: ${path}`, { b64image }, LogSeverity.Info);
-                    getApiRoutes().metadata.updateCover(path, b64image);
-                    const image = node?.cells?.kulImage;
-                    if (image) {
-                        image.value = `data:image/png;charset=utf-8;base64,${b64image}`;
-                        card.refresh();
-                        tip.destroy();
-                    }
-                }
-                catch (error) {
-                    lfManager.log("Failed to fetch the model's path from .info file", { b64image }, LogSeverity.Error);
-                }
-            }
-        }
-    };
-    tip.create({ x: e.x, y: e.y }, 'upload', cb);
 };
 //#endregion
 //#region prepareValidDataset

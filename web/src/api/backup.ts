@@ -1,7 +1,7 @@
-import { api } from '/scripts/api.js';
 import { APIEndpoints, BackupAPIs, BaseAPIPayload } from '../types/api/api';
 import { LogSeverity } from '../types/manager/manager';
 import { getLFManager } from '../utils/common';
+import { api } from '/scripts/api.js';
 
 export const BACKUP_API: BackupAPIs = {
   //#region new

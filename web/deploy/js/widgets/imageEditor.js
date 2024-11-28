@@ -1,40 +1,27 @@
 import { TREE_DATA } from '../fixtures/imageEditor.js';
-import { buttonEventHandler, canvasEventHandler, getStatusColumn, imageviewerEventHandler, setGridStatus, } from '../helpers/imageEditor.js';
+import { EV_HANDLERS, getStatusColumn, setGridStatus, updateCb } from '../helpers/imageEditor.js';
 import { KulEventName } from '../types/events/events.js';
 import { LogSeverity } from '../types/manager/manager.js';
-import { CustomWidgetName, NodeName, TagName, } from '../types/widgets/_common.js';
 import { ImageEditorCSS, ImageEditorIcons, ImageEditorStatus, } from '../types/widgets/imageEditor.js';
+import { CustomWidgetName, NodeName, TagName } from '../types/widgets/widgets.js';
 import { createDOMWidget, getLFManager, normalizeValue } from '../utils/common.js';
-//#region Image editor
+const STATE = new WeakMap();
 export const imageEditorFactory = {
-    options: (imageviewer, actionButtons, grid) => {
+    //#region Options
+    options: (wrapper) => {
         return {
             hideOnZoom: false,
-            getComp() {
-                return { imageviewer };
-            },
+            getState: () => STATE.get(wrapper),
             getValue: () => {
+                const { imageviewer } = STATE.get(wrapper).elements;
                 return imageviewer.kulData || {};
             },
-            refresh: async (directory) => {
-                getLFManager()
-                    .getApiRoutes()
-                    .image.get(directory)
-                    .then((r) => {
-                    if (r.status === 'success') {
-                        if (r?.data && Object.entries(r.data).length > 0) {
-                            imageviewer.kulData = r.data;
-                        }
-                        else {
-                            getLFManager().log('Images not found.', { r }, LogSeverity.Info);
-                        }
-                    }
-                });
-            },
             setValue: (value) => {
+                const { actionButtons, grid, imageviewer } = STATE.get(wrapper).elements;
                 const callback = (_, u) => {
                     const parsedValue = u.parsedJson;
-                    if (getStatusColumn(parsedValue)?.title === ImageEditorStatus.Pending) {
+                    const isPending = getStatusColumn(parsedValue)?.title === ImageEditorStatus.Pending;
+                    if (isPending) {
                         setGridStatus(ImageEditorStatus.Pending, grid, actionButtons);
                     }
                     imageviewer.kulData = parsedValue || {};
@@ -43,19 +30,35 @@ export const imageEditorFactory = {
             },
         };
     },
+    //#endregion
+    //#region Render
     render: (node) => {
         const wrapper = document.createElement(TagName.Div);
         const content = document.createElement(TagName.Div);
         const grid = document.createElement(TagName.Div);
         const settings = document.createElement(TagName.Div);
         const imageviewer = document.createElement(TagName.KulImageviewer);
+        const refresh = async (directory) => {
+            getLFManager()
+                .getApiRoutes()
+                .image.get(directory)
+                .then((r) => {
+                if (r.status === 'success') {
+                    if (r?.data && Object.entries(r.data).length > 0) {
+                        imageviewer.kulData = r.data;
+                    }
+                    else {
+                        getLFManager().log('Images not found.', { r }, LogSeverity.Info);
+                    }
+                }
+            });
+        };
         settings.classList.add(ImageEditorCSS.Settings);
         settings.slot = 'settings';
         imageviewer.classList.add(ImageEditorCSS.Widget);
-        imageviewer.kulLoadCallback = async (_, value) => await options.refresh(value);
+        imageviewer.kulLoadCallback = async (_, value) => await refresh(value);
         imageviewer.kulValue = TREE_DATA;
-        imageviewer.addEventListener(KulEventName.KulImageviewer, imageviewerEventHandler.bind(imageviewerEventHandler, settings, node));
-        imageviewer.addEventListener(KulEventName.KulCanvas, canvasEventHandler.bind(imageviewerEventHandler, imageviewer));
+        imageviewer.addEventListener(KulEventName.KulImageviewer, (e) => EV_HANDLERS.imageviewer(STATE.get(wrapper), e));
         imageviewer.appendChild(settings);
         const actionButtons = {};
         switch (node.comfyClass) {
@@ -69,6 +72,7 @@ export const imageEditorFactory = {
                 interrupt.kulLabel = 'Interrupt workflow';
                 interrupt.kulStyling = 'flat';
                 interrupt.title = 'Click to interrupt the workflow.';
+                interrupt.addEventListener(KulEventName.KulButton, (e) => EV_HANDLERS.button(STATE.get(wrapper), e));
                 resume.classList.add('kul-full-width');
                 resume.classList.add('kul-success');
                 resume.kulIcon = ImageEditorIcons.Resume;
@@ -76,10 +80,10 @@ export const imageEditorFactory = {
                 resume.kulStyling = 'flat';
                 resume.title =
                     'Click to resume the workflow. Remember to save your snapshots after editing the images!';
+                resume.addEventListener(KulEventName.KulButton, (e) => EV_HANDLERS.button(STATE.get(wrapper), e));
                 actions.classList.add(ImageEditorCSS.Actions);
                 actions.appendChild(interrupt);
                 actions.appendChild(resume);
-                actions.addEventListener(KulEventName.KulButton, buttonEventHandler.bind(buttonEventHandler, imageviewer, actionButtons, grid));
                 grid.classList.add(ImageEditorCSS.GridIsInactive);
                 grid.classList.add(ImageEditorCSS.GridHasActions);
                 grid.appendChild(actions);
@@ -92,8 +96,22 @@ export const imageEditorFactory = {
         content.classList.add(ImageEditorCSS.Content);
         content.appendChild(grid);
         wrapper.appendChild(content);
-        const options = imageEditorFactory.options(imageviewer, actionButtons, grid);
+        const options = imageEditorFactory.options(wrapper);
+        STATE.set(wrapper, {
+            elements: { actionButtons, controls: {}, grid, imageviewer, settings },
+            filter: null,
+            filterType: null,
+            node,
+            update: {
+                preview: () => updateCb(STATE.get(wrapper)),
+                snapshot: () => updateCb(STATE.get(wrapper), true),
+            },
+            wrapper,
+        });
         return { widget: createDOMWidget(CustomWidgetName.imageEditor, wrapper, node, options) };
     },
+    //#endregion
+    //#region State
+    state: STATE,
+    //#endregion
 };
-//#endregion

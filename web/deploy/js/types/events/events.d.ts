@@ -1,5 +1,5 @@
 import { KulDataDataset } from '../ketchup-lite/components';
-import { CustomWidgetName, NodeName } from '../widgets/_common';
+import { CustomWidgetName, NodeName } from '../widgets/widgets';
 export type GenericPayload = WidgetPayloadFor<CustomWidgetName>;
 export type GenericEvent = CustomEvent<GenericPayload>;
 export interface BaseEventPayload {

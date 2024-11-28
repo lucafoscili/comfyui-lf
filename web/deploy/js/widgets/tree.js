@@ -1,18 +1,19 @@
-import { CustomWidgetName, NodeName, TagName, } from '../types/widgets/_common.js';
-import { TreeCSS } from '../types/widgets/tree.js';
+import { TreeCSS, } from '../types/widgets/tree.js';
+import { CustomWidgetName, NodeName, TagName } from '../types/widgets/widgets.js';
 import { createDOMWidget, normalizeValue } from '../utils/common.js';
-//#region Tree
+const STATE = new WeakMap();
 export const treeFactory = {
-    options: (tree) => {
+    //#region Options
+    options: (wrapper) => {
         return {
             hideOnZoom: true,
-            getComp() {
-                return tree;
-            },
+            getState: () => STATE.get(wrapper),
             getValue() {
+                const { tree } = STATE.get(wrapper);
                 return tree.kulData || {};
             },
             setValue(value) {
+                const { tree } = STATE.get(wrapper);
                 const callback = (_, u) => {
                     tree.kulData = u.parsedJson || {};
                 };
@@ -20,11 +21,12 @@ export const treeFactory = {
             },
         };
     },
+    //#endregion
+    //#region Render
     render: (node) => {
         const wrapper = document.createElement(TagName.Div);
         const content = document.createElement(TagName.Div);
         const tree = document.createElement(TagName.KulTree);
-        const options = treeFactory.options(tree);
         switch (node.comfyClass) {
             case NodeName.isLandscape:
                 tree.kulAccordionLayout = false;
@@ -35,11 +37,16 @@ export const treeFactory = {
                 tree.kulSelectable = false;
                 break;
         }
-        content.classList.add(TreeCSS.Content);
         tree.classList.add(TreeCSS.Widget);
+        content.classList.add(TreeCSS.Content);
         content.appendChild(tree);
         wrapper.appendChild(content);
+        const options = treeFactory.options(wrapper);
+        STATE.set(wrapper, { node, tree, wrapper });
         return { widget: createDOMWidget(CustomWidgetName.tree, wrapper, node, options) };
     },
+    //#endregion
+    //#region State
+    state: STATE,
+    //#endregion
 };
-//#endregion

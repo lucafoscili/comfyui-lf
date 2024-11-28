@@ -1,12 +1,12 @@
-import { api } from '/scripts/api.js';
 import {
   APIEndpoints,
   GetImageAPIPayload,
   ImageAPIs,
   ProcessImageAPIPayload,
 } from '../types/api/api';
-import { getLFManager } from '../utils/common';
 import { LogSeverity } from '../types/manager/manager';
+import { getLFManager } from '../utils/common';
+import { api } from '/scripts/api.js';
 
 export const IMAGE_API: ImageAPIs = {
   //#region get
@@ -55,6 +55,7 @@ export const IMAGE_API: ImageAPIs = {
     return payload;
   },
   //#endregion
+
   //#region process
   process: async (url, type, settings) => {
     const lfManager = getLFManager();

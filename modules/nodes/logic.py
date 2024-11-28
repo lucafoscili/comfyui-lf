@@ -73,6 +73,7 @@ class LF_ExtractString:
         
         return (result_as_json, extracted_text, result_as_int, result_as_float, result_as_boolean)
 # endregion
+
 # region LF_ExtractPromptFromLoraTag
 class LF_ExtractPromptFromLoraTag:
     @classmethod
@@ -146,6 +147,7 @@ class LF_ExtractPromptFromLoraTag:
 
         return (clean_loras, keyword_counts, clean_loras, keyword_counts)
 # endregion
+
 # region LF_IsLandscape
 class LF_IsLandscape:
     @classmethod
@@ -204,6 +206,7 @@ class LF_IsLandscape:
         return (is_landscape_list[0], heights_list[0], widths_list[0], 
                 is_landscape_list, heights_list, widths_list)
 # endregion
+
 # region LF_MathOperation
 class LF_MathOperation:
     @classmethod
@@ -301,6 +304,7 @@ class LF_MathOperation:
     def VALIDATE_INPUTS(self, **kwargs):
          return True
 # endregion
+
 # region LF_ParsePromptWithLoraTags
 class LF_ParsePromptWithLoraTags:
     @classmethod
@@ -383,6 +387,7 @@ class LF_ParsePromptWithLoraTags:
 
         return (text, loras_string)
 # endregion
+
 # region LF_ResolutionSwitcher
 class LF_ResolutionSwitcher:
     @classmethod
@@ -454,6 +459,7 @@ class LF_ResolutionSwitcher:
 
         return (width, height, is_landscape)
 # endregion
+
 # region LF_SwitchFloat
 class LF_SwitchFloat:
     @classmethod
@@ -512,6 +518,7 @@ class LF_SwitchFloat:
 
         return (value, [value])
 # endregion
+
 # region LF_SwitchImage
 class LF_SwitchImage:
     @classmethod
@@ -568,6 +575,7 @@ class LF_SwitchImage:
 
         return (value, [value])
 # endregion
+
 # region LF_SwitchInteger    
 class LF_SwitchInteger:
     @classmethod
@@ -621,6 +629,7 @@ class LF_SwitchInteger:
 
         return (value, [value])
 # endregion
+
 # region LF_SwitchJSON
 class LF_SwitchJSON:
     @classmethod
@@ -677,6 +686,7 @@ class LF_SwitchJSON:
 
         return (value, [value])
 # endregion
+
 # region LF_SwitchString
 class LF_SwitchString:
     @classmethod
@@ -735,6 +745,7 @@ class LF_SwitchString:
 
         return (value, [value])
 # endregion
+
 NODE_CLASS_MAPPINGS = {
     "LF_ExtractPromptFromLoraTag": LF_ExtractPromptFromLoraTag,
     "LF_ExtractString": LF_ExtractString,

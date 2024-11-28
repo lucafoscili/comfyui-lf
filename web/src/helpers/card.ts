@@ -1,3 +1,4 @@
+import { DOWNLOAD_PLACEHOLDERS } from '../fixtures/card';
 import { APIMetadataEntry, GetMetadataAPIPayload } from '../types/api/api';
 import { KulEventName } from '../types/events/events';
 import {
@@ -5,43 +6,139 @@ import {
   KulCardEventPayload,
   KulDataDataset,
 } from '../types/ketchup-lite/components';
-import { KulCard } from '../types/ketchup-lite/components/kul-card/kul-card';
 import { KulDataCell } from '../types/ketchup-lite/managers/kul-data/kul-data-declarations';
 import { LogSeverity, TooltipUploadCallback } from '../types/manager/manager';
-import { CustomWidgetName, TagName } from '../types/widgets/_common';
-import { Card, CardDeserializedValue } from '../types/widgets/card';
-import { CardsWithChip } from '../types/widgets/cardsWithChip';
-import { getLFManager, getApiRoutes, unescapeJson, getCustomWidget } from '../utils/common';
+import { Card, CardDeserializedValue, CardState } from '../types/widgets/card';
+import { CardsWithChip, CardsWithChipState } from '../types/widgets/cardsWithChip';
+import { CustomWidgetName, TagName } from '../types/widgets/widgets';
+import { getApiRoutes, getCustomWidget, getLFManager, unescapeJson } from '../utils/common';
 
 export const CARD_PROPS_TO_SERIALIZE = ['kulData', 'kulStyle'];
 
-//#region Placeholders
-const DUMMY_PROPS: Partial<HTMLKulCardElement> = {
-  kulData: {
-    nodes: [
-      {
-        cells: {
-          kulImage: { shape: 'image', value: 'cloud_download' },
-          kulText: { shape: 'text', value: 'Fetching metadata from CivitAI...' },
-        },
-        id: '0',
-      },
-    ],
+export const EV_HANDLERS = {
+  //#region Button handler
+  button: (state: CardState | CardsWithChipState, e: CustomEvent<KulButtonEventPayload>) => {
+    const { comp, eventType } = e.detail;
+
+    const { grid, node } = state;
+
+    switch (eventType) {
+      case 'click':
+        const cards = Array.from(grid.querySelectorAll(TagName.KulCard));
+        if (cards?.length) {
+          const models: APIMetadataEntry[] = [];
+          const widget = getCustomWidget(node, CustomWidgetName.card);
+
+          cards.forEach((card) => {
+            const hashCell = card.kulData?.nodes?.[0]?.cells?.kulCode;
+            if (hashCell) {
+              const { hash, path } = JSON.parse(JSON.stringify(hashCell.value));
+              const dataset = card.kulData;
+              comp.kulShowSpinner = true;
+              models.push({ apiFlag: true, dataset, hash, path });
+            }
+          });
+
+          if (models.length) {
+            const value: CardDeserializedValue = {
+              props: [],
+            };
+            cardPlaceholders(widget, cards.length);
+            apiCall(models, true).then((r) => {
+              for (let index = 0; index < r.length; index++) {
+                const cardProps = r[index];
+                if (cardProps.kulData) {
+                  value.props.push(cardProps);
+                } else {
+                  value.props.push({
+                    ...cardProps,
+                    kulData: models[index].dataset,
+                  });
+                }
+              }
+              widget.options.setValue(JSON.stringify(value));
+              requestAnimationFrame(() => (comp.kulShowSpinner = false));
+            });
+          }
+        }
+        break;
+    }
   },
+  //#endregion
+
+  //#region Card handler
+  card: (e: CustomEvent<KulCardEventPayload>) => {
+    const { comp, eventType, originalEvent } = e.detail;
+
+    const node = comp.kulData?.nodes?.[0];
+
+    switch (eventType) {
+      case 'click':
+        if (node?.value) {
+          window.open(String(node.value).valueOf(), '_blank');
+        }
+        break;
+      case 'contextmenu':
+        const ogEv = originalEvent as MouseEvent;
+        const lfManager = getLFManager();
+
+        ogEv.preventDefault();
+        ogEv.stopPropagation();
+
+        const tip = lfManager.getManagers().tooltip;
+
+        const cb: TooltipUploadCallback = async (b64image: string) => {
+          const node = comp.kulData?.nodes?.[0];
+          if (node) {
+            const code = node?.cells?.kulCode;
+            if (code) {
+              try {
+                const path = JSON.parse(JSON.stringify(code.value)).path;
+                lfManager.log(
+                  `Updating cover for model with path: ${path}`,
+                  { b64image },
+                  LogSeverity.Info,
+                );
+                getApiRoutes().metadata.updateCover(path, b64image);
+                const image = node?.cells?.kulImage;
+                if (image) {
+                  image.value = `data:image/png;charset=utf-8;base64,${b64image}`;
+                  comp.refresh();
+                  tip.destroy();
+                }
+              } catch (error) {
+                lfManager.log(
+                  "Failed to fetch the model's path from .info file",
+                  { b64image },
+                  LogSeverity.Error,
+                );
+              }
+            }
+          }
+        };
+
+        tip.create({ x: ogEv.x, y: ogEv.y }, 'upload', cb);
+        break;
+    }
+  },
+  //#endregion
 };
+
+//#region cardPlaceholders
 export const cardPlaceholders = (widget: Card | CardsWithChip, count: number) => {
   const dummyValue: CardDeserializedValue = {
     props: [],
   };
 
   for (let index = 0; index < count; index++) {
-    dummyValue.props.push(DUMMY_PROPS);
+    dummyValue.props.push(DOWNLOAD_PLACEHOLDERS);
   }
   widget.options.setValue(JSON.stringify(dummyValue));
 };
 //#endregion
-//#region API call
-export const fetchModelMetadata = async (
+
+//#region apiCall
+export const apiCall = async (
   models: APIMetadataEntry[],
   forcedSave = false,
 ): Promise<Partial<HTMLKulCardElement>[]> => {
@@ -59,7 +156,8 @@ export const fetchModelMetadata = async (
   return Promise.all(promises);
 };
 //#endregion
-//#region API response
+
+//#region onResponse
 const onResponse = async (
   dataset: KulDataDataset,
   path: string,
@@ -101,11 +199,9 @@ const onResponse = async (
   return props;
 };
 //#endregion
-//#region cardHandler
-export const cardHandler = (
-  container: HTMLDivElement,
-  propsArray: Partial<HTMLKulCardElement>[],
-) => {
+
+//#region prepCards
+export const prepCards = (container: HTMLDivElement, propsArray: Partial<HTMLKulCardElement>[]) => {
   let count = 0;
 
   const cards = container.querySelectorAll('kul-card');
@@ -152,6 +248,7 @@ export const cardHandler = (
   return count;
 };
 //#endregion
+
 //#region getCardProps
 export const getCardProps = (container: HTMLDivElement) => {
   const propsArray: Partial<HTMLKulCardElement>[] = [];
@@ -174,134 +271,13 @@ export const getCardProps = (container: HTMLDivElement) => {
 };
 
 export const createCard = () => {
-  const card = document.createElement('kul-card');
-  card.addEventListener('kul-card-event', cardEventHandler);
-  card.addEventListener('contextmenu', contextMenuHandler.bind(contextMenuHandler, card));
+  const card = document.createElement(TagName.KulCard);
+  card.addEventListener(KulEventName.KulCard, EV_HANDLERS.card);
   return card;
 };
 
-export const cardEventHandler = (e: CustomEvent<KulCardEventPayload>) => {
-  const { comp, eventType } = e.detail;
-  const card = comp as KulCard;
-  const node = card.kulData?.nodes?.[0];
-
-  switch (eventType) {
-    case 'click':
-      if (node?.value) {
-        window.open(String(node.value).valueOf(), '_blank');
-      }
-      break;
-  }
-};
 //#endregion
 
-//#region selectorButton
-export const selectorButton = (grid: HTMLDivElement, node: NodeType) => {
-  const cb = (e: CustomEvent<KulButtonEventPayload>) => {
-    const { comp, eventType } = e.detail;
-    const button = comp;
-
-    switch (eventType) {
-      case 'click':
-        const cards = Array.from(grid.querySelectorAll(TagName.KulCard));
-        if (cards?.length) {
-          const models: APIMetadataEntry[] = [];
-          const widget = getCustomWidget(node, CustomWidgetName.card);
-
-          cards.forEach((card) => {
-            const hashCell = card.kulData?.nodes?.[0]?.cells?.kulCode;
-            if (hashCell) {
-              const { hash, path } = JSON.parse(JSON.stringify(hashCell.value));
-              const dataset = card.kulData;
-              button.kulShowSpinner = true;
-              models.push({ apiFlag: true, dataset, hash, path });
-            }
-          });
-
-          if (models.length) {
-            const value: CardDeserializedValue = {
-              props: [],
-            };
-            cardPlaceholders(widget, cards.length);
-            fetchModelMetadata(models, true).then((r) => {
-              for (let index = 0; index < r.length; index++) {
-                const cardProps = r[index];
-                if (cardProps.kulData) {
-                  value.props.push(cardProps);
-                } else {
-                  value.props.push({
-                    ...cardProps,
-                    kulData: models[index].dataset,
-                  });
-                }
-              }
-              widget.options.setValue(JSON.stringify(value));
-              requestAnimationFrame(() => (button.kulShowSpinner = false));
-            });
-          }
-        }
-        break;
-    }
-  };
-
-  const button = document.createElement(TagName.KulButton);
-  button.classList.add('kul-full-width');
-  button.kulIcon = 'cloud_download';
-  button.kulLabel = 'Refresh';
-  button.title = 'Attempts to manually ownload fresh metadata from CivitAI';
-  button.addEventListener(KulEventName.KulButton, cb);
-
-  const spinner = document.createElement(TagName.KulSpinner);
-  spinner.kulActive = true;
-  spinner.kulDimensions = '0.6em';
-  spinner.kulLayout = 2;
-  spinner.slot = 'spinner';
-  button.appendChild(spinner);
-
-  return button;
-};
-//#endregion
-//#region contextMenuHandler
-export const contextMenuHandler = (card: HTMLKulCardElement, e: MouseEvent) => {
-  e.preventDefault();
-  e.stopPropagation();
-
-  const lfManager = getLFManager();
-  const tip = lfManager.getManagers().tooltip;
-
-  const cb: TooltipUploadCallback = async (b64image: string) => {
-    const node = card.kulData?.nodes?.[0];
-    if (node) {
-      const code = node?.cells?.kulCode;
-      if (code) {
-        try {
-          const path = JSON.parse(JSON.stringify(code.value)).path;
-          lfManager.log(
-            `Updating cover for model with path: ${path}`,
-            { b64image },
-            LogSeverity.Info,
-          );
-          getApiRoutes().metadata.updateCover(path, b64image);
-          const image = node?.cells?.kulImage;
-          if (image) {
-            image.value = `data:image/png;charset=utf-8;base64,${b64image}`;
-            card.refresh();
-            tip.destroy();
-          }
-        } catch (error) {
-          lfManager.log(
-            "Failed to fetch the model's path from .info file",
-            { b64image },
-            LogSeverity.Error,
-          );
-        }
-      }
-    }
-  };
-
-  tip.create({ x: e.x, y: e.y }, 'upload', cb);
-};
-//#endregion
 //#region prepareValidDataset
 const prepareValidDataset = (r: CivitAIModelData, code: KulDataCell<'code'>) => {
   const dataset: KulDataDataset = {

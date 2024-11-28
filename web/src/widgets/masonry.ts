@@ -1,39 +1,41 @@
+import { EV_HANDLERS } from '../helpers/masonry';
 import { KulEventName } from '../types/events/events';
-import { KulImageEventPayload, KulMasonryEventPayload } from '../types/ketchup-lite/components';
-import { KulDataCell } from '../types/ketchup-lite/managers/kul-data/kul-data-declarations';
 import {
-  CustomWidgetDeserializedValuesMap,
-  CustomWidgetName,
-  NodeName,
-  NormalizeValueCallback,
-  TagName,
-} from '../types/widgets/_common';
-import { MasonryCSS, MasonryDeserializedValue, MasonryFactory } from '../types/widgets/masonry';
+  MasonryCSS,
+  MasonryDeserializedValue,
+  MasonryFactory,
+  MasonryNormalizeCallback,
+  MasonryState,
+} from '../types/widgets/masonry';
+import { CustomWidgetName, NodeName, TagName } from '../types/widgets/widgets';
 import { createDOMWidget, isValidNumber, normalizeValue } from '../utils/common';
 
-//#region Masonry
+const STATE = new WeakMap<HTMLDivElement, MasonryState>();
+
 export const masonryFactory: MasonryFactory = {
-  options: (masonry) => {
+  //#region Options
+  options: (wrapper) => {
     return {
       hideOnZoom: false,
-      getComp() {
-        return masonry;
-      },
+      getState: () => STATE.get(wrapper),
       getValue() {
-        const index = parseInt(masonry?.dataset.index);
+        const { masonry, selected } = STATE.get(wrapper);
+        const { index, name } = selected;
+
         return {
           columns: masonry?.kulColumns || 3,
           dataset: masonry?.kulData || {},
           index: isValidNumber(index) ? index : NaN,
-          name: masonry?.dataset.name || '',
+          name: name || '',
           view: masonry?.kulView || 'masonry',
         };
       },
       setValue(value) {
-        const callback: NormalizeValueCallback<
-          CustomWidgetDeserializedValuesMap<typeof CustomWidgetName.masonry> | string
-        > = (_, u) => {
+        const callback: MasonryNormalizeCallback = (_, u) => {
+          const { masonry, selected } = STATE.get(wrapper);
+
           const { columns, dataset, index, name, view } = u.parsedJson as MasonryDeserializedValue;
+
           if (columns) {
             masonry.kulColumns = columns;
           }
@@ -44,8 +46,8 @@ export const masonryFactory: MasonryFactory = {
             masonry.kulView = view;
           }
           if (isValidNumber(index)) {
-            masonry.dataset.index = index.toString() || '';
-            masonry.dataset.name = name || '';
+            selected.index = index;
+            selected.name = name || '';
             masonry.setSelectedShape(index);
           }
         };
@@ -54,15 +56,19 @@ export const masonryFactory: MasonryFactory = {
       },
     };
   },
+  //#endregion
+
+  //#region Render
   render: (node) => {
     const wrapper = document.createElement(TagName.Div);
     const content = document.createElement(TagName.Div);
     const masonry = document.createElement(TagName.KulMasonry);
-    const options = masonryFactory.options(masonry);
 
-    content.classList.add(MasonryCSS.Content);
     masonry.classList.add(MasonryCSS.Widget);
-    masonry.addEventListener(KulEventName.KulMasonry, masonryEventHandler);
+    masonry.addEventListener(
+      KulEventName.KulMasonry,
+      EV_HANDLERS.masonry.bind(EV_HANDLERS.masonry, STATE.get(wrapper)),
+    );
 
     switch (node.comfyClass) {
       case NodeName.loadImages:
@@ -70,32 +76,20 @@ export const masonryFactory: MasonryFactory = {
         break;
     }
 
+    content.classList.add(MasonryCSS.Content);
     content.appendChild(masonry);
+
     wrapper.appendChild(content);
+
+    const options = masonryFactory.options(wrapper);
+
+    STATE.set(wrapper, { masonry, node, selected: { index: NaN, name: '' }, wrapper });
 
     return { widget: createDOMWidget(CustomWidgetName.masonry, wrapper, node, options) };
   },
-};
-//#endregion
-//#region eventHandler
-const masonryEventHandler = (e: CustomEvent<KulMasonryEventPayload>) => {
-  const { comp, eventType, originalEvent, selectedShape } = e.detail;
-  const masonry = comp.rootElement as HTMLKulMasonryElement;
+  //#endregion
 
-  switch (eventType) {
-    case 'kul-event':
-      const { eventType } = (originalEvent as CustomEvent<KulImageEventPayload>).detail;
-      switch (eventType) {
-        case 'click':
-          const v =
-            selectedShape.shape?.value || (selectedShape.shape as KulDataCell<'image'>)?.kulValue;
-          masonry.dataset.index = isValidNumber(selectedShape.index)
-            ? selectedShape.index.toString()
-            : '';
-          masonry.dataset.name = v ? String(v).valueOf() : '';
-          break;
-      }
-      break;
-  }
+  //#region State
+  state: STATE,
+  //#endregion
 };
-//#endregion

@@ -1,3 +1,5 @@
+@use '../mixins/mixins' as mixins;
+
 .lf-tooltip {
   & {
     border: 1px solid var(--kul-border-color);

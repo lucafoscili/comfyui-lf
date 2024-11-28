@@ -2,7 +2,7 @@ const NAMESPACE = 'ketchup-lite';
 const BUILD = /* ketchup-lite */ { allRenderFn: true, appendChildSlotFix: false, asyncLoading: true, asyncQueue: false, attachStyles: true, cloneNodeFix: false, cmpDidLoad: true, cmpDidRender: true, cmpDidUnload: false, cmpDidUpdate: true, cmpShouldUpdate: false, cmpWillLoad: true, cmpWillRender: true, cmpWillUpdate: true, connectedCallback: false, constructableCSS: true, cssAnnotations: true, devTools: false, disconnectedCallback: true, element: false, event: true, experimentalScopedSlotChanges: false, experimentalSlotFixes: false, formAssociated: false, hasRenderFn: true, hostListener: true, hostListenerTarget: false, hostListenerTargetBody: false, hostListenerTargetDocument: false, hostListenerTargetParent: false, hostListenerTargetWindow: false, hotModuleReplacement: false, hydrateClientSide: false, hydrateServerSide: false, hydratedAttribute: false, hydratedClass: true, hydratedSelectorName: "hydrated", initializeNextTick: false, invisiblePrehydration: true, isDebug: false, isDev: false, isTesting: false, lazyLoad: true, lifecycle: true, lifecycleDOMEvents: false, member: true, method: true, mode: false, observeAttribute: true, profile: false, prop: true, propBoolean: true, propMutable: true, propNumber: true, propString: true, reflect: true, scoped: false, scopedSlotTextContentFix: false, scriptDataOpts: false, shadowDelegatesFocus: false, shadowDom: true, slot: true, slotChildNodesFix: false, slotRelocation: false, state: true, style: true, svg: true, taskQueue: true, transformTagName: false, updatable: true, vdomAttribute: true, vdomClass: true, vdomFunctional: true, vdomKey: true, vdomListener: true, vdomPropOrAttr: true, vdomRef: true, vdomRender: true, vdomStyle: true, vdomText: true, vdomXlink: true, watchCallback: true };
 
 /*
- Stencil Client Platform v4.20.0 | MIT Licensed | https://stenciljs.com
+ Stencil Client Platform v4.22.3 | MIT Licensed | https://stenciljs.com
  */
 var __defProp = Object.defineProperty;
 var __export = (target, all) => {
@@ -396,17 +396,30 @@ var addStyle = (styleContainerNode, cmpMeta, mode) => {
           if (nonce != null) {
             styleElm.setAttribute("nonce", nonce);
           }
-          const injectStyle = (
-            /**
-             * we render a scoped component
-             */
-            !(cmpMeta.$flags$ & 1 /* shadowDomEncapsulation */) || /**
-             * we are using shadow dom and render the style tag within the shadowRoot
-             */
-            cmpMeta.$flags$ & 1 /* shadowDomEncapsulation */ && styleContainerNode.nodeName !== "HEAD"
-          );
-          if (injectStyle) {
-            styleContainerNode.insertBefore(styleElm, styleContainerNode.querySelector("link"));
+          if (!(cmpMeta.$flags$ & 1 /* shadowDomEncapsulation */)) {
+            if (styleContainerNode.nodeName === "HEAD") {
+              const preconnectLinks = styleContainerNode.querySelectorAll("link[rel=preconnect]");
+              const referenceNode2 = preconnectLinks.length > 0 ? preconnectLinks[preconnectLinks.length - 1].nextSibling : styleContainerNode.querySelector("style");
+              styleContainerNode.insertBefore(styleElm, referenceNode2);
+            } else if ("host" in styleContainerNode) {
+              if (supportsConstructableStylesheets) {
+                const stylesheet = new CSSStyleSheet();
+                stylesheet.replaceSync(style);
+                styleContainerNode.adoptedStyleSheets = [stylesheet, ...styleContainerNode.adoptedStyleSheets];
+              } else {
+                const existingStyleContainer = styleContainerNode.querySelector("style");
+                if (existingStyleContainer) {
+                  existingStyleContainer.innerHTML = style + existingStyleContainer.innerHTML;
+                } else {
+                  styleContainerNode.prepend(styleElm);
+                }
+              }
+            } else {
+              styleContainerNode.append(styleElm);
+            }
+          }
+          if (cmpMeta.$flags$ & 1 /* shadowDomEncapsulation */ && styleContainerNode.nodeName !== "HEAD") {
+            styleContainerNode.insertBefore(styleElm, null);
           }
         }
         if (cmpMeta.$flags$ & 4 /* hasSlotRelocation */) {
@@ -499,7 +512,11 @@ var setAccessor = (elm, memberName, oldValue, newValue, isSvg, flags) => {
             if (memberName === "list") {
               isProp = false;
             } else if (oldValue == null || elm[memberName] != n) {
-              elm[memberName] = n;
+              if (typeof elm.__lookupSetter__(memberName) === "function") {
+                elm[memberName] = n;
+              } else {
+                elm.setAttribute(memberName, n);
+              }
             }
           } else {
             elm[memberName] = newValue;
@@ -1402,4 +1419,4 @@ var setNonce = (nonce) => plt.$nonce$ = nonce;
 
 export { Fragment as F, Host as H, getAssetPath as a, bootstrapLazy as b, setAssetPath as c, createEvent as d, forceUpdate as f, getElement as g, h, promiseResolve as p, registerInstance as r, setNonce as s };
 
-//# sourceMappingURL=index-53f95fee.js.map
+//# sourceMappingURL=index-7cf82e95.js.map

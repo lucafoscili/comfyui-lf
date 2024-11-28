@@ -1,18 +1,6 @@
-import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, a as getAssetPath, h, H as Host } from './index-53f95fee.js';
-import { d as commonjsGlobal, k as kulManagerInstance, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-9e1be956.js';
+import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, a as getAssetPath, h, H as Host } from './index-7cf82e95.js';
+import { d as commonjsGlobal, k as kulManagerInstance, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-72505221.js';
 import { g as getProps } from './componentUtils-a994b230.js';
-
-/*-------------------------------------------------*/
-/*                    P r o p s                    */
-/*-------------------------------------------------*/
-var KulCodeProps;
-(function (KulCodeProps) {
-    KulCodeProps["kulFormat"] = "Automatically formats the value.";
-    KulCodeProps["kulLanguage"] = "Sets the language of the snippet.";
-    KulCodeProps["kulPreserveSpaces"] = "Whether to preserve spaces or not. When missing it is set automatically.";
-    KulCodeProps["kulStyle"] = "Custom style of the component.";
-    KulCodeProps["kulValue"] = "String containing the snippet of code to display.";
-})(KulCodeProps || (KulCodeProps = {}));
 
 var prism = {exports: {}};
 
@@ -1966,7 +1954,20 @@ Prism.languages.js = Prism.languages.javascript;
 
 const Prism = prism.exports;
 
+//#endregion
+//#region Props
+var KulCodeProps;
+(function (KulCodeProps) {
+    KulCodeProps["kulFormat"] = "Automatically formats the value.";
+    KulCodeProps["kulLanguage"] = "Sets the language of the snippet.";
+    KulCodeProps["kulPreserveSpaces"] = "Whether to preserve spaces or not. When missing it is set automatically.";
+    KulCodeProps["kulStyle"] = "Custom style of the component.";
+    KulCodeProps["kulValue"] = "String containing the snippet of code to display.";
+})(KulCodeProps || (KulCodeProps = {}));
+//#endregion
+
 const STATIC_LANGUAGES = {
+    //#region CSS
     css: (Prism) => {
         var e = /(?:"(?:\\(?:\r\n|[\s\S])|[^"\\\r\n])*"|'(?:\\(?:\r\n|[\s\S])|[^'\\\r\n])*')/;
         (Prism.languages.css = {
@@ -2026,6 +2027,8 @@ const STATIC_LANGUAGES = {
             (t.tag.addInlined('style', 'css'),
                 t.tag.addAttribute('style', 'css'));
     },
+    //#endregion
+    //#region Javascript
     javascript: (Prism) => {
         (Prism.languages.javascript = Prism.languages.extend('clike', {
             'class-name': [
@@ -2138,6 +2141,8 @@ const STATIC_LANGUAGES = {
                     Prism.languages.markup.tag.addAttribute('on(?:abort|blur|change|click|composition(?:end|start|update)|dblclick|error|focus(?:in|out)?|key(?:down|up)|load|mouse(?:down|enter|leave|move|out|over|up)|reset|resize|scroll|select|slotchange|submit|unload|wheel)', 'javascript')),
             (Prism.languages.js = Prism.languages.javascript);
     },
+    //#endregion
+    //#region JSON
     json: (Prism) => {
         (Prism.languages.json = {
             property: {
@@ -2159,6 +2164,8 @@ const STATIC_LANGUAGES = {
         }),
             (Prism.languages.webmanifest = Prism.languages.json);
     },
+    //#endregion
+    //#region JSX
     jsx: (Prism) => {
         var n = Prism.util.clone(Prism.languages.javascript), e = '(?:\\{<S>*\\.{3}(?:[^{}]|<BRACES>)*\\})';
         function a(t, n) {
@@ -2262,6 +2269,8 @@ const STATIC_LANGUAGES = {
             ('jsx' !== t.language && 'tsx' !== t.language) || g(t.tokens);
         });
     },
+    //#endregion
+    //#region Markdown
     markdown: (Prism) => {
         function e(reg) {
             return ((reg = reg.replace(/<inner>/g, function () {
@@ -2523,6 +2532,8 @@ const STATIC_LANGUAGES = {
         var r = RegExp(Prism.languages.markup.tag.pattern.source, 'gi'), o = { amp: '&', lt: '<', gt: '>', quot: '"' }, l = String.fromCodePoint || String.fromCharCode;
         Prism.languages.md = Prism.languages.markdown;
     },
+    //#endregion
+    //#region Markup
     markup: (Prism) => {
         (Prism.languages.markup = {
             comment: { pattern: /<!--(?:(?!<!--)[\s\S])*?-->/, greedy: !0 },
@@ -2652,6 +2663,8 @@ const STATIC_LANGUAGES = {
             (Prism.languages.atom = Prism.languages.xml),
             (Prism.languages.rss = Prism.languages.xml);
     },
+    //#endregion
+    //#region Python
     python: (Prism) => {
         (Prism.languages.python = {
             comment: { pattern: /(^|[^\\])#.*/, lookbehind: !0, greedy: !0 },
@@ -2707,6 +2720,8 @@ const STATIC_LANGUAGES = {
             (Prism.languages.python['string-interpolation'].inside.interpolation.inside.rest = Prism.languages.python),
             (Prism.languages.py = Prism.languages.python);
     },
+    //#endregion
+    //#region Regex
     regex: (Prism) => {
         var e = { pattern: /\\[\\(){}[\]^$+*?|.]/, alias: 'escape' }, n = /\\(?:x[\da-fA-F]{2}|u[\da-fA-F]{4}|u\{[\da-fA-F]+\}|0[0-7]{0,2}|[123][0-7]{2}|c[a-zA-Z]|.)/, t = '(?:[^\\\\-]|' + n.source + ')', s = RegExp(t + '-' + t), i = {
             pattern: /(<|')[^<>']+(?=[>']$)/,
@@ -2775,6 +2790,8 @@ const STATIC_LANGUAGES = {
             alternation: { pattern: /\|/, alias: 'keyword' },
         };
     },
+    //#endregion
+    //#region scss
     scss: (Prism) => {
         (Prism.languages.scss = Prism.languages.extend('css', {
             comment: {
@@ -2827,6 +2844,8 @@ const STATIC_LANGUAGES = {
             }),
             (Prism.languages.scss.atrule.inside.rest = Prism.languages.scss);
     },
+    //#endregion
+    //#region tsx
     tsx: (Prism) => {
         const a = Prism.util.clone(Prism.languages.typescript);
         (Prism.languages.tsx = Prism.languages.extend('jsx', a)),
@@ -2836,6 +2855,8 @@ const STATIC_LANGUAGES = {
         (t.pattern = RegExp('(^|[^\\w$]|(?=</))(?:' + t.pattern.source + ')', t.pattern.flags)),
             (t.lookbehind = !0);
     },
+    //#endregion
+    //#region TypeScript
     typescript: (Prism) => {
         (Prism.languages.typescript = Prism.languages.extend('javascript', {
             'class-name': {
@@ -2875,6 +2896,7 @@ const STATIC_LANGUAGES = {
             }),
             (Prism.languages.ts = Prism.languages.typescript);
     },
+    //#endregion
 };
 
 const kulCodeCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}@keyframes fade-in-grid{0%{display:none}1%{display:grid;opacity:0}100%{display:grid;opacity:1}}:host{--kul_code_background_color:var(\n    --kul-code-background-color,\n    rgba(var(--kul-background-color-rgb) 0.275)\n  );--kul_code_font_family:var(\n    --kul-code-font-family,\n    var(--kul-font-family-monospace)\n  );--kul_code_header_background_color:var(\n    --kul-code-header-background-color,\n    var(--kul-title-background-color)\n  );--kul_code_header_color:var(--kul-code-header-color, var(--kul-title-color));--kul_code_selection_background_color:var(\n    --kul-code-selection-background-color,\n    rgba(var(--kul-border-color-rgb, 0.275))\n  );--kul_code_text_color:var(--kul-code-text-color, var(--kul-text-color));--kul_code_token_color_1:var(\n    --kul-code-token-color-1,\n    var(--kul-chart-color-1)\n  );--kul_code_token_color_2:var(\n    --kul-code-token-color-2,\n    var(--kul-chart-color-2)\n  );--kul_code_token_color_3:var(\n    --kul-code-token-color-3,\n    var(--kul-chart-color-3)\n  );--kul_code_token_color_4:var(\n    --kul-code-token-color-4,\n    var(--kul-chart-color-4)\n  );--kul_code_token_color_5:var(\n    --kul-code-token-color-5,\n    var(--kul-chart-color-5)\n  );display:block;height:100%;width:100%}#kul-component,.container{height:100%;overflow:auto;position:relative;width:100%}.container{display:grid;grid-template-rows:max-content 1fr}.title{font-size:0.85em;letter-spacing:2px;padding:0.5em;text-transform:uppercase}.header{--kul-button-primary-color:var(--kul_code_header_color);align-items:center;background:var(--kul_code_header_background_color);border-color:var(--kul-primary-color);border-left:inset;color:var(--kul_code_header_color);display:flex;height:36px;justify-content:space-between;padding:0.25em 0.75em;position:sticky;top:0;z-index:1}:not(pre)>code,pre{-webkit-backdrop-filter:blur(3.5px);backdrop-filter:blur(3.5px);background:var(--kul_code_background_color);border:1px solid var(--kul_code_header_background_color);border-radius:4px}code,pre{color:var(--kul_code_text_color);font-family:var(--kul_code_font_family);font-size:1em;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}code ::-moz-selection,code::-moz-selection,pre ::-moz-selection,pre::-moz-selection{text-shadow:none;background:var(--kul_code_selection_background_color)}code ::selection,code::selection,pre ::selection,pre::selection{text-shadow:none;background:var(--kul_code_selection_background_color)}.body{color:var(--kul_code_text_color);padding:1em;white-space:pre-line}pre{box-sizing:border-box;margin:0;min-height:calc(100% - 36px);overflow:auto;padding:1.75em 1em;white-space:pre-wrap}:not(pre)>code{border-radius:0.3em;padding:0.1em;white-space:normal}.token.cdata,.token.comment,.token.doctype,.token.prolog{color:rgba(var(--kul-text-color-rgb), 0.575)}.token.punctuation{color:rgba(var(--kul-text-color-rgb), 0.875)}.token.namespace{opacity:0.7}.token.bold,.token.important{font-weight:700}.token.italic{font-style:italic}.token.entity{cursor:help}.token.boolean,.token.constant,.token.deleted,.token.number,.token.property,.token.symbol,.token.tag{color:var(--kul_code_token_color_1)}.token.attr-name,.token.builtin,.token.char,.token.inserted,.token.selector,.token.string{color:var(--kul_code_token_color_2)}.token.atrule,.token.attr-value,.token.keyword{color:var(--kul_code_token_color_3)}.token.class-name,.token.function{color:var(--kul_code_token_color_4)}.token.important,.token.regex,.token.variable{color:var(--kul_code_token_color_5)}";
@@ -2899,17 +2921,12 @@ const KulCode = class {
         this.kulValue = '';
     }
     get rootElement() { return getElement(this); }
-    /*-------------------------------------------------*/
-    /*       I n t e r n a l   V a r i a b l e s       */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Internal variables
     #el;
     #kulManager = kulManagerInstance();
-    /*-------------------------------------------------*/
-    /*                   E v e n t s                   */
-    /*-------------------------------------------------*/
-    /**
-     * Describes event emitted.
-     */
+    //#endregion
+    //#region Events
     kulEvent;
     onKulEvent(e, eventType) {
         this.kulEvent.emit({
@@ -2919,9 +2936,8 @@ const KulCode = class {
             originalEvent: e,
         });
     }
-    /*-------------------------------------------------*/
-    /*           P u b l i c   M e t h o d s           */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Public methods
     /**
      * Retrieves the debug information reflecting the current state of the component.
      * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves to a KulDebugLifecycleInfo object containing debug information.
@@ -2953,9 +2969,8 @@ const KulCode = class {
             this.rootElement.remove();
         }, ms);
     }
-    /*-------------------------------------------------*/
-    /*           P r i v a t e   M e t h o d s         */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Private methods
     #format(value) {
         if (typeof value === 'string' && /^[\{\}]\s*$/i.test(value)) {
             return value.trim();
@@ -3006,9 +3021,8 @@ const KulCode = class {
             ? this.#format(this.kulValue)
             : this.kulValue;
     }
-    /*-------------------------------------------------*/
-    /*          L i f e c y c l e   H o o k s          */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Lifecycle hooks
     componentWillLoad() {
         this.#kulManager.theme.register(this);
         STATIC_LANGUAGES.css(Prism);
@@ -3049,7 +3063,7 @@ const KulCode = class {
             this.kulLanguage.toLowerCase() === '';
         const shouldPreserveSpace = this.kulPreserveSpaces ||
             (isPreserveSpaceMissing && !isLikelyTextual);
-        return (h(Host, { key: '07b9411ea3b727974942040cbb4d71af75515396' }, this.kulStyle && (h("style", { key: 'ba9d0f27f706fa7bc05839de598ec1b828574c33', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: '085fc5a274c97ed00f5e8e7a3c47d8366f04aa6c', id: KUL_WRAPPER_ID }, h("div", { key: '36486148e9a6404803279e6306695b03617e920c', class: "container" }, h("div", { key: 'd2084f554df0d909009a29538eac8ac8e8c03303', class: "header" }, h("span", { key: 'c6f5bed5fc066ac35c800bc337b453808503468b', class: "title" }, this.kulLanguage), h("kul-button", { key: '4ee0fb77859dcc421c35f04b1c25991575afc054', class: 'kul-slim kul-full-height', kulIcon: "content_copy", kulLabel: "Copy", kulStyling: "flat", "onKul-button-event": (e) => {
+        return (h(Host, { key: 'c9de933fa94bcba5071574a07a2a93ebbf75d346' }, this.kulStyle && (h("style", { key: '818f9ea2483b725ce003c5bb1847d52af8a893b1', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: '360044aa23cd796cc559802363d898c4f3b26943', id: KUL_WRAPPER_ID }, h("div", { key: 'cc60b3d9d2a5467d248794e3293a2a58f42eafb6', class: "container" }, h("div", { key: '0594d09d7981529256cc146e8f25229d79237217', class: "header" }, h("span", { key: '940abeb1bff3aff59ecaea8032bda2637167f1a8', class: "title" }, this.kulLanguage), h("kul-button", { key: '883fee5cdb25cc6f90644888b6ca514e01dbd9e8', class: 'kul-slim kul-full-height', kulIcon: "content_copy", kulLabel: "Copy", kulStyling: "flat", "onKul-button-event": (e) => {
                 const { comp, eventType } = e.detail;
                 switch (eventType) {
                     case 'click':
@@ -3074,9 +3088,8 @@ const KulCode = class {
 };
 KulCode.style = KulCodeStyle0;
 
-/*-------------------------------------------------*/
-/*                    P r o p s                    */
-/*-------------------------------------------------*/
+//#endregion
+//#region Props
 var KulProgressbarProps;
 (function (KulProgressbarProps) {
     KulProgressbarProps["kulCenteredLabel"] = "Displays the label in the middle of the progress bar. It's the default for the radial variant and can't be changed.";
@@ -3087,6 +3100,7 @@ var KulProgressbarProps;
     KulProgressbarProps["kulStyle"] = "Custom style of the component.";
     KulProgressbarProps["kulValue"] = "The current value the progress bar must display.";
 })(KulProgressbarProps || (KulProgressbarProps = {}));
+//#endregion
 
 const kulProgressbarCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}@keyframes fade-in-grid{0%{display:none}1%{display:grid;opacity:0}100%{display:grid;opacity:1}}:host{--kul_progressbar_border_radius:var(--kul-progressbar-border-radius, 4px);--kul_progressbar_font_family:var(\n    --kul-progressbar-font-family,\n    var(--kul-font-family)\n  );--kul_progressbar_font_size:var(\n    --kul-progressbar-font-size,\n    var(--kul-font-size)\n  );--kul_progressbar_height:var(--kul-progressbar-height, 2.5em);--kul_progressbar_primary_color:var(\n    --kul-progressbar-primary-color,\n    var(--kul-primary-color)\n  );--kul_progressbar_text_color:var(\n    --kul-progressbar-text-color,\n    var(--kul-text-color)\n  );--kul_progressbar_text_color_rgb:var(\n    --kul-progressbar-text-color-rgb,\n    var(--kul-text-color-rgb)\n  );--kul_progressbar_text_on_primary_color:var(\n    --kul-progressbar-text-on-primary-color,\n    var(--kul-text-on-primary-color)\n  );--kul_progressbar_track_color:var(\n    --kul-progressbar-track-color,\n    var(--kul-disabled-background-color)\n  );--kul_progressbar_width:var(--kul-progressbar-width, 100%)}:host{display:block;font-family:var(--kul_progressbar_font_family);font-size:var(--kul_progressbar_font_size);width:var(--kul_progressbar_width)}.progress-bar{background:var(--kul_progressbar_track_color);border-radius:var(--kul_progressbar_border_radius);height:var(--kul_progressbar_height);overflow:hidden;width:var(--kul_progressbar_width)}.progress-bar__icon{background:var(--kul_progressbar_text_color);height:1.5em;margin:0 0.25em;width:1.5em}.progress-bar__label{align-items:center;display:flex;height:100%;justify-content:center;left:0;min-width:max-content;position:absolute;top:0;width:100%}.progress-bar__mu{font-size:calc(var(--kul_progressbar_font_size) * 0.75)}.progress-bar__percentage{background:var(--kul_progressbar_primary_color);border-radius:var(--kul_progressbar_border_radius);box-sizing:border-box;color:var(--kul_progressbar_text_color);height:var(--kul_progressbar_height);padding:0.5em 0;position:relative;text-align:center;transition:width 0.2s ease;width:var(--kul_progressbar_percentage_width)}:host([kul-centered-label]) .progress-bar{position:relative}:host([kul-centered-label]) .progress-bar__percentage{position:static}:host([kul-is-radial]){box-sizing:border-box;margin:auto;padding:1.25em 0px}:host([kul-is-radial]) #kul-component{display:flex;font-size:10em;margin:auto}:host([kul-is-radial]) .progress-bar{background:none;height:1em;margin:auto;overflow:visible;position:relative;width:1em}:host([kul-is-radial]) .progress-bar:nth-child(3n+1){clear:both}:host([kul-is-radial]) .progress-bar .pie{height:1em;width:1em;clip:rect(0, 1em, 1em, 0.5em);left:0;position:absolute;top:0}:host([kul-is-radial]) .progress-bar .pie.has-value .half-circle{border-color:var(--kul_progressbar_primary_color)}:host([kul-is-radial]) .progress-bar .pie.has-value .half-circle.left-side{transform:var(--kul_progressbar_transform);transition:transform 0.2s ease}:host([kul-is-radial]) .progress-bar .pie.has-value.half-empty .right-side{display:none}:host([kul-is-radial]) .progress-bar .pie.has-value.half-full{clip:rect(auto, auto, auto, auto)}:host([kul-is-radial]) .progress-bar .pie.has-value.half-full .right-side{transform:rotate(180deg)}:host([kul-is-radial]) .progress-bar .pie .half-circle{height:1em;width:1em;border:0.1em solid var(--kul_progressbar_track_color);border-radius:50%;clip:rect(0, 0.5em, 1em, 0);left:0;position:absolute;top:0}:host([kul-is-radial]) .progress-bar__icon{height:0.75em;margin:0 0.15em;width:0.75em}:host([kul-is-radial]) .progress-bar__label{color:var(--kul_progressbar_text_color);cursor:default;display:flex;font-size:0.25em}:host([kul-is-radial]) .progress-bar__track{height:1em;width:1em;border:0.1em solid var(--kul_progressbar_track_color);border-radius:50%}:host([kul-is-radial]) .progress-bar__um{color:var(--kul_progressbar_text_color);font-size:0.75em;padding-bottom:0.75em}:host([kul-is-radial]) *,:host([kul-is-radial]) *:before,:host([kul-is-radial]) *:after{box-sizing:border-box}@keyframes running-stripes{0%{background-position:0 0}100%{background-position:3em 3em}}:host(.kul-animated) .progress-bar__percentage{animation:running-stripes 2s linear infinite;background-image:linear-gradient(-45deg, rgba(var(--kul_progressbar_text_color_rgb), 0.125) 25%, transparent 25%, transparent 50%, rgba(var(--kul_progressbar_text_color_rgb), 0.125) 50%, rgba(var(--kul_progressbar_text_color_rgb), 0.125) 75%, transparent 75%, transparent);background-size:3em 3em}:host(.kul-padded) .progress-bar{padding:0.5em;width:calc(100% - 1em)}:host(.kul-slim) #kul-component .progress-bar{--kul_progressbar_height:calc(\n    var(--kul-progressbar-height, 2.5em) * 0.5\n  );border-radius:9px}:host(.kul-slim) #kul-component .progress-bar__percentage{border-radius:9px;padding:0}:host(.kul-slim) #kul-component .progress-bar .pie .half-circle{border-width:0.05em}:host(.kul-slim) #kul-component .progress-bar__track{border-width:0.05em}:host(.kul-danger){--kul-progressbar-primary-color:var(--kul-danger-color);--kul-progressbar-text-on-primary-color:white}:host(.kul-info){--kul-progressbar-primary-color:var(--kul-info-color);--kul-progressbar-text-on-primary-color:white}:host(.kul-secondary){--kul-progressbar-primary-color:var(--kul-secondary-color);--kul-progressbar-text-on-primary-color:var(--kul-text-on-secondary-color)}:host(.kul-success){--kul-progressbar-primary-color:var(--kul-success-color);--kul-progressbar-text-on-primary-color:white}:host(.kul-warning){--kul-progressbar-primary-color:var(--kul-warning-color);--kul-progressbar-text-on-primary-color:white}";
 const KulProgressbarStyle0 = kulProgressbarCss;
@@ -3110,16 +3124,11 @@ const KulProgressbar = class {
         this.kulValue = 0;
     }
     get rootElement() { return getElement(this); }
-    /*-------------------------------------------------*/
-    /*       I n t e r n a l   V a r i a b l e s       */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Internal variables
     #kulManager = kulManagerInstance();
-    /*-------------------------------------------------*/
-    /*                   E v e n t s                   */
-    /*-------------------------------------------------*/
-    /**
-     * Describes event emitted.
-     */
+    //#endregion
+    //#region Events
     kulEvent;
     onKulEvent(e, eventType) {
         this.kulEvent.emit({
@@ -3129,9 +3138,8 @@ const KulProgressbar = class {
             originalEvent: e,
         });
     }
-    /*-------------------------------------------------*/
-    /*           P u b l i c   M e t h o d s           */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Public methods
     /**
      * Retrieves the debug information reflecting the current state of the component.
      * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves to a KulDebugLifecycleInfo object containing debug information.
@@ -3163,9 +3171,8 @@ const KulProgressbar = class {
             this.rootElement.remove();
         }, ms);
     }
-    /*-------------------------------------------------*/
-    /*           P r i v a t e   M e t h o d s         */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Private methods
     #prepIcon() {
         const path = getAssetPath(`./assets/svg/${this.kulIcon}.svg`);
         const style = {
@@ -3189,9 +3196,8 @@ const KulProgressbar = class {
     #prepRadialBar() {
         return (h("div", { class: 'progress-bar' }, this.#prepLabel(), h("div", { class: `pie ${this.kulValue ? 'has-value' : ''}  ${this.kulValue > 50 ? 'half-full' : 'half-empty'}` }, h("div", { class: "left-side half-circle" }), h("div", { class: "right-side half-circle" })), h("div", { class: "progress-bar__track" })));
     }
-    /*-------------------------------------------------*/
-    /*          L i f e c y c l e   H o o k s          */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Lifecycle hooks
     componentWillLoad() {
         this.#kulManager.theme.register(this);
     }
@@ -3210,7 +3216,7 @@ const KulProgressbar = class {
             ['--kul_progressbar_percentage_width']: `${this.kulValue}%`,
             ['--kul_progressbar_transform']: `rotate(${this.kulValue * 3.6}deg)`,
         };
-        return (h(Host, { key: 'd57cbc84d1dc6c0f991beab3458b01a05e8cbd31' }, this.kulStyle && (h("style", { key: 'f955bf5ed637cb3a42e09f9a038a4aa82ed28867', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: '4e3c5d7301832966304df31689a6e8a46a13e225', id: KUL_WRAPPER_ID, style: style }, this.kulIsRadial
+        return (h(Host, { key: '1de0f251a0947e91b040d2031559b09f6158521d' }, this.kulStyle && (h("style", { key: '2214e580571422fc10c58769ce022a17efb6bdfb', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: 'bebec6c7343c36e22a4436742ebbc6707dd6fba3', id: KUL_WRAPPER_ID, style: style }, this.kulIsRadial
             ? this.#prepRadialBar()
             : this.#prepProgressBar())));
     }

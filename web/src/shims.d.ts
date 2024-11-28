@@ -351,9 +351,9 @@ interface SlotInfo {
   colorOff?: string; // Color to render when it is not connected
   slot_index?: number;
 }
-interface Widget {
+interface Widget<W extends CustomWidgetName | ComfyWidgetName> {
   element?: DOMWidget;
-  type?: CustomWidgetName | ComfyWidgetName;
+  type?: W;
   name?: string;
   value?: any;
   options?: WidgetOptions;
@@ -379,3 +379,12 @@ interface ConnectionChangePayload {
 }
 
 type ComfyFolderTypes = 'input' | 'output' | 'temp';
+interface WidgetOptions<
+  V extends CustomWidgetDeserializedValuesMap<CustomWidgetName> = CustomWidgetDeserializedValuesMap<CustomWidgetName>,
+  S extends BaseWidgetState = BaseWidgetState,
+> {
+  hideOnZoom: boolean;
+  getState: () => S;
+  getValue: () => V;
+  setValue(value: string | V): void;
+}

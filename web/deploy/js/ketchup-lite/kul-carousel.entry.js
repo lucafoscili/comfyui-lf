@@ -1,20 +1,9 @@
-import { h, r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, F as Fragment, H as Host } from './index-53f95fee.js';
-import { k as kulManagerInstance, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-9e1be956.js';
+import { h, r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, F as Fragment, H as Host } from './index-7cf82e95.js';
+import { k as kulManagerInstance, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-72505221.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 
-/*-------------------------------------------------*/
-/*                    P r o p s                    */
-/*-------------------------------------------------*/
-var KulCarouselProps;
-(function (KulCarouselProps) {
-    KulCarouselProps["kulAutoPlay"] = "Enable or disable autoplay for the carousel.";
-    KulCarouselProps["kulData"] = "Actual data to carousel.";
-    KulCarouselProps["kulInterval"] = "Interval in milliseconds for autoplay.";
-    KulCarouselProps["kulShape"] = "Sets the type of shapes to compare.";
-    KulCarouselProps["kulStyle"] = "Sets a custom CSS style for the component.";
-})(KulCarouselProps || (KulCarouselProps = {}));
-
 const ACTIONS = {
+    //#region Autoplay
     autoplay: {
         start(adapter) {
             const carousel = adapter.get.carousel();
@@ -32,31 +21,54 @@ const ACTIONS = {
             }
         },
     },
+    //#endregion
+    //#region Next
     next: (adapter) => {
         const currentIndex = adapter.get.state.currentIndex();
         const totalSlides = adapter.get.totalSlides();
         adapter.set.state.currentIndex((currentIndex + 1) % totalSlides);
     },
+    //#endregion
+    //#region Previous
     previous: (adapter) => {
         const currentIndex = adapter.get.state.currentIndex();
         const totalSlides = adapter.get.totalSlides();
         adapter.set.state.currentIndex((currentIndex - 1 + totalSlides) % totalSlides);
     },
+    //#endregion
+    //#region ToSlide
     toSlide: (adapter, value) => {
         adapter.set.state.currentIndex(value);
     },
+    //#endregion
 };
 
 const BACK_ICON = 'chevron_left';
 const FORWARD_ICON = 'chevron_right';
 const COMPONENTS = {
+    //#region Back
     back: (adapter) => {
         return (h("kul-button", { class: "kul-full-height", id: BACK_ICON, kulIcon: "chevron_left", onClick: () => adapter.actions.previous(adapter), title: "View previous slide." }));
     },
+    //#endregion
+    //#region Forward
     forward: (adapter) => {
         return (h("kul-button", { class: "kul-full-height", id: BACK_ICON, kulIcon: FORWARD_ICON, onClick: () => adapter.actions.next(adapter), title: "View next slide." }));
     },
+    //#endregion
 };
+
+//#endregion
+//#region Props
+var KulCarouselProps;
+(function (KulCarouselProps) {
+    KulCarouselProps["kulAutoPlay"] = "Enable or disable autoplay for the carousel.";
+    KulCarouselProps["kulData"] = "Actual data to carousel.";
+    KulCarouselProps["kulInterval"] = "Interval in milliseconds for autoplay.";
+    KulCarouselProps["kulShape"] = "Sets the type of shapes to compare.";
+    KulCarouselProps["kulStyle"] = "Sets a custom CSS style for the component.";
+})(KulCarouselProps || (KulCarouselProps = {}));
+//#endregion
 
 const kulCarouselCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}@keyframes fade-in-grid{0%{display:none}1%{display:grid;opacity:0}100%{display:grid;opacity:1}}:host{display:block;font-family:var(--kul-font-family, sans-serif);height:100%;margin:auto;max-width:600px;overflow:hidden;position:relative;width:100%}#kul-component{height:100%;width:100%}.carousel{display:flex;height:100%;justify-content:center;position:relative;width:100%}.carousel:hover .carousel__indicators-wrapper{bottom:0;opacity:1}.carousel:hover .carousel__controls{width:100%}.carousel__controls{align-items:center;display:flex;height:100%;justify-content:space-between;opacity:0;position:absolute;top:0;transition:opacity 0.375s ease, width 0.375s ease-in;width:calc(100% + 100px)}.carousel__controls:hover{opacity:1}.carousel__indicator{background-color:var(--kul-title-color);border-radius:50%;cursor:pointer;height:8px;width:8px;margin:0 4px;transition:background-color 0.375s ease, opacity 0.375s ease}.carousel__indicator--active{background-color:var(--kul-primary-color);height:12px;width:12px}.carousel__indicator--small{height:6px;width:6px}.carousel__indicators{align-items:center;background:var(--kul-title-background-color);border-radius:16px;display:flex;justify-content:center;opacity:0.375;padding:8px;transition:opacity 0.375s ease;width:100%}.carousel__indicators:hover{opacity:1}.carousel__indicators-wrapper{bottom:-100%;display:flex;opacity:0;padding:8px 0;position:absolute;transition:bottom 0.2s ease-in, opacity 0.2s ease-in}.carousel__track{display:flex;height:100%;transition:transform 0.5s cubic-bezier(0.5, 0, 0.1, 1);will-change:transform;width:100%}.carousel__slide{align-items:center;display:flex;flex-shrink:0;height:100%;justify-content:center;width:100%}.carousel__chevron{color:var(--kul-title-color);cursor:pointer;font-size:12px;margin:0 6px;transition:transform 0.3s ease}.carousel__chevron--left{margin-right:8px}.carousel__chevron--right{margin-left:8px}.carousel__chevron:hover{transform:translateX(-3px)}.carousel__chevron--right:hover{transform:translateX(3px)}";
 const KulCarouselStyle0 = kulCarouselCss;
@@ -81,21 +93,16 @@ const KulCarousel = class {
         this.kulStyle = '';
     }
     get rootElement() { return getElement(this); }
-    /*-------------------------------------------------*/
-    /*       I n t e r n a l   V a r i a b l e s       */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Internal variables
     #interval;
     #kulManager = kulManagerInstance();
     #lastSwipeTime = 0;
     #swipeThrottleDelay = 300;
     #touchStartX = 0;
     #touchEndX = 0;
-    /*-------------------------------------------------*/
-    /*                   E v e n t s                   */
-    /*-------------------------------------------------*/
-    /**
-     * Describes event emitted.
-     */
+    //#endregion
+    //#region Events
     kulEvent;
     onKulEvent(e, eventType) {
         this.kulEvent.emit({
@@ -105,9 +112,8 @@ const KulCarousel = class {
             originalEvent: e,
         });
     }
-    /*-------------------------------------------------*/
-    /*                 W a t c h e r s                 */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Watchers
     async updateShapes() {
         try {
             this.shapes = this.#kulManager.data.cell.shapes.getAll(this.kulData);
@@ -116,9 +122,8 @@ const KulCarousel = class {
             this.#kulManager.debug.logs.new(this, 'Error updating shapes: ' + error, 'error');
         }
     }
-    /*-------------------------------------------------*/
-    /*           P u b l i c   M e t h o d s           */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Public methods
     /**
      * Fetches debug information of the component's current state.
      * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves with the debug information object.
@@ -169,9 +174,8 @@ const KulCarousel = class {
             this.rootElement.remove();
         }, ms);
     }
-    /*-------------------------------------------------*/
-    /*                   M e t h o d s                 */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Private methods
     #adapter = {
         actions: ACTIONS,
         components: COMPONENTS,
@@ -250,9 +254,8 @@ const KulCarousel = class {
         const decoratedShapes = this.#kulManager.data.cell.shapes.decorate(this.kulShape, this.shapes[this.kulShape], async (e) => this.onKulEvent(e, 'kul-event'), props).element;
         return (h("div", { class: "carousel__slide", "data-index": this.currentIndex }, h(Fragment, null, decoratedShapes[this.currentIndex])));
     }
-    /*-------------------------------------------------*/
-    /*          L i f e c y c l e   H o o k s          */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Lifecycle hooks
     componentWillLoad() {
         this.#kulManager.theme.register(this);
         this.updateShapes();
@@ -271,7 +274,7 @@ const KulCarousel = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: 'f6d944f678072f92251bfd4f49166e009ba6ea4c' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '6478c92b1df27d5454d5cb7b994970078116999d', id: KUL_WRAPPER_ID }, h("div", { key: '632040cdd1c5c342096eeaccbe5a40eec6f10dc7', class: "carousel", onTouchStart: (e) => (this.#touchStartX = e.touches[0].clientX), onTouchMove: () => {
+        return (h(Host, { key: 'c3159b31f6a979a23aa5975e3d2c5ff85a37cb1a' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'ab465a365a9cc2102e87010114a2594c2cbff10c', id: KUL_WRAPPER_ID }, h("div", { key: 'abd8f0df1b0681faa40b49f21bedf12bb789bf3a', class: "carousel", onTouchStart: (e) => (this.#touchStartX = e.touches[0].clientX), onTouchMove: () => {
                 const swipeDistance = this.#touchEndX - this.#touchStartX;
                 const swipeThreshold = 50;
                 const currentTime = performance.now();

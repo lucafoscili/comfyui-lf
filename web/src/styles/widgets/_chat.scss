@@ -1,0 +1,12 @@
+@use '../mixins/mixins' as mixins;
+
+.lf-chat {
+  & {
+    @include mixins.lf-root();
+  }
+
+  &__widget {
+    height: 100%;
+    width: 100%;
+  }
+}

@@ -1,53 +1,65 @@
-import { handleUpload } from '../helpers/upload';
+import { EV_HANDLERS } from '../helpers/upload';
 import { KulEventName } from '../types/events/events';
 import {
-  CustomWidgetDeserializedValuesMap,
-  CustomWidgetName,
-  NormalizeValueCallback,
-  TagName,
-} from '../types/widgets/_common';
-import { UploadCSS, UploadFactory } from '../types/widgets/upload';
+  UploadCSS,
+  UploadFactory,
+  UploadNormalizeCallback,
+  UploadState,
+} from '../types/widgets/upload';
+import { CustomWidgetName, TagName } from '../types/widgets/widgets';
 import { createDOMWidget, normalizeValue } from '../utils/common';
 
-//#region Upload
+const STATE = new WeakMap<HTMLDivElement, UploadState>();
+
 export const uploadFactory: UploadFactory = {
-  options: (upload) => {
+  //#region Options
+  options: (wrapper) => {
     return {
       hideOnZoom: true,
-      getComp() {
-        return upload;
-      },
+      getState: () => STATE.get(wrapper),
       getValue() {
-        return upload.dataset.files;
+        const { files } = STATE.get(wrapper);
+
+        return files || '';
       },
       setValue(value) {
-        const callback: NormalizeValueCallback<
-          CustomWidgetDeserializedValuesMap<typeof CustomWidgetName.upload> | string
-        > = (v) => {
-          upload.dataset.files = v;
+        const state = STATE.get(wrapper);
+
+        const callback: UploadNormalizeCallback = (v) => {
+          state.files = v;
         };
 
         normalizeValue(value, callback, CustomWidgetName.upload);
       },
     };
   },
+  //#endregion
 
+  //#region Render
   render: (node) => {
     const wrapper = document.createElement(TagName.Div);
     const content = document.createElement(TagName.Div);
     const upload = document.createElement(TagName.KulUpload);
-    const options = uploadFactory.options(upload);
+
+    upload.classList.add(UploadCSS.Widget);
+    upload.addEventListener(KulEventName.KulUpload, (e) =>
+      EV_HANDLERS.upload(STATE.get(wrapper), e),
+    );
 
     content.classList.add(UploadCSS.Content);
-    upload.classList.add(UploadCSS.Widget);
-    upload.addEventListener(KulEventName.KulUpload, (e) => {
-      handleUpload(e, upload);
-    });
-
     content.appendChild(upload);
+
     wrapper.appendChild(content);
+
+    const options = uploadFactory.options(wrapper);
+
+    STATE.set(wrapper, { files: '', node, upload, wrapper });
 
     return { widget: createDOMWidget(CustomWidgetName.upload, wrapper, node, options) };
   },
+  //#endregion
+
+  //#region State
+  state: STATE,
+  //#endregion
 };
-//#endregion
