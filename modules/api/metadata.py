@@ -49,6 +49,7 @@ async def clear_model_info(_):
     except Exception as e:
         return web.Response(status=500, text=f"Error: {str(e)}")
 # endregion
+
 # region save-metadata
 @PromptServer.instance.routes.post(f"{API_ROUTE_PREFIX}/save-metadata")
 async def save_model_info(request):
@@ -90,6 +91,7 @@ async def save_model_info(request):
     except Exception as e:
         return web.Response(status=500, text=f"Error: {str(e)}")
 # endregion
+
 # region update-metadata-cover
 @PromptServer.instance.routes.post(f"{API_ROUTE_PREFIX}/update-metadata-cover")
 async def update_metadata_cover(request):

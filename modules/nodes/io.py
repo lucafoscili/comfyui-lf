@@ -116,6 +116,7 @@ class LF_LoadFileOnce:
 
         return (file, file_name, file, file_name)
 # endregion
+
 # region LF_LoadImages
 class LF_LoadImages:
     @classmethod
@@ -248,6 +249,7 @@ class LF_LoadImages:
 
         return (image_batch[0], image_list, file_names, output_creation_dates, index, selected_image, selected_index, selected_name)
 # endregion
+
 # region LF_LoadLocalJSON
 class LF_LoadLocalJSON:
     @classmethod
@@ -296,6 +298,7 @@ class LF_LoadLocalJSON:
 
         return (data,)
 # endregion
+
 # region LF_LoadMetadata
 class LF_LoadMetadata:
     @classmethod
@@ -357,6 +360,7 @@ class LF_LoadMetadata:
 
         return (metadata_list, metadata_list)
 # endregion
+
 # region LF_RegionExtractor
 class LF_RegionExtractor:
     @classmethod
@@ -486,6 +490,7 @@ class LF_RegionExtractor:
 
         return (regions_list, regions_list)
 # endregion
+
 # region LF_SaveImageForCivitAI
 class LF_SaveImageForCivitAI:
     @classmethod
@@ -606,6 +611,7 @@ class LF_SaveImageForCivitAI:
 
         return (file_names, civitai_metadata)
 # endregion
+
 # region LF_SaveJSON
 class LF_SaveJSON:
     @classmethod
@@ -667,6 +673,7 @@ class LF_SaveJSON:
  
         return (json_data,)
 # endregion
+
 # region LF_SaveMarkdown
 class LF_SaveMarkdown:
     @classmethod
@@ -730,6 +737,7 @@ class LF_SaveMarkdown:
 
         return (markdown_text,)
 # endregion
+
 NODE_CLASS_MAPPINGS = {
     "LF_LoadAndEditImages": LF_LoadAndEditImages,
     "LF_LoadFileOnce": LF_LoadFileOnce,

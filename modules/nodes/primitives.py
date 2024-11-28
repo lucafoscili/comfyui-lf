@@ -75,6 +75,7 @@ class LF_Boolean:
 
         return (boolean, [boolean])
 # endregion
+
 # region LF_DisplayBoolean
 class LF_DisplayBoolean:
     @classmethod 
@@ -121,6 +122,7 @@ class LF_DisplayBoolean:
 
         return (kwargs.get("boolean"),)
 # endregion
+
 # region LF_DisplayFloat
 class LF_DisplayFloat:
     @classmethod 
@@ -167,6 +169,7 @@ class LF_DisplayFloat:
 
         return (kwargs.get("float"),)
 # endregion
+
 # region LF_DisplayInteger
 class LF_DisplayInteger:
     @classmethod 
@@ -213,6 +216,7 @@ class LF_DisplayInteger:
 
         return (kwargs.get("integer"),)
 # endregion
+
 # region LF_DisplayPrimitiveAsJSON
 class LF_DisplayPrimitiveAsJSON:
     @classmethod
@@ -302,6 +306,7 @@ class LF_DisplayPrimitiveAsJSON:
 
         return (dataset,)
 # endregion
+
 # region LF_DisplayString
 class LF_DisplayString:
     @classmethod 
@@ -348,6 +353,7 @@ class LF_DisplayString:
 
         return (kwargs.get("string"),)
 # endregion
+
 # region LF_Float
 class LF_Float:
     @classmethod 
@@ -414,6 +420,7 @@ class LF_Float:
 
         return (float_input, [float_input])
 # endregion
+
 # region LF_Integer
 class LF_Integer:
     @classmethod 
@@ -480,6 +487,7 @@ class LF_Integer:
 
         return (integer_input, [integer_input])
 # endregion
+
 # region LF_RandomBoolean
 class LF_RandomBoolean:
     @classmethod
@@ -530,6 +538,7 @@ class LF_RandomBoolean:
     def IS_CHANGED(cls, **kwargs):
         return float("NaN")
 # endregion
+
 # region LF_Something2Number
 class LF_Something2Number:
     @classmethod
@@ -637,6 +646,7 @@ class LF_Something2Number:
 
         return (float_values, integer_values, float_sum, integer_sum, float_values, integer_values)
 # endregion
+
 # region LF_Something2String
 class LF_Something2String:
     @classmethod
@@ -676,7 +686,6 @@ class LF_Something2String:
     input_keys = ["json", "boolean", "float", "integer"]
     combinations_list = []
 
-    # Generate all combinations of input keys
     for r in range(1, len(input_keys) + 1):
         for combo in combinations(input_keys, r):
             combo_name = "_".join(combo)
@@ -736,6 +745,7 @@ class LF_Something2String:
 
         return tuple(results)
 # endregion
+
 # region LF_String
 class LF_String:
     @classmethod 
@@ -802,6 +812,7 @@ class LF_String:
 
         return (string_input, [string_input])
 # endregion
+
 # region LF_WallOfText
 class LF_WallOfText:
     @classmethod 
@@ -906,6 +917,7 @@ class LF_WallOfText:
 
         return (wall_of_text, wall_of_text)
 # endregion
+
 NODE_CLASS_MAPPINGS = {
     "LF_Boolean": LF_Boolean,
     "LF_DisplayBoolean": LF_DisplayBoolean,

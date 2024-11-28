@@ -39,6 +39,7 @@ export const NODE_WIDGET_MAP = {
     LF_IsLandscape: [CustomWidgetName.tree],
     LF_KeywordCounter: [CustomWidgetName.countBarChart],
     LF_KeywordToggleFromJSON: [CustomWidgetName.chip],
+    LF_Line: [CustomWidgetName.compare],
     LF_LLMChat: [CustomWidgetName.chat],
     LF_LLMMessenger: [CustomWidgetName.messenger],
     LF_LoadAndEditImages: [CustomWidgetName.imageEditor],

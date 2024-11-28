@@ -51,6 +51,7 @@ def base64_to_tensor(base64_str):
     
     return img_tensor
 # endregion
+
 # region cleanse_lora_tag
 def cleanse_lora_tag(lora_tag: str, separator: str):
     """
@@ -89,6 +90,7 @@ def cleanse_lora_tag(lora_tag: str, separator: str):
     
     return keyword_str
 # endregion
+
 # region clean_prompt
 def clean_prompt(prompt: str):
     """
@@ -102,6 +104,7 @@ def clean_prompt(prompt: str):
     """
     return re.sub(r'(embedding:)?(.*?)(\.pt|\.pth|\.sft|\.safetensors)?', r'\2', prompt).strip()
 # endregion
+
 # region count_words_in_comma_separated_string
 def count_words_in_comma_separated_string(input_string: str):
     """
@@ -117,6 +120,7 @@ def count_words_in_comma_separated_string(input_string: str):
     word_count = len(words_list)
     return word_count
 # endregion
+
 # region convert_to_boolean
 def convert_to_boolean(text):
     """
@@ -137,6 +141,7 @@ def convert_to_boolean(text):
         return False
     return None
 # endregion
+
 # region convert_to_float
 def convert_to_float(text):
     """
@@ -153,6 +158,7 @@ def convert_to_float(text):
     except ValueError:
         return None
 # endregion
+
 # region convert_to_int
 def convert_to_int(text):
     """
@@ -169,6 +175,7 @@ def convert_to_int(text):
     except ValueError:
         return None
 # endregion
+
 # region convert_to_json
 def convert_to_json(text):
     """
@@ -185,6 +192,7 @@ def convert_to_json(text):
     except (json.JSONDecodeError, TypeError):
         return None
 # endregion
+
 # region create_compare_node
 def create_compare_node(source: str, target: str, index: int):
     """
@@ -208,6 +216,7 @@ def create_compare_node(source: str, target: str, index: int):
     }
     return node
 # endregion
+
 # region create_dummy_image_tensor
 def create_dummy_image_tensor():
     """
@@ -226,6 +235,7 @@ def create_dummy_image_tensor():
     
     return img_tensor.unsqueeze(0)
 # endregion
+
 # region create_history_node
 def create_history_node(value: str, nodes: list[dict]):
     """
@@ -256,6 +266,7 @@ def create_history_node(value: str, nodes: list[dict]):
 
     return
 # endregion
+
 # region create_masonry_node
 def create_masonry_node(filename: str, url: str, index: int):
     """
@@ -278,6 +289,7 @@ def create_masonry_node(filename: str, url: str, index: int):
     }
     return node
 # endregion
+
 # region create_resize_node
 def create_resize_node(height_s: int, width_s: int, height_t: int, width_t: int, index: int):
     """
@@ -298,6 +310,7 @@ def create_resize_node(height_s: int, width_s: int, height_t: int, width_t: int,
     }
     return node
 # endregion
+
 # region extract_jpeg_metadata
 def extract_jpeg_metadata(pil_image, file_name):
     """
@@ -353,6 +366,7 @@ def extract_jpeg_metadata(pil_image, file_name):
     except Exception as e:
         return {"error": f"An unexpected error occurred while extracting EXIF data from {file_name}: {str(e)}"}
 # endregion
+
 # region extract_png_metadata
 def extract_png_metadata(pil_image):
     """
@@ -373,6 +387,7 @@ def extract_png_metadata(pil_image):
 
     return metadata
 # endregion
+
 # region find_checkpoint_image
 def find_checkpoint_image(checkpoint_path):
     """
@@ -392,6 +407,7 @@ def find_checkpoint_image(checkpoint_path):
             return image_path
     return None
 # endregion
+
 # region filter_list
 def filter_list(filter, list):
     """
@@ -407,6 +423,7 @@ def filter_list(filter, list):
     normalized_filter = filter.replace('\\', '/')
     return [model for model in list if fnmatch.fnmatch(model.replace('\\', '/'), normalized_filter)]
 # endregion
+
 # region get_embedding_hashes
 def get_embedding_hashes(embeddings: str, analytics_dataset: dict):
     """
@@ -442,6 +459,7 @@ def get_embedding_hashes(embeddings: str, analytics_dataset: dict):
                     emb_hashes.append(f"{emb_name}: Unknown")
     return emb_hashes
 # endregion
+
 # region get_comfy_dir
 def get_comfy_dir(folder: str):
     """
@@ -486,6 +504,7 @@ def get_comfy_dir(folder: str):
     elif folder == "user":
         return get_user_directory()
 # endregion
+
 # region get_comfy_list
 def get_comfy_list(folder: str):
     """
@@ -518,6 +537,7 @@ def get_comfy_list(folder: str):
     """    
     return get_filename_list(folder)
 # endregion
+
 # region get_lora_hashes
 def get_lora_hashes(lora_tags: str, analytics_dataset: dict):
     """
@@ -552,6 +572,7 @@ def get_lora_hashes(lora_tags: str, analytics_dataset: dict):
                 lora_hashes.append(f"{lora_name}: Unknown")
     return lora_hashes
 # endregion
+
 # region get_random_parameter
 def get_random_parameter(length: int = 8) -> str:
     """
@@ -565,6 +586,7 @@ def get_random_parameter(length: int = 8) -> str:
     """
     return '?' + ''.join(random.choices(string.ascii_letters + string.digits, k=length))
 # endregion
+
 # region get_resource_url
 def get_resource_url(subfolder: str, filename: str, resource_type: str = 'output'):
     """
@@ -587,6 +609,7 @@ def get_resource_url(subfolder: str, filename: str, resource_type: str = 'output
     
     return f"/view?{'&'.join(params)}"
 # endregion
+
 # region get_sha256
 def get_sha256(file_path: str):
     """
@@ -618,6 +641,7 @@ def get_sha256(file_path: str):
 
     return sha256_value.hexdigest()
 # endregion
+
 # region handle_response
 def handle_response(response: dict, method: str = "GET"):
     """
@@ -651,6 +675,7 @@ def handle_response(response: dict, method: str = "GET"):
                 
         return response.status_code, method, "Whoops! Something went wrong."
 # endregion
+
 # region hex_to_tuple
 def hex_to_tuple(color: str):
     """
@@ -658,6 +683,7 @@ def hex_to_tuple(color: str):
     """
     return tuple(int(color.lstrip('#')[i:i+2], 16) for i in (0, 2, 4))
 # endregion
+
 # region not_none
 def is_none(input):
     """
@@ -674,6 +700,7 @@ def is_none(input):
     """
     return bool(input == None or str(input) == "None")
 # endregion
+
 # region normalize_input_image
 def normalize_input_image(image: list[torch.Tensor] | torch.Tensor):
     """
@@ -709,6 +736,7 @@ def normalize_input_image(image: list[torch.Tensor] | torch.Tensor):
     else:
         raise TypeError("Input must be a torch.Tensor or list.")
 # endregion
+
 # region normalize_json_input
 def normalize_json_input(input):
     """
@@ -784,6 +812,7 @@ def normalize_json_input(input):
     else:
         raise TypeError(f"Unsupported input type: {type(input)}") 
 # endregion
+
 # region normalize_input_list
 def normalize_input_list(input):
     """
@@ -805,6 +834,7 @@ def normalize_input_list(input):
         
     return None
 # endregion
+
 # region normalize_list_item
 def normalize_list_item(l: list, i: int):
     """
@@ -824,6 +854,7 @@ def normalize_list_item(l: list, i: int):
     """
     return l[i] if isinstance(l, list) and i < len(l) else l[0]
 # endregion
+
 # region normalize_list_to_value
 def normalize_list_to_value(input):
     """
@@ -843,6 +874,7 @@ def normalize_list_to_value(input):
         return input[0]
     return input
 # endregion
+
 # region normalize_output_image
 def normalize_output_image(image_input):
     """
@@ -900,6 +932,7 @@ def normalize_output_image(image_input):
 
     return batch_list, image_list
 # endregion
+
 # region not_none
 def not_none(input):
     """
@@ -916,6 +949,7 @@ def not_none(input):
     """
     return bool(input != None and str(input) != "None")
 # endregion
+
 # region numpy_to_tensor
 def numpy_to_tensor(numpy_array):
     """
@@ -944,6 +978,7 @@ def numpy_to_tensor(numpy_array):
         print(f"Error converting NumPy array to tensor: {e}")
         raise
 # endregion
+
 # region pil_to_tensor
 def pil_to_tensor(image):
     """
@@ -968,6 +1003,7 @@ def pil_to_tensor(image):
     
     return tensor
 # endregion
+
 # region prepare_model_dataset
 def prepare_model_dataset (model_name, model_hash, model_base64, model_path):
     """
@@ -1014,6 +1050,7 @@ def prepare_model_dataset (model_name, model_hash, model_base64, model_path):
 
     return dataset
 # endregion
+
 # region process_and_save_image
 def process_and_save_image(
     images: list[torch.Tensor],
@@ -1048,6 +1085,7 @@ def process_and_save_image(
 
     return processed_images
 # endregion
+
 # region process_model
 def process_model(model_type, model_name, folder):
     """
@@ -1118,6 +1156,7 @@ def process_model(model_type, model_name, folder):
         "saved_info": saved_info
     }
 # endregion
+
 # region randomize_from_history
 def randomize_from_history(nodes: list[dict], seed: int) -> bool:
     """
@@ -1137,6 +1176,7 @@ def randomize_from_history(nodes: list[dict], seed: int) -> bool:
     random.seed(seed)
     return random.choice([value for value in values])
 # endregion
+
 # region resize_and_crop_image
 def resize_and_crop_image(image_tensor: torch.Tensor, resize_method: str, target_height: int, target_width: int, resize_mode: str, pad_color: tuple):
     """
@@ -1192,6 +1232,7 @@ def resize_and_crop_image(image_tensor: torch.Tensor, resize_method: str, target
 
     return output_image.permute(0, 2, 3, 1)
 # endregion
+
 # region resize_image
 def resize_image(image_tensor: torch.Tensor, resize_method: str, longest_side: bool, size: int):
     """
@@ -1234,6 +1275,7 @@ def resize_image(image_tensor: torch.Tensor, resize_method: str, longest_side: b
 
     return resized_image
 # endregion
+
 # region resize_to_square
 def resize_to_square(image_tensor: torch.Tensor, square_size: int, resample_method: str, crop_position: str):
     """
@@ -1270,6 +1312,7 @@ def resize_to_square(image_tensor: torch.Tensor, square_size: int, resample_meth
 
     return cropped_img
 # endregion
+
 # region resolve_filepath
 def resolve_filepath(filename_prefix: str = None, base_output_path: str = None, add_timestamp: bool = False, extension: str = "PNG", add_counter: bool = True, image: torch.Tensor = None) -> str:
     """
@@ -1326,6 +1369,7 @@ def resolve_filepath(filename_prefix: str = None, base_output_path: str = None, 
 
     return output_file, subfolder, filename
 # endregion
+
 # region resolve_url
 def resolve_url(api_url: str):
     parsed_url = urlparse(api_url)
@@ -1337,6 +1381,7 @@ def resolve_url(api_url: str):
 
     return filename, file_type, subfolder
 # endregion
+
 # region tensor_to_base64
 def tensor_to_base64(tensors: list[torch.Tensor] | torch.Tensor):
     """
@@ -1365,6 +1410,7 @@ def tensor_to_base64(tensors: list[torch.Tensor] | torch.Tensor):
         return [convert_single_tensor(tensor) for tensor in tensors]
     return convert_single_tensor(tensors)
 # endregion
+
 # region tensor_to_bytes
 def tensor_to_bytes(tensor: torch.Tensor, format: str):
     """
@@ -1381,6 +1427,7 @@ def tensor_to_bytes(tensor: torch.Tensor, format: str):
     img.save(buffer, format)
     return buffer.getvalue()
 # endregion
+
 # region tensor_to_numpy
 def tensor_to_numpy(image: torch.Tensor, threeD: bool = False, dtype: type = np.uint8) -> np.ndarray:
     """
@@ -1415,6 +1462,7 @@ def tensor_to_numpy(image: torch.Tensor, threeD: bool = False, dtype: type = np.
         print(f"Error converting tensor to NumPy array: {e}")
         raise
 # endregion
+
 # region tensor_to_pil
 def tensor_to_pil(tensor: torch.Tensor):
     """
@@ -1431,3 +1479,4 @@ def tensor_to_pil(tensor: torch.Tensor):
     except Exception as e:
         print(f"Error converting tensor to PIL image: {e}")
         raise
+# endregion

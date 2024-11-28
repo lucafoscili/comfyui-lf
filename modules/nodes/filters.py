@@ -91,6 +91,7 @@ class LF_Brightness:
 
         return (batch_list[0], image_list)
 # endregion
+
 # region LF_Clarity
 class LF_Clarity:
     @classmethod
@@ -168,6 +169,7 @@ class LF_Clarity:
 
         return (batch_list[0], image_list)
 # endregion
+
 # region LF_Contrast
 class LF_Contrast:
     @classmethod
@@ -242,6 +244,7 @@ class LF_Contrast:
 
         return (batch_list[0], image_list)
 # endregion
+
 # region LF_Desaturation
 class LF_Desaturation:
     @classmethod
@@ -326,6 +329,7 @@ class LF_Desaturation:
 
         return (batch_list[0], image_list)
 # endregion
+
 # region LF_GaussianBlur
 class LF_GaussianBlur:
     @classmethod
@@ -394,6 +398,7 @@ class LF_GaussianBlur:
 
         return (batch_list[0], image_list)
 # endregion
+
 # region LF_Line
 class LF_Line:
     @classmethod
@@ -522,6 +527,7 @@ class LF_Line:
 
         return (batch_list[0], image_list)
 # endregion
+
 # region LF_Vignette
 class LF_Vignette:
     @classmethod
@@ -602,6 +608,7 @@ class LF_Vignette:
 
         return (batch_list[0], image_list)
 # endregion
+
 NODE_CLASS_MAPPINGS = {
     "LF_Brightness": LF_Brightness,
     "LF_Clarity": LF_Clarity,

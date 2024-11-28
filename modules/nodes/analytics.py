@@ -119,6 +119,7 @@ class LF_ColorAnalysis:
             mapping[r] = s
         return mapping.tolist()
 # endregion
+
 # region LF_ImageHistogram
 class LF_ImageHistogram:
     @classmethod
@@ -214,6 +215,7 @@ class LF_ImageHistogram:
 
         return (b[0], l, datasets)
 # endregion
+
 # region LF_KeywordCounter
 class LF_KeywordCounter:
     @classmethod
@@ -298,6 +300,7 @@ class LF_KeywordCounter:
 
         return (chart_dataset, chip_dataset)
 # endregion
+
 # region LF_LUTGeneration
 class LF_LUTGeneration:
     @classmethod
@@ -367,6 +370,7 @@ class LF_LUTGeneration:
 
         return (lut_datasets,)
 # endregion
+
 # region LF_UpdateUsageStatistics
 class LF_UpdateUsageStatistics:
     @classmethod
@@ -476,6 +480,7 @@ class LF_UpdateUsageStatistics:
 
         return (actual_path, dataset)
 # endregion
+
 # region LF_UsageStatistics
 class LF_UsageStatistics:
     @classmethod
@@ -496,6 +501,7 @@ class LF_UsageStatistics:
     def on_exec(self, **kwargs: dict):
         return ()
 # endregion
+
 NODE_CLASS_MAPPINGS = {
     "LF_ColorAnalysis": LF_ColorAnalysis,
     "LF_ImageHistogram": LF_ImageHistogram,

@@ -85,6 +85,7 @@ export declare enum NodeName {
     isLandscape = "LF_IsLandscape",
     keywordCounter = "LF_KeywordCounter",
     keywordToggleFromJson = "LF_KeywordToggleFromJSON",
+    line = "LF_Line",
     llmChat = "LF_LLMChat",
     llmMessenger = "LF_LLMMessenger",
     loadAndEditImages = "LF_LoadAndEditImages",

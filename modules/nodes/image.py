@@ -104,6 +104,7 @@ class LF_BlurImages:
 
         return (image_batch[0], image_list, blurred_file_names, len(image_list))
 # endregion
+
 # region LF_CompareImages
 class LF_CompareImages:
     @classmethod
@@ -181,6 +182,7 @@ class LF_CompareImages:
 
         return (image_batch[0], image_list, all_images_list, dataset)
 # endregion
+
 # region LF_ImagesEditingBreakpoint
 class LF_ImagesEditingBreakpoint:
     @classmethod
@@ -273,6 +275,7 @@ class LF_ImagesEditingBreakpoint:
 
         return (edited_batch_list[0], edited_image_list, batch_list[0], image_list)      
 # endregion
+
 # region LF_ImagesSlideshow
 class LF_ImagesSlideshow:
     @classmethod
@@ -327,6 +330,7 @@ class LF_ImagesSlideshow:
         
         return (batch_list[0], image_list)
 # endregion
+
 # region LF_LUTApplication
 class LF_LUTApplication:
     @classmethod
@@ -426,6 +430,7 @@ class LF_LUTApplication:
 
         return (image_batch[0], image_list)
 # endregion
+
 # region LF_MultipleImageResizeForWeb
 class LF_MultipleImageResizeForWeb:
     @classmethod
@@ -539,6 +544,7 @@ class LF_MultipleImageResizeForWeb:
 
         return (image_batch[0], image_list, output_file_names, output_file_names, output_file_names_with_dir, dataset)
 # endregion
+
 # region LF_ResizeImageByEdge
 class LF_ResizeImageByEdge:
     @classmethod
@@ -625,6 +631,7 @@ class LF_ResizeImageByEdge:
 
         return (image_batch[0], image_list, num_resized)
 # endregion
+
 # region LF_ResizeImageToDimension
 class LF_ResizeImageToDimension:
     @classmethod
@@ -722,6 +729,7 @@ class LF_ResizeImageToDimension:
 
         return (image_batch[0], image_list, num_resized)
 # endregion
+
 # region LF_ResizeImageToSquare
 class LF_ResizeImageToSquare:
     @classmethod
@@ -808,6 +816,7 @@ class LF_ResizeImageToSquare:
 
         return (image_batch[0], image_list, num_resized)
 # endregion
+
 # region LF_ViewImages
 class LF_ViewImages:
     @classmethod
@@ -862,6 +871,7 @@ class LF_ViewImages:
         
         return (batch_list[0], image_list)
 # endregion
+
 NODE_CLASS_MAPPINGS = {
     "LF_BlurImages": LF_BlurImages,
     "LF_CompareImages": LF_CompareImages,

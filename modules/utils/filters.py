@@ -42,6 +42,7 @@ def brightness_effect(image: torch.Tensor, brightness_strength: float, gamma: fl
 
     return final_tensor
 # endregion
+
 # region clarity_effect
 def clarity_effect(image: torch.Tensor, clarity_strength: float, sharpen_amount: float, blur_kernel_size: int) -> torch.Tensor:
     """
@@ -74,6 +75,7 @@ def clarity_effect(image: torch.Tensor, clarity_strength: float, sharpen_amount:
     return numpy_to_tensor(final_image)
 
 # endregion
+
 # region contrast_effect
 def contrast_effect(image: torch.Tensor, contrast_strength: float, midpoint: float, localized_contrast: bool) -> torch.Tensor:
     """
@@ -110,6 +112,7 @@ def contrast_effect(image: torch.Tensor, contrast_strength: float, midpoint: flo
     final_tensor = torch.tensor(adjusted_image, dtype=image.dtype, device=image.device)
     return final_tensor
 # endregion
+
 # region desaturate_effect
 def desaturate_effect(image: torch.Tensor, global_level: float, channel_levels: list[float]) -> torch.Tensor:
     """
@@ -134,6 +137,7 @@ def desaturate_effect(image: torch.Tensor, global_level: float, channel_levels: 
 
     return torch.stack([desaturated_r, desaturated_g, desaturated_b], dim=-1)
 # endregion
+
 # region gaussian_blur_effect
 def gaussian_blur_effect(image: torch.Tensor, blur_kernel_size: int, blur_sigma: float) -> torch.Tensor:
     """
@@ -155,6 +159,7 @@ def gaussian_blur_effect(image: torch.Tensor, blur_kernel_size: int, blur_sigma:
 
     return numpy_to_tensor(blurred_image)
 # endregion
+
 # region line_effect
 def line_effect(
     image: torch.Tensor,
@@ -218,6 +223,7 @@ def line_effect(
     blended_image = blend_with_alpha(image.squeeze(0), rgb, alpha_mask)
     return blended_image.unsqueeze(0)
 # endregion
+
 # region vignette_effect
 def vignette_effect(image: torch.Tensor, intensity: float, radius: float, shape: str, color: str = '000000') -> torch.Tensor:
     """

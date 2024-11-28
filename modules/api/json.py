@@ -27,6 +27,7 @@ async def get_json_data(request):
     except Exception as e:
         return web.Response(status=500, text=f"Error: {str(e)}")
 # endregion
+
 # region update-json
 @PromptServer.instance.routes.post(f"{API_ROUTE_PREFIX}/update-json")
 async def update_json_data(request):

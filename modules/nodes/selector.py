@@ -101,6 +101,7 @@ class LF_CheckpointSelector:
     def VALIDATE_INPUTS(self, **kwargs):
          return True
 # endregion
+
 # region LF_EmbeddingSelector
 class LF_EmbeddingSelector:
     initial_list = get_comfy_list("embeddings")
@@ -224,6 +225,7 @@ class LF_EmbeddingSelector:
     def VALIDATE_INPUTS(self, **kwargs):
          return True
 # endregion
+
 # region LF_LoraAndEmbeddingSelector
 class LF_LoraAndEmbeddingSelector:
     initial_emb_list = get_comfy_list("embeddings")
@@ -377,6 +379,7 @@ class LF_LoraAndEmbeddingSelector:
     def VALIDATE_INPUTS(self, **kwargs):
          return True
 # endregion
+
 # region LF_LoraSelector
 class LF_LoraSelector:
     initial_list = get_comfy_list("loras")
@@ -500,6 +503,7 @@ class LF_LoraSelector:
     def VALIDATE_INPUTS(self, **kwargs):
          return True
 # endregion
+
 # region LF_SamplerSelector
 class LF_SamplerSelector:
     @classmethod
@@ -577,6 +581,7 @@ class LF_SamplerSelector:
 
         return (sampler, sampler)
 # endregion
+
 # region LF_SchedulerSelector
 class LF_SchedulerSelector:
     @classmethod
@@ -652,6 +657,7 @@ class LF_SchedulerSelector:
 
         return (scheduler, scheduler)
 # endregion
+
 # region LF_UpscaleModelSelector
 class LF_UpscaleModelSelector:
     initial_list = get_comfy_list("upscale_models")
@@ -729,6 +735,7 @@ class LF_UpscaleModelSelector:
 
         return (upscale_model, upscale_model)
 # endregion
+
 # region LF_VAESelector
 class LF_VAESelector:
     initial_list = get_comfy_list("vae")
@@ -806,6 +813,7 @@ class LF_VAESelector:
 
         return (vae, vae)
 # endregion
+
 NODE_CLASS_MAPPINGS = {
     "LF_CheckpointSelector": LF_CheckpointSelector,
     "LF_EmbeddingSelector": LF_EmbeddingSelector,
