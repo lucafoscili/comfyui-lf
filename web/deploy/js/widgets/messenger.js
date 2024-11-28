@@ -20,13 +20,15 @@ export const messengerFactory = {
                 };
             },
             setValue(value) {
-                const { elements } = STATE.get(wrapper);
+                const state = STATE.get(wrapper);
+                const { elements } = state;
                 const { messenger, placeholder } = elements;
                 const callback = (_, u) => {
                     const { config, dataset } = u.parsedJson;
                     messenger.kulData = dataset;
                     if (isValidObject(config)) {
                         messenger.kulValue = config;
+                        state.config = config;
                     }
                     placeholder.classList.add(MessengerCSS.PlaceholderHidden);
                 };

@@ -6,13 +6,10 @@ export const EV_HANDLERS = {
   messenger: (state: MessengerState, e: CustomEvent<KulMessengerEventPayload>) => {
     const { eventType, config } = e.detail;
 
-    const { elements } = state;
-    const { messenger } = elements;
-
     switch (eventType) {
       case 'save':
         if (config && typeof config === 'object') {
-          messenger.dataset.config = JSON.stringify(config);
+          state.config = config;
         }
         break;
     }

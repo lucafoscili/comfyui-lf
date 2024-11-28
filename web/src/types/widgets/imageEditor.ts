@@ -46,8 +46,8 @@ export interface ImageEditorState extends BaseWidgetState {
   filter: ImageEditorFilter;
   filterType: ImageEditorFilterType;
   update: {
-    preview: (state: ImageEditorState) => Promise<void>;
-    snapshot: (state: ImageEditorState, addSnapshot: true) => Promise<void>;
+    preview: () => Promise<void>;
+    snapshot: () => Promise<void>;
   };
 }
 //#endregion

@@ -29,7 +29,8 @@ export const messengerFactory: MessengerFactory = {
         };
       },
       setValue(value) {
-        const { elements } = STATE.get(wrapper);
+        const state = STATE.get(wrapper);
+        const { elements } = state;
         const { messenger, placeholder } = elements;
 
         const callback: MessengerNormalizeCallback = (_, u) => {
@@ -38,6 +39,7 @@ export const messengerFactory: MessengerFactory = {
 
           if (isValidObject(config)) {
             messenger.kulValue = config;
+            state.config = config;
           }
 
           placeholder.classList.add(MessengerCSS.PlaceholderHidden);

@@ -1,13 +1,13 @@
 import { KulButtonEventPayload, KulCanvasEventPayload, KulImageviewerEventPayload, KulSliderEventPayload, KulTextfieldEventPayload, KulToggleEventPayload } from '../types/ketchup-lite/components';
 import { KulDataColumn, KulDataDataset, KulDataNode } from '../types/ketchup-lite/managers/kul-data/kul-data-declarations';
-import { ImageEditorActionButtons, ImageEditorControlConfig, ImageEditorSliderConfig, ImageEditorState, ImageEditorStatus, ImageEditorTextfieldConfig, ImageEditorToggleConfig, ImageEditorUpdateCallback } from '../types/widgets/imageEditor';
+import { ImageEditorActionButtons, ImageEditorControlConfig, ImageEditorSliderConfig, ImageEditorState, ImageEditorStatus, ImageEditorTextfieldConfig, ImageEditorToggleConfig } from '../types/widgets/imageEditor';
 export declare const EV_HANDLERS: {
     button: (state: ImageEditorState, e: CustomEvent<KulButtonEventPayload>) => Promise<void>;
     canvas: (state: ImageEditorState, e: CustomEvent<KulCanvasEventPayload>) => Promise<void>;
     imageviewer: (state: ImageEditorState, e: CustomEvent<KulImageviewerEventPayload>) => Promise<void>;
-    slider: (updateCb: ImageEditorUpdateCallback, e: CustomEvent<KulSliderEventPayload>) => Promise<void>;
-    textfield: (updateCb: ImageEditorUpdateCallback, e: CustomEvent<KulTextfieldEventPayload>) => Promise<void>;
-    toggle: (updateCb: ImageEditorUpdateCallback, e: CustomEvent<KulToggleEventPayload>) => Promise<void>;
+    slider: (state: ImageEditorState, e: CustomEvent<KulSliderEventPayload>) => Promise<void>;
+    textfield: (state: ImageEditorState, e: CustomEvent<KulTextfieldEventPayload>) => Promise<void>;
+    toggle: (state: ImageEditorState, e: CustomEvent<KulToggleEventPayload>) => Promise<void>;
 };
 export declare const apiCall: (state: ImageEditorState, addSnapshot: boolean) => Promise<void>;
 export declare const refreshValues: (state: ImageEditorState, addSnapshot?: boolean) => Promise<void>;

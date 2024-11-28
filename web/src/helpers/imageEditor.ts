@@ -16,7 +16,6 @@ import {
 } from '../types/ketchup-lite/managers/kul-data/kul-data-declarations';
 import { KulGenericEvent } from '../types/ketchup-lite/types/GenericTypes';
 import { LogSeverity } from '../types/manager/manager';
-import { NodeName, TagName } from '../types/widgets/widgets';
 import {
   ImageEditorActionButtons,
   ImageEditorBrushFilter,
@@ -30,12 +29,15 @@ import {
   ImageEditorFilterType,
   ImageEditorIcons,
   ImageEditorSliderConfig,
+  ImageEditorSliderIds,
   ImageEditorState,
   ImageEditorStatus,
   ImageEditorTextfieldConfig,
+  ImageEditorTextfieldIds,
   ImageEditorToggleConfig,
-  ImageEditorUpdateCallback,
+  ImageEditorToggleIds,
 } from '../types/widgets/imageEditor';
+import { NodeName, TagName } from '../types/widgets/widgets';
 import {
   debounce,
   getApiRoutes,
@@ -166,15 +168,18 @@ export const EV_HANDLERS = {
   //#endregion
 
   //#region Slider handler
-  slider: async (updateCb: ImageEditorUpdateCallback, e: CustomEvent<KulSliderEventPayload>) => {
+  slider: async (state: ImageEditorState, e: CustomEvent<KulSliderEventPayload>) => {
     const { eventType } = e.detail;
+
+    const { update } = state;
+    const { preview, snapshot } = update;
 
     switch (eventType) {
       case 'change':
-        updateCb(true);
+        snapshot();
         break;
       case 'input':
-        const debouncedCallback = debounce(updateCb, 300);
+        const debouncedCallback = debounce(preview, 300);
         debouncedCallback();
         break;
     }
@@ -182,18 +187,18 @@ export const EV_HANDLERS = {
   //#endregion
 
   //#region Textfield handler
-  textfield: async (
-    updateCb: ImageEditorUpdateCallback,
-    e: CustomEvent<KulTextfieldEventPayload>,
-  ) => {
+  textfield: async (state: ImageEditorState, e: CustomEvent<KulTextfieldEventPayload>) => {
     const { eventType } = e.detail;
+
+    const { update } = state;
+    const { preview, snapshot } = update;
 
     switch (eventType) {
       case 'change':
-        updateCb(true);
+        snapshot();
         break;
       case 'input':
-        const debouncedCallback = debounce(updateCb, 300);
+        const debouncedCallback = debounce(preview, 300);
         debouncedCallback();
         break;
     }
@@ -201,17 +206,21 @@ export const EV_HANDLERS = {
   //#endregion
 
   //#region Toggle
-  toggle: async (updateCb: ImageEditorUpdateCallback, e: CustomEvent<KulToggleEventPayload>) => {
+  toggle: async (state: ImageEditorState, e: CustomEvent<KulToggleEventPayload>) => {
     const { eventType } = e.detail;
+
+    const { update } = state;
+    const { snapshot } = update;
 
     switch (eventType) {
       case 'change':
-        updateCb(true);
+        snapshot();
         break;
     }
   },
   //#endregion
 };
+
 //#region apiCall
 export const apiCall = async (state: ImageEditorState, addSnapshot: boolean) => {
   const { elements, filter, filterType } = state;
@@ -287,6 +296,7 @@ export const refreshValues = async (state: ImageEditorState, addSnapshot = false
 
 //#region prepSettings
 export const prepSettings = (state: ImageEditorState, node: KulDataNode) => {
+  state.elements.controls = {};
   state.filter = unescapeJson(node.cells.kulCode.value).parsedJson as ImageEditorFilter;
   state.filterType = node.id as ImageEditorFilterType;
 
@@ -306,15 +316,19 @@ export const prepSettings = (state: ImageEditorState, node: KulDataNode) => {
       controls.forEach((control) => {
         switch (controlName) {
           case ImageEditorControls.Slider:
-            controlsContainer.appendChild(createSlider(state, control as ImageEditorSliderConfig));
+            const slider = createSlider(state, control as ImageEditorSliderConfig);
+            controlsContainer.appendChild(slider);
+            state.elements.controls[control.id as ImageEditorSliderIds] = slider;
             break;
           case ImageEditorControls.Textfield:
-            controlsContainer.appendChild(
-              createTextfield(state, control as ImageEditorTextfieldConfig),
-            );
+            const textfield = createTextfield(state, control as ImageEditorTextfieldConfig);
+            controlsContainer.appendChild(textfield);
+            state.elements.controls[control.id as ImageEditorTextfieldIds] = textfield;
             break;
           case ImageEditorControls.Toggle:
-            controlsContainer.appendChild(createToggle(state, control as ImageEditorToggleConfig));
+            const toggle = createToggle(state, control as ImageEditorToggleConfig);
+            controlsContainer.appendChild(toggle);
+            state.elements.controls[control.id as ImageEditorToggleIds] = toggle;
             break;
           default:
             throw new Error(`Unknown control type: ${controlName}`);
@@ -344,11 +358,7 @@ export const createSlider = (state: ImageEditorState, data: ImageEditorSliderCon
   comp.kulStyle = '.form-field { width: 100%; }';
   comp.kulValue = Number(data.defaultValue);
   comp.title = data.title;
-
-  comp.addEventListener(
-    KulEventName.KulSlider,
-    EV_HANDLERS.slider.bind(EV_HANDLERS.slider.bind, state),
-  );
+  comp.addEventListener(KulEventName.KulSlider, (e) => EV_HANDLERS.slider(state, e));
 
   return comp;
 };
@@ -362,11 +372,7 @@ export const createTextfield = (state: ImageEditorState, data: ImageEditorTextfi
   comp.kulHtmlAttributes = { type: data.type };
   comp.kulValue = String(data.defaultValue).valueOf();
   comp.title = data.title;
-
-  comp.addEventListener(
-    KulEventName.KulTextfield,
-    EV_HANDLERS.textfield.bind(EV_HANDLERS.textfield.bind, state),
-  );
+  comp.addEventListener(KulEventName.KulTextfield, (e) => EV_HANDLERS.textfield(state, e));
 
   return comp;
 };
@@ -381,11 +387,7 @@ export const createToggle = (state: ImageEditorState, data: ImageEditorToggleCon
   comp.kulLabel = parseLabel(data);
   comp.kulValue = false;
   comp.title = data.title;
-
-  comp.addEventListener(
-    KulEventName.KulToggle,
-    EV_HANDLERS.toggle.bind(EV_HANDLERS.toggle.bind, state),
-  );
+  comp.addEventListener(KulEventName.KulToggle, (e) => EV_HANDLERS.toggle(state, e));
 
   return comp;
 };

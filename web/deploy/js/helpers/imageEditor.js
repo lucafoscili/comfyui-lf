@@ -1,8 +1,8 @@
 import { SETTINGS } from '../fixtures/imageEditor.js';
 import { KulEventName } from '../types/events/events.js';
 import { LogSeverity } from '../types/manager/manager.js';
-import { NodeName, TagName } from '../types/widgets/widgets.js';
 import { ImageEditorColumnId, ImageEditorControls, ImageEditorCSS, ImageEditorIcons, ImageEditorStatus, } from '../types/widgets/imageEditor.js';
+import { NodeName, TagName } from '../types/widgets/widgets.js';
 import { debounce, getApiRoutes, getLFManager, isTree, isValidObject, unescapeJson, } from '../utils/common.js';
 export const EV_HANDLERS = {
     //#region Button handler
@@ -107,39 +107,45 @@ export const EV_HANDLERS = {
     },
     //#endregion
     //#region Slider handler
-    slider: async (updateCb, e) => {
+    slider: async (state, e) => {
         const { eventType } = e.detail;
+        const { update } = state;
+        const { preview, snapshot } = update;
         switch (eventType) {
             case 'change':
-                updateCb(true);
+                snapshot();
                 break;
             case 'input':
-                const debouncedCallback = debounce(updateCb, 300);
+                const debouncedCallback = debounce(preview, 300);
                 debouncedCallback();
                 break;
         }
     },
     //#endregion
     //#region Textfield handler
-    textfield: async (updateCb, e) => {
+    textfield: async (state, e) => {
         const { eventType } = e.detail;
+        const { update } = state;
+        const { preview, snapshot } = update;
         switch (eventType) {
             case 'change':
-                updateCb(true);
+                snapshot();
                 break;
             case 'input':
-                const debouncedCallback = debounce(updateCb, 300);
+                const debouncedCallback = debounce(preview, 300);
                 debouncedCallback();
                 break;
         }
     },
     //#endregion
     //#region Toggle
-    toggle: async (updateCb, e) => {
+    toggle: async (state, e) => {
         const { eventType } = e.detail;
+        const { update } = state;
+        const { snapshot } = update;
         switch (eventType) {
             case 'change':
-                updateCb(true);
+                snapshot();
                 break;
         }
     },
@@ -212,6 +218,7 @@ export const refreshValues = async (state, addSnapshot = false) => {
 //#endregion
 //#region prepSettings
 export const prepSettings = (state, node) => {
+    state.elements.controls = {};
     state.filter = unescapeJson(node.cells.kulCode.value).parsedJson;
     state.filterType = node.id;
     const { elements, filter } = state;
@@ -227,13 +234,19 @@ export const prepSettings = (state, node) => {
             controls.forEach((control) => {
                 switch (controlName) {
                     case ImageEditorControls.Slider:
-                        controlsContainer.appendChild(createSlider(state, control));
+                        const slider = createSlider(state, control);
+                        controlsContainer.appendChild(slider);
+                        state.elements.controls[control.id] = slider;
                         break;
                     case ImageEditorControls.Textfield:
-                        controlsContainer.appendChild(createTextfield(state, control));
+                        const textfield = createTextfield(state, control);
+                        controlsContainer.appendChild(textfield);
+                        state.elements.controls[control.id] = textfield;
                         break;
                     case ImageEditorControls.Toggle:
-                        controlsContainer.appendChild(createToggle(state, control));
+                        const toggle = createToggle(state, control);
+                        controlsContainer.appendChild(toggle);
+                        state.elements.controls[control.id] = toggle;
                         break;
                     default:
                         throw new Error(`Unknown control type: ${controlName}`);
@@ -260,7 +273,7 @@ export const createSlider = (state, data) => {
     comp.kulStyle = '.form-field { width: 100%; }';
     comp.kulValue = Number(data.defaultValue);
     comp.title = data.title;
-    comp.addEventListener(KulEventName.KulSlider, EV_HANDLERS.slider.bind(EV_HANDLERS.slider.bind, state));
+    comp.addEventListener(KulEventName.KulSlider, (e) => EV_HANDLERS.slider(state, e));
     return comp;
 };
 //#endregion
@@ -271,7 +284,7 @@ export const createTextfield = (state, data) => {
     comp.kulHtmlAttributes = { type: data.type };
     comp.kulValue = String(data.defaultValue).valueOf();
     comp.title = data.title;
-    comp.addEventListener(KulEventName.KulTextfield, EV_HANDLERS.textfield.bind(EV_HANDLERS.textfield.bind, state));
+    comp.addEventListener(KulEventName.KulTextfield, (e) => EV_HANDLERS.textfield(state, e));
     return comp;
 };
 //#endregion
@@ -283,7 +296,7 @@ export const createToggle = (state, data) => {
     comp.kulLabel = parseLabel(data);
     comp.kulValue = false;
     comp.title = data.title;
-    comp.addEventListener(KulEventName.KulToggle, EV_HANDLERS.toggle.bind(EV_HANDLERS.toggle.bind, state));
+    comp.addEventListener(KulEventName.KulToggle, (e) => EV_HANDLERS.toggle(state, e));
     return comp;
 };
 //#endregion
