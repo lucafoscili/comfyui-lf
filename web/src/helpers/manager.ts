@@ -5,7 +5,7 @@ import {
   CustomWidgetName,
   NodeName,
   NodeWidgetMap,
-} from '../types/widgets/_common';
+} from '../types/widgets/widgets';
 import { MessengerCSS } from '../types/widgets/messenger';
 import {
   areJSONEqual,

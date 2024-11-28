@@ -1,10 +1,10 @@
-import { KulArticleNode } from '../ketchup-lite/components/kul-article/kul-article-declarations';
+import { KulArticleNode } from '../../types/ketchup-lite/components/kul-article/kul-article-declarations';
 import {
   BaseWidgetState,
   CustomWidgetName,
   NormalizeValueCallback,
   WidgetFactory,
-} from './_common';
+} from './widgets';
 
 //#region CSS
 const BASE_CSS_CLASS = 'lf-controlpanel';

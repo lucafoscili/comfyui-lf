@@ -1,2 +1,5 @@
 import { KulUploadEventPayload } from '../types/ketchup-lite/components';
-export declare const handleUpload: (e: CustomEvent<KulUploadEventPayload>, upload: HTMLKulUploadElement) => Promise<void>;
+import { UploadState } from '../types/widgets/upload';
+export declare const EV_HANDLERS: {
+    upload: (state: UploadState, e: CustomEvent<KulUploadEventPayload>) => Promise<void>;
+};

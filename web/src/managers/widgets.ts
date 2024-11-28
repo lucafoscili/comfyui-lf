@@ -1,46 +1,55 @@
-import { controlPanelFactory } from '../widgets/controlPanel.js';
-import { codeFactory } from '../widgets/code.js';
-import {
-  CustomWidgetName,
-  CustomWidgetOptionsCallbacksMap,
-  NodeName,
-} from '../types/widgets/_common.js';
-import { masonryFactory } from '../widgets/masonry.js';
-import { textareaFactory } from '../widgets/textarea.js';
-import { treeFactory } from '../widgets/tree.js';
-import { chatFactory } from '../widgets/chat.js';
-import { historyFactory } from '../widgets/history.js';
-import { countBarChartFactory } from '../widgets/countBarChart.js';
-import { uploadFactory } from '../widgets/upload.js';
-import { chipFactory } from '../widgets/chip.js';
-import { messengerFactory } from '../widgets/messenger.js';
-import { cardFactory } from '../widgets/card.js';
-import { cardsWithChipFactory } from '../widgets/cardsWithChip.js';
-import { tabBarChartFactory } from '../widgets/tabBarChart.js';
-import { compareFactory } from '../widgets/compare.js';
-import { CardPayload, NotifyPayload, WidgetPayloadMap } from '../types/events/events.js';
-import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common.js';
-import { showNotification } from '../helpers/notify.js';
-import { progressbarFactory } from '../widgets/progressbar.js';
-import { carouselFactory } from '../widgets/carousel.js';
-import { imageEditorFactory } from '../widgets/imageEditor.js';
-import { ImageEditorActionButtons } from '../types/widgets/imageEditor.js';
-import { Card } from '../types/widgets/card.js';
-import { CardsWithChip, CardsWithChipDeserializedValue } from '../types/widgets/cardsWithChip.js';
-import { APIMetadataEntry } from '../types/api/api.js';
-import { LogSeverity } from '../types/manager/manager.js';
-import { cardPlaceholders, fetchModelMetadata } from '../helpers/card.js';
+import { apiCall, cardPlaceholders } from '../helpers/card';
+import { APIMetadataEntry } from '../types/api/api';
+import { CardPayload, NotifyPayload, WidgetPayloadMap } from '../types/events/events';
+import { LogSeverity } from '../types/manager/manager';
+import { Card } from '../types/widgets/card';
+import { CardsWithChip, CardsWithChipDeserializedValue } from '../types/widgets/cardsWithChip';
+import { CustomWidgetName, NodeName, WidgetFactory } from '../types/widgets/widgets';
+import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common';
+import { cardFactory } from '../widgets/card';
+import { cardsWithChipFactory } from '../widgets/cardsWithChip';
+import { carouselFactory } from '../widgets/carousel';
+import { chatFactory } from '../widgets/chat';
+import { chipFactory } from '../widgets/chip';
+import { codeFactory } from '../widgets/code';
+import { compareFactory } from '../widgets/compare';
+import { controlPanelFactory } from '../widgets/controlPanel';
+import { countBarChartFactory } from '../widgets/countBarChart';
+import { historyFactory } from '../widgets/history';
+import { imageEditorFactory } from '../widgets/imageEditor';
+import { masonryFactory } from '../widgets/masonry';
+import { messengerFactory } from '../widgets/messenger';
+import { progressbarFactory } from '../widgets/progressbar';
+import { tabBarChartFactory } from '../widgets/tabBarChart';
+import { textareaFactory } from '../widgets/textarea';
+import { treeFactory } from '../widgets/tree';
+import { uploadFactory } from '../widgets/upload';
 
 export class LFWidgets {
-  constructor() {
-    const link = document.createElement('link');
-    link.dataset.filename = 'tooltip';
-    link.rel = 'stylesheet';
-    link.type = 'text/css';
-    link.href = `extensions/comfyui-lf/css/widgets.css`;
-    document.head.appendChild(link);
-  }
+  #FACTORIES: Record<CustomWidgetName, WidgetFactory> = {
+    [CustomWidgetName.card]: cardFactory,
+    [CustomWidgetName.carousel]: carouselFactory,
+    [CustomWidgetName.cardsWithChip]: cardsWithChipFactory,
+    [CustomWidgetName.chat]: chatFactory,
+    [CustomWidgetName.chip]: chipFactory,
+    [CustomWidgetName.code]: codeFactory,
+    [CustomWidgetName.compare]: compareFactory,
+    [CustomWidgetName.controlPanel]: controlPanelFactory,
+    [CustomWidgetName.countBarChart]: countBarChartFactory,
+    [CustomWidgetName.history]: historyFactory,
+    [CustomWidgetName.imageEditor]: imageEditorFactory,
+    [CustomWidgetName.masonry]: masonryFactory,
+    [CustomWidgetName.messenger]: messengerFactory,
+    [CustomWidgetName.progressbar]: progressbarFactory,
+    [CustomWidgetName.tabBarChart]: tabBarChartFactory,
+    [CustomWidgetName.textarea]: textareaFactory,
+    [CustomWidgetName.tree]: treeFactory,
+    [CustomWidgetName.upload]: uploadFactory,
+  };
 
+  //#region render
+  render = (name: CustomWidgetName) => this.#FACTORIES[name].render;
+  //#endregion
   //#region Decorators
   decorators = {
     card: <W extends Card | CardsWithChip>(payload: CardPayload, widget: W) => {
@@ -62,7 +71,7 @@ export class LFWidgets {
         models.push({ dataset, hash, path, apiFlag });
       }
 
-      fetchModelMetadata(models).then((r) => {
+      apiCall(models).then((r) => {
         for (let index = 0; index < r.length; index++) {
           const cardProps = r[index];
           if (cardProps.kulData) {
@@ -78,104 +87,6 @@ export class LFWidgets {
         widget.options.setValue(JSON.stringify(value));
         getApiRoutes().comfy.redraw();
       });
-    },
-  };
-  //#endregion
-  //#region Options
-  option: { [K in CustomWidgetName]: CustomWidgetOptionsCallbacksMap<K> } = {
-    [CustomWidgetName.card]: (grid: HTMLDivElement) => cardFactory.options(grid),
-    [CustomWidgetName.cardsWithChip]: (grid: HTMLDivElement) => cardsWithChipFactory.options(grid),
-    [CustomWidgetName.carousel]: (carousel: HTMLKulCarouselElement) =>
-      carouselFactory.options(carousel),
-    [CustomWidgetName.chat]: (chat: HTMLKulChatElement) => chatFactory.options(chat),
-    [CustomWidgetName.chip]: (chip: HTMLKulChipElement) => chipFactory.options(chip),
-    [CustomWidgetName.code]: (code: HTMLKulCodeElement) => codeFactory.options(code),
-    [CustomWidgetName.compare]: (compare: HTMLKulCompareElement) => compareFactory.options(compare),
-    [CustomWidgetName.controlPanel]: () => controlPanelFactory.options(),
-    [CustomWidgetName.countBarChart]: (
-      chart: HTMLKulChartElement,
-      chip: HTMLKulChipElement,
-      button: HTMLKulButtonElement,
-    ) => countBarChartFactory.options(chart, chip, button),
-    [CustomWidgetName.history]: (history: HTMLKulListElement) => historyFactory.options(history),
-    [CustomWidgetName.imageEditor]: (
-      imageviewer: HTMLKulImageviewerElement,
-      actionButtons: ImageEditorActionButtons,
-      grid: HTMLDivElement,
-    ) => imageEditorFactory.options(imageviewer, actionButtons, grid),
-    [CustomWidgetName.masonry]: (masonry: HTMLKulMasonryElement) => masonryFactory.options(masonry),
-    [CustomWidgetName.messenger]: (
-      messenger: HTMLKulMessengerElement,
-      placeholder: HTMLDivElement,
-    ) => messengerFactory.options(messenger, placeholder),
-    [CustomWidgetName.progressbar]: (progressbar: HTMLKulProgressbarElement, nodeType: NodeType) =>
-      progressbarFactory.options(progressbar, nodeType),
-    [CustomWidgetName.tabBarChart]: (
-      chart: HTMLKulChartElement,
-      tabbar: HTMLKulTabbarElement,
-      textfield: HTMLKulTextfieldElement,
-      node: NodeName,
-    ) => tabBarChartFactory.options(chart, tabbar, textfield, node),
-    [CustomWidgetName.textarea]: (content: HTMLTextAreaElement) => textareaFactory.options(content),
-    [CustomWidgetName.tree]: (tree: HTMLKulTreeElement) => treeFactory.options(tree),
-    [CustomWidgetName.upload]: (upload: HTMLKulUploadElement) => uploadFactory.options(upload),
-  };
-  //#endregion
-  //#region Setters
-  set = {
-    [CustomWidgetName.card]: (nodeType: NodeType) => {
-      return cardFactory.render(nodeType, CustomWidgetName.card);
-    },
-    [CustomWidgetName.carousel]: (nodeType: NodeType) => {
-      return carouselFactory.render(nodeType, CustomWidgetName.carousel);
-    },
-    [CustomWidgetName.cardsWithChip]: (nodeType: NodeType) => {
-      return cardsWithChipFactory.render(nodeType, CustomWidgetName.cardsWithChip);
-    },
-    [CustomWidgetName.chat]: (nodeType: NodeType) => {
-      return chatFactory.render(nodeType, CustomWidgetName.chat);
-    },
-    [CustomWidgetName.chip]: (nodeType: NodeType) => {
-      return chipFactory.render(nodeType, CustomWidgetName.chip);
-    },
-    [CustomWidgetName.code]: (nodeType: NodeType) => {
-      return codeFactory.render(nodeType, CustomWidgetName.code);
-    },
-    [CustomWidgetName.compare]: (nodeType: NodeType) => {
-      return compareFactory.render(nodeType, CustomWidgetName.compare);
-    },
-    [CustomWidgetName.controlPanel]: (nodeType: NodeType) => {
-      return controlPanelFactory.render(nodeType, CustomWidgetName.controlPanel);
-    },
-    [CustomWidgetName.countBarChart]: (nodeType: NodeType) => {
-      return countBarChartFactory.render(nodeType, CustomWidgetName.countBarChart);
-    },
-    [CustomWidgetName.history]: (nodeType: NodeType) => {
-      return historyFactory.render(nodeType, CustomWidgetName.history);
-    },
-    [CustomWidgetName.imageEditor]: (nodeType: NodeType) => {
-      return imageEditorFactory.render(nodeType, CustomWidgetName.imageEditor);
-    },
-    [CustomWidgetName.masonry]: (nodeType: NodeType) => {
-      return masonryFactory.render(nodeType, CustomWidgetName.masonry);
-    },
-    [CustomWidgetName.messenger]: (nodeType: NodeType) => {
-      return messengerFactory.render(nodeType, CustomWidgetName.messenger);
-    },
-    [CustomWidgetName.progressbar]: (nodeType: NodeType) => {
-      return progressbarFactory.render(nodeType, CustomWidgetName.progressbar);
-    },
-    [CustomWidgetName.tabBarChart]: (nodeType: NodeType) => {
-      return tabBarChartFactory.render(nodeType, CustomWidgetName.tabBarChart);
-    },
-    [CustomWidgetName.textarea]: (nodeType: NodeType) => {
-      return textareaFactory.render(nodeType, CustomWidgetName.textarea);
-    },
-    [CustomWidgetName.tree]: (nodeType: NodeType) => {
-      return treeFactory.render(nodeType, CustomWidgetName.tree);
-    },
-    [CustomWidgetName.upload]: (nodeType: NodeType) => {
-      return uploadFactory.render(nodeType, CustomWidgetName.upload);
     },
   };
   //#endregion
@@ -200,7 +111,7 @@ export class LFWidgets {
       switch (name) {
         case NodeName.notify:
           if ('action' in payload) {
-            showNotification(payload as NotifyPayload);
+            this.#notifications.show(payload as NotifyPayload);
           }
           break;
       }
@@ -306,6 +217,84 @@ export class LFWidgets {
         LogSeverity.Warning,
       );
     }
+  };
+  //#endregion
+  //#region Notifications
+  #notifications = {
+    decorate: (payload: NotifyPayload) => {
+      const { action, image, message, silent, tag, title } = payload;
+
+      const icon =
+        action === 'focus tab'
+          ? 'visibility'
+          : action === 'interrupt'
+          ? 'not_interested'
+          : action === 'interrupt and queue'
+          ? 'refresh'
+          : action === 'queue prompt'
+          ? 'queue'
+          : '';
+
+      const options: NotificationOptions = {
+        body: message,
+        icon: icon
+          ? window.location.href + `extensions/comfyui-lf/assets/svg/${icon}.svg`
+          : undefined,
+        requireInteraction: action === 'none' ? false : true,
+        silent,
+        tag,
+      };
+
+      if ('image' in Notification.prototype && image) {
+        options.image = image;
+      }
+
+      if (Notification.permission === 'granted') {
+        const notification = new Notification(title, options);
+
+        notification.addEventListener('click', () => {
+          const lfManager = getLFManager();
+
+          const routes = getApiRoutes().comfy;
+          switch (action) {
+            case 'focus tab':
+              window.focus();
+              break;
+            case 'interrupt':
+              routes.interrupt();
+              break;
+            case 'interrupt and queue':
+              routes.interrupt();
+              routes.queuePrompt();
+              lfManager.log(
+                'New prompt queued from notification after interrupting.',
+                {},
+                LogSeverity.Success,
+              );
+              break;
+            case 'queue prompt':
+              routes.queuePrompt();
+              lfManager.log('New prompt queued from notification.', {}, LogSeverity.Success);
+              break;
+          }
+        });
+      }
+    },
+    show: (payload: NotifyPayload) => {
+      const lfManager = getLFManager();
+
+      if (Notification.permission !== 'granted') {
+        Notification.requestPermission().then((permission) => {
+          if (permission === 'granted') {
+            this.#notifications.decorate(payload);
+          } else {
+            lfManager.log('Notification permission denied.', {}, LogSeverity.Warning);
+          }
+        });
+      } else {
+        this.#notifications.decorate(payload);
+      }
+    },
   };
   //#endregion
 }

@@ -1,12 +1,6 @@
-import {
-  callApi,
-  prepareTabbarDataset,
-  tabbarEventHandler,
-  textfieldEventHandler,
-} from '../helpers/tabBarChart';
+import { apiCall, EV_HANDLERS, prepareTabbarDataset } from '../helpers/tabBarChart';
 import { AnalyticsType } from '../types/api/api';
 import { KulEventName } from '../types/events/events';
-import { CustomWidgetName, NodeName, TagName } from '../types/widgets/_common';
 import {
   TabBarChartColors,
   TabBarChartCSS,
@@ -16,6 +10,7 @@ import {
   TabBarChartNormalizeCallback,
   TabBarChartState,
 } from '../types/widgets/tabBarChart';
+import { CustomWidgetName, NodeName, TagName } from '../types/widgets/widgets';
 import { createDOMWidget, normalizeValue } from '../utils/common';
 
 const STATE = new WeakMap<HTMLDivElement, TabBarChartState>();
@@ -47,7 +42,7 @@ export const tabBarChartFactory: TabBarChartFactory = {
             case NodeName.usageStatistics:
               state.directory = parsedValue.directory;
 
-              callApi(state);
+              apiCall(state);
               break;
             default:
               for (const key in parsedValue) {
@@ -106,7 +101,7 @@ export const tabBarChartFactory: TabBarChartFactory = {
     tabbar.kulValue = null;
     tabbar.addEventListener(
       KulEventName.KulTabbar,
-      tabbarEventHandler.bind(tabbarEventHandler, STATE.get(wrapper)),
+      EV_HANDLERS.tabbar.bind(EV_HANDLERS.tabbar, STATE.get(wrapper)),
     );
 
     textfield.classList.add(TabBarChartCSS.Directory);
@@ -115,7 +110,7 @@ export const tabBarChartFactory: TabBarChartFactory = {
     textfield.kulStyling = 'flat';
     textfield.addEventListener(
       KulEventName.KulTextfield,
-      textfieldEventHandler.bind(textfieldEventHandler, STATE.get(wrapper)),
+      EV_HANDLERS.textfield.bind(EV_HANDLERS.textfield, STATE.get(wrapper)),
     );
 
     grid.classList.add(TabBarChartCSS.Grid);

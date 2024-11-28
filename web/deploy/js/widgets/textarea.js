@@ -1,21 +1,25 @@
-import { handleInputChange } from '../helpers/textarea.js';
-import { CustomWidgetName, NodeName, TagName, } from '../types/widgets/_common.js';
-import { TextareaCSS } from '../types/widgets/textarea.js';
-import { createDOMWidget, findWidget, normalizeValue } from '../utils/common.js';
-//#region Textarea
+import { EV_HANDLERS } from '../helpers/textarea.js';
+import { TextareaCSS, } from '../types/widgets/textarea.js';
+import { CustomWidgetName, TagName } from '../types/widgets/widgets.js';
+import { createDOMWidget, normalizeValue } from '../utils/common.js';
+const STATE = new WeakMap();
 export const textareaFactory = {
-    options: (textarea) => {
+    //#region Options
+    options: (wrapper) => {
         return {
             hideOnZoom: false,
+            getState: () => STATE.get(wrapper),
             getValue() {
+                const { textarea } = STATE.get(wrapper);
                 try {
                     return JSON.parse(textarea?.value || '{}') || {};
                 }
                 catch (error) {
-                    return { invalid_json: error };
+                    return error;
                 }
             },
             setValue(value) {
+                const { textarea } = STATE.get(wrapper);
                 const callback = (_, u) => {
                     const parsedJson = u.parsedJson;
                     textarea.value = JSON.stringify(parsedJson, null, 2) || '{}';
@@ -24,23 +28,23 @@ export const textareaFactory = {
             },
         };
     },
+    //#endregion
+    //#region Render
     render: (node) => {
-        const w = findWidget(node, CustomWidgetName.textarea);
-        if (findWidget(node, CustomWidgetName.textarea) && node.comfyClass === NodeName.writeJson) {
-            return w.element;
-        }
         const wrapper = document.createElement(TagName.Div);
         const content = document.createElement(TagName.Div);
         const textarea = document.createElement(TagName.Textarea);
-        const options = textareaFactory.options(textarea);
         content.classList.add(TextareaCSS.Content);
-        textarea.classList.add(TextareaCSS.Widget);
         content.appendChild(textarea);
+        textarea.classList.add(TextareaCSS.Widget);
+        textarea.addEventListener('input', EV_HANDLERS.input);
         wrapper.appendChild(content);
-        textarea.addEventListener('input', (e) => {
-            handleInputChange(e);
-        });
+        const options = textareaFactory.options(wrapper);
+        STATE.set(wrapper, { node, textarea, wrapper });
         return { widget: createDOMWidget(CustomWidgetName.textarea, wrapper, node, options) };
     },
+    //#endregion
+    //#region State
+    state: STATE,
+    //#endregion
 };
-//#endregion

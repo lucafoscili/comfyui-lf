@@ -1,6 +1,5 @@
-import { CustomWidgetName, NodeName, TagName } from '../types/widgets/_common';
-import { getCardProps, EV_HANDLERS, prepCards } from '../helpers/card';
-import { createDOMWidget, normalizeValue } from '../utils/common';
+import { EV_HANDLERS, getCardProps, prepCards } from '../helpers/card';
+import { KulEventName } from '../types/events/events';
 import {
   CardCSS,
   CardDeserializedValue,
@@ -8,7 +7,8 @@ import {
   CardNormalizeCallback,
   CardState,
 } from '../types/widgets/card';
-import { KulEventName } from '../types/events/events';
+import { CustomWidgetName, NodeName, TagName } from '../types/widgets/widgets';
+import { createDOMWidget, normalizeValue } from '../utils/common';
 
 const STATE = new WeakMap<HTMLDivElement, CardState>();
 
@@ -68,9 +68,8 @@ export const cardFactory: CardFactory = {
         button.kulIcon = 'cloud_download';
         button.kulLabel = 'Refresh';
         button.title = 'Attempts to manually ownload fresh metadata from CivitAI';
-        button.addEventListener(
-          KulEventName.KulButton,
-          EV_HANDLERS.button.bind(EV_HANDLERS.button, STATE.get(wrapper)),
+        button.addEventListener(KulEventName.KulButton, (e) =>
+          EV_HANDLERS.button(STATE.get(wrapper), e),
         );
 
         button.appendChild(spinner);

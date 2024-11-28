@@ -1,4 +1,3 @@
-import { api } from '/scripts/api.js';
 import {
   APIEndpoints,
   BaseAPIPayload,
@@ -7,6 +6,7 @@ import {
 } from '../types/api/api';
 import { LogSeverity } from '../types/manager/manager';
 import { getLFManager } from '../utils/common';
+import { api } from '/scripts/api.js';
 
 export const METADATA_API: MetadataAPIs = {
   //#region clear

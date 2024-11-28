@@ -1,16 +1,16 @@
-import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, a as getAssetPath, h, H as Host } from './index-53f95fee.js';
-import { k as kulManagerInstance, a as KulDataCyAttributes, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-9e1be956.js';
+import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, a as getAssetPath, h, H as Host } from './index-7cf82e95.js';
+import { k as kulManagerInstance, a as KulDataCyAttributes, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-72505221.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 
-/*-------------------------------------------------*/
-/*                    P r o p s                    */
-/*-------------------------------------------------*/
+//#endregion
+//#region Props
 var KulAccordionProps;
 (function (KulAccordionProps) {
     KulAccordionProps["kulData"] = "Actual data of the accordion.";
     KulAccordionProps["kulRipple"] = "When set to true, the pointerdown event will trigger a ripple effect.";
     KulAccordionProps["kulStyle"] = "Sets a custom CSS style for the component.";
 })(KulAccordionProps || (KulAccordionProps = {}));
+//#endregion
 
 const kulAccordionCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}@keyframes fade-in-grid{0%{display:none}1%{display:grid;opacity:0}100%{display:grid;opacity:1}}:host{--kul_accordion_backdrop_filter:var(\n    --kul-accordion-backdrop-filter,\n    blur(3.5px)\n  );--kul_accordion_background_color:var(\n    --kul-accordion-background-color,\n    var(--kul-background-color)\n  );--kul_accordion_border:var(\n    --kul-accordion-border,\n    1px solid var(--kul-border-color)\n  );--kul_accordion_border_radius:var(--kul-accordion-border-radius, 4px);--kul-accordion_dropdown_icon_color:var(\n    --kul-accordion-dropdown-icon-color,\n    var(--kul-text-color)\n  );--kul_accordion_font_family:var(\n    --kul-accordion-font-family,\n    var(--kul-font-family)\n  );--kul_accordion_font_size:var(\n    --kul-accordion-font-size,\n    var(--kul-font-size)\n  );--kul_accordion_background_color_hover:var(\n    --kul-accordion-background-color-hover,\n    rgba(var(--kul-text-color-rgb), 0.175)\n  );--kul_accordion_color_hover:var(\n    --kul-accordion-color-hover,\n    var(--kul-text-color)\n  );--kul_accordion_padding:var(--kul-accordion-padding, 1em 1.5em);--kul_accordion_primary_color:var(\n    --kul-accordion-primary-color,\n    var(--kul-primary-color)\n  );--kul_accordion_primary_color_rgb:var(\n    --kul-accordion-primary-color-rgb,\n    var(--kul-primary-color-rgb)\n  );--kul_accordion_text_color:var(\n    --kul-accordion-text-color,\n    var(--kul-text-color)\n  );--kul_accordion_text_on_primary_color:var(\n    --kul-accordion-text-on-primary-color,\n    var(--kul-text-on-primary-color)\n  );--kul_accordion_transition:var(--kul-accordion-transition, 80ms);display:block;font-family:var(--kul_accordion_font_family);font-size:var(--kul_accordion_font_size)}.accordion{-webkit-backdrop-filter:var(--kul_accordion_backdrop_filter);backdrop-filter:var(--kul_accordion_backdrop_filter);background-color:var(--kul_accordion_background_color);border-bottom:var(--kul_accordion_border);border-radius:var(--kul_accordion_border_radius);border-top:var(--kul_accordion_border);display:flex;flex-wrap:wrap;flex-direction:column;width:100%}.node{border-left:var(--kul_accordion_border);border-right:var(--kul_accordion_border);box-sizing:border-box;width:100%}.node:not(:first-of-type){border-top:var(--kul_accordion_border)}.node__header{align-items:center;border:none;box-sizing:border-box;color:var(--kul_accordion_text_color);cursor:pointer;display:flex;line-height:1.75em;outline:none;padding:var(--kul_accordion_padding);position:relative;text-align:left;transition:background-color var(--kul_accordion_transition), color var(--kul_accordion_transition);width:100%}.node__header:hover:not(.node__header--selected){color:var(--kul_accordion_color_hover);background-color:var(--kul_accordion_background_color_hover)}.node__header--expanded{color:var(--kul_accordion_color_hover);background-color:var(--kul_accordion_background_color_hover)}.node__header--expanded .node__dropdown{transform:rotate(-180deg)}.node__header--selected{background-color:rgba(var(--kul_accordion_primary_color_rgb), 0.175)}.node__text{margin-right:0.5em;overflow:hidden;text-overflow:ellipsis;white-space:pre}.node__text--highlighted{color:var(--kul_accordion_text_on_primary_color);background-color:var(--kul_accordion_primary_color)}.node__dropdown,.node__expand,.node__icon{background-color:var(--kul_accordion_text_color);height:1.5em;margin:0;width:1.5em}.node__icon{margin-left:0;margin-right:0.5em}.node__expand{margin-left:auto;-webkit-mask:var(--kul-dropdown-icon);mask:var(--kul-dropdown-icon);overflow:hidden;transition:transform 125ms ease}.node__expand:hover{transform:scale(1.25)}.node__expand--expanded{-webkit-mask:var(--kul-expanded-icon);mask:var(--kul-expanded-icon);transform:rotate(180deg)}.node__expand--expanded:hover{transform:rotate(-180deg) scale(1.25)}.node__expand--placeholder{visibility:hidden}.node__dropdown{background-color:var(--kul-accordion_dropdown_icon_color);height:1.5em;margin-left:auto;margin-right:0;min-width:1.5em;width:1.5em;transition:transform var(--kul_accordion_transition)}.node__content{animation:fade-in-block 0.25s ease-out}:host(.kul-borderless){--kul-accordion-border:none}:host(.kul-full-height){height:100%}:host(.kul-full-width){width:100%}:host(.kul-danger){--kul-accordion-primary-color:var(--kul-danger-color);--kul-accordion-primary-color-rgb:var(--kul-danger-color-rgb);--kul-accordion-text-on-primary-color:white}:host(.kul-info){--kul-accordion-primary-color:var(--kul-info-color);--kul-accordion-primary-color-rgb:var(--kul-info-color-rgb);--kul-accordion-text-on-primary-color:white}:host(.kul-secondary){--kul-accordion-primary-color:var(--kul-secondary-color);--kul-accordion-primary-color-rgb:var(--kul-secondary-color-rgb);--kul-accordion-text-on-primary-color:var(--kul-text-on-secondary-color)}:host(.kul-success){--kul-accordion-primary-color:var(--kul-success-color);--kul-accordion-primary-color-rgb:var(--kul-success-color-rgb);--kul-accordion-text-on-primary-color:white}:host(.kul-warning){--kul-accordion-primary-color:var(--kul-warning-color);--kul-accordion-primary-color-rgb:var(--kul-warning-color-rgb);--kul-accordion-text-on-primary-color:white}";
 const KulAccordionStyle0 = kulAccordionCss;
@@ -33,18 +33,13 @@ const KulAccordion = class {
         this.kulStyle = '';
     }
     get rootElement() { return getElement(this); }
-    /*-------------------------------------------------*/
-    /*       I n t e r n a l   V a r i a b l e s       */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Internal variables
     #kulManager = kulManagerInstance();
     #rippleSurface = {};
     #slotsNames = [];
-    /*-------------------------------------------------*/
-    /*                   E v e n t s                   */
-    /*-------------------------------------------------*/
-    /**
-     * Describes event emitted.
-     */
+    //#endregion
+    //#region Events
     kulEvent;
     onKulEvent(e, eventType, node) {
         switch (eventType) {
@@ -61,9 +56,8 @@ const KulAccordion = class {
             originalEvent: e,
         });
     }
-    /*-------------------------------------------------*/
-    /*           P u b l i c   M e t h o d s           */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Public methods
     /**
      * Fetches debug information of the component's current state.
      * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves with the debug information object.
@@ -130,9 +124,8 @@ const KulAccordion = class {
             this.rootElement.remove();
         }, ms);
     }
-    /*-------------------------------------------------*/
-    /*           P r i v a t e   M e t h o d s         */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Private methods
     #isExpanded(node) {
         return this.expandedNodes.has(node);
     }
@@ -184,9 +177,8 @@ const KulAccordion = class {
         }
         return nodes;
     }
-    /*-------------------------------------------------*/
-    /*          L i f e c y c l e   H o o k s          */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Lifecycle hooks
     componentWillLoad() {
         this.#kulManager.theme.register(this);
     }
@@ -210,7 +202,7 @@ const KulAccordion = class {
     }
     render() {
         this.#rippleSurface = {};
-        return (h(Host, { key: 'e0c846d214ee730e5f57fdb5c58ca500dedf7c74' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'd494aedb92dec3151c34c226e9ec40360481d656', id: KUL_WRAPPER_ID }, h("div", { key: '0767a857471bf101b77f4290ba57ac0290df9e7d', class: "accordion" }, this.#prepAccordion()))));
+        return (h(Host, { key: '95f72e2f32d9f201af51f4bbc1a000140fbe2016' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '1afa76edbdc4e87c8dadccc9615eff2e6f54b086', id: KUL_WRAPPER_ID }, h("div", { key: '5ab09ffe69d1a998daf5ceecb78bcf6d9b02add0', class: "accordion" }, this.#prepAccordion()))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

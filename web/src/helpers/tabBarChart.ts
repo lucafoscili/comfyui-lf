@@ -1,4 +1,3 @@
-import { AnalyticsType } from '../types/api/api';
 import {
   KulDataDataset,
   KulDataNode,
@@ -6,67 +5,47 @@ import {
   KulTextfieldEventPayload,
 } from '../types/ketchup-lite/components';
 import { LogSeverity } from '../types/manager/manager';
-import { NodeName } from '../types/widgets/_common';
+import { NodeName } from '../types/widgets/widgets';
 import { TabBarChartState } from '../types/widgets/tabBarChart';
 import { getApiRoutes, getLFManager } from '../utils/common';
 
-//#region prepareTabbarDataset
-export const prepareTabbarDataset = (data: Record<string, KulDataDataset>) => {
-  const dataset: KulDataDataset = { nodes: [] };
-  for (const filename in data) {
-    if (Object.prototype.hasOwnProperty.call(data, filename)) {
-      const node: KulDataNode = {
-        cells: { kulChart: { kulData: data[filename], shape: 'chart', value: '' } },
-        id: filename,
-        value: filename.split('_')?.[0] || filename,
-      };
-      dataset.nodes.push(node);
+export const EV_HANDLERS = {
+  //#region Tabbar handler
+  tabbar: (state: TabBarChartState, e: CustomEvent<KulTabbarEventPayload>) => {
+    const { eventType, node } = e.detail;
+
+    const { elements } = state;
+    const { chart } = elements;
+
+    switch (eventType) {
+      case 'click':
+        switch (state.node.comfyClass) {
+          case NodeName.usageStatistics:
+            chart.kulData = getLFManager().getCachedDatasets().usage[node.id];
+            break;
+          default:
+            chart.kulData = node.cells.kulChart.kulData;
+            break;
+        }
+        break;
     }
-  }
-  return dataset;
-};
-//#endregion
-//#region tabbarEventHandler
-export const tabbarEventHandler = (
-  state: TabBarChartState,
-  e: CustomEvent<KulTabbarEventPayload>,
-) => {
-  const { eventType, node } = e.detail;
+  },
+  //#endregion
+  //#region Textfield handler
+  textfield: (state: TabBarChartState, e: CustomEvent<KulTextfieldEventPayload>) => {
+    const { eventType, value } = e.detail;
 
-  const { elements } = state;
-  const { chart } = elements;
-
-  switch (eventType) {
-    case 'click':
-      switch (state.node.comfyClass) {
-        case NodeName.usageStatistics:
-          chart.kulData = getLFManager().getCachedDatasets().usage[node.id];
-          break;
-        default:
-          chart.kulData = node.cells.kulChart.kulData;
-          break;
-      }
-      break;
-  }
+    switch (eventType) {
+      case 'change':
+        state.directory = value;
+        apiCall(state);
+        break;
+    }
+  },
+  //#endregion
 };
-//#endregion
-//#region textfieldEventHandler
-export const textfieldEventHandler = (
-  state: TabBarChartState,
-  e: CustomEvent<KulTextfieldEventPayload>,
-) => {
-  const { eventType, value } = e.detail;
-
-  switch (eventType) {
-    case 'change':
-      state.directory = value;
-      callApi(state);
-      break;
-  }
-};
-//#endregion
-//#region callApi
-export const callApi = async (state: TabBarChartState) => {
+//#region apiCall
+export const apiCall = async (state: TabBarChartState) => {
   const { directory, elements, selected, type } = state;
   const { chart, tabbar, textfield } = elements;
 
@@ -88,5 +67,21 @@ export const callApi = async (state: TabBarChartState) => {
         }
       }
     });
+};
+//#endregion
+//#region prepareTabbarDataset
+export const prepareTabbarDataset = (data: Record<string, KulDataDataset>) => {
+  const dataset: KulDataDataset = { nodes: [] };
+  for (const filename in data) {
+    if (Object.prototype.hasOwnProperty.call(data, filename)) {
+      const node: KulDataNode = {
+        cells: { kulChart: { kulData: data[filename], shape: 'chart', value: '' } },
+        id: filename,
+        value: filename.split('_')?.[0] || filename,
+      };
+      dataset.nodes.push(node);
+    }
+  }
+  return dataset;
 };
 //#endregion

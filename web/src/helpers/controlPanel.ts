@@ -15,7 +15,7 @@ import {
   KulButtonEventPayload,
 } from '../types/ketchup-lite/components/kul-button/kul-button-declarations';
 import { KulToggleEvent } from '../types/ketchup-lite/components/kul-toggle/kul-toggle-declarations';
-import { TagName } from '../types/widgets/_common';
+import { TagName } from '../types/widgets/widgets';
 import {
   ControlPanelCSS,
   ControlPanelFixture,
@@ -235,5 +235,4 @@ export const handleKulEvent = (e: Event) => {
     EV_HANDLERS.toggle(ogEv);
   }
 };
-
 //#endregion

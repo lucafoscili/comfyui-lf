@@ -1,13 +1,15 @@
-import { CustomWidgetName, TagName, } from '../types/widgets/_common.js';
-import { createDOMWidget, getApiRoutes, getKulManager, getLFManager, normalizeValue, } from '../utils/common.js';
 import { createContent } from '../helpers/controlPanel.js';
-import { ControlPanelCSS, } from '../types/widgets/controlPanel.js';
 import { KulEventName } from '../types/events/events.js';
-//#region Control panel
+import { ControlPanelCSS, } from '../types/widgets/controlPanel.js';
+import { CustomWidgetName, TagName } from '../types/widgets/widgets.js';
+import { createDOMWidget, getApiRoutes, getKulManager, getLFManager, normalizeValue, } from '../utils/common.js';
+const STATE = new WeakMap();
 export const controlPanelFactory = {
-    options: () => {
+    //#region Options
+    options: (wrapper) => {
         return {
             hideOnZoom: false,
+            getState: () => STATE.get(wrapper),
             getValue() {
                 return {
                     backup: getLFManager().isBackupEnabled() || false,
@@ -45,6 +47,8 @@ export const controlPanelFactory = {
             },
         };
     },
+    //#endregion
+    //#region Render
     render: (node) => {
         const contentCb = (domWidget, isReady) => {
             const readyCb = (domWidget) => {
@@ -74,9 +78,13 @@ export const controlPanelFactory = {
             content.classList.add(ControlPanelCSS.Content);
         };
         const wrapper = document.createElement(TagName.Div);
-        const options = controlPanelFactory.options();
         contentCb(wrapper, false);
+        const options = controlPanelFactory.options(wrapper);
+        STATE.set(wrapper, { node, wrapper });
         return { widget: createDOMWidget(CustomWidgetName.controlPanel, wrapper, node, options) };
     },
+    //#endregion
+    //#region State
+    state: STATE,
+    //#endregion
 };
-//#endregion

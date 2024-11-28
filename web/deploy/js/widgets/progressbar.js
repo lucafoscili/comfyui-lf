@@ -1,38 +1,36 @@
-import { CustomWidgetName, NodeName, TagName, } from '../types/widgets/_common.js';
-import { ProgressbarCSS, } from '../types/widgets/progressBar.js';
+import { ProgressbarCSS, ProgressbarIcons, ProgressbarLabels, } from '../types/widgets/progressbar.js';
+import { CustomWidgetName, NodeName, TagName } from '../types/widgets/widgets.js';
 import { createDOMWidget, normalizeValue } from '../utils/common.js';
-const FALLBACK_LABEL = 'N/A';
-const TYPE = CustomWidgetName.progressbar;
-//#region Progress bar
+const STATE = new WeakMap();
 export const progressbarFactory = {
-    options: (progressbar, nodeType) => {
+    //#region Options
+    options: (wrapper) => {
         return {
             hideOnZoom: false,
-            getComp() {
-                return progressbar;
-            },
+            getState: () => STATE.get(wrapper),
             getValue() {
+                const { progressbar } = STATE.get(wrapper);
                 return {
                     bool: progressbar.kulLabel === 'true' ? true : false,
                     roll: progressbar.kulValue || 0,
                 };
             },
             setValue(value) {
+                const { node, progressbar } = STATE.get(wrapper);
                 const callback = (_, u) => {
                     const { bool, roll } = u.parsedJson;
                     const isFalse = !!(bool === false);
                     const isTrue = !!(bool === true);
-                    switch (nodeType.comfyClass) {
+                    switch (node.comfyClass) {
                         case NodeName.resolutionSwitcher:
-                            progressbar.kulLabel = '!';
                             if (isTrue) {
-                                progressbar.kulIcon = 'landscape';
+                                progressbar.kulIcon = ProgressbarIcons.Landscape;
                             }
                             else if (isFalse) {
-                                progressbar.kulIcon = 'portrait';
+                                progressbar.kulIcon = ProgressbarIcons.Portrait;
                             }
                             else {
-                                progressbar.kulLabel = FALLBACK_LABEL;
+                                progressbar.kulLabel = ProgressbarLabels.Fallback;
                             }
                             break;
                         default:
@@ -40,35 +38,41 @@ export const progressbarFactory = {
                             progressbar.classList.remove('kul-danger');
                             if (isTrue) {
                                 progressbar.classList.add('kul-success');
-                                progressbar.kulLabel = 'true';
+                                progressbar.kulLabel = ProgressbarLabels.True;
                             }
                             else if (isFalse) {
                                 progressbar.classList.add('kul-danger');
-                                progressbar.kulLabel = 'false';
+                                progressbar.kulLabel = ProgressbarLabels.False;
                             }
                             else {
-                                progressbar.kulLabel = FALLBACK_LABEL;
+                                progressbar.kulLabel = ProgressbarLabels.Fallback;
                             }
                             break;
                     }
                     progressbar.title = roll ? 'Actual roll: ' + roll.toString() : '';
                     progressbar.kulValue = roll || 100;
                 };
-                normalizeValue(value, callback, TYPE);
+                normalizeValue(value, callback, CustomWidgetName.progressbar);
             },
         };
     },
+    //#endregion
+    //#region Render
     render: (node) => {
         const wrapper = document.createElement(TagName.Div);
         const content = document.createElement(TagName.Div);
         const progressbar = document.createElement(TagName.KulProgressbar);
-        const options = progressbarFactory.options(progressbar, node);
-        content.classList.add(ProgressbarCSS.Content);
         progressbar.kulIsRadial = true;
-        progressbar.kulLabel = FALLBACK_LABEL;
+        progressbar.kulLabel = ProgressbarLabels.Fallback;
+        content.classList.add(ProgressbarCSS.Content);
         content.appendChild(progressbar);
         wrapper.appendChild(content);
-        return { widget: createDOMWidget(TYPE, wrapper, node, options) };
+        const options = progressbarFactory.options(wrapper);
+        STATE.set(wrapper, { node, progressbar, wrapper });
+        return { widget: createDOMWidget(CustomWidgetName.progressbar, wrapper, node, options) };
     },
+    //#endregion
+    //#region State
+    state: STATE,
+    //#endregion
 };
-//#endregion

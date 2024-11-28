@@ -1,10 +1,9 @@
-import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, F as Fragment, H as Host } from './index-53f95fee.js';
-import { k as kulManagerInstance, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-9e1be956.js';
+import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, F as Fragment, H as Host } from './index-7cf82e95.js';
+import { k as kulManagerInstance, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-72505221.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 
-/*-------------------------------------------------*/
-/*                    P r o p s                    */
-/*-------------------------------------------------*/
+//#endregion
+//#region Props
 var KulTypewriterProps;
 (function (KulTypewriterProps) {
     KulTypewriterProps["kulCursor"] = "Enables or disables the blinking cursor.";
@@ -15,6 +14,7 @@ var KulTypewriterProps;
     KulTypewriterProps["kulStyle"] = "Custom style of the component.";
     KulTypewriterProps["kulValue"] = "Sets the text or array of texts to display with the typewriter effect.";
 })(KulTypewriterProps || (KulTypewriterProps = {}));
+//#endregion
 
 const kulTypewriterCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}@keyframes fade-in-grid{0%{display:none}1%{display:grid;opacity:0}100%{display:grid;opacity:1}}:host{--kul-typewriter-text-color:var(\n    --kul-typewriter-text-color,\n    var(--kul-typewriter-text-color)\n  );--kul-typewriter-cursor-width:var(--kul-typewriter-cursor-width, 3px);--kul-typewriter-cursor-color:var(\n    --kul-typewriter-cursor-color,\n    var(--kul-typewriter-text-color)\n  );--kul-typewriter-font-size:var(\n    --kul-typewriter-font-size,\n    var(--kul-font-size)\n  );--kul-typewriter-font-family:var(\n    --kul-typewriter-font-family,\n    var(--kul-font-family)\n  );align-items:center;display:inline-flex;color:var(--kul-typewriter-text-color);font-size:var(--kul-typewriter-font-size);font-family:var(--kul-typewriter-font-family)}.cursor{display:inline-block;width:var(--kul-typewriter-cursor-width);background-color:var(--kul-typewriter-cursor-color);margin-left:2px;animation:blink 0.8s infinite}@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}";
 const KulTypewriterStyle0 = kulTypewriterCss;
@@ -42,18 +42,13 @@ const KulTypewriter = class {
         this.kulValue = '';
     }
     get rootElement() { return getElement(this); }
-    /*-------------------------------------------------*/
-    /*       I n t e r n a l   V a r i a b l e s       */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Internal variables
     #kulManager = kulManagerInstance();
     #timeout;
     #texts = [];
-    /*-------------------------------------------------*/
-    /*                   E v e n t s                   */
-    /*-------------------------------------------------*/
-    /**
-     * Describes the component's events.
-     */
+    //#endregion
+    //#region Events
     kulEvent;
     onKulEvent(e, eventType) {
         this.kulEvent.emit({
@@ -63,16 +58,14 @@ const KulTypewriter = class {
             eventType,
         });
     }
-    /*-------------------------------------------------*/
-    /*                 W a t c h e r s                 */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Watchers
     handleKulValueChange() {
-        this.initializeTexts();
-        this.resetTyping();
+        this.#initializeTexts();
+        this.#resetTyping();
     }
-    /*-------------------------------------------------*/
-    /*           P u b l i c   M e t h o d s           */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Public methods
     /**
      * Fetches debug information of the component's current state.
      * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves with the debug information object.
@@ -104,15 +97,14 @@ const KulTypewriter = class {
             this.rootElement.remove();
         }, ms);
     }
-    /*-------------------------------------------------*/
-    /*           P r i v a t e   M e t h o d s         */
-    /*-------------------------------------------------*/
-    initializeTexts() {
+    //#endregion
+    //#region Private methods
+    #initializeTexts() {
         this.#texts = Array.isArray(this.kulValue)
             ? this.kulValue
             : [this.kulValue];
     }
-    startTyping() {
+    #startTyping() {
         const currentText = this.#texts[this.currentTextIndex] || '';
         if (this.isDeleting) {
             this.displayedText = currentText.substring(0, this.displayedText.length - 1);
@@ -133,29 +125,28 @@ const KulTypewriter = class {
         }
         else {
             const delay = this.isDeleting ? this.kulDeleteSpeed : this.kulSpeed;
-            this.#timeout = setTimeout(() => this.startTyping(), delay);
+            this.#timeout = setTimeout(() => this.#startTyping(), delay);
         }
     }
-    resetTyping() {
+    #resetTyping() {
         clearTimeout(this.#timeout);
         this.displayedText = '';
         this.isDeleting = false;
         this.currentTextIndex = 0;
-        this.startTyping();
+        this.#startTyping();
     }
     #prepText() {
         return (h(Fragment, null, h("span", null, this.displayedText), this.kulCursor ? h("span", { class: "cursor" }, "|") : null));
     }
-    /*-------------------------------------------------*/
-    /*          L i f e c y c l e   H o o k s          */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Lifecycle hooks
     componentWillLoad() {
         this.#kulManager.theme.register(this);
-        this.initializeTexts();
+        this.#initializeTexts();
     }
     componentDidLoad() {
         this.onKulEvent(new CustomEvent('ready'), 'ready');
-        this.startTyping();
+        this.#startTyping();
         this.#kulManager.debug.updateDebugInfo(this, 'did-load');
     }
     componentWillRender() {
@@ -165,7 +156,7 @@ const KulTypewriter = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: '89c8610164a15b4a392ea6949c7537450675d68f' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '62fdde208e2be2930679051e60c43e1b1f1ce142', id: KUL_WRAPPER_ID }, this.#prepText())));
+        return (h(Host, { key: '158ed2255972b1e6f1b3b00beb612c5276382f60' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '3c0413cc01bed273b242cccd2f5c9bfe74e63794', id: KUL_WRAPPER_ID }, this.#prepText())));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

@@ -1,4 +1,3 @@
-import { CustomWidgetName, NodeName, TagName } from '../types/widgets/_common';
 import {
   TreeCSS,
   TreeDeserializedValue,
@@ -6,6 +5,7 @@ import {
   TreeNormalizeCallback,
   TreeState,
 } from '../types/widgets/tree';
+import { CustomWidgetName, NodeName, TagName } from '../types/widgets/widgets';
 import { createDOMWidget, normalizeValue } from '../utils/common';
 
 const STATE = new WeakMap<HTMLDivElement, TreeState>();

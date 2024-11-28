@@ -1,0 +1,12 @@
+@mixin lf-root($overflow: auto, $max: true) {
+  background: var(--kul-background-color);
+  height: 100%;
+  width: 100%;
+
+  @if $max == true {
+    max-height: 100%;
+    max-width: 100%;
+  }
+
+  overflow: $overflow;
+}

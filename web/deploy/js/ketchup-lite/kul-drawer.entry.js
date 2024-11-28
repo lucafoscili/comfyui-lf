@@ -1,14 +1,14 @@
-import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-53f95fee.js';
-import { k as kulManagerInstance, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-9e1be956.js';
+import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-7cf82e95.js';
+import { k as kulManagerInstance, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-72505221.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 
-/*-------------------------------------------------*/
-/*                    P r o p s                    */
-/*-------------------------------------------------*/
+//#endregion
+//#region Props
 var KulDrawerProps;
 (function (KulDrawerProps) {
     KulDrawerProps["kulStyle"] = "Custom style of the component.";
 })(KulDrawerProps || (KulDrawerProps = {}));
+//#endregion
 
 const kulDrawerCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}@keyframes fade-in-grid{0%{display:none}1%{display:grid;opacity:0}100%{display:grid;opacity:1}}:host{--kul_drawer_backdrop:var(--kul-drawer-backdrop, rgba(0, 0, 0, 0.32));--kul_drawer_box_shadow:var(\n    --kul-drawer-box-shadow,\n    0 8px 10px -5px rgba(0, 0, 0, 0.2),\n    0 16px 24px 2px rgba(0, 0, 0, 0.14),\n    0 6px 30px 5px rgba(0, 0, 0, 0.12)\n  );--kul_drawer_permanent_border:var(\n    --kul-drawer-permanent-border,\n    1px solid var(--kul-border-color)\n  );--kul_drawer_slide_transition:var(--kul-drawer-slide-transition, 750ms);--kul_drawer_transition:var(--kul-drawer-transition, 250ms);box-shadow:var(--kul_drawer_box_shadow);display:block;font-size:var(--kul-font-size);height:100dvh;left:calc(var(--kul-drawer-width) * -1);position:fixed;top:0;transition:left var(--kul_drawer_slide_transition) cubic-bezier(0.4, 0, 0.2, 1), right var(--kul_drawer_slide_transition) cubic-bezier(0.4, 0, 0.2, 1);width:var(--kul-drawer-width);z-index:var(--kul-drawer-zindex)}#kul-component{height:100%;width:100%}.backdrop{background:var(--kul_drawer_backdrop);display:none;height:100%;left:0;position:fixed;top:0;width:100%;z-index:var(--kul-drawer-zindex)}.drawer{height:100%;position:fixed;width:var(--kul-drawer-width);z-index:calc(var(--kul-drawer-zindex) + 1)}.drawer__content{background-color:var(--kul-drawer-background-color);box-sizing:border-box;height:100%;overflow-y:auto;width:100%}.drawer ::slotted(*){--kul-button-primary-color:var(--kul-drawer-color);--kul-button-primary-color-rgb:var(--kul-drawer-color-rgb);--kul-button-primary-color-h:var(--kul-drawer-color-h);--kul-button-primary-color-s:var(--kul-drawer-color-s);--kul-button-primary-color-l:var(--kul-drawer-color-l);--kul-switch-label-color:var(--kul-drawer-color);--kul-switch-primary-color:var(--kul-drawer-color);--kul-switch-primary-color-rgb:var(--kul-drawer-color-rgb);--kul-textfield-color:var(--kul-drawer-color);--kul-textfield-color-rgb:var(--kul-drawer-color-rgb);--kul-textfield-primary-color:var(--kul-drawer-color);--kul-textfield-primary-color-rgb:var(--kul-drawer-color-rgb);--kul-tree-color:var(--kul-drawer-color);--kul-tree-color-rgb:var(--kul-drawer-color-rgb);--kul-tree-filter-background-color:var(--kul-drawer-background-color);--kul-tree-icon-color:var(--kul-drawer-color);color:var(--kul-drawer-color);fill:var(--kul-drawer-color)}:host([kul-opened]){left:0}:host([kul-opened]) .backdrop{display:block}:host(.kul-right){left:unset;right:-100%}:host([kul-opened].kul-right){right:0}:host(.kul-permanent){box-shadow:unset;transition:all 250ms}:host(.kul-permanent) .backdrop{display:none}:host(.kul-permanent) .drawer{position:relative}:host(.kul-permanent) .drawer__content{border-right:var(--kup_drawer_permanent_border)}";
 const KulDrawerStyle0 = kulDrawerCss;
@@ -28,16 +28,11 @@ const KulDrawer = class {
         this.kulStyle = '';
     }
     get rootElement() { return getElement(this); }
-    /*-------------------------------------------------*/
-    /*       I n t e r n a l   V a r i a b l e s       */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Internal variables
     #kulManager = kulManagerInstance();
-    /*-------------------------------------------------*/
-    /*                   E v e n t s                   */
-    /*-------------------------------------------------*/
-    /**
-     * Describes event emitted by the component.
-     */
+    //#endregion
+    //#region Events
     kulEvent;
     onKulEvent(e, eventType) {
         this.kulEvent.emit({
@@ -47,9 +42,8 @@ const KulDrawer = class {
             originalEvent: e,
         });
     }
-    /*-------------------------------------------------*/
-    /*           P u b l i c   M e t h o d s           */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Public methods
     /**
      * Closes the drawer.
      */
@@ -113,9 +107,8 @@ const KulDrawer = class {
             this.rootElement.remove();
         }, ms);
     }
-    /*-------------------------------------------------*/
-    /*          L i f e c y c l e   H o o k s          */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Lifecycle hooks
     componentWillLoad() {
         this.#kulManager.theme.register(this);
     }
@@ -130,7 +123,7 @@ const KulDrawer = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: '7eaf9eeda7a16d5a01ee8422df69f7993fc435b2', "kul-opened": this.opened }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '0f3fee18a70da4b72b8068e09c763180e6977993', class: "backdrop", onClick: (e) => {
+        return (h(Host, { key: '1e0f0a652483d8ed8c09cc6b8a8ca8f1a7510122', "kul-opened": this.opened }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '31867e3b6503e3537d1d13f5dce4fa3aaa0451dc', class: "backdrop", onClick: (e) => {
                 e.preventDefault();
                 e.stopPropagation();
             }, onPointerDown: (e) => {
@@ -140,7 +133,7 @@ const KulDrawer = class {
             }, onTouchStart: (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-            } }), h("div", { key: '1a8047af584f249b4be0b434fbc3bcc70d805883', id: KUL_WRAPPER_ID }, h("div", { key: '613794b4fb526c0aa56418e3c83341018b62d53a', class: 'drawer' }, h("div", { key: '5b9057a72275a098418b9f06f0ecc3cb283b4ee5', class: `drawer__content` }, h("slot", { key: '2c2b6d808c844c95cf995fee93e301d9c051b7bb' }))))));
+            } }), h("div", { key: '8b4913de4c58e9f37a12c0df281f23c966e192b5', id: KUL_WRAPPER_ID }, h("div", { key: '840877f19424ab145e566bdd1a29a06efc2a3411', class: 'drawer' }, h("div", { key: 'cb20ecbbf5832d6a3e0d6578633947ee493f14ef', class: `drawer__content` }, h("slot", { key: 'c722dcc7003236f5b203b0ca7daee6ba012e1173' }))))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

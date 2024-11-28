@@ -1,10 +1,9 @@
-import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-53f95fee.js';
-import { k as kulManagerInstance, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-9e1be956.js';
+import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-7cf82e95.js';
+import { k as kulManagerInstance, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-72505221.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 
-/*-------------------------------------------------*/
-/*                    P r o p s                    */
-/*-------------------------------------------------*/
+//#endregion
+//#region Props
 var KulToastProps;
 (function (KulToastProps) {
     KulToastProps["kulCloseCallback"] = "Callback invoked when the toast is closed.";
@@ -14,6 +13,7 @@ var KulToastProps;
     KulToastProps["kulStyle"] = "Enables customization of the component's style.";
     KulToastProps["kulTimer"] = "When kulTimer is set with a number, the toast will close itself after the specified amount of time (in ms).";
 })(KulToastProps || (KulToastProps = {}));
+//#endregion
 
 const kulToastCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}@keyframes fade-in-grid{0%{display:none}1%{display:grid;opacity:0}100%{display:grid;opacity:1}}:host{--kul_toast_accent_color:var(\n    --kul-toast-accent-color,\n    var(--kul-info-color)\n  );--kul_toast_accent_height:var(--kul-toast-accent-height, 4px);--kul_toast_icon_opacity:var(--kul-toast-icon-opacity, 0.625);--kul_toast_slidein_from:var(--kul-toast-slidein-from, translateX(100%));--kul_toast_slidein_to:var(--kul-toast-slidein-to, translateX(0));animation:slideIn 250ms ease-out;-webkit-backdrop-filter:blur(3.5px);backdrop-filter:blur(3.5px);background-color:rgba(var(--kul-background-color-rgb), 0.375);border-radius:4px;box-shadow:var(--kul-box-shadow);box-sizing:border-box;display:block;height:100%;width:100%}#kul-component{height:100%;width:100%}.toast{height:100%;width:100%}.toast__accent{background-color:var(--kul_toast_accent_color);height:var(--kul_toast_accent_height);width:100%}.toast__accent--temporary{animation:reduceWidthToZero linear 5s forwards}.toast__message-wrapper{align-content:center;box-sizing:border-box;display:flex;height:100%;padding:12px}.toast__icon{margin:auto 8px;opacity:var(--kul_toast_icon_opacity)}.toast__icon--close{cursor:pointer;margin:auto 8px auto auto;position:relative}.toast__icon--close:hover:before{background-color:rgba(var(--kul-danger-color-rgb), 0.175);border-radius:50%;content:\"\";left:-3px;padding:12px;position:absolute;top:-3px}.toast__message{padding:12px 12px 12px 0}@media only screen and (max-width: 600px){.host{animation:slideUp 250ms ease-out}}@keyframes reduceWidthToZero{0%{width:100%}100%{width:0}}@keyframes slideIn{0%{transform:var(--kul_toast_slidein_from)}100%{transform:var(--kul_toast_slidein_to)}}@keyframes slideUp{0%{transform:var(--kul_toast_slideup_from)}100%{transform:var(--kul_toast_slideup_to)}}";
 const KulToastStyle0 = kulToastCss;
@@ -47,16 +47,11 @@ const KulToast = class {
         this.kulStyle = '';
     }
     get rootElement() { return getElement(this); }
-    /*-------------------------------------------------*/
-    /*       I n t e r n a l   V a r i a b l e s       */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Internal variables
     #kulManager = kulManagerInstance();
-    /*-------------------------------------------------*/
-    /*                   E v e n t s                   */
-    /*-------------------------------------------------*/
-    /**
-     * Describes event emitted.
-     */
+    //#endregion
+    //#region Events
     kulEvent;
     onKulEvent(e, eventType) {
         this.kulEvent.emit({
@@ -66,9 +61,8 @@ const KulToast = class {
             originalEvent: e,
         });
     }
-    /*-------------------------------------------------*/
-    /*           P u b l i c   M e t h o d s           */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Public methods
     /**
      * Retrieves the debug information reflecting the current state of the component.
      * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves to a KulDebugLifecycleInfo object containing debug information.
@@ -100,9 +94,8 @@ const KulToast = class {
             this.rootElement.remove();
         }, ms);
     }
-    /*-------------------------------------------------*/
-    /*          L i f e c y c l e   H o o k s          */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Lifecycle hooks
     componentWillLoad() {
         this.#kulManager.theme.register(this);
     }
@@ -120,7 +113,7 @@ const KulToast = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: '341eea3fb2639783253cd5c482f36b6a8cd3a034' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '8d88560ffd4bb55187d8b8492e98fdf6b869f8cc', id: KUL_WRAPPER_ID }, h("div", { key: '0774597febfbef6ad217e6fa380501775a11e03d', class: "toast" }, h("div", { key: 'd609c6486b1c5c195cf5eb204d9e3fa73ca2e060', class: `toast__accent ${this.kulTimer ? 'toast__accent--temporary' : ''}` }), h("div", { key: 'a83e2048a0fdd5995cebdb90fd05f0fb172c59e6', class: "toast__message-wrapper" }, this.kulIcon ? (h("div", { class: "toast__icon" }, h("kul-image", { ...this.kulIcon }))) : undefined, this.kulMessage ? (h("div", { class: "toast__message" }, this.kulMessage)) : undefined, this.kulCloseIcon ? (h("div", { class: "toast__icon toast__icon--close", onClick: () => this.kulCloseCallback() }, h("kul-image", { ...this.kulCloseIcon }))) : undefined)))));
+        return (h(Host, { key: '58feced3a77f3f58c09641396ea94deae62d7b1e' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '83a8b0fdaaf683a71cd237ac4c1ce31be472b4cf', id: KUL_WRAPPER_ID }, h("div", { key: 'e852ea92b8ab6ae793263bf50da63af65810b8b7', class: "toast" }, h("div", { key: 'd386ff081f6fe2465b5864dbadb6c040fd01f840', class: `toast__accent ${this.kulTimer ? 'toast__accent--temporary' : ''}` }), h("div", { key: '221e0f2805462b50d60e607f946af5be09a60501', class: "toast__message-wrapper" }, this.kulIcon ? (h("div", { class: "toast__icon" }, h("kul-image", { ...this.kulIcon }))) : undefined, this.kulMessage ? (h("div", { class: "toast__message" }, this.kulMessage)) : undefined, this.kulCloseIcon ? (h("div", { class: "toast__icon toast__icon--close", onClick: () => this.kulCloseCallback() }, h("kul-image", { ...this.kulCloseIcon }))) : undefined)))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

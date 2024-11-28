@@ -5,7 +5,7 @@ import { getLFManager } from '../utils/common';
 
 export const EV_HANDLERS = {
   //#region Chat handler
-  chat: (e: CustomEvent<KulChatEventPayload>, state: ChatState) => {
+  chat: (state: ChatState, e: CustomEvent<KulChatEventPayload>) => {
     const { eventType, history, status } = e.detail;
 
     switch (eventType) {

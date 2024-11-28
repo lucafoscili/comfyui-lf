@@ -1,28 +1,56 @@
-import { controlPanelFactory } from '../widgets/controlPanel.js';
-import { codeFactory } from '../widgets/code.js';
-import { CustomWidgetName, NodeName, } from '../types/widgets/_common.js';
-import { masonryFactory } from '../widgets/masonry.js';
-import { textareaFactory } from '../widgets/textarea.js';
-import { treeFactory } from '../widgets/tree.js';
-import { chatFactory } from '../widgets/chat.js';
-import { historyFactory } from '../widgets/history.js';
-import { countBarChartFactory } from '../widgets/countBarChart.js';
-import { uploadFactory } from '../widgets/upload.js';
-import { chipFactory } from '../widgets/chip.js';
-import { messengerFactory } from '../widgets/messenger.js';
+var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, state, kind, f) {
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
+    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
+};
+var _LFWidgets_FACTORIES, _LFWidgets_notifications;
+import { apiCall, cardPlaceholders } from '../helpers/card.js';
+import { LogSeverity } from '../types/manager/manager.js';
+import { CustomWidgetName, NodeName } from '../types/widgets/widgets.js';
+import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common.js';
 import { cardFactory } from '../widgets/card.js';
 import { cardsWithChipFactory } from '../widgets/cardsWithChip.js';
-import { tabBarChartFactory } from '../widgets/tabBarChart.js';
-import { compareFactory } from '../widgets/compare.js';
-import { getApiRoutes, getCustomWidget, getLFManager } from '../utils/common.js';
-import { showNotification } from '../helpers/notify.js';
-import { progressbarFactory } from '../widgets/progressbar.js';
 import { carouselFactory } from '../widgets/carousel.js';
+import { chatFactory } from '../widgets/chat.js';
+import { chipFactory } from '../widgets/chip.js';
+import { codeFactory } from '../widgets/code.js';
+import { compareFactory } from '../widgets/compare.js';
+import { controlPanelFactory } from '../widgets/controlPanel.js';
+import { countBarChartFactory } from '../widgets/countBarChart.js';
+import { historyFactory } from '../widgets/history.js';
 import { imageEditorFactory } from '../widgets/imageEditor.js';
-import { LogSeverity } from '../types/manager/manager.js';
-import { cardPlaceholders, fetchModelMetadata } from '../helpers/card.js';
+import { masonryFactory } from '../widgets/masonry.js';
+import { messengerFactory } from '../widgets/messenger.js';
+import { progressbarFactory } from '../widgets/progressbar.js';
+import { tabBarChartFactory } from '../widgets/tabBarChart.js';
+import { textareaFactory } from '../widgets/textarea.js';
+import { treeFactory } from '../widgets/tree.js';
+import { uploadFactory } from '../widgets/upload.js';
 export class LFWidgets {
     constructor() {
+        _LFWidgets_FACTORIES.set(this, {
+            [CustomWidgetName.card]: cardFactory,
+            [CustomWidgetName.carousel]: carouselFactory,
+            [CustomWidgetName.cardsWithChip]: cardsWithChipFactory,
+            [CustomWidgetName.chat]: chatFactory,
+            [CustomWidgetName.chip]: chipFactory,
+            [CustomWidgetName.code]: codeFactory,
+            [CustomWidgetName.compare]: compareFactory,
+            [CustomWidgetName.controlPanel]: controlPanelFactory,
+            [CustomWidgetName.countBarChart]: countBarChartFactory,
+            [CustomWidgetName.history]: historyFactory,
+            [CustomWidgetName.imageEditor]: imageEditorFactory,
+            [CustomWidgetName.masonry]: masonryFactory,
+            [CustomWidgetName.messenger]: messengerFactory,
+            [CustomWidgetName.progressbar]: progressbarFactory,
+            [CustomWidgetName.tabBarChart]: tabBarChartFactory,
+            [CustomWidgetName.textarea]: textareaFactory,
+            [CustomWidgetName.tree]: treeFactory,
+            [CustomWidgetName.upload]: uploadFactory,
+        });
+        //#region render
+        this.render = (name) => __classPrivateFieldGet(this, _LFWidgets_FACTORIES, "f")[name].render;
+        //#endregion
         //#region Decorators
         this.decorators = {
             card: (payload, widget) => {
@@ -40,7 +68,7 @@ export class LFWidgets {
                     const path = paths[index];
                     models.push({ dataset, hash, path, apiFlag });
                 }
-                fetchModelMetadata(models).then((r) => {
+                apiCall(models).then((r) => {
                     for (let index = 0; index < r.length; index++) {
                         const cardProps = r[index];
                         if (cardProps.kulData) {
@@ -59,86 +87,6 @@ export class LFWidgets {
             },
         };
         //#endregion
-        //#region Options
-        this.option = {
-            [CustomWidgetName.card]: (grid) => cardFactory.options(grid),
-            [CustomWidgetName.cardsWithChip]: (grid) => cardsWithChipFactory.options(grid),
-            [CustomWidgetName.carousel]: (carousel) => carouselFactory.options(carousel),
-            [CustomWidgetName.chat]: (chat) => chatFactory.options(chat),
-            [CustomWidgetName.chip]: (chip) => chipFactory.options(chip),
-            [CustomWidgetName.code]: (code) => codeFactory.options(code),
-            [CustomWidgetName.compare]: (compare) => compareFactory.options(compare),
-            [CustomWidgetName.controlPanel]: () => controlPanelFactory.options(),
-            [CustomWidgetName.countBarChart]: (chart, chip, button) => countBarChartFactory.options(chart, chip, button),
-            [CustomWidgetName.history]: (history) => historyFactory.options(history),
-            [CustomWidgetName.imageEditor]: (imageviewer, actionButtons, grid) => imageEditorFactory.options(imageviewer, actionButtons, grid),
-            [CustomWidgetName.masonry]: (masonry) => masonryFactory.options(masonry),
-            [CustomWidgetName.messenger]: (messenger, placeholder) => messengerFactory.options(messenger, placeholder),
-            [CustomWidgetName.progressbar]: (progressbar, nodeType) => progressbarFactory.options(progressbar, nodeType),
-            [CustomWidgetName.tabBarChart]: (chart, tabbar, textfield, node) => tabBarChartFactory.options(chart, tabbar, textfield, node),
-            [CustomWidgetName.textarea]: (content) => textareaFactory.options(content),
-            [CustomWidgetName.tree]: (tree) => treeFactory.options(tree),
-            [CustomWidgetName.upload]: (upload) => uploadFactory.options(upload),
-        };
-        //#endregion
-        //#region Setters
-        this.set = {
-            [CustomWidgetName.card]: (nodeType) => {
-                return cardFactory.render(nodeType, CustomWidgetName.card);
-            },
-            [CustomWidgetName.carousel]: (nodeType) => {
-                return carouselFactory.render(nodeType, CustomWidgetName.carousel);
-            },
-            [CustomWidgetName.cardsWithChip]: (nodeType) => {
-                return cardsWithChipFactory.render(nodeType, CustomWidgetName.cardsWithChip);
-            },
-            [CustomWidgetName.chat]: (nodeType) => {
-                return chatFactory.render(nodeType, CustomWidgetName.chat);
-            },
-            [CustomWidgetName.chip]: (nodeType) => {
-                return chipFactory.render(nodeType, CustomWidgetName.chip);
-            },
-            [CustomWidgetName.code]: (nodeType) => {
-                return codeFactory.render(nodeType, CustomWidgetName.code);
-            },
-            [CustomWidgetName.compare]: (nodeType) => {
-                return compareFactory.render(nodeType, CustomWidgetName.compare);
-            },
-            [CustomWidgetName.controlPanel]: (nodeType) => {
-                return controlPanelFactory.render(nodeType, CustomWidgetName.controlPanel);
-            },
-            [CustomWidgetName.countBarChart]: (nodeType) => {
-                return countBarChartFactory.render(nodeType, CustomWidgetName.countBarChart);
-            },
-            [CustomWidgetName.history]: (nodeType) => {
-                return historyFactory.render(nodeType, CustomWidgetName.history);
-            },
-            [CustomWidgetName.imageEditor]: (nodeType) => {
-                return imageEditorFactory.render(nodeType, CustomWidgetName.imageEditor);
-            },
-            [CustomWidgetName.masonry]: (nodeType) => {
-                return masonryFactory.render(nodeType, CustomWidgetName.masonry);
-            },
-            [CustomWidgetName.messenger]: (nodeType) => {
-                return messengerFactory.render(nodeType, CustomWidgetName.messenger);
-            },
-            [CustomWidgetName.progressbar]: (nodeType) => {
-                return progressbarFactory.render(nodeType, CustomWidgetName.progressbar);
-            },
-            [CustomWidgetName.tabBarChart]: (nodeType) => {
-                return tabBarChartFactory.render(nodeType, CustomWidgetName.tabBarChart);
-            },
-            [CustomWidgetName.textarea]: (nodeType) => {
-                return textareaFactory.render(nodeType, CustomWidgetName.textarea);
-            },
-            [CustomWidgetName.tree]: (nodeType) => {
-                return treeFactory.render(nodeType, CustomWidgetName.tree);
-            },
-            [CustomWidgetName.upload]: (nodeType) => {
-                return uploadFactory.render(nodeType, CustomWidgetName.upload);
-            },
-        };
-        //#endregion
         //#region onEvent
         this.onEvent = (name, event, widgets) => {
             const lfManager = getLFManager();
@@ -149,7 +97,7 @@ export class LFWidgets {
                 switch (name) {
                     case NodeName.notify:
                         if ('action' in payload) {
-                            showNotification(payload);
+                            __classPrivateFieldGet(this, _LFWidgets_notifications, "f").show(payload);
                         }
                         break;
                 }
@@ -230,11 +178,75 @@ export class LFWidgets {
                 lfManager.log(`Event '${name}' was fired but its related node (#${payload.id}) wasn't found in the graph! Skipping handling the event.`, { payload, name }, LogSeverity.Warning);
             }
         };
-        const link = document.createElement('link');
-        link.dataset.filename = 'tooltip';
-        link.rel = 'stylesheet';
-        link.type = 'text/css';
-        link.href = `extensions/comfyui-lf/css/widgets.css`;
-        document.head.appendChild(link);
+        //#endregion
+        //#region Notifications
+        _LFWidgets_notifications.set(this, {
+            decorate: (payload) => {
+                const { action, image, message, silent, tag, title } = payload;
+                const icon = action === 'focus tab'
+                    ? 'visibility'
+                    : action === 'interrupt'
+                        ? 'not_interested'
+                        : action === 'interrupt and queue'
+                            ? 'refresh'
+                            : action === 'queue prompt'
+                                ? 'queue'
+                                : '';
+                const options = {
+                    body: message,
+                    icon: icon
+                        ? window.location.href + `extensions/comfyui-lf/assets/svg/${icon}.svg`
+                        : undefined,
+                    requireInteraction: action === 'none' ? false : true,
+                    silent,
+                    tag,
+                };
+                if ('image' in Notification.prototype && image) {
+                    options.image = image;
+                }
+                if (Notification.permission === 'granted') {
+                    const notification = new Notification(title, options);
+                    notification.addEventListener('click', () => {
+                        const lfManager = getLFManager();
+                        const routes = getApiRoutes().comfy;
+                        switch (action) {
+                            case 'focus tab':
+                                window.focus();
+                                break;
+                            case 'interrupt':
+                                routes.interrupt();
+                                break;
+                            case 'interrupt and queue':
+                                routes.interrupt();
+                                routes.queuePrompt();
+                                lfManager.log('New prompt queued from notification after interrupting.', {}, LogSeverity.Success);
+                                break;
+                            case 'queue prompt':
+                                routes.queuePrompt();
+                                lfManager.log('New prompt queued from notification.', {}, LogSeverity.Success);
+                                break;
+                        }
+                    });
+                }
+            },
+            show: (payload) => {
+                const lfManager = getLFManager();
+                if (Notification.permission !== 'granted') {
+                    Notification.requestPermission().then((permission) => {
+                        if (permission === 'granted') {
+                            __classPrivateFieldGet(this, _LFWidgets_notifications, "f").decorate(payload);
+                        }
+                        else {
+                            lfManager.log('Notification permission denied.', {}, LogSeverity.Warning);
+                        }
+                    });
+                }
+                else {
+                    __classPrivateFieldGet(this, _LFWidgets_notifications, "f").decorate(payload);
+                }
+            },
+        });
+        //#endregion
     }
 }
+_LFWidgets_FACTORIES = new WeakMap(), _LFWidgets_notifications = new WeakMap();

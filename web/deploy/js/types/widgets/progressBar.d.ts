@@ -1,22 +1,23 @@
-import { BaseWidgetCallback, BaseWidgetFactory, BaseWidgetOptions, CustomWidgetName } from './_common';
-export interface Progressbar extends Widget {
-    options: ProgressbarOptions;
-    type: [CustomWidgetName.progressbar];
+import { BaseWidgetState, CustomWidgetName, NormalizeValueCallback, WidgetFactory } from './widgets';
+export declare enum ProgressbarCSS {
+    Content = "lf-progressbar"
 }
-export interface ProgressbarFactory extends BaseWidgetFactory<ProgressbarOptions> {
-    options: ProgressbarOptionsCallback;
-}
-export type ProgressbarOptionsCallback = (progressbar: HTMLKulProgressbarElement, nodeType: NodeType) => ProgressbarOptions;
-export interface ProgressbarOptions extends BaseWidgetOptions<ProgressbarDeserializedValue> {
-    getComp(): HTMLKulProgressbarElement;
-}
-export type ProgressbarSetter = () => {
-    [CustomWidgetName.progressbar]: BaseWidgetCallback<CustomWidgetName.progressbar>;
-};
+export type Progressbar = Widget<CustomWidgetName.progressbar>;
+export type ProgressbarFactory = WidgetFactory<ProgressbarDeserializedValue, ProgressbarState>;
+export type ProgressbarNormalizeCallback = NormalizeValueCallback<ProgressbarDeserializedValue | string>;
 export type ProgressbarDeserializedValue = {
     bool: boolean;
     roll: number;
 };
-export declare enum ProgressbarCSS {
-    Content = "lf-progressbar"
+export interface ProgressbarState extends BaseWidgetState {
+    progressbar: HTMLKulProgressbarElement;
+}
+export declare enum ProgressbarIcons {
+    Landscape = "landscape",
+    Portrait = "portrait"
+}
+export declare enum ProgressbarLabels {
+    Fallback = "N/A",
+    False = "false",
+    True = "true"
 }

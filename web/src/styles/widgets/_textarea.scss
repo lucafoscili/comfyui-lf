@@ -1,0 +1,30 @@
+@use '../mixins/mixins' as mixins;
+
+.lf-textarea {
+  & {
+    @include mixins.lf-root();
+  }
+
+  &__widget {
+    background: var(--kul-background-color);
+    border: 0;
+    color: var(--kul-text-color);
+    display: block;
+    font-family: var(--kul-font-family-monospace);
+    font-size: var(--kul-font-size);
+    height: 100%;
+    outline: none;
+    padding: 8px;
+    resize: none;
+    transition: box-shadow 175ms ease;
+    width: 100%;
+
+    &:focus:not(.lf-textarea__widget--error) {
+      box-shadow: inset 0px 0px 4px 1px var(--kul-text-color);
+    }
+
+    &--error {
+      box-shadow: inset 0px 0px 4px 1px var(--kul-danger-color);
+    }
+  }
+}

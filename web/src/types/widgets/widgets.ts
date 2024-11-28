@@ -11,7 +11,7 @@ import { History, HistoryDeserializedValue } from './history';
 import { ImageEditor, ImageEditorDeserializedValue } from './imageEditor';
 import { Masonry, MasonryDeserializedValue } from './masonry';
 import { Messenger, MessengerDeserializedValue } from './messenger';
-import { Progressbar, ProgressbarDeserializedValue } from './progressBar';
+import { Progressbar, ProgressbarDeserializedValue } from './progressbar';
 import { TabBarChart, TabBarChartDeserializedValue } from './tabBarChart';
 import { Textarea, TextareaDeserializedValue } from './textarea';
 import { Tree, TreeDeserializedValue } from './tree';
@@ -245,7 +245,7 @@ export type ComfyWidgetCallback = <T extends ComfyWidgetName>(
   name: T,
 ) => { widget: ComfyWidget };
 export interface WidgetFactory<
-  V extends CustomWidgetDeserializedValuesMap<CustomWidgetName>,
+  V extends CustomWidgetDeserializedValuesMap<CustomWidgetName> = CustomWidgetDeserializedValuesMap<CustomWidgetName>,
   S extends BaseWidgetState = BaseWidgetState,
 > {
   options: (wrapper: HTMLDivElement) => WidgetOptions<V, S>;

@@ -17,19 +17,6 @@
   width: 100%;
 }
 
-.lf-carousel {
-  background: var(--kul-background-color);
-  height: 100%;
-  width: 100%;
-  max-height: 100%;
-  max-width: 100%;
-  overflow: auto;
-}
-.lf-carousel__widget {
-  height: 100%;
-  width: 100%;
-}
-
 .lf-cardswithchip {
   background: var(--kul-background-color);
   height: 100%;
@@ -48,6 +35,19 @@
 }
 .lf-cardswithchip__grid {
   grid-template-rows: minmax(0, auto) 1fr;
+}
+
+.lf-carousel {
+  background: var(--kul-background-color);
+  height: 100%;
+  width: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  overflow: auto;
+}
+.lf-carousel__widget {
+  height: 100%;
+  width: 100%;
 }
 
 .lf-chat {
@@ -130,24 +130,9 @@
   overflow: auto;
   position: relative;
 }
-.lf-countbarchart__grid {
-  display: grid;
-  grid-template-rows: 60% 1fr auto;
+.lf-countbarchart__widget {
   height: 100%;
   width: 100%;
-}
-.lf-countbarchart__button, .lf-countbarchart__chip {
-  height: auto;
-}
-.lf-countbarchart__button--hidden, .lf-countbarchart__chip--hidden {
-  visibility: hidden;
-}
-.lf-countbarchart__chip {
-  border-top: 1px solid var(--kul-border-color);
-  border-bottom: 1px solid var(--kul-border-color);
-  box-sizing: border-box;
-  overflow: auto;
-  padding: 4px 0;
 }
 
 .lf-history {
@@ -354,4 +339,4 @@
   width: 100%;
 }
 
-/*# sourceMappingURL=widgets.css.map */
+/*# sourceMappingURL=_index.css.map */

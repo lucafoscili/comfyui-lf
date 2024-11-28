@@ -1,13 +1,13 @@
 import { EV_HANDLERS } from '../helpers/history';
 import { KulEventName } from '../types/events/events';
 import { KulDataDataset } from '../types/ketchup-lite/components';
-import { CustomWidgetName, NodeName, TagName } from '../types/widgets/_common';
 import {
   HistoryCSS,
   HistoryFactory,
   HistoryNormalizeCallback,
   HistoryState,
 } from '../types/widgets/history';
+import { CustomWidgetName, NodeName, TagName } from '../types/widgets/widgets';
 import { createDOMWidget, normalizeValue } from '../utils/common';
 
 const STATE = new WeakMap<HTMLDivElement, HistoryState>();
@@ -53,10 +53,7 @@ export const historyFactory: HistoryFactory = {
         break;
     }
 
-    list.addEventListener(
-      KulEventName.KulList,
-      EV_HANDLERS.list.bind(EV_HANDLERS.list, STATE.get(wrapper)),
-    );
+    list.addEventListener(KulEventName.KulList, (e) => EV_HANDLERS.list(STATE.get(wrapper), e));
 
     content.classList.add(HistoryCSS.Content);
     content.appendChild(list);

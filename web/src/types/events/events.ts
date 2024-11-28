@@ -1,5 +1,5 @@
 import { KulDataDataset } from '../ketchup-lite/components';
-import { CustomWidgetName, NodeName } from '../widgets/_common';
+import { CustomWidgetName, NodeName } from '../widgets/widgets';
 
 // #region Common declarations
 export type GenericPayload = WidgetPayloadFor<CustomWidgetName>;

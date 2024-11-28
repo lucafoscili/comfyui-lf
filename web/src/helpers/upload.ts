@@ -3,8 +3,8 @@ import { LogSeverity } from '../types/manager/manager';
 import { UploadState } from '../types/widgets/upload';
 import { getApiRoutes, getLFManager } from '../utils/common';
 
-//#region Handlers
-export const handlers = {
+export const EV_HANDLERS = {
+  //#region Upload handler
   upload: async (state: UploadState, e: CustomEvent<KulUploadEventPayload>) => {
     const { eventType, selectedFiles } = e.detail;
 
@@ -49,5 +49,5 @@ export const handlers = {
         break;
     }
   },
+  //#endregion
 };
-//#endregion

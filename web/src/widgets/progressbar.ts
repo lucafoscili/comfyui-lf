@@ -1,4 +1,3 @@
-import { CustomWidgetName, NodeName, TagName } from '../types/widgets/_common';
 import {
   ProgressbarCSS,
   ProgressbarDeserializedValue,
@@ -7,7 +6,8 @@ import {
   ProgressbarLabels,
   ProgressbarNormalizeCallback,
   ProgressbarState,
-} from '../types/widgets/progressBar';
+} from '../types/widgets/progressbar';
+import { CustomWidgetName, NodeName, TagName } from '../types/widgets/widgets';
 import { createDOMWidget, normalizeValue } from '../utils/common';
 
 const STATE = new WeakMap<HTMLDivElement, ProgressbarState>();

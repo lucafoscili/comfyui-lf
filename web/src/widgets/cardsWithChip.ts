@@ -1,6 +1,4 @@
-import { CustomWidgetName, TagName } from '../types/widgets/_common';
 import { getCardProps, prepCards } from '../helpers/card';
-import { createDOMWidget, normalizeValue } from '../utils/common';
 import {
   CardsWithChipCSS,
   CardsWithChipDeserializedValue,
@@ -8,6 +6,8 @@ import {
   CardsWithChipNormalizeCallback,
   CardsWithChipState,
 } from '../types/widgets/cardsWithChip';
+import { CustomWidgetName, TagName } from '../types/widgets/widgets';
+import { createDOMWidget, normalizeValue } from '../utils/common';
 
 const STATE = new WeakMap<HTMLDivElement, CardsWithChipState>();
 
@@ -68,7 +68,7 @@ export const cardsWithChipFactory: CardsWithChipFactory = {
     content.appendChild(grid);
     wrapper.appendChild(content);
 
-    const options = cardsWithChipFactory.options(grid);
+    const options = cardsWithChipFactory.options(wrapper);
 
     STATE.set(wrapper, { chip, grid, node, wrapper });
 

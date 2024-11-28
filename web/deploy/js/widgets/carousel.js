@@ -1,18 +1,19 @@
-import { CustomWidgetName, TagName, } from '../types/widgets/_common.js';
-import { CarouselCSS } from '../types/widgets/carousel.js';
+import { CustomWidgetName, TagName } from '../types/widgets/widgets.js';
 import { createDOMWidget, normalizeValue } from '../utils/common.js';
-//#region Carousel
+import { CarouselCSS, } from './../types/widgets/carousel.js';
+const STATE = new WeakMap();
 export const carouselFactory = {
-    options: (carousel) => {
+    //#region Options
+    options: (wrapper) => {
         return {
             hideOnZoom: true,
-            getComp() {
-                return carousel;
-            },
+            getState: () => STATE.get(wrapper),
             getValue() {
+                const { carousel } = STATE.get(wrapper);
                 return carousel?.kulData || {};
             },
             setValue(value) {
+                const { carousel } = STATE.get(wrapper);
                 const callback = (_, u) => {
                     const dataset = u.parsedJson;
                     carousel.kulData = dataset || {};
@@ -21,17 +22,23 @@ export const carouselFactory = {
             },
         };
     },
+    //#endregion
+    //#region Render
     render: (node) => {
         const wrapper = document.createElement(TagName.Div);
         const content = document.createElement(TagName.Div);
         const carousel = document.createElement(TagName.KulCarousel);
-        const options = carouselFactory.options(carousel);
         carousel.kulAutoPlay = true;
         content.classList.add(CarouselCSS.Content);
         carousel.classList.add(CarouselCSS.Widget);
         content.appendChild(carousel);
         wrapper.appendChild(content);
+        const options = carouselFactory.options(wrapper);
+        STATE.set(wrapper, { carousel, node, wrapper });
         return { widget: createDOMWidget(CustomWidgetName.carousel, wrapper, node, options) };
     },
+    //#endregion
+    //#region State
+    state: STATE,
+    //#endregion
 };
-//#endregion

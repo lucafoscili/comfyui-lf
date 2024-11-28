@@ -1,11 +1,11 @@
 import { KulDataDataset } from '../types/ketchup-lite/components';
-import { CustomWidgetName, TagName } from '../types/widgets/_common';
 import {
   CompareCSS,
   CompareFactory,
   CompareNormalizeCallback,
   CompareState,
 } from '../types/widgets/compare';
+import { CustomWidgetName, TagName } from '../types/widgets/widgets';
 import { createDOMWidget, normalizeValue } from '../utils/common';
 
 const STATE = new WeakMap<HTMLDivElement, CompareState>();

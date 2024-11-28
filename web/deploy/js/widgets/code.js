@@ -1,15 +1,15 @@
-import { CustomWidgetName, NodeName, TagName, } from '../types/widgets/_common.js';
 import { CodeCSS } from '../types/widgets/code.js';
+import { CustomWidgetName, NodeName, TagName } from '../types/widgets/widgets.js';
 import { createDOMWidget, normalizeValue } from '../utils/common.js';
-//#region Code
+const STATE = new WeakMap();
 export const codeFactory = {
-    options: (code) => {
+    //#region Options
+    options: (wrapper) => {
         return {
             hideOnZoom: false,
-            getComp() {
-                return code;
-            },
+            getState: () => STATE.get(wrapper),
             getValue() {
+                const { code } = STATE.get(wrapper);
                 switch (code.kulLanguage) {
                     case 'json':
                         return code.kulValue || '{}';
@@ -18,6 +18,7 @@ export const codeFactory = {
                 }
             },
             setValue(value) {
+                const { code } = STATE.get(wrapper);
                 const callback = (v, u) => {
                     switch (code.kulLanguage) {
                         case 'json':
@@ -32,11 +33,12 @@ export const codeFactory = {
             },
         };
     },
+    //#endregion
+    //#region Render
     render: (node) => {
         const wrapper = document.createElement(TagName.Div);
         const content = document.createElement(TagName.Div);
         const code = document.createElement(TagName.KulCode);
-        const options = codeFactory.options(code);
         content.classList.add(CodeCSS.Content);
         code.classList.add(CodeCSS.Widget);
         switch (node.comfyClass) {
@@ -55,7 +57,12 @@ export const codeFactory = {
         }
         content.appendChild(code);
         wrapper.appendChild(content);
+        const options = codeFactory.options(wrapper);
+        STATE.set(wrapper, { code, node, wrapper });
         return { widget: createDOMWidget(CustomWidgetName.code, wrapper, node, options) };
     },
+    //#endregion
+    //#region State
+    state: STATE,
+    //#endregion
 };
-//#endregion

@@ -1,20 +1,10 @@
-import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, F as Fragment, H as Host } from './index-53f95fee.js';
-import { k as kulManagerInstance, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-9e1be956.js';
+import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, F as Fragment, H as Host } from './index-7cf82e95.js';
+import { k as kulManagerInstance, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-72505221.js';
 import { g as getProps } from './componentUtils-a994b230.js';
-
-/*-------------------------------------------------*/
-/*                    P r o p s                    */
-/*-------------------------------------------------*/
-var KulCompareProps;
-(function (KulCompareProps) {
-    KulCompareProps["kulData"] = "Actual data to compare.";
-    KulCompareProps["kulShape"] = "Sets the type of shapes to compare.";
-    KulCompareProps["kulStyle"] = "Sets a custom CSS style for the component.";
-    KulCompareProps["kulView"] = "Sets the type of view, either styled as a before-after or a side-by-side comparison.";
-})(KulCompareProps || (KulCompareProps = {}));
 
 const DEFAULTS = (_isOverlay) => {
     return {
+        //#region Left
         left: {
             image: () => [
                 {
@@ -24,6 +14,8 @@ const DEFAULTS = (_isOverlay) => {
                 },
             ],
         },
+        //#endregion
+        //#region Right
         right: {
             image: () => [
                 {
@@ -33,8 +25,20 @@ const DEFAULTS = (_isOverlay) => {
                 },
             ],
         },
+        //#endregion
     };
 };
+
+//#endregion
+//#region Props
+var KulCompareProps;
+(function (KulCompareProps) {
+    KulCompareProps["kulData"] = "Actual data to compare.";
+    KulCompareProps["kulShape"] = "Sets the type of shapes to compare.";
+    KulCompareProps["kulStyle"] = "Sets a custom CSS style for the component.";
+    KulCompareProps["kulView"] = "Sets the type of view, either styled as a before-after or a side-by-side comparison.";
+})(KulCompareProps || (KulCompareProps = {}));
+//#endregion
 
 const kulCompareCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}@keyframes fade-in-grid{0%{display:none}1%{display:grid;opacity:0}100%{display:grid;opacity:1}}:host{--kul_compare_grid_template:var(--kul-compare-grid-template, 1fr auto);--kul_compare_change_view_background_color:var(\n    --kul-compare-change-view-background-color,\n    var(--kul-title-background-color)\n  );--kul_compare_change_view_padding:var(\n    --kul-compare-change-view-padding,\n    8px\n  );--kul_compare_slider_width:var(--kul-compare-slider-width, 3px);--kul_compare_slider_color:var(\n    --kul-compare-slider-color,\n    var(--kul-title-background-color)\n  );display:block}#kul-component{height:100%;width:100%}.compare{height:100%;width:100%}.grid{display:grid;grid-template-rows:var(--kul_compare_grid_template);height:100%;position:relative;width:100%}.change-view{background:var(--kul_compare_change_view_background_color);box-sizing:border-box;display:flex;justify-content:space-between;padding:var(--kul_compare_change_view_padding);width:100%}.view{height:100%;position:relative;width:100%}.view--overlay>:first-child{height:100%;position:relative;width:100%}.view--overlay>:last-child{clip-path:inset(0 var(--kul_compare_overlay_width, 50%) 0 0);height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.view--overlay>:last-child:after{background-color:var(--kul_compare_slider_color);content:\"\";height:100%;pointer-events:none;position:absolute;right:var(--kul_compare_overlay_width, 50%);top:0;width:var(--kul_compare_slider_width)}.view--split{display:grid;grid-template-columns:50% 50%;overflow:hidden}.view__panel{background:var(--kul_compare_change_view_background_color);bottom:0;height:max-content;max-height:50%;overflow:auto;position:absolute;width:50%;z-index:2}.view__panel--left{left:0}.view__panel--right{right:0}.view__slider{height:100%;left:0;position:absolute;top:0;width:100%;z-index:1}.view__slider__input{appearance:none;background:transparent;cursor:grab;height:100%;margin:0;pointer-events:all;width:100%;z-index:1}.view__slider__input::-webkit-slider-thumb{appearance:none;background-color:var(--kul_compare_slider_color);cursor:ew-resize;height:100%;margin:0;width:10px}.view__slider__input::-moz-slider-thumb{appearance:none;background-color:var(--kul_compare_slider_color);cursor:ew-resize;height:100%;margin:0;width:10px}";
 const KulCompareStyle0 = kulCompareCss;
@@ -61,16 +65,11 @@ const KulCompare = class {
         this.kulView = 'overlay';
     }
     get rootElement() { return getElement(this); }
-    /*-------------------------------------------------*/
-    /*       I n t e r n a l   V a r i a b l e s       */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Internal variables
     #kulManager = kulManagerInstance();
-    /*-------------------------------------------------*/
-    /*                   E v e n t s                   */
-    /*-------------------------------------------------*/
-    /**
-     * Describes event emitted.
-     */
+    //#endregion
+    //#region Events
     kulEvent;
     onKulEvent(e, eventType) {
         this.kulEvent.emit({
@@ -80,9 +79,8 @@ const KulCompare = class {
             originalEvent: e,
         });
     }
-    /*-------------------------------------------------*/
-    /*                 W a t c h e r s                 */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Watchers
     async updateShapes() {
         try {
             this.shapes = this.#kulManager.data.cell.shapes.getAll(this.kulData);
@@ -94,9 +92,8 @@ const KulCompare = class {
             this.#kulManager.debug.logs.new(this, 'Error updating shapes: ' + error, 'error');
         }
     }
-    /*-------------------------------------------------*/
-    /*           P u b l i c   M e t h o d s           */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Public methods
     /**
      * Fetches debug information of the component's current state.
      * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves with the debug information object.
@@ -128,9 +125,8 @@ const KulCompare = class {
             this.rootElement.remove();
         }, ms);
     }
-    /*-------------------------------------------------*/
-    /*           P r i v a t e   M e t h o d s         */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Private methods
     #getShapes() {
         return this.shapes?.[this.kulShape] || [];
     }
@@ -228,9 +224,8 @@ const KulCompare = class {
         const sliderValue = 100 - parseInt(event.target.value);
         this.rootElement.style.setProperty('--kul_compare_overlay_width', `${sliderValue}%`);
     }
-    /*-------------------------------------------------*/
-    /*          L i f e c y c l e   H o o k s          */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Lifecycle hooks
     componentWillLoad() {
         this.#kulManager.theme.register(this);
         this.updateShapes();
@@ -246,7 +241,7 @@ const KulCompare = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: '5539581059594f06f8fc2c3beca7cb2b4abf2559' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'f880683f0bc6386ddc9ba5f3b1dbdd2be923c110', id: KUL_WRAPPER_ID }, h("div", { key: '4302b2773ad7bd06b70cc3df981104b126a9b2e5', class: "compare" }, this.#prepCompare()))));
+        return (h(Host, { key: 'ad0fcf895c841449eaa42fe89ceb8b2f6f8621cf' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '4927d39d91a4bd60d2d6edc00d5a3fb7f3e07910', id: KUL_WRAPPER_ID }, h("div", { key: '61b25a5685c1df5ca63b1d6b912ef9c89810f47d', class: "compare" }, this.#prepCompare()))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

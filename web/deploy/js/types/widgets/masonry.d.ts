@@ -1,20 +1,13 @@
-import { KulDataDataset } from '../ketchup-lite/components';
-import { KulMasonry } from '../ketchup-lite/components/kul-masonry/kul-masonry';
-import { BaseWidgetCallback, BaseWidgetFactory, BaseWidgetOptions, CustomWidgetName } from './_common';
-export interface Masonry extends Widget {
-    options: MasonryOptions;
-    type: [CustomWidgetName.masonry];
+import { KulDataDataset } from '../../types/ketchup-lite/components';
+import { KulMasonry } from '../../types/ketchup-lite/components/kul-masonry/kul-masonry';
+import { BaseWidgetState, CustomWidgetName, NormalizeValueCallback, WidgetFactory } from './widgets';
+export declare enum MasonryCSS {
+    Content = "lf-masonry",
+    Widget = "lf-masonry__widget"
 }
-export interface MasonryFactory extends BaseWidgetFactory<MasonryOptions> {
-    options: MasonryOptionsCallback;
-}
-export type MasonryOptionsCallback = (masonry: HTMLKulMasonryElement) => MasonryOptions;
-export interface MasonryOptions extends BaseWidgetOptions<MasonryDeserializedValue> {
-    getComp(): HTMLKulMasonryElement;
-}
-export type MasonrySetter = () => {
-    [CustomWidgetName.masonry]: BaseWidgetCallback<CustomWidgetName.masonry>;
-};
+export type Masonry = Widget<CustomWidgetName.masonry>;
+export type MasonryFactory = WidgetFactory<MasonryDeserializedValue, MasonryState>;
+export type MasonryNormalizeCallback = NormalizeValueCallback<MasonryDeserializedValue | string>;
 export interface MasonryDeserializedValue {
     columns?: KulMasonry['kulColumns'];
     dataset: KulDataDataset;
@@ -22,7 +15,10 @@ export interface MasonryDeserializedValue {
     name?: string;
     view?: KulMasonry['kulView'];
 }
-export declare enum MasonryCSS {
-    Content = "lf-masonry",
-    Widget = "lf-masonry__widget"
+export interface MasonryState extends BaseWidgetState {
+    masonry: HTMLKulMasonryElement;
+    selected: {
+        index?: number;
+        name?: string;
+    };
 }

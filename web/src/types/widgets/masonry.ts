@@ -1,11 +1,11 @@
-import { KulDataDataset } from '../ketchup-lite/components';
-import { KulMasonry } from '../ketchup-lite/components/kul-masonry/kul-masonry';
+import { KulDataDataset } from '../../types/ketchup-lite/components';
+import { KulMasonry } from '../../types/ketchup-lite/components/kul-masonry/kul-masonry';
 import {
   BaseWidgetState,
   CustomWidgetName,
   NormalizeValueCallback,
   WidgetFactory,
-} from './_common';
+} from './widgets';
 
 //#region CSS
 const BASE_CSS_CLASS = 'lf-masonry';

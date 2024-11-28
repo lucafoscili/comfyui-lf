@@ -1,20 +1,12 @@
-import { BaseWidgetCallback, BaseWidgetFactory, BaseWidgetOptions, CustomWidgetName } from './_common';
-export interface Code extends Widget {
-    options: CodeOptions;
-    type: [CustomWidgetName.code];
-}
-export interface CodeFactory extends BaseWidgetFactory<CodeOptions> {
-    options: CodeOptionsCallback;
-}
-export type CodeOptionsCallback = (code: HTMLKulCodeElement) => CodeOptions;
-export interface CodeOptions extends BaseWidgetOptions<CodeValueDeserializedValue> {
-    getComp(): HTMLKulCodeElement;
-}
-export type CodeSetter = () => {
-    [CustomWidgetName.code]: BaseWidgetCallback<CustomWidgetName.code>;
-};
-export type CodeValueDeserializedValue = string;
+import { BaseWidgetState, CustomWidgetName, NormalizeValueCallback, WidgetFactory } from './widgets';
 export declare enum CodeCSS {
     Content = "lf-code",
     Widget = "lf-code__widget"
+}
+export type Code = Widget<CustomWidgetName.code>;
+export type CodeFactory = WidgetFactory<CodeDeserializedValue, CodeState>;
+export type CodeNormalizeCallback = NormalizeValueCallback<CodeDeserializedValue | string>;
+export type CodeDeserializedValue = string;
+export interface CodeState extends BaseWidgetState {
+    code: HTMLKulCodeElement;
 }

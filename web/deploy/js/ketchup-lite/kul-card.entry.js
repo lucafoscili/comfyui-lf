@@ -1,10 +1,9 @@
-import { h, r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, H as Host } from './index-53f95fee.js';
-import { k as kulManagerInstance, R as RIPPLE_SURFACE_CLASS, a as KulDataCyAttributes, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-9e1be956.js';
+import { h, r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, H as Host } from './index-7cf82e95.js';
+import { k as kulManagerInstance, R as RIPPLE_SURFACE_CLASS, a as KulDataCyAttributes, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-72505221.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 
-/*-------------------------------------------------*/
-/*                 I n t e r n a l                 */
-/*-------------------------------------------------*/
+//#endregion
+//#region Internal usage
 var KulCardCSSClasses;
 (function (KulCardCSSClasses) {
     KulCardCSSClasses["HAS_ACTIONS"] = "has-actions";
@@ -15,9 +14,8 @@ var KulCardShapesIds;
     KulCardShapesIds["CLEAR"] = "clear";
     KulCardShapesIds["THEME"] = "theme";
 })(KulCardShapesIds || (KulCardShapesIds = {}));
-/*-------------------------------------------------*/
-/*                    P r o p s                    */
-/*-------------------------------------------------*/
+//#endregion
+//#region Props
 var KulCardProps;
 (function (KulCardProps) {
     KulCardProps["kulData"] = "The actual data of the card.";
@@ -26,6 +24,7 @@ var KulCardProps;
     KulCardProps["kulSizeY"] = "The height of the card, defaults to 100%. Accepts any valid CSS format (px, %, vh, etc.).";
     KulCardProps["kulStyle"] = "Custom style of the component.";
 })(KulCardProps || (KulCardProps = {}));
+//#endregion
 
 const getThemes = () => {
     const nodes = [];
@@ -41,6 +40,7 @@ const getThemes = () => {
     return nodes;
 };
 const DEFAULTS = {
+    //#region debug
     debug: {
         button: () => [
             {
@@ -77,6 +77,8 @@ const DEFAULTS = {
             },
         ],
     },
+    //#endregion
+    //#region keywords
     keywords: {
         button: () => [
             {
@@ -101,6 +103,8 @@ const DEFAULTS = {
             },
         ],
     },
+    //#endregion
+    //#region material
     material: {
         image: () => [
             {
@@ -112,6 +116,8 @@ const DEFAULTS = {
             },
         ],
     },
+    //#endregion
+    //#region upload
     upload: {
         button: () => [
             {
@@ -123,92 +129,10 @@ const DEFAULTS = {
             },
         ],
     },
+    //#endregion
 };
 
-function getKeywordsLayout(adapter) {
-    const card = adapter.get.card();
-    const shapes = adapter.get.shapes();
-    const eventDispatcher = adapter.actions.dispatchEvent;
-    const decorator = kulManagerInstance().data.cell.shapes.decorate;
-    const buttonEventHandler = async (e) => {
-        const { comp, eventType } = e.detail;
-        const chipEl = chips?.ref?.[0];
-        if (chipEl && eventType === 'pointerdown') {
-            comp.setMessage();
-            if (chipEl) {
-                const selectedChips = [];
-                (await chipEl.getSelectedNodes()).forEach((n) => {
-                    selectedChips.push(n.id);
-                });
-                navigator.clipboard.writeText(selectedChips.join(', '));
-            }
-        }
-    };
-    const buttons = decorator('button', shapes.button, eventDispatcher, DEFAULTS.keywords.button(), buttonEventHandler);
-    const charts = decorator('chart', shapes.chart, eventDispatcher, DEFAULTS.keywords.chart());
-    const chips = decorator('chip', shapes.chip, eventDispatcher, DEFAULTS.keywords.chip());
-    const className = {
-        [`${card.kulLayout}-layout`]: true,
-    };
-    return (h("div", { class: className },
-        charts?.element?.length && (h("div", { class: "section-1 chart" }, charts.element[0])),
-        chips?.element?.length && (h("div", { class: "section-2 chip" }, chips.element[0])),
-        buttons?.element?.length && (h("div", { class: "section-3 button" }, buttons.element[0]))));
-}
-
-function getMaterialLayout(adapter) {
-    const card = adapter.get.card();
-    const shapes = adapter.get.shapes();
-    const eventDispatcher = adapter.actions.dispatchEvent;
-    const decorator = kulManagerInstance().data.cell.shapes.decorate;
-    const buttons = decorator('button', shapes.button, eventDispatcher);
-    const images = decorator('image', shapes.image, eventDispatcher, DEFAULTS.material.image());
-    const texts = decorator('text', shapes.text, eventDispatcher);
-    const coverIndex = 0;
-    const cover = images.element?.length
-        ? images.element[coverIndex]
-        : null;
-    const titleIndex = 0;
-    const title = texts.element?.length ? shapes.text[titleIndex].value : null;
-    const subtitleIndex = 1;
-    const subtitle = texts.element?.length > subtitleIndex
-        ? shapes.text[subtitleIndex].value
-        : null;
-    const descriptionIndex = 2;
-    const description = texts.element?.length > descriptionIndex
-        ? shapes.text[descriptionIndex].value
-        : undefined;
-    const className = {
-        [`${card.kulLayout}-layout`]: true,
-        [KulCardCSSClasses.HAS_ACTIONS]: !!buttons.element?.length,
-    };
-    return (h("div", { class: className },
-        h("div", { class: RIPPLE_SURFACE_CLASS, "data-cy": KulDataCyAttributes.RIPPLE, onPointerDown: (e) => {
-                kulManagerInstance().theme.ripple.trigger(e, e.currentTarget);
-            } },
-            h("div", { class: "section-1" }, cover),
-            h("div", { class: "section-2" },
-                h("div", { class: "sub-2 title" }, title),
-                h("div", { class: "sub-2 subtitle" }, subtitle),
-                h("div", { class: "sub-2 description" }, description))),
-        buttons.element?.length ? (h("div", { class: "section-3" }, buttons.element)) : null));
-}
-
-function getUploadLayout(adapter) {
-    const card = adapter.get.card();
-    const shapes = adapter.get.shapes();
-    const eventDispatcher = adapter.actions.dispatchEvent;
-    const decorator = kulManagerInstance().data.cell.shapes.decorate;
-    const buttons = decorator('button', shapes.button, eventDispatcher, DEFAULTS.upload.button());
-    const uploads = decorator('upload', shapes.upload, eventDispatcher);
-    const className = {
-        [`${card.kulLayout}-layout`]: true,
-    };
-    return (h("div", { class: className },
-        uploads?.element?.length && (h("div", { class: "section-1 upload" }, uploads.element[0])),
-        buttons?.element?.length && (h("div", { class: "section-2 button" }, buttons.element[0]))));
-}
-
+//#region Debug layout
 function getDebugLayout(adapter) {
     const card = adapter.get.card();
     const shapes = adapter.get.shapes();
@@ -226,6 +150,8 @@ function getDebugLayout(adapter) {
         buttons?.element?.length && (h("div", { class: "section-3 button" }, buttons.element[0])),
         buttons?.element?.length && (h("div", { class: "section-4 button" }, buttons.element[1]))));
 }
+//#endregion
+//#region Event handlers
 const buttonEventHandler = (e) => {
     const { eventType, id, originalEvent } = e.detail;
     switch (eventType) {
@@ -282,6 +208,97 @@ const toggleEventHandler = (e) => {
             break;
     }
 };
+//#endregion
+
+//#region Keywords layout
+function getKeywordsLayout(adapter) {
+    const card = adapter.get.card();
+    const shapes = adapter.get.shapes();
+    const eventDispatcher = adapter.actions.dispatchEvent;
+    const decorator = kulManagerInstance().data.cell.shapes.decorate;
+    const buttonEventHandler = async (e) => {
+        const { comp, eventType } = e.detail;
+        const chipEl = chips?.ref?.[0];
+        if (chipEl && eventType === 'pointerdown') {
+            comp.setMessage();
+            if (chipEl) {
+                const selectedChips = [];
+                (await chipEl.getSelectedNodes()).forEach((n) => {
+                    selectedChips.push(n.id);
+                });
+                navigator.clipboard.writeText(selectedChips.join(', '));
+            }
+        }
+    };
+    const buttons = decorator('button', shapes.button, eventDispatcher, DEFAULTS.keywords.button(), buttonEventHandler);
+    const charts = decorator('chart', shapes.chart, eventDispatcher, DEFAULTS.keywords.chart());
+    const chips = decorator('chip', shapes.chip, eventDispatcher, DEFAULTS.keywords.chip());
+    const className = {
+        [`${card.kulLayout}-layout`]: true,
+    };
+    return (h("div", { class: className },
+        charts?.element?.length && (h("div", { class: "section-1 chart" }, charts.element[0])),
+        chips?.element?.length && (h("div", { class: "section-2 chip" }, chips.element[0])),
+        buttons?.element?.length && (h("div", { class: "section-3 button" }, buttons.element[0]))));
+}
+//#endregion
+
+//#region Material layout
+function getMaterialLayout(adapter) {
+    const card = adapter.get.card();
+    const shapes = adapter.get.shapes();
+    const eventDispatcher = adapter.actions.dispatchEvent;
+    const decorator = kulManagerInstance().data.cell.shapes.decorate;
+    const buttons = decorator('button', shapes.button, eventDispatcher);
+    const images = decorator('image', shapes.image, eventDispatcher, DEFAULTS.material.image());
+    const texts = decorator('text', shapes.text, eventDispatcher);
+    const coverIndex = 0;
+    const cover = images.element?.length
+        ? images.element[coverIndex]
+        : null;
+    const titleIndex = 0;
+    const title = texts.element?.length ? shapes.text[titleIndex].value : null;
+    const subtitleIndex = 1;
+    const subtitle = texts.element?.length > subtitleIndex
+        ? shapes.text[subtitleIndex].value
+        : null;
+    const descriptionIndex = 2;
+    const description = texts.element?.length > descriptionIndex
+        ? shapes.text[descriptionIndex].value
+        : undefined;
+    const className = {
+        [`${card.kulLayout}-layout`]: true,
+        [KulCardCSSClasses.HAS_ACTIONS]: !!buttons.element?.length,
+    };
+    return (h("div", { class: className },
+        h("div", { class: RIPPLE_SURFACE_CLASS, "data-cy": KulDataCyAttributes.RIPPLE, onPointerDown: (e) => {
+                kulManagerInstance().theme.ripple.trigger(e, e.currentTarget);
+            } },
+            h("div", { class: "section-1" }, cover),
+            h("div", { class: "section-2" },
+                h("div", { class: "sub-2 title" }, title),
+                h("div", { class: "sub-2 subtitle" }, subtitle),
+                h("div", { class: "sub-2 description" }, description))),
+        buttons.element?.length ? (h("div", { class: "section-3" }, buttons.element)) : null));
+}
+//#endregion
+
+//#region Upload layout
+function getUploadLayout(adapter) {
+    const card = adapter.get.card();
+    const shapes = adapter.get.shapes();
+    const eventDispatcher = adapter.actions.dispatchEvent;
+    const decorator = kulManagerInstance().data.cell.shapes.decorate;
+    const buttons = decorator('button', shapes.button, eventDispatcher, DEFAULTS.upload.button());
+    const uploads = decorator('upload', shapes.upload, eventDispatcher);
+    const className = {
+        [`${card.kulLayout}-layout`]: true,
+    };
+    return (h("div", { class: className },
+        uploads?.element?.length && (h("div", { class: "section-1 upload" }, uploads.element[0])),
+        buttons?.element?.length && (h("div", { class: "section-2 button" }, buttons.element[0]))));
+}
+//#endregion
 
 const LAYOUT_HUB = {
     debug: (adapter) => getDebugLayout(adapter),
@@ -312,16 +329,11 @@ const KulCard = class {
         this.kulStyle = '';
     }
     get rootElement() { return getElement(this); }
-    /*-------------------------------------------------*/
-    /*       I n t e r n a l   V a r i a b l e s       */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Internal variables
     #kulManager = kulManagerInstance();
-    /*-------------------------------------------------*/
-    /*                   E v e n t s                   */
-    /*-------------------------------------------------*/
-    /**
-     * Triggered when an event is fired.
-     */
+    //#endregion
+    //#region Events
     kulEvent;
     onKulEvent(e, eventType) {
         this.kulEvent.emit({
@@ -331,9 +343,8 @@ const KulCard = class {
             originalEvent: e,
         });
     }
-    /*-------------------------------------------------*/
-    /*           P u b l i c   M e t h o d s           */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Public methods
     /**
      * Fetches debug information of the component's current state.
      * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves with the debug information object.
@@ -372,9 +383,8 @@ const KulCard = class {
             this.rootElement.remove();
         }, ms);
     }
-    /*-------------------------------------------------*/
-    /*           P r i v a t e   M e t h o d s         */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Private methods
     #adapter = {
         actions: {
             dispatchEvent: async (e) => {
@@ -383,9 +393,8 @@ const KulCard = class {
         },
         get: { card: () => this, shapes: () => this.shapes },
     };
-    /*-------------------------------------------------*/
-    /*          L i f e c y c l e   H o o k s          */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Lifecycle hooks
     componentWillLoad() {
         this.#kulManager.language.register(this);
         this.#kulManager.theme.register(this);

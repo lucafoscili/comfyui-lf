@@ -1,10 +1,10 @@
-import { KulDataDataset } from '../ketchup-lite/components';
+import { KulDataDataset } from '../../types/ketchup-lite/components';
 import {
   BaseWidgetState,
   CustomWidgetName,
   NormalizeValueCallback,
   WidgetFactory,
-} from './_common';
+} from './widgets';
 
 //#region CSS
 const BASE_CSS_CLASS = 'lf-imageeditor';
@@ -33,12 +33,19 @@ export type ImageEditorDeserializedValue = KulDataDataset;
 export interface ImageEditorState extends BaseWidgetState {
   elements: {
     actionButtons: ImageEditorActionButtons;
+    controls: Partial<{
+      [K in ImageEditorControlIds]: ImageEditorControlMap<K>;
+    }>;
     grid: HTMLDivElement;
     imageviewer: HTMLKulImageviewerElement;
     settings: HTMLDivElement;
   };
   filter: ImageEditorFilter;
   filterType: ImageEditorFilterType;
+  update: {
+    preview: (state: ImageEditorState) => Promise<void>;
+    snapshot: (state: ImageEditorState, addSnapshot: true) => Promise<void>;
+  };
 }
 //#endregion
 //#region Dataset
@@ -105,6 +112,16 @@ export type ImageEditorControlIds =
   | ImageEditorSliderIds
   | ImageEditorTextfieldIds
   | ImageEditorToggleIds;
+export type ImageEditorControlMap<ID extends ImageEditorControlIds> =
+  ID extends ImageEditorCanvasIds
+    ? HTMLKulCanvasElement
+    : ID extends ImageEditorSliderIds
+    ? HTMLKulSliderElement
+    : ID extends ImageEditorTextfieldIds
+    ? HTMLKulTextfieldElement
+    : ID extends ImageEditorToggleIds
+    ? HTMLKulToggleElement
+    : never;
 export type ImageEditorControlValue = string | number | boolean;
 export type ImageEditorFilterSettings = Partial<{
   [K in ImageEditorControlIds]: number | boolean | string | Array<{ x: number; y: number }>;

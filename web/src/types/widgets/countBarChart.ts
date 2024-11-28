@@ -1,10 +1,10 @@
-import { KulDataDataset } from '../ketchup-lite/components';
+import { KulDataDataset } from '../../types/ketchup-lite/components';
 import {
   BaseWidgetState,
   CustomWidgetName,
   NormalizeValueCallback,
   WidgetFactory,
-} from './_common';
+} from './widgets';
 
 //#region CSS
 const BASE_CSS_CLASS = 'lf-countbarchart';

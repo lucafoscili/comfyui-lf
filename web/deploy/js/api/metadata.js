@@ -1,7 +1,7 @@
-import { api } from '/scripts/api.js';
 import { APIEndpoints, } from '../types/api/api.js';
 import { LogSeverity } from '../types/manager/manager.js';
 import { getLFManager } from '../utils/common.js';
+import { api } from '/scripts/api.js';
 export const METADATA_API = {
     //#region clear
     clear: async () => {

@@ -15,7 +15,7 @@ import {
   ImageEditorVignetteIds,
 } from '../types/widgets/imageEditor';
 
-const SETTINGS: ImageEditorFilters = {
+export const SETTINGS: ImageEditorFilters = {
   //#region Brightness
   brightness: {
     controlIds: ImageEditorBrightnessIds,

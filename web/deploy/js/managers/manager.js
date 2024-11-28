@@ -13,17 +13,17 @@ var _LFManager_APIS, _LFManager_AUTOMATIC_BACKUP, _LFManager_CACHED_DATASETS, _L
 import { ANALYTICS_API } from '../api/analytics.js';
 import { BACKUP_API } from '../api/backup.js';
 import { COMFY_API } from '../api/comfy.js';
+import { GITHUB_API } from '../api/github.js';
 import { IMAGE_API } from '../api/image.js';
 import { JSON_API } from '../api/json.js';
 import { METADATA_API } from '../api/metadata.js';
+import { getLogStyle, NODE_WIDGET_MAP, onConnectionsChange, onDrawBackground, onNodeCreated, } from '../helpers/manager.js';
 import { defineCustomElements } from '../ketchup-lite/loader.js';
+import { LogSeverity, } from '../types/manager/manager.js';
+import { CustomWidgetName, NodeName } from '../types/widgets/widgets.js';
 import { getKulManager } from '../utils/common.js';
 import { LFTooltip } from './tooltip.js';
 import { LFWidgets } from './widgets.js';
-import { CustomWidgetName, NodeName } from '../types/widgets/_common.js';
-import { getLogStyle, NODE_WIDGET_MAP, onConnectionsChange, onDrawBackground, onNodeCreated, } from '../helpers/manager.js';
-import { LogSeverity, } from '../types/manager/manager.js';
-import { GITHUB_API } from '../api/github.js';
 export class LFManager {
     constructor() {
         _LFManager_APIS.set(this, {
@@ -56,6 +56,12 @@ export class LFManager {
         };
         document.addEventListener('kul-manager-ready', managerCb);
         defineCustomElements(window);
+        const link = document.createElement('link');
+        link.dataset.filename = '_index';
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = `extensions/comfyui-lf/css/_index.css`;
+        document.head.appendChild(link);
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").tooltip = new LFTooltip();
         __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").widgets = new LFWidgets();
     }
@@ -92,7 +98,7 @@ export class LFManager {
                     getCustomWidgets: () => widgets.reduce((acc, widget) => {
                         return {
                             ...acc,
-                            [widget]: __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").widgets.set[widget],
+                            [widget]: __classPrivateFieldGet(this, _LFManager_MANAGERS, "f").widgets.render(widget),
                         };
                     }, customWidgets),
                 };

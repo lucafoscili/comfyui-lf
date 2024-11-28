@@ -1,11 +1,11 @@
-import { KulDataDataset } from '../ketchup-lite/components';
+import { KulDataDataset } from '../../types/ketchup-lite/components';
+import { CardDeserializedValue } from './card';
 import {
   BaseWidgetState,
   CustomWidgetName,
   NormalizeValueCallback,
   WidgetFactory,
-} from './_common';
-import { CardDeserializedValue } from './card';
+} from './widgets';
 
 //#region CSS
 const BASE_CSS_CLASS = 'lf-cardswithchip';

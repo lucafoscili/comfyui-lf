@@ -1,11 +1,11 @@
 import { KulListEventPayload } from '../types/ketchup-lite/components';
-import { ComfyWidgetName, NodeName } from '../types/widgets/_common';
+import { ComfyWidgetName, NodeName } from '../types/widgets/widgets';
 import { HistoryState } from '../types/widgets/history';
 import { getWidget } from '../utils/common';
 
 export const EV_HANDLERS = {
-  //#region listEventHandler
-  list: (e: CustomEvent<KulListEventPayload>, state: HistoryState) => {
+  //#region List handler
+  list: (state: HistoryState, e: CustomEvent<KulListEventPayload>) => {
     const { eventType, node } = e.detail;
 
     const comfyNode = state.node;

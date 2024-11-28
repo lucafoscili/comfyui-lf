@@ -1,5 +1,5 @@
-import { CustomWidgetName, NodeName, TagName } from '../types/widgets/_common';
 import { CodeCSS, CodeFactory, CodeNormalizeCallback, CodeState } from '../types/widgets/code';
+import { CustomWidgetName, NodeName, TagName } from '../types/widgets/widgets';
 import { createDOMWidget, normalizeValue } from '../utils/common';
 
 const STATE = new WeakMap<HTMLDivElement, CodeState>();

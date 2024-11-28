@@ -1,5 +1,5 @@
 import { LogSeverity } from '../types/manager/manager.js';
-import { ComfyWidgetName, CustomWidgetName, NodeName, } from '../types/widgets/_common.js';
+import { ComfyWidgetName, CustomWidgetName, NodeName, } from '../types/widgets/widgets.js';
 import { MessengerCSS } from '../types/widgets/messenger.js';
 import { areJSONEqual, getApiRoutes, getCustomWidget, getInput, getLFManager, isValidJSON, refreshChart, unescapeJson, } from '../utils/common.js';
 //#region Node-Widget map

@@ -1,5 +1,5 @@
-import { CustomWidgetName, } from '../types/widgets/_common.js';
 import { LogSeverity } from '../types/manager/manager.js';
+import { CustomWidgetName, } from '../types/widgets/widgets.js';
 //#region Constants
 const DEFAULT_WIDGET_NAME = 'ui_widget';
 const DOM = document.documentElement;
@@ -12,11 +12,17 @@ let timer;
 export const isButton = (comp) => {
     return comp.rootElement.tagName.toLowerCase() === 'kul-button';
 };
+export const isCanvas = (comp) => {
+    return comp.rootElement.tagName.toLowerCase() === 'kul-canvas';
+};
 export const isChart = (comp) => {
     return comp.rootElement.tagName.toLowerCase() === 'kul-chart';
 };
 export const isList = (comp) => {
     return comp.rootElement.tagName.toLowerCase() === 'kul-list';
+};
+export const isTree = (comp) => {
+    return comp.rootElement.tagName.toLowerCase() === 'kul-tree';
 };
 export const isToggle = (comp) => {
     return comp.rootElement.tagName.toLowerCase() === 'kul-toggle';
@@ -151,7 +157,7 @@ export const splitByLastSpaceBeforeAnyBracket = (input) => {
 };
 //#endregion
 //#region Widgets
-export const createDOMWidget = (type, element, node, options = undefined) => {
+export const createDOMWidget = (type, element, node, options) => {
     getLFManager().log(`Creating '${type}'`, { element });
     try {
         const { nodeData } = Object.getPrototypeOf(node).constructor;

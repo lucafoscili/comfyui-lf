@@ -1,0 +1,12 @@
+@use '../mixins/mixins' as mixins;
+
+.lf-compare {
+  & {
+    @include mixins.lf-root($overflow: hidden);
+  }
+
+  &__widget {
+    height: 100%;
+    width: 100%;
+  }
+}

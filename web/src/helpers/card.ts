@@ -8,10 +8,10 @@ import {
 } from '../types/ketchup-lite/components';
 import { KulDataCell } from '../types/ketchup-lite/managers/kul-data/kul-data-declarations';
 import { LogSeverity, TooltipUploadCallback } from '../types/manager/manager';
-import { CustomWidgetName, TagName } from '../types/widgets/_common';
 import { Card, CardDeserializedValue, CardState } from '../types/widgets/card';
 import { CardsWithChip, CardsWithChipState } from '../types/widgets/cardsWithChip';
-import { getLFManager, getApiRoutes, unescapeJson, getCustomWidget } from '../utils/common';
+import { CustomWidgetName, TagName } from '../types/widgets/widgets';
+import { getApiRoutes, getCustomWidget, getLFManager, unescapeJson } from '../utils/common';
 
 export const CARD_PROPS_TO_SERIALIZE = ['kulData', 'kulStyle'];
 

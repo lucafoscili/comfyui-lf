@@ -1,5 +1,4 @@
 import { KulDataDataset } from '../types/ketchup-lite/components';
-import { CustomWidgetName, TagName } from '../types/widgets/_common';
 import {
   CountBarChartCSS,
   CountBarChartDeserializedValue,
@@ -7,6 +6,7 @@ import {
   CountBarChartNormalizeCallback,
   CountBarChartState,
 } from '../types/widgets/countBarChart';
+import { CustomWidgetName, TagName } from '../types/widgets/widgets';
 import { createDOMWidget, normalizeValue } from '../utils/common';
 
 const STATE = new WeakMap<HTMLDivElement, CountBarChartState>();

@@ -1,14 +1,7 @@
 import { TREE_DATA } from '../fixtures/imageEditor';
-import {
-  buttonEventHandler,
-  canvasEventHandler,
-  getStatusColumn,
-  imageviewerEventHandler,
-  setGridStatus,
-} from '../helpers/imageEditor';
+import { EV_HANDLERS, getStatusColumn, setGridStatus, updateCb } from '../helpers/imageEditor';
 import { KulEventName } from '../types/events/events';
 import { LogSeverity } from '../types/manager/manager';
-import { CustomWidgetName, NodeName, TagName } from '../types/widgets/_common';
 import {
   ImageEditorActionButtons,
   ImageEditorCSS,
@@ -19,6 +12,7 @@ import {
   ImageEditorState,
   ImageEditorStatus,
 } from '../types/widgets/imageEditor';
+import { CustomWidgetName, NodeName, TagName } from '../types/widgets/widgets';
 import { createDOMWidget, getLFManager, normalizeValue } from '../utils/common';
 
 const STATE = new WeakMap<HTMLDivElement, ImageEditorState>();
@@ -81,13 +75,8 @@ export const imageEditorFactory: ImageEditorFactory = {
     imageviewer.classList.add(ImageEditorCSS.Widget);
     imageviewer.kulLoadCallback = async (_, value) => await refresh(value);
     imageviewer.kulValue = TREE_DATA;
-    imageviewer.addEventListener(
-      KulEventName.KulImageviewer,
-      imageviewerEventHandler.bind(imageviewerEventHandler, settings, node),
-    );
-    imageviewer.addEventListener(
-      KulEventName.KulCanvas,
-      canvasEventHandler.bind(imageviewerEventHandler, imageviewer),
+    imageviewer.addEventListener(KulEventName.KulImageviewer, (e) =>
+      EV_HANDLERS.imageviewer(STATE.get(wrapper), e),
     );
     imageviewer.appendChild(settings);
 
@@ -105,6 +94,9 @@ export const imageEditorFactory: ImageEditorFactory = {
         interrupt.kulLabel = 'Interrupt workflow';
         interrupt.kulStyling = 'flat';
         interrupt.title = 'Click to interrupt the workflow.';
+        interrupt.addEventListener(KulEventName.KulButton, (e) =>
+          EV_HANDLERS.button(STATE.get(wrapper), e),
+        );
 
         resume.classList.add('kul-full-width');
         resume.classList.add('kul-success');
@@ -113,14 +105,13 @@ export const imageEditorFactory: ImageEditorFactory = {
         resume.kulStyling = 'flat';
         resume.title =
           'Click to resume the workflow. Remember to save your snapshots after editing the images!';
+        resume.addEventListener(KulEventName.KulButton, (e) =>
+          EV_HANDLERS.button(STATE.get(wrapper), e),
+        );
 
         actions.classList.add(ImageEditorCSS.Actions);
         actions.appendChild(interrupt);
         actions.appendChild(resume);
-        actions.addEventListener(
-          KulEventName.KulButton,
-          buttonEventHandler.bind(buttonEventHandler, imageviewer, actionButtons, grid),
-        );
 
         grid.classList.add(ImageEditorCSS.GridIsInactive);
         grid.classList.add(ImageEditorCSS.GridHasActions);
@@ -143,10 +134,14 @@ export const imageEditorFactory: ImageEditorFactory = {
     const options = imageEditorFactory.options(wrapper);
 
     STATE.set(wrapper, {
-      elements: { actionButtons, grid, imageviewer, settings },
+      elements: { actionButtons, controls: {}, grid, imageviewer, settings },
       filter: null,
       filterType: null,
       node,
+      update: {
+        preview: () => updateCb(STATE.get(wrapper)),
+        snapshot: () => updateCb(STATE.get(wrapper), true),
+      },
       wrapper,
     });
 

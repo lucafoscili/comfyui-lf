@@ -1,19 +1,10 @@
 import { ANALYTICS_API } from '../api/analytics.js';
 import { BACKUP_API } from '../api/backup.js';
 import { COMFY_API } from '../api/comfy.js';
+import { GITHUB_API } from '../api/github.js';
 import { IMAGE_API } from '../api/image.js';
 import { JSON_API } from '../api/json.js';
 import { METADATA_API } from '../api/metadata.js';
-import { defineCustomElements } from '../ketchup-lite/loader.js';
-import { getKulManager } from '../utils/common.js';
-import { LFTooltip } from './tooltip';
-import { LFWidgets } from './widgets.js';
-import { EventName } from '../types/events/events.js';
-import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations';
-import { KulDataDataset } from '../types/ketchup-lite/components.js';
-import { KulDom } from '../types/ketchup-lite/managers/kul-manager/kul-manager-declarations.js';
-import { KulManager } from '../types/ketchup-lite/managers/kul-manager/kul-manager.js';
-import { CustomWidgetName, NodeName } from '../types/widgets/_common.js';
 import {
   getLogStyle,
   NODE_WIDGET_MAP,
@@ -21,14 +12,23 @@ import {
   onDrawBackground,
   onNodeCreated,
 } from '../helpers/manager.js';
+import { defineCustomElements } from '../ketchup-lite/loader.js';
 import { APIRoutes } from '../types/api/api.js';
+import { EventName } from '../types/events/events.js';
+import { KulDataDataset } from '../types/ketchup-lite/components.js';
+import { KulArticleNode } from '../types/ketchup-lite/components/kul-article/kul-article-declarations.js';
+import { KulDom } from '../types/ketchup-lite/managers/kul-manager/kul-manager-declarations.js';
+import { KulManager } from '../types/ketchup-lite/managers/kul-manager/kul-manager.js';
 import {
   CustomWidgetGetter,
   Extension,
   ExtensionCallback,
   LogSeverity,
 } from '../types/manager/manager.js';
-import { GITHUB_API } from '../api/github.js';
+import { CustomWidgetName, NodeName } from '../types/widgets/widgets.js';
+import { getKulManager } from '../utils/common.js';
+import { LFTooltip } from './tooltip.js';
+import { LFWidgets } from './widgets.js';
 
 export interface LFWindow extends Window {
   comfyAPI: ComfyUI;
@@ -67,11 +67,19 @@ export class LFManager {
       this.log('KulManager ready', { kulManager: this.#MANAGERS.ketchupLite }, LogSeverity.Success);
       document.removeEventListener('kul-manager-ready', managerCb);
     };
+
     this.#DOM.ketchupLiteInit = {
       assetsPath: window.location.href + 'extensions/comfyui-lf/assets',
     };
     document.addEventListener('kul-manager-ready', managerCb);
     defineCustomElements(window);
+
+    const link = document.createElement('link');
+    link.dataset.filename = '_index';
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = `extensions/comfyui-lf/css/_index.css`;
+    document.head.appendChild(link);
 
     this.#MANAGERS.tooltip = new LFTooltip();
     this.#MANAGERS.widgets = new LFWidgets();
@@ -124,7 +132,7 @@ export class LFManager {
             widgets.reduce((acc, widget) => {
               return {
                 ...acc,
-                [widget]: this.#MANAGERS.widgets.set[widget],
+                [widget]: this.#MANAGERS.widgets.render(widget),
               };
             }, customWidgets),
         };

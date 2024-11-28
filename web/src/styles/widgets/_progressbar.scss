@@ -1,0 +1,9 @@
+@use '../mixins/mixins' as mixins;
+
+.lf-progressbar {
+  & {
+    @include mixins.lf-root($overflow: hidden, $max: false);
+    display: flex;
+    justify-content: center;
+  }
+}

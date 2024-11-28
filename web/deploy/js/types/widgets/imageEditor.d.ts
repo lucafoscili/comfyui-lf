@@ -1,24 +1,5 @@
-import { KulDataDataset } from '../ketchup-lite/components';
-import { BaseWidgetCallback, BaseWidgetFactory, BaseWidgetOptions, CustomWidgetName } from './_common';
-export interface ImageEditor extends Widget {
-    options: ImageEditorOptions;
-    type: [CustomWidgetName.imageEditor];
-}
-export interface ImageEditorFactory extends BaseWidgetFactory<ImageEditorOptions> {
-    options: ImageEditorOptionsCallback;
-}
-export type ImageEditorOptionsCallback = (imageviewer: HTMLKulImageviewerElement, actionButtons: ImageEditorActionButtons, grid: HTMLDivElement) => ImageEditorOptions;
-export interface ImageEditorOptions extends BaseWidgetOptions<ImageEditorDeserializedValue> {
-    getComp(): {
-        imageviewer: HTMLKulImageviewerElement;
-    };
-    refresh: (directory: string) => Promise<void>;
-}
-export type ImageEditorSetter = () => {
-    [CustomWidgetName.imageEditor]: BaseWidgetCallback<CustomWidgetName.imageEditor>;
-};
-export type ImageEditorDeserializedValue = KulDataDataset;
-export type ImageEditorUpdateCallback = (addSnapshot?: boolean) => Promise<void>;
+import { KulDataDataset } from '../../types/ketchup-lite/components';
+import { BaseWidgetState, CustomWidgetName, NormalizeValueCallback, WidgetFactory } from './widgets';
 export declare enum ImageEditorCSS {
     Content = "lf-imageeditor",
     Widget = "lf-imageeditor__widget",
@@ -29,10 +10,26 @@ export declare enum ImageEditorCSS {
     Settings = "lf-imageeditor__settings",
     SettingsControls = "lf-imageeditor__settings__controls"
 }
-export interface ImageEditorData {
+export type ImageEditor = Widget<CustomWidgetName.imageEditor>;
+export type ImageEditorFactory = WidgetFactory<ImageEditorDeserializedValue, ImageEditorState>;
+export type ImageEditorNormalizeCallback = NormalizeValueCallback<ImageEditorDeserializedValue | string>;
+export type ImageEditorDeserializedValue = KulDataDataset;
+export interface ImageEditorState extends BaseWidgetState {
+    elements: {
+        actionButtons: ImageEditorActionButtons;
+        controls: Partial<{
+            [K in ImageEditorControlIds]: ImageEditorControlMap<K>;
+        }>;
+        grid: HTMLDivElement;
+        imageviewer: HTMLKulImageviewerElement;
+        settings: HTMLDivElement;
+    };
     filter: ImageEditorFilter;
     filterType: ImageEditorFilterType;
-    settings: HTMLDivElement;
+    update: {
+        preview: (state: ImageEditorState) => Promise<void>;
+        snapshot: (state: ImageEditorState, addSnapshot: true) => Promise<void>;
+    };
 }
 export declare enum ImageEditorStatus {
     Completed = "completed",
@@ -51,6 +48,7 @@ export declare enum ImageEditorIcons {
     Reset = "refresh",
     Resume = "play"
 }
+export type ImageEditorUpdateCallback = (addSnapshot?: boolean) => Promise<void>;
 export declare enum ImageEditorControls {
     Canvas = "canvas",
     Slider = "slider",
@@ -88,6 +86,7 @@ export declare enum ImageEditorToggleIds {
     Smooth = "smoooth"
 }
 export type ImageEditorControlIds = ImageEditorCanvasIds | ImageEditorSliderIds | ImageEditorTextfieldIds | ImageEditorToggleIds;
+export type ImageEditorControlMap<ID extends ImageEditorControlIds> = ID extends ImageEditorCanvasIds ? HTMLKulCanvasElement : ID extends ImageEditorSliderIds ? HTMLKulSliderElement : ID extends ImageEditorTextfieldIds ? HTMLKulTextfieldElement : ID extends ImageEditorToggleIds ? HTMLKulToggleElement : never;
 export type ImageEditorControlValue = string | number | boolean;
 export type ImageEditorFilterSettings = Partial<{
     [K in ImageEditorControlIds]: number | boolean | string | Array<{

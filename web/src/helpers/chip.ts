@@ -3,7 +3,7 @@ import { ChipState } from '../types/widgets/chip';
 
 export const EV_HANDLERS = {
   //#region Chip handler
-  chip: async (e: CustomEvent<KulChipEventPayload>, state: ChipState) => {
+  chip: async (state: ChipState, e: CustomEvent<KulChipEventPayload>) => {
     const { comp, eventType } = e.detail;
     switch (eventType) {
       case 'click':

@@ -1,16 +1,16 @@
-import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, H as Host, F as Fragment, a as getAssetPath } from './index-53f95fee.js';
-import { k as kulManagerInstance, c as KulThemeColorValues, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID, g as KUL_DROPDOWN_CLASS_VISIBLE, h as KulDynamicPositionPlacement, i as KUL_DROPDOWN_CLASS, a as KulDataCyAttributes, C as CSS_VAR_PREFIX, f as KulLanguageGeneric } from './kul-manager-9e1be956.js';
+import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, H as Host, F as Fragment, a as getAssetPath } from './index-7cf82e95.js';
+import { k as kulManagerInstance, c as KulThemeColorValues, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID, g as KUL_DROPDOWN_CLASS_VISIBLE, h as KulDynamicPositionPlacement, i as KUL_DROPDOWN_CLASS, a as KulDataCyAttributes, C as CSS_VAR_PREFIX, f as KulLanguageGeneric } from './kul-manager-72505221.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 
-/*-------------------------------------------------*/
-/*                    P r o p s                    */
-/*-------------------------------------------------*/
+//#endregion
+//#region Props
 var KulBadgeProps;
 (function (KulBadgeProps) {
     KulBadgeProps["kulImageProps"] = "The props of the image displayed inside the badge.";
     KulBadgeProps["kulLabel"] = "The text displayed inside the badge.";
     KulBadgeProps["kulStyle"] = "Custom style of the component.";
 })(KulBadgeProps || (KulBadgeProps = {}));
+//#endregion
 
 const kulBadgeCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}@keyframes fade-in-grid{0%{display:none}1%{display:grid;opacity:0}100%{display:grid;opacity:1}}:host{--kul_badge_border_radius:var(--kul-badge-border-radius, 30px);--kul_badge_font_family:var(--kul-badge-font-family, var(--kul-font-family));--kul_badge_font_size:var(--kul-badge-font-size, var(--kul-font-size));--kul_badge_min_size:var(--kul-badge-min-size, 1.5em);--kul_badge_padding:var(--kul-badge-padding, 0.25em);--kul_badge_primary_color:var(\n    --kul-badge-primary-color,\n    var(--kul-primary-color)\n  );--kul_badge_text_on_primary_color:var(\n    --kul-badge-text-on-primary-color,\n    var(--kul-text-on-primary-color)\n  );display:block;font-family:var(--kul_badge_font_family);font-size:var(--kul_badge_font_size);position:absolute;top:0;left:0;transform:translate(-50%, -50%)}#kul-component{background-color:var(--kul_badge_primary_color);border-radius:var(--kul_badge_border_radius);color:var(--kul_badge_text_on_primary_color);font-size:0.875em;min-height:var(--kul_badge_min_size);min-width:var(--kul_badge_min_size);padding:var(--kul_badge_padding);text-align:center}kul-image{left:50%;position:absolute;top:50%;transform:translate(-50%, -50%)}:host(.kul-top-right){bottom:unset;left:unset;right:0;top:0;transform:translate(50%, -50%)}:host(.kul-bottom-right){bottom:0;left:unset;right:0;top:unset;transform:translate(50%, 50%)}:host(.kul-bottom-left){bottom:0;left:0;right:unset;top:unset;transform:translate(-50%, 50%)}:host(.kul-danger){--kul-badge-primary-color:var(--kul-danger-color);--kul-badge-text-on-primary-color:white}:host(.kul-info){--kul-badge-primary-color:var(--kul-info-color);--kul-badge-text-on-primary-color:white}:host(.kul-secondary){--kul-badge-primary-color:var(--kul-secondary-color);--kul-badge-text-on-primary-color:var(--kul-text-on-secondary-color)}:host(.kul-success){--kul-badge-primary-color:var(--kul-success-color);--kul-badge-text-on-primary-color:white}:host(.kul-warning){--kul-badge-primary-color:var(--kul-warning-color);--kul-badge-text-on-primary-color:white}";
 const KulBadgeStyle0 = kulBadgeCss;
@@ -31,16 +31,11 @@ const KulBadge = class {
         this.kulStyle = '';
     }
     get rootElement() { return getElement(this); }
-    /*-------------------------------------------------*/
-    /*       I n t e r n a l   V a r i a b l e s       */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Internal variables
     #kulManager = kulManagerInstance();
-    /*-------------------------------------------------*/
-    /*                   E v e n t s                   */
-    /*-------------------------------------------------*/
-    /**
-     * Describes event emitted.
-     */
+    //#endregion
+    //#region Events
     kulEvent;
     onKulEvent(e, eventType) {
         this.kulEvent.emit({
@@ -50,9 +45,8 @@ const KulBadge = class {
             originalEvent: e,
         });
     }
-    /*-------------------------------------------------*/
-    /*           P u b l i c   M e t h o d s           */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Public methods
     /**
      * Fetches debug information of the component's current state.
      * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves with the debug information object.
@@ -84,9 +78,8 @@ const KulBadge = class {
             this.rootElement.remove();
         }, ms);
     }
-    /*-------------------------------------------------*/
-    /*          L i f e c y c l e   H o o k s          */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Lifecycle hooks
     componentWillLoad() {
         this.#kulManager.theme.register(this);
     }
@@ -106,9 +99,9 @@ const KulBadge = class {
             if (!this.kulImageProps.kulColor) {
                 this.kulImageProps.kulColor = `var(${KulThemeColorValues.TEXT_ON_PRIMARY})`;
             }
-            imageEl = h("kul-image", { key: '854661916f5cb1bd1443f42e0e08ce9c1cc8ce7e', ...this.kulImageProps });
+            imageEl = h("kul-image", { key: '35eb05a5b1d2bf2ada34eeee1a64b7d437dc8fb4', ...this.kulImageProps });
         }
-        return (h(Host, { key: '4100fc0f5ad4d0a4f8a93501009d107af5e2f273' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '7747a710d13277fc05b5d3e2cd7f1ca203209f95', id: KUL_WRAPPER_ID, onClick: (e) => this.onKulEvent(e, 'click') }, this.kulLabel, imageEl)));
+        return (h(Host, { key: 'b216e01ac8cfe6c4dec78475293b7750eab7fae4' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '9ac83272d9f80c67c5d570abf47b80ee8b1cadf1', id: KUL_WRAPPER_ID, onClick: (e) => this.onKulEvent(e, 'click') }, this.kulLabel, imageEl)));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);
@@ -116,9 +109,8 @@ const KulBadge = class {
 };
 KulBadge.style = KulBadgeStyle0;
 
-/*-------------------------------------------------*/
-/*                    P r o p s                    */
-/*-------------------------------------------------*/
+//#endregion
+//#region Props
 var KulButtonProps;
 (function (KulButtonProps) {
     KulButtonProps["kulData"] = "Actual data of the button, used to render dropdown buttons.";
@@ -135,6 +127,7 @@ var KulButtonProps;
     KulButtonProps["kulType"] = "Defines the button type attribute.";
     KulButtonProps["kulValue"] = "If true, the button is marked as checked.";
 })(KulButtonProps || (KulButtonProps = {}));
+//#endregion
 
 const kulButtonCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}@keyframes fade-in-grid{0%{display:none}1%{display:grid;opacity:0}100%{display:grid;opacity:1}}:host{--kul_button_backdrop_filter:var(--kul-button-backdrop-filter, blur(3.5px));--kul_button_backdrop_filter_hover:var(\n    --kul-button-backdrop-filter-hover,\n    blur(5px)\n  );--kul_button_border_radius:var(--kul-button-border-radius, 4px);--kul_button_disabled_color:var(\n    --kul-button-disabled-color,\n    var(--kul-disabled-color)\n  );--kul_button_font_family:var(\n    --kul-button-font-family,\n    var(--kul-font-family)\n  );--kul_button_font_size:var(--kul-button-font-size, var(--kul-font-size));--kul_button_font_weight:var(--kul-button-font-weight, 400);--kul_button_height:var(--kul-button-height, 3em);--kul_button_padding:var(--kul-button-padding, 0 1.25em);--kul_button_primary_color:var(\n    --kul-button-primary-color,\n    var(--kul-primary-color)\n  );--kul_button_primary_color_h:var(\n    --kul-button-primary-color-h,\n    var(--kul-primary-color-h)\n  );--kul_button_primary_color_s:var(\n    --kul-button-primary-color-s,\n    var(--kul-primary-color-s)\n  );--kul_button_primary_color_l:var(\n    --kul-button-primary-color-l,\n    var(--kul-primary-color-l)\n  );--kul_button_primary_color_rgb:var(\n    --kul-button-primary-color-rgb,\n    var(--kul-primary-color-rgb)\n  );--kul_button_text_on_primary_color:var(\n    --kul-button-text-on-primary-color,\n    var(--kul-text-on-primary-color)\n  );--kul_button_text_transform:var(--kul-button-text-transform, uppercase);--kul_spinner_color:var(--kul_button_primary_color);display:block;font-size:var(--kul_button_font_size);width:max-content}#kul-component{align-items:center;display:flex}.button{align-items:center;background-color:transparent;border:none;border-radius:var(--kul_button_border_radius);box-sizing:border-box;color:var(--kul_button_primary_color);cursor:pointer;display:inline-flex;font-family:var(--kul_button_font_family);font-size:0.775em;font-weight:var(--kul_button_font_weight);height:var(--kul_button_height);justify-content:center;letter-spacing:0.0892857143em;line-height:inherit;min-width:64px;outline:none;overflow:visible;padding:var(--kul_button_padding);position:relative;text-decoration:none;text-transform:var(--kul_button_text_transform);transition:background-color 80ms linear, box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);user-select:none;vertical-align:middle}.button:hover{background-color:rgba(var(--kul_button_primary_color_rgb), 0.125)}.button:focus{background-color:rgba(var(--kul_button_primary_color_rgb), 0.375)}.button--floating,.button--raised,.button--outlined{-webkit-backdrop-filter:var(--kul_button_backdrop_filter);backdrop-filter:var(--kul_button_backdrop_filter)}.button--floating,.button--raised{--kul-spinner-color:var(--kul-text-color)}.button--floating:not(.button--disabled),.button--raised:not(.button--disabled){--kul-spinner-border-color:hsl(\n    var(--kul_button_primary_color_h),\n    calc(var(--kul_button_primary_color_s) * 0.75),\n    calc(var(--kul_button_primary_color_l) * 0.85)\n  );background-color:rgba(var(--kul_button_primary_color_rgb), 0.15)}.button--floating:focus,.button--floating:hover,.button--raised:focus,.button--raised:hover{-webkit-backdrop-filter:var(--kul_button_backdrop_filter);backdrop-filter:var(--kul_button_backdrop_filter)}.button--floating.button--disabled,.button--raised.button--disabled{background-color:var(--kul-disabled-background-color);box-shadow:none}.button--floating{border-radius:24px;box-shadow:0 0.215em 0.35em -1px rgba(var(--kul-text-color-rgb), 0.2), 0 0.43em 0.71em 0 rgba(var(--kul-text-color-rgb), 0.14), 0 0.07em 1.285em 0 rgba(var(--kul-text-color-rgb), 0.12);font-weight:500;font-size:1em;height:3.4em;width:auto;padding:0 1.5em}.button--floating.button--no-label{border-radius:50%;height:4em;padding:0;width:4em}.button--floating:hover,.button--floating:focus{box-shadow:0 5px 5px -3px rgba(var(--kul-text-color-rgb), 0.25), 0 8px 10px 1px rgba(var(--kul-text-color-rgb), 0.18), 0 3px 14px 2px rgba(var(--kul-text-color-rgb), 0.15)}.button--floating:active{box-shadow:0 7px 8px -4px rgba(var(--kul-text-color-rgb), 0.2), 0 12px 17px 2px rgba(var(--kul-text-color-rgb), 0.14), 0 5px 22px 4px rgba(var(--kul-text-color-rgb), 0.12)}.button--disabled{color:var(--kul_button_disabled_color);cursor:auto;opacity:0.75;pointer-events:none}.button--no-label{min-width:unset;padding:0 0.5em}.button--no-label .button__icon{margin:0}.button--outlined{border-width:1px;border-style:solid}.button--outlined:not(.button--disabled){border-color:var(--kul_button_primary_color);background-color:transparent;color:var(--kul_button_primary_color)}.button--outlined:focus,.button--outlined:hover{-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px)}.button--outlined:hover{background-color:rgba(var(--kul_button_primary_color_rgb), 0.125)}.button--outlined:focus{background-color:rgba(var(--kul_button_primary_color_rgb), 0.175)}.button--outlined.button--disabled{opacity:0.75;border-color:var(--kul_button_disabled_color)}.button--raised{box-shadow:0 3px 1px -2px rgba(var(--kul-text-color-rgb), 0.2), 0 2px 2px 0 rgba(var(--kul-text-color-rgb), 0.14), 0 1px 5px 0 rgba(var(--kul-text-color-rgb), 0.12)}.button--raised:focus,.button--raised:hover{box-shadow:0 2px 4px -1px rgba(var(--kul-text-color-rgb), 0.25), 0 4px 5px 0 rgba(var(--kul-text-color-rgb), 0.18), 0 1px 10px 0 rgba(var(--kul-text-color-rgb), 0.15)}.button--raised:active{box-shadow:0 5px 5px -3px rgba(var(--kul-text-color-rgb), 0.2), 0 8px 10px 1px rgba(var(--kul-text-color-rgb), 0.14), 0 3px 14px 2px rgba(var(--kul-text-color-rgb), 0.12)}.button--with-spinner{opacity:0.8;pointer-events:none}.button--dropdown{max-width:max-content;min-width:unset;padding:0.5em;position:relative}.button--dropdown:before{background-color:var(--kul-border-color);content:\"\";height:100%;left:0;opacity:0.75;position:absolute;top:0;width:1px}.button--dropdown kul-image{margin:0}.button__spinner-container{width:100%;height:var(--kul_button_spinner_height);left:0;position:absolute}.button__icon{margin-left:-0.25em;margin-right:0.75em}.button__icon--hidden{visibility:hidden}.button__label+.button__icon{margin-left:0.75em;margin-right:-0.25em}.icon-button{background-color:transparent;color:var(--kul_button_primary_color);display:inline-block;position:relative;box-sizing:border-box;border:none;outline:none;font-size:var(--kul_button_font_size);text-decoration:none;cursor:pointer;user-select:none;padding:0.75em;border-radius:50%}.icon-button:hover,.icon-button:focus{-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);background-color:rgba(var(--kul_button_primary_color_rgb), 0.125)}.icon-button__icon{display:flex;margin:auto}.icon-button__icon.icon-button__icon--on{display:none}.icon-button--with-spinner{pointer-events:none}.icon-button--with-spinner .icon-button__icon{opacity:0}.icon-button--with-spinner .button__spinner-container{width:100%;height:100%;left:0;position:absolute;top:0}.icon-button--disabled{opacity:0.75;pointer-events:none}.icon-button__spinner-container{width:var(--kul_button_spinner_width);height:var(--kul_button_spinner_height)}.content--hidden{visibility:hidden}@keyframes pulsating{0%{transform:scale(2);box-shadow:0 0 0 0 rgba(var(--kul_button_primary_color_rgb), 0.7)}70%{transform:scale(2.75);box-shadow:0 0 0 10px rgba(var(--kul_button_primary_color_rgb), 0)}100%{transform:scale(2);box-shadow:0 0 0 0 rgba(var(--kul_button_primary_color_rgb), 0)}}:host(.kul-full-height){height:100%}:host(.kul-full-height) #kul-component,:host(.kul-full-height) .button{height:100%}:host(.kul-full-width){width:100%}:host(.kul-full-width) #kul-component,:host(.kul-full-width) .button{width:100%}:host(.kul-large) button{font-size:1.25em}:host(.kul-shaped) .button{border-radius:18px}:host(.kul-shaped) .button.button--floating{border-radius:50% 0}:host(.kul-slim) button{font-size:0.675em}:host(.kul-pulsating) .icon-button--on:after{content:\"\";animation:pulsating 1250ms infinite;position:absolute;height:2px;width:2px;top:calc(50% - 1px);left:calc(50% - 1px);border-radius:50%}:host(.kul-danger){--kul-button-primary-color:var(--kul-danger-color);--kul-button-primary-color-h:var(--kul-danger-color-h);--kul-button-primary-color-s:var(--kul-danger-color-s);--kul-button-primary-color-l:var(--kul-danger-color-l);--kul-button-primary-color-rgb:var(--kul-danger-color-rgb);--kul-button-text-on-primary-color:white}:host(.kul-info){--kul-button-primary-color:var(--kul-info-color);--kul-button-primary-color-h:var(--kul-info-color-h);--kul-button-primary-color-s:var(--kul-info-color-s);--kul-button-primary-color-l:var(--kul-info-color-l);--kul-button-primary-color-rgb:var(--kul-info-color-rgb);--kul-button-text-on-primary-color:white}:host(.kul-secondary){--kul-button-primary-color:var(--kul-secondary-color);--kul-button-primary-color-h:var(--kul-secondary-color-h);--kul-button-primary-color-s:var(--kul-secondary-color-s);--kul-button-primary-color-l:var(--kul-secondary-color-l);--kul-button-primary-color-rgb:var(--kul-secondary-color-rgb);--kul-button-text-on-primary-color:var(--kul-text-on-secondary-color)}:host(.kul-success){--kul-button-primary-color:var(--kul-success-color);--kul-button-primary-color-h:var(--kul-success-color-h);--kul-button-primary-color-s:var(--kul-success-color-s);--kul-button-primary-color-l:var(--kul-success-color-l);--kul-button-primary-color-rgb:var(--kul-success-color-rgb);--kul-button-text-on-primary-color:white}:host(.kul-warning){--kul-button-primary-color:var(--kul-warning-color);--kul-button-primary-color-h:var(--kul-warning-color-h);--kul-button-primary-color-s:var(--kul-warning-color-s);--kul-button-primary-color-l:var(--kul-warning-color-l);--kul-button-primary-color-rgb:var(--kul-warning-color-rgb);--kul-button-text-on-primary-color:white}";
 const KulButtonStyle0 = kulButtonCss;
@@ -166,9 +159,8 @@ const KulButton = class {
         this.kulValue = false;
     }
     get rootElement() { return getElement(this); }
-    /*-------------------------------------------------*/
-    /*       I n t e r n a l   V a r i a b l e s       */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Internal variables
     #clickCb;
     #dropdown;
     #dropdownRippleSurface;
@@ -176,12 +168,8 @@ const KulButton = class {
     #kulManager = kulManagerInstance();
     #rippleSurface;
     #timeout;
-    /*-------------------------------------------------*/
-    /*                   E v e n t s                   */
-    /*-------------------------------------------------*/
-    /**
-     * Describes event emitted for various button interactions like click, focus, blur.
-     */
+    //#endregion
+    //#region Events
     kulEvent;
     onKulEvent(e, eventType, isDropdown = false) {
         switch (eventType) {
@@ -204,9 +192,8 @@ const KulButton = class {
             value: this.value,
         });
     }
-    /*-------------------------------------------------*/
-    /*           P u b l i c   M e t h o d s           */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Public methods
     /**
      * Fetches debug information of the component's current state.
      * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves with the debug information object.
@@ -276,9 +263,8 @@ const KulButton = class {
             this.rootElement.remove();
         }, ms);
     }
-    /*-------------------------------------------------*/
-    /*           P r i v a t e   M e t h o d s         */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Private methods
     #listManager() {
         return {
             close: () => {
@@ -449,9 +435,8 @@ const KulButton = class {
                 }
             } }, this.#prepRipple(true), h("kul-image", { ...image, kulValue: '--kul-dropdown-icon' }), h("kul-list", { class: KUL_DROPDOWN_CLASS, "data-cy": KulDataCyAttributes.DROPDOWN_MENU, kulData: { nodes: this.kulData.nodes[0].children }, "onKul-list-event": eventHandler, ref: (el) => (this.#list = el) })));
     }
-    /*-------------------------------------------------*/
-    /*          L i f e c y c l e   H o o k s          */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Lifecycle hooks
     componentWillLoad() {
         if (this.kulValue) {
             this.value = 'on';
@@ -544,16 +529,11 @@ const KulImage = class {
         this.kulValue = '';
     }
     get rootElement() { return getElement(this); }
-    /*-------------------------------------------------*/
-    /*        I n t e r n a l   V a r i a b l e s      */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Internal variables
     #kulManager = kulManagerInstance();
-    /*-------------------------------------------------*/
-    /*                   E v e n t s                   */
-    /*-------------------------------------------------*/
-    /**
-     * Describes event emitted.
-     */
+    //#endregion
+    //#region Events
     kulEvent;
     onKulEvent(e, eventType) {
         this.kulEvent.emit({
@@ -563,15 +543,13 @@ const KulImage = class {
             eventType,
         });
     }
-    /*-------------------------------------------------*/
-    /*                 W a t c h e r s                 */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Watchers
     async resetState() {
         this.error = false;
     }
-    /*-------------------------------------------------*/
-    /*           P u b l i c   M e t h o d s           */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Public methods
     /**
      * Fetches debug information of the component's current state.
      * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves with the debug information object.
@@ -603,10 +581,9 @@ const KulImage = class {
             this.rootElement.remove();
         }, ms);
     }
-    /*-------------------------------------------------*/
-    /*           P r i v a t e   M e t h o d s         */
-    /*-------------------------------------------------*/
-    createIcon() {
+    //#endregion
+    //#region Private methods
+    #createIcon() {
         const className = {
             image__icon: true,
         };
@@ -631,7 +608,7 @@ const KulImage = class {
             `url('${getAssetPath(`./assets/svg/${icon}.svg`)}') no-repeat center`;
         return h("div", { class: className, style: style });
     }
-    createImage() {
+    #createImage() {
         return (h("img", { onError: (e) => {
                 this.error = true;
                 this.onKulEvent(e, 'error');
@@ -640,15 +617,14 @@ const KulImage = class {
                 this.onKulEvent(e, 'load');
             }, src: this.kulValue }));
     }
-    isResourceUrl() {
+    #isResourceUrl() {
         return !!(this.kulValue &&
             (this.kulValue.indexOf('.') > -1 ||
                 this.kulValue.indexOf('/') > -1 ||
                 this.kulValue.indexOf('\\') > -1));
     }
-    /*-------------------------------------------------*/
-    /*          L i f e c y c l e   H o o k s          */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Lifecylce hooks
     componentWillLoad() {
         this.#kulManager.theme.register(this);
     }
@@ -669,17 +645,17 @@ const KulImage = class {
         }
         let el;
         let feedback;
-        const isUrl = this.isResourceUrl();
+        const isUrl = this.#isResourceUrl();
         let spinnerLayout;
         let style = {
             '--kul_image_height': this.kulSizeY ? this.kulSizeY : 'auto',
             '--kul_image_width': this.kulSizeX ? this.kulSizeX : '100%',
         };
         if (isUrl && !this.error) {
-            el = this.createImage();
+            el = this.#createImage();
         }
         else {
-            el = this.createIcon();
+            el = this.#createIcon();
         }
         if (this.kulShowSpinner && isUrl) {
             spinnerLayout = 14;
@@ -699,9 +675,8 @@ const KulImage = class {
 };
 KulImage.style = KulImageStyle0;
 
-/*-------------------------------------------------*/
-/*                    P r o p s                    */
-/*-------------------------------------------------*/
+//#endregion
+//#region Props
 var KulListProps;
 (function (KulListProps) {
     KulListProps["kulData"] = "The actual data of the list.";
@@ -712,6 +687,7 @@ var KulListProps;
     KulListProps["kulSelectable"] = "Defines whether items are selectable or not.";
     KulListProps["kulStyle"] = "Custom style of the component.";
 })(KulListProps || (KulListProps = {}));
+//#endregion
 
 const kulListCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}@keyframes fade-in-grid{0%{display:none}1%{display:grid;opacity:0}100%{display:grid;opacity:1}}:host{--kul_list_backdrop_filter:var(--kul-list-backdrop-filter, blur(3.5px));--kul_list_background_color:rgba(var(--kul-background-color-rgb), 0.75);--kul_list_font_family:var(--kul-list-font-family, var(--kul-font-family));--kul_list_font_size:var(--kul-list-font-size, var(--kul-font-size));--kul_list_font_weight:var(--kul-list-font-weight, 400);--kul_list_group_item_height:var(--kul-list-group-item-height, 3em);--kul_list_item_height:var(--kul-list-item-height, 2.5em);--kul_list_item_padding:var(--kul-list-item-padding, 0 0.75em);--kul_list_primary_color:var(\n    --kul-list-primary-color,\n    var(--kul-primary-color)\n  );--kul_list_primary_color_rgb:var(\n    --kul-list-primary-color-rgb,\n    var(--kul-primary-color-rgb)\n  );--kul_list_text_color:var(--kul-list-text-color, var(--kul-text-color));--kul_list_text_color_rgb:var(\n    --kul-list-text-color-rgb,\n    var(--kul-text-color-rgb)\n  );--kul_list_transition:var(--kul-list-transition, 125ms);-webkit-backdrop-filter:var(--kul_list_backdrop_filter);backdrop-filter:var(--kul_list_backdrop_filter);background-color:var(--kul_list_background_color);display:block;font-family:var(--kul_list_font_family);font-size:var(--kul_list_font_size);height:100%;outline:none;width:100%}#kul-component{height:100%;width:100%}.list{box-sizing:border-box;color:var(--kul_list_text_color);font-weight:var(--kul_list_font_weight);height:100%;letter-spacing:0.009375em;line-height:1.5em;list-style-type:none;margin:0;padding:0.5em 0;text-decoration:inherit;text-transform:inherit;width:100%}.list--empty{padding:0}.list--selectable .node{cursor:pointer;pointer-events:all}.list--selectable .node:not(.node--selected):hover,.list--selectable .node:not(.node--selected).node--focused{background-color:rgba(var(--kul_list_text_color_rgb), 0.125)}.list--selectable .node.node--selected:hover{background-color:rgba(var(--kul_list_primary_color_rgb), 0.225);color:var(--kul_list_primary_color)}.list-item{align-items:center;display:flex;width:100%}.list-item:hover .delete{width:1.5em}.delete{box-sizing:border-box;cursor:pointer;height:var(--kul_list_item_height);opacity:0.75;overflow:hidden;transition:opacity 125ms ease, width 125ms ease;width:0}.delete:hover{opacity:1}.delete__icon{background-color:var(--kul_list_text_color);height:100%;margin:0;width:100%}.node{align-items:center;display:flex;height:var(--kul_list_item_height);justify-content:flex-start;padding:var(--kul_list_item_padding);pointer-events:none;position:relative;outline:none;overflow:hidden;transition:background-color var(--kul_list_transition), color var(--kul_list_transition);width:100%}.node--has-description{align-self:flex-start;height:3.6em}.node--selected{background-color:rgba(var(--kul_list_primary_color_rgb), 0.175);color:var(--kul_list_primary_color)}.node__title{display:block;line-height:normal;margin-bottom:-1.5em;margin-top:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.node__title:before{content:\"\";display:inline-block;width:0;height:1.5em;vertical-align:0}.node__title:after{content:\"\";display:inline-block;width:0;height:2em;vertical-align:-2em}.node__subtitle{color:var(--kul_list_text_color);display:block;font-size:0.875em;font-weight:400;letter-spacing:0.0178571429em;line-height:normal;margin-top:0;opacity:0.75;overflow:hidden;padding-bottom:0.5em;text-decoration:inherit;text-transform:inherit;text-overflow:ellipsis;white-space:nowrap}.node__icon{background-color:var(--kul_list_text_color);height:1.5em;margin:0 0.75em 0 0;width:1.5em}.empty-data{align-items:center;display:flex;justify-content:center;height:100%;width:100%}:host(.kul-dropdown-menu){display:none;height:max-content;max-height:50dvh;max-width:75dvw;overflow:auto;width:max-content}:host(.kul-dropdown-menu--visible){display:block}";
 const KulListStyle0 = kulListCss;
@@ -738,18 +714,13 @@ const KulList = class {
         this.kulStyle = '';
     }
     get rootElement() { return getElement(this); }
-    /*-------------------------------------------------*/
-    /*       I n t e r n a l   V a r i a b l e s       */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Internal variables
     #kulManager = kulManagerInstance();
     #listItems = [];
     #rippleSurface = [];
-    /*-------------------------------------------------*/
-    /*                   E v e n t s                   */
-    /*-------------------------------------------------*/
-    /**
-     * Describes event emitted.
-     */
+    //#endregion
+    //#region Events
     kulEvent;
     onKulEvent(e, eventType, node, index = 0) {
         switch (eventType) {
@@ -783,9 +754,8 @@ const KulList = class {
             node,
         });
     }
-    /*-------------------------------------------------*/
-    /*                L i s t e n e r s                */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Listeners
     listenKeydown(e) {
         if (this.kulNavigation) {
             switch (e.key) {
@@ -807,9 +777,8 @@ const KulList = class {
             }
         }
     }
-    /*-------------------------------------------------*/
-    /*           P u b l i c   M e t h o d s           */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Public methods
     /**
      * Focuses the next element of the list.
      */
@@ -892,9 +861,8 @@ const KulList = class {
             this.rootElement.remove();
         }, ms);
     }
-    /*-------------------------------------------------*/
-    /*           P r i v a t e   M e t h o d s         */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Private methods
     #handleSelection(index) {
         if (this.kulSelectable &&
             index !== null &&
@@ -949,9 +917,8 @@ const KulList = class {
     #prepTitle(node) {
         return String(node.value).valueOf() ? (h("div", { class: "node__title" }, String(node.value).valueOf())) : undefined;
     }
-    /*-------------------------------------------------*/
-    /*          L i f e c y c l e   H o o k s          */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Lifecycle hooks
     componentWillLoad() {
         this.#kulManager.theme.register(this);
     }
@@ -978,7 +945,7 @@ const KulList = class {
             'list--empty': isEmpty,
             'list--selectable': this.kulSelectable,
         };
-        return (h(Host, { key: '908322ec55c6e149f4bbf893995ed4f735046192' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '6ba22b472aeb9891c7bc8cbce85bb656e38d3b5f', id: KUL_WRAPPER_ID }, isEmpty ? (h("div", { class: "empty-data" }, h("div", { class: "empty-data__text" }, this.kulEmptyLabel ||
+        return (h(Host, { key: 'b3d6383b682814a3210cd93a92636616041f8f04' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'c06ea3aba956e6423fed9ade2b6e05b8d3ab5be7', id: KUL_WRAPPER_ID }, isEmpty ? (h("div", { class: "empty-data" }, h("div", { class: "empty-data__text" }, this.kulEmptyLabel ||
             this.#kulManager.language.translate(KulLanguageGeneric.EMPTY_DATA)))) : (h("ul", { "aria-multiselectable": 'false', class: className, role: 'listbox' }, this.kulData.nodes.map((item, index) => this.#prepNode(item, index)))))));
     }
     disconnectedCallback() {

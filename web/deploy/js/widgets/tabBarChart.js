@@ -1,89 +1,50 @@
-import { prepareTabbarDataset, tabbarEventHandler, textfieldEventHandler, } from '../helpers/tabBarChart.js';
+import { apiCall, EV_HANDLERS, prepareTabbarDataset } from '../helpers/tabBarChart.js';
 import { KulEventName } from '../types/events/events.js';
-import { LogSeverity } from '../types/manager/manager.js';
-import { CustomWidgetName, NodeName, TagName, } from '../types/widgets/_common.js';
-import { TabBarChartCSS, } from '../types/widgets/tabBarChart.js';
-import { createDOMWidget, getLFManager, normalizeValue } from '../utils/common.js';
-//#region Tab bar chart
+import { TabBarChartColors, TabBarChartCSS, TabBarChartIds, } from '../types/widgets/tabBarChart.js';
+import { CustomWidgetName, NodeName, TagName } from '../types/widgets/widgets.js';
+import { createDOMWidget, normalizeValue } from '../utils/common.js';
+const STATE = new WeakMap();
 export const tabBarChartFactory = {
-    options: (chart, tabbar, textfield, node) => {
+    //#region Options
+    options: (wrapper) => {
         return {
             hideOnZoom: false,
-            getComp() {
-                return { chart, tabbar };
-            },
+            getState: () => STATE.get(wrapper),
             getValue: () => {
-                switch (node) {
+                const { directory, node } = STATE.get(wrapper);
+                switch (node.comfyClass) {
                     case NodeName.usageStatistics:
-                        return { directory: chart.dataset.directory || '' };
+                        return { directory: directory || '' };
                     default:
-                    case NodeName.colorAnalysis:
-                    case NodeName.imageHistogram:
                         return {};
                 }
             },
             setValue: (value) => {
+                const state = STATE.get(wrapper);
+                const { chart, tabbar } = state.elements;
                 const callback = (_, u) => {
                     const parsedValue = u.parsedJson;
-                    switch (node) {
-                        case NodeName.colorAnalysis:
-                        case NodeName.lutGeneration:
-                        case NodeName.imageHistogram:
-                            for (const key in parsedValue) {
-                                if (Object.prototype.hasOwnProperty.call(parsedValue, key)) {
-                                    const dataset = parsedValue[key];
-                                    chart.kulData = dataset || {};
-                                    tabbar.kulData = prepareTabbarDataset(parsedValue) || {};
-                                    requestAnimationFrame(() => tabbar.setValue(0));
-                                }
-                            }
-                            break;
+                    switch (state.node.comfyClass) {
                         case NodeName.usageStatistics:
-                            getLFManager()
-                                .getApiRoutes()
-                                .analytics.get(parsedValue.directory, 'usage')
-                                .then((r) => {
-                                if (r.status === 'success') {
-                                    if (r?.data && Object.entries(r.data).length > 0) {
-                                        const firstKey = Object.keys(r.data)[0];
-                                        chart.dataset.directory = parsedValue.directory || '';
-                                        chart.kulData = r.data[firstKey] || {};
-                                        tabbar.kulData = prepareTabbarDataset(r.data) || {};
-                                        textfield.setValue(parsedValue.directory);
-                                        requestAnimationFrame(() => tabbar.setValue(0));
-                                    }
-                                    else {
-                                        getLFManager().log('Analytics not found.', { r }, LogSeverity.Info);
-                                    }
-                                }
-                            });
+                            state.directory = parsedValue.directory;
+                            apiCall(state);
+                            break;
+                        default:
+                            for (const key in parsedValue) {
+                                const dataset = parsedValue[key];
+                                chart.kulData = dataset || {};
+                                tabbar.kulData = prepareTabbarDataset(parsedValue) || {};
+                                requestAnimationFrame(async () => tabbar.setValue(0));
+                            }
                             break;
                     }
                 };
                 normalizeValue(value, callback, CustomWidgetName.tabBarChart);
             },
-            refresh: async () => {
-                const currentTab = (await tabbar?.getValue())?.node?.id;
-                const directory = chart?.dataset.directory;
-                const type = chart?.dataset.type;
-                getLFManager()
-                    .getApiRoutes()
-                    .analytics.get(directory, type)
-                    .then((r) => {
-                    if (r.status === 'success') {
-                        if (r?.data && Object.entries(r.data).length > 0) {
-                            const firstKey = currentTab || Object.keys(r.data)[0];
-                            chart.kulData = r.data[firstKey];
-                            tabbar.kulData = prepareTabbarDataset(r.data);
-                        }
-                        else {
-                            getLFManager().log('Analytics not found.', { r }, LogSeverity.Info);
-                        }
-                    }
-                });
-            },
         };
     },
+    //#endregion
+    //#region Render
     render: (node) => {
         const wrapper = document.createElement(TagName.Div);
         const content = document.createElement(TagName.Div);
@@ -91,40 +52,40 @@ export const tabBarChartFactory = {
         const textfield = document.createElement(TagName.KulTextfield);
         const chart = document.createElement(TagName.KulChart);
         const tabbar = document.createElement(TagName.KulTabbar);
-        const options = tabBarChartFactory.options(chart, tabbar, textfield, node.comfyClass);
+        let type;
         switch (node.comfyClass) {
             case NodeName.colorAnalysis:
-                chart.kulAxis = ['intensity'];
-                chart.kulColors = ['red', 'green', 'blue'];
-                chart.kulSeries = ['red', 'green', 'blue'];
+                chart.kulAxis = [TabBarChartIds.Intensity];
+                chart.kulColors = [TabBarChartColors.Red, TabBarChartColors.Green, TabBarChartColors.Blue];
+                chart.kulSeries = [TabBarChartIds.Red, TabBarChartIds.Green, TabBarChartIds.Blue];
                 chart.kulTypes = ['scatter'];
                 grid.classList.add(TabBarChartCSS.GridNoDirectory);
                 textfield.classList.add(TabBarChartCSS.DirectoryHidden);
                 break;
             case NodeName.imageHistogram:
             case NodeName.lutGeneration:
-                chart.kulAxis = ['intensity'];
-                chart.kulColors = ['red', 'green', 'blue'];
-                chart.kulSeries = ['red', 'green', 'blue'];
+                chart.kulAxis = [TabBarChartIds.Intensity];
+                chart.kulColors = [TabBarChartIds.Red, TabBarChartIds.Green, TabBarChartIds.Blue];
+                chart.kulSeries = [TabBarChartIds.Red, TabBarChartIds.Green, TabBarChartIds.Blue];
                 chart.kulTypes = ['area'];
                 grid.classList.add(TabBarChartCSS.GridNoDirectory);
                 textfield.classList.add(TabBarChartCSS.DirectoryHidden);
                 break;
             case NodeName.usageStatistics:
-                chart.kulAxis = ['name'];
-                chart.dataset.type = 'usage';
-                chart.kulSeries = ['counter', 'counter'];
+                type = 'usage';
+                chart.kulAxis = [TabBarChartIds.Name];
+                chart.kulSeries = [TabBarChartIds.Counter, TabBarChartIds.Counter];
                 chart.kulTypes = ['area'];
                 break;
         }
-        tabbar.addEventListener(KulEventName.KulTabbar, tabbarEventHandler.bind(tabbarEventHandler, chart, node.comfyClass));
-        tabbar.kulValue = null;
         tabbar.classList.add(TabBarChartCSS.Tabbar);
+        tabbar.kulValue = null;
+        tabbar.addEventListener(KulEventName.KulTabbar, EV_HANDLERS.tabbar.bind(EV_HANDLERS.tabbar, STATE.get(wrapper)));
         textfield.classList.add(TabBarChartCSS.Directory);
         textfield.kulIcon = 'folder';
         textfield.kulLabel = 'Directory';
         textfield.kulStyling = 'flat';
-        textfield.addEventListener(KulEventName.KulTextfield, textfieldEventHandler.bind(textfieldEventHandler, chart, options.refresh));
+        textfield.addEventListener(KulEventName.KulTextfield, EV_HANDLERS.textfield.bind(EV_HANDLERS.textfield, STATE.get(wrapper)));
         grid.classList.add(TabBarChartCSS.Grid);
         grid.appendChild(textfield);
         grid.appendChild(tabbar);
@@ -132,7 +93,19 @@ export const tabBarChartFactory = {
         content.classList.add(TabBarChartCSS.Content);
         content.appendChild(grid);
         wrapper.appendChild(content);
+        const options = tabBarChartFactory.options(wrapper);
+        STATE.set(wrapper, {
+            directory: '',
+            elements: { chart, tabbar, textfield },
+            node,
+            selected: '',
+            type,
+            wrapper,
+        });
         return { widget: createDOMWidget(CustomWidgetName.tabBarChart, wrapper, node, options) };
     },
+    //#endregion
+    //#region State
+    state: STATE,
+    //#endregion
 };
-//#endregion

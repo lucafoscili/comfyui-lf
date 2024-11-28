@@ -1,12 +1,12 @@
-import { CustomWidgetName, TagName } from '../types/widgets/_common';
+import { CustomWidgetName, TagName } from '../types/widgets/widgets';
+import { createDOMWidget, normalizeValue } from '../utils/common';
 import {
   CarouselCSS,
   CarouselDeserializedValue,
   CarouselFactory,
   CarouselNormalizeCallback,
   CarouselState,
-} from '../types/widgets/carousel';
-import { createDOMWidget, normalizeValue } from '../utils/common';
+} from './../types/widgets/carousel';
 
 const STATE = new WeakMap<HTMLDivElement, CarouselState>();
 

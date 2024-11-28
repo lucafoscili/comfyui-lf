@@ -1,10 +1,9 @@
-import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-53f95fee.js';
-import { k as kulManagerInstance, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-9e1be956.js';
+import { r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, h, H as Host } from './index-7cf82e95.js';
+import { k as kulManagerInstance, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-72505221.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 
-/*-------------------------------------------------*/
-/*                    P r o p s                    */
-/*-------------------------------------------------*/
+//#endregion
+//#region Props
 var KulPhotoframeProps;
 (function (KulPhotoframeProps) {
     KulPhotoframeProps["kulPlaceholder"] = "Html attributes of the picture before the component enters the viewport.";
@@ -12,6 +11,7 @@ var KulPhotoframeProps;
     KulPhotoframeProps["kulThreshold"] = "Percentage of the component's dimensions entering the viewport (0.1 => 1)";
     KulPhotoframeProps["kulValue"] = "Html attributes of the picture after the component enters the viewport.";
 })(KulPhotoframeProps || (KulPhotoframeProps = {}));
+//#endregion
 
 const kulPhotoframeCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}@keyframes fade-in-grid{0%{display:none}1%{display:grid;opacity:0}100%{display:grid;opacity:1}}:host{--kul_photoframe_border:var(\n    --kul-photoframe-border,\n    1px inset var(--kul-border-color)\n  );--kul_photoframe_fade_out_time:var(--kul-photoframe-fade-out-time, 2000ms);border:var(--kul_photoframe_border);display:block;height:100%;position:relative;width:100%}#kul-component{position:relative;height:100%;width:100%}img{max-height:100%;max-width:100%}.horizontal img{width:100%}.vertical img{height:100%}.placeholder{display:none;transition:opacity var(--kul_photoframe_fade_out_time) ease-out;will-change:opacity;z-index:1}.placeholder--loaded{display:block}.placeholder--fade-out{opacity:0;position:absolute}.value{display:none;left:0;position:absolute;top:0;z-index:0}.value--fade-in{display:block;position:relative}:host(.kul-fit) img{height:100%;object-fit:cover;width:100%}";
 const KulPhotoframeStyle0 = kulPhotoframeCss;
@@ -34,21 +34,16 @@ const KulPhotoframe = class {
         this.kulValue = null;
     }
     get rootElement() { return getElement(this); }
-    /*-------------------------------------------------*/
-    /*       I n t e r n a l   V a r i a b l e s       */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Internal variables
     #intObserver;
     #kulManager = kulManagerInstance();
     #placeholderEl;
     #valueEl;
     #renderValue = false;
     #wrapperEl;
-    /*-------------------------------------------------*/
-    /*                   E v e n t s                   */
-    /*-------------------------------------------------*/
-    /**
-     * Describes event emitted.
-     */
+    //#endregion
+    //#region Events
     kulEvent;
     onKulEvent(e, eventType, isPlaceholder = false) {
         this.kulEvent.emit({
@@ -59,9 +54,8 @@ const KulPhotoframe = class {
             isPlaceholder,
         });
     }
-    /*-------------------------------------------------*/
-    /*           P u b l i c   M e t h o d s           */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Public methods
     /**
      * Fetches debug information of the component's current state.
      * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves with the debug information object.
@@ -93,9 +87,8 @@ const KulPhotoframe = class {
             this.rootElement.remove();
         }, ms);
     }
-    /*-------------------------------------------------*/
-    /*           P r i v a t e   M e t h o d s         */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Private methods
     #setObserver() {
         const callback = (entries) => {
             entries.forEach((entry) => {
@@ -110,9 +103,8 @@ const KulPhotoframe = class {
         };
         this.#intObserver = new IntersectionObserver(callback, options);
     }
-    /*-------------------------------------------------*/
-    /*          L i f e c y c l e   H o o k s          */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Lifecycle hooks
     componentWillLoad() {
         this.#kulManager.theme.register(this);
         this.#setObserver();
@@ -131,9 +123,9 @@ const KulPhotoframe = class {
         if (this.isInViewport && !this.#renderValue) {
             this.#renderValue = true;
         }
-        return (h(Host, { key: '64d4446e6ad0c5f25806f4789736f8f521f0704b' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '76c7e94630beb9030052039b354e1e1888ae196e', id: KUL_WRAPPER_ID, ref: (el) => {
+        return (h(Host, { key: '0579a5dba1cabedf12298409d141cdc1dfaa94a9' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '2989b8b006ba31d3b999a767d7ee00b5d951ad80', id: KUL_WRAPPER_ID, ref: (el) => {
                 this.#wrapperEl = el;
-            } }, h("img", { key: '4769c3ef7a568b993eed08fb2e7331a8769c4844', ...this.kulPlaceholder, class: "placeholder", ref: (el) => (this.#placeholderEl = el), onLoad: (e) => {
+            } }, h("img", { key: '1ca70232b1fe13ed73b7f57dd3b1df0f354fc3f5', ...this.kulPlaceholder, class: "placeholder", ref: (el) => (this.#placeholderEl = el), onLoad: (e) => {
                 if (this.#placeholderEl.naturalWidth >
                     this.#placeholderEl.naturalHeight) {
                     this.#wrapperEl.classList.add('horizontal');

@@ -1,4 +1,4 @@
-import { CustomWidgetName, } from './_common.js';
+//#region CSS
 const BASE_CSS_CLASS = 'lf-textarea';
 export var TextareaCSS;
 (function (TextareaCSS) {

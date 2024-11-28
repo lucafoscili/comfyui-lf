@@ -1,7 +1,7 @@
 import { EV_HANDLERS } from '../helpers/chat';
 import { KulEventName } from '../types/events/events';
-import { CustomWidgetName, TagName } from '../types/widgets/_common';
 import { ChatCSS, ChatFactory, ChatNormalizeCallback, ChatState } from '../types/widgets/chat';
+import { CustomWidgetName, TagName } from '../types/widgets/widgets';
 import { createDOMWidget, normalizeValue } from '../utils/common';
 
 const STATE = new WeakMap<HTMLDivElement, ChatState>();
@@ -39,10 +39,7 @@ export const chatFactory: ChatFactory = {
     content.classList.add(ChatCSS.Content);
     chat.classList.add(ChatCSS.Widget);
 
-    chat.addEventListener(
-      KulEventName.KulChat,
-      EV_HANDLERS.chat.bind(EV_HANDLERS.chat, STATE.get(wrapper)),
-    );
+    chat.addEventListener(KulEventName.KulChat, (e) => EV_HANDLERS.chat(STATE.get(wrapper), e));
 
     content.appendChild(chat);
     wrapper.appendChild(content);

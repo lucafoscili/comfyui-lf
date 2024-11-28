@@ -1,7 +1,6 @@
 import { PLACEHOLDER_MESSAGE } from '../fixtures/messenger';
-import { handleMessengerEvent } from '../helpers/messenger';
+import { EV_HANDLERS } from '../helpers/messenger';
 import { KulEventName } from '../types/events/events';
-import { CustomWidgetName, TagName } from '../types/widgets/_common';
 import {
   MessengerCSS,
   MessengerDeserializedValue,
@@ -9,6 +8,7 @@ import {
   MessengerNormalizeCallback,
   MessengerState,
 } from '../types/widgets/messenger';
+import { CustomWidgetName, TagName } from '../types/widgets/widgets';
 import { createDOMWidget, isValidObject, normalizeValue } from '../utils/common';
 
 const STATE = new WeakMap<HTMLDivElement, MessengerState>();
@@ -66,7 +66,7 @@ export const messengerFactory: MessengerFactory = {
 
     messenger.addEventListener(
       KulEventName.KulMessenger,
-      handleMessengerEvent.bind(handleMessengerEvent, STATE.get(wrapper)),
+      EV_HANDLERS.messenger.bind(EV_HANDLERS.messenger, STATE.get(wrapper)),
     );
 
     content.appendChild(placeholder);

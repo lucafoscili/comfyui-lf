@@ -1,12 +1,12 @@
-import { handlers } from '../helpers/upload';
+import { EV_HANDLERS } from '../helpers/upload';
 import { KulEventName } from '../types/events/events';
-import { CustomWidgetName, TagName } from '../types/widgets/_common';
 import {
   UploadCSS,
   UploadFactory,
   UploadNormalizeCallback,
   UploadState,
 } from '../types/widgets/upload';
+import { CustomWidgetName, TagName } from '../types/widgets/widgets';
 import { createDOMWidget, normalizeValue } from '../utils/common';
 
 const STATE = new WeakMap<HTMLDivElement, UploadState>();
@@ -43,7 +43,7 @@ export const uploadFactory: UploadFactory = {
     upload.classList.add(UploadCSS.Widget);
     upload.addEventListener(
       KulEventName.KulUpload,
-      handlers.upload.bind(handlers.upload, STATE.get(wrapper)),
+      EV_HANDLERS.upload.bind(EV_HANDLERS.upload, STATE.get(wrapper)),
     );
 
     content.classList.add(UploadCSS.Content);

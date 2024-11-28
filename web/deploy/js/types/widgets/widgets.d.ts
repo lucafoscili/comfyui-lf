@@ -1,22 +1,21 @@
-import { EventPayload } from '../events/events';
-import { Card, CardDeserializedValue, CardOptions, CardOptionsCallback } from './card';
-import { CardsWithChip, CardsWithChipDeserializedValue, CardsWithChipOptions, CardsWithChipOptionsCallback } from './cardsWithChip';
-import { Carousel, CarouselDeserializedValue, CarouselOptions, CarouselOptionsCallback } from './carousel';
-import { Chat, ChatOptions, ChatOptionsCallback, ChatValueDeserializedValue } from './chat';
-import { Chip, ChipOptions, ChipOptionsCallback, ChipValueDeserializedValue } from './chip';
-import { Code, CodeOptions, CodeOptionsCallback, CodeValueDeserializedValue } from './code';
-import { Compare, CompareOptions, CompareOptionsCallback, CompareValueDeserializedValue } from './compare';
-import { ControlPanel, ControlPanelDeserializedValue, ControlPanelOptions, ControlPanelOptionsCallback } from './controlPanel';
-import { CountBarChart, CountBarChartDeserializedValue, CountBarChartOptions, CountBarChartOptionsCallback } from './countBarChart';
-import { History, HistoryOptions, HistoryOptionsCallback, HistoryDeserializedValue } from './history';
-import { ImageEditor, ImageEditorDeserializedValue, ImageEditorOptions, ImageEditorOptionsCallback } from './imageEditor';
-import { Masonry, MasonryDeserializedValue, MasonryOptions, MasonryOptionsCallback } from './masonry';
-import { Messenger, MessengerDeserializedValue, MessengerOptions, MessengerOptionsCallback } from './messenger';
-import { Progressbar, ProgressbarDeserializedValue, ProgressbarOptions, ProgressbarOptionsCallback } from './progressBar';
-import { TabBarChart, TabBarChartDeserializedValue, TabBarChartOptions, TabBarChartOptionsCallback } from './tabBarChart';
-import { Textarea, TextareaDeserializedValue, TextareaOptions, TextareaOptionsCallback } from './textarea';
-import { Tree, TreeOptions, TreeOptionsCallback, TreeValueDeserializedValue } from './tree';
-import { Upload, UploadDeserializedValue, UploadOptions, UploadOptionsCallback } from './upload';
+import { Card, CardDeserializedValue } from './card';
+import { CardsWithChip, CardsWithChipDeserializedValue } from './cardsWithChip';
+import { Carousel, CarouselDeserializedValue } from './carousel';
+import { Chat, ChatDeserializedValue } from './chat';
+import { Chip, ChipDeserializedValue } from './chip';
+import { Code, CodeDeserializedValue } from './code';
+import { Compare, CompareDeserializedValue } from './compare';
+import { ControlPanel, ControlPanelDeserializedValue } from './controlPanel';
+import { CountBarChart, CountBarChartDeserializedValue } from './countBarChart';
+import { History, HistoryDeserializedValue } from './history';
+import { ImageEditor, ImageEditorDeserializedValue } from './imageEditor';
+import { Masonry, MasonryDeserializedValue } from './masonry';
+import { Messenger, MessengerDeserializedValue } from './messenger';
+import { Progressbar, ProgressbarDeserializedValue } from './progressbar';
+import { TabBarChart, TabBarChartDeserializedValue } from './tabBarChart';
+import { Textarea, TextareaDeserializedValue } from './textarea';
+import { Tree, TreeDeserializedValue } from './tree';
+import { Upload, UploadDeserializedValue } from './upload';
 export declare enum ComfyWidgetName {
     boolean = "BOOLEAN",
     combo = "COMBO",
@@ -162,21 +161,18 @@ export declare enum TagName {
     KulUpload = "kul-upload",
     Textarea = "textarea"
 }
-export type CustomWidgetDeserializedValues = CardDeserializedValue | CardsWithChipDeserializedValue | CarouselDeserializedValue | ChatValueDeserializedValue | ChipValueDeserializedValue | CodeValueDeserializedValue | CompareValueDeserializedValue | ControlPanelDeserializedValue | CountBarChartDeserializedValue | HistoryDeserializedValue | ImageEditorDeserializedValue | MasonryDeserializedValue | MessengerDeserializedValue | ProgressbarDeserializedValue | TabBarChartDeserializedValue | TextareaDeserializedValue | TreeValueDeserializedValue | UploadDeserializedValue;
-export type CustomWidgetOptions = CardOptions | CardsWithChipOptions | CarouselOptions | ChatOptions | ChipOptions | CodeOptions | CompareOptions | ControlPanelOptions | CountBarChartOptions | HistoryOptions | ImageEditorOptions | MasonryOptions | MessengerOptions | ProgressbarOptions | TabBarChartOptions | TextareaOptions | TreeOptions | UploadOptions;
-export type CustomWidgetOptionsCallbacks = CardOptionsCallback | CarouselOptionsCallback | ChatOptionsCallback | ChipOptionsCallback | CodeOptionsCallback | CompareOptionsCallback | ControlPanelOptionsCallback | HistoryOptionsCallback | ImageEditorOptionsCallback | MasonryOptionsCallback | MessengerOptionsCallback | ProgressbarOptionsCallback | TabBarChartOptionsCallback | TextareaOptionsCallback | TreeOptionsCallback | UploadOptionsCallback;
 export type ComfyWidgetMap = {
-    [ComfyWidgetName.boolean]: Widget;
-    [ComfyWidgetName.combo]: Widget;
-    [ComfyWidgetName.customtext]: Widget;
-    [ComfyWidgetName.float]: Widget;
-    [ComfyWidgetName.integer]: Widget;
-    [ComfyWidgetName.json]: Widget;
-    [ComfyWidgetName.number]: Widget;
-    [ComfyWidgetName.seed]: Widget;
-    [ComfyWidgetName.string]: Widget;
-    [ComfyWidgetName.text]: Widget;
-    [ComfyWidgetName.toggle]: Widget;
+    [ComfyWidgetName.boolean]: ComfyWidget;
+    [ComfyWidgetName.combo]: ComfyWidget;
+    [ComfyWidgetName.customtext]: ComfyWidget;
+    [ComfyWidgetName.float]: ComfyWidget;
+    [ComfyWidgetName.integer]: ComfyWidget;
+    [ComfyWidgetName.json]: ComfyWidget;
+    [ComfyWidgetName.number]: ComfyWidget;
+    [ComfyWidgetName.seed]: ComfyWidget;
+    [ComfyWidgetName.string]: ComfyWidget;
+    [ComfyWidgetName.text]: ComfyWidget;
+    [ComfyWidgetName.toggle]: ComfyWidget;
 };
 export type CustomWidgetMap = {
     [CustomWidgetName.card]: Card;
@@ -202,10 +198,10 @@ export type CustomWidgetDeserializedValuesMap<Name extends CustomWidgetName> = {
     [CustomWidgetName.card]: CardDeserializedValue;
     [CustomWidgetName.cardsWithChip]: CardsWithChipDeserializedValue;
     [CustomWidgetName.carousel]: CarouselDeserializedValue;
-    [CustomWidgetName.chat]: ChatValueDeserializedValue;
-    [CustomWidgetName.chip]: ChipValueDeserializedValue;
-    [CustomWidgetName.code]: CodeValueDeserializedValue;
-    [CustomWidgetName.compare]: CompareValueDeserializedValue;
+    [CustomWidgetName.chat]: ChatDeserializedValue;
+    [CustomWidgetName.chip]: ChipDeserializedValue;
+    [CustomWidgetName.code]: CodeDeserializedValue;
+    [CustomWidgetName.compare]: CompareDeserializedValue;
     [CustomWidgetName.controlPanel]: ControlPanelDeserializedValue;
     [CustomWidgetName.countBarChart]: CountBarChartDeserializedValue;
     [CustomWidgetName.history]: HistoryDeserializedValue;
@@ -215,54 +211,45 @@ export type CustomWidgetDeserializedValuesMap<Name extends CustomWidgetName> = {
     [CustomWidgetName.progressbar]: ProgressbarDeserializedValue;
     [CustomWidgetName.tabBarChart]: TabBarChartDeserializedValue;
     [CustomWidgetName.textarea]: TextareaDeserializedValue;
-    [CustomWidgetName.tree]: TreeValueDeserializedValue;
+    [CustomWidgetName.tree]: TreeDeserializedValue;
     [CustomWidgetName.upload]: UploadDeserializedValue;
 }[Name];
-export type CustomWidgetOptionsCallbacksMap<Name extends CustomWidgetName> = {
-    [CustomWidgetName.card]: CardOptionsCallback;
-    [CustomWidgetName.cardsWithChip]: CardsWithChipOptionsCallback;
-    [CustomWidgetName.carousel]: CarouselOptionsCallback;
-    [CustomWidgetName.chat]: ChatOptionsCallback;
-    [CustomWidgetName.chip]: ChipOptionsCallback;
-    [CustomWidgetName.code]: CodeOptionsCallback;
-    [CustomWidgetName.compare]: CompareOptionsCallback;
-    [CustomWidgetName.controlPanel]: ControlPanelOptionsCallback;
-    [CustomWidgetName.countBarChart]: CountBarChartOptionsCallback;
-    [CustomWidgetName.history]: HistoryOptionsCallback;
-    [CustomWidgetName.imageEditor]: ImageEditorOptionsCallback;
-    [CustomWidgetName.masonry]: MasonryOptionsCallback;
-    [CustomWidgetName.messenger]: MessengerOptionsCallback;
-    [CustomWidgetName.progressbar]: ProgressbarOptionsCallback;
-    [CustomWidgetName.tabBarChart]: TabBarChartOptionsCallback;
-    [CustomWidgetName.textarea]: TextareaOptionsCallback;
-    [CustomWidgetName.tree]: TreeOptionsCallback;
-    [CustomWidgetName.upload]: UploadOptionsCallback;
-}[Name];
-export type NodePayloadMap = {
-    [N in NodeName]: EventPayload<CustomWidgetName>;
-};
 export type NodeWidgetMap = {
     [N in NodeName]: CustomWidgetName[];
 };
+export type ComfyWidget = Widget<ComfyWidgetName>;
+export type CustomWidget = Card;
+export type GenericWidget = ComfyWidget | CustomWidget;
 export type UnescapeJSONPayload = {
     validJson: boolean;
     parsedJson?: {};
     unescapedStr: string;
 };
-export type NormalizeValueCallback<V extends CustomWidgetDeserializedValuesMap<CustomWidgetName>> = (origValue: V, unescaped: UnescapeJSONPayload) => void;
-export type BaseWidgetCallback<T extends CustomWidgetName> = (node: NodeType, name: T) => {
-    widget: Widget;
+export type NormalizeValueCallback<V extends CustomWidgetDeserializedValuesMap<CustomWidgetName>, S extends BaseWidgetState = BaseWidgetState> = (origValue: V, unescaped: UnescapeJSONPayload, state?: S) => void;
+export type GenericWidgetCallback = ComfyWidgetCallback | CustomWidgetCallback;
+export type CustomWidgetCallback = <T extends CustomWidgetName>(node: NodeType, name: T) => {
+    widget: CustomWidget;
 };
 export type ComfyWidgetCallback = <T extends ComfyWidgetName>(node: NodeType, name: T) => {
-    widget: Widget;
+    widget: ComfyWidget;
 };
-export interface BaseWidgetFactory<T extends CustomWidgetOptions> {
-    options: BaseWidgetOptionsCallback<T>;
-    render: BaseWidgetCallback<CustomWidgetName>;
+export interface WidgetFactory<V extends CustomWidgetDeserializedValuesMap<CustomWidgetName> = CustomWidgetDeserializedValuesMap<CustomWidgetName>, S extends BaseWidgetState = BaseWidgetState> {
+    options: (wrapper: HTMLDivElement) => WidgetOptions<V, S>;
+    render: (node: NodeType) => {
+        widget: GenericWidget;
+    };
+    state: WeakMap<HTMLDivElement, S>;
 }
-export interface BaseWidgetOptions<V extends CustomWidgetDeserializedValuesMap<CustomWidgetName>> {
+export interface WidgetOptions<V extends CustomWidgetDeserializedValuesMap<CustomWidgetName> = CustomWidgetDeserializedValuesMap<CustomWidgetName>, S extends BaseWidgetState = BaseWidgetState> {
     hideOnZoom: boolean;
+    getState: () => S;
     getValue: () => V;
     setValue(value: string | V): void;
 }
-export type BaseWidgetOptionsCallback<T extends CustomWidgetOptions> = (...args: any[]) => T;
+export interface BaseWidgetState {
+    node: NodeType;
+    wrapper: HTMLDivElement;
+}
+export type WidgetSetter = {
+    [W in CustomWidgetName]: CustomWidgetCallback;
+};

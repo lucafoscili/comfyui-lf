@@ -1,8 +1,4 @@
-import {
-  GetGitHubLatestReleaseAPIPayload,
-  GetMetadataAPIPayload,
-  GitHubAPIs,
-} from '../types/api/api';
+import { GetGitHubLatestReleaseAPIPayload, GitHubAPIs } from '../types/api/api';
 import { LogSeverity } from '../types/manager/manager';
 import { getLFManager } from '../utils/common';
 

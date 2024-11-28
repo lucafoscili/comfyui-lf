@@ -1,23 +1,20 @@
-import { KulArticleNode } from '../ketchup-lite/components/kul-article/kul-article-declarations';
-import { BaseWidgetCallback, BaseWidgetFactory, BaseWidgetOptions, CustomWidgetName } from './_common';
-export interface ControlPanel extends Widget {
-    options: ControlPanelOptions;
-    type: [CustomWidgetName.controlPanel];
+import { KulArticleNode } from '../../types/ketchup-lite/components/kul-article/kul-article-declarations';
+import { BaseWidgetState, CustomWidgetName, NormalizeValueCallback, WidgetFactory } from './widgets';
+export declare enum ControlPanelCSS {
+    Content = "lf-controlpanel",
+    Grid = "lf-controlpanel__grid",
+    Spinner = "lf-controlpanel__spinner"
 }
-export interface ControlPanelFactory extends BaseWidgetFactory<ControlPanelOptions> {
-    options: ControlPanelOptionsCallback;
-}
-export type ControlPanelOptionsCallback = () => ControlPanelOptions;
-export interface ControlPanelOptions extends BaseWidgetOptions<ControlPanelDeserializedValue> {
-}
-export type ControlPanelSetter = () => {
-    [CustomWidgetName.controlPanel]: BaseWidgetCallback<CustomWidgetName.controlPanel>;
-};
+export type ControlPanel = Widget<CustomWidgetName.controlPanel>;
+export type ControlPanelFactory = WidgetFactory<ControlPanelDeserializedValue, ControlPanelState>;
+export type ControlPanelNormalizeCallback = NormalizeValueCallback<ControlPanelDeserializedValue | string>;
 export type ControlPanelDeserializedValue = {
     backup: boolean;
     debug: boolean;
     themes: string;
 };
+export interface ControlPanelState extends BaseWidgetState {
+}
 export interface ControlPanelFixture {
     [ControlPanelIds.Analytics]: () => KulArticleNode;
     [ControlPanelIds.Backup]: () => KulArticleNode;
@@ -59,9 +56,4 @@ export declare enum ControlPanelSection {
     Paragraph = "paragraph",
     Root = "root",
     Section = "section"
-}
-export declare enum ControlPanelCSS {
-    Content = "lf-controlpanel",
-    Grid = "lf-controlpanel__grid",
-    Spinner = "lf-controlpanel__spinner"
 }

@@ -1,35 +1,39 @@
+import { EV_HANDLERS } from '../helpers/chip.js';
 import { KulEventName } from '../types/events/events.js';
-import { CustomWidgetName, NodeName, TagName, } from '../types/widgets/_common.js';
 import { ChipCSS } from '../types/widgets/chip.js';
+import { CustomWidgetName, NodeName, TagName } from '../types/widgets/widgets.js';
 import { createDOMWidget, normalizeValue } from '../utils/common.js';
-//#region Chip
+const STATE = new WeakMap();
 export const chipFactory = {
-    options: (chip) => {
+    //#region Options
+    options: (wrapper) => {
         return {
             hideOnZoom: true,
-            getComp() {
-                return chip;
-            },
+            getState: () => STATE.get(wrapper),
             getValue() {
-                return chip?.dataset.selectedChips || '';
+                const { selected } = STATE.get(wrapper);
+                return selected || '';
             },
             setValue(value) {
+                const state = STATE.get(wrapper);
                 const callback = (v) => {
-                    chip.dataset.selectedChips = v;
-                    chip.setSelectedNodes(v.split(', '));
+                    const value = v ? v.split(', ') : [];
+                    state.selected = v;
+                    state.chip.setSelectedNodes(value);
                 };
                 normalizeValue(value, callback, CustomWidgetName.chip);
             },
         };
     },
+    //#endregion
+    //#region Render
     render: (node) => {
         const wrapper = document.createElement(TagName.Div);
         const content = document.createElement(TagName.Div);
         const chip = document.createElement(TagName.KulChip);
-        const options = chipFactory.options(chip);
         content.classList.add(ChipCSS.Content);
         chip.classList.add(ChipCSS.Widget);
-        chip.addEventListener(KulEventName.KulChip, eventHandler);
+        chip.addEventListener(KulEventName.KulChip, (e) => EV_HANDLERS.chip(STATE.get(wrapper), e));
         switch (node.comfyClass) {
             case NodeName.keywordToggleFromJson:
                 chip.kulStyling = 'filter';
@@ -37,20 +41,12 @@ export const chipFactory = {
         }
         content.appendChild(chip);
         wrapper.appendChild(content);
+        const options = chipFactory.options(wrapper);
+        STATE.set(wrapper, { chip, node, selected: '', wrapper });
         return { widget: createDOMWidget(CustomWidgetName.chip, wrapper, node, options) };
     },
+    //#endregion
+    //#region State
+    state: STATE,
+    //#endregion
 };
-const eventHandler = async (e) => {
-    const { comp, eventType } = e.detail;
-    switch (eventType) {
-        case 'click':
-            const chip = comp;
-            const selectedValues = [];
-            (await chip.getSelectedNodes()).forEach((node) => {
-                selectedValues.push(String(node.value).valueOf());
-            });
-            chip.rootElement.dataset.selectedChips = selectedValues.join(', ');
-            break;
-    }
-};
-//#endregion

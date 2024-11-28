@@ -1,3 +1,14 @@
+import { LFWindow } from '../managers/manager';
+import { KulDataDataset } from '../types/ketchup-lite/components';
+import { KulButton } from '../types/ketchup-lite/components/kul-button/kul-button';
+import { KulCanvas } from '../types/ketchup-lite/components/kul-canvas/kul-canvas';
+import { KulChart } from '../types/ketchup-lite/components/kul-chart/kul-chart';
+import { KulList } from '../types/ketchup-lite/components/kul-list/kul-list';
+import { KulToggle } from '../types/ketchup-lite/components/kul-toggle/kul-toggle';
+import { KulTree } from '../types/ketchup-lite/components/kul-tree/kul-tree';
+import { KulDom } from '../types/ketchup-lite/managers/kul-manager/kul-manager-declarations';
+import { KulComponent, KulComponentName } from '../types/ketchup-lite/types/GenericTypes';
+import { LogSeverity } from '../types/manager/manager';
 import {
   ComfyWidgetMap,
   ComfyWidgetName,
@@ -7,16 +18,7 @@ import {
   NormalizeValueCallback,
   UnescapeJSONPayload,
   WidgetOptions,
-} from '../types/widgets/_common';
-import { KulButton } from '../types/ketchup-lite/components/kul-button/kul-button';
-import { KulChart } from '../types/ketchup-lite/components/kul-chart/kul-chart';
-import { KulDataDataset } from '../types/ketchup-lite/components';
-import { KulList } from '../types/ketchup-lite/components/kul-list/kul-list';
-import { KulToggle } from '../types/ketchup-lite/components/kul-toggle/kul-toggle';
-import { KulComponent, KulComponentName } from '../types/ketchup-lite/types/GenericTypes';
-import { KulDom } from '../types/ketchup-lite/managers/kul-manager/kul-manager-declarations';
-import { LogSeverity } from '../types/manager/manager';
-import { LFWindow } from '../managers/manager';
+} from '../types/widgets/widgets';
 
 //#region Constants
 const DEFAULT_WIDGET_NAME = 'ui_widget';
@@ -32,11 +34,17 @@ let timer: ReturnType<typeof setTimeout>;
 export const isButton = (comp: KulComponent<KulComponentName>): comp is KulButton => {
   return comp.rootElement.tagName.toLowerCase() === 'kul-button';
 };
+export const isCanvas = (comp: KulComponent<KulComponentName>): comp is KulCanvas => {
+  return comp.rootElement.tagName.toLowerCase() === 'kul-canvas';
+};
 export const isChart = (comp: KulComponent<KulComponentName>): comp is KulChart => {
   return comp.rootElement.tagName.toLowerCase() === 'kul-chart';
 };
 export const isList = (comp: KulComponent<KulComponentName>): comp is KulList => {
   return comp.rootElement.tagName.toLowerCase() === 'kul-list';
+};
+export const isTree = (comp: KulComponent<KulComponentName>): comp is KulTree => {
+  return comp.rootElement.tagName.toLowerCase() === 'kul-tree';
 };
 export const isToggle = (comp: KulComponent<KulComponentName>): comp is KulToggle => {
   return comp.rootElement.tagName.toLowerCase() === 'kul-toggle';
@@ -262,7 +270,6 @@ export const normalizeValue = <
     getLFManager().log(`Normalization error!`, { error, widget }, LogSeverity.Error);
   }
 };
-
 export const refreshChart = (node: NodeType) => {
   try {
     const domWidget =

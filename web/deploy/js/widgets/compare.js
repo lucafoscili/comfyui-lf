@@ -1,18 +1,19 @@
-import { CustomWidgetName, TagName, } from '../types/widgets/_common.js';
-import { CompareCSS } from '../types/widgets/compare.js';
+import { CompareCSS, } from '../types/widgets/compare.js';
+import { CustomWidgetName, TagName } from '../types/widgets/widgets.js';
 import { createDOMWidget, normalizeValue } from '../utils/common.js';
-//#region Compare
+const STATE = new WeakMap();
 export const compareFactory = {
-    options: (compare) => {
+    //#region Options
+    options: (wrapper) => {
         return {
             hideOnZoom: false,
-            getComp() {
-                return compare;
-            },
+            getState: () => STATE.get(wrapper),
             getValue() {
-                return {};
+                const { compare } = STATE.get(wrapper);
+                return compare.kulData || {};
             },
             setValue(value) {
+                const { compare } = STATE.get(wrapper);
                 const callback = (_, u) => {
                     compare.kulData = u.parsedJson || {};
                 };
@@ -20,11 +21,12 @@ export const compareFactory = {
             },
         };
     },
+    //#endregion
+    //#region Render
     render: (node) => {
         const wrapper = document.createElement(TagName.Div);
         const content = document.createElement(TagName.Div);
         const compare = document.createElement(TagName.KulCompare);
-        const options = compareFactory.options(compare);
         content.classList.add(CompareCSS.Content);
         compare.classList.add(CompareCSS.Widget);
         switch (node.comfyClass) {
@@ -34,7 +36,12 @@ export const compareFactory = {
         }
         content.appendChild(compare);
         wrapper.appendChild(content);
+        const options = compareFactory.options(wrapper);
+        STATE.set(wrapper, { compare, node, wrapper });
         return { widget: createDOMWidget(CustomWidgetName.compare, wrapper, node, options) };
     },
+    //#endregion
+    //#region State
+    state: STATE,
+    //#endregion
 };
-//#endregion

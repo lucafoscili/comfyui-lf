@@ -1,0 +1,29 @@
+@use '../mixins/mixins' as mixins;
+
+.lf-tabbarchart {
+  & {
+    @include mixins.lf-root($max: false);
+    position: relative;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+    height: 100%;
+    width: 100%;
+
+    &--no-directory {
+      grid-template-rows: auto 1fr;
+    }
+  }
+
+  &__directory {
+    &--hidden {
+      display: none;
+    }
+  }
+
+  &__tabbar {
+    overflow: auto;
+  }
+}

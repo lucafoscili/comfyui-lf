@@ -1,5 +1,4 @@
-import { inputEventHandler } from '../helpers/textarea';
-import { CustomWidgetName, TagName } from '../types/widgets/_common';
+import { EV_HANDLERS } from '../helpers/textarea';
 import {
   TextareaCSS,
   TextareaDeserializedValue,
@@ -7,6 +6,7 @@ import {
   TextareaNormalizeCallback,
   TextareaState,
 } from '../types/widgets/textarea';
+import { CustomWidgetName, TagName } from '../types/widgets/widgets';
 import { createDOMWidget, normalizeValue } from '../utils/common';
 
 const STATE = new WeakMap<HTMLDivElement, TextareaState>();
@@ -49,7 +49,7 @@ export const textareaFactory: TextareaFactory = {
     content.appendChild(textarea);
 
     textarea.classList.add(TextareaCSS.Widget);
-    textarea.addEventListener('input', inputEventHandler);
+    textarea.addEventListener('input', EV_HANDLERS.input);
 
     wrapper.appendChild(content);
 

@@ -1,20 +1,13 @@
-import { BaseWidgetCallback, BaseWidgetFactory, BaseWidgetOptions, CustomWidgetName } from './_common';
-export interface Chip extends Widget {
-    options: ChipOptions;
-    type: [CustomWidgetName.chip];
-}
-export interface ChipFactory extends BaseWidgetFactory<ChipOptions> {
-    options: ChipOptionsCallback;
-}
-export type ChipOptionsCallback = (chip: HTMLKulChipElement) => ChipOptions;
-export interface ChipOptions extends BaseWidgetOptions<ChipValueDeserializedValue> {
-    getComp(): HTMLKulChipElement;
-}
-export type ChipSetter = () => {
-    [CustomWidgetName.chip]: BaseWidgetCallback<CustomWidgetName.chip>;
-};
-export type ChipValueDeserializedValue = string;
+import { BaseWidgetState, CustomWidgetName, NormalizeValueCallback, WidgetFactory } from './widgets';
 export declare enum ChipCSS {
     Content = "lf-chip",
     Widget = "lf-chip__widget"
+}
+export type Chip = Widget<CustomWidgetName.chip>;
+export type ChipFactory = WidgetFactory<ChipDeserializedValue, ChipState>;
+export type ChipNormalizeCallback = NormalizeValueCallback<ChipDeserializedValue | string>;
+export type ChipDeserializedValue = string;
+export interface ChipState extends BaseWidgetState {
+    chip: HTMLKulChipElement;
+    selected: string;
 }

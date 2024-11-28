@@ -1,20 +1,13 @@
-import { BaseWidgetCallback, BaseWidgetFactory, BaseWidgetOptions, CustomWidgetName } from './_common';
-export interface Chat extends Widget {
-    options: ChatOptions;
-    type: [CustomWidgetName.chat];
-}
-export interface ChatFactory extends BaseWidgetFactory<ChatOptions> {
-    options: ChatOptionsCallback;
-}
-export type ChatOptionsCallback = (chat: HTMLKulChatElement) => ChatOptions;
-export interface ChatOptions extends BaseWidgetOptions<ChatValueDeserializedValue> {
-    getComp(): HTMLKulChatElement;
-}
-export type ChatSetter = () => {
-    [CustomWidgetName.chat]: BaseWidgetCallback<CustomWidgetName.chat>;
-};
-export type ChatValueDeserializedValue = string;
+import { BaseWidgetState, CustomWidgetName, NormalizeValueCallback, WidgetFactory } from './widgets';
 export declare enum ChatCSS {
     Content = "lf-chat",
     Widget = "lf-chat__widget"
+}
+export type Chat = Widget<CustomWidgetName.chat>;
+export type ChatFactory = WidgetFactory<ChatDeserializedValue, ChatState>;
+export type ChatNormalizeCallback = NormalizeValueCallback<ChatDeserializedValue | string>;
+export type ChatDeserializedValue = string;
+export interface ChatState extends BaseWidgetState {
+    chat: HTMLKulChatElement;
+    history: string;
 }

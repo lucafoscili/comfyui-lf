@@ -1,1 +1,3 @@
-export declare const handleInputChange: (e: Event) => void;
+export declare const EV_HANDLERS: {
+    input: (e: Event) => void;
+};

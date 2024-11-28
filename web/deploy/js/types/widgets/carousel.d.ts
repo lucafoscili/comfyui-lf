@@ -1,21 +1,13 @@
-import { KulDataDataset } from '../ketchup-lite/components';
-import { BaseWidgetCallback, BaseWidgetFactory, BaseWidgetOptions, CustomWidgetName } from './_common';
-export interface Carousel extends Widget {
-    options: CarouselOptions;
-    type: [CustomWidgetName.carousel];
-}
-export interface CarouselFactory extends BaseWidgetFactory<CarouselOptions> {
-    options: CarouselOptionsCallback;
-}
-export type CarouselOptionsCallback = (masonry: HTMLKulCarouselElement) => CarouselOptions;
-export interface CarouselOptions extends BaseWidgetOptions<CarouselDeserializedValue> {
-    getComp(): HTMLKulCarouselElement;
-}
-export type CarouselSetter = () => {
-    [CustomWidgetName.carousel]: BaseWidgetCallback<CustomWidgetName.carousel>;
-};
-export type CarouselDeserializedValue = KulDataDataset;
+import { KulDataDataset } from '../../types/ketchup-lite/components';
+import { BaseWidgetState, CustomWidgetName, NormalizeValueCallback, WidgetFactory } from './widgets';
 export declare enum CarouselCSS {
     Content = "lf-carousel",
     Widget = "lf-carousel__widget"
+}
+export type Carousel = Widget<CustomWidgetName.carousel>;
+export type CarouselFactory = WidgetFactory<CarouselDeserializedValue, CarouselState>;
+export type CarouselNormalizeCallback = NormalizeValueCallback<CarouselDeserializedValue | string>;
+export type CarouselDeserializedValue = KulDataDataset;
+export interface CarouselState extends BaseWidgetState {
+    carousel: HTMLKulCarouselElement;
 }

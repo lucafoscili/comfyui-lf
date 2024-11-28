@@ -1,6 +1,5 @@
-import { masonryEventHandler } from '../helpers/masonry';
+import { EV_HANDLERS } from '../helpers/masonry';
 import { KulEventName } from '../types/events/events';
-import { CustomWidgetName, NodeName, TagName } from '../types/widgets/_common';
 import {
   MasonryCSS,
   MasonryDeserializedValue,
@@ -8,6 +7,7 @@ import {
   MasonryNormalizeCallback,
   MasonryState,
 } from '../types/widgets/masonry';
+import { CustomWidgetName, NodeName, TagName } from '../types/widgets/widgets';
 import { createDOMWidget, isValidNumber, normalizeValue } from '../utils/common';
 
 const STATE = new WeakMap<HTMLDivElement, MasonryState>();
@@ -66,7 +66,7 @@ export const masonryFactory: MasonryFactory = {
     masonry.classList.add(MasonryCSS.Widget);
     masonry.addEventListener(
       KulEventName.KulMasonry,
-      masonryEventHandler.bind(masonryEventHandler, STATE.get(wrapper)),
+      EV_HANDLERS.masonry.bind(EV_HANDLERS.masonry, STATE.get(wrapper)),
     );
 
     switch (node.comfyClass) {

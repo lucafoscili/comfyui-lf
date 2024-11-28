@@ -1,19 +1,9 @@
-import { h, r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, H as Host } from './index-53f95fee.js';
-import { a as KulDataCyAttributes, k as kulManagerInstance, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-9e1be956.js';
+import { h, r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, H as Host } from './index-7cf82e95.js';
+import { a as KulDataCyAttributes, k as kulManagerInstance, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-72505221.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 
-//#endregion
-//#region Props
-var KulImageviewerProps;
-(function (KulImageviewerProps) {
-    KulImageviewerProps["kulData"] = "Actual data of the image viewer.";
-    KulImageviewerProps["kulLoadCallback"] = "Callback invoked when the load button is clicked.";
-    KulImageviewerProps["kulStyle"] = "Sets a custom CSS style for the component.";
-    KulImageviewerProps["kulValue"] = "Configuration parameters of the detail view.";
-})(KulImageviewerProps || (KulImageviewerProps = {}));
-//#endregion
-
 const ACTIONS = {
+    //#region clearHistory
     async clearHistory(adapter, index = null) {
         const history = adapter.set.state.history;
         if (index === null) {
@@ -24,12 +14,16 @@ const ACTIONS = {
             history.clear(index);
         }
     },
+    //#endregion
+    //#region clearSelection
     async clearSelection(adapter) {
         const stateSetter = adapter.set.state;
         stateSetter.currentShape({});
         stateSetter.history.index(null);
         adapter.components.refs.masonry.setSelectedShape(null);
     },
+    //#endregion
+    //#region delete
     async delete(adapter) {
         const getters = adapter.get;
         const imageviewer = getters.imageviewer();
@@ -43,6 +37,8 @@ const ACTIONS = {
         imageviewer.kulData = { ...dataset };
         await adapter.actions.clearSelection(adapter);
     },
+    //#endregion
+    //#region findImage
     findImage(adapter) {
         const imageviewer = adapter.get.imageviewer();
         const manager = adapter.get.manager();
@@ -51,6 +47,8 @@ const ACTIONS = {
         return cells['image'].find((c) => c.value === currentSelectedShape.value ||
             c.kulValue === currentSelectedShape.value);
     },
+    //#endregion
+    //#region load
     async load(adapter) {
         const imageviewer = adapter.get.imageviewer();
         const refs = adapter.components.refs;
@@ -63,6 +61,8 @@ const ACTIONS = {
             console.error('Load operation failed:', error);
         }
     },
+    //#endregion
+    //#region redo
     async redo(adapter) {
         const currentHistory = adapter.get.state.history.current();
         const index = adapter.get.state.history.index();
@@ -70,6 +70,8 @@ const ACTIONS = {
             adapter.set.state.history.index(index + 1);
         }
     },
+    //#endregion
+    //#region save
     async save(adapter) {
         const currentSelectedShape = adapter.get.state.currentShape();
         if (!currentSelectedShape) {
@@ -87,6 +89,8 @@ const ACTIONS = {
         await adapter.actions.clearHistory(adapter, index);
         imageviewer.kulData = { ...imageviewer.kulData };
     },
+    //#endregion
+    //#region undo
     async undo(adapter) {
         const index = adapter.get.state.history.index();
         if (index > 0) {
@@ -94,6 +98,8 @@ const ACTIONS = {
             adapter.set.state.history.index(newIndex);
         }
     },
+    //#endregion
+    //#region updateValue
     updateValue(shape, value) {
         const s = shape;
         shape.value = value;
@@ -101,6 +107,7 @@ const ACTIONS = {
             s.kulValue = value;
         }
     },
+    //#endregion
 };
 
 const COMPONENTS = {
@@ -147,7 +154,7 @@ const prepCanvas = (adapter) => {
     const imageProps = {
         kulValue: currentSnapshot.value,
     };
-    return (h("kul-canvas", { class: className, kulImageProps: imageProps, "onKul-image-event": eventHandler, ref: (el) => {
+    return (h("kul-canvas", { class: className, kulImageProps: imageProps, "onKul-canvas-event": eventHandler, ref: (el) => {
             if (el) {
                 adapter.components.refs.canvas = el;
             }
@@ -404,6 +411,17 @@ const prepUndo = (adapter) => {
 };
 // #endregion
 
+//#endregion
+//#region Props
+var KulImageviewerProps;
+(function (KulImageviewerProps) {
+    KulImageviewerProps["kulData"] = "Actual data of the image viewer.";
+    KulImageviewerProps["kulLoadCallback"] = "Callback invoked when the load button is clicked.";
+    KulImageviewerProps["kulStyle"] = "Sets a custom CSS style for the component.";
+    KulImageviewerProps["kulValue"] = "Configuration parameters of the detail view.";
+})(KulImageviewerProps || (KulImageviewerProps = {}));
+//#endregion
+
 const kulImageviewerCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}@keyframes fade-in-grid{0%{display:none}1%{display:grid;opacity:0}100%{display:grid;opacity:1}}:host{--kul_imageviewer_display:var(--kul-imageviewer-display, block);--kul_imageviewer_height:var(--kul-imageviewer-height, 100%);--kul_imageviewer_width:var(--kul-imageviewer-width, 100%);--kul_imageviewer_component_height:var(\n    --kul-imageviewer-component-height,\n    100%\n  );--kul_imageviewer_component_width:var(\n    --kul-imageviewer-component-width,\n    100%\n  );--kul_imageviewer_viewer_height:var(--kul-imageviewer-viewer-height, 100%);--kul_imageviewer_viewer_width:var(--kul-imageviewer-viewer-width, 100%);--kul_imageviewer_main_grid_border_width:var(\n    --kul-imageviewer-main-grid-border-width,\n    2px\n  );--kul_imageviewer_main_grid_border_style:var(\n    --kul-imageviewer-main-grid-border-style,\n    solid\n  );--kul_imageviewer_main_grid_border_color:var(\n    --kul-imageviewer-main-grid-border-color,\n    var(--kul-border-color)\n  );--kul_imageviewer_main_grid_box_sizing:var(\n    --kul-imageviewer-main-grid-box-sizing,\n    border-box\n  );--kul_imageviewer_main_grid_display:var(\n    --kul-imageviewer-main-grid-display,\n    grid\n  );--kul_imageviewer_main_grid_template_columns:var(\n    --kul-imageviewer-main-grid-template-columns,\n    100% 0\n  );--kul_imageviewer_main_grid_height:var(\n    --kul-imageviewer-main-grid-height,\n    100%\n  );--kul_imageviewer_main_grid_width:var(\n    --kul-imageviewer-main-grid-width,\n    100%\n  );--kul_imageviewer_main_grid_has_selection_template_columns:var(\n    --kul-imageviewer-main-grid-has-selection-template-columns,\n    30% 70%\n  );--kul_imageviewer_navigation_grid_display:var(\n    --kul-imageviewer-navigation-grid-display,\n    grid\n  );--kul_imageviewer_navigation_grid_template_rows:var(\n    --kul-imageviewer-navigation-grid-template-rows,\n    auto auto 1fr\n  );--kul_imageviewer_navigation_grid_height:var(\n    --kul-imageviewer-navigation-grid-height,\n    100%\n  );--kul_imageviewer_navigation_grid_width:var(\n    --kul-imageviewer-navigation-grid-width,\n    100%\n  );--kul_imageviewer_navigation_grid_textfield_padding:var(\n    --kul-imageviewer-navigation-grid-textfield-padding,\n    0\n  );--kul_imageviewer_navigation_grid_button_padding_bottom:var(\n    --kul-imageviewer-navigation-grid-button-padding-bottom,\n    12px\n  );--kul_imageviewer_navigation_grid_masonry_overflow:var(\n    --kul-imageviewer-navigation-grid-masonry-overflow,\n    auto\n  );--kul_imageviewer_navigation_grid_masonry_position:var(\n    --kul-imageviewer-navigation-grid-masonry-position,\n    relative\n  );--kul_imageviewer_details_grid_border_left_width:var(\n    --kul-imageviewer-details-grid-border-left-width,\n    2px\n  );--kul_imageviewer_details_grid_border_left_style:var(\n    --kul-imageviewer-details-grid-border-left-style,\n    solid\n  );--kul_imageviewer_details_grid_border_left_color:var(\n    --kul-imageviewer-details-grid-border-left-color,\n    var(--kul-border-color)\n  );--kul_imageviewer_details_grid_box_sizing:var(\n    --kul-imageviewer-details-grid-box-sizing,\n    border-box\n  );--kul_imageviewer_details_grid_display:var(\n    --kul-imageviewer-details-grid-display,\n    none\n  );--kul_imageviewer_details_grid_template_areas:var(\n    --kul-imageviewer-details-grid-template-areas,\n    \"image image\" \"actions actions\" \"tree settings\"\n  );--kul_imageviewer_details_grid_template_columns:var(\n    --kul-imageviewer-details-grid-template-columns,\n    40% 1fr\n  );--kul_imageviewer_details_grid_template_rows:var(\n    --kul-imageviewer-details-grid-template-rows,\n    60% auto 1fr\n  );--kul_imageviewer_details_grid_height:var(\n    --kul-imageviewer-details-grid-height,\n    100%\n  );--kul_imageviewer_details_grid_width:var(\n    --kul-imageviewer-details-grid-width,\n    100%\n  );--kul_imageviewer_details_grid_actions_border_bottom_width:var(\n    --kul-imageviewer-details-grid-actions-border-bottom-width,\n    2px\n  );--kul_imageviewer_details_grid_actions_border_bottom_style:var(\n    --kul-imageviewer-details-grid-actions-border-bottom-style,\n    solid\n  );--kul_imageviewer_details_grid_actions_border_bottom_color:var(\n    --kul-imageviewer-details-grid-actions-border-bottom-color,\n    var(--kul-border-color)\n  );--kul_imageviewer_details_grid_actions_box_sizing:var(\n    --kul-imageviewer-details-grid-actions-box-sizing,\n    border-box\n  );--kul_imageviewer_details_grid_actions_display:var(\n    --kul-imageviewer-details-grid-actions-display,\n    flex\n  );--kul_imageviewer_details_grid_actions_grid_area:var(\n    --kul-imageviewer-details-grid-actions-grid-area,\n    actions\n  );--kul_imageviewer_details_grid_canvas_border_bottom_width:var(\n    --kul-imageviewer-details-grid-image-border-bottom-width,\n    2px\n  );--kul_imageviewer_details_grid_canvas_border_bottom_style:var(\n    --kul-imageviewer-details-grid-image-border-bottom-style,\n    solid\n  );--kul_imageviewer_details_grid_canvas_border_bottom_color:var(\n    --kul-imageviewer-details-grid-image-border-bottom-color,\n    var(--kul-border-color)\n  );--kul_imageviewer_details_grid_canvas_box_sizing:var(\n    --kul-imageviewer-details-grid-image-box-sizing,\n    border-box\n  );--kul_imageviewer_details_grid_canvas_grid_area:var(\n    --kul-imageviewer-details-grid-image-grid-area,\n    image\n  );--kul_imageviewer_details_grid_tree_border_right_width:var(\n    --kul-imageviewer-details-grid-tree-border-right-width,\n    2px\n  );--kul_imageviewer_details_grid_tree_border_right_style:var(\n    --kul-imageviewer-details-grid-tree-border-right-style,\n    solid\n  );--kul_imageviewer_details_grid_tree_border_right_color:var(\n    --kul-imageviewer-details-grid-tree-border-right-color,\n    var(--kul-border-color)\n  );--kul_imageviewer_details_grid_tree_box_sizing:var(\n    --kul-imageviewer-details-grid-tree-box-sizing,\n    border-box\n  );--kul_imageviewer_details_grid_tree_grid_area:var(\n    --kul-imageviewer-details-grid-tree-grid-area,\n    tree\n  );-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);display:var(--kul_imageviewer_display);height:var(--kul_imageviewer_height);width:var(--kul_imageviewer_width)}#kul-component{height:var(--kul_imageviewer_component_height);width:var(--kul_imageviewer_component_width)}.imageviewer{height:var(--kul_imageviewer_viewer_height);width:var(--kul_imageviewer_viewer_width)}.main-grid{border:var(--kul_imageviewer_main_grid_border_width) var(--kul_imageviewer_main_grid_border_style) var(--kul_imageviewer_main_grid_border_color);box-sizing:var(--kul_imageviewer_main_grid_box_sizing);display:var(--kul_imageviewer_main_grid_display);grid-template-columns:var(--kul_imageviewer_main_grid_template_columns);height:var(--kul_imageviewer_main_grid_height);overflow:auto;width:var(--kul_imageviewer_main_grid_width)}.main-grid--has-selection{grid-template-columns:var(--kul_imageviewer_main_grid_has_selection_template_columns)}.main-grid--has-selection .details-grid{display:grid}.navigation-grid{display:var(--kul_imageviewer_navigation_grid_display);grid-template-rows:var(--kul_imageviewer_navigation_grid_template_rows);height:var(--kul_imageviewer_navigation_grid_height);overflow:auto;width:var(--kul_imageviewer_navigation_grid_width)}.navigation-grid__textfield{padding:var(--kul_imageviewer_navigation_grid_textfield_padding)}.navigation-grid__button{padding-bottom:var(--kul_imageviewer_navigation_grid_button_padding_bottom)}.navigation-grid__masonry{overflow:var(--kul_imageviewer_navigation_grid_masonry_overflow);position:var(--kul_imageviewer_navigation_grid_masonry_position)}.details-grid{border-left:var(--kul_imageviewer_details_grid_border_left_width) var(--kul_imageviewer_details_grid_border_left_style) var(--kul_imageviewer_details_grid_border_left_color);box-sizing:var(--kul_imageviewer_details_grid_box_sizing);display:var(--kul_imageviewer_details_grid_display);grid-template-areas:var(--kul_imageviewer_details_grid_template_areas);grid-template-columns:var(--kul_imageviewer_details_grid_template_columns);grid-template-rows:var(--kul_imageviewer_details_grid_template_rows);height:var(--kul_imageviewer_details_grid_height);overflow:auto;width:var(--kul_imageviewer_details_grid_width)}.details-grid__actions{border-bottom:var(--kul_imageviewer_details_grid_actions_border_bottom_width) var(--kul_imageviewer_details_grid_actions_border_bottom_style) var(--kul_imageviewer_details_grid_actions_border_bottom_color);box-sizing:var(--kul_imageviewer_details_grid_actions_box_sizing);display:var(--kul_imageviewer_details_grid_actions_display);grid-area:var(--kul_imageviewer_details_grid_actions_grid_area)}.details-grid__canvas{border-bottom:var(--kul_imageviewer_details_grid_canvas_border_bottom_width) var(--kul_imageviewer_details_grid_canvas_border_bottom_style) var(--kul_imageviewer_details_grid_canvas_border_bottom_color);box-sizing:var(--kul_imageviewer_details_grid_canvas_box_sizing)}.details-grid__preview{grid-area:var(--kul_imageviewer_details_grid_canvas_grid_area);position:relative}.details-grid__spinner{height:100%;left:0;pointer-events:none;position:absolute;top:0;width:100%}.details-grid__tree{border-right:var(--kul_imageviewer_details_grid_tree_border_right_width) var(--kul_imageviewer_details_grid_tree_border_right_style) var(--kul_imageviewer_details_grid_tree_border_right_color);box-sizing:var(--kul_imageviewer_details_grid_tree_box_sizing);grid-area:var(--kul_imageviewer_details_grid_tree_grid_area);overflow:auto}";
 const KulImageviewerStyle0 = kulImageviewerCss;
 
@@ -428,17 +446,12 @@ const KulImageviewer = class {
         this.kulValue = {};
     }
     get rootElement() { return getElement(this); }
-    /*-------------------------------------------------*/
-    /*       I n t e r n a l   V a r i a b l e s       */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Internal variables
     #kulManager = kulManagerInstance();
     #stringify = this.#kulManager.data.cell.stringify;
-    /*-------------------------------------------------*/
-    /*                   E v e n t s                   */
-    /*-------------------------------------------------*/
-    /**
-     * Describes event emitted.
-     */
+    //#endregion
+    //#region Events
     kulEvent;
     onKulEvent(e, eventType) {
         this.kulEvent.emit({
@@ -448,9 +461,8 @@ const KulImageviewer = class {
             originalEvent: e,
         });
     }
-    /*-------------------------------------------------*/
-    /*           P u b l i c   M e t h o d s           */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Public methods
     /**
      * Appends a new snapshot to the current shape's history by duplicating it with an updated value.
      * It has no effect when the current shape is not set.
@@ -533,9 +545,8 @@ const KulImageviewer = class {
             this.rootElement.remove();
         }, ms);
     }
-    /*-------------------------------------------------*/
-    /*           P r i v a t e   M e t h o d s         */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Private methods
     #adapter = {
         actions: ACTIONS,
         components: COMPONENTS,
@@ -621,9 +632,8 @@ const KulImageviewer = class {
     #prepNavigation() {
         return (h("div", { class: "navigation-grid" }, this.#adapter.components.jsx.textfield(this.#adapter), this.#adapter.components.jsx.load(this.#adapter), this.#adapter.components.jsx.masonry(this.#adapter)));
     }
-    /*-------------------------------------------------*/
-    /*          L i f e c y c l e   H o o k s          */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Lifecycle hooks
     componentWillLoad() {
         this.#kulManager.theme.register(this);
     }
@@ -638,7 +648,7 @@ const KulImageviewer = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: '5c18adf709299b9a462a4ec36e30d9dfaad2fc68' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '1f89f13c8ff211d7c6273b42ac6870f76ef70081', id: KUL_WRAPPER_ID }, h("div", { key: 'fb5985c90c3c674d94d5a0ee0b7a9673cfff4d6e', class: "imageviewer" }, this.#prepImageviewer()))));
+        return (h(Host, { key: '497fda0c0f8e35d252c19635ab295a8c613faa28' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '9843b4dae9bc02a90e2f1498353d13f72b9591d8', id: KUL_WRAPPER_ID }, h("div", { key: 'aed2e229cff4d71adfc2c8f24561b5ce2be18dcd', class: "imageviewer" }, this.#prepImageviewer()))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);

@@ -1,10 +1,165 @@
-import { h, F as Fragment, r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, H as Host, a as getAssetPath } from './index-53f95fee.js';
-import { k as kulManagerInstance, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID, a as KulDataCyAttributes, c as KulThemeColorValues } from './kul-manager-9e1be956.js';
+import { h, F as Fragment, r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, H as Host, a as getAssetPath } from './index-7cf82e95.js';
+import { k as kulManagerInstance, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID, a as KulDataCyAttributes, c as KulThemeColorValues } from './kul-manager-72505221.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 
-/*-------------------------------------------------*/
-/*                    P r o p s                    */
-/*-------------------------------------------------*/
+//#region prepInputArea
+const prepInputArea = (adapter) => {
+    return (h("div", { class: "chat__request__input" },
+        h("kul-button", { class: "chat__request__input__button kul-full-height", id: "settings-button", kulIcon: "settings", kulStyling: "flat", "onKul-button-event": buttonEventHandler.bind(buttonEventHandler, adapter), ref: (el) => {
+                if (el) {
+                    adapter.components.buttons.settings = el;
+                }
+            } }),
+        h("kul-textfield", { class: "chat__request__input__textarea", kulFullWidth: true, kulLabel: "What's on your mind?", kulStyling: "textarea", ref: (el) => {
+                if (el) {
+                    adapter.components.textareas.prompt = el;
+                }
+            } }),
+        prepProgressBar(adapter)));
+};
+//#endregion
+//#region prepButtons
+const prepButtons = (adapter) => {
+    return (h("div", { class: "chat__request__buttons" },
+        h("kul-button", { id: "clear-button", kulLabel: "Clear", kulStyling: 'flat', "onKul-button-event": buttonEventHandler.bind(buttonEventHandler, adapter), ref: (el) => {
+                if (el) {
+                    adapter.components.buttons.clear = el;
+                }
+            }, title: "Clear the textarea." }),
+        h("kul-button", { id: "stt-button", class: "chat__request__buttons__stt", kulIcon: "keyboard_voice", kulStyling: 'icon', "onKul-button-event": buttonEventHandler.bind(buttonEventHandler, adapter), ref: (el) => {
+                if (el) {
+                    adapter.components.buttons.stt = el;
+                }
+            }, title: "Activate Speech To Text with your browser's API (if supported)." },
+            h("kul-spinner", { kulActive: true, kulDimensions: "0.6em", kulLayout: 6, slot: "spinner" })),
+        h("kul-button", { id: "send-button", kulIcon: "check", kulLabel: "Send", "onKul-button-event": buttonEventHandler.bind(buttonEventHandler, adapter), ref: (el) => {
+                if (el) {
+                    adapter.components.buttons.send = el;
+                }
+            }, title: "Send your prompt (CTRL+Enter)." },
+            h("kul-spinner", { kulActive: true, kulDimensions: "0.6em", slot: "spinner" }))));
+};
+//#endregion
+//#region prepProgressBar
+const prepProgressBar = (adapter) => {
+    const cssClass = {
+        chat__request__input__progressbar: true,
+        ['kul-animated']: true,
+        ['kul-striped']: true,
+    };
+    return (h("kul-progressbar", { class: cssClass, kulCenteredLabel: true, kulIcon: "data_usage", kulLabel: "Context window", "onKul-progressbar-event": progressbarEventHandler.bind(progressbarEventHandler, adapter), ref: (el) => {
+            if (el) {
+                adapter.components.progressbar = el;
+            }
+        } }));
+};
+//#endregion
+//#region buttonEventHandler
+const buttonEventHandler = async (adapter, e) => {
+    const { eventType, id } = e.detail;
+    const textarea = adapter.components.textareas.prompt;
+    switch (eventType) {
+        case 'click':
+            switch (id) {
+                case 'clear-button':
+                    await textarea.setValue('');
+                    await textarea.setFocus();
+                    break;
+                case 'send-button':
+                    adapter.actions.send();
+                    break;
+                case 'settings-button':
+                    adapter.set.status.view('settings');
+                    break;
+                case 'stt-button':
+                    adapter.actions.stt();
+                    break;
+            }
+    }
+};
+//#endregion
+//#region progressbarEventHandler
+const progressbarEventHandler = async (adapter, e) => {
+    const { eventType } = e.detail;
+    switch (eventType) {
+        case 'ready':
+            adapter.actions.updateTokenCount();
+            break;
+    }
+};
+//#endregion
+
+//#region prepMessages
+const prepMessages = (adapter) => {
+    const elements = [];
+    const history = adapter.get.history();
+    const toolbarMessage = adapter.get.status.toolbarMessage();
+    if (history?.length > 0) {
+        history.forEach((m) => {
+            const element = (h("div", { class: `chat__messages__container chat__messages__container--${m.role}`, onPointerEnter: () => adapter.set.status.toolbarMessage(m), onPointerLeave: () => adapter.set.status.toolbarMessage(null) },
+                h("div", { class: `chat__messages__content chat__messages__content--${m.role}` }, prepContent(m)),
+                m === toolbarMessage ? prepToolbar(adapter, m) : null));
+            elements.push(element);
+        });
+    }
+    else {
+        elements.push(h("div", { class: "chat__messages__empty" }, "Your chat history is empty!"));
+    }
+    return elements;
+};
+//#endregion
+//#region prepToolbar
+const prepToolbar = (adapter, m) => {
+    const cssClass = 'chat__messages__toolbar__button kul-slim';
+    return (h("div", { class: "chat__messages__toolbar" },
+        h("kul-button", { class: cssClass + ' kul-danger', kulIcon: "delete", onClick: () => adapter.actions.delete(m), title: "Remove this message from history." }),
+        h("kul-button", { class: cssClass, kulIcon: "content_copy", onClick: () => navigator.clipboard.writeText(m.content), title: "Copy text to clipboard." }),
+        m.role === 'user' ? (h("kul-button", { class: cssClass, kulIcon: "refresh", onClick: () => adapter.actions.regenerate(m), title: "Regenerate answer to this question." })) : null));
+};
+//#endregion
+//#region prepContent
+const prepContent = (message) => {
+    const elements = [];
+    const messageContent = message.content;
+    const codeBlockRegex = /```(\w+)?\n([\s\S]*?)```/g;
+    let lastIndex = 0;
+    let match;
+    while ((match = codeBlockRegex.exec(messageContent)) !== null) {
+        if (match.index > lastIndex) {
+            const textPart = messageContent.slice(lastIndex, match.index);
+            elements.push(h("div", { class: "paragraph" }, textPart));
+        }
+        const language = match[1] ? match[1].trim() : 'text';
+        const codePart = match[2].trim();
+        elements.push(h("kul-code", { class: 'code', kulLanguage: language, kulValue: codePart }));
+        lastIndex = match.index + match[0].length;
+    }
+    if (lastIndex < messageContent.length) {
+        const remainingText = messageContent.slice(lastIndex);
+        elements.push(h("div", { class: "paragraph" }, remainingText));
+    }
+    return elements;
+};
+//#endregion
+
+//#region prepChat
+const prepChat = (adapter) => {
+    return (h(Fragment, null,
+        h("div", { class: "chat__request" },
+            prepInputArea(adapter),
+            prepButtons(adapter)),
+        h("div", { class: `chat__messages` }, prepMessages(adapter)),
+        h("div", { class: "chat__spinner-bar" },
+            h("kul-spinner", { kulBarVariant: true, ref: (el) => {
+                    if (el) {
+                        adapter.components.spinner = el;
+                    }
+                } }))));
+};
+//#endregion
+
+//#endregion
+//#region Props
 var KulChatProps;
 (function (KulChatProps) {
     KulChatProps["kulContextWindow"] = "How many tokens the context window can handle, used to calculate the occupied space.";
@@ -18,6 +173,7 @@ var KulChatProps;
     KulChatProps["kulTemperature"] = "Sets the creative boundaries of the LLM.";
     KulChatProps["kulValue"] = "Initial history of the chat.";
 })(KulChatProps || (KulChatProps = {}));
+//#endregion
 
 const OPTIONS_IDS = {
     contextWindow: 'context-option',
@@ -27,6 +183,7 @@ const OPTIONS_IDS = {
     system: 'system-option',
     temperature: 'temperature-option',
 };
+//#region prepSettings
 const prepSettings = (adapter) => {
     return (h(Fragment, null,
         prepButton(adapter),
@@ -37,9 +194,13 @@ const prepSettings = (adapter) => {
                 }
             } })));
 };
+//#endregion
+//#region prepButton
 const prepButton = (adapter) => {
     return (h("kul-button", { class: "kul-full-width", kulIcon: "arrow_back", kulLabel: "Back", "onKul-button-event": backEventHandler.bind(backEventHandler, adapter) }));
 };
+//#endregion
+//#region prepFields
 const prepFields = (adapter) => {
     return (h(Fragment, null,
         h("kul-textfield", { id: OPTIONS_IDS.contextWindow, kulHtmlAttributes: {
@@ -64,6 +225,8 @@ const prepFields = (adapter) => {
                 type: 'number',
             }, kulIcon: "timer", kulLabel: "Polling interval", kulValue: String(adapter.get.props.pollingInterval()).valueOf(), "onKul-textfield-event": textfieldEventHandler.bind(textfieldEventHandler, adapter) })));
 };
+//#endregion
+//#region backEventHandler
 const backEventHandler = (adapter, e) => {
     const { eventType } = e.detail;
     switch (eventType) {
@@ -73,6 +236,8 @@ const backEventHandler = (adapter, e) => {
             break;
     }
 };
+//#endregion
+//#region textfieldEventHandler
 const textfieldEventHandler = (adapter, e) => {
     const { eventType, id, value } = e.detail;
     switch (eventType) {
@@ -100,144 +265,7 @@ const textfieldEventHandler = (adapter, e) => {
             break;
     }
 };
-
-const prepInputArea = (adapter) => {
-    return (h("div", { class: "chat__request__input" },
-        h("kul-button", { class: "chat__request__input__button kul-full-height", id: "settings-button", kulIcon: "settings", kulStyling: "flat", "onKul-button-event": buttonEventHandler.bind(buttonEventHandler, adapter), ref: (el) => {
-                if (el) {
-                    adapter.components.buttons.settings = el;
-                }
-            } }),
-        h("kul-textfield", { class: "chat__request__input__textarea", kulFullWidth: true, kulLabel: "What's on your mind?", kulStyling: "textarea", ref: (el) => {
-                if (el) {
-                    adapter.components.textareas.prompt = el;
-                }
-            } }),
-        prepProgressBar(adapter)));
-};
-const prepButtons = (adapter) => {
-    return (h("div", { class: "chat__request__buttons" },
-        h("kul-button", { id: "clear-button", kulLabel: "Clear", kulStyling: 'flat', "onKul-button-event": buttonEventHandler.bind(buttonEventHandler, adapter), ref: (el) => {
-                if (el) {
-                    adapter.components.buttons.clear = el;
-                }
-            }, title: "Clear the textarea." }),
-        h("kul-button", { id: "stt-button", class: "chat__request__buttons__stt", kulIcon: "keyboard_voice", kulStyling: 'icon', "onKul-button-event": buttonEventHandler.bind(buttonEventHandler, adapter), ref: (el) => {
-                if (el) {
-                    adapter.components.buttons.stt = el;
-                }
-            }, title: "Activate Speech To Text with your browser's API (if supported)." },
-            h("kul-spinner", { kulActive: true, kulDimensions: "0.6em", kulLayout: 6, slot: "spinner" })),
-        h("kul-button", { id: "send-button", kulIcon: "check", kulLabel: "Send", "onKul-button-event": buttonEventHandler.bind(buttonEventHandler, adapter), ref: (el) => {
-                if (el) {
-                    adapter.components.buttons.send = el;
-                }
-            }, title: "Send your prompt (CTRL+Enter)." },
-            h("kul-spinner", { kulActive: true, kulDimensions: "0.6em", slot: "spinner" }))));
-};
-const prepProgressBar = (adapter) => {
-    const cssClass = {
-        chat__request__input__progressbar: true,
-        ['kul-animated']: true,
-        ['kul-striped']: true,
-    };
-    return (h("kul-progressbar", { class: cssClass, kulCenteredLabel: true, kulIcon: "data_usage", kulLabel: "Context window", "onKul-progressbar-event": progressbarEventHandler.bind(progressbarEventHandler, adapter), ref: (el) => {
-            if (el) {
-                adapter.components.progressbar = el;
-            }
-        } }));
-};
-const buttonEventHandler = async (adapter, e) => {
-    const { eventType, id } = e.detail;
-    const textarea = adapter.components.textareas.prompt;
-    switch (eventType) {
-        case 'click':
-            switch (id) {
-                case 'clear-button':
-                    await textarea.setValue('');
-                    await textarea.setFocus();
-                    break;
-                case 'send-button':
-                    adapter.actions.send();
-                    break;
-                case 'settings-button':
-                    adapter.set.status.view('settings');
-                    break;
-                case 'stt-button':
-                    adapter.actions.stt();
-                    break;
-            }
-    }
-};
-const progressbarEventHandler = async (adapter, e) => {
-    const { eventType } = e.detail;
-    switch (eventType) {
-        case 'ready':
-            adapter.actions.updateTokenCount();
-            break;
-    }
-};
-
-const prepMessages = (adapter) => {
-    const elements = [];
-    const history = adapter.get.history();
-    const toolbarMessage = adapter.get.status.toolbarMessage();
-    if (history?.length > 0) {
-        history.forEach((m) => {
-            const element = (h("div", { class: `chat__messages__container chat__messages__container--${m.role}`, onPointerEnter: () => adapter.set.status.toolbarMessage(m), onPointerLeave: () => adapter.set.status.toolbarMessage(null) },
-                h("div", { class: `chat__messages__content chat__messages__content--${m.role}` }, prepContent(m)),
-                m === toolbarMessage ? prepToolbar(adapter, m) : null));
-            elements.push(element);
-        });
-    }
-    else {
-        elements.push(h("div", { class: "chat__messages__empty" }, "Your chat history is empty!"));
-    }
-    return elements;
-};
-const prepToolbar = (adapter, m) => {
-    const cssClass = 'chat__messages__toolbar__button kul-slim';
-    return (h("div", { class: "chat__messages__toolbar" },
-        h("kul-button", { class: cssClass + ' kul-danger', kulIcon: "delete", onClick: () => adapter.actions.delete(m), title: "Remove this message from history." }),
-        h("kul-button", { class: cssClass, kulIcon: "content_copy", onClick: () => navigator.clipboard.writeText(m.content), title: "Copy text to clipboard." }),
-        m.role === 'user' ? (h("kul-button", { class: cssClass, kulIcon: "refresh", onClick: () => adapter.actions.regenerate(m), title: "Regenerate answer to this question." })) : null));
-};
-const prepContent = (message) => {
-    const elements = [];
-    const messageContent = message.content;
-    const codeBlockRegex = /```(\w+)?\n([\s\S]*?)```/g;
-    let lastIndex = 0;
-    let match;
-    while ((match = codeBlockRegex.exec(messageContent)) !== null) {
-        if (match.index > lastIndex) {
-            const textPart = messageContent.slice(lastIndex, match.index);
-            elements.push(h("div", { class: "paragraph" }, textPart));
-        }
-        const language = match[1] ? match[1].trim() : 'text';
-        const codePart = match[2].trim();
-        elements.push(h("kul-code", { class: 'code', kulLanguage: language, kulValue: codePart }));
-        lastIndex = match.index + match[0].length;
-    }
-    if (lastIndex < messageContent.length) {
-        const remainingText = messageContent.slice(lastIndex);
-        elements.push(h("div", { class: "paragraph" }, remainingText));
-    }
-    return elements;
-};
-
-const prepChat = (adapter) => {
-    return (h(Fragment, null,
-        h("div", { class: "chat__request" },
-            prepInputArea(adapter),
-            prepButtons(adapter)),
-        h("div", { class: `chat__messages` }, prepMessages(adapter)),
-        h("div", { class: "chat__spinner-bar" },
-            h("kul-spinner", { kulBarVariant: true, ref: (el) => {
-                    if (el) {
-                        adapter.components.spinner = el;
-                    }
-                } }))));
-};
+//#endregion
 
 const kulChatCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}@keyframes fade-in-grid{0%{display:none}1%{display:grid;opacity:0}100%{display:grid;opacity:1}}:host{--kul_chat_blur_radius:var(--kul-chat-blur-radius, 3.5px);--kul_chat_border_radius:var(--kul-chat-border-radius, 8px);--kul_chat_buttons_padding:var(--kul-chat-buttons-padding, 1em 0);--kul_chat_grid_gap:var(--kul-chat-grid-gap, 16px);--kul_chat_inner_padding:var(--kul-chat-inner-padding, 0 16px);--kul_chat_margin_bottom:var(--kul-chat-margin-bottom, 16px);--kul_chat_margin_top:var(--kul-chat-margin-top, 16px);--kul_chat_outer_grid_gap:var(--kul-chat-outer-grid-gap, 12px);--kul_chat_padding:var(--kul-chat-padding, 18px);--kul-chat_small_font_size:var(--kul-chat-small-font-size, 0.875em);--kul_chat_spinner_size:var(--kul-chat-spinner-size, 48px);--kul_chat_title_font_size:var(--kul-chat-title-font-size, 2em);color:var(--kul-text-color);display:block;height:100%;width:100%}#kul-component{height:100%;position:relative;width:100%}.chat{backdrop-filter:blur(var(--kul_chat_blur_radius));box-sizing:border-box;display:grid;height:100%;margin:auto;padding:var(--kul_chat_padding)}.chat--bottom-textarea{align-content:center;grid-gap:var(--kul_chat_outer_grid_gap);grid-template-areas:\"messages\" \"spinner\" \"request\";grid-template-rows:1fr auto auto}.chat--top-textarea{grid-gap:var(--kul_chat_outer_grid_gap);grid-template-areas:\"request\" \"messages\" \"spinner\";grid-template-rows:auto 1fr auto}.chat--offline{grid-template-rows:1fr auto}.chat--offline__error{padding:32px}.chat__request{box-sizing:border-box;grid-area:request;max-width:100%;padding:var(--kul_chat_inner_padding);width:100%}.chat__request__input{display:grid;grid-template-areas:\"textarea button\" \"progressbar button\";grid-template-columns:1fr auto}.chat__request__input__button{--kul-button-border-radius:0;--kul-button-padding:0 1em;grid-area:button}.chat__request__input__progressbar{--kul-progressbar-border-radius:0;--kul-progressbar-height:1.75em;grid-area:progressbar}.chat__request__input__textarea{--kul-textfield-border-radius:0;grid-area:textarea;overflow-x:hidden}.chat__request__buttons{align-items:center;display:flex;justify-content:space-evenly;padding:var(--kul_chat_buttons_padding)}.chat__request__buttons__stt{padding:0 1em}.chat__messages{align-content:start;box-sizing:border-box;display:grid;grid-area:messages;grid-gap:var(--kul_chat_grid_gap);grid-template-columns:1fr;margin-bottom:var(--kul_chat_margin_top);margin-top:var(--kul_chat_margin_top);overflow:auto;padding:var(--kul_chat_inner_padding);white-space:pre-line;width:100%;word-break:normal}.chat__messages__container{backdrop-filter:blur(var(--kul_chat_blur_radius));background-color:rgba(var(--kul-background-color-rgb), 0.125);border:1px solid rgba(var(--kul-text-color-rgb), 0.5);border-radius:var(--kul_chat_border_radius);display:flex;height:max-content;max-width:80%;position:relative;transition:background-color 225ms ease}.chat__messages__container:hover{background-color:rgba(var(--kup-primary-color-rgb), 0.325)}.chat__messages__container--assistant{justify-self:start}.chat__messages__container--user{justify-self:end}.chat__messages__empty{font-size:var(--kul_chat_small_font_size);font-style:italic;opacity:0.5;text-align:center}.chat__messages__content{font-family:var(--kul-font-family);font-size:calc(var(--kul-font-size) * 1.125);max-width:100%;padding:12px}.chat__messages__toolbar{animation:fade-in-flex 0.25s ease-out;border:0;border-bottom-right-radius:var(--kul_chat_border_radius);border-top-right-radius:var(--kul_chat_border_radius);border-top:1px inset rgba(var(--kul-text-color-rgb), 0.225);box-sizing:border-box;display:flex;flex-direction:column;flex-flow:wrap-reverse;height:100%;justify-content:end;padding:12px;transition:width 125ms ease, opacity 125ms ease, padding 125ms ease}.chat__messages__toolbar__button{margin:4px}.chat__spinner-bar{bottom:0;grid-area:spinner;height:4px;left:0;position:absolute;width:100%}.chat__title{text-align:center;font-size:var(--kul_chat_title_font_size)}.chat__text{font-size:var(--kul_chat_small_font_size);font-style:italic;opacity:0.5;text-align:center}.settings{display:grid;grid-gap:8px;grid-template-rows:auto auto 1fr;height:100%}.settings__system{box-sizing:border-box;overflow:hidden;padding-top:18px}";
 const KulChatStyle0 = kulChatCss;
@@ -269,17 +297,12 @@ const KulChat = class {
         this.kulValue = [];
     }
     get rootElement() { return getElement(this); }
-    /*-------------------------------------------------*/
-    /*       I n t e r n a l   V a r i a b l e s       */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Internal variables
     #kulManager = kulManagerInstance();
     #statusinterval;
-    /*-------------------------------------------------*/
-    /*                   E v e n t s                   */
-    /*-------------------------------------------------*/
-    /**
-     * Describes event emitted.
-     */
+    //#endregion
+    //#region Events
     kulEvent;
     onKulEvent(e, eventType) {
         this.kulEvent.emit({
@@ -291,9 +314,8 @@ const KulChat = class {
             status: this.status,
         });
     }
-    /*-------------------------------------------------*/
-    /*                L i s t e n e r s                */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Listeners
     listenKeydown(e) {
         switch (e.key) {
             case 'Enter':
@@ -307,9 +329,8 @@ const KulChat = class {
                 e.stopPropagation();
         }
     }
-    /*-------------------------------------------------*/
-    /*                 W a t c h e r s                 */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Watchers
     async updateTokensCount() {
         const progressbar = this.#adapter.components.progressbar;
         const system = this.#adapter.components.textareas.system;
@@ -336,9 +357,8 @@ const KulChat = class {
             }
         });
     }
-    /*-------------------------------------------------*/
-    /*           P u b l i c   M e t h o d s           */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Public methods
     /**
      * Retrieves the debug information reflecting the current state of the component.
      * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves to a KulDebugLifecycleInfo object containing debug information.
@@ -399,9 +419,8 @@ const KulChat = class {
             this.rootElement.remove();
         }, ms);
     }
-    /*-------------------------------------------------*/
-    /*           P r i v a t e   M e t h o d s         */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Private methods
     #adapter = {
         actions: {
             delete: (m) => {
@@ -571,9 +590,8 @@ const KulChat = class {
         this.#adapter.actions.updateTokenCount();
         this.onKulEvent(new CustomEvent('update'), 'update');
     }
-    /*-------------------------------------------------*/
-    /*          L i f e c y c l e   H o o k s          */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Lifecycle hooks
     componentWillLoad() {
         this.#kulManager.theme.register(this);
         if (this.kulValue) {
@@ -604,7 +622,7 @@ const KulChat = class {
         this.#kulManager.debug.updateDebugInfo(this, 'did-render');
     }
     render() {
-        return (h(Host, { key: '732ef036c1c065396ec8b0bf9cae0a354eaf453d' }, this.kulStyle && (h("style", { key: '962c0e1e6a01109f23a050f2ef668bb3fd4fee9b', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: '0c4baf87d882551bf6805d959305541b2a5815fc', id: KUL_WRAPPER_ID }, h("div", { key: 'adcc1b7ea6f00ec2891eef10e16356db27bb2d86', class: `${this.view} ${this.view}--${this.kulLayout} ${this.view}--${this.status}` }, this.view === 'settings'
+        return (h(Host, { key: 'eff3b786d52aa5349ecae0dd10766044d8e7cc8a' }, this.kulStyle && (h("style", { key: 'e04b3063e9d664e1359e2a0f0d5803feb30b004f', id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))), h("div", { key: '304badeb4e380c0363a653a3b7417aaf862aac9f', id: KUL_WRAPPER_ID }, h("div", { key: 'eda7f3e4d856651b05ef3572a1d48b9bd27c08b3', class: `${this.view} ${this.view}--${this.kulLayout} ${this.view}--${this.status}` }, this.view === 'settings'
             ? prepSettings(this.#adapter)
             : this.status === 'ready'
                 ? prepChat(this.#adapter)
@@ -622,9 +640,8 @@ const KulChat = class {
 };
 KulChat.style = KulChatStyle0;
 
-/*-------------------------------------------------*/
-/*                    P r o p s                    */
-/*-------------------------------------------------*/
+//#endregion
+//#region Props
 var KulChipProps;
 (function (KulChipProps) {
     KulChipProps["kulData"] = "The data of the chip chip.";
@@ -632,6 +649,7 @@ var KulChipProps;
     KulChipProps["kulStyle"] = "Custom style of the component.";
     KulChipProps["kulStyling"] = "Styling of the chip component, includes: \"choice\", \"input\", \"filter\" and \"standard\".";
 })(KulChipProps || (KulChipProps = {}));
+//#endregion
 
 const kulChipCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}@keyframes fade-in-grid{0%{display:none}1%{display:grid;opacity:0}100%{display:grid;opacity:1}}:host{--kul_chip_background_color:var(\n    --kul-chip-background-color,\n    var(--kul-background-color)\n  );--kul_chip_border_radius:var(--kul-chip-border-radius, 16px);--kul_chip_font_family:var(--kul-chip-font-family, var(--kul-font-family));--kul_chip_font_size:var(--kul-chip-font-size, var(--kul-font-size));--kul_chip_font_weight:var(--kul-chip-font-weight, var(--kul-font-weight));--kul_chip_height:var(--kul-chip-height, 32px);--kul_chip_indent_multiplier:var(--kul-chip-indent-multiplier, 10);--kul_chip_margin:var(--kul-chip-margin, 4px);--kul_chip_padding:var(--kul-chip-padding, 0 12px);--kul_chip_primary_color:var(\n    --kul-chip-primary-color,\n    var(--kul-primary-color)\n  );--kul_chip_primary_color_rgb:var(\n    --kul-chip-primary-color-rgb,\n    var(--kul-primary-color-rgb)\n  );--kul_chip_text_color:var(--kul-chip-text-color, var(--kul-text-color));--kul_chip_text_color_rgb:var(\n    --kul-chip-text_color_rgb,\n    var(--kul-text-color-rgb)\n  )}:host{-webkit-backdrop-filter:var(--kul_list_backdrop_filter);backdrop-filter:var(--kul_list_backdrop_filter);background-color:var(--kul_list_background_color);display:block;font-family:var(--kul_chip_font_family);font-size:var(--kul_chip_font_size);height:100%;outline:none;width:100%}#kul-component,.chip-set{height:100%;width:100%}.chip-set{align-content:center;box-sizing:border-box;display:flex;flex-wrap:wrap;justify-content:center;padding:4px}.chip-set--choice .chip,.chip-set--filter .chip,.chip-set--input .chip{cursor:pointer}.chip-set--choice .chip--selected{background-color:var(--kul_chip_background_color);background-image:linear-gradient(to right, rgba(var(--kul_chip_primary_color_rgb), 0.25) 0%, rgba(var(--kul_chip_primary_color_rgb), 0.25) 0.1%, rgba(var(--kul_chip_primary_color_rgb), 0.25));color:var(--kul_chip_primary_color)}.chip-set--filter .chip__icon--leading{opacity:1;transition:opacity 75ms linear;transition-delay:-50ms}.chip-set--filter .chip__icon--leading+.chip__checkmark{opacity:0;transition:opacity 75ms linear;transition-delay:80ms}.chip-set--filter .chip__icon--leading+.chip__checkmark .chip__checkmark-svg{transition:width 0ms}.chip-set--filter .chip__icon--leading.chip__icon--leading-hidden{display:none;width:0;opacity:0}.chip-set--filter .chip__icon--leading.chip__icon--leading-hidden+.chip__checkmark{height:20px;width:20px;opacity:1}.chip-set--filter .chip--selected .chip__icon--leading{opacity:0}.chip-set--filter .chip--selected .chip__checkmark-path{stroke-dashoffset:0}.chip-set--filter .chip--selected .chip__checkmark{margin-left:-4px;margin-right:4px}.chip-set--filter .chip--selected .chip__checkmark .chip__checkmark-svg{height:20px;width:20px}.chip-set--input .kul-clear-icon{margin-left:4px;margin-right:-4px}.chip-set--input .kul-clear-icon:hover{opacity:0.75}.node{display:flex;flex-direction:column}.node__expand{background-color:var(--kul_chip_text_color);cursor:pointer;height:1.5em;margin:0;-webkit-mask:var(--kul-collapsed-icon);mask:var(--kul-collapsed-icon);overflow:hidden;transition:transform 125ms ease;width:1.5em}.node__expand:hover{transform:scale(1.25)}.node__expand--expanded{-webkit-mask:var(--kul-expanded-icon);mask:var(--kul-expanded-icon)}.node__expand--placeholder{visibility:hidden}.chip-wrapper{align-items:center;display:flex}.chip-wrapper--hidden-children .dropdown-icon{transform:unset}.indent{width:calc(var(--kul_chip_margin) * var(--kul_chip_indent_offset) * var(--kul_chip_indent_multiplier))}.chip{align-items:center;background-color:var(--kul_chip_background_color);background-image:linear-gradient(to right, rgba(var(--kul_chip_text_color_rgb), 0.1) 0%, rgba(var(--kul_chip_text_color_rgb), 0.1) 0.1%, rgba(var(--kul_chip_text_color_rgb), 0.1));border-radius:var(--kul_chip_border_radius);border-width:0;box-sizing:border-box;color:var(--kul_chip_text_color);display:inline-flex;font-size:0.875em;font-weight:var(--kul_chip_font_weight);height:var(--kul_chip_height);letter-spacing:0.0178571429em;margin:var(--kul_chip_margin);max-width:max-content;outline:none;padding:var(--kul_chip_padding);position:relative;text-decoration:inherit;text-transform:inherit}.chip__icon--leading{color:var(--kul_chip_text_color)}.chip__icon--leading:not(.chip__icon--leading-hidden){margin-left:-4px;margin-right:6px}.chip__icon{background:var(--kul_chip_text_color);display:block;height:18px;outline:none;width:18px}.chip__icon--leading:not(.chip__icon--leading-hidden){width:20px;height:20px;font-size:20px}.chip__icon--trailing{margin-right:-4px;margin-left:6px}.chip__checkmark-svg{width:0;height:20px;transition:width 150ms cubic-bezier(0.4, 0, 0.2, 1)}.chip__checkmark-path{transition:stroke-dashoffset 150ms 50ms cubic-bezier(0.4, 0, 0.6, 1);stroke-width:2px;stroke-dashoffset:29.7833385;stroke-dasharray:29.7833385}.chip svg path{color:var(--kul_chip_text_color);stroke:var(--kul_chip_text_color)}.chip__primary-action{outline:none}.chip__primary-action .chip__text{white-space:nowrap}:host(.kul-danger){--kul-chip-primary-color:var(--kul-danger-color);--kul-chip-primary-color-rgb:var(--kul-danger-color-rgb)}:host(.kul-info){--kul-chip-primary-color:var(--kul-info-color);--kul-chip-primary-color-rgb:var(--kul-info-color-rgb)}:host(.kul-secondary){--kul-chip-primary-color:var(--kul-secondary-color);--kul-chip-primary-color-rgb:var(--kul-secondary-color-rgb)}:host(.kul-success){--kul-chip-primary-color:var(--kul-success-color);--kul-chip-primary-color-rgb:var(--kul-success-color-rgb)}:host(.kul-warning){--kul-chip-primary-color:var(--kul-warning-color);--kul-chip-primary-color-rgb:var(--kul-warning-color-rgb)}";
 const KulChipStyle0 = kulChipCss;
@@ -656,18 +674,13 @@ const KulChip = class {
         this.kulStyling = 'standard';
     }
     get rootElement() { return getElement(this); }
-    /*-------------------------------------------------*/
-    /*       I n t e r n a l   V a r i a b l e s       */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Internal variables
     #nodeItems = [];
     #kulManager = kulManagerInstance();
     #rippleSurface = [];
-    /*-------------------------------------------------*/
-    /*                   E v e n t s                   */
-    /*-------------------------------------------------*/
-    /**
-     * Describes event emitted.
-     */
+    //#endregion
+    //#region Events
     kulEvent;
     onKulEvent(e, eventType, args) {
         const { expansion, node } = args || {};
@@ -714,9 +727,8 @@ const KulChip = class {
             selectedNodes: this.selectedNodes,
         });
     }
-    /*-------------------------------------------------*/
-    /*           P u b l i c   M e t h o d s           */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Public methods
     /**
      * Fetches debug information of the component's current state.
      * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves with the debug information object.
@@ -778,9 +790,8 @@ const KulChip = class {
             this.rootElement.remove();
         }, ms);
     }
-    /*-------------------------------------------------*/
-    /*           P r i v a t e   M e t h o d s         */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Private methods
     #hasChildren(node) {
         return !!(node.children && node.children.length);
     }
@@ -894,9 +905,8 @@ const KulChip = class {
     #showChildren(node) {
         return this.expandedNodes.has(node);
     }
-    /*-------------------------------------------------*/
-    /*          L i f e c y c l e   H o o k s          */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Lifecycle hooks
     componentWillLoad() {
         this.#kulManager.theme.register(this);
     }
@@ -931,7 +941,7 @@ const KulChip = class {
             'chip-set--filter': this.#isFilter(),
             'chip-set--input': this.#isInput(),
         };
-        return (h(Host, { key: '7391de32b4051dc12acc04f1b8bc525d989116e9' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'eb58f96a8827f162cfdf5dc60ea370782282357c', id: KUL_WRAPPER_ID }, h("div", { key: '33b59600b4163e722f22f0be9984fe648f1d7e9f', class: className, role: "grid" }, this.#prepChipSet()))));
+        return (h(Host, { key: '73ae7ab5a10eff50a258ae67e895b6d99b57f362' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: 'f2b52c7d3294613df6d8a651a640dde3682b26f7', id: KUL_WRAPPER_ID }, h("div", { key: 'eefd9f482c17fa94978ef44181acefb74f85b920', class: className, role: "grid" }, this.#prepChipSet()))));
     }
     disconnectedCallback() {
         this.#kulManager.theme.unregister(this);
@@ -939,9 +949,8 @@ const KulChip = class {
 };
 KulChip.style = KulChipStyle0;
 
-/*-------------------------------------------------*/
-/*                    P r o p s                    */
-/*-------------------------------------------------*/
+//#endregion
+//#region Props
 var KulTabbarProps;
 (function (KulTabbarProps) {
     KulTabbarProps["kulData"] = "Actual data of the component.";
@@ -949,6 +958,7 @@ var KulTabbarProps;
     KulTabbarProps["kulStyle"] = "Custom style of the component.";
     KulTabbarProps["kulValue"] = "Sets the initial selected node's index.";
 })(KulTabbarProps || (KulTabbarProps = {}));
+//#endregion
 
 const kulTabbarCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}@keyframes fade-in-grid{0%{display:none}1%{display:grid;opacity:0}100%{display:grid;opacity:1}}:host{--kul_tabbar_backdrop_filter:var(--kul-tabbar-backdrop-filter, blur(3.5px));--kul_tabbar_backdrop_filter_hover:var(\n    --kul-tabbar-backdrop-filter-hover,\n    blur(5px)\n  );--kul_tabbar_font_size:var(--kul-tabbar-font-size, var(--kul-font-size));--kul_tabbar_font_weight:var(--kul-tabbar-font-weight, 500);--kul_tabbar_height:var(--kul-tabbar-height, 36px);--kul_tabbar_primary_color_rgb:var(\n    --kul-tabbar-primary-color-rgb,\n    var(--kul-primary-color-rgb)\n  );--kul_tabbar_primary_color:var(\n    --kul-tabbar-primary-color,\n    var(--kul-primary-color)\n  );--kul_tabbar_tab_padding:var(--kul-tabbar-tab-padding, 0 24px);display:block;font-size:var(--kul_tabbar_font_size);width:100%}.tabbar{width:100%}.tabbar__scroller{height:var(--kul_tabbar_height);overflow-y:hidden}.tabbar__scroll-area{display:flex;overflow:auto;overflow-x:hidden}.tabbar__scroll-content{display:flex;flex:1 0 auto;position:relative;transform:none;will-change:transform}.tab{appearance:none;-webkit-backdrop-filter:var(--kul_tabbar_backdrop_filter);backdrop-filter:var(--kul_tabbar_backdrop_filter);background:none;border:none;box-sizing:border-box;color:var(--kul_tabbar_primary_color);cursor:pointer;display:flex;flex:1 0 auto;font-family:var(--kul_tabbar_font_family);font-size:0.875em;font-weight:var(--kul_tabbar_font_weight);height:var(--kul_tabbar_height);justify-content:center;letter-spacing:0.0892857143em;margin:0px;min-width:90px;outline:none;padding:var(--kul_tabbar_tab_padding);position:relative;text-align:center;text-transform:uppercase;white-space:nowrap;z-index:1}.tab:hover{-webkit-backdrop-filter:var(--kul_tabbar_backdrop_filter_hover);backdrop-filter:var(--kul_tabbar_backdrop_filter_hover);background-color:rgba(var(--kul_tabbar_primary_color_rgb), 0.075)}.tab--active .tab__icon{transition-delay:100ms}.tab--active .tab__text-label{transition-delay:100ms}.tab__icon{font-size:24px;height:24px;transition:color 150ms linear 0s;width:24px;z-index:2}.tab__icon.kul-icon{background-color:var(--kul_tabbar_primary_color);height:24px;width:24px}.tab__content{align-items:center;display:flex;height:inherit;justify-content:center;pointer-events:none;position:relative}.tab__text-label{color:var(--kul_tabbar_primary_color);display:inline-block;line-height:1;transition:color 150ms linear 0s;z-index:2}.tab__icon+.tab__text-label{padding-left:8px;padding-right:0px}.tab__indicator{display:flex;height:100%;justify-content:center;left:0px;pointer-events:none;position:absolute;top:0px;width:100%;z-index:1}.tab__indicator--active .tab__indicator-content{opacity:1}.tab__indicator-content{border-color:var(--kul_tabbar_primary_color);opacity:0;transform-origin:left center}.tab__indicator-content--underline{align-self:flex-end;border-top-style:solid;border-top-width:2px;box-sizing:border-box;transition:all 125ms cubic-bezier(0.4, 0, 0.2, 1) 0s;width:100%}";
 const KulTabbarStyle0 = kulTabbarCss;
@@ -971,18 +981,13 @@ const KulTabbar = class {
         this.kulValue = 0;
     }
     get rootElement() { return getElement(this); }
-    /*-------------------------------------------------*/
-    /*       I n t e r n a l   V a r i a b l e s       */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Internal variables
     #kulManager = kulManagerInstance();
     #rippleSurface;
     #scrollArea;
-    /*-------------------------------------------------*/
-    /*                   E v e n t s                   */
-    /*-------------------------------------------------*/
-    /**
-     * Describes events emitted.
-     */
+    //#endregion
+    //#region Events
     kulEvent;
     onKulEvent(e, eventType, index = 0, node) {
         if (eventType === 'pointerdown') {
@@ -1004,9 +1009,8 @@ const KulTabbar = class {
             node,
         });
     }
-    /*-------------------------------------------------*/
-    /*           P u b l i c   M e t h o d s           */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Public methods
     /**
      * Retrieves the debug information reflecting the current state of the component.
      * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves to a KulDebugLifecycleInfo object containing debug information.
@@ -1067,9 +1071,8 @@ const KulTabbar = class {
             this.rootElement.remove();
         }, ms);
     }
-    /*-------------------------------------------------*/
-    /*          L i f e c y c l e   H o o k s          */
-    /*-------------------------------------------------*/
+    //#endregion
+    //#region Lifecycle hooks
     componentWillLoad() {
         try {
             if (this.kulValue !== null) {

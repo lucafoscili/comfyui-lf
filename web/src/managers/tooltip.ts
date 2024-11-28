@@ -1,6 +1,6 @@
-import { getKulManager, getLFManager } from '../utils/common.js';
+import { KulEventName } from '../types/events/events';
 import { KulButtonEventPayload } from '../types/ketchup-lite/components';
-import type {
+import {
   KulDynamicPositionAnchor,
   KulDynamicPositionPlacement,
 } from '../types/ketchup-lite/managers/kul-dynamic-position/kul-dynamic-position-declarations';
@@ -9,7 +9,9 @@ import {
   TooltipCallbacks,
   TooltipLayouts,
   TooltipUploadCallback,
-} from '../types/manager/manager.js';
+} from '../types/manager/manager';
+import { TagName } from '../types/widgets/widgets';
+import { getKulManager, getLFManager } from '../utils/common';
 
 export class LFTooltip {
   #CB: {
@@ -22,14 +24,6 @@ export class LFTooltip {
   #LAYOUT: TooltipLayouts; // more in the future?
   #TOOLTIP_ELEMENT: HTMLDivElement;
 
-  constructor() {
-    const link = document.createElement('link');
-    link.dataset.filename = 'tooltip';
-    link.rel = 'stylesheet';
-    link.type = 'text/css';
-    link.href = `extensions/comfyui-lf/css/tooltip.css`;
-    document.head.appendChild(link);
-  }
   //#region Initialize
   #initialize() {
     this.#TOOLTIP_ELEMENT?.remove();
@@ -40,9 +34,9 @@ export class LFTooltip {
   //#endregion
   //#region Upload layout
   #uploadLayout() {
-    const content = document.createElement('div');
-    const upload = document.createElement('kul-upload');
-    const button = document.createElement('kul-button');
+    const content = document.createElement(TagName.Div);
+    const upload = document.createElement(TagName.KulUpload);
+    const button = document.createElement(TagName.KulButton);
 
     content.classList.add(this.#CSS_CLASSES.content);
 
@@ -54,7 +48,7 @@ export class LFTooltip {
     content.appendChild(button);
 
     button.addEventListener(
-      'kul-button-event',
+      KulEventName.KulButton,
       this.#buttonEventHandler.bind(this.#buttonEventHandler, upload),
     );
 

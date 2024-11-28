@@ -1,7 +1,7 @@
 import { EV_HANDLERS } from '../helpers/chip';
 import { KulEventName } from '../types/events/events';
-import { CustomWidgetName, NodeName, TagName } from '../types/widgets/_common';
 import { ChipCSS, ChipFactory, ChipNormalizeCallback, ChipState } from '../types/widgets/chip';
+import { CustomWidgetName, NodeName, TagName } from '../types/widgets/widgets';
 import { createDOMWidget, normalizeValue } from '../utils/common';
 
 const STATE = new WeakMap<HTMLDivElement, ChipState>();
@@ -39,10 +39,7 @@ export const chipFactory: ChipFactory = {
 
     content.classList.add(ChipCSS.Content);
     chip.classList.add(ChipCSS.Widget);
-    chip.addEventListener(
-      KulEventName.KulChip,
-      EV_HANDLERS.chip.bind(EV_HANDLERS, STATE.get(wrapper)),
-    );
+    chip.addEventListener(KulEventName.KulChip, (e) => EV_HANDLERS.chip(STATE.get(wrapper), e));
 
     switch (node.comfyClass) {
       case NodeName.keywordToggleFromJson:

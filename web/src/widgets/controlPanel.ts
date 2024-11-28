@@ -1,12 +1,5 @@
-import { CustomWidgetName, TagName } from '../types/widgets/_common';
-import {
-  createDOMWidget,
-  getApiRoutes,
-  getKulManager,
-  getLFManager,
-  normalizeValue,
-} from '../utils/common';
 import { createContent } from '../helpers/controlPanel';
+import { KulEventName } from '../types/events/events';
 import {
   ControlPanelCSS,
   ControlPanelDeserializedValue,
@@ -14,7 +7,14 @@ import {
   ControlPanelNormalizeCallback,
   ControlPanelState,
 } from '../types/widgets/controlPanel';
-import { KulEventName } from '../types/events/events';
+import { CustomWidgetName, TagName } from '../types/widgets/widgets';
+import {
+  createDOMWidget,
+  getApiRoutes,
+  getKulManager,
+  getLFManager,
+  normalizeValue,
+} from '../utils/common';
 
 const STATE = new WeakMap<HTMLDivElement, ControlPanelState>();
 
