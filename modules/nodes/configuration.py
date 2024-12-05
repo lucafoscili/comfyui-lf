@@ -164,9 +164,12 @@ class LF_CivitAIMetadataSetup:
         emb_hashes_str = ", ".join(get_embedding_hashes(embeddings, analytics_dataset)) if embeddings else ""
         lora_hashes_str = ", ".join(get_lora_hashes(lora_tags, analytics_dataset)) if lora_tags else ""
 
+        emb_str = f"{embeddings}, " if embeddings else ""
+        lora_str = f", {lora_tags}" if lora_tags else ""
+
         # Metadata string generation
         metadata_string = (
-            f"{embeddings or ''}, {positive_prompt or ''}, {lora_tags or ''}\n"
+            f"{emb_str}{positive_prompt or ''}{lora_str}\n"
             f"Negative prompt: {negative_prompt or ''}\n"
             f"Steps: {steps or ''}, Sampler: {sampler or ''}, Schedule type: {scheduler or ''}, CFG scale: {cfg or ''}, "
             f"Seed: {seed or ''}, Size: {width or ''}x{height or ''}, "
@@ -184,7 +187,8 @@ class LF_CivitAIMetadataSetup:
             "value": clean_metadata_string,
         })
 
-        output_prompt = f"{embeddings}, {positive_prompt}" if positive_prompt else ""
+        output_prompt = f"{emb_str}{positive_prompt}" if positive_prompt else ""
+        
         return (
             clean_metadata_string, checkpoint, vae, sampler, scheduler, embeddings, lora_tags,
             output_prompt, negative_prompt, steps, denoising, clip_skip, cfg, seed,
