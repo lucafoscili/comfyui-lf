@@ -385,13 +385,13 @@ class LF_GaussianBlur:
                 'blur_kernel_size': blur_kernel_size,
                 'blur_sigma': blur_sigma,
             },
-            filename_prefix="vignette",
+            filename_prefix="gaussianblur",
             nodes=nodes,
         )
 
         batch_list, image_list = normalize_output_image(processed_images)
 
-        PromptServer.instance.send_sync(f"{EVENT_PREFIX}vignette", {
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}gaussianblur", {
             "node": kwargs.get("node_id"),
             "dataset": dataset,
         })
