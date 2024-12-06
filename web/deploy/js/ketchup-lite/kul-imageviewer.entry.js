@@ -1,9 +1,8 @@
-import { h, r as registerInstance, d as createEvent, g as getElement, f as forceUpdate, H as Host } from './index-7cf82e95.js';
-import { a as KulDataCyAttributes, k as kulManagerInstance, K as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-72505221.js';
+import { h, r as registerInstance, d as createEvent, f as forceUpdate, H as Host, g as getElement } from './index-64e8bec6.js';
+import { K as KulDataCyAttributes, k as kulManagerInstance, a as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-2a1960f6.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 
 const ACTIONS = {
-    //#region clearHistory
     async clearHistory(adapter, index = null) {
         const history = adapter.set.state.history;
         if (index === null) {
@@ -14,16 +13,12 @@ const ACTIONS = {
             history.clear(index);
         }
     },
-    //#endregion
-    //#region clearSelection
     async clearSelection(adapter) {
         const stateSetter = adapter.set.state;
         stateSetter.currentShape({});
         stateSetter.history.index(null);
         adapter.components.refs.masonry.setSelectedShape(null);
     },
-    //#endregion
-    //#region delete
     async delete(adapter) {
         const getters = adapter.get;
         const imageviewer = getters.imageviewer();
@@ -37,18 +32,14 @@ const ACTIONS = {
         imageviewer.kulData = { ...dataset };
         await adapter.actions.clearSelection(adapter);
     },
-    //#endregion
-    //#region findImage
     findImage(adapter) {
         const imageviewer = adapter.get.imageviewer();
         const manager = adapter.get.manager();
         const currentSelectedShape = adapter.get.state.currentShape();
         const cells = manager.data.cell.shapes.getAll(imageviewer.kulData, false);
-        return cells['image'].find((c) => c.value === currentSelectedShape.value ||
+        return cells["image"].find((c) => c.value === currentSelectedShape.value ||
             c.kulValue === currentSelectedShape.value);
     },
-    //#endregion
-    //#region load
     async load(adapter) {
         const imageviewer = adapter.get.imageviewer();
         const refs = adapter.components.refs;
@@ -58,11 +49,9 @@ const ACTIONS = {
             adapter.actions.clearHistory(adapter);
         }
         catch (error) {
-            console.error('Load operation failed:', error);
+            console.error("Load operation failed:", error);
         }
     },
-    //#endregion
-    //#region redo
     async redo(adapter) {
         const currentHistory = adapter.get.state.history.current();
         const index = adapter.get.state.history.index();
@@ -70,8 +59,6 @@ const ACTIONS = {
             adapter.set.state.history.index(index + 1);
         }
     },
-    //#endregion
-    //#region save
     async save(adapter) {
         const currentSelectedShape = adapter.get.state.currentShape();
         if (!currentSelectedShape) {
@@ -89,8 +76,6 @@ const ACTIONS = {
         await adapter.actions.clearHistory(adapter, index);
         imageviewer.kulData = { ...imageviewer.kulData };
     },
-    //#endregion
-    //#region undo
     async undo(adapter) {
         const index = adapter.get.state.history.index();
         if (index > 0) {
@@ -98,8 +83,6 @@ const ACTIONS = {
             adapter.set.state.history.index(newIndex);
         }
     },
-    //#endregion
-    //#region updateValue
     updateValue(shape, value) {
         const s = shape;
         shape.value = value;
@@ -107,7 +90,6 @@ const ACTIONS = {
             s.kulValue = value;
         }
     },
-    //#endregion
 };
 
 const COMPONENTS = {
@@ -142,10 +124,10 @@ const COMPONENTS = {
 const prepCanvas = (adapter) => {
     const imageviewer = adapter.get.imageviewer();
     const className = {
-        'details-grid__canvas': true,
+        "details-grid__canvas": true,
     };
     const eventHandler = (e) => {
-        imageviewer.onKulEvent(e, 'kul-event');
+        imageviewer.onKulEvent(e, "kul-event");
     };
     const currentSnapshot = adapter.get.state.history.currentSnapshot();
     if (!currentSnapshot) {
@@ -154,7 +136,7 @@ const prepCanvas = (adapter) => {
     const imageProps = {
         kulValue: currentSnapshot.value,
     };
-    return (h("kul-canvas", { class: className, kulImageProps: imageProps, "onKul-canvas-event": eventHandler, ref: (el) => {
+    return (h("kul-canvas", { class: className, "data-cy": KulDataCyAttributes.SHAPE, kulImageProps: imageProps, "onKul-canvas-event": eventHandler, ref: (el) => {
             if (el) {
                 adapter.components.refs.canvas = el;
             }
@@ -165,15 +147,15 @@ const prepCanvas = (adapter) => {
 const prepClearHistory = (adapter) => {
     const imageviewer = adapter.get.imageviewer();
     const className = {
-        'details-grid__clear-history': true,
-        'kul-danger': true,
-        'kul-full-width': true,
+        "details-grid__clear-history": true,
+        "kul-danger": true,
+        "kul-full-width": true,
     };
     const eventHandler = async (e) => {
         const { comp, eventType } = e.detail;
-        imageviewer.onKulEvent(e, 'kul-event');
+        imageviewer.onKulEvent(e, "kul-event");
         switch (eventType) {
-            case 'click':
+            case "click":
                 requestAnimationFrame(() => (comp.kulShowSpinner = true));
                 const index = adapter.get.state.currentShape().shape.index;
                 await adapter.actions.clearHistory(adapter, index);
@@ -195,15 +177,15 @@ const prepClearHistory = (adapter) => {
 const prepDelete = (adapter) => {
     const imageviewer = adapter.get.imageviewer();
     const className = {
-        'details-grid__delete': true,
-        'kul-danger': true,
-        'kul-full-width': true,
+        "details-grid__delete": true,
+        "kul-danger": true,
+        "kul-full-width": true,
     };
     const eventHandler = async (e) => {
         const { comp, eventType } = e.detail;
-        imageviewer.onKulEvent(e, 'kul-event');
+        imageviewer.onKulEvent(e, "kul-event");
         switch (eventType) {
-            case 'click':
+            case "click":
                 requestAnimationFrame(() => (comp.kulShowSpinner = true));
                 await adapter.actions.delete(adapter);
                 requestAnimationFrame(() => (comp.kulShowSpinner = false));
@@ -222,14 +204,14 @@ const prepDelete = (adapter) => {
 const prepLoad = (adapter) => {
     const imageviewer = adapter.get.imageviewer();
     const className = {
-        'navigation-grid__button': true,
-        'kul-full-width': true,
+        "navigation-grid__button": true,
+        "kul-full-width": true,
     };
     const eventHandler = async (e) => {
         const { comp, eventType } = e.detail;
-        imageviewer.onKulEvent(e, 'kul-event');
+        imageviewer.onKulEvent(e, "kul-event");
         switch (eventType) {
-            case 'click':
+            case "click":
                 requestAnimationFrame(() => (comp.kulShowSpinner = true));
                 await adapter.actions.load(adapter);
                 requestAnimationFrame(() => (comp.kulShowSpinner = false));
@@ -248,16 +230,16 @@ const prepLoad = (adapter) => {
 const prepMasonry = (adapter) => {
     const imageviewer = adapter.get.imageviewer();
     const className = {
-        'navigation-grid__masonry': true,
+        "navigation-grid__masonry": true,
     };
     const eventHandler = (e) => {
         const { eventType, originalEvent, selectedShape } = e.detail;
-        imageviewer.onKulEvent(e, 'kul-event');
+        imageviewer.onKulEvent(e, "kul-event");
         switch (eventType) {
-            case 'kul-event':
+            case "kul-event":
                 const orig = originalEvent;
                 switch (orig.detail.eventType) {
-                    case 'click':
+                    case "click":
                         const currentShape = adapter.get.state.currentShape();
                         if (currentShape?.shape?.index === selectedShape.index) {
                             adapter.actions.clearSelection(adapter);
@@ -283,14 +265,14 @@ const prepMasonry = (adapter) => {
 const prepRedo = (adapter) => {
     const imageviewer = adapter.get.imageviewer();
     const className = {
-        'details-grid__redo': true,
-        'kul-full-width': true,
+        "details-grid__redo": true,
+        "kul-full-width": true,
     };
     const eventHandler = async (e) => {
         const { comp, eventType } = e.detail;
-        imageviewer.onKulEvent(e, 'kul-event');
+        imageviewer.onKulEvent(e, "kul-event");
         switch (eventType) {
-            case 'click':
+            case "click":
                 requestAnimationFrame(() => (comp.kulShowSpinner = true));
                 await adapter.actions.redo(adapter);
                 requestAnimationFrame(() => (comp.kulShowSpinner = false));
@@ -312,15 +294,15 @@ const prepRedo = (adapter) => {
 const prepSave = (adapter) => {
     const imageviewer = adapter.get.imageviewer();
     const className = {
-        'details-grid__commit-changes': true,
-        'kul-success': true,
-        'kul-full-width': true,
+        "details-grid__commit-changes": true,
+        "kul-success": true,
+        "kul-full-width": true,
     };
     const eventHandler = async (e) => {
         const { comp, eventType } = e.detail;
-        imageviewer.onKulEvent(e, 'kul-event');
+        imageviewer.onKulEvent(e, "kul-event");
         switch (eventType) {
-            case 'click':
+            case "click":
                 requestAnimationFrame(() => (comp.kulShowSpinner = true));
                 await adapter.actions.save(adapter);
                 requestAnimationFrame(() => (comp.kulShowSpinner = false));
@@ -340,7 +322,7 @@ const prepSave = (adapter) => {
 // #region Spinner
 const prepSpinner = (adapter) => {
     const className = {
-        'details-grid__spinner': true,
+        "details-grid__spinner": true,
     };
     return (h("kul-spinner", { class: className, kulActive: adapter.get.state.spinnerStatus(), kulDimensions: "16px", kulFader: true, kulFaderTimeout: 125, kulLayout: 14, ref: (el) => {
             if (el) {
@@ -353,10 +335,10 @@ const prepSpinner = (adapter) => {
 const prepTextfield = (adapter) => {
     const imageviewer = adapter.get.imageviewer();
     const className = {
-        'navigation-grid__textfield': true,
+        "navigation-grid__textfield": true,
     };
     const eventHandler = (e) => {
-        imageviewer.onKulEvent(e, 'kul-event');
+        imageviewer.onKulEvent(e, "kul-event");
     };
     return (h("kul-textfield", { class: className, kulIcon: "folder", kulLabel: "Directory", kulStyling: "flat", "onKul-textfield-event-event": eventHandler, ref: (el) => {
             if (el) {
@@ -369,10 +351,10 @@ const prepTextfield = (adapter) => {
 const prepTree = (adapter) => {
     const imageviewer = adapter.get.imageviewer();
     const className = {
-        'details-grid__tree': true,
+        "details-grid__tree": true,
     };
     const eventHandler = (e) => {
-        imageviewer.onKulEvent(e, 'kul-event');
+        imageviewer.onKulEvent(e, "kul-event");
     };
     return (h("kul-tree", { class: className, "data-cy": KulDataCyAttributes.INPUT, kulAccordionLayout: true, kulData: imageviewer.kulValue, kulSelectable: true, "onKul-tree-event": eventHandler, ref: (el) => {
             if (el) {
@@ -385,14 +367,14 @@ const prepTree = (adapter) => {
 const prepUndo = (adapter) => {
     const imageviewer = adapter.get.imageviewer();
     const className = {
-        'details-grid__undo': true,
-        'kul-full-width': true,
+        "details-grid__undo": true,
+        "kul-full-width": true,
     };
     const eventHandler = async (e) => {
         const { comp, eventType } = e.detail;
-        imageviewer.onKulEvent(e, 'kul-event');
+        imageviewer.onKulEvent(e, "kul-event");
         switch (eventType) {
-            case 'click':
+            case "click":
                 requestAnimationFrame(() => (comp.kulShowSpinner = true));
                 await adapter.actions.undo(adapter);
                 requestAnimationFrame(() => (comp.kulShowSpinner = false));
@@ -425,10 +407,88 @@ var KulImageviewerProps;
 const kulImageviewerCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}@keyframes fade-in-grid{0%{display:none}1%{display:grid;opacity:0}100%{display:grid;opacity:1}}:host{--kul_imageviewer_display:var(--kul-imageviewer-display, block);--kul_imageviewer_height:var(--kul-imageviewer-height, 100%);--kul_imageviewer_width:var(--kul-imageviewer-width, 100%);--kul_imageviewer_component_height:var(\n    --kul-imageviewer-component-height,\n    100%\n  );--kul_imageviewer_component_width:var(\n    --kul-imageviewer-component-width,\n    100%\n  );--kul_imageviewer_viewer_height:var(--kul-imageviewer-viewer-height, 100%);--kul_imageviewer_viewer_width:var(--kul-imageviewer-viewer-width, 100%);--kul_imageviewer_main_grid_border_width:var(\n    --kul-imageviewer-main-grid-border-width,\n    2px\n  );--kul_imageviewer_main_grid_border_style:var(\n    --kul-imageviewer-main-grid-border-style,\n    solid\n  );--kul_imageviewer_main_grid_border_color:var(\n    --kul-imageviewer-main-grid-border-color,\n    var(--kul-border-color)\n  );--kul_imageviewer_main_grid_box_sizing:var(\n    --kul-imageviewer-main-grid-box-sizing,\n    border-box\n  );--kul_imageviewer_main_grid_display:var(\n    --kul-imageviewer-main-grid-display,\n    grid\n  );--kul_imageviewer_main_grid_template_columns:var(\n    --kul-imageviewer-main-grid-template-columns,\n    100% 0\n  );--kul_imageviewer_main_grid_height:var(\n    --kul-imageviewer-main-grid-height,\n    100%\n  );--kul_imageviewer_main_grid_width:var(\n    --kul-imageviewer-main-grid-width,\n    100%\n  );--kul_imageviewer_main_grid_has_selection_template_columns:var(\n    --kul-imageviewer-main-grid-has-selection-template-columns,\n    30% 70%\n  );--kul_imageviewer_navigation_grid_display:var(\n    --kul-imageviewer-navigation-grid-display,\n    grid\n  );--kul_imageviewer_navigation_grid_template_rows:var(\n    --kul-imageviewer-navigation-grid-template-rows,\n    auto auto 1fr\n  );--kul_imageviewer_navigation_grid_height:var(\n    --kul-imageviewer-navigation-grid-height,\n    100%\n  );--kul_imageviewer_navigation_grid_width:var(\n    --kul-imageviewer-navigation-grid-width,\n    100%\n  );--kul_imageviewer_navigation_grid_textfield_padding:var(\n    --kul-imageviewer-navigation-grid-textfield-padding,\n    0\n  );--kul_imageviewer_navigation_grid_button_padding_bottom:var(\n    --kul-imageviewer-navigation-grid-button-padding-bottom,\n    12px\n  );--kul_imageviewer_navigation_grid_masonry_overflow:var(\n    --kul-imageviewer-navigation-grid-masonry-overflow,\n    auto\n  );--kul_imageviewer_navigation_grid_masonry_position:var(\n    --kul-imageviewer-navigation-grid-masonry-position,\n    relative\n  );--kul_imageviewer_details_grid_border_left_width:var(\n    --kul-imageviewer-details-grid-border-left-width,\n    2px\n  );--kul_imageviewer_details_grid_border_left_style:var(\n    --kul-imageviewer-details-grid-border-left-style,\n    solid\n  );--kul_imageviewer_details_grid_border_left_color:var(\n    --kul-imageviewer-details-grid-border-left-color,\n    var(--kul-border-color)\n  );--kul_imageviewer_details_grid_box_sizing:var(\n    --kul-imageviewer-details-grid-box-sizing,\n    border-box\n  );--kul_imageviewer_details_grid_display:var(\n    --kul-imageviewer-details-grid-display,\n    none\n  );--kul_imageviewer_details_grid_template_areas:var(\n    --kul-imageviewer-details-grid-template-areas,\n    \"image image\" \"actions actions\" \"tree settings\"\n  );--kul_imageviewer_details_grid_template_columns:var(\n    --kul-imageviewer-details-grid-template-columns,\n    40% 1fr\n  );--kul_imageviewer_details_grid_template_rows:var(\n    --kul-imageviewer-details-grid-template-rows,\n    60% auto 1fr\n  );--kul_imageviewer_details_grid_height:var(\n    --kul-imageviewer-details-grid-height,\n    100%\n  );--kul_imageviewer_details_grid_width:var(\n    --kul-imageviewer-details-grid-width,\n    100%\n  );--kul_imageviewer_details_grid_actions_border_bottom_width:var(\n    --kul-imageviewer-details-grid-actions-border-bottom-width,\n    2px\n  );--kul_imageviewer_details_grid_actions_border_bottom_style:var(\n    --kul-imageviewer-details-grid-actions-border-bottom-style,\n    solid\n  );--kul_imageviewer_details_grid_actions_border_bottom_color:var(\n    --kul-imageviewer-details-grid-actions-border-bottom-color,\n    var(--kul-border-color)\n  );--kul_imageviewer_details_grid_actions_box_sizing:var(\n    --kul-imageviewer-details-grid-actions-box-sizing,\n    border-box\n  );--kul_imageviewer_details_grid_actions_display:var(\n    --kul-imageviewer-details-grid-actions-display,\n    flex\n  );--kul_imageviewer_details_grid_actions_grid_area:var(\n    --kul-imageviewer-details-grid-actions-grid-area,\n    actions\n  );--kul_imageviewer_details_grid_canvas_border_bottom_width:var(\n    --kul-imageviewer-details-grid-image-border-bottom-width,\n    2px\n  );--kul_imageviewer_details_grid_canvas_border_bottom_style:var(\n    --kul-imageviewer-details-grid-image-border-bottom-style,\n    solid\n  );--kul_imageviewer_details_grid_canvas_border_bottom_color:var(\n    --kul-imageviewer-details-grid-image-border-bottom-color,\n    var(--kul-border-color)\n  );--kul_imageviewer_details_grid_canvas_box_sizing:var(\n    --kul-imageviewer-details-grid-image-box-sizing,\n    border-box\n  );--kul_imageviewer_details_grid_canvas_grid_area:var(\n    --kul-imageviewer-details-grid-image-grid-area,\n    image\n  );--kul_imageviewer_details_grid_tree_border_right_width:var(\n    --kul-imageviewer-details-grid-tree-border-right-width,\n    2px\n  );--kul_imageviewer_details_grid_tree_border_right_style:var(\n    --kul-imageviewer-details-grid-tree-border-right-style,\n    solid\n  );--kul_imageviewer_details_grid_tree_border_right_color:var(\n    --kul-imageviewer-details-grid-tree-border-right-color,\n    var(--kul-border-color)\n  );--kul_imageviewer_details_grid_tree_box_sizing:var(\n    --kul-imageviewer-details-grid-tree-box-sizing,\n    border-box\n  );--kul_imageviewer_details_grid_tree_grid_area:var(\n    --kul-imageviewer-details-grid-tree-grid-area,\n    tree\n  );-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);display:var(--kul_imageviewer_display);height:var(--kul_imageviewer_height);width:var(--kul_imageviewer_width)}#kul-component{height:var(--kul_imageviewer_component_height);width:var(--kul_imageviewer_component_width)}.imageviewer{height:var(--kul_imageviewer_viewer_height);width:var(--kul_imageviewer_viewer_width)}.main-grid{border:var(--kul_imageviewer_main_grid_border_width) var(--kul_imageviewer_main_grid_border_style) var(--kul_imageviewer_main_grid_border_color);box-sizing:var(--kul_imageviewer_main_grid_box_sizing);display:var(--kul_imageviewer_main_grid_display);grid-template-columns:var(--kul_imageviewer_main_grid_template_columns);height:var(--kul_imageviewer_main_grid_height);overflow:auto;width:var(--kul_imageviewer_main_grid_width)}.main-grid--has-selection{grid-template-columns:var(--kul_imageviewer_main_grid_has_selection_template_columns)}.main-grid--has-selection .details-grid{display:grid}.navigation-grid{display:var(--kul_imageviewer_navigation_grid_display);grid-template-rows:var(--kul_imageviewer_navigation_grid_template_rows);height:var(--kul_imageviewer_navigation_grid_height);overflow:auto;width:var(--kul_imageviewer_navigation_grid_width)}.navigation-grid__textfield{padding:var(--kul_imageviewer_navigation_grid_textfield_padding)}.navigation-grid__button{padding-bottom:var(--kul_imageviewer_navigation_grid_button_padding_bottom)}.navigation-grid__masonry{overflow:var(--kul_imageviewer_navigation_grid_masonry_overflow);position:var(--kul_imageviewer_navigation_grid_masonry_position)}.details-grid{border-left:var(--kul_imageviewer_details_grid_border_left_width) var(--kul_imageviewer_details_grid_border_left_style) var(--kul_imageviewer_details_grid_border_left_color);box-sizing:var(--kul_imageviewer_details_grid_box_sizing);display:var(--kul_imageviewer_details_grid_display);grid-template-areas:var(--kul_imageviewer_details_grid_template_areas);grid-template-columns:var(--kul_imageviewer_details_grid_template_columns);grid-template-rows:var(--kul_imageviewer_details_grid_template_rows);height:var(--kul_imageviewer_details_grid_height);overflow:auto;width:var(--kul_imageviewer_details_grid_width)}.details-grid__actions{border-bottom:var(--kul_imageviewer_details_grid_actions_border_bottom_width) var(--kul_imageviewer_details_grid_actions_border_bottom_style) var(--kul_imageviewer_details_grid_actions_border_bottom_color);box-sizing:var(--kul_imageviewer_details_grid_actions_box_sizing);display:var(--kul_imageviewer_details_grid_actions_display);grid-area:var(--kul_imageviewer_details_grid_actions_grid_area)}.details-grid__canvas{border-bottom:var(--kul_imageviewer_details_grid_canvas_border_bottom_width) var(--kul_imageviewer_details_grid_canvas_border_bottom_style) var(--kul_imageviewer_details_grid_canvas_border_bottom_color);box-sizing:var(--kul_imageviewer_details_grid_canvas_box_sizing)}.details-grid__preview{grid-area:var(--kul_imageviewer_details_grid_canvas_grid_area);position:relative}.details-grid__spinner{height:100%;left:0;pointer-events:none;position:absolute;top:0;width:100%}.details-grid__tree{border-right:var(--kul_imageviewer_details_grid_tree_border_right_width) var(--kul_imageviewer_details_grid_tree_border_right_style) var(--kul_imageviewer_details_grid_tree_border_right_color);box-sizing:var(--kul_imageviewer_details_grid_tree_box_sizing);grid-area:var(--kul_imageviewer_details_grid_tree_grid_area);overflow:auto}";
 const KulImageviewerStyle0 = kulImageviewerCss;
 
+var __classPrivateFieldGet = (undefined && undefined.__classPrivateFieldGet) || function (receiver, state, kind, f) {
+    if (kind === "a" && !f)
+        throw new TypeError("Private accessor was defined without a getter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver))
+        throw new TypeError("Cannot read private member from an object whose class did not declare it");
+    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
+};
+var _KulImageviewer_instances, _KulImageviewer_kulManager, _KulImageviewer_stringify, _KulImageviewer_adapter, _KulImageviewer_getSelectedShapeValue, _KulImageviewer_prepDetails, _KulImageviewer_prepImageviewer, _KulImageviewer_prepNavigation;
 const KulImageviewer = class {
     constructor(hostRef) {
         registerInstance(this, hostRef);
         this.kulEvent = createEvent(this, "kul-imageviewer-event", 6);
+        _KulImageviewer_instances.add(this);
+        /*-------------------------------------------------*/
+        /*       I n t e r n a l   V a r i a b l e s       */
+        /*-------------------------------------------------*/
+        _KulImageviewer_kulManager.set(this, kulManagerInstance());
+        _KulImageviewer_stringify.set(this, __classPrivateFieldGet(this, _KulImageviewer_kulManager, "f").data.cell.stringify);
+        /*-------------------------------------------------*/
+        /*           P r i v a t e   M e t h o d s         */
+        /*-------------------------------------------------*/
+        _KulImageviewer_adapter.set(this, {
+            actions: ACTIONS,
+            components: COMPONENTS,
+            get: {
+                imageviewer: () => this,
+                manager: () => __classPrivateFieldGet(this, _KulImageviewer_kulManager, "f"),
+                state: {
+                    currentShape: () => __classPrivateFieldGet(this, _KulImageviewer_instances, "m", _KulImageviewer_getSelectedShapeValue).call(this, this.currentShape),
+                    history: {
+                        current: () => this.history[this.currentShape.index],
+                        currentSnapshot: () => {
+                            if (this.historyIndex === null) {
+                                return;
+                            }
+                            const snapshot = this.history[this.currentShape.index][this.historyIndex];
+                            return __classPrivateFieldGet(this, _KulImageviewer_instances, "m", _KulImageviewer_getSelectedShapeValue).call(this, snapshot);
+                        },
+                        full: () => this.history,
+                        index: () => this.historyIndex,
+                    },
+                    spinnerStatus: () => this.isSpinnerActive,
+                },
+            },
+            set: {
+                state: {
+                    currentShape: (node) => (this.currentShape = node),
+                    history: {
+                        clear: (index = null) => {
+                            if (index !== null) {
+                                this.history[index] = [this.history[index][0]];
+                                if (this.historyIndex === 0) {
+                                    this.refresh();
+                                }
+                                else {
+                                    this.historyIndex = 0;
+                                }
+                            }
+                            else {
+                                this.history = {};
+                                this.historyIndex = null;
+                            }
+                        },
+                        index: (index) => (this.historyIndex = index),
+                        new: (selectedShape, isSnapshot = false) => {
+                            const historyByIndex = this.history?.[selectedShape.index] || [];
+                            if (this.historyIndex < historyByIndex.length - 1) {
+                                historyByIndex.splice(this.historyIndex + 1);
+                            }
+                            if (historyByIndex?.length && !isSnapshot) {
+                                historyByIndex[0] = selectedShape;
+                                return;
+                            }
+                            historyByIndex.push(selectedShape);
+                            this.history[selectedShape.index] = historyByIndex;
+                            this.historyIndex = historyByIndex.length - 1;
+                        },
+                    },
+                    spinnerStatus: (active) => (__classPrivateFieldGet(this, _KulImageviewer_adapter, "f").components.refs.spinner.kulActive = active),
+                },
+            },
+        });
         this.debugInfo = {
             endTime: 0,
             renderCount: 0,
@@ -442,17 +502,9 @@ const KulImageviewer = class {
         this.isSpinnerActive = false;
         this.kulData = {};
         this.kulLoadCallback = null;
-        this.kulStyle = '';
+        this.kulStyle = "";
         this.kulValue = {};
     }
-    get rootElement() { return getElement(this); }
-    //#endregion
-    //#region Internal variables
-    #kulManager = kulManagerInstance();
-    #stringify = this.#kulManager.data.cell.stringify;
-    //#endregion
-    //#region Events
-    kulEvent;
     onKulEvent(e, eventType) {
         this.kulEvent.emit({
             comp: this,
@@ -461,8 +513,9 @@ const KulImageviewer = class {
             originalEvent: e,
         });
     }
-    //#endregion
-    //#region Public methods
+    /*-------------------------------------------------*/
+    /*           P u b l i c   M e t h o d s           */
+    /*-------------------------------------------------*/
     /**
      * Appends a new snapshot to the current shape's history by duplicating it with an updated value.
      * It has no effect when the current shape is not set.
@@ -472,34 +525,34 @@ const KulImageviewer = class {
             return;
         }
         const newShape = JSON.parse(JSON.stringify(this.currentShape));
-        this.#adapter.actions.updateValue(newShape.shape, value);
-        this.#adapter.set.state.history.new(newShape, true);
+        __classPrivateFieldGet(this, _KulImageviewer_adapter, "f").actions.updateValue(newShape.shape, value);
+        __classPrivateFieldGet(this, _KulImageviewer_adapter, "f").set.state.history.new(newShape, true);
     }
     /**
      * Clears the history related to the shape identified by the index.
      * When index is not provided, it clear the full history.
      */
     async clearHistory(index = null) {
-        await this.#adapter.actions.clearHistory(this.#adapter, index);
+        await __classPrivateFieldGet(this, _KulImageviewer_adapter, "f").actions.clearHistory(__classPrivateFieldGet(this, _KulImageviewer_adapter, "f"), index);
     }
     /**
      * Clears the currently selected shape.
      */
     async clearSelection() {
-        await this.#adapter.actions.clearSelection(this.#adapter);
+        await __classPrivateFieldGet(this, _KulImageviewer_adapter, "f").actions.clearSelection(__classPrivateFieldGet(this, _KulImageviewer_adapter, "f"));
     }
     /**
      * This method is used to retrieve the references to the subcomponents.
      */
     async getComponents() {
-        return this.#adapter.components.refs;
+        return __classPrivateFieldGet(this, _KulImageviewer_adapter, "f").components.refs;
     }
     /**
      * Fetches the current snapshot.
      * @returns {Promise<{shape: KulMasonrySelectedShape; value: string;}>} A promise that resolves with the current snapshot's object.
      */
     async getCurrentSnapshot() {
-        return this.#adapter.get.state.history.currentSnapshot();
+        return __classPrivateFieldGet(this, _KulImageviewer_adapter, "f").get.state.history.currentSnapshot();
     }
     /**
      * Fetches debug information of the component's current state.
@@ -526,8 +579,8 @@ const KulImageviewer = class {
      * Clears the full history and clears the current selection.
      */
     async reset() {
-        await this.#adapter.actions.clearHistory(this.#adapter);
-        await this.#adapter.actions.clearSelection(this.#adapter);
+        await __classPrivateFieldGet(this, _KulImageviewer_adapter, "f").actions.clearHistory(__classPrivateFieldGet(this, _KulImageviewer_adapter, "f"));
+        await __classPrivateFieldGet(this, _KulImageviewer_adapter, "f").actions.clearSelection(__classPrivateFieldGet(this, _KulImageviewer_adapter, "f"));
     }
     /**
      * Displays/hides the spinner over the preview.
@@ -541,118 +594,54 @@ const KulImageviewer = class {
      */
     async unmount(ms = 0) {
         setTimeout(() => {
-            this.onKulEvent(new CustomEvent('unmount'), 'unmount');
+            this.onKulEvent(new CustomEvent("unmount"), "unmount");
             this.rootElement.remove();
         }, ms);
     }
-    //#endregion
-    //#region Private methods
-    #adapter = {
-        actions: ACTIONS,
-        components: COMPONENTS,
-        get: {
-            imageviewer: () => this,
-            manager: () => this.#kulManager,
-            state: {
-                currentShape: () => this.#getSelectedShapeValue(this.currentShape),
-                history: {
-                    current: () => this.history[this.currentShape.index],
-                    currentSnapshot: () => {
-                        if (this.historyIndex === null) {
-                            return;
-                        }
-                        const snapshot = this.history[this.currentShape.index][this.historyIndex];
-                        return this.#getSelectedShapeValue(snapshot);
-                    },
-                    full: () => this.history,
-                    index: () => this.historyIndex,
-                },
-                spinnerStatus: () => this.isSpinnerActive,
-            },
-        },
-        set: {
-            state: {
-                currentShape: (node) => (this.currentShape = node),
-                history: {
-                    clear: (index = null) => {
-                        if (index !== null) {
-                            this.history[index] = [this.history[index][0]];
-                            if (this.historyIndex === 0) {
-                                this.refresh();
-                            }
-                            else {
-                                this.historyIndex = 0;
-                            }
-                        }
-                        else {
-                            this.history = {};
-                            this.historyIndex = null;
-                        }
-                    },
-                    index: (index) => (this.historyIndex = index),
-                    new: (selectedShape, isSnapshot = false) => {
-                        const historyByIndex = this.history?.[selectedShape.index] || [];
-                        if (this.historyIndex < historyByIndex.length - 1) {
-                            historyByIndex.splice(this.historyIndex + 1);
-                        }
-                        if (historyByIndex?.length && !isSnapshot) {
-                            historyByIndex[0] = selectedShape;
-                            return;
-                        }
-                        historyByIndex.push(selectedShape);
-                        this.history[selectedShape.index] = historyByIndex;
-                        this.historyIndex = historyByIndex.length - 1;
-                    },
-                },
-                spinnerStatus: (active) => (this.#adapter.components.refs.spinner.kulActive = active),
-            },
-        },
-    };
-    #getSelectedShapeValue(selectedShape) {
-        if (selectedShape.index !== undefined) {
-            const value = selectedShape.shape.value ||
-                selectedShape.shape.kulValue;
-            return {
-                shape: selectedShape,
-                value: this.#stringify(value),
-            };
-        }
-    }
-    #prepDetails() {
-        const jsx = this.#adapter.components.jsx;
-        return (h("div", { class: "details-grid" }, h("div", { class: "details-grid__preview" }, jsx.canvas(this.#adapter), jsx.spinner(this.#adapter)), h("div", { class: "details-grid__actions" }, jsx.delete(this.#adapter), jsx.clearHistory(this.#adapter), jsx.undo(this.#adapter), jsx.redo(this.#adapter), jsx.save(this.#adapter)), jsx.tree(this.#adapter), h("div", { class: "details-grid__settings" }, h("slot", { name: "settings" }))));
-    }
-    #prepImageviewer() {
-        const className = {
-            'main-grid': true,
-            'main-grid--has-selection': !!this.#adapter.get.state.currentShape(),
-        };
-        return (h("div", { class: className }, this.#prepNavigation(), this.#prepDetails()));
-    }
-    #prepNavigation() {
-        return (h("div", { class: "navigation-grid" }, this.#adapter.components.jsx.textfield(this.#adapter), this.#adapter.components.jsx.load(this.#adapter), this.#adapter.components.jsx.masonry(this.#adapter)));
-    }
-    //#endregion
-    //#region Lifecycle hooks
+    /*-------------------------------------------------*/
+    /*          L i f e c y c l e   H o o k s          */
+    /*-------------------------------------------------*/
     componentWillLoad() {
-        this.#kulManager.theme.register(this);
+        __classPrivateFieldGet(this, _KulImageviewer_kulManager, "f").theme.register(this);
     }
     componentDidLoad() {
-        this.onKulEvent(new CustomEvent('ready'), 'ready');
-        this.#kulManager.debug.updateDebugInfo(this, 'did-load');
+        this.onKulEvent(new CustomEvent("ready"), "ready");
+        __classPrivateFieldGet(this, _KulImageviewer_kulManager, "f").debug.updateDebugInfo(this, "did-load");
     }
     componentWillRender() {
-        this.#kulManager.debug.updateDebugInfo(this, 'will-render');
+        __classPrivateFieldGet(this, _KulImageviewer_kulManager, "f").debug.updateDebugInfo(this, "will-render");
     }
     componentDidRender() {
-        this.#kulManager.debug.updateDebugInfo(this, 'did-render');
+        __classPrivateFieldGet(this, _KulImageviewer_kulManager, "f").debug.updateDebugInfo(this, "did-render");
     }
     render() {
-        return (h(Host, { key: '497fda0c0f8e35d252c19635ab295a8c613faa28' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, this.#kulManager.theme.setKulStyle(this))) : undefined, h("div", { key: '9843b4dae9bc02a90e2f1498353d13f72b9591d8', id: KUL_WRAPPER_ID }, h("div", { key: 'aed2e229cff4d71adfc2c8f24561b5ce2be18dcd', class: "imageviewer" }, this.#prepImageviewer()))));
+        return (h(Host, { key: '89bb872610f0836bcbd9933345a6de9fea1814b5' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, __classPrivateFieldGet(this, _KulImageviewer_kulManager, "f").theme.setKulStyle(this))) : undefined, h("div", { key: 'a1c92e4edf9c38e79b64b6f915630d3ae9ac2fff', id: KUL_WRAPPER_ID }, h("div", { key: 'b57ac69d307d35eac29e7bab7baa9e9456846522', class: "imageviewer" }, __classPrivateFieldGet(this, _KulImageviewer_instances, "m", _KulImageviewer_prepImageviewer).call(this)))));
     }
     disconnectedCallback() {
-        this.#kulManager.theme.unregister(this);
+        __classPrivateFieldGet(this, _KulImageviewer_kulManager, "f").theme.unregister(this);
     }
+    get rootElement() { return getElement(this); }
+};
+_KulImageviewer_kulManager = new WeakMap(), _KulImageviewer_stringify = new WeakMap(), _KulImageviewer_adapter = new WeakMap(), _KulImageviewer_instances = new WeakSet(), _KulImageviewer_getSelectedShapeValue = function _KulImageviewer_getSelectedShapeValue(selectedShape) {
+    if (selectedShape.index !== undefined) {
+        const value = selectedShape.shape.value ||
+            selectedShape.shape.kulValue;
+        return {
+            shape: selectedShape,
+            value: __classPrivateFieldGet(this, _KulImageviewer_stringify, "f").call(this, value),
+        };
+    }
+}, _KulImageviewer_prepDetails = function _KulImageviewer_prepDetails() {
+    const jsx = __classPrivateFieldGet(this, _KulImageviewer_adapter, "f").components.jsx;
+    return (h("div", { class: "details-grid" }, h("div", { class: "details-grid__preview" }, jsx.canvas(__classPrivateFieldGet(this, _KulImageviewer_adapter, "f")), jsx.spinner(__classPrivateFieldGet(this, _KulImageviewer_adapter, "f"))), h("div", { class: "details-grid__actions" }, jsx.delete(__classPrivateFieldGet(this, _KulImageviewer_adapter, "f")), jsx.clearHistory(__classPrivateFieldGet(this, _KulImageviewer_adapter, "f")), jsx.undo(__classPrivateFieldGet(this, _KulImageviewer_adapter, "f")), jsx.redo(__classPrivateFieldGet(this, _KulImageviewer_adapter, "f")), jsx.save(__classPrivateFieldGet(this, _KulImageviewer_adapter, "f"))), jsx.tree(__classPrivateFieldGet(this, _KulImageviewer_adapter, "f")), h("div", { class: "details-grid__settings" }, h("slot", { name: "settings" }))));
+}, _KulImageviewer_prepImageviewer = function _KulImageviewer_prepImageviewer() {
+    const className = {
+        "main-grid": true,
+        "main-grid--has-selection": !!__classPrivateFieldGet(this, _KulImageviewer_adapter, "f").get.state.currentShape(),
+    };
+    return (h("div", { class: className }, __classPrivateFieldGet(this, _KulImageviewer_instances, "m", _KulImageviewer_prepNavigation).call(this), __classPrivateFieldGet(this, _KulImageviewer_instances, "m", _KulImageviewer_prepDetails).call(this)));
+}, _KulImageviewer_prepNavigation = function _KulImageviewer_prepNavigation() {
+    return (h("div", { class: "navigation-grid" }, __classPrivateFieldGet(this, _KulImageviewer_adapter, "f").components.jsx.textfield(__classPrivateFieldGet(this, _KulImageviewer_adapter, "f")), __classPrivateFieldGet(this, _KulImageviewer_adapter, "f").components.jsx.load(__classPrivateFieldGet(this, _KulImageviewer_adapter, "f")), __classPrivateFieldGet(this, _KulImageviewer_adapter, "f").components.jsx.masonry(__classPrivateFieldGet(this, _KulImageviewer_adapter, "f"))));
 };
 KulImageviewer.style = KulImageviewerStyle0;
 
