@@ -3,7 +3,7 @@ import { KulEventName } from '../types/events/events.js';
 import { LogSeverity } from '../types/manager/manager.js';
 import { ImageEditorColumnId, ImageEditorControls, ImageEditorCSS, ImageEditorIcons, ImageEditorStatus, } from '../types/widgets/imageEditor.js';
 import { NodeName, TagName } from '../types/widgets/widgets.js';
-import { debounce, getApiRoutes, getLFManager, isTree, isValidObject, unescapeJson, } from '../utils/common.js';
+import { canvasToBase64, debounce, getApiRoutes, getLFManager, isTree, isValidObject, unescapeJson, } from '../utils/common.js';
 export const EV_HANDLERS = {
     //#region Button handler
     button: async (state, e) => {
@@ -43,12 +43,16 @@ export const EV_HANDLERS = {
             case 'stroke':
                 const originalFilter = filter;
                 const originalFilterType = filterType;
-                if (!filter?.hasCanvasAction) {
+                let b64_canvas = '';
+                if (filterType === 'brush' || !filter?.hasCanvasAction) {
                     state.filterType = 'brush';
+                    const canvas = await comp.getCanvas();
+                    b64_canvas = canvasToBase64(canvas);
                 }
                 const temporaryFilter = {
                     ...JSON.parse(JSON.stringify(SETTINGS.brush)),
                     settings: {
+                        b64_canvas,
                         color: comp.kulColor,
                         opacity: comp.kulOpacity,
                         points,
@@ -62,6 +66,7 @@ export const EV_HANDLERS = {
                 finally {
                     state.filter = originalFilter;
                     state.filterType = originalFilterType;
+                    await comp.clearCanvas();
                 }
                 break;
         }
@@ -354,6 +359,7 @@ export const updateCb = async (state, addSnapshot = false) => {
     const { imageviewer } = elements;
     const { settings } = filter;
     const validValues = isValidObject(settings);
+    const isCanvasAction = settings.points || settings.b64_canvas;
     const isStroke = !filter || filter.hasCanvasAction;
     if (validValues && isStroke) {
         const { color, size, opacity } = settings;
@@ -362,7 +368,7 @@ export const updateCb = async (state, addSnapshot = false) => {
         canvas.kulSize = size;
         canvas.kulOpacity = opacity;
     }
-    const shouldUpdate = !!(validValues && (!isStroke || (isStroke && settings.points)));
+    const shouldUpdate = !!(validValues && (!isStroke || (isStroke && isCanvasAction)));
     if (shouldUpdate) {
         apiCall(state, addSnapshot);
     }

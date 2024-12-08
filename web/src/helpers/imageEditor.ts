@@ -39,6 +39,7 @@ import {
 } from '../types/widgets/imageEditor';
 import { NodeName, TagName } from '../types/widgets/widgets';
 import {
+  canvasToBase64,
   debounce,
   getApiRoutes,
   getLFManager,
@@ -97,13 +98,18 @@ export const EV_HANDLERS = {
         const originalFilter = filter;
         const originalFilterType = filterType;
 
-        if (!filter?.hasCanvasAction) {
+        let b64_canvas = '';
+
+        if (filterType === 'brush' || !filter?.hasCanvasAction) {
           state.filterType = 'brush';
+          const canvas = await comp.getCanvas();
+          b64_canvas = canvasToBase64(canvas);
         }
 
         const temporaryFilter: ImageEditorBrushFilter = {
           ...JSON.parse(JSON.stringify(SETTINGS.brush)),
           settings: {
+            b64_canvas,
             color: comp.kulColor,
             opacity: comp.kulOpacity,
             points,
@@ -118,6 +124,7 @@ export const EV_HANDLERS = {
         } finally {
           state.filter = originalFilter;
           state.filterType = originalFilterType;
+          await comp.clearCanvas();
         }
         break;
     }
@@ -455,6 +462,7 @@ export const updateCb = async (state: ImageEditorState, addSnapshot = false) => 
 
   const validValues = isValidObject(settings);
 
+  const isCanvasAction = settings.points || settings.b64_canvas;
   const isStroke = !filter || filter.hasCanvasAction;
 
   if (validValues && isStroke) {
@@ -466,7 +474,7 @@ export const updateCb = async (state: ImageEditorState, addSnapshot = false) => 
     canvas.kulOpacity = opacity;
   }
 
-  const shouldUpdate = !!(validValues && (!isStroke || (isStroke && settings.points)));
+  const shouldUpdate = !!(validValues && (!isStroke || (isStroke && isCanvasAction)));
   if (shouldUpdate) {
     apiCall(state, addSnapshot);
   }

@@ -187,6 +187,9 @@ export const splitByLastSpaceBeforeAnyBracket = (input: string) => {
 //#endregion
 
 //#region Widgets
+export const canvasToBase64 = (canvas: HTMLCanvasElement) => {
+  return canvas.toDataURL('image/png');
+};
 export const createDOMWidget = (
   type: CustomWidgetName,
   element: HTMLDivElement,

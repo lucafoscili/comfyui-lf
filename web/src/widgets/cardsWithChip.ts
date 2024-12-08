@@ -52,21 +52,21 @@ export const cardsWithChipFactory: CardsWithChipFactory = {
   render: (node) => {
     const wrapper = document.createElement(TagName.Div);
     const content = document.createElement(TagName.Div);
+    const outerGrid = document.createElement(TagName.Div);
     const grid = document.createElement(TagName.Div);
-    const cards = document.createElement(TagName.Div);
     const chip = document.createElement(TagName.KulChip);
 
     content.classList.add(CardsWithChipCSS.Content);
-    grid.classList.add(CardsWithChipCSS.Grid);
-    cards.classList.add(CardsWithChipCSS.Cards);
+    outerGrid.classList.add(CardsWithChipCSS.Grid);
+    grid.classList.add(CardsWithChipCSS.Cards);
     chip.classList.add(CardsWithChipCSS.Chip);
 
     chip.kulStyle = '#kul-component .chip-set { height: auto; }';
 
-    grid.appendChild(chip);
-    grid.appendChild(cards);
+    outerGrid.appendChild(chip);
+    outerGrid.appendChild(grid);
 
-    content.appendChild(grid);
+    content.appendChild(outerGrid);
     wrapper.appendChild(content);
 
     const options = cardsWithChipFactory.options(wrapper);

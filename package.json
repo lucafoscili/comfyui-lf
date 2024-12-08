@@ -1,6 +1,6 @@
 {
   "name": "comfyui-lf",
-  "version": "5.3.1",
+  "version": "5.3.2",
   "private": false,
   "scripts": {
     "clean": "rimraf web/deploy",
@@ -14,7 +14,7 @@
   "devDependencies": {
     "@types/node": "^22",
     "fs-extra": "^11",
-    "ketchup-lite": "2.3.2",
+    "ketchup-lite": "2.4.1",
     "rimraf": "^6",
     "sass": "^1",
     "typescript": "^5"

@@ -24,6 +24,8 @@ export type ComfyURLType = 'input' | 'output' | 'temp';
 export interface ComfyAPIs {
     comfyUi: () => ComfyUI;
     event: (name: EventName, callback: (e: GenericEvent) => void) => void;
+    executeCommand: (name: ComfyUICommands) => void;
+    getDragAndScale: () => ComfyDS;
     getLinkById: (id: string) => LinkInfo;
     getNodeById: (id: string) => NodeType;
     getResourceUrl: (subfolder: string, filename: string, type: ComfyURLType) => void;

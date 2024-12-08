@@ -1,5 +1,5 @@
-import { r as registerInstance, d as createEvent, f as forceUpdate, h, H as Host, g as getElement, F as Fragment } from './index-64e8bec6.js';
-import { k as kulManagerInstance, a as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-2a1960f6.js';
+import { r as registerInstance, d as createEvent, f as forceUpdate, h, H as Host, g as getElement, F as Fragment } from './index-5c52ec0e.js';
+import { k as kulManagerInstance, a as KUL_WRAPPER_ID, b as KUL_STYLE_ID } from './kul-manager-c48a993d.js';
 import { g as getProps } from './componentUtils-a994b230.js';
 
 //#endregion
@@ -8,6 +8,7 @@ var KulCanvasProps;
 (function (KulCanvasProps) {
     KulCanvasProps["kulBrush"] = "The shape of the brush.";
     KulCanvasProps["kulColor"] = "The color of the brush.";
+    KulCanvasProps["kulCursor"] = " Sets the style of the cursor.";
     KulCanvasProps["kulImageProps"] = "The props of the image displayed inside the badge.";
     KulCanvasProps["kulOpacity"] = "The opacity of the brush.";
     KulCanvasProps["kulPreview"] = "Displays the brush track of the current stroke.";
@@ -59,7 +60,7 @@ const simplifyStroke = (points, tolerance) => {
 };
 //#endregion
 
-const kulCanvasCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}@keyframes fade-in-grid{0%{display:none}1%{display:grid;opacity:0}100%{display:grid;opacity:1}}:host{display:block;height:100%;position:relative;width:100%}#kul-component{height:100%;width:100%}.canvas{cursor:none;height:100%;margin:auto;max-width:100%;position:relative;width:max-content}.canvas__image{pointer-events:none}.canvas__board,.canvas__cursor{position:absolute;top:0;left:0;width:100%;height:100%}.canvas__cursor{pointer-events:none}";
+const kulCanvasCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}@keyframes fade-in-grid{0%{display:none}1%{display:grid;opacity:0}100%{display:grid;opacity:1}}:host{display:block;height:100%;position:relative;width:100%}#kul-component{height:100%;width:100%}.canvas{height:100%;margin:auto;max-width:100%;position:relative;width:max-content}.canvas--hidden-cursor{cursor:none}.canvas__image{pointer-events:none}.canvas__board,.canvas__cursor{position:absolute;top:0;left:0;width:100%;height:100%}.canvas__cursor{pointer-events:none}";
 const KulCanvasStyle0 = kulCanvasCss;
 
 var __classPrivateFieldGet$1 = (undefined && undefined.__classPrivateFieldGet) || function (receiver, state, kind, f) {
@@ -78,7 +79,7 @@ var __classPrivateFieldSet = (undefined && undefined.__classPrivateFieldSet) || 
         throw new TypeError("Cannot write private member to an object whose class did not declare it");
     return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
 };
-var _KulCanvas_instances, _KulCanvas_board, _KulCanvas_boardCtx, _KulCanvas_container, _KulCanvas_cursor, _KulCanvas_cursorCtx, _KulCanvas_image, _KulCanvas_kulManager, _KulCanvas_resizeObserver, _KulCanvas_resizeTimeout, _KulCanvas_normalizeCoordinate, _KulCanvas_getCanvasCoordinate, _KulCanvas_setupContext, _KulCanvas_handlePointerDown, _KulCanvas_handlePointerMove, _KulCanvas_handlePointerOut, _KulCanvas_handlePointerUp, _KulCanvas_addPoint, _KulCanvas_endCapture, _KulCanvas_drawBrushCursor, _KulCanvas_drawBrushShape, _KulCanvas_drawLastSegment;
+var _KulCanvas_instances, _KulCanvas_board, _KulCanvas_boardCtx, _KulCanvas_container, _KulCanvas_cursor, _KulCanvas_cursorCtx, _KulCanvas_image, _KulCanvas_kulManager, _KulCanvas_resizeObserver, _KulCanvas_resizeTimeout, _KulCanvas_isCursorPreview, _KulCanvas_normalizeCoordinate, _KulCanvas_getCanvasCoordinate, _KulCanvas_setupContext, _KulCanvas_handlePointerDown, _KulCanvas_handlePointerMove, _KulCanvas_handlePointerOut, _KulCanvas_handlePointerUp, _KulCanvas_addPoint, _KulCanvas_endCapture, _KulCanvas_drawBrushCursor, _KulCanvas_drawBrushShape, _KulCanvas_drawLastSegment;
 const KulCanvas = class {
     constructor(hostRef) {
         registerInstance(this, hostRef);
@@ -97,7 +98,9 @@ const KulCanvas = class {
         _KulCanvas_resizeTimeout.set(this, void 0);
         _KulCanvas_handlePointerMove.set(this, (e) => {
             e.preventDefault();
-            __classPrivateFieldGet$1(this, _KulCanvas_instances, "m", _KulCanvas_drawBrushCursor).call(this, e);
+            if (__classPrivateFieldGet$1(this, _KulCanvas_instances, "m", _KulCanvas_isCursorPreview).call(this)) {
+                __classPrivateFieldGet$1(this, _KulCanvas_instances, "m", _KulCanvas_drawBrushCursor).call(this, e);
+            }
             if (!this.isPainting) {
                 return;
             }
@@ -121,6 +124,7 @@ const KulCanvas = class {
         this.points = [];
         this.kulBrush = "round";
         this.kulColor = "#ff0000";
+        this.kulCursor = "preview";
         this.kulImageProps = null;
         this.kulOpacity = 1.0;
         this.kulPreview = true;
@@ -141,6 +145,12 @@ const KulCanvas = class {
     }
     //#endregion
     //#region Public methods
+    /**
+     * Clears the painting canvas .
+     */
+    async clearCanvas() {
+        __classPrivateFieldGet$1(this, _KulCanvas_boardCtx, "f").clearRect(0, 0, __classPrivateFieldGet$1(this, _KulCanvas_board, "f").width, __classPrivateFieldGet$1(this, _KulCanvas_board, "f").height);
+    }
     /**
      * Returns the painting canvas .
      * @returns {Promise<HTMLCanvasElement>} The painting canvas.
@@ -176,17 +186,33 @@ const KulCanvas = class {
         forceUpdate(this);
     }
     /**
+     * Automatically resizes the canvas to the match the size of the container.
+     */
+    async resizeCanvas() {
+        const { height, width } = __classPrivateFieldGet$1(this, _KulCanvas_container, "f").getBoundingClientRect();
+        __classPrivateFieldGet$1(this, _KulCanvas_board, "f").height = height;
+        __classPrivateFieldGet$1(this, _KulCanvas_board, "f").width = width;
+        if (__classPrivateFieldGet$1(this, _KulCanvas_instances, "m", _KulCanvas_isCursorPreview).call(this)) {
+            __classPrivateFieldGet$1(this, _KulCanvas_cursor, "f").height = height;
+            __classPrivateFieldGet$1(this, _KulCanvas_cursor, "f").width = width;
+        }
+    }
+    /**
      * Sets the height of the canvas.
      */
     async setCanvasHeight(value) {
         if (value !== undefined) {
             __classPrivateFieldGet$1(this, _KulCanvas_board, "f").height = value;
-            __classPrivateFieldGet$1(this, _KulCanvas_cursor, "f").height = value;
+            if (__classPrivateFieldGet$1(this, _KulCanvas_instances, "m", _KulCanvas_isCursorPreview).call(this)) {
+                __classPrivateFieldGet$1(this, _KulCanvas_cursor, "f").height = value;
+            }
         }
         else {
-            const h = __classPrivateFieldGet$1(this, _KulCanvas_container, "f").clientHeight;
-            __classPrivateFieldGet$1(this, _KulCanvas_board, "f").height = h;
-            __classPrivateFieldGet$1(this, _KulCanvas_cursor, "f").height = h;
+            const { height } = __classPrivateFieldGet$1(this, _KulCanvas_container, "f").getBoundingClientRect();
+            __classPrivateFieldGet$1(this, _KulCanvas_board, "f").height = height;
+            if (__classPrivateFieldGet$1(this, _KulCanvas_instances, "m", _KulCanvas_isCursorPreview).call(this)) {
+                __classPrivateFieldGet$1(this, _KulCanvas_cursor, "f").height = height;
+            }
         }
     }
     /**
@@ -195,12 +221,16 @@ const KulCanvas = class {
     async setCanvasWidth(value) {
         if (value !== undefined) {
             __classPrivateFieldGet$1(this, _KulCanvas_board, "f").width = value;
-            __classPrivateFieldGet$1(this, _KulCanvas_cursor, "f").width = value;
+            if (__classPrivateFieldGet$1(this, _KulCanvas_instances, "m", _KulCanvas_isCursorPreview).call(this)) {
+                __classPrivateFieldGet$1(this, _KulCanvas_cursor, "f").width = value;
+            }
         }
         else {
-            const w = __classPrivateFieldGet$1(this, _KulCanvas_container, "f").clientWidth;
-            __classPrivateFieldGet$1(this, _KulCanvas_board, "f").width = w;
-            __classPrivateFieldGet$1(this, _KulCanvas_cursor, "f").width = w;
+            const { width } = __classPrivateFieldGet$1(this, _KulCanvas_container, "f").getBoundingClientRect();
+            __classPrivateFieldGet$1(this, _KulCanvas_board, "f").width = width;
+            if (__classPrivateFieldGet$1(this, _KulCanvas_instances, "m", _KulCanvas_isCursorPreview).call(this)) {
+                __classPrivateFieldGet$1(this, _KulCanvas_cursor, "f").width = width;
+            }
         }
     }
     /**
@@ -241,23 +271,27 @@ const KulCanvas = class {
         __classPrivateFieldGet$1(this, _KulCanvas_kulManager, "f").debug.updateDebugInfo(this, "did-render");
     }
     render() {
-        return (h(Host, { key: '5fff141a11ea6aabd638d076884a2551fc4f9779' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, __classPrivateFieldGet$1(this, _KulCanvas_kulManager, "f").theme.setKulStyle(this))) : undefined, h("div", { key: '90bdcca331d7ff98bdd16e2eff543ace141e027b', id: KUL_WRAPPER_ID }, h("div", { key: '511b64197eb9cafcf2b9dba4c9499425c9afa225', class: "canvas", ref: (el) => {
+        const className = {
+            canvas: true,
+            "canvas--hidden-cursor": __classPrivateFieldGet$1(this, _KulCanvas_instances, "m", _KulCanvas_isCursorPreview).call(this),
+        };
+        return (h(Host, { key: '7226f66353c0b9bbbb526c7c918b1e5ecfce3886' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, __classPrivateFieldGet$1(this, _KulCanvas_kulManager, "f").theme.setKulStyle(this))) : undefined, h("div", { key: 'f9b117f368383d807353e9cc302f826dee346902', id: KUL_WRAPPER_ID }, h("div", { key: '0bfde5689d1b971ba211158022aff3e4fcbf354c', class: className, ref: (el) => {
                 if (el) {
                     __classPrivateFieldSet(this, _KulCanvas_container, el, "f");
                 }
-            } }, h("kul-image", { key: 'aa49aeb4df93afd4b13f1f95fb57a8907aa68146', class: "canvas__image kul-fit", ...this.kulImageProps, ref: (el) => {
+            } }, h("kul-image", { key: 'b757fb108cac828650487cd4fe96205c0d8578ef', class: "canvas__image kul-fit", ...this.kulImageProps, ref: (el) => {
                 if (el) {
                     __classPrivateFieldSet(this, _KulCanvas_image, el, "f");
                 }
-            } }), h("canvas", { key: 'fc36fc88a0d6c524fc210da600a63cfd945fa681', class: "canvas__board", onPointerDown: (e) => __classPrivateFieldGet$1(this, _KulCanvas_instances, "m", _KulCanvas_handlePointerDown).call(this, e), onPointerMove: (e) => __classPrivateFieldGet$1(this, _KulCanvas_handlePointerMove, "f").call(this, e), onPointerUp: (e) => this.onKulEvent(e, "stroke"), onPointerOut: (e) => __classPrivateFieldGet$1(this, _KulCanvas_handlePointerOut, "f").call(this, e), ref: (el) => {
+            } }), h("canvas", { key: '760f31ecc63610bc6b5fa833eb48fdcd79ed066b', class: "canvas__board", onPointerDown: (e) => __classPrivateFieldGet$1(this, _KulCanvas_instances, "m", _KulCanvas_handlePointerDown).call(this, e), onPointerMove: (e) => __classPrivateFieldGet$1(this, _KulCanvas_handlePointerMove, "f").call(this, e), onPointerUp: (e) => this.onKulEvent(e, "stroke"), onPointerOut: (e) => __classPrivateFieldGet$1(this, _KulCanvas_handlePointerOut, "f").call(this, e), ref: (el) => {
                 if (el) {
                     __classPrivateFieldSet(this, _KulCanvas_board, el, "f");
                 }
-            } }), h("canvas", { key: '111ee465cb68966467f83bd27180d7d4cc99c36c', class: "canvas__cursor", ref: (el) => {
+            } }), __classPrivateFieldGet$1(this, _KulCanvas_instances, "m", _KulCanvas_isCursorPreview).call(this) && (h("canvas", { key: '52ce19df5a08f41e6e82a2554bc4d276f72b4276', class: "canvas__cursor", ref: (el) => {
                 if (el) {
                     __classPrivateFieldSet(this, _KulCanvas_cursor, el, "f");
                 }
-            } })))));
+            } }))))));
     }
     disconnectedCallback() {
         __classPrivateFieldGet$1(this, _KulCanvas_kulManager, "f").theme.unregister(this);
@@ -267,7 +301,9 @@ const KulCanvas = class {
     }
     get rootElement() { return getElement(this); }
 };
-_KulCanvas_board = new WeakMap(), _KulCanvas_boardCtx = new WeakMap(), _KulCanvas_container = new WeakMap(), _KulCanvas_cursor = new WeakMap(), _KulCanvas_cursorCtx = new WeakMap(), _KulCanvas_image = new WeakMap(), _KulCanvas_kulManager = new WeakMap(), _KulCanvas_resizeObserver = new WeakMap(), _KulCanvas_resizeTimeout = new WeakMap(), _KulCanvas_handlePointerMove = new WeakMap(), _KulCanvas_handlePointerOut = new WeakMap(), _KulCanvas_handlePointerUp = new WeakMap(), _KulCanvas_instances = new WeakSet(), _KulCanvas_normalizeCoordinate = function _KulCanvas_normalizeCoordinate(event, rect) {
+_KulCanvas_board = new WeakMap(), _KulCanvas_boardCtx = new WeakMap(), _KulCanvas_container = new WeakMap(), _KulCanvas_cursor = new WeakMap(), _KulCanvas_cursorCtx = new WeakMap(), _KulCanvas_image = new WeakMap(), _KulCanvas_kulManager = new WeakMap(), _KulCanvas_resizeObserver = new WeakMap(), _KulCanvas_resizeTimeout = new WeakMap(), _KulCanvas_handlePointerMove = new WeakMap(), _KulCanvas_handlePointerOut = new WeakMap(), _KulCanvas_handlePointerUp = new WeakMap(), _KulCanvas_instances = new WeakSet(), _KulCanvas_isCursorPreview = function _KulCanvas_isCursorPreview() {
+    return this.kulCursor === "preview";
+}, _KulCanvas_normalizeCoordinate = function _KulCanvas_normalizeCoordinate(event, rect) {
     let x = (event.clientX - rect.left) / rect.width;
     let y = (event.clientY - rect.top) / rect.height;
     x = Math.max(0, Math.min(1, x));
@@ -305,7 +341,6 @@ _KulCanvas_board = new WeakMap(), _KulCanvas_boardCtx = new WeakMap(), _KulCanva
 }, _KulCanvas_endCapture = function _KulCanvas_endCapture(e) {
     e.preventDefault();
     this.isPainting = false;
-    __classPrivateFieldGet$1(this, _KulCanvas_boardCtx, "f").clearRect(0, 0, __classPrivateFieldGet$1(this, _KulCanvas_board, "f").width, __classPrivateFieldGet$1(this, _KulCanvas_board, "f").height);
     __classPrivateFieldGet$1(this, _KulCanvas_board, "f").releasePointerCapture(e.pointerId);
     __classPrivateFieldGet$1(this, _KulCanvas_board, "f").removeEventListener("pointermove", __classPrivateFieldGet$1(this, _KulCanvas_handlePointerMove, "f"));
     __classPrivateFieldGet$1(this, _KulCanvas_board, "f").removeEventListener("pointerup", __classPrivateFieldGet$1(this, _KulCanvas_handlePointerUp, "f"));

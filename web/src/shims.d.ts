@@ -388,3 +388,82 @@ interface WidgetOptions<
   getValue: () => V;
   setValue(value: string | V): void;
 }
+type ComfyUICommands =
+  | 'Comfy.NewBlankWorkflow'
+  | 'Comfy.OpenWorkflow'
+  | 'Comfy.LoadDefaultWorkflow'
+  | 'Comfy.SaveWorkflow'
+  | 'Comfy.SaveWorkflowAs'
+  | 'Comfy.ExportWorkflow'
+  | 'Comfy.ExportWorkflowAPI'
+  | 'Comfy.Undo'
+  | 'Comfy.Redo'
+  | 'Comfy.ClearWorkflow'
+  | 'Comfy.Canvas.ResetView'
+  | 'Comfy.OpenClipspace'
+  | 'Comfy.RefreshNodeDefinitions'
+  | 'Comfy.Interrupt'
+  | 'Comfy.ClearPendingTasks'
+  | 'Comfy.BrowseTemplates'
+  | 'Comfy.Canvas.ZoomIn'
+  | 'Comfy.Canvas.ZoomOut'
+  | 'Comfy.Canvas.FitView'
+  | 'Comfy.Canvas.ToggleLock'
+  | 'Comfy.Canvas.ToggleLinkVisibility'
+  | 'Comfy.QueuePrompt'
+  | 'Comfy.QueuePromptFront'
+  | 'Comfy.ShowSettingsDialog'
+  | 'Comfy.Graph.GroupSelectedNodes'
+  | 'Workspace.NextOpenedWorkflow'
+  | 'Workspace.PreviousOpenedWorkflow'
+  | 'Comfy.Canvas.ToggleSelectedNodes.Mute'
+  | 'Comfy.Canvas.ToggleSelectedNodes.Bypass'
+  | 'Comfy.Canvas.ToggleSelectedNodes.Pin'
+  | 'Comfy.Canvas.ToggleSelected.Pin'
+  | 'Comfy.Canvas.ToggleSelectedNodes.Collapse'
+  | 'Comfy.ToggleTheme'
+  | 'Workspace.ToggleBottomPanel'
+  | 'Workspace.ToggleFocusMode'
+  | 'Comfy.Graph.FitGroupToContents'
+  | 'Workspace.ToggleSidebarTab.queue'
+  | 'Workspace.ToggleSidebarTab.node-library'
+  | 'Workspace.ToggleSidebarTab.model-library'
+  | 'Workspace.ToggleSidebarTab.workflows'
+  | 'Workspace.ToggleBottomPanelTab.logs-terminal'
+  | 'Comfy.GroupNode.ConvertSelectedNodesToGroupNode'
+  | 'Comfy.GroupNode.UngroupSelectedGroupNodes'
+  | 'Comfy.GroupNode.ManageGroupNodes'
+  | 'Workspace.ToggleSidebarTab.easyuse_nodes_map';
+interface ComfyDS {
+  // Properties
+  dragging?: unknown; // Could be further refined if known
+  element: HTMLCanvasElement; // The canvas element
+  enabled: boolean;
+  last_mouse: [number, number]; // Array of two numbers
+  max_scale: number;
+  min_scale: number;
+  onredraw: ((instance: DragAndScale) => void) | null;
+  state: {
+    offset: [number, number];
+    scale: number;
+  };
+  viewport: Float32Array | null;
+  visible_area: Float32Array;
+  _binded_mouse_callback?: unknown; // Could be further refined if known
+
+  // Getters/Setters
+  offset: [number, number]; // Accessible via getter and setter
+  scale: number; // Accessible via getter and setter
+
+  // Methods
+  bindEvents(element: HTMLElement): void;
+  changeDeltaScale(value: number, zooming_center?: [number, number]): void;
+  changeScale(value: number, zooming_center?: [number, number]): void;
+  computeVisibleArea(viewport: DOMRect): Float32Array;
+  convertCanvasToOffset(pos: [number, number], out?: [number, number]): [number, number];
+  convertOffsetToCanvas(pos: [number, number]): [number, number];
+  mouseDrag(x: number, y: number): void;
+  onMouse(event: MouseEvent): void;
+  reset(): void;
+  toCanvasContext(ctx: CanvasRenderingContext2D): void;
+}

@@ -1,10 +1,23 @@
 import { api } from '/scripts/api.js';
 import { app } from '/scripts/app.js';
+import { getLFManager } from '../utils/common.js';
+import { LogSeverity } from '../types/manager/manager.js';
 //#region Comfy APIs
 export const COMFY_API = {
     comfyUi: () => window.comfyAPI,
     event: (name, callback) => {
         api.addEventListener(name, callback);
+    },
+    executeCommand: (name) => {
+        try {
+            app.extensionManager.command.execute(name);
+        }
+        catch (error) {
+            getLFManager().log(`Command ${name} not executed!`, { error }, LogSeverity.Warning);
+        }
+    },
+    getDragAndScale: () => {
+        return app.canvas.ds;
     },
     getLinkById: (id) => {
         return app.graph.links[String(id).valueOf()];
