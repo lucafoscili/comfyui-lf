@@ -460,6 +460,65 @@ class LF_ResolutionSwitcher:
         return (width, height, is_landscape)
 # endregion
 
+# region LF_StringReplace
+class LF_StringReplace:
+    @classmethod
+    def INPUT_TYPES(self):
+        return {
+            "required": {
+                "input_text": (Input.STRING, {
+                    "default": "", 
+                    "tooltip": "The text where replacements will occur."
+                }),
+                "target": (Input.STRING, {
+                    "default": "", 
+                    "tooltip": "The substring to be replaced."
+                }),
+                "replacement": (Input.STRING, {
+                    "default": "", 
+                    "tooltip": "The substring to replace the target with."
+                }),
+            },
+            "optional": {
+                "ui_widget": (Input.KUL_CODE, {
+                    "default": {}
+                }),
+            },
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
+        }
+
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    RETURN_NAMES = ("string", "string_list")
+    RETURN_TYPES = ("STRING", "STRING")
+
+    def on_exec(self, **kwargs: dict):
+        input_text: str = normalize_list_to_value(kwargs.get("input_text"))
+        target: str = normalize_list_to_value(kwargs.get("target"))
+        replacement: str = normalize_list_to_value(kwargs.get("replacement"))
+
+        replacement_count = input_text.count(target)
+        modified_text = input_text.replace(target, replacement)
+
+        log = f"""## Result:
+
+  **Original Text**: {input_text}
+  **Target Substring**: {target}
+  **Replacement Substring**: {replacement}
+  **Resulting Text**: {modified_text}
+  **Replacements Made**: {replacement_count}
+        """
+
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}stringreplace", {
+            "node": kwargs.get("node_id"),
+            "value": log,
+        })
+
+        return (modified_text, [modified_text])
+# endregion
+
 # region LF_SwitchFloat
 class LF_SwitchFloat:
     @classmethod
@@ -753,6 +812,7 @@ NODE_CLASS_MAPPINGS = {
     "LF_MathOperation": LF_MathOperation,
     "LF_ParsePromptWithLoraTags": LF_ParsePromptWithLoraTags,
     "LF_ResolutionSwitcher": LF_ResolutionSwitcher,
+    "LF_StringReplace": LF_StringReplace,
     "LF_SwitchFloat": LF_SwitchFloat,
     "LF_SwitchImage": LF_SwitchImage,
     "LF_SwitchInteger": LF_SwitchInteger,
@@ -766,6 +826,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_MathOperation": "Math operation",
     "LF_ParsePromptWithLoraTags": "Parse Prompt with LoRA tags",
     "LF_ResolutionSwitcher": "Resolution switcher",
+    "LF_StringReplace": "String replace",
     "LF_SwitchFloat": "Switch Float",
     "LF_SwitchImage": "Switch Image",
     "LF_SwitchInteger": "Switch Integer",

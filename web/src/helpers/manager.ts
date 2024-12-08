@@ -94,6 +94,7 @@ export const NODE_WIDGET_MAP: NodeWidgetMap = {
   LF_Something2String: [CustomWidgetName.code],
   LF_SortJSONKeys: [CustomWidgetName.code],
   LF_String: [CustomWidgetName.history],
+  LF_StringReplace: [CustomWidgetName.code],
   LF_StringToJSON: [CustomWidgetName.code],
   LF_SwitchFloat: [CustomWidgetName.progressbar],
   LF_SwitchImage: [CustomWidgetName.progressbar],
