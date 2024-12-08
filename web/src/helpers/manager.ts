@@ -1,12 +1,15 @@
 import { KulMessengerDataset } from '../types/ketchup-lite/components';
 import { LogSeverity } from '../types/manager/manager';
+import { ChipState } from '../types/widgets/chip';
+import { ImageEditorState } from '../types/widgets/imageEditor';
+import { MessengerCSS, MessengerState } from '../types/widgets/messenger';
 import {
   ComfyWidgetName,
   CustomWidgetName,
+  GenericWidget,
   NodeName,
   NodeWidgetMap,
 } from '../types/widgets/widgets';
-import { MessengerCSS, MessengerState } from '../types/widgets/messenger';
 import {
   areJSONEqual,
   getApiRoutes,
@@ -17,10 +20,10 @@ import {
   refreshChart,
   unescapeJson,
 } from '../utils/common';
-import { ChipState } from '../types/widgets/chip';
 
 //#region Node-Widget map
 export const NODE_WIDGET_MAP: NodeWidgetMap = {
+  LF_Blend: [CustomWidgetName.compare],
   LF_BlurImages: [CustomWidgetName.masonry],
   LF_Boolean: [CustomWidgetName.history],
   LF_Brightness: [CustomWidgetName.compare],
@@ -154,9 +157,22 @@ export const onNodeCreated = async (nodeType: NodeType) => {
     const node = this;
 
     for (let index = 0; index < node.widgets?.length; index++) {
-      const w = node.widgets[index];
+      const w: GenericWidget = node.widgets[index];
 
       switch (w.type.toUpperCase()) {
+        case CustomWidgetName.imageEditor:
+          const ds = getApiRoutes().comfy.getDragAndScale();
+          if (ds) {
+            const onredraw = ds.onredraw;
+
+            ds.onredraw = function () {
+              const r = onredraw ? onredraw.apply(this, arguments) : void 0;
+              const state = w.options.getState() as ImageEditorState;
+              setCanvasSizeCb(state.elements.imageviewer);
+              return r;
+            };
+          }
+          break;
         case ComfyWidgetName.customtext:
         case ComfyWidgetName.string:
         case ComfyWidgetName.text:
@@ -260,6 +276,19 @@ const messengerCb = (node: NodeType) => {
   } catch (error) {
     getLFManager().log('Error processing messenger data', { dataset, error }, LogSeverity.Error);
   }
+};
+//#endregion
+
+//#region logStyle
+const setCanvasSizeCb = async (imageviewer: HTMLKulImageviewerElement) => {
+  requestAnimationFrame(async () => {
+    try {
+      const { canvas } = await imageviewer.getComponents();
+      canvas.resizeCanvas();
+    } catch (error) {
+      getLFManager().log("Could't update canvas dimensions.", { error }, LogSeverity.Info);
+    }
+  });
 };
 //#endregion
 

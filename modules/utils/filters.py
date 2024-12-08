@@ -7,20 +7,48 @@ from scipy.interpolate import CubicSpline
 
 from ..utils.helpers import hex_to_tuple, numpy_to_tensor, pil_to_tensor, tensor_to_numpy, tensor_to_pil
 
+# region blend_effect
+def blend_effect(image: torch.Tensor, overlay_image: torch.Tensor, alpha_mask: float) -> torch.Tensor:
+    """
+    Apply alpha blending between a base image and an overlay one.
+
+    Args:
+        image (torch.Tensor): Base image tensor. Shape: [1, H, W, C].
+        overlay_image (torch.Tensor): Overlay image tensor to blend. Shape: [1, H, W, C].
+        alpha_mask (float): Opacity for blending (0.0 to 1.0).
+
+    Returns:
+        torch.Tensor: Blended image tensor.
+    """
+    if image.shape != overlay_image.shape:
+        _, base_h, base_w, _ = image.shape
+
+        overlay_image: torch.Tensor = torch.nn.functional.interpolate(
+            overlay_image.permute(0, 3, 1, 2),
+            size=(base_h, base_w),
+            mode='bilinear',
+            align_corners=False
+        ).permute(0, 2, 3, 1)
+
+    alpha_tensor: torch.Tensor = torch.full_like(image[..., 0], alpha_mask).unsqueeze(-1)
+
+    return blend_overlay(image, overlay_image, alpha_tensor)
+# endregion
+
 # region brightness_effect
 def brightness_effect(image: torch.Tensor, brightness_strength: float, gamma: float, midpoint: float, localized_brightness: bool) -> torch.Tensor:
     """
     Adjusts the brightness of the input image tensor with gamma correction and optional localized enhancement.
 
     Args:
-        image (torch.Tensor): Input image tensor with shape (1, H, W, C).
+        image (torch.Tensor): Input image tensor with shape [1, H, W, C].
         brightness_strength (float): Brightness adjustment factor (-1 to 1).
         gamma (float): Gamma correction factor.
         midpoint (float): Tonal midpoint for brightness scaling.
         localized_brightness (bool): Whether to enhance brightness locally in darker regions.
 
     Returns:
-        torch.Tensor: Adjusted image tensor with shape (1, H, W, C).
+        torch.Tensor: Adjusted image tensor with shape [1, H, W, C].
     """
     validate_image(image, expected_shape=(3,))
 
@@ -82,13 +110,13 @@ def contrast_effect(image: torch.Tensor, contrast_strength: float, midpoint: flo
     Adjusts the contrast of the input image tensor.
 
     Args:
-        image (torch.Tensor): Input image tensor with shape (1, H, W, C).
+        image (torch.Tensor): Input image tensor with shape [1, H, W, C].
         contrast_strength (float): Contrast adjustment factor (-1 to 1).
         midpoint (float): Tonal midpoint for contrast scaling.
         localized_contrast (bool): Whether to enhance contrast locally around edges.
 
     Returns:
-        torch.Tensor: Contrast-adjusted image tensor with shape (1, H, W, C).
+        torch.Tensor: Contrast-adjusted image tensor with shape [1, H, W, C].
     """
     validate_image(image, expected_shape=(3,))
 
@@ -173,7 +201,7 @@ def line_effect(
     Draws a straight line or smooth curve on an image tensor.
 
     Args:
-        image (torch.Tensor): Input image tensor of shape (1, H, W, C), values in [0, 1].
+        image (torch.Tensor): Input image tensor of shape [1, H, W, C], values in [0, 1].
         points (list[tuple]): List of normalized (x, y) points.
         size (int): Diameter of the line in pixels.
         color (str): Hex color of the line.
@@ -216,7 +244,6 @@ def line_effect(
         x2, y2 = pixel_points[1]
         alpha_mask = draw_straight_line(alpha_mask, x1, y1, x2, y2, size, opacity)
 
-    print("Alpha Mask Sum (Final):", alpha_mask.sum().item())
     if alpha_mask.sum().item() == 0:
         raise ValueError("Alpha mask is empty!")
 
@@ -289,6 +316,39 @@ def apply_sharpen(image, sharpen_amount):
     gaussian_blur = cv2.GaussianBlur(image, (9, 9), 10.0)
     sharpened_image = cv2.addWeighted(image, 1.0 + sharpen_amount, gaussian_blur, -sharpen_amount, 0)
     return sharpened_image
+
+def blend_overlay(image: torch.Tensor, overlay: torch.Tensor, alpha_mask: torch.Tensor) -> torch.Tensor:
+    """
+    Blend an overlay image with a base image using an alpha mask.
+
+    Args:
+        image (torch.Tensor): The base image tensor. Shape: [1, H, W, 3].
+        overlay (torch.Tensor): The overlay image tensor. Shape: [1, H, W, 3] or [1, H, W, 4].
+        alpha_mask (torch.Tensor): The alpha mask tensor. Shape: [1, H, W, 1].
+
+    Returns:
+        torch.Tensor: The resulting blended image tensor. Shape: [1, H, W, 3].
+    """
+    if overlay.shape[-1] > image.shape[-1]:
+        overlay_alpha = overlay[..., 3:4]
+        overlay = overlay[..., :3]
+
+        alpha_mask = alpha_mask * overlay_alpha
+
+    elif overlay.shape[-1] < image.shape[-1]:
+        raise ValueError(f"Overlay image has fewer channels ({overlay.shape[-1]}) than base image ({image.shape[-1]}).")
+
+    if alpha_mask.dim() == 4 and alpha_mask.shape[-1] == 1:
+        adjusted_alpha = alpha_mask
+    elif alpha_mask.dim() == 3 and alpha_mask.shape[-1] == 1:
+        adjusted_alpha = alpha_mask.unsqueeze(-1)
+    elif alpha_mask.dim() == 3 and alpha_mask.shape[-1] != 1:
+        raise ValueError(f"Alpha mask has unexpected shape: {alpha_mask.shape}")
+    else:
+        raise ValueError(f"Unsupported alpha_mask dimensions: {alpha_mask.dim()}")
+
+    blended_image = image * (1 - adjusted_alpha) + overlay * adjusted_alpha
+    return blended_image
 
 def blend_with_alpha(image, rgb, alpha_mask):
     """

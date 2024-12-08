@@ -28,6 +28,7 @@ export declare const getOutput: (node: NodeType, type: ComfyWidgetName | CustomW
 export declare const isValidNumber: (n: number) => boolean;
 export declare const capitalize: (input: string) => string;
 export declare const splitByLastSpaceBeforeAnyBracket: (input: string) => string;
+export declare const canvasToBase64: (canvas: HTMLCanvasElement) => string;
 export declare const createDOMWidget: (type: CustomWidgetName, element: HTMLDivElement, node: NodeType, options: WidgetOptions) => any;
 export declare const debounce: <T extends (...args: any[]) => void>(func: T, delay: number) => (...args: Parameters<T>) => void;
 export declare const findWidget: <T extends CustomWidgetName>(node: NodeType, type: T) => CustomWidgetMap[T];

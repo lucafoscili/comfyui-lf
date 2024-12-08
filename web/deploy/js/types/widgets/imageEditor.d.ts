@@ -56,16 +56,14 @@ export declare enum ImageEditorControls {
     Toggle = "toggle"
 }
 export declare enum ImageEditorCanvasIds {
+    B64Canvas = "b64_canvas",
     Points = "points"
 }
 export declare enum ImageEditorSliderIds {
     BlueChannel = "b_channel",
     BlurKernelSize = "blur_kernel_size",
     BlurSigma = "blur_sigma",
-    BrightnessStrength = "brightness_strength",
-    ClarityStrength = "clarity_strength",
-    ContrastStrength = "contrast_strength",
-    DesaturationStrength = "desaturation_strength",
+    Strength = "strength",
     Gamma = "gamma",
     GreenChannel = "g_channel",
     Intensity = "intensity",
@@ -80,8 +78,7 @@ export declare enum ImageEditorTextfieldIds {
     Color = "color"
 }
 export declare enum ImageEditorToggleIds {
-    LocalizedBrightness = "localized_brightness",
-    LocalizedContrast = "localized_contrast",
+    Localized = "localized",
     Shape = "shape",
     Smooth = "smoooth"
 }
@@ -129,6 +126,7 @@ export type ImageEditorSettingsFor = Partial<{
     [ImageEditorControls.Toggle]: ImageEditorToggleConfig[];
 }>;
 export interface ImageEditorFilterSettingsMap {
+    blend: ImageEditorBlendSettings;
     brightness: ImageEditorBrightnessSettings;
     brush: ImageEditorBrushSettings;
     clarity: ImageEditorClaritySettings;
@@ -138,32 +136,36 @@ export interface ImageEditorFilterSettingsMap {
     line: ImageEditorLineSettings;
     vignette: ImageEditorVignetteSettings;
 }
+export interface ImageEditorBlendSettings extends ImageEditorFilterSettings {
+    opacity: number;
+}
 export interface ImageEditorBrightnessSettings extends ImageEditorFilterSettings {
-    brightness_strength: number;
+    strength: number;
     gamma: number;
-    localized_brightness: boolean;
+    localized: boolean;
     midpoint: number;
 }
 export interface ImageEditorBrushSettings extends ImageEditorFilterSettings {
+    b64_canvas: string;
     color: string;
     opacity: number;
     size: number;
 }
 export interface ImageEditorClaritySettings extends ImageEditorFilterSettings {
-    clarity_strength: number;
+    strength: number;
     sharpen_amount: number;
     blur_kernel_size: number;
 }
 export interface ImageEditorContrastSettings extends ImageEditorFilterSettings {
-    contrast_strength: number;
-    localized_contrast: boolean;
+    strength: number;
+    localized: boolean;
     midpoint: number;
 }
 export interface ImageEditorDesaturateSettings extends ImageEditorFilterSettings {
     r_channel: number;
     g_channel: number;
     b_channel: number;
-    desaturation_strength: number;
+    strength: number;
 }
 export interface ImageEditorGaussianBlurSettings extends ImageEditorFilterSettings {
     blur_kernel_size: number;
@@ -184,32 +186,36 @@ export interface ImageEditorVignetteSettings extends ImageEditorFilterSettings {
     radius: number;
     shape: boolean;
 }
+export declare enum ImageEditorBlendIds {
+    Opacity = "opacity"
+}
 export declare enum ImageEditorBrightnessIds {
-    BrightnessStrength = "brightness_strength",
+    Strength = "strength",
     Gamma = "gamma",
     Midpoint = "midpoint",
-    LocalizedBrightness = "localized_brightness"
+    Localized = "localized"
 }
 export declare enum ImageEditorBrushIds {
+    B64Canvas = "b64_canvas",
     Color = "color",
     Opacity = "opacity",
     Size = "size"
 }
 export declare enum ImageEditorClarityIds {
     BlurKernelSize = "blur_kernel_size",
-    ClarityStrength = "clarity_strength",
+    Strength = "strength",
     SharpenAmount = "sharpen_amount"
 }
 export declare enum ImageEditorContrastIds {
-    ContrastStrength = "contrast_strength",
-    LocalizedContrast = "localized_contrast",
+    Strength = "strength",
+    Localized = "contrast",
     Midpoint = "midpoint"
 }
 export declare enum ImageEditorDesaturateIds {
     RedChannel = "r_channel",
     GreenChannel = "g_channel",
     BlueChannel = "b_channel",
-    DesaturationStrength = "desaturation_strength"
+    Strength = "strength"
 }
 export declare enum ImageEditorGaussianBlurIds {
     BlurKernelSize = "blur_kernel_size",

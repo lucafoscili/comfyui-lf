@@ -20,9 +20,9 @@ export const SETTINGS: ImageEditorFilters = {
   brightness: {
     controlIds: ImageEditorBrightnessIds,
     settings: {
-      brightness_strength: 0,
+      strength: 0,
       gamma: 0,
-      localized_brightness: false,
+      localized: false,
       midpoint: 0.5,
     },
     configs: {
@@ -31,7 +31,7 @@ export const SETTINGS: ImageEditorFilters = {
           ariaLabel: 'Brightness Strength',
           controlType: ImageEditorControls.Slider,
           defaultValue: 0,
-          id: ImageEditorSliderIds.BrightnessStrength,
+          id: ImageEditorSliderIds.Strength,
           isMandatory: true,
           max: '1',
           min: '-1',
@@ -65,7 +65,7 @@ export const SETTINGS: ImageEditorFilters = {
           ariaLabel: 'Localized Brightness',
           controlType: ImageEditorControls.Toggle,
           defaultValue: false,
-          id: ImageEditorToggleIds.LocalizedContrast,
+          id: ImageEditorToggleIds.Localized,
           off: 'false',
           on: 'true',
           title: 'Enhance brightness locally in darker regions.',
@@ -79,7 +79,7 @@ export const SETTINGS: ImageEditorFilters = {
   brush: {
     controlIds: ImageEditorBrushIds,
     hasCanvasAction: true,
-    settings: { color: '#FF0000', opacity: 1, size: 10 },
+    settings: { b64_canvas: '', color: '#FF0000', opacity: 1, size: 10 },
     configs: {
       [ImageEditorControls.Slider]: [
         {
@@ -124,7 +124,7 @@ export const SETTINGS: ImageEditorFilters = {
   clarity: {
     controlIds: ImageEditorClarityIds,
     settings: {
-      clarity_strength: 0,
+      strength: 0,
       sharpen_amount: 0,
       blur_kernel_size: 1,
     },
@@ -134,7 +134,7 @@ export const SETTINGS: ImageEditorFilters = {
           ariaLabel: 'Clarity Strength',
           controlType: ImageEditorControls.Slider,
           defaultValue: 0,
-          id: ImageEditorSliderIds.ClarityStrength,
+          id: ImageEditorSliderIds.Strength,
           isMandatory: true,
           max: '5',
           min: '0',
@@ -171,8 +171,8 @@ export const SETTINGS: ImageEditorFilters = {
   contrast: {
     controlIds: ImageEditorContrastIds,
     settings: {
-      contrast_strength: 0,
-      localized_contrast: false,
+      strength: 0,
+      localized: false,
       midpoint: 0,
     },
     configs: {
@@ -181,7 +181,7 @@ export const SETTINGS: ImageEditorFilters = {
           ariaLabel: 'Contrast Strength',
           controlType: ImageEditorControls.Slider,
           defaultValue: 0,
-          id: ImageEditorSliderIds.ContrastStrength,
+          id: ImageEditorSliderIds.Strength,
           isMandatory: true,
           max: '1',
           min: '-1',
@@ -205,7 +205,7 @@ export const SETTINGS: ImageEditorFilters = {
           ariaLabel: 'Localized Contrast',
           controlType: ImageEditorControls.Toggle,
           defaultValue: false,
-          id: ImageEditorToggleIds.LocalizedContrast,
+          id: ImageEditorToggleIds.Localized,
           off: 'false',
           on: 'true',
           title: 'Apply contrast enhancement locally to edges and textures.',
@@ -222,7 +222,7 @@ export const SETTINGS: ImageEditorFilters = {
       r_channel: 1,
       g_channel: 1,
       b_channel: 1,
-      desaturation_strength: 0,
+      strength: 0,
     },
     configs: {
       slider: [
@@ -230,7 +230,7 @@ export const SETTINGS: ImageEditorFilters = {
           ariaLabel: 'Desaturation strength',
           controlType: ImageEditorControls.Slider,
           defaultValue: 0,
-          id: ImageEditorSliderIds.DesaturationStrength,
+          id: ImageEditorSliderIds.Strength,
           isMandatory: true,
           max: '1',
           min: '0',

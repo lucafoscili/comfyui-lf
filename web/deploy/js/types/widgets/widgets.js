@@ -36,6 +36,7 @@ export var CustomWidgetName;
 })(CustomWidgetName || (CustomWidgetName = {}));
 export var NodeName;
 (function (NodeName) {
+    NodeName["blend"] = "LF_Blend";
     NodeName["blurImages"] = "LF_BlurImages";
     NodeName["boolean"] = "LF_Boolean";
     NodeName["brightness"] = "LF_Brightness";

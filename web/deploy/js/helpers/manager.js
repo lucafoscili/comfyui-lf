@@ -1,9 +1,10 @@
 import { LogSeverity } from '../types/manager/manager.js';
-import { ComfyWidgetName, CustomWidgetName, NodeName, } from '../types/widgets/widgets.js';
 import { MessengerCSS } from '../types/widgets/messenger.js';
+import { ComfyWidgetName, CustomWidgetName, NodeName, } from '../types/widgets/widgets.js';
 import { areJSONEqual, getApiRoutes, getCustomWidget, getInput, getLFManager, isValidJSON, refreshChart, unescapeJson, } from '../utils/common.js';
 //#region Node-Widget map
 export const NODE_WIDGET_MAP = {
+    LF_Blend: [CustomWidgetName.compare],
     LF_BlurImages: [CustomWidgetName.masonry],
     LF_Boolean: [CustomWidgetName.history],
     LF_Brightness: [CustomWidgetName.compare],
@@ -129,6 +130,18 @@ export const onNodeCreated = async (nodeType) => {
         for (let index = 0; index < node.widgets?.length; index++) {
             const w = node.widgets[index];
             switch (w.type.toUpperCase()) {
+                case CustomWidgetName.imageEditor:
+                    const ds = getApiRoutes().comfy.getDragAndScale();
+                    if (ds) {
+                        const onredraw = ds.onredraw;
+                        ds.onredraw = function () {
+                            const r = onredraw ? onredraw.apply(this, arguments) : void 0;
+                            const state = w.options.getState();
+                            setCanvasSizeCb(state.elements.imageviewer);
+                            return r;
+                        };
+                    }
+                    break;
                 case ComfyWidgetName.customtext:
                 case ComfyWidgetName.string:
                 case ComfyWidgetName.text:
@@ -228,6 +241,19 @@ const messengerCb = (node) => {
     catch (error) {
         getLFManager().log('Error processing messenger data', { dataset, error }, LogSeverity.Error);
     }
+};
+//#endregion
+//#region logStyle
+const setCanvasSizeCb = async (imageviewer) => {
+    requestAnimationFrame(async () => {
+        try {
+            const { canvas } = await imageviewer.getComponents();
+            canvas.resizeCanvas();
+        }
+        catch (error) {
+            getLFManager().log("Could't update canvas dimensions.", { error }, LogSeverity.Info);
+        }
+    });
 };
 //#endregion
 //#region logStyle

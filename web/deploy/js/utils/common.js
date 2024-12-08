@@ -157,6 +157,9 @@ export const splitByLastSpaceBeforeAnyBracket = (input) => {
 };
 //#endregion
 //#region Widgets
+export const canvasToBase64 = (canvas) => {
+    return canvas.toDataURL('image/png');
+};
 export const createDOMWidget = (type, element, node, options) => {
     getLFManager().log(`Creating '${type}'`, { element });
     try {

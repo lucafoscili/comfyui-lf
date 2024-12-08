@@ -50,6 +50,7 @@ export declare enum CustomWidgetName {
     upload = "KUL_UPLOAD"
 }
 export declare enum NodeName {
+    blend = "LF_Blend",
     blurImages = "LF_BlurImages",
     boolean = "LF_Boolean",
     brightness = "LF_Brightness",
