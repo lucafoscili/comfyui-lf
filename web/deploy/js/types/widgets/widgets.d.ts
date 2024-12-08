@@ -123,6 +123,7 @@ export declare enum NodeName {
     sortJsonKeys = "LF_SortJSONKeys",
     string = "LF_String",
     stringReplace = "LF_StringReplace",
+    stringTemplate = "LF_StringTemplate",
     stringToJson = "LF_StringToJSON",
     switchFloat = "LF_SwitchFloat",
     switchImage = "LF_SwitchImage",

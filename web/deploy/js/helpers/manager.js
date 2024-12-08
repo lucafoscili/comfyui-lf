@@ -77,6 +77,7 @@ export const NODE_WIDGET_MAP = {
     LF_SortJSONKeys: [CustomWidgetName.code],
     LF_String: [CustomWidgetName.history],
     LF_StringReplace: [CustomWidgetName.code],
+    LF_StringTemplate: [CustomWidgetName.code],
     LF_StringToJSON: [CustomWidgetName.code],
     LF_SwitchFloat: [CustomWidgetName.progressbar],
     LF_SwitchImage: [CustomWidgetName.progressbar],

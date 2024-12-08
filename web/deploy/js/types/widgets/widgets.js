@@ -109,6 +109,7 @@ export var NodeName;
     NodeName["sortJsonKeys"] = "LF_SortJSONKeys";
     NodeName["string"] = "LF_String";
     NodeName["stringReplace"] = "LF_StringReplace";
+    NodeName["stringTemplate"] = "LF_StringTemplate";
     NodeName["stringToJson"] = "LF_StringToJSON";
     NodeName["switchFloat"] = "LF_SwitchFloat";
     NodeName["switchImage"] = "LF_SwitchImage";
