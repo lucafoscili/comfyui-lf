@@ -86,7 +86,7 @@ const prepMessages = (adapter) => {
     if (history?.length > 0) {
         history.forEach((m) => {
             const element = (h("div", { class: `chat__messages__container chat__messages__container--${m.role}`, onPointerEnter: () => adapter.set.status.toolbarMessage(m), onPointerLeave: () => adapter.set.status.toolbarMessage(null) },
-                h("div", { class: `chat__messages__content chat__messages__content--${m.role}` }, prepContent(m)),
+                h("div", { class: `chat__messages__content chat__messages__content--${m.role}` }, prepContent(adapter, m)),
                 m === toolbarMessage ? prepToolbar(adapter, m) : null));
             elements.push(element);
         });
@@ -103,7 +103,11 @@ const prepToolbar = (adapter, m) => {
         h("kul-button", { class: cssClass, kulIcon: "content_copy", onClick: () => navigator.clipboard.writeText(m.content), title: "Copy text to clipboard." }),
         m.role === "user" ? (h("kul-button", { class: cssClass, kulIcon: "refresh", onClick: () => adapter.actions.regenerate(m), title: "Regenerate answer to this question." })) : null));
 };
-const prepContent = (message) => {
+const prepContent = (adapter, message) => {
+    const typewriterProps = adapter.get.props.typewriterProps();
+    const useTypewriter = !!(message.role === "assistant" &&
+        typeof typewriterProps === "object" &&
+        typewriterProps !== null);
     const elements = [];
     const messageContent = message.content;
     const codeBlockRegex = /```(\w+)?\n([\s\S]*?)```/g;
@@ -112,16 +116,16 @@ const prepContent = (message) => {
     while ((match = codeBlockRegex.exec(messageContent)) !== null) {
         if (match.index > lastIndex) {
             const textPart = messageContent.slice(lastIndex, match.index);
-            elements.push(h("div", { class: "paragraph" }, textPart));
+            elements.push(useTypewriter ? (h("kul-typewriter", { class: "chat__messages__paragraph", ...typewriterProps, kulValue: textPart })) : (h("div", { class: "paragraph" }, textPart)));
         }
         const language = match[1] ? match[1].trim() : "text";
         const codePart = match[2].trim();
-        elements.push(h("kul-code", { class: "code", kulLanguage: language, kulValue: codePart }));
+        elements.push(h("kul-code", { class: "chat__messages__code", kulLanguage: language, kulValue: codePart }));
         lastIndex = match.index + match[0].length;
     }
     if (lastIndex < messageContent.length) {
         const remainingText = messageContent.slice(lastIndex);
-        elements.push(h("div", { class: "paragraph" }, remainingText));
+        elements.push(useTypewriter ? (h("kul-typewriter", { class: "chat__messages__paragraph", ...typewriterProps, kulValue: remainingText })) : (h("div", { class: "paragraph" }, remainingText)));
     }
     return elements;
 };
@@ -155,6 +159,7 @@ var KulChatProps;
     KulChatProps["kulStyle"] = "Custom style of the component.";
     KulChatProps["kulSystem"] = "System message for the LLM.";
     KulChatProps["kulTemperature"] = "Sets the creative boundaries of the LLM.";
+    KulChatProps["kulTypewriterProps"] = "Sets the props of the assistant typewriter component. Set this prop to false to replace the typewriter with a simple text element.";
     KulChatProps["kulValue"] = "Initial history of the chat.";
 })(KulChatProps || (KulChatProps = {}));
 //#endregion
@@ -241,7 +246,7 @@ const textfieldEventHandler = (adapter, e) => {
     }
 };
 
-const kulChatCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}@keyframes fade-in-grid{0%{display:none}1%{display:grid;opacity:0}100%{display:grid;opacity:1}}:host{--kul_chat_blur_radius:var(--kul-chat-blur-radius, 3.5px);--kul_chat_border_radius:var(--kul-chat-border-radius, 8px);--kul_chat_buttons_padding:var(--kul-chat-buttons-padding, 1em 0);--kul_chat_grid_gap:var(--kul-chat-grid-gap, 16px);--kul_chat_inner_padding:var(--kul-chat-inner-padding, 0 16px);--kul_chat_margin_bottom:var(--kul-chat-margin-bottom, 16px);--kul_chat_margin_top:var(--kul-chat-margin-top, 16px);--kul_chat_outer_grid_gap:var(--kul-chat-outer-grid-gap, 12px);--kul_chat_padding:var(--kul-chat-padding, 18px);--kul-chat_small_font_size:var(--kul-chat-small-font-size, 0.875em);--kul_chat_spinner_size:var(--kul-chat-spinner-size, 48px);--kul_chat_title_font_size:var(--kul-chat-title-font-size, 2em);color:var(--kul-text-color);display:block;height:100%;width:100%}#kul-component{height:100%;position:relative;width:100%}.chat{backdrop-filter:blur(var(--kul_chat_blur_radius));box-sizing:border-box;display:grid;height:100%;margin:auto;padding:var(--kul_chat_padding)}.chat--bottom-textarea{align-content:center;grid-gap:var(--kul_chat_outer_grid_gap);grid-template-areas:\"messages\" \"spinner\" \"request\";grid-template-rows:1fr auto auto}.chat--top-textarea{grid-gap:var(--kul_chat_outer_grid_gap);grid-template-areas:\"request\" \"messages\" \"spinner\";grid-template-rows:auto 1fr auto}.chat--offline{grid-template-rows:1fr auto}.chat--offline__error{padding:32px}.chat__request{box-sizing:border-box;grid-area:request;max-width:100%;padding:var(--kul_chat_inner_padding);width:100%}.chat__request__input{display:grid;grid-template-areas:\"textarea button\" \"progressbar button\";grid-template-columns:1fr auto}.chat__request__input__button{--kul-button-border-radius:0;--kul-button-padding:0 1em;grid-area:button}.chat__request__input__progressbar{--kul-progressbar-border-radius:0;--kul-progressbar-height:1.75em;grid-area:progressbar}.chat__request__input__textarea{--kul-textfield-border-radius:0;grid-area:textarea;overflow-x:hidden}.chat__request__buttons{align-items:center;display:flex;justify-content:space-evenly;padding:var(--kul_chat_buttons_padding)}.chat__request__buttons__stt{padding:0 1em}.chat__messages{align-content:start;box-sizing:border-box;display:grid;grid-area:messages;grid-gap:var(--kul_chat_grid_gap);grid-template-columns:1fr;margin-bottom:var(--kul_chat_margin_top);margin-top:var(--kul_chat_margin_top);overflow:auto;padding:var(--kul_chat_inner_padding);white-space:pre-line;width:100%;word-break:normal}.chat__messages__container{backdrop-filter:blur(var(--kul_chat_blur_radius));background-color:rgba(var(--kul-background-color-rgb), 0.125);border:1px solid rgba(var(--kul-text-color-rgb), 0.5);border-radius:var(--kul_chat_border_radius);display:flex;height:max-content;max-width:80%;position:relative;transition:background-color 225ms ease}.chat__messages__container:hover{background-color:rgba(var(--kup-primary-color-rgb), 0.325)}.chat__messages__container--assistant{justify-self:start}.chat__messages__container--user{justify-self:end}.chat__messages__empty{font-size:var(--kul_chat_small_font_size);font-style:italic;opacity:0.5;text-align:center}.chat__messages__content{font-family:var(--kul-font-family);font-size:calc(var(--kul-font-size) * 1.125);max-width:100%;padding:12px}.chat__messages__toolbar{animation:fade-in-flex 0.25s ease-out;border:0;border-bottom-right-radius:var(--kul_chat_border_radius);border-top-right-radius:var(--kul_chat_border_radius);border-top:1px inset rgba(var(--kul-text-color-rgb), 0.225);box-sizing:border-box;display:flex;flex-direction:column;flex-flow:wrap-reverse;height:100%;justify-content:end;padding:12px;transition:width 125ms ease, opacity 125ms ease, padding 125ms ease}.chat__messages__toolbar__button{margin:4px}.chat__spinner-bar{bottom:0;grid-area:spinner;height:4px;left:0;position:absolute;width:100%}.chat__title{text-align:center;font-size:var(--kul_chat_title_font_size)}.chat__text{font-size:var(--kul_chat_small_font_size);font-style:italic;opacity:0.5;text-align:center}.settings{display:grid;grid-gap:8px;grid-template-rows:auto auto 1fr;height:100%}.settings__system{box-sizing:border-box;overflow:hidden;padding-top:18px}";
+const kulChatCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}@keyframes fade-in-grid{0%{display:none}1%{display:grid;opacity:0}100%{display:grid;opacity:1}}:host{--kul_chat_blur_radius:var(--kul-chat-blur-radius, 3.5px);--kul_chat_border_radius:var(--kul-chat-border-radius, 8px);--kul_chat_buttons_padding:var(--kul-chat-buttons-padding, 1em 0);--kul_chat_grid_gap:var(--kul-chat-grid-gap, 16px);--kul_chat_inner_padding:var(--kul-chat-inner-padding, 0 16px);--kul_chat_margin_bottom:var(--kul-chat-margin-bottom, 16px);--kul_chat_margin_top:var(--kul-chat-margin-top, 16px);--kul_chat_outer_grid_gap:var(--kul-chat-outer-grid-gap, 12px);--kul_chat_padding:var(--kul-chat-padding, 18px);--kul-chat_small_font_size:var(--kul-chat-small-font-size, 0.875em);--kul_chat_spinner_size:var(--kul-chat-spinner-size, 48px);--kul_chat_title_font_size:var(--kul-chat-title-font-size, 2em);color:var(--kul-text-color);display:block;height:100%;width:100%}#kul-component{height:100%;position:relative;width:100%}.chat{backdrop-filter:blur(var(--kul_chat_blur_radius));box-sizing:border-box;display:grid;height:100%;margin:auto;padding:var(--kul_chat_padding)}.chat--bottom-textarea{align-content:center;grid-gap:var(--kul_chat_outer_grid_gap);grid-template-areas:\"messages\" \"spinner\" \"request\";grid-template-rows:1fr auto auto}.chat--top-textarea{grid-gap:var(--kul_chat_outer_grid_gap);grid-template-areas:\"request\" \"messages\" \"spinner\";grid-template-rows:auto 1fr auto}.chat--offline{grid-template-rows:1fr auto}.chat--offline__error{padding:32px}.chat__request{box-sizing:border-box;grid-area:request;max-width:100%;padding:var(--kul_chat_inner_padding);width:100%}.chat__request__input{display:grid;grid-template-areas:\"textarea button\" \"progressbar button\";grid-template-columns:1fr auto}.chat__request__input__button{--kul-button-border-radius:0;--kul-button-padding:0 1em;grid-area:button}.chat__request__input__progressbar{--kul-progressbar-border-radius:0;--kul-progressbar-height:1.75em;grid-area:progressbar}.chat__request__input__textarea{--kul-textfield-border-radius:0;grid-area:textarea;overflow-x:hidden}.chat__request__buttons{align-items:center;display:flex;justify-content:space-evenly;padding:var(--kul_chat_buttons_padding)}.chat__request__buttons__stt{padding:0 1em}.chat__messages{align-content:start;box-sizing:border-box;display:grid;grid-area:messages;grid-gap:var(--kul_chat_grid_gap);grid-template-columns:1fr;margin-bottom:var(--kul_chat_margin_top);margin-top:var(--kul_chat_margin_top);overflow:auto;padding:var(--kul_chat_inner_padding);white-space:pre-line;width:100%;word-break:normal}.chat__messages__container{backdrop-filter:blur(var(--kul_chat_blur_radius));background-color:rgba(var(--kul-background-color-rgb), 0.125);border:1px solid rgba(var(--kul-text-color-rgb), 0.5);border-radius:var(--kul_chat_border_radius);display:flex;height:max-content;max-width:80%;position:relative;transition:background-color 225ms ease}.chat__messages__container:hover{background-color:rgba(var(--kup-primary-color-rgb), 0.325)}.chat__messages__container--assistant{justify-self:start}.chat__messages__container--user{justify-self:end}.chat__messages__empty{font-size:var(--kul_chat_small_font_size);font-style:italic;opacity:0.5;text-align:center}.chat__messages__content{font-family:var(--kul-font-family);font-size:calc(var(--kul-font-size) * 1.125);max-width:100%;padding:12px}.chat__messages__toolbar{animation:fade-in-flex 0.25s ease-out;border:0;border-bottom-right-radius:var(--kul_chat_border_radius);border-top-right-radius:var(--kul_chat_border_radius);border-top:1px inset rgba(var(--kul-text-color-rgb), 0.225);box-sizing:border-box;display:flex;flex-direction:column;flex-flow:wrap-reverse;height:100%;justify-content:end;padding:12px;transition:width 125ms ease, opacity 125ms ease, padding 125ms ease}.chat__messages__toolbar__button{margin:4px}.chat__messages__code{height:auto}.chat__spinner-bar{bottom:0;grid-area:spinner;height:4px;left:0;position:absolute;width:100%}.chat__title{text-align:center;font-size:var(--kul_chat_title_font_size)}.chat__text{font-size:var(--kul_chat_small_font_size);font-style:italic;opacity:0.5;text-align:center}.settings{display:grid;grid-gap:8px;grid-template-rows:auto auto 1fr;height:100%}.settings__system{box-sizing:border-box;overflow:hidden;padding-top:18px}";
 const KulChatStyle0 = kulChatCss;
 
 var __classPrivateFieldGet$2 = (undefined && undefined.__classPrivateFieldGet) || function (receiver, state, kind, f) {
@@ -345,6 +350,7 @@ const KulChat = class {
                     pollingInterval: () => this.kulPollingInterval,
                     system: () => this.kulSystem,
                     temperature: () => this.kulTemperature,
+                    typewriterProps: () => this.kulTypewriterProps,
                 },
             },
             set: {
@@ -396,6 +402,11 @@ const KulChat = class {
         this.kulStyle = "";
         this.kulSystem = "You are a helpful and cheerful assistant eager to help the user out with his tasks.";
         this.kulTemperature = 0.7;
+        this.kulTypewriterProps = {
+            kulDeleteSpeed: 10,
+            kulTag: "p",
+            kulSpeed: 20,
+        };
         this.kulValue = [];
     }
     onKulEvent(e, eventType) {
@@ -549,7 +560,7 @@ const KulChat = class {
         __classPrivateFieldGet$2(this, _KulChat_kulManager, "f").debug.updateDebugInfo(this, "did-render");
     }
     render() {
-        return (h(Host, { key: '6c91574bd5770a26ef3c6dd13dd3c44e792195b8' }, this.kulStyle && (h("style", { key: '654ae1881041f4b5e0340fae6623849beb38eadf', id: KUL_STYLE_ID }, __classPrivateFieldGet$2(this, _KulChat_kulManager, "f").theme.setKulStyle(this))), h("div", { key: '3936c62137af3016575bd4d8973dc375d3400932', id: KUL_WRAPPER_ID }, h("div", { key: 'd349d7eb994141c10942d374a015ddcf0470311c', class: `${this.view} ${this.view}--${this.kulLayout} ${this.view}--${this.status}` }, this.view === "settings"
+        return (h(Host, { key: '7b7388459dcdec3c9a2f717b7ee2421e7e2bc1b9' }, this.kulStyle && (h("style", { key: '5fe4c8266e3542ea89ed88b369856f036196b8d6', id: KUL_STYLE_ID }, __classPrivateFieldGet$2(this, _KulChat_kulManager, "f").theme.setKulStyle(this))), h("div", { key: '2d22c6cb1543cf5ae7f7cdcf7771038b37866803', id: KUL_WRAPPER_ID }, h("div", { key: 'ce6d418bc5427b96ba66257a3659c19e14fadaa7', class: `${this.view} ${this.view}--${this.kulLayout} ${this.view}--${this.status}` }, this.view === "settings"
             ? prepSettings(__classPrivateFieldGet$2(this, _KulChat_adapter, "f"))
             : this.status === "ready"
                 ? prepChat(__classPrivateFieldGet$2(this, _KulChat_adapter, "f"))
