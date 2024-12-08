@@ -77,6 +77,7 @@ export const NODE_WIDGET_MAP: NodeWidgetMap = {
   LF_Notify: [],
   LF_ParsePromptWithLoraTags: [CustomWidgetName.code],
   LF_RandomBoolean: [CustomWidgetName.progressbar],
+  LF_RegexReplace: [CustomWidgetName.code],
   LF_RegionExtractor: [CustomWidgetName.code],
   LF_ResizeImageByEdge: [CustomWidgetName.tree],
   LF_ResizeImageToDimension: [CustomWidgetName.tree],

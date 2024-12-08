@@ -104,6 +104,7 @@ export declare enum NodeName {
     notify = "LF_Notify",
     parsePromptWithLoraTags = "LF_ParsePromptWithLoraTags",
     randomBoolean = "LF_RandomBoolean",
+    regexReplace = "LF_RegexReplace",
     regionExtractor = "LF_RegionExtractor",
     resizeImageByEdge = "LF_ResizeImageByEdge",
     resizeImageToDimension = "LF_ResizeImageToDimension",

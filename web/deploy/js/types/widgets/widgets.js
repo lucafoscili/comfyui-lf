@@ -90,6 +90,7 @@ export var NodeName;
     NodeName["notify"] = "LF_Notify";
     NodeName["parsePromptWithLoraTags"] = "LF_ParsePromptWithLoraTags";
     NodeName["randomBoolean"] = "LF_RandomBoolean";
+    NodeName["regexReplace"] = "LF_RegexReplace";
     NodeName["regionExtractor"] = "LF_RegionExtractor";
     NodeName["resizeImageByEdge"] = "LF_ResizeImageByEdge";
     NodeName["resizeImageToDimension"] = "LF_ResizeImageToDimension";
