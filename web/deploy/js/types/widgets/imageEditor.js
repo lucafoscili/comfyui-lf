@@ -117,6 +117,10 @@ export var ImageEditorLineIds;
     ImageEditorLineIds["Size"] = "size";
     ImageEditorLineIds["Smooth"] = "smooth";
 })(ImageEditorLineIds || (ImageEditorLineIds = {}));
+export var ImageEditorSepiaIds;
+(function (ImageEditorSepiaIds) {
+    ImageEditorSepiaIds["Intensity"] = "intensity";
+})(ImageEditorSepiaIds || (ImageEditorSepiaIds = {}));
 export var ImageEditorVignetteIds;
 (function (ImageEditorVignetteIds) {
     ImageEditorVignetteIds["Color"] = "color";

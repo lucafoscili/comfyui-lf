@@ -115,6 +115,7 @@ export declare enum NodeName {
     saveJson = "LF_SaveJSON",
     saveMarkdown = "LF_SaveMarkdown",
     schedulerSelector = "LF_SchedulerSelector",
+    sepia = "LF_Sepia",
     sequentialSeedsGenerator = "LF_SequentialSeedsGenerator",
     setValueInJson = "LF_SetValueInJSON",
     shuffleJsonKeys = "LF_ShuffleJSONKeys",

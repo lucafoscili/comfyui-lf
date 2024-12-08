@@ -470,7 +470,7 @@ class LF_RegexReplace:
             })
             return ("", [])
 
-        log = f"""## Regex Replacement Log:
+        log = f"""## Result:
 
   **Original Text**: {input_text}
   **Regex Pattern**: {pattern}
@@ -655,12 +655,12 @@ class LF_StringTemplate:
                     "default": False,
                     "tooltip": "If true, randomly pick one dictionary from the replacements list."
                 }),
-                "ui_widget": (Input.KUL_CODE, {
-                    "default": {}
-                }),
                 "use_regex_placeholders": (Input.BOOLEAN, {
                     "default": False,
                     "tooltip": "Enable regex placeholders like {\\w+} for advanced templates."
+                }),
+                "ui_widget": (Input.KUL_CODE, {
+                    "default": {}
                 }),
             },
             "hidden": {

@@ -88,6 +88,7 @@ export const NODE_WIDGET_MAP: NodeWidgetMap = {
   LF_SaveJSON: [CustomWidgetName.tree],
   LF_SaveMarkdown: [CustomWidgetName.tree],
   LF_SchedulerSelector: [CustomWidgetName.history],
+  LF_Sepia: [CustomWidgetName.compare],
   LF_SequentialSeedsGenerator: [CustomWidgetName.history],
   LF_SetValueInJSON: [CustomWidgetName.code],
   LF_ShuffleJSONKeys: [CustomWidgetName.code],

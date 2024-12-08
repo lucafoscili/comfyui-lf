@@ -101,6 +101,7 @@ export var NodeName;
     NodeName["saveJson"] = "LF_SaveJSON";
     NodeName["saveMarkdown"] = "LF_SaveMarkdown";
     NodeName["schedulerSelector"] = "LF_SchedulerSelector";
+    NodeName["sepia"] = "LF_Sepia";
     NodeName["sequentialSeedsGenerator"] = "LF_SequentialSeedsGenerator";
     NodeName["setValueInJson"] = "LF_SetValueInJSON";
     NodeName["shuffleJsonKeys"] = "LF_ShuffleJSONKeys";

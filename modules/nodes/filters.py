@@ -3,7 +3,7 @@ import torch
 from server import PromptServer
 
 from ..utils.constants import CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, Input
-from ..utils.filters import blend_effect, brightness_effect, clarity_effect, contrast_effect, desaturate_effect, gaussian_blur_effect, line_effect, vignette_effect
+from ..utils.filters import blend_effect, brightness_effect, clarity_effect, contrast_effect, desaturate_effect, gaussian_blur_effect, line_effect, sepia_effect, vignette_effect
 from ..utils.helpers import normalize_input_image, normalize_list_to_value, normalize_output_image, process_and_save_image
 
 CATEGORY = f"{CATEGORY_PREFIX}/Filters"
@@ -593,6 +593,66 @@ class LF_Line:
         return (batch_list[0], image_list)
 # endregion
 
+# region LF_Sepia
+class LF_Sepia:
+    @classmethod
+    def INPUT_TYPES(self):
+        return {
+            "required": {
+                "image": (Input.IMAGE, {
+                    "tooltip": "Input image tensor or a list of image tensors."
+                }),
+                "intensity": (Input.FLOAT, {
+                    "default": 0.5,
+                    "min": 0.0,
+                    "max": 1.0,
+                    "step": 0.05,
+                    "tooltip": "Controls the strength of the sepia effect."
+                }),
+            },
+            "optional": {
+                "ui_widget": (Input.KUL_COMPARE, {
+                    "default": {}
+                })
+            },
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
+        }
+
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    OUTPUT_IS_LIST = (False, True)
+    RETURN_NAMES = ("image", "image_list")
+    RETURN_TYPES = ("IMAGE", "IMAGE")
+
+    def on_exec(self, **kwargs: dict):
+        image: list[torch.Tensor] = normalize_input_image(kwargs.get("image"))
+        intensity: float = normalize_list_to_value(kwargs.get("intensity"))
+
+        nodes: list[dict] = []
+        dataset: dict = {"nodes": nodes}
+
+        processed_images = process_and_save_image(
+            images=image,
+            filter_function=sepia_effect,
+            filter_args={
+                'intensity': intensity,
+            },
+            filename_prefix="sepia",
+            nodes=nodes,
+        )
+
+        batch_list, image_list = normalize_output_image(processed_images)
+
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}sepia", {
+            "node": kwargs.get("node_id"),
+            "dataset": dataset,
+        })
+
+        return (batch_list[0], image_list)
+# endregion
+
 # region LF_Vignette
 class LF_Vignette:
     @classmethod
@@ -682,6 +742,7 @@ NODE_CLASS_MAPPINGS = {
     "LF_Desaturation": LF_Desaturation,
     "LF_GaussianBlur": LF_GaussianBlur,
     "LF_Line": LF_Line,
+    "LF_Sepia": LF_Sepia,
     "LF_Vignette": LF_Vignette
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
@@ -691,6 +752,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_Contrast": "Contrast",
     "LF_Desaturation": "Desaturation",
     "LF_GaussianBlur": "Gaussian Blur",
-    "LF_Line": "LF_Line",
+    "LF_Line": "Line",
+    "LF_Sepia": "Sepia",
     "LF_Vignette": "Vignette"
 }

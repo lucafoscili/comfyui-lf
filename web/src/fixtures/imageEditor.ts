@@ -1,5 +1,6 @@
 import { KulDataDataset } from '../types/ketchup-lite/components';
 import {
+  ImageEditorBlendIds,
   ImageEditorBrightnessIds,
   ImageEditorBrushIds,
   ImageEditorClarityIds,
@@ -9,6 +10,7 @@ import {
   ImageEditorFilters,
   ImageEditorGaussianBlurIds,
   ImageEditorLineIds,
+  ImageEditorSepiaIds,
   ImageEditorSliderIds,
   ImageEditorTextfieldIds,
   ImageEditorToggleIds,
@@ -16,6 +18,42 @@ import {
 } from '../types/widgets/imageEditor';
 
 export const SETTINGS: ImageEditorFilters = {
+  //#region Blend
+  blend: {
+    controlIds: ImageEditorBlendIds,
+    settings: {
+      color: '#FF0000',
+      opacity: 0.5,
+    },
+    configs: {
+      [ImageEditorControls.Slider]: [
+        {
+          ariaLabel: 'Opacity',
+          controlType: ImageEditorControls.Slider,
+          defaultValue: 0,
+          id: ImageEditorSliderIds.Opacity,
+          isMandatory: true,
+          max: '1',
+          min: '0',
+          step: '0.01',
+          title: 'Adjust the opacity of the blended layer.',
+        },
+      ],
+      [ImageEditorControls.Textfield]: [
+        {
+          ariaLabel: 'Color',
+          controlType: ImageEditorControls.Textfield,
+          defaultValue: '#FF0000',
+          id: ImageEditorTextfieldIds.Color,
+          isMandatory: true,
+          title: 'Sets the solid color that will be blended onto the image.',
+          type: 'color',
+        },
+      ],
+    },
+  },
+  //#endregion
+
   //#region Brightness
   brightness: {
     controlIds: ImageEditorBrightnessIds,
@@ -368,6 +406,30 @@ export const SETTINGS: ImageEditorFilters = {
   },
   //#endregion
 
+  //#region Sepia
+  sepia: {
+    controlIds: ImageEditorSepiaIds,
+    settings: {
+      intensity: 0,
+    },
+    configs: {
+      [ImageEditorControls.Slider]: [
+        {
+          ariaLabel: 'Sepia Intensity',
+          controlType: ImageEditorControls.Slider,
+          defaultValue: 0,
+          id: ImageEditorSliderIds.Intensity,
+          isMandatory: true,
+          max: '1',
+          min: '0',
+          step: '0.01',
+          title: 'Controls the intensity of the sepia effect.',
+        },
+      ],
+    },
+  },
+  //#endregion
+
   //#region Vignette
   vignette: {
     controlIds: ImageEditorVignetteIds,
@@ -520,6 +582,20 @@ export const TREE_DATA: KulDataDataset = {
       icon: 'palette',
       value: 'Creative Effects',
       children: [
+        //#region Blend
+        {
+          cells: {
+            kulCode: {
+              shape: 'code',
+              value: JSON.stringify(SETTINGS.blend),
+            },
+          },
+          description: 'Blends a color layer onto the image.',
+          id: 'blend',
+          value: 'Blend',
+        },
+        //#endregion
+
         //#region Gaussian blur
         {
           description: 'Blurs the image.',
@@ -545,6 +621,20 @@ export const TREE_DATA: KulDataDataset = {
           },
           id: 'line',
           value: 'Line',
+        },
+        //#endregion
+
+        //#region Sepia
+        {
+          cells: {
+            kulCode: {
+              shape: 'code',
+              value: JSON.stringify(SETTINGS.sepia),
+            },
+          },
+          description: 'Applies a sepia effect to the image.',
+          id: 'sepia',
+          value: 'Sepia',
         },
         //#endregion
 

@@ -9,8 +9,8 @@ from PIL import Image
 from server import PromptServer
 
 from ..utils.constants import API_ROUTE_PREFIX
-from ..utils.filters import blend_effect, brightness_effect, clarity_effect, contrast_effect, desaturate_effect, gaussian_blur_effect, line_effect, vignette_effect
-from ..utils.helpers import base64_to_tensor, convert_to_boolean, convert_to_float, convert_to_int, create_masonry_node, get_comfy_dir, get_resource_url, pil_to_tensor, resolve_filepath, resolve_url, tensor_to_pil
+from ..utils.filters import blend_effect, brightness_effect, clarity_effect, contrast_effect, desaturate_effect, gaussian_blur_effect, line_effect, sepia_effect, vignette_effect
+from ..utils.helpers import base64_to_tensor, convert_to_boolean, convert_to_float, convert_to_int, create_colored_tensor, create_masonry_node, get_comfy_dir, get_resource_url, pil_to_tensor, resolve_filepath, resolve_url, tensor_to_pil
 
 # region get-image
 @PromptServer.instance.routes.post(f"{API_ROUTE_PREFIX}/get-image")
@@ -83,6 +83,8 @@ async def process_image(request):
             processed_tensor = apply_gaussian_blur_effect(img_tensor, settings)
         elif filter_type == "line":
             processed_tensor = apply_line_effect(img_tensor, settings)
+        elif filter_type == "sepia":
+            processed_tensor = apply_sepia_effect(img_tensor, settings)
         elif filter_type == "vignette":
             processed_tensor = apply_vignette_effect(img_tensor, settings)
         else:
@@ -104,8 +106,11 @@ async def process_image(request):
 # region helpers
 def apply_blend_effect(img_tensor: torch.Tensor, settings: dict):
     opacity = convert_to_float(settings.get("opacity", 1.0))
+    color: str = settings.get("color", "FF0000")
 
-    return blend_effect(img_tensor, opacity)
+    overlay_image = create_colored_tensor(img_tensor, color)
+
+    return blend_effect(img_tensor, overlay_image, opacity)
 
 def apply_brightness_effect(img_tensor: torch.Tensor, settings: dict):
     brightness_strength = convert_to_float(settings.get("strength", 0))
@@ -160,13 +165,18 @@ def apply_line_effect(img_tensor: torch.Tensor, settings: dict):
 
     return line_effect(img_tensor, points, size, color, opacity, smooth)
 
+def apply_sepia_effect(img_tensor: torch.Tensor, settings: dict):
+    intensity = convert_to_float(settings.get("intensity", 0))
+
+    return sepia_effect(img_tensor, intensity)
+
 def apply_vignette_effect(img_tensor: torch.Tensor, settings: dict):
     intensity = convert_to_float(settings.get("intensity", 0))
     radius = convert_to_float(settings.get("radius", 0))
     shape: str = settings.get("shape", "elliptical")
     color: str = settings.get("color", "000000")
 
-    return vignette_effect(img_tensor, intensity, radius, shape, color)  
+    return vignette_effect(img_tensor, intensity, radius, shape, color)
 
 def load_image_tensor(image_path: str) -> torch.Tensor:
     try:
