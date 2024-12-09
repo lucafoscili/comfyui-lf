@@ -7,6 +7,7 @@ import {
   ImageEditorContrastIds,
   ImageEditorControls,
   ImageEditorDesaturateIds,
+  ImageEditorFilmGrainIds,
   ImageEditorFilters,
   ImageEditorGaussianBlurIds,
   ImageEditorLineIds,
@@ -314,6 +315,61 @@ export const SETTINGS: ImageEditorFilters = {
   },
   //#endregion
 
+  //#region Film grain
+  filmGrain: {
+    controlIds: ImageEditorFilmGrainIds,
+    settings: { intensity: 0, size: 1, soft_blend: false, tint: '#FFFFFF' },
+    configs: {
+      [ImageEditorControls.Slider]: [
+        {
+          ariaLabel: 'Intensity',
+          controlType: ImageEditorControls.Slider,
+          defaultValue: 0,
+          id: ImageEditorSliderIds.Intensity,
+          isMandatory: true,
+          max: '1',
+          min: '0',
+          step: '0.05',
+          title: 'Sets the strength of the filter.',
+        },
+        {
+          ariaLabel: 'Size',
+          controlType: ImageEditorControls.Slider,
+          defaultValue: 1,
+          id: ImageEditorSliderIds.Size,
+          isMandatory: true,
+          max: '5',
+          min: '0.5',
+          step: '0.1',
+          title: "Sets the size of the noise's granularity.",
+        },
+      ],
+      [ImageEditorControls.Textfield]: [
+        {
+          ariaLabel: 'Tint',
+          controlType: ImageEditorControls.Textfield,
+          defaultValue: '#FFFFFF',
+          id: ImageEditorTextfieldIds.Tint,
+          isMandatory: true,
+          title: 'Hexadecimal color (default is FFFFFF for no tint).',
+          type: 'color',
+        },
+      ],
+      [ImageEditorControls.Toggle]: [
+        {
+          ariaLabel: 'Soft blend',
+          controlType: ImageEditorControls.Toggle,
+          defaultValue: false,
+          id: ImageEditorToggleIds.SoftBlend,
+          title: 'If True, uses a soft blending mode for the grain.',
+          off: 'false',
+          on: 'true',
+        },
+      ],
+    },
+  },
+  //#endregion
+
   //#region Gaussian blur
   gaussianBlur: {
     controlIds: ImageEditorGaussianBlurIds,
@@ -593,6 +649,20 @@ export const TREE_DATA: KulDataDataset = {
           description: 'Blends a color layer onto the image.',
           id: 'blend',
           value: 'Blend',
+        },
+        //#endregion
+
+        //#region Film grain
+        {
+          description: 'Applies a film grain effect.',
+          cells: {
+            kulCode: {
+              shape: 'code',
+              value: JSON.stringify(SETTINGS.filmGrain),
+            },
+          },
+          id: 'film_grain',
+          value: 'Film grain',
         },
         //#endregion
 

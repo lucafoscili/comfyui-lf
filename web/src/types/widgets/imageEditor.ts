@@ -104,11 +104,13 @@ export enum ImageEditorSliderIds {
 }
 export enum ImageEditorTextfieldIds {
   Color = 'color',
+  Tint = 'tint',
 }
 export enum ImageEditorToggleIds {
   Localized = 'localized',
   Shape = 'shape',
   Smooth = 'smoooth',
+  SoftBlend = 'soft_blend',
 }
 export type ImageEditorControlIds =
   | ImageEditorCanvasIds
@@ -181,6 +183,7 @@ export interface ImageEditorFilterSettingsMap {
   clarity: ImageEditorClaritySettings;
   contrast: ImageEditorContrastSettings;
   desaturate: ImageEditorDesaturateSettings;
+  filmGrain: ImageEditorFilmGrainSettings;
   gaussianBlur: ImageEditorGaussianBlurSettings;
   line: ImageEditorLineSettings;
   sepia: ImageEditorSepiaSettings;
@@ -217,6 +220,12 @@ export interface ImageEditorDesaturateSettings extends ImageEditorFilterSettings
   g_channel: number;
   b_channel: number;
   strength: number;
+}
+export interface ImageEditorFilmGrainSettings extends ImageEditorFilterSettings {
+  intensity: number;
+  size: number;
+  tint: string;
+  soft_blend: boolean;
 }
 export interface ImageEditorGaussianBlurSettings extends ImageEditorFilterSettings {
   blur_kernel_size: number;
@@ -267,6 +276,12 @@ export enum ImageEditorDesaturateIds {
   GreenChannel = 'g_channel',
   BlueChannel = 'b_channel',
   Strength = 'strength',
+}
+export enum ImageEditorFilmGrainIds {
+  Intensity = 'intensity',
+  Size = 'size',
+  Tint = 'tint',
+  SoftBlend = 'soft_blend',
 }
 export enum ImageEditorGaussianBlurIds {
   BlurKernelSize = 'blur_kernel_size',
@@ -345,6 +360,15 @@ export type ImageEditorDesaturateFilter = ImageEditorFilterDefinition<
     [ImageEditorControls.Slider]: ImageEditorSliderConfig[];
   }
 >;
+export type ImageEditorFilmGrainFilter = ImageEditorFilterDefinition<
+  typeof ImageEditorFilmGrainIds,
+  ImageEditorFilmGrainSettings,
+  {
+    [ImageEditorControls.Slider]: ImageEditorSliderConfig[];
+    [ImageEditorControls.Textfield]: ImageEditorTextfieldConfig[];
+    [ImageEditorControls.Toggle]: ImageEditorToggleConfig[];
+  }
+>;
 export type ImageEditorGaussianBlurFilter = ImageEditorFilterDefinition<
   typeof ImageEditorGaussianBlurIds,
   ImageEditorGaussianBlurSettings,
@@ -385,6 +409,7 @@ export type ImageEditorFilters = {
   clarity: ImageEditorClarityFilter;
   contrast: ImageEditorContrastFilter;
   desaturate: ImageEditorDesaturateFilter;
+  filmGrain: ImageEditorFilmGrainFilter;
   gaussianBlur: ImageEditorGaussianBlurFilter;
   line: ImageEditorLineFilter;
   sepia: ImageEditorSepiaFilter;
@@ -396,6 +421,7 @@ export type ImageEditorFilter =
   | ImageEditorClarityFilter
   | ImageEditorContrastFilter
   | ImageEditorDesaturateFilter
+  | ImageEditorFilmGrainFilter
   | ImageEditorGaussianBlurFilter
   | ImageEditorLineFilter
   | ImageEditorSepiaFilter

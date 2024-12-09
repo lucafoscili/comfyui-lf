@@ -27,6 +27,7 @@ export const NODE_WIDGET_MAP = {
     LF_EmbeddingSelector: [CustomWidgetName.card],
     LF_ExtractString: [CustomWidgetName.code],
     LF_ExtractPromptFromLoraTag: [CustomWidgetName.code],
+    LF_FilmGrain: [CustomWidgetName.compare],
     LF_Float: [CustomWidgetName.history],
     LF_GaussianBlur: [CustomWidgetName.compare],
     LF_GetRandomKeyFromJSON: [CustomWidgetName.code],

@@ -75,12 +75,14 @@ export declare enum ImageEditorSliderIds {
     Size = "size"
 }
 export declare enum ImageEditorTextfieldIds {
-    Color = "color"
+    Color = "color",
+    Tint = "tint"
 }
 export declare enum ImageEditorToggleIds {
     Localized = "localized",
     Shape = "shape",
-    Smooth = "smoooth"
+    Smooth = "smoooth",
+    SoftBlend = "soft_blend"
 }
 export type ImageEditorControlIds = ImageEditorCanvasIds | ImageEditorSliderIds | ImageEditorTextfieldIds | ImageEditorToggleIds;
 export type ImageEditorControlMap<ID extends ImageEditorControlIds> = ID extends ImageEditorCanvasIds ? HTMLKulCanvasElement : ID extends ImageEditorSliderIds ? HTMLKulSliderElement : ID extends ImageEditorTextfieldIds ? HTMLKulTextfieldElement : ID extends ImageEditorToggleIds ? HTMLKulToggleElement : never;
@@ -132,6 +134,7 @@ export interface ImageEditorFilterSettingsMap {
     clarity: ImageEditorClaritySettings;
     contrast: ImageEditorContrastSettings;
     desaturate: ImageEditorDesaturateSettings;
+    filmGrain: ImageEditorFilmGrainSettings;
     gaussianBlur: ImageEditorGaussianBlurSettings;
     line: ImageEditorLineSettings;
     sepia: ImageEditorSepiaSettings;
@@ -168,6 +171,12 @@ export interface ImageEditorDesaturateSettings extends ImageEditorFilterSettings
     g_channel: number;
     b_channel: number;
     strength: number;
+}
+export interface ImageEditorFilmGrainSettings extends ImageEditorFilterSettings {
+    intensity: number;
+    size: number;
+    tint: string;
+    soft_blend: boolean;
 }
 export interface ImageEditorGaussianBlurSettings extends ImageEditorFilterSettings {
     blur_kernel_size: number;
@@ -222,6 +231,12 @@ export declare enum ImageEditorDesaturateIds {
     BlueChannel = "b_channel",
     Strength = "strength"
 }
+export declare enum ImageEditorFilmGrainIds {
+    Intensity = "intensity",
+    Size = "size",
+    Tint = "tint",
+    SoftBlend = "soft_blend"
+}
 export declare enum ImageEditorGaussianBlurIds {
     BlurKernelSize = "blur_kernel_size",
     BlurSigma = "blur_sigma"
@@ -273,6 +288,11 @@ export type ImageEditorContrastFilter = ImageEditorFilterDefinition<typeof Image
 export type ImageEditorDesaturateFilter = ImageEditorFilterDefinition<typeof ImageEditorDesaturateIds, ImageEditorDesaturateSettings, {
     [ImageEditorControls.Slider]: ImageEditorSliderConfig[];
 }>;
+export type ImageEditorFilmGrainFilter = ImageEditorFilterDefinition<typeof ImageEditorFilmGrainIds, ImageEditorFilmGrainSettings, {
+    [ImageEditorControls.Slider]: ImageEditorSliderConfig[];
+    [ImageEditorControls.Textfield]: ImageEditorTextfieldConfig[];
+    [ImageEditorControls.Toggle]: ImageEditorToggleConfig[];
+}>;
 export type ImageEditorGaussianBlurFilter = ImageEditorFilterDefinition<typeof ImageEditorGaussianBlurIds, ImageEditorGaussianBlurSettings, {
     [ImageEditorControls.Slider]: ImageEditorSliderConfig[];
 }>;
@@ -297,9 +317,10 @@ export type ImageEditorFilters = {
     clarity: ImageEditorClarityFilter;
     contrast: ImageEditorContrastFilter;
     desaturate: ImageEditorDesaturateFilter;
+    filmGrain: ImageEditorFilmGrainFilter;
     gaussianBlur: ImageEditorGaussianBlurFilter;
     line: ImageEditorLineFilter;
     sepia: ImageEditorSepiaFilter;
     vignette: ImageEditorVignetteFilter;
 };
-export type ImageEditorFilter = ImageEditorBrightnessFilter | ImageEditorBrushFilter | ImageEditorClarityFilter | ImageEditorContrastFilter | ImageEditorDesaturateFilter | ImageEditorGaussianBlurFilter | ImageEditorLineFilter | ImageEditorSepiaFilter | ImageEditorVignetteFilter;
+export type ImageEditorFilter = ImageEditorBrightnessFilter | ImageEditorBrushFilter | ImageEditorClarityFilter | ImageEditorContrastFilter | ImageEditorDesaturateFilter | ImageEditorFilmGrainFilter | ImageEditorGaussianBlurFilter | ImageEditorLineFilter | ImageEditorSepiaFilter | ImageEditorVignetteFilter;

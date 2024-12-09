@@ -73,6 +73,7 @@ export enum NodeName {
   displayPrimitiveAsJson = 'LF_DisplayPrimitiveAsJSON',
   displayString = 'LF_DisplayString',
   markdownDocGenerator = 'LF_MarkdownDocGenerator',
+  filmGrain = 'LF_FilmGrain',
   float = 'LF_Float',
   embeddingSelector = 'LF_EmbeddingSelector',
   extractString = 'LF_ExtractString',

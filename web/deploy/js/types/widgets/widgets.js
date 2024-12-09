@@ -57,6 +57,7 @@ export var NodeName;
     NodeName["displayPrimitiveAsJson"] = "LF_DisplayPrimitiveAsJSON";
     NodeName["displayString"] = "LF_DisplayString";
     NodeName["markdownDocGenerator"] = "LF_MarkdownDocGenerator";
+    NodeName["filmGrain"] = "LF_FilmGrain";
     NodeName["float"] = "LF_Float";
     NodeName["embeddingSelector"] = "LF_EmbeddingSelector";
     NodeName["extractString"] = "LF_ExtractString";
