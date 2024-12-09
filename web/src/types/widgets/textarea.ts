@@ -21,7 +21,7 @@ export type TextareaNormalizeCallback = NormalizeValueCallback<TextareaDeseriali
 //#endregion
 
 //#region Value
-export type TextareaDeserializedValue = Record<string, unknown>;
+export type TextareaDeserializedValue = Record<string, unknown> | Array<Record<string, unknown>>;
 //#endregion
 
 //#region State

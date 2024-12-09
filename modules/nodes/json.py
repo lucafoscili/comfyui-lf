@@ -266,7 +266,6 @@ class LF_ImageListFromJSON:
         image_batch, image_list = normalize_output_image(image)
 
         return (image_batch[0], image_list, keys, num_images, width, height)
-
 # endregion
 
 # region LF_KeywordToggleFromJSON

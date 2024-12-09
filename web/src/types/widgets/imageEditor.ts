@@ -183,9 +183,11 @@ export interface ImageEditorFilterSettingsMap {
   desaturate: ImageEditorDesaturateSettings;
   gaussianBlur: ImageEditorGaussianBlurSettings;
   line: ImageEditorLineSettings;
+  sepia: ImageEditorSepiaSettings;
   vignette: ImageEditorVignetteSettings;
 }
 export interface ImageEditorBlendSettings extends ImageEditorFilterSettings {
+  color: string;
   opacity: number;
 }
 export interface ImageEditorBrightnessSettings extends ImageEditorFilterSettings {
@@ -226,6 +228,9 @@ export interface ImageEditorLineSettings extends ImageEditorFilterSettings {
   points: Array<{ x: number; y: number }>;
   size: number;
   smooth: boolean;
+}
+export interface ImageEditorSepiaSettings extends ImageEditorFilterSettings {
+  intensity: number;
 }
 export interface ImageEditorVignetteSettings extends ImageEditorFilterSettings {
   intensity: number;
@@ -274,6 +279,9 @@ export enum ImageEditorLineIds {
   Size = 'size',
   Smooth = 'smooth',
 }
+export enum ImageEditorSepiaIds {
+  Intensity = 'intensity',
+}
 export enum ImageEditorVignetteIds {
   Color = 'color',
   Intensity = 'intensity',
@@ -291,6 +299,14 @@ export interface ImageEditorFilterDefinition<
   hasCanvasAction?: boolean;
   settings: ImageEditorSettings;
 }
+export type ImageEditorBlendFilter = ImageEditorFilterDefinition<
+  typeof ImageEditorBlendIds,
+  ImageEditorBlendSettings,
+  {
+    [ImageEditorControls.Slider]: ImageEditorSliderConfig[];
+    [ImageEditorControls.Textfield]: ImageEditorTextfieldConfig[];
+  }
+>;
 export type ImageEditorBrightnessFilter = ImageEditorFilterDefinition<
   typeof ImageEditorBrightnessIds,
   ImageEditorBrightnessSettings,
@@ -346,6 +362,13 @@ export type ImageEditorLineFilter = ImageEditorFilterDefinition<
     [ImageEditorControls.Toggle]: ImageEditorToggleConfig[];
   }
 >;
+export type ImageEditorSepiaFilter = ImageEditorFilterDefinition<
+  typeof ImageEditorSepiaIds,
+  ImageEditorSepiaSettings,
+  {
+    [ImageEditorControls.Slider]: ImageEditorSliderConfig[];
+  }
+>;
 export type ImageEditorVignetteFilter = ImageEditorFilterDefinition<
   typeof ImageEditorVignetteIds,
   ImageEditorVignetteSettings,
@@ -356,6 +379,7 @@ export type ImageEditorVignetteFilter = ImageEditorFilterDefinition<
   }
 >;
 export type ImageEditorFilters = {
+  blend: ImageEditorBlendFilter;
   brightness: ImageEditorBrightnessFilter;
   brush: ImageEditorBrushFilter;
   clarity: ImageEditorClarityFilter;
@@ -363,6 +387,7 @@ export type ImageEditorFilters = {
   desaturate: ImageEditorDesaturateFilter;
   gaussianBlur: ImageEditorGaussianBlurFilter;
   line: ImageEditorLineFilter;
+  sepia: ImageEditorSepiaFilter;
   vignette: ImageEditorVignetteFilter;
 };
 export type ImageEditorFilter =
@@ -373,5 +398,6 @@ export type ImageEditorFilter =
   | ImageEditorDesaturateFilter
   | ImageEditorGaussianBlurFilter
   | ImageEditorLineFilter
+  | ImageEditorSepiaFilter
   | ImageEditorVignetteFilter;
 //#endregion

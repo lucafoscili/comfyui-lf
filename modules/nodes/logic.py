@@ -6,7 +6,7 @@ import torch
 from server import PromptServer
 
 from ..utils.constants import ANY, CATEGORY_PREFIX, EVENT_PREFIX, FUNCTION, Input, INT_MAX, LORA_TAG_REGEX
-from ..utils.helpers import count_words_in_comma_separated_string, cleanse_lora_tag, normalize_input_list, convert_to_boolean, convert_to_float, convert_to_int, convert_to_json, normalize_input_image, normalize_input_list, normalize_list_to_value, not_none
+from ..utils.helpers import count_words_in_comma_separated_string, cleanse_lora_tag, normalize_input_list, convert_to_boolean, convert_to_float, convert_to_int, convert_to_json, normalize_input_image, normalize_input_list, normalize_json_input, normalize_list_to_value, not_none
 
 CATEGORY = f"{CATEGORY_PREFIX}/Logic"
 
@@ -388,6 +388,107 @@ class LF_ParsePromptWithLoraTags:
         return (text, loras_string)
 # endregion
 
+# region LF_RegexReplace
+class LF_RegexReplace:
+    @classmethod
+    def INPUT_TYPES(self):
+        return {
+            "required": {
+                "input_text": (Input.STRING, {
+                    "default": "", 
+                    "tooltip": "The text where the regex replacements will occur."
+                }),
+                "pattern": (Input.STRING, {
+                    "default": "", 
+                    "tooltip": "The regex pattern to match."
+                }),
+                "replacement": (Input.STRING, {
+                    "default": "", 
+                    "tooltip": "The substring to replace the regex matches with."
+                }),
+            },
+            "optional": {
+                "flags": (Input.STRING, {
+                    "default": "0",
+                    "tooltip": "Regex flags to use. Comma-separated list: IGNORECASE, MULTILINE, DOTALL, etc."
+                }),
+                "ui_widget": (Input.KUL_CODE, {
+                    "default": {}
+                }),
+            },
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
+        }
+
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    OUTPUT_IS_LIST = (False, True)
+    RETURN_NAMES = ("string", "string_list")
+    RETURN_TYPES = ("STRING", "STRING")
+
+    def on_exec(self, **kwargs: dict):
+        input_text: str = normalize_list_to_value(kwargs.get("input_text"))
+        pattern: str = normalize_list_to_value(kwargs.get("pattern"))
+        replacement: str = normalize_list_to_value(kwargs.get("replacement"))
+        flags_raw: str = normalize_list_to_value(kwargs.get("flags", "0"))
+
+        flag_mapping = {
+            "IGNORECASE": re.IGNORECASE,
+            "MULTILINE": re.MULTILINE,
+            "DOTALL": re.DOTALL,
+            "VERBOSE": re.VERBOSE,
+        }
+        flags = 0
+        if flags_raw:
+            for flag in flags_raw.split(","):
+                flag = flag.strip().upper()
+                if flag in flag_mapping:
+                    flags |= flag_mapping[flag]
+
+        if not input_text or not pattern:
+            log = f"**Error**: Input text or pattern is empty. Replacement cannot proceed."
+            PromptServer.instance.send_sync(f"{EVENT_PREFIX}regexreplace", {
+                "node": kwargs.get("node_id"),
+                "value": log,
+            })
+            return ("", [])
+
+        replacement_count = 0
+        modified_text = input_text
+        try:
+            modified_text, replacement_count = re.subn(pattern, replacement, input_text, flags=flags)
+        except re.error as e:
+            log = f"""## Regex Error:
+
+  **Invalid Pattern**: {pattern}
+  **Error Message**: {str(e)}
+            """
+            PromptServer.instance.send_sync(f"{EVENT_PREFIX}regexreplace", {
+                "node": kwargs.get("node_id"),
+                "value": log,
+            })
+            return ("", [])
+
+        log = f"""## Result:
+
+  **Original Text**: {input_text}
+  **Regex Pattern**: {pattern}
+  **Replacement Substring**: {replacement}
+  **Regex Flags**: {flags_raw}
+  **Resulting Text**: {modified_text}
+  **Replacements Made**: {replacement_count}
+        """
+
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}regexreplace", {
+            "node": kwargs.get("node_id"),
+            "value": log,
+        })
+
+        return (modified_text, [modified_text])
+
+# endregion
+
 # region LF_ResolutionSwitcher
 class LF_ResolutionSwitcher:
     @classmethod
@@ -458,6 +559,189 @@ class LF_ResolutionSwitcher:
         })
 
         return (width, height, is_landscape)
+# endregion
+
+# region LF_StringReplace
+class LF_StringReplace:
+    @classmethod
+    def INPUT_TYPES(self):
+        return {
+            "required": {
+                "input_text": (Input.STRING, {
+                    "default": "", 
+                    "tooltip": "The text where replacements will occur."
+                }),
+                "target": (Input.STRING, {
+                    "default": "", 
+                    "tooltip": "The substring to be replaced."
+                }),
+                "replacement": (Input.STRING, {
+                    "default": "", 
+                    "tooltip": "The substring to replace the target with."
+                }),
+            },
+            "optional": {
+                "ui_widget": (Input.KUL_CODE, {
+                    "default": {}
+                }),
+            },
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
+        }
+
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    OUTPUT_IS_LIST = (False, True)
+    RETURN_NAMES = ("string", "string_list")
+    RETURN_TYPES = ("STRING", "STRING")
+
+    def on_exec(self, **kwargs: dict):
+        input_text: str = normalize_list_to_value(kwargs.get("input_text"))
+        target: str = normalize_list_to_value(kwargs.get("target"))
+        replacement: str = normalize_list_to_value(kwargs.get("replacement"))
+
+        if not input_text or not target:
+            log = f"**Error**: Input text or target is empty. Replacement cannot proceed."
+            PromptServer.instance.send_sync(f"{EVENT_PREFIX}stringreplace", {
+                "node": kwargs.get("node_id"),
+                "value": log,
+            })
+            return ("", [])
+
+        replacement_count = input_text.count(target)
+        modified_text = input_text.replace(target, replacement)
+
+        log = f"""## Result:
+
+  **Original Text**: {input_text}
+  **Target Substring**: {target}
+  **Replacement Substring**: {replacement}
+  **Resulting Text**: {modified_text}
+  **Replacements Made**: {replacement_count}
+        """
+
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}stringreplace", {
+            "node": kwargs.get("node_id"),
+            "value": log,
+        })
+
+        return (modified_text, [modified_text])
+# endregion
+
+# region LF_StringTemplate
+class LF_StringTemplate:
+    @classmethod
+    def INPUT_TYPES(self):
+        return {
+            "required": {
+                "template": (Input.STRING, {
+                    "default": "",
+                    "multiline": True,
+                    "tooltip": "The string template with placeholders matching the keys of the input dictionaries (e.g.: {name}, {style}, etc.)."
+                }),
+                "replacements": (Input.JSON, {
+                    "default": [{}],
+                    "tooltip": "A list of dictionaries for placeholders. Each dictionary is used for a separate result."
+                }),
+            },
+            "optional": {
+                "seed": (Input.INTEGER, {
+                    "default": 42, 
+                    "max": INT_MAX, 
+                    "tooltip": "Seed to control the randomness of the shuffling."
+                }),
+                "randomize": (Input.BOOLEAN, {
+                    "default": False,
+                    "tooltip": "If true, randomly pick one dictionary from the replacements list."
+                }),
+                "use_regex_placeholders": (Input.BOOLEAN, {
+                    "default": False,
+                    "tooltip": "Enable regex placeholders like {\\w+} for advanced templates."
+                }),
+                "ui_widget": (Input.KUL_CODE, {
+                    "default": {}
+                }),
+            },
+            "hidden": {
+                "node_id": "UNIQUE_ID"
+            }
+        }
+
+    CATEGORY = CATEGORY
+    FUNCTION = FUNCTION
+    OUTPUT_IS_LIST = (False, True)
+    RETURN_NAMES = ("string", "string_list")
+    RETURN_TYPES = ("STRING", "STRING")
+
+    def on_exec(self, **kwargs: dict):
+        template: str = normalize_list_to_value(kwargs.get("template"))
+        replacements_list: list[dict] | dict = normalize_json_input(kwargs.get("replacements", [{}]))
+        randomize: bool = normalize_list_to_value(kwargs.get("randomize", False))
+        seed: int = normalize_list_to_value(kwargs.get("seed", 42))
+        use_regex: bool = normalize_list_to_value(kwargs.get("use_regex_placeholders", False))
+
+        if not isinstance(replacements_list, list) or not all(isinstance(d, dict) for d in replacements_list):
+            log = "**Error**: Replacements must be a list of dictionaries."
+            PromptServer.instance.send_sync(f"{EVENT_PREFIX}stringtemplate", {
+                "node": kwargs.get("node_id"),
+                "value": log,
+            })
+            return ("", [])
+
+        unmatched_keys = []
+        filled_templates = []
+
+        try:
+            if randomize:
+                random.seed(seed)
+                selected_dict = random.choice(replacements_list)
+                filled_templates = [self._process_template(template, selected_dict, use_regex, unmatched_keys)]
+            else:
+                for replacements in replacements_list:
+                    filled_templates.append(self._process_template(template, replacements, use_regex, unmatched_keys))
+
+        except Exception as e:
+            log = f"**Error**: {str(e)}"
+            PromptServer.instance.send_sync(f"{EVENT_PREFIX}stringtemplate", {
+                "node": kwargs.get("node_id"),
+                "value": log,
+            })
+            return ("", [])
+
+        log = f"""## Result:
+
+  **Template**: {template}
+  **Replacements List**: {replacements_list}
+  **Randomized**: {randomize}
+  **Unmatched Keys**: {", ".join(unmatched_keys) if unmatched_keys else "None"}
+  **Result**: {filled_templates}
+        """
+
+        PromptServer.instance.send_sync(f"{EVENT_PREFIX}stringtemplate", {
+            "node": kwargs.get("node_id"),
+            "value": log,
+        })
+
+        return (filled_templates[0], filled_templates)
+
+    def _process_template(self, template, replacements, use_regex, unmatched_keys):
+        filled_template = template
+        if use_regex:
+            pattern = r"\{([^}]+)\}"
+            def replace_match(match):
+                key = match.group(1)
+                if key in replacements:
+                    return str(replacements[key])
+                unmatched_keys.append(key)
+                return match.group(0)
+            filled_template = re.sub(pattern, replace_match, template)
+        else:
+            try:
+                filled_template = template.format(**replacements)
+            except KeyError as e:
+                unmatched_keys.append(str(e).strip("'"))
+        return filled_template
 # endregion
 
 # region LF_SwitchFloat
@@ -752,7 +1036,10 @@ NODE_CLASS_MAPPINGS = {
     "LF_IsLandscape": LF_IsLandscape,
     "LF_MathOperation": LF_MathOperation,
     "LF_ParsePromptWithLoraTags": LF_ParsePromptWithLoraTags,
+    "LF_RegexReplace": LF_RegexReplace,
     "LF_ResolutionSwitcher": LF_ResolutionSwitcher,
+    "LF_StringReplace": LF_StringReplace,
+    "LF_StringTemplate": LF_StringTemplate,
     "LF_SwitchFloat": LF_SwitchFloat,
     "LF_SwitchImage": LF_SwitchImage,
     "LF_SwitchInteger": LF_SwitchInteger,
@@ -765,7 +1052,10 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LF_IsLandscape": "Is image in landscape res.?",
     "LF_MathOperation": "Math operation",
     "LF_ParsePromptWithLoraTags": "Parse Prompt with LoRA tags",
+    "LF_RegexReplace": "Regex replace",
     "LF_ResolutionSwitcher": "Resolution switcher",
+    "LF_StringReplace": "String replace",
+    "LF_StringTemplate": "String template",
     "LF_SwitchFloat": "Switch Float",
     "LF_SwitchImage": "Switch Image",
     "LF_SwitchInteger": "Switch Integer",

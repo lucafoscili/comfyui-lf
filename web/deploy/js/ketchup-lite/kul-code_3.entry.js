@@ -2861,14 +2861,14 @@ const STATIC_LANGUAGES = {
 const kulCodeCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}@keyframes fade-in-grid{0%{display:none}1%{display:grid;opacity:0}100%{display:grid;opacity:1}}:host{--kul_code_background_color:var(\n    --kul-code-background-color,\n    rgba(var(--kul-background-color-rgb) 0.275)\n  );--kul_code_font_family:var(\n    --kul-code-font-family,\n    var(--kul-font-family-monospace)\n  );--kul_code_header_background_color:var(\n    --kul-code-header-background-color,\n    var(--kul-title-background-color)\n  );--kul_code_header_color:var(--kul-code-header-color, var(--kul-title-color));--kul_code_selection_background_color:var(\n    --kul-code-selection-background-color,\n    rgba(var(--kul-border-color-rgb, 0.275))\n  );--kul_code_text_color:var(--kul-code-text-color, var(--kul-text-color));--kul_code_token_color_1:var(\n    --kul-code-token-color-1,\n    var(--kul-chart-color-1)\n  );--kul_code_token_color_2:var(\n    --kul-code-token-color-2,\n    var(--kul-chart-color-2)\n  );--kul_code_token_color_3:var(\n    --kul-code-token-color-3,\n    var(--kul-chart-color-3)\n  );--kul_code_token_color_4:var(\n    --kul-code-token-color-4,\n    var(--kul-chart-color-4)\n  );--kul_code_token_color_5:var(\n    --kul-code-token-color-5,\n    var(--kul-chart-color-5)\n  );display:block;height:100%;width:100%}#kul-component,.container{height:100%;overflow:auto;position:relative;width:100%}.container{display:grid;grid-template-rows:max-content 1fr}.title{font-size:0.85em;letter-spacing:2px;padding:0.5em;text-transform:uppercase}.header{--kul-button-primary-color:var(--kul_code_header_color);align-items:center;background:var(--kul_code_header_background_color);border-color:var(--kul-primary-color);border-left:inset;color:var(--kul_code_header_color);display:flex;height:36px;justify-content:space-between;padding:0.25em 0.75em;position:sticky;top:0;z-index:1}:not(pre)>code,pre{-webkit-backdrop-filter:blur(3.5px);backdrop-filter:blur(3.5px);background:var(--kul_code_background_color);border:1px solid var(--kul_code_header_background_color);border-radius:4px}code,pre{color:var(--kul_code_text_color);font-family:var(--kul_code_font_family);font-size:1em;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}code ::-moz-selection,code::-moz-selection,pre ::-moz-selection,pre::-moz-selection{text-shadow:none;background:var(--kul_code_selection_background_color)}code ::selection,code::selection,pre ::selection,pre::selection{text-shadow:none;background:var(--kul_code_selection_background_color)}.body{color:var(--kul_code_text_color);padding:1em;white-space:pre-line}pre{box-sizing:border-box;margin:0;min-height:calc(100% - 36px);overflow:auto;padding:1.75em 1em;white-space:pre-wrap}:not(pre)>code{border-radius:0.3em;padding:0.1em;white-space:normal}.token.cdata,.token.comment,.token.doctype,.token.prolog{color:rgba(var(--kul-text-color-rgb), 0.575)}.token.punctuation{color:rgba(var(--kul-text-color-rgb), 0.875)}.token.namespace{opacity:0.7}.token.bold,.token.important{font-weight:700}.token.italic{font-style:italic}.token.entity{cursor:help}.token.boolean,.token.constant,.token.deleted,.token.number,.token.property,.token.symbol,.token.tag{color:var(--kul_code_token_color_1)}.token.attr-name,.token.builtin,.token.char,.token.inserted,.token.selector,.token.string{color:var(--kul_code_token_color_2)}.token.atrule,.token.attr-value,.token.keyword{color:var(--kul_code_token_color_3)}.token.class-name,.token.function{color:var(--kul_code_token_color_4)}.token.important,.token.regex,.token.variable{color:var(--kul_code_token_color_5)}";
 const KulCodeStyle0 = kulCodeCss;
 
-var __classPrivateFieldGet$1 = (undefined && undefined.__classPrivateFieldGet) || function (receiver, state, kind, f) {
+var __classPrivateFieldGet$2 = (undefined && undefined.__classPrivateFieldGet) || function (receiver, state, kind, f) {
     if (kind === "a" && !f)
         throw new TypeError("Private accessor was defined without a getter");
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver))
         throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
-var __classPrivateFieldSet = (undefined && undefined.__classPrivateFieldSet) || function (receiver, state, value, kind, f) {
+var __classPrivateFieldSet$1 = (undefined && undefined.__classPrivateFieldSet) || function (receiver, state, value, kind, f) {
     if (kind === "m")
         throw new TypeError("Private method is not writable");
     if (kind === "a" && !f)
@@ -2948,7 +2948,7 @@ const KulCode = class {
     /*          L i f e c y c l e   H o o k s          */
     /*-------------------------------------------------*/
     componentWillLoad() {
-        __classPrivateFieldGet$1(this, _KulCode_kulManager, "f").theme.register(this);
+        __classPrivateFieldGet$2(this, _KulCode_kulManager, "f").theme.register(this);
         STATIC_LANGUAGES.css(Prism);
         STATIC_LANGUAGES.javascript(Prism);
         STATIC_LANGUAGES.json(Prism);
@@ -2960,23 +2960,23 @@ const KulCode = class {
         STATIC_LANGUAGES.scss(Prism);
         STATIC_LANGUAGES.tsx(Prism);
         STATIC_LANGUAGES.typescript(Prism);
-        __classPrivateFieldGet$1(this, _KulCode_instances, "m", _KulCode_updateValue).call(this);
+        __classPrivateFieldGet$2(this, _KulCode_instances, "m", _KulCode_updateValue).call(this);
     }
     componentDidLoad() {
         this.onKulEvent(new CustomEvent("ready"), "ready");
-        __classPrivateFieldGet$1(this, _KulCode_kulManager, "f").debug.updateDebugInfo(this, "did-load");
+        __classPrivateFieldGet$2(this, _KulCode_kulManager, "f").debug.updateDebugInfo(this, "did-load");
     }
     componentWillUpdate() {
-        this.value = __classPrivateFieldGet$1(this, _KulCode_instances, "m", _KulCode_format).call(this, this.kulValue);
+        this.value = __classPrivateFieldGet$2(this, _KulCode_instances, "m", _KulCode_format).call(this, this.kulValue);
     }
     componentWillRender() {
-        __classPrivateFieldGet$1(this, _KulCode_kulManager, "f").debug.updateDebugInfo(this, "will-render");
+        __classPrivateFieldGet$2(this, _KulCode_kulManager, "f").debug.updateDebugInfo(this, "will-render");
     }
     componentDidRender() {
-        if (__classPrivateFieldGet$1(this, _KulCode_el, "f")) {
-            __classPrivateFieldGet$1(this, _KulCode_instances, "m", _KulCode_highlightCode).call(this);
+        if (__classPrivateFieldGet$2(this, _KulCode_el, "f")) {
+            __classPrivateFieldGet$2(this, _KulCode_instances, "m", _KulCode_highlightCode).call(this);
         }
-        __classPrivateFieldGet$1(this, _KulCode_kulManager, "f").debug.updateDebugInfo(this, "did-render");
+        __classPrivateFieldGet$2(this, _KulCode_kulManager, "f").debug.updateDebugInfo(this, "did-render");
     }
     render() {
         const isPreserveSpaceMissing = !!(this.kulPreserveSpaces !== true && this.kulPreserveSpaces !== false);
@@ -2986,7 +2986,7 @@ const KulCode = class {
             this.kulLanguage.toLowerCase() === "css" ||
             this.kulLanguage.toLowerCase() === "";
         const shouldPreserveSpace = this.kulPreserveSpaces || (isPreserveSpaceMissing && !isLikelyTextual);
-        return (h(Host, { key: '1b24613971f2737e5f90932692aff91e55573691' }, this.kulStyle && (h("style", { key: 'a59e8a81ed54d63451cc9bb7090c32784fb6ac91', id: KUL_STYLE_ID }, __classPrivateFieldGet$1(this, _KulCode_kulManager, "f").theme.setKulStyle(this))), h("div", { key: 'd9a03f067c7b07f4a93d0afcb82069ce6dba4bf9', id: KUL_WRAPPER_ID }, h("div", { key: 'beeca8cb44cf0e404d48d2fa30f2a7bd4f782bc1', class: "container" }, h("div", { key: 'a226f7b1150966904c400115ae6caece226a9064', class: "header" }, h("span", { key: '7308739445a19dd547188dd66957b7eb97db7bdf', class: "title" }, this.kulLanguage), h("kul-button", { key: '5b429f4962b8aed2a62a1415f6a7429c35995c44', class: "kul-slim kul-full-height", kulIcon: "content_copy", kulLabel: "Copy", kulStyling: "flat", "onKul-button-event": (e) => {
+        return (h(Host, { key: 'bd42101f7d44573e30ce9fc448245db9ebb1c28c' }, this.kulStyle && (h("style", { key: '5c4c70c1ddcfd100360b8a60c476e02eaae7e5dc', id: KUL_STYLE_ID }, __classPrivateFieldGet$2(this, _KulCode_kulManager, "f").theme.setKulStyle(this))), h("div", { key: 'ae39a22b1a4a125171162baf9a66686272e4235b', id: KUL_WRAPPER_ID }, h("div", { key: '974b2ed5d7a31717fd29d8ce81801940d6ce0932', class: "container" }, h("div", { key: 'a416ad2c637111e92d7d438526236cb911d06b1f', class: "header" }, h("span", { key: '00ecda7c343dfeb459ce60f3d877f12b9ee53d38', class: "title" }, this.kulLanguage), h("kul-button", { key: '560c02ca090d9651233b8aa5245d6a693a6dd069', class: "kul-slim kul-full-height", kulIcon: "content_copy", kulLabel: "Copy", kulStyling: "flat", "onKul-button-event": (e) => {
                 const { comp, eventType } = e.detail;
                 switch (eventType) {
                     case "click":
@@ -2996,16 +2996,16 @@ const KulCode = class {
                 }
             } })), shouldPreserveSpace ? (h("pre", { class: "language-" + this.kulLanguage, key: this.value, ref: (el) => {
                 if (el) {
-                    __classPrivateFieldSet(this, _KulCode_el, el, "f");
+                    __classPrivateFieldSet$1(this, _KulCode_el, el, "f");
                 }
             } }, h("code", null, this.value))) : (h("div", { class: "body language-" + this.kulLanguage, key: this.value, ref: (el) => {
                 if (el) {
-                    __classPrivateFieldSet(this, _KulCode_el, el, "f");
+                    __classPrivateFieldSet$1(this, _KulCode_el, el, "f");
                 }
             } }, this.value))))));
     }
     disconnectedCallback() {
-        __classPrivateFieldGet$1(this, _KulCode_kulManager, "f").theme.unregister(this);
+        __classPrivateFieldGet$2(this, _KulCode_kulManager, "f").theme.unregister(this);
     }
     static get assetsDirs() { return ["assets/prism"]; }
     get rootElement() { return getElement(this); }
@@ -3014,41 +3014,43 @@ _KulCode_el = new WeakMap(), _KulCode_kulManager = new WeakMap(), _KulCode_insta
     if (typeof value === "string" && /^[\{\}]\s*$/i.test(value)) {
         return value.trim();
     }
-    else if (__classPrivateFieldGet$1(this, _KulCode_instances, "m", _KulCode_isJson).call(this, value)) {
+    else if (__classPrivateFieldGet$2(this, _KulCode_instances, "m", _KulCode_isJson).call(this, value)) {
         const parsed = JSON.parse(value);
         return JSON.stringify(parsed, null, 2);
     }
     else {
-        return __classPrivateFieldGet$1(this, _KulCode_kulManager, "f").data.cell.stringify(value);
+        return __classPrivateFieldGet$2(this, _KulCode_kulManager, "f").data.cell.stringify(value);
     }
 }, _KulCode_highlightCode = async function _KulCode_highlightCode() {
     try {
         if (!Prism.languages[this.kulLanguage]) {
-            await __classPrivateFieldGet$1(this, _KulCode_instances, "m", _KulCode_loadLanguage).call(this);
+            await __classPrivateFieldGet$2(this, _KulCode_instances, "m", _KulCode_loadLanguage).call(this);
         }
     }
     catch (error) {
-        __classPrivateFieldGet$1(this, _KulCode_kulManager, "f").debug.logs.new(this, "Failed to highlight code:" + error, "error");
-        __classPrivateFieldGet$1(this, _KulCode_el, "f").innerHTML = this.value;
+        __classPrivateFieldGet$2(this, _KulCode_kulManager, "f").debug.logs.new(this, "Failed to highlight code:" + error, "error");
+        __classPrivateFieldGet$2(this, _KulCode_el, "f").innerHTML = this.value;
+    }
+    finally {
+        Prism.highlightElement(__classPrivateFieldGet$2(this, _KulCode_el, "f"));
     }
 }, _KulCode_isObjectLike = function _KulCode_isObjectLike(obj) {
     return typeof obj === "object" && obj !== null;
 }, _KulCode_isDictionary = function _KulCode_isDictionary(obj) {
-    return (__classPrivateFieldGet$1(this, _KulCode_instances, "m", _KulCode_isObjectLike).call(this, obj) &&
+    return (__classPrivateFieldGet$2(this, _KulCode_instances, "m", _KulCode_isObjectLike).call(this, obj) &&
         Object.values(obj).every((value) => value != null));
 }, _KulCode_isJson = function _KulCode_isJson(value) {
-    return (this.kulLanguage?.toLowerCase() === "json" || __classPrivateFieldGet$1(this, _KulCode_instances, "m", _KulCode_isDictionary).call(this, value));
+    return (this.kulLanguage?.toLowerCase() === "json" || __classPrivateFieldGet$2(this, _KulCode_instances, "m", _KulCode_isDictionary).call(this, value));
 }, _KulCode_loadLanguage = async function _KulCode_loadLanguage() {
     try {
         const module = getAssetPath(`./assets/prism/prism-${this.kulLanguage}.min.js`);
         await import(module);
-        Prism.highlightAll();
     }
     catch (error) {
         console.error(`Failed to load Prism.js component for ${this.kulLanguage}:`, error);
     }
 }, _KulCode_updateValue = function _KulCode_updateValue() {
-    this.value = this.kulFormat ? __classPrivateFieldGet$1(this, _KulCode_instances, "m", _KulCode_format).call(this, this.kulValue) : this.kulValue;
+    this.value = this.kulFormat ? __classPrivateFieldGet$2(this, _KulCode_instances, "m", _KulCode_format).call(this, this.kulValue) : this.kulValue;
 };
 KulCode.style = KulCodeStyle0;
 
@@ -3069,7 +3071,7 @@ var KulProgressbarProps;
 const kulProgressbarCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}@keyframes fade-in-grid{0%{display:none}1%{display:grid;opacity:0}100%{display:grid;opacity:1}}:host{--kul_progressbar_border_radius:var(--kul-progressbar-border-radius, 4px);--kul_progressbar_font_family:var(\n    --kul-progressbar-font-family,\n    var(--kul-font-family)\n  );--kul_progressbar_font_size:var(\n    --kul-progressbar-font-size,\n    var(--kul-font-size)\n  );--kul_progressbar_height:var(--kul-progressbar-height, 2.5em);--kul_progressbar_primary_color:var(\n    --kul-progressbar-primary-color,\n    var(--kul-primary-color)\n  );--kul_progressbar_text_color:var(\n    --kul-progressbar-text-color,\n    var(--kul-text-color)\n  );--kul_progressbar_text_color_rgb:var(\n    --kul-progressbar-text-color-rgb,\n    var(--kul-text-color-rgb)\n  );--kul_progressbar_text_on_primary_color:var(\n    --kul-progressbar-text-on-primary-color,\n    var(--kul-text-on-primary-color)\n  );--kul_progressbar_track_color:var(\n    --kul-progressbar-track-color,\n    var(--kul-disabled-background-color)\n  );--kul_progressbar_width:var(--kul-progressbar-width, 100%)}:host{display:block;font-family:var(--kul_progressbar_font_family);font-size:var(--kul_progressbar_font_size);width:var(--kul_progressbar_width)}.progress-bar{background:var(--kul_progressbar_track_color);border-radius:var(--kul_progressbar_border_radius);height:var(--kul_progressbar_height);overflow:hidden;width:var(--kul_progressbar_width)}.progress-bar__icon{background:var(--kul_progressbar_text_color);height:1.5em;margin:0 0.25em;width:1.5em}.progress-bar__label{align-items:center;display:flex;height:100%;justify-content:center;left:0;min-width:max-content;position:absolute;top:0;width:100%}.progress-bar__mu{font-size:calc(var(--kul_progressbar_font_size) * 0.75)}.progress-bar__percentage{background:var(--kul_progressbar_primary_color);border-radius:var(--kul_progressbar_border_radius);box-sizing:border-box;color:var(--kul_progressbar_text_color);height:var(--kul_progressbar_height);padding:0.5em 0;position:relative;text-align:center;transition:width 0.2s ease;width:var(--kul_progressbar_percentage_width)}:host([kul-centered-label]) .progress-bar{position:relative}:host([kul-centered-label]) .progress-bar__percentage{position:static}:host([kul-is-radial]){box-sizing:border-box;margin:auto;padding:1.25em 0px}:host([kul-is-radial]) #kul-component{display:flex;font-size:10em;margin:auto}:host([kul-is-radial]) .progress-bar{background:none;height:1em;margin:auto;overflow:visible;position:relative;width:1em}:host([kul-is-radial]) .progress-bar:nth-child(3n+1){clear:both}:host([kul-is-radial]) .progress-bar .pie{height:1em;width:1em;clip:rect(0, 1em, 1em, 0.5em);left:0;position:absolute;top:0}:host([kul-is-radial]) .progress-bar .pie.has-value .half-circle{border-color:var(--kul_progressbar_primary_color)}:host([kul-is-radial]) .progress-bar .pie.has-value .half-circle.left-side{transform:var(--kul_progressbar_transform);transition:transform 0.2s ease}:host([kul-is-radial]) .progress-bar .pie.has-value.half-empty .right-side{display:none}:host([kul-is-radial]) .progress-bar .pie.has-value.half-full{clip:rect(auto, auto, auto, auto)}:host([kul-is-radial]) .progress-bar .pie.has-value.half-full .right-side{transform:rotate(180deg)}:host([kul-is-radial]) .progress-bar .pie .half-circle{height:1em;width:1em;border:0.1em solid var(--kul_progressbar_track_color);border-radius:50%;clip:rect(0, 0.5em, 1em, 0);left:0;position:absolute;top:0}:host([kul-is-radial]) .progress-bar__icon{height:0.75em;margin:0 0.15em;width:0.75em}:host([kul-is-radial]) .progress-bar__label{color:var(--kul_progressbar_text_color);cursor:default;display:flex;font-size:0.25em}:host([kul-is-radial]) .progress-bar__track{height:1em;width:1em;border:0.1em solid var(--kul_progressbar_track_color);border-radius:50%}:host([kul-is-radial]) .progress-bar__um{color:var(--kul_progressbar_text_color);font-size:0.75em;padding-bottom:0.75em}:host([kul-is-radial]) *,:host([kul-is-radial]) *:before,:host([kul-is-radial]) *:after{box-sizing:border-box}@keyframes running-stripes{0%{background-position:0 0}100%{background-position:3em 3em}}:host(.kul-animated) .progress-bar__percentage{animation:running-stripes 2s linear infinite;background-image:linear-gradient(-45deg, rgba(var(--kul_progressbar_text_color_rgb), 0.125) 25%, transparent 25%, transparent 50%, rgba(var(--kul_progressbar_text_color_rgb), 0.125) 50%, rgba(var(--kul_progressbar_text_color_rgb), 0.125) 75%, transparent 75%, transparent);background-size:3em 3em}:host(.kul-padded) .progress-bar{padding:0.5em;width:calc(100% - 1em)}:host(.kul-slim) #kul-component .progress-bar{--kul_progressbar_height:calc(\n    var(--kul-progressbar-height, 2.5em) * 0.5\n  );border-radius:9px}:host(.kul-slim) #kul-component .progress-bar__percentage{border-radius:9px;padding:0}:host(.kul-slim) #kul-component .progress-bar .pie .half-circle{border-width:0.05em}:host(.kul-slim) #kul-component .progress-bar__track{border-width:0.05em}:host(.kul-danger){--kul-progressbar-primary-color:var(--kul-danger-color);--kul-progressbar-text-on-primary-color:white}:host(.kul-info){--kul-progressbar-primary-color:var(--kul-info-color);--kul-progressbar-text-on-primary-color:white}:host(.kul-secondary){--kul-progressbar-primary-color:var(--kul-secondary-color);--kul-progressbar-text-on-primary-color:var(--kul-text-on-secondary-color)}:host(.kul-success){--kul-progressbar-primary-color:var(--kul-success-color);--kul-progressbar-text-on-primary-color:white}:host(.kul-warning){--kul-progressbar-primary-color:var(--kul-warning-color);--kul-progressbar-text-on-primary-color:white}";
 const KulProgressbarStyle0 = kulProgressbarCss;
 
-var __classPrivateFieldGet = (undefined && undefined.__classPrivateFieldGet) || function (receiver, state, kind, f) {
+var __classPrivateFieldGet$1 = (undefined && undefined.__classPrivateFieldGet) || function (receiver, state, kind, f) {
     if (kind === "a" && !f)
         throw new TypeError("Private accessor was defined without a getter");
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver))
@@ -3146,27 +3148,27 @@ const KulProgressbar = class {
     /*          L i f e c y c l e   H o o k s          */
     /*-------------------------------------------------*/
     componentWillLoad() {
-        __classPrivateFieldGet(this, _KulProgressbar_kulManager, "f").theme.register(this);
+        __classPrivateFieldGet$1(this, _KulProgressbar_kulManager, "f").theme.register(this);
     }
     componentDidLoad() {
         this.onKulEvent(new CustomEvent("ready"), "ready");
-        __classPrivateFieldGet(this, _KulProgressbar_kulManager, "f").debug.updateDebugInfo(this, "did-load");
+        __classPrivateFieldGet$1(this, _KulProgressbar_kulManager, "f").debug.updateDebugInfo(this, "did-load");
     }
     componentWillRender() {
-        __classPrivateFieldGet(this, _KulProgressbar_kulManager, "f").debug.updateDebugInfo(this, "will-render");
+        __classPrivateFieldGet$1(this, _KulProgressbar_kulManager, "f").debug.updateDebugInfo(this, "will-render");
     }
     componentDidRender() {
-        __classPrivateFieldGet(this, _KulProgressbar_kulManager, "f").debug.updateDebugInfo(this, "did-render");
+        __classPrivateFieldGet$1(this, _KulProgressbar_kulManager, "f").debug.updateDebugInfo(this, "did-render");
     }
     render() {
         const style = {
             ["--kul_progressbar_percentage_width"]: `${this.kulValue}%`,
             ["--kul_progressbar_transform"]: `rotate(${this.kulValue * 3.6}deg)`,
         };
-        return (h(Host, { key: '22e10701dac0c4f47d04e3700dab7ade325d31aa' }, this.kulStyle && (h("style", { key: '5bf4ae15ca37864f8456888ab77b26083155959e', id: KUL_STYLE_ID }, __classPrivateFieldGet(this, _KulProgressbar_kulManager, "f").theme.setKulStyle(this))), h("div", { key: 'c2333282c7ad9cd01e00f1760dcbdc3672a04db9', id: KUL_WRAPPER_ID, style: style }, this.kulIsRadial ? __classPrivateFieldGet(this, _KulProgressbar_instances, "m", _KulProgressbar_prepRadialBar).call(this) : __classPrivateFieldGet(this, _KulProgressbar_instances, "m", _KulProgressbar_prepProgressBar).call(this))));
+        return (h(Host, { key: '22e10701dac0c4f47d04e3700dab7ade325d31aa' }, this.kulStyle && (h("style", { key: '5bf4ae15ca37864f8456888ab77b26083155959e', id: KUL_STYLE_ID }, __classPrivateFieldGet$1(this, _KulProgressbar_kulManager, "f").theme.setKulStyle(this))), h("div", { key: 'c2333282c7ad9cd01e00f1760dcbdc3672a04db9', id: KUL_WRAPPER_ID, style: style }, this.kulIsRadial ? __classPrivateFieldGet$1(this, _KulProgressbar_instances, "m", _KulProgressbar_prepRadialBar).call(this) : __classPrivateFieldGet$1(this, _KulProgressbar_instances, "m", _KulProgressbar_prepProgressBar).call(this))));
     }
     disconnectedCallback() {
-        __classPrivateFieldGet(this, _KulProgressbar_kulManager, "f").theme.unregister(this);
+        __classPrivateFieldGet$1(this, _KulProgressbar_kulManager, "f").theme.unregister(this);
     }
     get rootElement() { return getElement(this); }
 };
@@ -3184,14 +3186,215 @@ _KulProgressbar_kulManager = new WeakMap(), _KulProgressbar_instances = new Weak
             h("div", { class: "progress-bar__text" }, this.kulValue),
             h("div", { class: "progress-bar__mu" }, "%"),
         ];
-    return (h("div", { class: "progress-bar__label" }, this.kulIcon && __classPrivateFieldGet(this, _KulProgressbar_instances, "m", _KulProgressbar_prepIcon).call(this), label));
+    return (h("div", { class: "progress-bar__label" }, this.kulIcon && __classPrivateFieldGet$1(this, _KulProgressbar_instances, "m", _KulProgressbar_prepIcon).call(this), label));
 }, _KulProgressbar_prepProgressBar = function _KulProgressbar_prepProgressBar() {
-    return (h("div", { class: "progress-bar" }, h("div", { class: "progress-bar__percentage" }, __classPrivateFieldGet(this, _KulProgressbar_instances, "m", _KulProgressbar_prepLabel).call(this))));
+    return (h("div", { class: "progress-bar" }, h("div", { class: "progress-bar__percentage" }, __classPrivateFieldGet$1(this, _KulProgressbar_instances, "m", _KulProgressbar_prepLabel).call(this))));
 }, _KulProgressbar_prepRadialBar = function _KulProgressbar_prepRadialBar() {
-    return (h("div", { class: "progress-bar" }, __classPrivateFieldGet(this, _KulProgressbar_instances, "m", _KulProgressbar_prepLabel).call(this), h("div", { class: `pie ${this.kulValue ? "has-value" : ""}  ${this.kulValue > 50 ? "half-full" : "half-empty"}` }, h("div", { class: "left-side half-circle" }), h("div", { class: "right-side half-circle" })), h("div", { class: "progress-bar__track" })));
+    return (h("div", { class: "progress-bar" }, __classPrivateFieldGet$1(this, _KulProgressbar_instances, "m", _KulProgressbar_prepLabel).call(this), h("div", { class: `pie ${this.kulValue ? "has-value" : ""}  ${this.kulValue > 50 ? "half-full" : "half-empty"}` }, h("div", { class: "left-side half-circle" }), h("div", { class: "right-side half-circle" })), h("div", { class: "progress-bar__track" })));
 };
 KulProgressbar.style = KulProgressbarStyle0;
 
-export { KulCode as kul_code, KulProgressbar as kul_progressbar };
+//#endregion
+//#region Props
+var KulTypewriterProps;
+(function (KulTypewriterProps) {
+    KulTypewriterProps["kulCursor"] = "Sets the behavior of the bliking cursor.";
+    KulTypewriterProps["kulDeleteSpeed"] = "Sets the deleting speed in milliseconds.";
+    KulTypewriterProps["kulLoop"] = "Enables or disables looping of the text.";
+    KulTypewriterProps["kulPause"] = "Sets the duration of the pause after typing a complete text.";
+    KulTypewriterProps["kulSpeed"] = "Sets the typing speed in milliseconds.";
+    KulTypewriterProps["kulStyle"] = "Custom style of the component.";
+    KulTypewriterProps["kulTag"] = "The name of the HTML tag that will wrap the text.";
+    KulTypewriterProps["kulValue"] = "Sets the text or array of texts to display with the typewriter effect.";
+})(KulTypewriterProps || (KulTypewriterProps = {}));
+//#endregion
 
-//# sourceMappingURL=kul-code_2.entry.js.map
+const kulTypewriterCss = ".ripple-surface{cursor:pointer;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}.ripple{animation:ripple 0.675s ease-out;border-radius:50%;pointer-events:none;position:absolute;transform:scale(0)}@keyframes ripple{to{opacity:0;transform:scale(4)}}::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background-color:var(--kul-primary-color);-webkit-transition:background-color 0.2s ease-in-out;transition:background-color 0.2s ease-in-out}::-webkit-scrollbar-track{background-color:var(--kul-background-color)}@keyframes fade-in-block{0%{display:none}1%{display:block;opacity:0}100%{display:block;opacity:1}}@keyframes fade-in-flex{0%{display:none}1%{display:flex;opacity:0}100%{display:flex;opacity:1}}@keyframes fade-in-grid{0%{display:none}1%{display:grid;opacity:0}100%{display:grid;opacity:1}}:host{--kul-typewriter-text-color:var(\n    --kul-typewriter-text-color,\n    var(--kul-typewriter-text-color)\n  );--kul-typewriter-cursor-width:var(--kul-typewriter-cursor-width, 3px);--kul-typewriter-cursor-color:var(\n    --kul-typewriter-cursor-color,\n    var(--kul-typewriter-text-color)\n  );--kul-typewriter-font-size:var(\n    --kul-typewriter-font-size,\n    var(--kul-font-size)\n  );--kul-typewriter-font-family:var(\n    --kul-typewriter-font-family,\n    var(--kul-font-family)\n  );align-items:center;display:inline-flex;color:var(--kul-typewriter-text-color);font-size:var(--kul-typewriter-font-size);font-family:var(--kul-typewriter-font-family);overflow:hidden}#kul-component{height:100%;width:100%}.cursor{display:inline-block;width:var(--kul-typewriter-cursor-width);background-color:var(--kul-typewriter-cursor-color);margin-left:2px;animation:blink 0.8s infinite}@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}";
+const KulTypewriterStyle0 = kulTypewriterCss;
+
+var __classPrivateFieldGet = (undefined && undefined.__classPrivateFieldGet) || function (receiver, state, kind, f) {
+    if (kind === "a" && !f)
+        throw new TypeError("Private accessor was defined without a getter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver))
+        throw new TypeError("Cannot read private member from an object whose class did not declare it");
+    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
+};
+var __classPrivateFieldSet = (undefined && undefined.__classPrivateFieldSet) || function (receiver, state, value, kind, f) {
+    if (kind === "m")
+        throw new TypeError("Private method is not writable");
+    if (kind === "a" && !f)
+        throw new TypeError("Private accessor was defined without a setter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver))
+        throw new TypeError("Cannot write private member to an object whose class did not declare it");
+    return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
+};
+var _KulTypewriter_instances, _KulTypewriter_kulManager, _KulTypewriter_timeout, _KulTypewriter_texts, _KulTypewriter_initializeTexts, _KulTypewriter_startTyping, _KulTypewriter_resetTyping, _KulTypewriter_deleteText, _KulTypewriter_completeReset, _KulTypewriter_prepText;
+const KulTypewriter = class {
+    constructor(hostRef) {
+        registerInstance(this, hostRef);
+        this.kulEvent = createEvent(this, "kul-typewriter-event", 6);
+        _KulTypewriter_instances.add(this);
+        //#endregion
+        //#region Internal variables
+        _KulTypewriter_kulManager.set(this, kulManagerInstance());
+        _KulTypewriter_timeout.set(this, void 0);
+        _KulTypewriter_texts.set(this, []);
+        this.debugInfo = {
+            endTime: 0,
+            renderCount: 0,
+            renderEnd: 0,
+            renderStart: 0,
+            startTime: performance.now(),
+        };
+        this.displayedText = "";
+        this.isDeleting = false;
+        this.currentTextIndex = 0;
+        this.kulCursor = "auto";
+        this.kulDeleteSpeed = 50;
+        this.kulLoop = false;
+        this.kulPause = 500;
+        this.kulSpeed = 50;
+        this.kulStyle = "";
+        this.kulTag = "p";
+        this.kulValue = "";
+    }
+    onKulEvent(e, eventType) {
+        this.kulEvent.emit({
+            comp: this,
+            id: this.rootElement.id,
+            originalEvent: e,
+            eventType,
+        });
+    }
+    //#endregion
+    //#region Watchers
+    handleKulValueChange() {
+        __classPrivateFieldGet(this, _KulTypewriter_instances, "m", _KulTypewriter_initializeTexts).call(this);
+        __classPrivateFieldGet(this, _KulTypewriter_instances, "m", _KulTypewriter_resetTyping).call(this); // This now animates the deletion before switching values
+    }
+    //#endregion
+    //#region Public methods
+    /**
+     * Fetches debug information of the component's current state.
+     * @returns {Promise<KulDebugLifecycleInfo>} A promise that resolves with the debug information object.
+     */
+    async getDebugInfo() {
+        return this.debugInfo;
+    }
+    /**
+     * Used to retrieve component's props values.
+     * @param {boolean} descriptions - When provided and true, the result will be the list of props with their description.
+     * @returns {Promise<GenericObject>} List of props as object, each key will be a prop.
+     */
+    async getProps(descriptions) {
+        return getProps(this, KulTypewriterProps, descriptions);
+    }
+    /**
+     * This method is used to trigger a new render of the component.
+     */
+    async refresh() {
+        forceUpdate(this);
+    }
+    /**
+     * Initiates the unmount sequence, which removes the component from the DOM after a delay.
+     * @param {number} ms - Number of milliseconds
+     */
+    async unmount(ms = 0) {
+        setTimeout(() => {
+            this.onKulEvent(new CustomEvent("unmount"), "unmount");
+            this.rootElement.remove();
+        }, ms);
+    }
+    //#endregion
+    //#region Lifecycle hooks
+    componentWillLoad() {
+        __classPrivateFieldGet(this, _KulTypewriter_kulManager, "f").theme.register(this);
+        __classPrivateFieldGet(this, _KulTypewriter_instances, "m", _KulTypewriter_initializeTexts).call(this);
+    }
+    componentDidLoad() {
+        this.onKulEvent(new CustomEvent("ready"), "ready");
+        requestAnimationFrame(async () => __classPrivateFieldGet(this, _KulTypewriter_instances, "m", _KulTypewriter_startTyping).call(this));
+        __classPrivateFieldGet(this, _KulTypewriter_kulManager, "f").debug.updateDebugInfo(this, "did-load");
+    }
+    componentWillRender() {
+        __classPrivateFieldGet(this, _KulTypewriter_kulManager, "f").debug.updateDebugInfo(this, "will-render");
+    }
+    componentDidRender() {
+        __classPrivateFieldGet(this, _KulTypewriter_kulManager, "f").debug.updateDebugInfo(this, "did-render");
+    }
+    render() {
+        return (h(Host, { key: 'ff8c414a5c329fdc31c49d55fac53ddd226e5040' }, this.kulStyle ? (h("style", { id: KUL_STYLE_ID }, __classPrivateFieldGet(this, _KulTypewriter_kulManager, "f").theme.setKulStyle(this))) : undefined, h("div", { key: '8043b8cc03fd2e992ccdb516e2066c40cc6dd815', id: KUL_WRAPPER_ID }, __classPrivateFieldGet(this, _KulTypewriter_instances, "m", _KulTypewriter_prepText).call(this))));
+    }
+    disconnectedCallback() {
+        __classPrivateFieldGet(this, _KulTypewriter_kulManager, "f").theme.unregister(this);
+        clearTimeout(__classPrivateFieldGet(this, _KulTypewriter_timeout, "f"));
+    }
+    get rootElement() { return getElement(this); }
+    static get watchers() { return {
+        "kulValue": ["handleKulValueChange"]
+    }; }
+};
+_KulTypewriter_kulManager = new WeakMap(), _KulTypewriter_timeout = new WeakMap(), _KulTypewriter_texts = new WeakMap(), _KulTypewriter_instances = new WeakSet(), _KulTypewriter_initializeTexts = function _KulTypewriter_initializeTexts() {
+    __classPrivateFieldSet(this, _KulTypewriter_texts, Array.isArray(this.kulValue)
+        ? this.kulValue
+        : [this.kulValue], "f");
+}, _KulTypewriter_startTyping = function _KulTypewriter_startTyping() {
+    const currentText = __classPrivateFieldGet(this, _KulTypewriter_texts, "f")[this.currentTextIndex] || "";
+    if (this.isDeleting) {
+        this.displayedText = currentText.substring(0, this.displayedText.length - 1);
+    }
+    else {
+        this.displayedText = currentText.substring(0, this.displayedText.length + 1);
+    }
+    if (!this.isDeleting && this.displayedText === currentText) {
+        __classPrivateFieldSet(this, _KulTypewriter_timeout, setTimeout(() => {
+            if (this.kulLoop)
+                this.isDeleting = true;
+        }, this.kulPause), "f");
+    }
+    else if (this.isDeleting && this.displayedText === "") {
+        this.isDeleting = false;
+        this.currentTextIndex = (this.currentTextIndex + 1) % __classPrivateFieldGet(this, _KulTypewriter_texts, "f").length;
+    }
+    else {
+        const delay = this.isDeleting ? this.kulDeleteSpeed : this.kulSpeed;
+        __classPrivateFieldSet(this, _KulTypewriter_timeout, setTimeout(() => __classPrivateFieldGet(this, _KulTypewriter_instances, "m", _KulTypewriter_startTyping).call(this), delay), "f");
+    }
+}, _KulTypewriter_resetTyping = function _KulTypewriter_resetTyping() {
+    clearTimeout(__classPrivateFieldGet(this, _KulTypewriter_timeout, "f"));
+    if (this.displayedText) {
+        this.isDeleting = true;
+        __classPrivateFieldGet(this, _KulTypewriter_instances, "m", _KulTypewriter_deleteText).call(this, () => {
+            __classPrivateFieldGet(this, _KulTypewriter_instances, "m", _KulTypewriter_completeReset).call(this);
+        });
+    }
+    else {
+        __classPrivateFieldGet(this, _KulTypewriter_instances, "m", _KulTypewriter_completeReset).call(this);
+    }
+}, _KulTypewriter_deleteText = function _KulTypewriter_deleteText(callback) {
+    if (this.displayedText.length > 0) {
+        this.displayedText = this.displayedText.slice(0, -1);
+        __classPrivateFieldSet(this, _KulTypewriter_timeout, setTimeout(() => {
+            __classPrivateFieldGet(this, _KulTypewriter_instances, "m", _KulTypewriter_deleteText).call(this, callback);
+        }, this.kulDeleteSpeed), "f");
+    }
+    else {
+        callback();
+    }
+}, _KulTypewriter_completeReset = function _KulTypewriter_completeReset() {
+    this.isDeleting = false;
+    this.currentTextIndex = 0;
+    __classPrivateFieldGet(this, _KulTypewriter_instances, "m", _KulTypewriter_startTyping).call(this);
+}, _KulTypewriter_prepText = function _KulTypewriter_prepText() {
+    const shouldShowCursor = this.kulCursor === "enabled" ||
+        (this.kulCursor === "auto" &&
+            !this.isDeleting &&
+            this.displayedText !== __classPrivateFieldGet(this, _KulTypewriter_texts, "f")[this.currentTextIndex]);
+    const TagName = this.kulTag || "div";
+    return (h(TagName, null, h("span", null, this.displayedText || "\u00A0"), shouldShowCursor ? h("span", { class: "cursor" }, "|") : null));
+};
+KulTypewriter.style = KulTypewriterStyle0;
+
+export { KulCode as kul_code, KulProgressbar as kul_progressbar, KulTypewriter as kul_typewriter };
+
+//# sourceMappingURL=kul-code_3.entry.js.map

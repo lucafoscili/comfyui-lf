@@ -21,7 +21,7 @@ export const textareaFactory: TextareaFactory = {
         const { textarea } = STATE.get(wrapper);
 
         try {
-          return JSON.parse(textarea?.value || '{}') || {};
+          return textarea?.value || '{}';
         } catch (error) {
           return error;
         }

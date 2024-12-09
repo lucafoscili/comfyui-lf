@@ -7,7 +7,7 @@ export declare enum TextareaCSS {
 export type Textarea = Widget<CustomWidgetName.textarea>;
 export type TextareaFactory = WidgetFactory<TextareaDeserializedValue, TextareaState>;
 export type TextareaNormalizeCallback = NormalizeValueCallback<TextareaDeserializedValue | string>;
-export type TextareaDeserializedValue = Record<string, unknown>;
+export type TextareaDeserializedValue = Record<string, unknown> | Array<Record<string, unknown>>;
 export interface TextareaState extends BaseWidgetState {
     textarea: HTMLTextAreaElement;
 }
