@@ -9,7 +9,7 @@ from PIL import Image
 from server import PromptServer
 
 from ..utils.constants import API_ROUTE_PREFIX
-from ..utils.filters import blend_effect, brightness_effect, clarity_effect, contrast_effect, desaturate_effect, gaussian_blur_effect, line_effect, sepia_effect, vignette_effect
+from ..utils.filters import blend_effect, brightness_effect, clarity_effect, contrast_effect, desaturate_effect, film_grain_effect, gaussian_blur_effect, line_effect, sepia_effect, vignette_effect
 from ..utils.helpers import base64_to_tensor, convert_to_boolean, convert_to_float, convert_to_int, create_colored_tensor, create_masonry_node, get_comfy_dir, get_resource_url, pil_to_tensor, resolve_filepath, resolve_url, tensor_to_pil
 
 # region get-image
@@ -79,6 +79,8 @@ async def process_image(request):
             processed_tensor = apply_contrast_effect(img_tensor, settings)
         elif filter_type == "desaturate":
             processed_tensor = apply_desaturate_effect(img_tensor, settings)
+        elif filter_type == "film_grain":
+            processed_tensor = apply_film_grain_effect(img_tensor, settings)
         elif filter_type == "gaussian_blur":
             processed_tensor = apply_gaussian_blur_effect(img_tensor, settings)
         elif filter_type == "line":
@@ -147,6 +149,14 @@ def apply_desaturate_effect(img_tensor: torch.Tensor, settings: dict):
     b = convert_to_float(settings.get("b_channel", 1))
 
     return desaturate_effect(img_tensor, desaturation_strength, [r, g, b])
+
+def apply_film_grain_effect(img_tensor: torch.Tensor, settings: dict):
+    intensity: float = convert_to_float(settings.get("intensity", 0))
+    size: float = convert_to_float(settings.get("size", 1))
+    tint: str = settings.get("tint", "FFFFFF")
+    soft_blend: bool = convert_to_boolean(settings.get("soft_blend", False))
+
+    return film_grain_effect(img_tensor, intensity, size, tint, soft_blend)
 
 def apply_gaussian_blur_effect(img_tensor: torch.Tensor, settings: dict):
     blur_sigma = convert_to_float(settings.get("blur_sigma", 0))
