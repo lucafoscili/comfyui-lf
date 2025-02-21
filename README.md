@@ -5,6 +5,8 @@
 **You can start migrating to the [new repository](https://github.com/lucafoscili/lf-nodes) whenever you want, I completed the transition and everything seems to working smoothly.**
 **This repo will be archived in the next weeks**
 
+---
+
 🚨 **This repository is now in legacy mode** 🚨  
 
 LF Nodes has officially **migrated** to its new dedicated repository: [LF Nodes](https://github.com/lucafoscili/lf-nodes). This repository will no longer receive **new updates, fixes, or features**.  
